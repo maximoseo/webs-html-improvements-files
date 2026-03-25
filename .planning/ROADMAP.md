@@ -129,13 +129,10 @@ Plans:
   3. Social links show network brand-color on hover; social area is elegant and non-spammy
   4. Floating Back to Top and Contact Us buttons are visible, professional, and do not overlap content
   5. On tablet/mobile, floating buttons resize/reposition to avoid obstructing content
-**Plans**: TBD
+**Plans**: 1 plan
 
 Plans:
-- [ ] 07-01: Author section with logo image and layout
-- [ ] 07-02: Social links with brand-color hover states
-- [ ] 07-03: Floating Back to Top and Contact Us buttons
-- [ ] 07-04: Floating button responsive behavior and conflict avoidance
+- [ ] 07-01-PLAN.md -- Author section with logo/bio/social links + floating Back to Top and Contact Us buttons (Wave 1)
 
 ### Phase 8: SEO Schema & Hover States Polish
 **Goal**: Article and FAQ schema markup is embedded, and all hover state interactions are finalized and WordPress-safe
@@ -201,7 +198,7 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6 -> 7 -> 8 -> 9 -> 10
 | 4. Navigation & Table of Contents | 1/1 | Complete | 2026-03-25 |
 | 5. Product Card Integration | 0/1 | Planned | - |
 | 6. FAQ Section & Accordions | 0/1 | Planned | - |
-| 7. Author Section, Social Links & Floating UI | 0/4 | Not started | - |
+| 7. Author Section, Social Links & Floating UI | 0/1 | Not started | - |
 | 8. SEO Schema & Hover States Polish | 0/3 | Not started | - |
 | 9. N8N Prompt & Workflow Alignment | 0/3 | Not started | - |
 | 10. QA Validation & File Delivery | 0/4 | Not started | - |
