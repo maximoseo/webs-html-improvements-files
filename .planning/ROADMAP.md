@@ -143,12 +143,10 @@ Plans:
   2. JSON-LD FAQ schema covers all FAQ questions and answers
   3. Proper heading hierarchy is verified for SEO crawlers
   4. All hover states across TOC, FAQ, CTA, and social links remain readable and WordPress-safe via inline JS handlers
-**Plans**: TBD
+**Plans**: 1 plan
 
 Plans:
-- [ ] 08-01: Article and FAQ JSON-LD schema markup
-- [ ] 08-02: SEO heading hierarchy verification
-- [ ] 08-03: Cross-section hover state audit and WordPress safety check
+- [ ] 08-01-PLAN.md -- JSON-LD Article + FAQ schema markup, heading hierarchy verification, and cross-section hover state audit (Wave 1)
 
 ### Phase 9: N8N Prompt & Workflow Alignment
 **Goal**: N8N prompt TXT contains the exact injection block and workflow JSON produces output matching the new template
@@ -199,6 +197,6 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6 -> 7 -> 8 -> 9 -> 10
 | 5. Product Card Integration | 0/1 | Planned | - |
 | 6. FAQ Section & Accordions | 0/1 | Planned | - |
 | 7. Author Section, Social Links & Floating UI | 0/1 | Not started | - |
-| 8. SEO Schema & Hover States Polish | 0/3 | Not started | - |
+| 8. SEO Schema & Hover States Polish | 0/1 | Not started | - |
 | 9. N8N Prompt & Workflow Alignment | 0/3 | Not started | - |
 | 10. QA Validation & File Delivery | 0/4 | Not started | - |
