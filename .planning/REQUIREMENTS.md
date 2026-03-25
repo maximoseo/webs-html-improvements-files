@@ -18,13 +18,13 @@
 
 ### Navigation & TOC
 
-- [ ] **NAV-01**: Table of Contents positioned near top of article (after intro/summary)
-- [ ] **NAV-02**: TOC starts closed by default using details/summary
-- [ ] **NAV-03**: Single column TOC layout, no numbering on items
-- [ ] **NAV-04**: All TOC anchors point to correct heading IDs
-- [ ] **NAV-05**: TOC title is exactly "תוכן עניינים" for Hebrew
-- [ ] **NAV-06**: Hover state with underline and subtle color shift on TOC items
-- [ ] **NAV-07**: Polished accordion open/close indicator animation
+- [x] **NAV-01**: Table of Contents positioned near top of article (after intro/summary)
+- [x] **NAV-02**: TOC starts closed by default using details/summary
+- [x] **NAV-03**: Single column TOC layout, no numbering on items
+- [x] **NAV-04**: All TOC anchors point to correct heading IDs
+- [x] **NAV-05**: TOC title is exactly "תוכן עניינים" for Hebrew
+- [x] **NAV-06**: Hover state with underline and subtle color shift on TOC items
+- [x] **NAV-07**: Polished accordion open/close indicator animation
 
 ### Product Integration
 
@@ -86,7 +86,7 @@
 
 ### Hover States
 
-- [ ] **HOVER-01**: TOC items: underline + subtle color shift on hover
+- [x] **HOVER-01**: TOC items: underline + subtle color shift on hover
 - [ ] **HOVER-02**: FAQ headers: subtle emphasis without hurting readability
 - [ ] **HOVER-03**: CTA button: premium professional hover effect
 - [ ] **HOVER-04**: Social links: network brand-color hover
@@ -149,13 +149,13 @@
 | TMPL-06 | Phase 3 | Complete |
 | TMPL-07 | Phase 3 | Complete |
 | TMPL-08 | Phase 3 | Complete |
-| NAV-01 | Phase 4 | Pending |
-| NAV-02 | Phase 4 | Pending |
-| NAV-03 | Phase 4 | Pending |
-| NAV-04 | Phase 4 | Pending |
-| NAV-05 | Phase 4 | Pending |
-| NAV-06 | Phase 4 | Pending |
-| NAV-07 | Phase 4 | Pending |
+| NAV-01 | Phase 4 | Complete |
+| NAV-02 | Phase 4 | Complete |
+| NAV-03 | Phase 4 | Complete |
+| NAV-04 | Phase 4 | Complete |
+| NAV-05 | Phase 4 | Complete |
+| NAV-06 | Phase 4 | Complete |
+| NAV-07 | Phase 4 | Complete |
 | PROD-01 | Phase 2 | Complete |
 | PROD-02 | Phase 2 | Complete |
 | PROD-03 | Phase 5 | Pending |
@@ -196,7 +196,7 @@
 | SEO-01 | Phase 8 | Pending |
 | SEO-02 | Phase 8 | Pending |
 | SEO-03 | Phase 8 | Pending |
-| HOVER-01 | Phase 4 | Pending |
+| HOVER-01 | Phase 4 | Complete |
 | HOVER-02 | Phase 6 | Pending |
 | HOVER-03 | Phase 7 | Pending |
 | HOVER-04 | Phase 7 | Pending |

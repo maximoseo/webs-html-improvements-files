@@ -87,7 +87,7 @@ Plans:
 **Plans**: 1 plan
 
 Plans:
-- [ ] 04-01-PLAN.md -- Full TOC: anchor links to all H2 sections, hover states, plus/minus indicator (Wave 1)
+- [x] 04-01-PLAN.md -- Full TOC: anchor links to all H2 sections, hover states, plus/minus indicator (Wave 1)
 
 ### Phase 5: Product Card Integration
 **Goal**: Real products from hipsterstyle.co.il display in uniform, WordPress-safe cards with stable images
