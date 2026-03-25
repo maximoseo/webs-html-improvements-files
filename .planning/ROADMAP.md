@@ -71,7 +71,7 @@ Plans:
 **Plans**: 2 plans
 
 Plans:
-- [ ] 03-01-PLAN.md -- Article wrapper, RTL setup, inline CSS architecture, and "In This Article" summary card (Wave 1)
+- [x] 03-01-PLAN.md -- Article wrapper, RTL setup, inline CSS architecture, and "In This Article" summary card (Wave 1)
 - [ ] 03-02-PLAN.md -- Semantic heading hierarchy, responsive clamp() typography, editorial spacing, and stub sections for Phases 4-8 (Wave 2)
 
 ### Phase 4: Navigation & Table of Contents
