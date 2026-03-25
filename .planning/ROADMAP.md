@@ -35,12 +35,12 @@ Decimal phases appear between their surrounding integers in numeric order.
   3. A before-state audit summary exists capturing current template structure, CSS approach, and known issues
   4. WordPress rendering risk review is complete with wp_kses_post() impact analysis
   5. A prioritized list of required changes drives all subsequent phases
-**Plans**: TBD
+**Plans**: 3 plans
 
 Plans:
-- [ ] 01-01: Audit existing HTML template for WordPress-unsafe patterns
-- [ ] 01-02: Audit existing N8N prompt and workflow JSON
-- [ ] 01-03: WordPress rendering risk review and change prioritization
+- [ ] 01-01-PLAN.md -- HTML template risk inventory and site reference migration map (Wave 1)
+- [ ] 01-02-PLAN.md -- N8N prompt contradiction report and workflow logic bug report (Wave 1)
+- [ ] 01-03-PLAN.md -- Consolidated WordPress rendering risk summary and prioritized change list (Wave 2)
 
 ### Phase 2: Firecrawl Product Discovery & Social Verification
 **Goal**: Real product data and verified social links are available for template integration
@@ -203,7 +203,7 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6 -> 7 -> 8 -> 9 -> 10
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Baseline Audit & WordPress Risk Assessment | 0/3 | Not started | - |
+| 1. Baseline Audit & WordPress Risk Assessment | 0/3 | Planned | - |
 | 2. Firecrawl Product Discovery & Social Verification | 0/3 | Not started | - |
 | 3. Template Foundation & Article Structure | 0/3 | Not started | - |
 | 4. Navigation & Table of Contents | 0/3 | Not started | - |
