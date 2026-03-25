@@ -1,0 +1,96 @@
+{
+  "meta": {
+    "generated": "2026-03-25",
+    "phase": "02-firecrawl-product-discovery-social-verification",
+    "source": "Shopify JSON API + Firecrawl site discovery",
+    "confidence": {
+      "products": "HIGH",
+      "social": "HIGH",
+      "contact": "MEDIUM",
+      "brand": "HIGH"
+    }
+  },
+  "products": [
+    {
+      "name": "\u05d7\u05dc\u05d9\u05e4\u05ea \u05e1\u05e0\u05d3\u05d9",
+      "url": "https://hipsterstyle.co.il/products/%D7%97%D7%9C%D7%99%D7%A4%D7%AA-%D7%A1%D7%A0%D7%93%D7%99",
+      "image": "https://zqcnyllsfwnssnuduvmj.supabase.co/storage/v1/object/public/article-assets/hipsterstyle/product-sandy.jpg",
+      "image_alt": "\u05d7\u05dc\u05d9\u05e4\u05ea \u05e1\u05e0\u05d3\u05d9 \u05de\u05d0\u05ea \u05d4\u05d9\u05e4\u05e1\u05d8\u05e8",
+      "category": "\u05d7\u05dc\u05d9\u05e4\u05d5\u05ea \u05d1\u05e0\u05d5\u05ea"
+    },
+    {
+      "name": "\u05d7\u05dc\u05d9\u05e4\u05ea \u05d4\u05e0\u05e8\u05d9",
+      "url": "https://hipsterstyle.co.il/products/%D7%97%D7%9C%D7%99%D7%A4%D7%AA-%D7%94%D7%A0%D7%A8%D7%99",
+      "image": "https://zqcnyllsfwnssnuduvmj.supabase.co/storage/v1/object/public/article-assets/hipsterstyle/product-henry.jpg",
+      "image_alt": "\u05d7\u05dc\u05d9\u05e4\u05ea \u05d4\u05e0\u05e8\u05d9 \u05de\u05d0\u05ea \u05d4\u05d9\u05e4\u05e1\u05d8\u05e8",
+      "category": "\u05d7\u05dc\u05d9\u05e4\u05d5\u05ea \u05d1\u05e0\u05d9\u05dd"
+    },
+    {
+      "name": "\u05d7\u05dc\u05d9\u05e4\u05ea \u05e0\u05d9\u05e0\u05d5",
+      "url": "https://hipsterstyle.co.il/products/%D7%97%D7%9C%D7%99%D7%A4%D7%AA-%D7%A0%D7%99%D7%A0%D7%95",
+      "image": "https://zqcnyllsfwnssnuduvmj.supabase.co/storage/v1/object/public/article-assets/hipsterstyle/product-nino.jpg",
+      "image_alt": "\u05d7\u05dc\u05d9\u05e4\u05ea \u05e0\u05d9\u05e0\u05d5 \u05de\u05d0\u05ea \u05d4\u05d9\u05e4\u05e1\u05d8\u05e8",
+      "category": "\u05d7\u05dc\u05d9\u05e4\u05d5\u05ea \u05d1\u05e0\u05d9\u05dd"
+    },
+    {
+      "name": "\u05d7\u05dc\u05d9\u05e4\u05ea \u05de\u05d9\u05dc\u05d4",
+      "url": "https://hipsterstyle.co.il/products/%D7%97%D7%9C%D7%99%D7%A4%D7%AA-%D7%9E%D7%99%D7%9C%D7%94",
+      "image": "https://zqcnyllsfwnssnuduvmj.supabase.co/storage/v1/object/public/article-assets/hipsterstyle/product-mila.jpg",
+      "image_alt": "\u05d7\u05dc\u05d9\u05e4\u05ea \u05de\u05d9\u05dc\u05d4 \u05de\u05d0\u05ea \u05d4\u05d9\u05e4\u05e1\u05d8\u05e8",
+      "category": "\u05d7\u05dc\u05d9\u05e4\u05d5\u05ea \u05d1\u05e0\u05d5\u05ea"
+    },
+    {
+      "name": "\u05d8\u05d9\u05e9\u05e8\u05d8 \u05d0\u05dc\u05d9",
+      "url": "https://hipsterstyle.co.il/products/%D7%98%D7%99%D7%A9%D7%A8%D7%98-%D7%90%D7%9C%D7%99",
+      "image": "https://zqcnyllsfwnssnuduvmj.supabase.co/storage/v1/object/public/article-assets/hipsterstyle/product-eli.jpg",
+      "image_alt": "\u05d8\u05d9\u05e9\u05e8\u05d8 \u05d0\u05dc\u05d9 \u05de\u05d0\u05ea \u05d4\u05d9\u05e4\u05e1\u05d8\u05e8",
+      "category": "\u05d7\u05d5\u05dc\u05e6\u05d5\u05ea \u05d1\u05e0\u05d9\u05dd"
+    },
+    {
+      "name": "\u05d2'\u05d9\u05e0\u05e1 \u05e9\u05d9\u05d9",
+      "url": "https://hipsterstyle.co.il/products/%D7%92-%D7%99%D7%A0%D7%A1-%D7%A9%D7%99%D7%99",
+      "image": "https://zqcnyllsfwnssnuduvmj.supabase.co/storage/v1/object/public/article-assets/hipsterstyle/product-shay.jpg",
+      "image_alt": "\u05d2'\u05d9\u05e0\u05e1 \u05e9\u05d9\u05d9 \u05de\u05d0\u05ea \u05d4\u05d9\u05e4\u05e1\u05d8\u05e8",
+      "category": "\u05de\u05db\u05e0\u05e1\u05d9\u05d9\u05dd \u05d1\u05e0\u05d9\u05dd"
+    }
+  ],
+  "social": {
+    "facebook": "https://www.facebook.com/HipsterBabyCollection",
+    "instagram": "https://www.instagram.com/hipster.style/"
+  },
+  "contact": {
+    "phone_mobile": "+972529767667",
+    "phone_mobile_display": "052-9767667",
+    "phone_landline": "+97235353003",
+    "phone_landline_display": "03-5353003",
+    "email": "info@hipsterstyle.co.il",
+    "whatsapp": "https://wa.me/972529767667"
+  },
+  "brand": {
+    "name_he": "\u05d4\u05d9\u05e4\u05e1\u05d8\u05e8",
+    "name_en": "Hipster",
+    "tagline_he": "\u05d4\u05d9\u05e4\u05e1\u05d8\u05e8 \u05d4\u05d5\u05d0 \u05d7\u05dc\u05d5\u05dd \u05e9\u05dc\u05e0\u05d5 \u05e9\u05de\u05ea\u05d2\u05e9\u05dd \u05db\u05dc \u05d9\u05d5\u05dd \u05de\u05d7\u05d3\u05e9",
+    "description_he": "\u05de\u05d5\u05ea\u05d2 \u05d0\u05d5\u05e4\u05e0\u05ea \u05d9\u05dc\u05d3\u05d9\u05dd \u05d9\u05e9\u05e8\u05d0\u05dc\u05d9 \u2014 \u05e1\u05d8\u05d9\u05d9\u05dc \u05e9\u05d5\u05e0\u05d4 \u05de\u05db\u05d5\u05dc\u05dd",
+    "site": "https://hipsterstyle.co.il/",
+    "about_url": "https://hipsterstyle.co.il/pages/%D7%9E%D7%99-%D7%90%D7%A0%D7%97%D7%A0%D7%95",
+    "contact_url": "https://hipsterstyle.co.il/pages/contact",
+    "logo_url": "https://hipsterstyle.co.il/cdn/shop/files/hipster_logo_black.png"
+  },
+  "tbd_resolution": {
+    "about_page": "https://hipsterstyle.co.il/pages/%D7%9E%D7%99-%D7%90%D7%A0%D7%97%D7%A0%D7%95",
+    "gallery_page": "NO EQUIVALENT -- use collections or homepage",
+    "contact_page": "https://hipsterstyle.co.il/pages/contact",
+    "product_urls": "6 products verified -- see products array",
+    "phone_mobile": "+972529767667 (052-9767667)",
+    "phone_landline": "+97235353003 (03-5353003)",
+    "email": "info@hipsterstyle.co.il",
+    "facebook_profile": "https://www.facebook.com/HipsterBabyCollection",
+    "instagram_profile": "https://www.instagram.com/hipster.style/",
+    "brand_name_he": "\u05d4\u05d9\u05e4\u05e1\u05d8\u05e8",
+    "brand_name_en": "Hipster",
+    "author_portrait": "Use brand logo (hipster_logo_black.png) -- different brand from oritmartin",
+    "product_images": "6 images uploaded to Supabase -- see products array image fields",
+    "business_description_he": "\u05de\u05d5\u05ea\u05d2 \u05d0\u05d5\u05e4\u05e0\u05ea \u05d9\u05dc\u05d3\u05d9\u05dd \u05d9\u05e9\u05e8\u05d0\u05dc\u05d9 \u2014 \u05e1\u05d8\u05d9\u05d9\u05dc \u05e9\u05d5\u05e0\u05d4 \u05de\u05db\u05d5\u05dc\u05dd",
+    "youtube_channel": "NOT FOUND -- omit from template"
+  }
+}
