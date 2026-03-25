@@ -28,14 +28,14 @@
 
 ### Product Integration
 
-- [ ] **PROD-01**: Firecrawl discovers real product pages from hipsterstyle.co.il inner pages
-- [ ] **PROD-02**: Only products relevant to article topic are selected
+- [x] **PROD-01**: Firecrawl discovers real product pages from hipsterstyle.co.il inner pages
+- [x] **PROD-02**: Only products relevant to article topic are selected
 - [ ] **PROD-03**: Product cards display image above, text/title below in separate area
 - [ ] **PROD-04**: All product cards are uniform size and aligned
 - [ ] **PROD-05**: No text overlay on product images, clear spacing between image and text
 - [ ] **PROD-06**: Images never cut, broken, or distorted — use img tags with object-fit
 - [ ] **PROD-07**: No empty cards, no cards without images, no duplicate images
-- [ ] **PROD-08**: Links go to real product pages — no invented URLs
+- [x] **PROD-08**: Links go to real product pages — no invented URLs
 - [ ] **PROD-09**: No prices displayed (link to live pages for current pricing)
 - [ ] **PROD-10**: Unstable images hosted via Supabase with stable public URLs
 
@@ -156,14 +156,14 @@
 | NAV-05 | Phase 4 | Pending |
 | NAV-06 | Phase 4 | Pending |
 | NAV-07 | Phase 4 | Pending |
-| PROD-01 | Phase 2 | Pending |
-| PROD-02 | Phase 2 | Pending |
+| PROD-01 | Phase 2 | Complete |
+| PROD-02 | Phase 2 | Complete |
 | PROD-03 | Phase 5 | Pending |
 | PROD-04 | Phase 5 | Pending |
 | PROD-05 | Phase 5 | Pending |
 | PROD-06 | Phase 5 | Pending |
 | PROD-07 | Phase 5 | Pending |
-| PROD-08 | Phase 2 | Pending |
+| PROD-08 | Phase 2 | Complete |
 | PROD-09 | Phase 5 | Pending |
 | PROD-10 | Phase 5 | Pending |
 | FAQ-01 | Phase 6 | Pending |

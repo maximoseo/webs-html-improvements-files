@@ -55,7 +55,7 @@ Plans:
 **Plans**: 2 plans
 
 Plans:
-- [ ] 02-01-PLAN.md -- Fetch product data from Shopify JSON API, verify URLs, download images (Wave 1)
+- [x] 02-01-PLAN.md -- Fetch product data from Shopify JSON API, verify URLs, download images (Wave 1)
 - [ ] 02-02-PLAN.md -- Upload images to Supabase, verify social/contact URLs, assemble consolidated discovery JSON (Wave 2)
 
 ### Phase 3: Template Foundation & Article Structure
