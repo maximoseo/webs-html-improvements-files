@@ -56,7 +56,7 @@ Plans:
 
 Plans:
 - [x] 02-01-PLAN.md -- Fetch product data from Shopify JSON API, verify URLs, download images (Wave 1)
-- [ ] 02-02-PLAN.md -- Upload images to Supabase, verify social/contact URLs, assemble consolidated discovery JSON (Wave 2)
+- [x] 02-02-PLAN.md -- Upload images to Supabase, verify social/contact URLs, assemble consolidated discovery JSON (Wave 2)
 
 ### Phase 3: Template Foundation & Article Structure
 **Goal**: A WordPress-safe article skeleton with RTL, inline CSS, semantic headings, and responsive layout is ready for section content

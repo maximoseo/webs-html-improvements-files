@@ -53,9 +53,9 @@
 
 - [ ] **AUTH-01**: About the Author section is the final section — nothing appears after it
 - [ ] **AUTH-02**: Author section includes logo image, visually centered and balanced
-- [ ] **AUTH-03**: Social links with correct verified URLs
-- [ ] **AUTH-04**: Firecrawl verifies real active social profiles and YouTube channel
-- [ ] **AUTH-05**: Only verified real profiles added — no invented links
+- [x] **AUTH-03**: Social links with correct verified URLs
+- [x] **AUTH-04**: Firecrawl verifies real active social profiles and YouTube channel
+- [x] **AUTH-05**: Only verified real profiles added — no invented links
 - [ ] **AUTH-06**: Brand-color hover on each social network icon
 - [ ] **AUTH-07**: Social area is elegant and non-spammy
 
@@ -175,9 +175,9 @@
 | FAQ-07 | Phase 6 | Pending |
 | AUTH-01 | Phase 7 | Pending |
 | AUTH-02 | Phase 7 | Pending |
-| AUTH-03 | Phase 2 | Pending |
-| AUTH-04 | Phase 2 | Pending |
-| AUTH-05 | Phase 2 | Pending |
+| AUTH-03 | Phase 2 | Complete |
+| AUTH-04 | Phase 2 | Complete |
+| AUTH-05 | Phase 2 | Complete |
 | AUTH-06 | Phase 7 | Pending |
 | AUTH-07 | Phase 7 | Pending |
 | FLOAT-01 | Phase 7 | Pending |
