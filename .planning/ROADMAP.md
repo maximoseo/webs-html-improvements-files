@@ -161,7 +161,7 @@ Plans:
 **Plans**: 1 plan
 
 Plans:
-- [ ] 09-01-PLAN.md -- Rebuild prompt TXT with exact injection block + update workflow JSON aligned to new template (Wave 1)
+- [x] 09-01-PLAN.md -- Rebuild prompt TXT with exact injection block + update workflow JSON aligned to new template (Wave 1)
 
 ### Phase 10: QA Validation & File Delivery
 **Goal**: All three deliverables are validated in WordPress, packaged with correct dated filenames, and delivered to local path and Dropbox

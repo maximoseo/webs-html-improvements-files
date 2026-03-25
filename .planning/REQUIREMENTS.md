@@ -69,14 +69,14 @@
 
 ### N8N Integration
 
-- [ ] **N8N-01**: Improved N8N Prompt TXT contains exact injection block (non-negotiable)
-- [ ] **N8N-02**: Products injection: `{{ JSON.stringify($json["products"], null, 2) }}`
-- [ ] **N8N-03**: Content injection: `{{ $("Writing Blog").first().json.output }}`
-- [ ] **N8N-04**: Hebrew instruction line present exactly as specified
-- [ ] **N8N-05**: Image URL lines for sections 1-4 and hero exactly as specified
-- [ ] **N8N-06**: No extra JSON/N8N injection lines beyond the specified block
-- [ ] **N8N-07**: Workflow JSON updated and aligned to new prompt + template
-- [ ] **N8N-08**: Two-phase LLM generation pattern (content then HTML rendering)
+- [x] **N8N-01**: Improved N8N Prompt TXT contains exact injection block (non-negotiable)
+- [x] **N8N-02**: Products injection: `{{ JSON.stringify($json["products"], null, 2) }}`
+- [x] **N8N-03**: Content injection: `{{ $("Writing Blog").first().json.output }}`
+- [x] **N8N-04**: Hebrew instruction line present exactly as specified
+- [x] **N8N-05**: Image URL lines for sections 1-4 and hero exactly as specified
+- [x] **N8N-06**: No extra JSON/N8N injection lines beyond the specified block
+- [x] **N8N-07**: Workflow JSON updated and aligned to new prompt + template
+- [x] **N8N-08**: Two-phase LLM generation pattern (content then HTML rendering)
 
 ### SEO & Schema
 
@@ -185,14 +185,14 @@
 | FLOAT-03 | Phase 7 | Complete |
 | FLOAT-04 | Phase 7 | Complete |
 | FLOAT-05 | Phase 7 | Complete |
-| N8N-01 | Phase 9 | Pending |
-| N8N-02 | Phase 9 | Pending |
-| N8N-03 | Phase 9 | Pending |
-| N8N-04 | Phase 9 | Pending |
-| N8N-05 | Phase 9 | Pending |
-| N8N-06 | Phase 9 | Pending |
-| N8N-07 | Phase 9 | Pending |
-| N8N-08 | Phase 9 | Pending |
+| N8N-01 | Phase 9 | Complete |
+| N8N-02 | Phase 9 | Complete |
+| N8N-03 | Phase 9 | Complete |
+| N8N-04 | Phase 9 | Complete |
+| N8N-05 | Phase 9 | Complete |
+| N8N-06 | Phase 9 | Complete |
+| N8N-07 | Phase 9 | Complete |
+| N8N-08 | Phase 9 | Complete |
 | SEO-01 | Phase 8 | Complete |
 | SEO-02 | Phase 8 | Complete |
 | SEO-03 | Phase 8 | Complete |
