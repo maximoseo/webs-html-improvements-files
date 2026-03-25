@@ -84,12 +84,10 @@ Plans:
   3. TOC title reads "תוכן עניינים" in Hebrew
   4. Every TOC link points to a correct heading ID anchor that survives WordPress processing
   5. TOC items show underline + subtle color shift on hover via inline JS handlers
-**Plans**: TBD
+**Plans**: 1 plan
 
 Plans:
-- [ ] 04-01: TOC structure with details/summary and closed default state
-- [ ] 04-02: TOC anchor generation and heading ID mapping
-- [ ] 04-03: TOC hover states and open/close animation
+- [ ] 04-01-PLAN.md -- Full TOC: anchor links to all H2 sections, hover states, plus/minus indicator (Wave 1)
 
 ### Phase 5: Product Card Integration
 **Goal**: Real products from hipsterstyle.co.il display in uniform, WordPress-safe cards with stable images
@@ -204,7 +202,7 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6 -> 7 -> 8 -> 9 -> 10
 | 1. Baseline Audit & WordPress Risk Assessment | 3/3 | Complete | 2026-03-25 |
 | 2. Firecrawl Product Discovery & Social Verification | 2/2 | Complete | 2026-03-25 |
 | 3. Template Foundation & Article Structure | 0/2 | Planned | - |
-| 4. Navigation & Table of Contents | 0/3 | Not started | - |
+| 4. Navigation & Table of Contents | 0/1 | Planned | - |
 | 5. Product Card Integration | 0/3 | Not started | - |
 | 6. FAQ Section & Accordions | 0/3 | Not started | - |
 | 7. Author Section, Social Links & Floating UI | 0/4 | Not started | - |
