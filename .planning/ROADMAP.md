@@ -68,12 +68,11 @@ Plans:
   3. Responsive layout works using clamp()/percentages/auto-fill with no media queries
   4. Semantic H2/H3 heading hierarchy is in place with premium editorial whitespace and typography
   5. No external CSS/JS dependencies, no CDN links, no HTML comments, no markdown, no code fences
-**Plans**: TBD
+**Plans**: 2 plans
 
 Plans:
-- [ ] 03-01: Article wrapper, RTL setup, and base inline CSS architecture
-- [ ] 03-02: Responsive layout system using clamp() and percentages
-- [ ] 03-03: Semantic heading hierarchy and editorial typography
+- [ ] 03-01-PLAN.md -- Article wrapper, RTL setup, inline CSS architecture, and "In This Article" summary card (Wave 1)
+- [ ] 03-02-PLAN.md -- Semantic heading hierarchy, responsive clamp() typography, editorial spacing, and stub sections for Phases 4-8 (Wave 2)
 
 ### Phase 4: Navigation & Table of Contents
 **Goal**: Users can navigate the article via a polished, WordPress-safe TOC that starts closed and links to correct headings
@@ -203,8 +202,8 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6 -> 7 -> 8 -> 9 -> 10
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Baseline Audit & WordPress Risk Assessment | 3/3 | Complete | 2026-03-25 |
-| 2. Firecrawl Product Discovery & Social Verification | 0/2 | Planned | - |
-| 3. Template Foundation & Article Structure | 0/3 | Not started | - |
+| 2. Firecrawl Product Discovery & Social Verification | 2/2 | Complete | 2026-03-25 |
+| 3. Template Foundation & Article Structure | 0/2 | Planned | - |
 | 4. Navigation & Table of Contents | 0/3 | Not started | - |
 | 5. Product Card Integration | 0/3 | Not started | - |
 | 6. FAQ Section & Accordions | 0/3 | Not started | - |
