@@ -102,7 +102,7 @@ Plans:
 **Plans**: 1 plan
 
 Plans:
-- [ ] 05-01-PLAN.md -- 6 product cards with inline-block layout, Supabase images, real URLs, no prices (Wave 1)
+- [x] 05-01-PLAN.md -- 6 product cards with inline-block layout, Supabase images, real URLs, no prices (Wave 1)
 
 ### Phase 6: FAQ Section & Accordions
 **Goal**: FAQ section renders as individual closed accordions with polished animations, positioned before author section

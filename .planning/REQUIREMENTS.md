@@ -30,14 +30,14 @@
 
 - [x] **PROD-01**: Firecrawl discovers real product pages from hipsterstyle.co.il inner pages
 - [x] **PROD-02**: Only products relevant to article topic are selected
-- [ ] **PROD-03**: Product cards display image above, text/title below in separate area
-- [ ] **PROD-04**: All product cards are uniform size and aligned
-- [ ] **PROD-05**: No text overlay on product images, clear spacing between image and text
-- [ ] **PROD-06**: Images never cut, broken, or distorted — use img tags with object-fit
-- [ ] **PROD-07**: No empty cards, no cards without images, no duplicate images
+- [x] **PROD-03**: Product cards display image above, text/title below in separate area
+- [x] **PROD-04**: All product cards are uniform size and aligned
+- [x] **PROD-05**: No text overlay on product images, clear spacing between image and text
+- [x] **PROD-06**: Images never cut, broken, or distorted — use img tags with object-fit
+- [x] **PROD-07**: No empty cards, no cards without images, no duplicate images
 - [x] **PROD-08**: Links go to real product pages — no invented URLs
-- [ ] **PROD-09**: No prices displayed (link to live pages for current pricing)
-- [ ] **PROD-10**: Unstable images hosted via Supabase with stable public URLs
+- [x] **PROD-09**: No prices displayed (link to live pages for current pricing)
+- [x] **PROD-10**: Unstable images hosted via Supabase with stable public URLs
 
 ### FAQ Section
 
@@ -158,14 +158,14 @@
 | NAV-07 | Phase 4 | Complete |
 | PROD-01 | Phase 2 | Complete |
 | PROD-02 | Phase 2 | Complete |
-| PROD-03 | Phase 5 | Pending |
-| PROD-04 | Phase 5 | Pending |
-| PROD-05 | Phase 5 | Pending |
-| PROD-06 | Phase 5 | Pending |
-| PROD-07 | Phase 5 | Pending |
+| PROD-03 | Phase 5 | Complete |
+| PROD-04 | Phase 5 | Complete |
+| PROD-05 | Phase 5 | Complete |
+| PROD-06 | Phase 5 | Complete |
+| PROD-07 | Phase 5 | Complete |
 | PROD-08 | Phase 2 | Complete |
-| PROD-09 | Phase 5 | Pending |
-| PROD-10 | Phase 5 | Pending |
+| PROD-09 | Phase 5 | Complete |
+| PROD-10 | Phase 5 | Complete |
 | FAQ-01 | Phase 6 | Pending |
 | FAQ-02 | Phase 6 | Pending |
 | FAQ-03 | Phase 6 | Pending |
