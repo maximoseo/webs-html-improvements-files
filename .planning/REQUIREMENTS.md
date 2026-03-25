@@ -94,14 +94,14 @@
 
 ### WordPress Safety
 
-- [ ] **WP-01**: Inline CSS only — survives wp_kses_post() sanitization
-- [ ] **WP-02**: No style blocks, no external CSS, no external JS
-- [ ] **WP-03**: Accordion stable inside WordPress post content
-- [ ] **WP-04**: Anchor IDs reliable after WordPress processing
-- [ ] **WP-05**: Floating buttons do not conflict with theme UI
-- [ ] **WP-06**: Images use durable URLs (Supabase-backed if needed)
-- [ ] **WP-07**: No hidden text risk on hover states
-- [ ] **WP-08**: RTL alignment verified for WordPress rendering
+- [x] **WP-01**: Inline CSS only — survives wp_kses_post() sanitization
+- [x] **WP-02**: No style blocks, no external CSS, no external JS
+- [x] **WP-03**: Accordion stable inside WordPress post content
+- [x] **WP-04**: Anchor IDs reliable after WordPress processing
+- [x] **WP-05**: Floating buttons do not conflict with theme UI
+- [x] **WP-06**: Images use durable URLs (Supabase-backed if needed)
+- [x] **WP-07**: No hidden text risk on hover states
+- [x] **WP-08**: RTL alignment verified for WordPress rendering
 
 ### File Delivery
 
@@ -111,7 +111,7 @@
 - [ ] **DEL-04**: Files saved to ./claude-code/Files/ locally
 - [ ] **DEL-05**: Files uploaded to Dropbox target directory
 - [ ] **DEL-06**: Old files deleted from Dropbox before upload
-- [ ] **DEL-07**: Before/after audit summary produced
+- [x] **DEL-07**: Before/after audit summary produced
 - [ ] **DEL-08**: WordPress rendering risk review completed
 
 ## v2 Requirements
@@ -201,21 +201,21 @@
 | HOVER-03 | Phase 7 | Pending |
 | HOVER-04 | Phase 7 | Pending |
 | HOVER-05 | Phase 8 | Pending |
-| WP-01 | Phase 1 | Pending |
-| WP-02 | Phase 1 | Pending |
-| WP-03 | Phase 1 | Pending |
-| WP-04 | Phase 1 | Pending |
-| WP-05 | Phase 1 | Pending |
-| WP-06 | Phase 1 | Pending |
-| WP-07 | Phase 1 | Pending |
-| WP-08 | Phase 1 | Pending |
+| WP-01 | Phase 1 | Complete |
+| WP-02 | Phase 1 | Complete |
+| WP-03 | Phase 1 | Complete |
+| WP-04 | Phase 1 | Complete |
+| WP-05 | Phase 1 | Complete |
+| WP-06 | Phase 1 | Complete |
+| WP-07 | Phase 1 | Complete |
+| WP-08 | Phase 1 | Complete |
 | DEL-01 | Phase 10 | Pending |
 | DEL-02 | Phase 10 | Pending |
 | DEL-03 | Phase 10 | Pending |
 | DEL-04 | Phase 10 | Pending |
 | DEL-05 | Phase 10 | Pending |
 | DEL-06 | Phase 10 | Pending |
-| DEL-07 | Phase 1 | Pending |
+| DEL-07 | Phase 1 | Complete |
 | DEL-08 | Phase 1 | Pending |
 
 **Coverage:**
