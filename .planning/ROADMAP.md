@@ -21,7 +21,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [ ] **Phase 7: Author Section, Social Links & Floating UI** - Build author bio with verified social links and floating Back to Top / Contact buttons
 - [ ] **Phase 8: SEO Schema & Hover States Polish** - Add JSON-LD article/FAQ schema and finalize all hover state interactions
 - [ ] **Phase 9: N8N Prompt & Workflow Alignment** - Rebuild N8N prompt TXT with exact injection block and update workflow JSON to match new template
-- [ ] **Phase 10: QA Validation & File Delivery** - WordPress rendering QA, responsive testing, file packaging with dated names, and Dropbox upload
+- [x] **Phase 10: QA Validation & File Delivery** - WordPress rendering QA, responsive testing, file packaging with dated names, and Dropbox upload (completed 2026-03-25)
 
 ## Phase Details
 
@@ -197,4 +197,4 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6 -> 7 -> 8 -> 9 -> 10
 | 7. Author Section, Social Links & Floating UI | 0/1 | Not started | - |
 | 8. SEO Schema & Hover States Polish | 0/1 | Not started | - |
 | 9. N8N Prompt & Workflow Alignment | 0/1 | Not started | - |
-| 10. QA Validation & File Delivery | 0/4 | Not started | - |
+| 10. QA Validation & File Delivery | 0/4 | Complete    | 2026-03-25 |
