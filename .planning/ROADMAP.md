@@ -72,7 +72,7 @@ Plans:
 
 Plans:
 - [x] 03-01-PLAN.md -- Article wrapper, RTL setup, inline CSS architecture, and "In This Article" summary card (Wave 1)
-- [ ] 03-02-PLAN.md -- Semantic heading hierarchy, responsive clamp() typography, editorial spacing, and stub sections for Phases 4-8 (Wave 2)
+- [x] 03-02-PLAN.md -- Semantic heading hierarchy, responsive clamp() typography, editorial spacing, and stub sections for Phases 4-8 (Wave 2)
 
 ### Phase 4: Navigation & Table of Contents
 **Goal**: Users can navigate the article via a polished, WordPress-safe TOC that starts closed and links to correct headings

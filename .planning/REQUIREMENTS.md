@@ -10,9 +10,9 @@
 - [x] **TMPL-01**: Article wrapped in `<article>` tags with no content outside wrapper
 - [x] **TMPL-02**: Full RTL Hebrew layout with dir="rtl" and lang="he"
 - [x] **TMPL-03**: All CSS delivered via inline style attributes — zero `<style>` blocks
-- [ ] **TMPL-04**: Responsive layout without media queries using clamp()/percentages/auto-fill
-- [ ] **TMPL-05**: Semantic H2/H3 heading hierarchy throughout article
-- [ ] **TMPL-06**: Premium editorial whitespace, typography, and visual hierarchy
+- [x] **TMPL-04**: Responsive layout without media queries using clamp()/percentages/auto-fill
+- [x] **TMPL-05**: Semantic H2/H3 heading hierarchy throughout article
+- [x] **TMPL-06**: Premium editorial whitespace, typography, and visual hierarchy
 - [x] **TMPL-07**: No external CSS/JS dependencies, no CDN links
 - [x] **TMPL-08**: No HTML comments, no markdown, no code fences in output
 
@@ -144,9 +144,9 @@
 | TMPL-01 | Phase 3 | Complete |
 | TMPL-02 | Phase 3 | Complete |
 | TMPL-03 | Phase 3 | Complete |
-| TMPL-04 | Phase 3 | Pending |
-| TMPL-05 | Phase 3 | Pending |
-| TMPL-06 | Phase 3 | Pending |
+| TMPL-04 | Phase 3 | Complete |
+| TMPL-05 | Phase 3 | Complete |
+| TMPL-06 | Phase 3 | Complete |
 | TMPL-07 | Phase 3 | Complete |
 | TMPL-08 | Phase 3 | Complete |
 | NAV-01 | Phase 4 | Pending |
