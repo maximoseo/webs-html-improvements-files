@@ -41,13 +41,13 @@
 
 ### FAQ Section
 
-- [ ] **FAQ-01**: FAQ section positioned before author section
-- [ ] **FAQ-02**: No numbering on FAQ questions
-- [ ] **FAQ-03**: Each question is separate accordion item using details/summary
-- [ ] **FAQ-04**: All FAQ items start closed by default
-- [ ] **FAQ-05**: Clean WordPress-safe accordion structure
-- [ ] **FAQ-06**: Polished plus/minus indicator with subtle open/close animation
-- [ ] **FAQ-07**: Hover emphasis on FAQ headers without hurting readability
+- [x] **FAQ-01**: FAQ section positioned before author section
+- [x] **FAQ-02**: No numbering on FAQ questions
+- [x] **FAQ-03**: Each question is separate accordion item using details/summary
+- [x] **FAQ-04**: All FAQ items start closed by default
+- [x] **FAQ-05**: Clean WordPress-safe accordion structure
+- [x] **FAQ-06**: Polished plus/minus indicator with subtle open/close animation
+- [x] **FAQ-07**: Hover emphasis on FAQ headers without hurting readability
 
 ### Author & Social
 
@@ -87,7 +87,7 @@
 ### Hover States
 
 - [x] **HOVER-01**: TOC items: underline + subtle color shift on hover
-- [ ] **HOVER-02**: FAQ headers: subtle emphasis without hurting readability
+- [x] **HOVER-02**: FAQ headers: subtle emphasis without hurting readability
 - [ ] **HOVER-03**: CTA button: premium professional hover effect
 - [ ] **HOVER-04**: Social links: network brand-color hover
 - [ ] **HOVER-05**: All hover states remain readable and WordPress-safe (inline JS handlers)
@@ -166,13 +166,13 @@
 | PROD-08 | Phase 2 | Complete |
 | PROD-09 | Phase 5 | Complete |
 | PROD-10 | Phase 5 | Complete |
-| FAQ-01 | Phase 6 | Pending |
-| FAQ-02 | Phase 6 | Pending |
-| FAQ-03 | Phase 6 | Pending |
-| FAQ-04 | Phase 6 | Pending |
-| FAQ-05 | Phase 6 | Pending |
-| FAQ-06 | Phase 6 | Pending |
-| FAQ-07 | Phase 6 | Pending |
+| FAQ-01 | Phase 6 | Complete |
+| FAQ-02 | Phase 6 | Complete |
+| FAQ-03 | Phase 6 | Complete |
+| FAQ-04 | Phase 6 | Complete |
+| FAQ-05 | Phase 6 | Complete |
+| FAQ-06 | Phase 6 | Complete |
+| FAQ-07 | Phase 6 | Complete |
 | AUTH-01 | Phase 7 | Pending |
 | AUTH-02 | Phase 7 | Pending |
 | AUTH-03 | Phase 2 | Complete |
@@ -197,7 +197,7 @@
 | SEO-02 | Phase 8 | Pending |
 | SEO-03 | Phase 8 | Pending |
 | HOVER-01 | Phase 4 | Complete |
-| HOVER-02 | Phase 6 | Pending |
+| HOVER-02 | Phase 6 | Complete |
 | HOVER-03 | Phase 7 | Pending |
 | HOVER-04 | Phase 7 | Pending |
 | HOVER-05 | Phase 8 | Pending |

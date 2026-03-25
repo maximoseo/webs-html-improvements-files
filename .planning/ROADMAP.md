@@ -117,7 +117,7 @@ Plans:
 **Plans**: 1 plan
 
 Plans:
-- [ ] 06-01-PLAN.md -- Replace FAQ stub with 6 details/summary accordion items, plus/minus toggle, hover emphasis (Wave 1)
+- [x] 06-01-PLAN.md -- Replace FAQ stub with 6 details/summary accordion items, plus/minus toggle, hover emphasis (Wave 1)
 
 ### Phase 7: Author Section, Social Links & Floating UI
 **Goal**: Author bio with verified social links is the final article section, and floating buttons provide persistent navigation
