@@ -114,12 +114,10 @@ Plans:
   3. All FAQ items start closed by default
   4. Plus/minus indicator animates smoothly on open/close
   5. FAQ headers show subtle emphasis on hover without hurting readability
-**Plans**: TBD
+**Plans**: 1 plan
 
 Plans:
-- [ ] 06-01: FAQ section structure with individual details/summary accordions
-- [ ] 06-02: FAQ open/close animation and plus/minus indicator
-- [ ] 06-03: FAQ hover states and WordPress safety validation
+- [ ] 06-01-PLAN.md -- Replace FAQ stub with 6 details/summary accordion items, plus/minus toggle, hover emphasis (Wave 1)
 
 ### Phase 7: Author Section, Social Links & Floating UI
 **Goal**: Author bio with verified social links is the final article section, and floating buttons provide persistent navigation
@@ -202,7 +200,7 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6 -> 7 -> 8 -> 9 -> 10
 | 3. Template Foundation & Article Structure | 2/2 | Complete | 2026-03-25 |
 | 4. Navigation & Table of Contents | 1/1 | Complete | 2026-03-25 |
 | 5. Product Card Integration | 0/1 | Planned | - |
-| 6. FAQ Section & Accordions | 0/3 | Not started | - |
+| 6. FAQ Section & Accordions | 0/1 | Planned | - |
 | 7. Author Section, Social Links & Floating UI | 0/4 | Not started | - |
 | 8. SEO Schema & Hover States Polish | 0/3 | Not started | - |
 | 9. N8N Prompt & Workflow Alignment | 0/3 | Not started | - |
