@@ -146,7 +146,7 @@ Plans:
 **Plans**: 1 plan
 
 Plans:
-- [ ] 08-01-PLAN.md -- JSON-LD Article + FAQ schema markup, heading hierarchy verification, and cross-section hover state audit (Wave 1)
+- [x] 08-01-PLAN.md -- JSON-LD Article + FAQ schema markup, heading hierarchy verification, and cross-section hover state audit (Wave 1)
 
 ### Phase 9: N8N Prompt & Workflow Alignment
 **Goal**: N8N prompt TXT contains the exact injection block and workflow JSON produces output matching the new template
