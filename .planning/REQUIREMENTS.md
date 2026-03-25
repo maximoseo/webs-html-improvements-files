@@ -141,23 +141,88 @@
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| TMPL-01 through TMPL-08 | Phase TBD | Pending |
-| NAV-01 through NAV-07 | Phase TBD | Pending |
-| PROD-01 through PROD-10 | Phase TBD | Pending |
-| FAQ-01 through FAQ-07 | Phase TBD | Pending |
-| AUTH-01 through AUTH-07 | Phase TBD | Pending |
-| FLOAT-01 through FLOAT-05 | Phase TBD | Pending |
-| N8N-01 through N8N-08 | Phase TBD | Pending |
-| SEO-01 through SEO-03 | Phase TBD | Pending |
-| HOVER-01 through HOVER-05 | Phase TBD | Pending |
-| WP-01 through WP-08 | Phase TBD | Pending |
-| DEL-01 through DEL-08 | Phase TBD | Pending |
+| TMPL-01 | Phase 3 | Pending |
+| TMPL-02 | Phase 3 | Pending |
+| TMPL-03 | Phase 3 | Pending |
+| TMPL-04 | Phase 3 | Pending |
+| TMPL-05 | Phase 3 | Pending |
+| TMPL-06 | Phase 3 | Pending |
+| TMPL-07 | Phase 3 | Pending |
+| TMPL-08 | Phase 3 | Pending |
+| NAV-01 | Phase 4 | Pending |
+| NAV-02 | Phase 4 | Pending |
+| NAV-03 | Phase 4 | Pending |
+| NAV-04 | Phase 4 | Pending |
+| NAV-05 | Phase 4 | Pending |
+| NAV-06 | Phase 4 | Pending |
+| NAV-07 | Phase 4 | Pending |
+| PROD-01 | Phase 2 | Pending |
+| PROD-02 | Phase 2 | Pending |
+| PROD-03 | Phase 5 | Pending |
+| PROD-04 | Phase 5 | Pending |
+| PROD-05 | Phase 5 | Pending |
+| PROD-06 | Phase 5 | Pending |
+| PROD-07 | Phase 5 | Pending |
+| PROD-08 | Phase 2 | Pending |
+| PROD-09 | Phase 5 | Pending |
+| PROD-10 | Phase 5 | Pending |
+| FAQ-01 | Phase 6 | Pending |
+| FAQ-02 | Phase 6 | Pending |
+| FAQ-03 | Phase 6 | Pending |
+| FAQ-04 | Phase 6 | Pending |
+| FAQ-05 | Phase 6 | Pending |
+| FAQ-06 | Phase 6 | Pending |
+| FAQ-07 | Phase 6 | Pending |
+| AUTH-01 | Phase 7 | Pending |
+| AUTH-02 | Phase 7 | Pending |
+| AUTH-03 | Phase 2 | Pending |
+| AUTH-04 | Phase 2 | Pending |
+| AUTH-05 | Phase 2 | Pending |
+| AUTH-06 | Phase 7 | Pending |
+| AUTH-07 | Phase 7 | Pending |
+| FLOAT-01 | Phase 7 | Pending |
+| FLOAT-02 | Phase 7 | Pending |
+| FLOAT-03 | Phase 7 | Pending |
+| FLOAT-04 | Phase 7 | Pending |
+| FLOAT-05 | Phase 7 | Pending |
+| N8N-01 | Phase 9 | Pending |
+| N8N-02 | Phase 9 | Pending |
+| N8N-03 | Phase 9 | Pending |
+| N8N-04 | Phase 9 | Pending |
+| N8N-05 | Phase 9 | Pending |
+| N8N-06 | Phase 9 | Pending |
+| N8N-07 | Phase 9 | Pending |
+| N8N-08 | Phase 9 | Pending |
+| SEO-01 | Phase 8 | Pending |
+| SEO-02 | Phase 8 | Pending |
+| SEO-03 | Phase 8 | Pending |
+| HOVER-01 | Phase 4 | Pending |
+| HOVER-02 | Phase 6 | Pending |
+| HOVER-03 | Phase 7 | Pending |
+| HOVER-04 | Phase 7 | Pending |
+| HOVER-05 | Phase 8 | Pending |
+| WP-01 | Phase 1 | Pending |
+| WP-02 | Phase 1 | Pending |
+| WP-03 | Phase 1 | Pending |
+| WP-04 | Phase 1 | Pending |
+| WP-05 | Phase 1 | Pending |
+| WP-06 | Phase 1 | Pending |
+| WP-07 | Phase 1 | Pending |
+| WP-08 | Phase 1 | Pending |
+| DEL-01 | Phase 10 | Pending |
+| DEL-02 | Phase 10 | Pending |
+| DEL-03 | Phase 10 | Pending |
+| DEL-04 | Phase 10 | Pending |
+| DEL-05 | Phase 10 | Pending |
+| DEL-06 | Phase 10 | Pending |
+| DEL-07 | Phase 1 | Pending |
+| DEL-08 | Phase 1 | Pending |
 
 **Coverage:**
-- v1 requirements: 62 total
-- Mapped to phases: 0 (pending roadmap)
-- Unmapped: 62
+- v1 requirements: 76 total
+- Mapped to phases: 76
+- Unmapped: 0
 
 ---
 *Requirements defined: 2026-03-25*
-*Last updated: 2026-03-25 after initial definition*
+*Last updated: 2026-03-25 after roadmap creation*
