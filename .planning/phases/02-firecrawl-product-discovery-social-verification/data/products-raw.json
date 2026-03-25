@@ -1,0 +1,120 @@
+{
+  "fetched_at": "2026-03-25T19:13:24.796Z",
+  "source": "Shopify JSON API",
+  "products": [
+    {
+      "name_he": "חליפת סנדי",
+      "handle": "חליפת-סנדי",
+      "url": "https://hipsterstyle.co.il/products/%D7%97%D7%9C%D7%99%D7%A4%D7%AA-%D7%A1%D7%A0%D7%93%D7%99",
+      "url_verified": true,
+      "http_status": 200,
+      "shopify_image_url": "https://cdn.shopify.com/s/files/1/0733/0552/2470/files/product-1019749.jpg",
+      "local_image": "data/images/product-sandy.jpg",
+      "product_type": "",
+      "tags": [
+        "בנות",
+        "חג",
+        "טוטאל לוק",
+        "מרץ 2026",
+        "קיץ 2026"
+      ],
+      "category": "חליפות",
+      "description_snippet": "מידת דוגמנית 6-7 שנים"
+    },
+    {
+      "name_he": "חליפת הנרי",
+      "handle": "חליפת-הנרי",
+      "url": "https://hipsterstyle.co.il/products/%D7%97%D7%9C%D7%99%D7%A4%D7%AA-%D7%94%D7%A0%D7%A8%D7%99",
+      "url_verified": true,
+      "http_status": 200,
+      "shopify_image_url": "https://cdn.shopify.com/s/files/1/0733/0552/2470/files/product-6642878.jpg",
+      "local_image": "data/images/product-henry.jpg",
+      "product_type": "",
+      "tags": [
+        "בנים",
+        "חג",
+        "טוטאל לוק",
+        "מרץ 2026",
+        "קיץ 2026"
+      ],
+      "category": "חליפות",
+      "description_snippet": "חליפה עם חולצה מכופתרת ומכנס קצר עם גומי ושרוך קיים לבנות חליפה תואמת מידת דוגמן 6-7 שנים"
+    },
+    {
+      "name_he": "חליפת נינו",
+      "handle": "חליפת-נינו",
+      "url": "https://hipsterstyle.co.il/products/%D7%97%D7%9C%D7%99%D7%A4%D7%AA-%D7%A0%D7%99%D7%A0%D7%95",
+      "url_verified": true,
+      "http_status": 200,
+      "shopify_image_url": "https://cdn.shopify.com/s/files/1/0733/0552/2470/files/product-9363795.jpg",
+      "local_image": "data/images/product-nino.jpg",
+      "product_type": "",
+      "tags": [
+        "בנים",
+        "חג",
+        "טוטאל לוק",
+        "מרץ 2026",
+        "קיץ 2026"
+      ],
+      "category": "חליפות",
+      "description_snippet": "מידת דוגמן 8 שנים"
+    },
+    {
+      "name_he": "חליפת מילה",
+      "handle": "חליפת-מילה",
+      "url": "https://hipsterstyle.co.il/products/%D7%97%D7%9C%D7%99%D7%A4%D7%AA-%D7%9E%D7%99%D7%9C%D7%94",
+      "url_verified": true,
+      "http_status": 200,
+      "shopify_image_url": "https://cdn.shopify.com/s/files/1/0733/0552/2470/files/product-8489663.jpg",
+      "local_image": "data/images/product-mila.jpg",
+      "product_type": "",
+      "tags": [
+        "בנות",
+        "חג",
+        "טוטאל לוק",
+        "מרץ 2026",
+        "קיץ 2026"
+      ],
+      "category": "חליפות",
+      "description_snippet": "מידת דוגמנית 6-7 שנים"
+    },
+    {
+      "name_he": "טישרט אלי",
+      "handle": "טישרט-אלי",
+      "url": "https://hipsterstyle.co.il/products/%D7%98%D7%99%D7%A9%D7%A8%D7%98-%D7%90%D7%9C%D7%99",
+      "url_verified": true,
+      "http_status": 200,
+      "shopify_image_url": "https://cdn.shopify.com/s/files/1/0733/0552/2470/files/product-8927069.jpg",
+      "local_image": "data/images/product-eli.jpg",
+      "product_type": "",
+      "tags": [
+        "בנים",
+        "חג",
+        "מרץ 2026",
+        "עליון",
+        "קיץ 2026"
+      ],
+      "category": "חולצות",
+      "description_snippet": "מידת דוגמן 7 שנים"
+    },
+    {
+      "name_he": "ג'ינס שיי",
+      "handle": "ג-ינס-שיי",
+      "url": "https://hipsterstyle.co.il/products/%D7%92-%D7%99%D7%A0%D7%A1-%D7%A9%D7%99%D7%99",
+      "url_verified": true,
+      "http_status": 200,
+      "shopify_image_url": "https://cdn.shopify.com/s/files/1/0733/0552/2470/files/4878hipster29.12.2518175.jpg",
+      "local_image": "data/images/product-shay.jpg",
+      "product_type": "",
+      "tags": [
+        "בנים",
+        "חג",
+        "מרץ 2026",
+        "קיץ 2026",
+        "תחתון"
+      ],
+      "category": "ג'ינסים",
+      "description_snippet": "ג'ינס גם גומי ושרוך להקטנה מידת דוגמן 7 שנים"
+    }
+  ]
+}
