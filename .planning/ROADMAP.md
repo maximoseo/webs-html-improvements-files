@@ -158,12 +158,10 @@ Plans:
   3. Hebrew instruction line and image URL lines for sections 1-4 + hero are present exactly as specified
   4. No extra JSON/N8N injection lines exist beyond the specified block
   5. Workflow JSON implements two-phase LLM generation (content then HTML rendering) aligned to new template
-**Plans**: TBD
+**Plans**: 1 plan
 
 Plans:
-- [ ] 09-01: N8N prompt TXT rebuild with exact injection block
-- [ ] 09-02: N8N workflow JSON update and alignment to new template
-- [ ] 09-03: Two-phase LLM generation pattern validation
+- [ ] 09-01-PLAN.md -- Rebuild prompt TXT with exact injection block + update workflow JSON aligned to new template (Wave 1)
 
 ### Phase 10: QA Validation & File Delivery
 **Goal**: All three deliverables are validated in WordPress, packaged with correct dated filenames, and delivered to local path and Dropbox
@@ -198,5 +196,5 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6 -> 7 -> 8 -> 9 -> 10
 | 6. FAQ Section & Accordions | 0/1 | Planned | - |
 | 7. Author Section, Social Links & Floating UI | 0/1 | Not started | - |
 | 8. SEO Schema & Hover States Polish | 0/1 | Not started | - |
-| 9. N8N Prompt & Workflow Alignment | 0/3 | Not started | - |
+| 9. N8N Prompt & Workflow Alignment | 0/1 | Not started | - |
 | 10. QA Validation & File Delivery | 0/4 | Not started | - |
