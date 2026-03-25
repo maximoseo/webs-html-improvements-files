@@ -52,12 +52,11 @@ Plans:
   3. All product URLs resolve to real pages on hipsterstyle.co.il
   4. Social profile URLs (Instagram, Facebook, YouTube, etc.) have been verified as active and real
   5. No invented or placeholder URLs exist in the extracted data
-**Plans**: TBD
+**Plans**: 2 plans
 
 Plans:
-- [ ] 02-01: Firecrawl product page discovery and extraction from hipsterstyle.co.il
-- [ ] 02-02: Product filtering and relevance validation
-- [ ] 02-03: Social profile and YouTube channel verification via Firecrawl
+- [ ] 02-01-PLAN.md -- Fetch product data from Shopify JSON API, verify URLs, download images (Wave 1)
+- [ ] 02-02-PLAN.md -- Upload images to Supabase, verify social/contact URLs, assemble consolidated discovery JSON (Wave 2)
 
 ### Phase 3: Template Foundation & Article Structure
 **Goal**: A WordPress-safe article skeleton with RTL, inline CSS, semantic headings, and responsive layout is ready for section content
@@ -203,8 +202,8 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6 -> 7 -> 8 -> 9 -> 10
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Baseline Audit & WordPress Risk Assessment | 0/3 | Planned | - |
-| 2. Firecrawl Product Discovery & Social Verification | 0/3 | Not started | - |
+| 1. Baseline Audit & WordPress Risk Assessment | 3/3 | Complete | 2026-03-25 |
+| 2. Firecrawl Product Discovery & Social Verification | 0/2 | Planned | - |
 | 3. Template Foundation & Article Structure | 0/3 | Not started | - |
 | 4. Navigation & Table of Contents | 0/3 | Not started | - |
 | 5. Product Card Integration | 0/3 | Not started | - |
