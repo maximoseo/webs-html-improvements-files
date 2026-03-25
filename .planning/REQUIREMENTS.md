@@ -112,7 +112,7 @@
 - [ ] **DEL-05**: Files uploaded to Dropbox target directory
 - [ ] **DEL-06**: Old files deleted from Dropbox before upload
 - [x] **DEL-07**: Before/after audit summary produced
-- [ ] **DEL-08**: WordPress rendering risk review completed
+- [x] **DEL-08**: WordPress rendering risk review completed
 
 ## v2 Requirements
 
@@ -216,7 +216,7 @@
 | DEL-05 | Phase 10 | Pending |
 | DEL-06 | Phase 10 | Pending |
 | DEL-07 | Phase 1 | Complete |
-| DEL-08 | Phase 1 | Pending |
+| DEL-08 | Phase 1 | Complete |
 
 **Coverage:**
 - v1 requirements: 76 total
