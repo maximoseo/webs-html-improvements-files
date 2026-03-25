@@ -51,21 +51,21 @@
 
 ### Author & Social
 
-- [ ] **AUTH-01**: About the Author section is the final section — nothing appears after it
-- [ ] **AUTH-02**: Author section includes logo image, visually centered and balanced
+- [x] **AUTH-01**: About the Author section is the final section — nothing appears after it
+- [x] **AUTH-02**: Author section includes logo image, visually centered and balanced
 - [x] **AUTH-03**: Social links with correct verified URLs
 - [x] **AUTH-04**: Firecrawl verifies real active social profiles and YouTube channel
 - [x] **AUTH-05**: Only verified real profiles added — no invented links
-- [ ] **AUTH-06**: Brand-color hover on each social network icon
-- [ ] **AUTH-07**: Social area is elegant and non-spammy
+- [x] **AUTH-06**: Brand-color hover on each social network icon
+- [x] **AUTH-07**: Social area is elegant and non-spammy
 
 ### Floating UI
 
-- [ ] **FLOAT-01**: Floating Back to Top button that scrolls to top
-- [ ] **FLOAT-02**: Floating Contact Us button linking to real contact page
-- [ ] **FLOAT-03**: Buttons are professional, minimal, and do not overlap content
-- [ ] **FLOAT-04**: No duplication of existing floating UI actions
-- [ ] **FLOAT-05**: On tablet/mobile, buttons resize/reposition to avoid obstructing content
+- [x] **FLOAT-01**: Floating Back to Top button that scrolls to top
+- [x] **FLOAT-02**: Floating Contact Us button linking to real contact page
+- [x] **FLOAT-03**: Buttons are professional, minimal, and do not overlap content
+- [x] **FLOAT-04**: No duplication of existing floating UI actions
+- [x] **FLOAT-05**: On tablet/mobile, buttons resize/reposition to avoid obstructing content
 
 ### N8N Integration
 
@@ -88,8 +88,8 @@
 
 - [x] **HOVER-01**: TOC items: underline + subtle color shift on hover
 - [x] **HOVER-02**: FAQ headers: subtle emphasis without hurting readability
-- [ ] **HOVER-03**: CTA button: premium professional hover effect
-- [ ] **HOVER-04**: Social links: network brand-color hover
+- [x] **HOVER-03**: CTA button: premium professional hover effect
+- [x] **HOVER-04**: Social links: network brand-color hover
 - [ ] **HOVER-05**: All hover states remain readable and WordPress-safe (inline JS handlers)
 
 ### WordPress Safety
@@ -173,18 +173,18 @@
 | FAQ-05 | Phase 6 | Complete |
 | FAQ-06 | Phase 6 | Complete |
 | FAQ-07 | Phase 6 | Complete |
-| AUTH-01 | Phase 7 | Pending |
-| AUTH-02 | Phase 7 | Pending |
+| AUTH-01 | Phase 7 | Complete |
+| AUTH-02 | Phase 7 | Complete |
 | AUTH-03 | Phase 2 | Complete |
 | AUTH-04 | Phase 2 | Complete |
 | AUTH-05 | Phase 2 | Complete |
-| AUTH-06 | Phase 7 | Pending |
-| AUTH-07 | Phase 7 | Pending |
-| FLOAT-01 | Phase 7 | Pending |
-| FLOAT-02 | Phase 7 | Pending |
-| FLOAT-03 | Phase 7 | Pending |
-| FLOAT-04 | Phase 7 | Pending |
-| FLOAT-05 | Phase 7 | Pending |
+| AUTH-06 | Phase 7 | Complete |
+| AUTH-07 | Phase 7 | Complete |
+| FLOAT-01 | Phase 7 | Complete |
+| FLOAT-02 | Phase 7 | Complete |
+| FLOAT-03 | Phase 7 | Complete |
+| FLOAT-04 | Phase 7 | Complete |
+| FLOAT-05 | Phase 7 | Complete |
 | N8N-01 | Phase 9 | Pending |
 | N8N-02 | Phase 9 | Pending |
 | N8N-03 | Phase 9 | Pending |
@@ -198,8 +198,8 @@
 | SEO-03 | Phase 8 | Pending |
 | HOVER-01 | Phase 4 | Complete |
 | HOVER-02 | Phase 6 | Complete |
-| HOVER-03 | Phase 7 | Pending |
-| HOVER-04 | Phase 7 | Pending |
+| HOVER-03 | Phase 7 | Complete |
+| HOVER-04 | Phase 7 | Complete |
 | HOVER-05 | Phase 8 | Pending |
 | WP-01 | Phase 1 | Complete |
 | WP-02 | Phase 1 | Complete |

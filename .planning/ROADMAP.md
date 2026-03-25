@@ -132,7 +132,7 @@ Plans:
 **Plans**: 1 plan
 
 Plans:
-- [ ] 07-01-PLAN.md -- Author section with logo/bio/social links + floating Back to Top and Contact Us buttons (Wave 1)
+- [x] 07-01-PLAN.md -- Author section with logo/bio/social links + floating Back to Top and Contact Us buttons (Wave 1)
 
 ### Phase 8: SEO Schema & Hover States Polish
 **Goal**: Article and FAQ schema markup is embedded, and all hover state interactions are finalized and WordPress-safe
