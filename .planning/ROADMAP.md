@@ -99,12 +99,10 @@ Plans:
   3. Images are never cut, broken, or distorted -- using img tags with object-fit: contain
   4. No empty cards, no cards without images, no duplicate images, no prices displayed
   5. Unstable product images are hosted on Supabase with stable public URLs
-**Plans**: TBD
+**Plans**: 1 plan
 
 Plans:
-- [ ] 05-01: Product card HTML structure with image-above/text-below layout
-- [ ] 05-02: Uniform card sizing and responsive grid alignment
-- [ ] 05-03: Supabase image upload for unstable external image URLs
+- [ ] 05-01-PLAN.md -- 6 product cards with inline-block layout, Supabase images, real URLs, no prices (Wave 1)
 
 ### Phase 6: FAQ Section & Accordions
 **Goal**: FAQ section renders as individual closed accordions with polished animations, positioned before author section
@@ -201,9 +199,9 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6 -> 7 -> 8 -> 9 -> 10
 |-------|----------------|--------|-----------|
 | 1. Baseline Audit & WordPress Risk Assessment | 3/3 | Complete | 2026-03-25 |
 | 2. Firecrawl Product Discovery & Social Verification | 2/2 | Complete | 2026-03-25 |
-| 3. Template Foundation & Article Structure | 0/2 | Planned | - |
-| 4. Navigation & Table of Contents | 0/1 | Planned | - |
-| 5. Product Card Integration | 0/3 | Not started | - |
+| 3. Template Foundation & Article Structure | 2/2 | Complete | 2026-03-25 |
+| 4. Navigation & Table of Contents | 1/1 | Complete | 2026-03-25 |
+| 5. Product Card Integration | 0/1 | Planned | - |
 | 6. FAQ Section & Accordions | 0/3 | Not started | - |
 | 7. Author Section, Social Links & Floating UI | 0/4 | Not started | - |
 | 8. SEO Schema & Hover States Polish | 0/3 | Not started | - |
