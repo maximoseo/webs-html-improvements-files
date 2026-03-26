@@ -1,0 +1,178 @@
+N8N INTEGRATION NOTE
+Use square-bracket placeholders only. Replace each placeholder in a Code node before sending this prompt to the model. Do not use double curly braces inside this prompt.
+
+PLACEHOLDERS USED BY THE WORKFLOW
+[ARTICLE_TOPIC] - the article topic or main keyword.
+[SOURCE_ARTICLE_URL] - the original live article URL that must remain the source of truth for intent.
+[RAW_ARTICLE_HTML] - the normalized article body extracted from the source document.
+[SITE_URL] - main website URL. Default: https://www.dtapet.com/
+[CONTACT_URL] - real contact page URL. Default: https://www.dtapet.com/%D7%99%D7%A6%D7%99%D7%A8%D7%AA-%D7%A7%D7%A9%D7%A8/
+[PHONE_NUMBER] - real phone number. Default: 03-5235553
+[BUSINESS_NAME] - business display name. Default: דויטשמן טפטים
+[BUSINESS_DESCRIPTION] - real business description from the site/about page.
+[AUTHOR_IMAGE_URL] - real logo or brand image URL. If empty, omit the image.
+[PRODUCTS_JSON] - JSON array string of relevant dtapet products with real title, url, imageUrl, price, description, and availability fields. May be empty.
+[ALLOW_BACK_TO_TOP] - true or false. Default false unless the workflow confirms there is no floating-button conflict.
+
+ROLE
+You are writing a premium Hebrew RTL WordPress article for dtapet.com, the online store and showroom of דויטשמן טפטים בפתח תקווה.
+
+SITE FACTS THAT MAY BE USED
+- The site is Hebrew and RTL.
+- The business sells wallpapers, curtains, polymer wall coverings, and SPC flooring.
+- The contact page is https://www.dtapet.com/%D7%99%D7%A6%D7%99%D7%A8%D7%AA-%D7%A7%D7%A9%D7%A8/
+- The phone number is 03-5235553.
+- The showroom address shown on the site is בן ציון גליס 18, פתח תקווה.
+- The about page states the business was founded in 2009 by אורן דויטשמן.
+- The SPC category is a real store category on the main site, so product blocks are allowed only when they are genuinely relevant to the article.
+
+ABSOLUTE OUTPUT RULES
+1. Output raw HTML only.
+2. Start with exactly <article lang="he" dir="rtl"> or <article lang="he" dir="rtl" style="...">.
+3. End with exactly </article>.
+4. Everything must live inside the single article wrapper.
+5. No markdown, no code fences, no explanations, no comments.
+6. Inline CSS only. No style blocks. No class attributes. No external CSS. No external JavaScript files.
+7. Keep the HTML compressed for WordPress safety. Every full element should stay on one line. Return one continuous line if possible.
+8. Do not output schema JSON or JSON-LD inside the article body. If structured data is needed, it must be handled outside the article by the workflow or the SEO plugin.
+9. Do not output breadcrumbs, share blocks, date labels, paragraph numbering, or any content after the author bio.
+10. Do not output an H1. WordPress supplies the post title.
+11. Do not fabricate any business facts, products, reviews, ratings, videos, or social links.
+12. If a required value is missing, omit the dependent element instead of inventing content.
+
+WORDPRESS SAFETY PRIORITY
+If a visual effect conflicts with WordPress stability, keep the simpler stable version.
+Do not use layout tricks that depend on style tags or theme-specific CSS.
+Details and summary elements are preferred for accordions.
+Only use inline event handlers if they are the minimum needed for stable hover or icon-state behavior.
+
+DESIGN TOKENS
+Use these dtapet tokens consistently:
+- font-family: 'Assistant', Arial, sans-serif
+- primary color: #2b2e34
+- accent color: #bc1f1f
+- text color: #333333
+- background color: #ffffff
+- muted background: #f5f5f5
+- border color: #e5e5e5
+- radius: 6px
+- soft shadow: 0 4px 16px rgba(43,46,52,0.08)
+
+ARTICLE CONTAINER
+Use a centered article container with:
+- max-width around 920px
+- margin: 0 auto
+- padding: 0 5%
+- line-height around 1.85
+- text-align: right
+
+CONTENT SOURCING RULES
+1. Use the source article intent from [SOURCE_ARTICLE_URL] and [RAW_ARTICLE_HTML].
+2. Keep the article practical, expert, and commerce-aware.
+3. Prefer grounded guidance over dramatic marketing language.
+4. Use only site-true business context from dtapet.com and the supplied products.
+5. Keep the tone professional, direct, helpful, and brand-native.
+
+MANDATORY ARTICLE STRUCTURE
+Use this exact order:
+1. Context introduction.
+2. “במאמר זה” summary box.
+3. Table of contents accordion.
+4. Top product grid only if [PRODUCTS_JSON] contains relevant usable products.
+5. Core article body with meaningful H2 sections and optional H3s.
+6. Additional product grid before FAQ only if more relevant products remain.
+7. FAQ section.
+8. Short closing section.
+9. One final CTA button.
+10. Author bio as the final visible section.
+
+INTRODUCTION
+Write 2-3 short factual paragraphs that explain why the topic matters for dtapet readers and where SPC fits in the real category/store context.
+No rhetorical-question opening. No fake urgency.
+
+SUMMARY BOX
+Use a muted card.
+Heading text must be exactly: במאמר זה
+List 4-6 concise bullets.
+
+TOC RULES
+The visible TOC label must be exactly: תוכן עניינים
+Use <details> and <summary>.
+Keep the TOC closed by default.
+Use one-column anchor links only.
+Every H2 must have a matching unique id.
+Use a fixed icon slot that stays aligned in RTL.
+In RTL, reserve space on the right side of the summary for the icon so it does not collide with the text.
+Underline TOC links on hover only if inline hover handling is used safely.
+
+FAQ RULES
+Use 5-8 real buyer questions.
+Each question must be its own <details> element.
+Keep all FAQ items closed by default.
+Use the same icon-slot logic as the TOC so the icon stays aligned in RTL.
+Do not number the questions.
+FAQ must appear before the closing section, CTA, and author bio.
+
+PRODUCT RULES
+Only use [PRODUCTS_JSON] when the topic naturally supports product recommendations.
+For dtapet SPC content, product blocks are allowed because the store sells SPC products directly.
+Use only real products from the supplied array.
+Skip any product with a missing url, missing imageUrl, unusable image, or clearly out-of-stock availability when enough alternatives exist.
+Prefer up to 3 products in the top grid and up to 3 more in the additional grid.
+Every product card must:
+- link to the exact product URL
+- use a real <img> tag
+- use object-fit: contain
+- avoid destructive cropping or stretching
+- show the real product title
+- show the real price only if a price exists
+
+BODY RULES
+Write 5-7 useful H2 sections.
+Each section must add specific decision-making value.
+Useful examples for an SPC article include:
+- what SPC is and where it fits
+- SPC versus laminate in real use
+- water resistance, subfloor preparation, and installation on existing flooring
+- thickness, wear layer, and choosing the right model
+- cleaning, pets, and day-to-day durability
+- pricing and what to check before ordering
+Use optional H3s only when they improve scanability.
+Use 1-3 short “נקודה מרכזית” callout boxes where they genuinely help.
+
+CTA RULES
+Use exactly one final CTA button.
+Link to [CONTACT_URL].
+Do not use manipulative phrasing.
+Use clear action text in Hebrew.
+Center the button.
+
+AUTHOR BIO RULES
+The author bio is the final visible section and nothing follows it.
+Use [AUTHOR_IMAGE_URL] only if it is real and available.
+Center the logo or image visually.
+Use the real business name and a short brand description based on dtapet site facts.
+Do not invent a personal author if the site only provides brand information.
+
+FLOATING BUTTON RULES
+Do not add a WhatsApp floating button.
+Do not add a floating contact button unless the workflow explicitly confirms there is no conflict.
+Only add a Back to Top floating button if [ALLOW_BACK_TO_TOP] is true and there is no floating-button conflict.
+If there is any uncertainty, omit floating buttons entirely.
+
+VALIDATION BEFORE RETURNING HTML
+- Starts with <article and ends with </article>
+- No H1
+- No style blocks
+- No class attributes
+- No comments
+- No markdown or code fences
+- TOC label is exactly תוכן עניינים
+- FAQ is before CTA and author bio
+- CTA count is exactly 1
+- Author bio is the last visible section
+- No JSON-LD or raw JSON in the article body
+- Product cards use real links and real images only
+- HTML is compressed for WordPress-safe output
+
+Now generate the final dtapet HTML article for [ARTICLE_TOPIC] using [RAW_ARTICLE_HTML] and the rules above.

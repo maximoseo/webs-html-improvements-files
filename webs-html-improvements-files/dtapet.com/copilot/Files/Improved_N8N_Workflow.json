@@ -1,0 +1,662 @@
+{
+  "name": "DTapet SPC Article Pipeline - Copilot Improved",
+  "nodes": [
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        },
+        "triggerOn": "specificFolder",
+        "folderId": "={{ $credentials.googleDriveFolderId }}",
+        "options": {}
+      },
+      "id": "node-google-docs-trigger",
+      "name": "Google Docs Trigger",
+      "type": "n8n-nodes-base.googleDriveTrigger",
+      "typeVersion": 1,
+      "position": [
+        220,
+        320
+      ],
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "google-drive-oauth",
+          "name": "Google Drive OAuth2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "fileId": "={{ $json.id }}",
+        "options": {}
+      },
+      "id": "node-get-doc-content",
+      "name": "Get Doc Content",
+      "type": "n8n-nodes-base.googleDocs",
+      "typeVersion": 2,
+      "position": [
+        440,
+        320
+      ],
+      "credentials": {
+        "googleDocsOAuth2Api": {
+          "id": "google-docs-oauth",
+          "name": "Google Docs OAuth2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const doc = $input.first().json;\nlet title = doc.title || 'Untitled';\nlet content = '';\nlet h1Found = false;\nlet keywords = [];\nlet publishStatus = 'draft';\n\nif (doc.body && doc.body.content) {\n  for (const element of doc.body.content) {\n    if (!element.paragraph) continue;\n    const para = element.paragraph;\n    let text = '';\n    for (const part of (para.elements || [])) {\n      if (part.textRun) text += part.textRun.content || '';\n    }\n    text = text.replace(/\\n+$/g, '').trim();\n    if (!text) continue;\n\n    if (text.startsWith('KEYWORDS:')) {\n      keywords = text.replace('KEYWORDS:', '').split(',').map(k => k.trim()).filter(Boolean);\n      continue;\n    }\n    if (text.startsWith('STATUS:')) {\n      publishStatus = text.replace('STATUS:', '').trim().toLowerCase() || 'draft';\n      continue;\n    }\n\n    const style = para.paragraphStyle?.namedStyleType || 'NORMAL_TEXT';\n    if (style === 'HEADING_1') {\n      if (!h1Found) {\n        title = text;\n        h1Found = true;\n      }\n      continue;\n    }\n    if (style === 'HEADING_2') {\n      content += `<h2>${text}</h2>\\n`;\n      continue;\n    }\n    if (style === 'HEADING_3') {\n      content += `<h3>${text}</h3>\\n`;\n      continue;\n    }\n    content += `<p>${text}</p>\\n`;\n  }\n}\n\nreturn {\n  json: {\n    title,\n    content,\n    keywords,\n    publishStatus,\n    docId: doc.documentId,\n    docTitle: doc.title,\n    sourceArticleUrl: 'https://www.dtapet.com/spc-flooring-complete-guide/',\n    siteUrl: 'https://www.dtapet.com/',\n    productCategoryUrl: 'https://www.dtapet.com/%D7%A4%D7%A8%D7%A7%D7%98-spc/',\n    contactUrl: 'https://www.dtapet.com/%D7%99%D7%A6%D7%99%D7%A8%D7%AA-%D7%A7%D7%A9%D7%A8/',\n    phoneNumber: '03-5235553',\n    businessName: 'דויטשמן טפטים',\n    businessDescription: 'טפטים, וילונות, חיפויים פולימריים ופרקט SPC בפתח תקווה',\n    authorImageUrl: 'https://www.dtapet.com/wp-content/uploads/2022/09/logo-e1663485891304.png'\n  }\n};"
+      },
+      "id": "node-parse-document",
+      "name": "Parse Document",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        660,
+        320
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.firecrawl.dev/v1/scrape",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{ $env.FIRECRAWL_API_KEY }}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"url\": {{ JSON.stringify($json.siteUrl) }},\n  \"formats\": [\"extract\"],\n  \"extract\": {\n    \"schema\": {\n      \"type\": \"object\",\n      \"properties\": {\n        \"businessName\": { \"type\": \"string\" },\n        \"language\": { \"type\": \"string\" },\n        \"direction\": { \"type\": \"string\" },\n        \"contactUrl\": { \"type\": \"string\" },\n        \"phoneNumber\": { \"type\": \"string\" },\n        \"logoUrl\": { \"type\": \"string\" },\n        \"hasStore\": { \"type\": \"boolean\" },\n        \"whatsappNumber\": { \"type\": \"string\" }\n      }\n    }\n  }\n}",
+        "options": {
+          "timeout": 30000
+        }
+      },
+      "id": "node-discover-site-data",
+      "name": "Discover Site Data",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [
+        900,
+        320
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "firecrawl-api-key",
+          "name": "Firecrawl API Key"
+        }
+      },
+      "continueOnFail": true
+    },
+    {
+      "parameters": {
+        "jsCode": "const parsed = $node['Parse Document'].json;\nlet extracted = {};\ntry {\n  const raw = $input.first().json;\n  extracted = raw?.data?.extract || raw?.extract || {};\n} catch (_) {\n  extracted = {};\n}\n\nconst siteData = {\n  businessName: extracted.businessName || parsed.businessName,\n  language: extracted.language || 'he',\n  direction: extracted.direction || 'rtl',\n  contactUrl: extracted.contactUrl || parsed.contactUrl,\n  phoneNumber: extracted.phoneNumber || parsed.phoneNumber,\n  logoUrl: extracted.logoUrl || parsed.authorImageUrl,\n  hasStore: extracted.hasStore !== false,\n  whatsappNumber: extracted.whatsappNumber || '',\n  primaryColor: '#2b2e34',\n  accentColor: '#bc1f1f',\n  textColor: '#333333',\n  backgroundColor: '#ffffff',\n  borderColor: '#e5e5e5',\n  fontFamily: \"'Assistant', Arial, sans-serif\"\n};\n\nreturn {\n  json: {\n    ...parsed,\n    siteData,\n    allowBackToTop: false,\n    hasExistingFloatingButtons: true,\n    shouldEmbedProducts: true\n  }\n};"
+      },
+      "id": "node-merge-site-data",
+      "name": "Merge Site Data",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1140,
+        320
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const data = $input.first().json;\nconst haystack = `${data.title || ''} ${(data.keywords || []).join(' ')} ${data.content || ''}`.toLowerCase();\nconst shouldEmbedProducts = data.siteData.hasStore && (haystack.includes('spc') || haystack.includes('פרקט') || haystack.includes('ריצוף') || haystack.includes('floor'));\nreturn { json: { ...data, shouldEmbedProducts } };"
+      },
+      "id": "node-detect-product-relevance",
+      "name": "Detect Product Relevance",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1380,
+        320
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": false,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "product-needed",
+              "leftValue": "={{ $json.shouldEmbedProducts }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "true"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "node-product-gate",
+      "name": "Product Needed?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        1620,
+        320
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.firecrawl.dev/v1/scrape",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{ $env.FIRECRAWL_API_KEY }}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"url\": {{ JSON.stringify($json.productCategoryUrl) }},\n  \"formats\": [\"extract\"],\n  \"extract\": {\n    \"schema\": {\n      \"type\": \"object\",\n      \"properties\": {\n        \"products\": {\n          \"type\": \"array\",\n          \"items\": {\n            \"type\": \"object\",\n            \"properties\": {\n              \"title\": { \"type\": \"string\" },\n              \"url\": { \"type\": \"string\" },\n              \"imageUrl\": { \"type\": \"string\" },\n              \"price\": { \"type\": \"string\" },\n              \"availability\": { \"type\": \"string\" }\n            }\n          }\n        }\n      }\n    }\n  }\n}",
+        "options": {
+          "timeout": 45000
+        }
+      },
+      "id": "node-scrape-spc-category",
+      "name": "Scrape SPC Category",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [
+        1860,
+        220
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "firecrawl-api-key",
+          "name": "Firecrawl API Key"
+        }
+      },
+      "continueOnFail": true
+    },
+    {
+      "parameters": {
+        "jsCode": "const data = $node['Detect Product Relevance'].json;\nconst raw = $input.first().json;\nconst extracted = raw?.data?.extract || raw?.extract || {};\nconst products = Array.isArray(extracted.products) ? extracted.products : [];\n\nconst normalizeImage = (value) => {\n  if (!value) return '';\n  return value.replace(/-\\d+x\\d+(?=\\.(jpg|jpeg|png|webp)$)/i, '');\n};\n\nconst selectedProducts = products\n  .filter((product) => {\n    const title = (product.title || '').trim();\n    const url = (product.url || '').trim();\n    const imageUrl = normalizeImage((product.imageUrl || '').trim());\n    const availability = ((product.availability || '').trim()).toLowerCase();\n    if (!title || !url || !imageUrl) return false;\n    if (!url.includes('/shop/')) return false;\n    if (availability.includes('אזל') || availability.includes('out of stock')) return false;\n    return true;\n  })\n  .slice(0, 6)\n  .map((product) => ({\n    title: (product.title || '').trim(),\n    url: (product.url || '').trim(),\n    imageUrl: normalizeImage((product.imageUrl || '').trim()),\n    price: (product.price || '').trim(),\n    availability: (product.availability || '').trim()\n  }));\n\nreturn { json: { ...data, selectedProducts } };"
+      },
+      "id": "node-select-relevant-products",
+      "name": "Select Relevant Products",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2100,
+        220
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.firecrawl.dev/v1/batch/scrape",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{ $env.FIRECRAWL_API_KEY }}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"urls\": {{ JSON.stringify(($json.selectedProducts || []).map((product) => product.url)) }},\n  \"formats\": [\"extract\"],\n  \"extract\": {\n    \"schema\": {\n      \"type\": \"object\",\n      \"properties\": {\n        \"productTitle\": { \"type\": \"string\" },\n        \"productPrice\": { \"type\": \"string\" },\n        \"productImage\": { \"type\": \"string\" },\n        \"productDescription\": { \"type\": \"string\" },\n        \"productUrl\": { \"type\": \"string\" },\n        \"availability\": { \"type\": \"string\" }\n      }\n    }\n  }\n}",
+        "options": {
+          "timeout": 45000
+        }
+      },
+      "id": "node-scrape-product-pages",
+      "name": "Scrape Product Pages",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [
+        2340,
+        220
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "firecrawl-api-key",
+          "name": "Firecrawl API Key"
+        }
+      },
+      "continueOnFail": true
+    },
+    {
+      "parameters": {
+        "jsCode": "const data = $node['Select Relevant Products'].json;\nconst response = $input.first().json;\nconst SUPABASE_URL = $env.SUPABASE_URL || '';\nconst SUPABASE_KEY = $env.SUPABASE_SERVICE_ROLE_KEY || $env.SUPABASE_NEW_API_KEY || $env.SUPABASE_ANON_KEY || '';\nconst siteSlug = 'dtapet-com';\n\nconst normalizeImage = (value) => {\n  if (!value) return '';\n  return value.replace(/-\\d+x\\d+(?=\\.(jpg|jpeg|png|webp)$)/i, '');\n};\n\nasync function uploadImage(imageUrl, storagePath) {\n  const normalized = normalizeImage(imageUrl);\n  if (!normalized) return '';\n  if (!SUPABASE_URL || !SUPABASE_KEY) return normalized;\n  try {\n    const imageResponse = await fetch(normalized);\n    if (!imageResponse.ok) return normalized;\n    const body = await imageResponse.arrayBuffer();\n    const contentType = imageResponse.headers.get('content-type') || 'image/jpeg';\n    const uploadResponse = await fetch(`${SUPABASE_URL}/storage/v1/object/article-assets/${storagePath}`, {\n      method: 'POST',\n      headers: {\n        'Authorization': `Bearer ${SUPABASE_KEY}`,\n        'Content-Type': contentType,\n        'x-upsert': 'true'\n      },\n      body\n    });\n    if (!uploadResponse.ok) return normalized;\n    return `${SUPABASE_URL}/storage/v1/object/public/article-assets/${storagePath}`;\n  } catch (_) {\n    return normalized;\n  }\n}\n\nconst rawItems = Array.isArray(response?.data) ? response.data : [];\nconst scrapedItems = rawItems.map((item) => item?.extract || {}).filter(Boolean);\nconst fallbackMap = new Map((data.selectedProducts || []).map((product) => [product.url, product]));\nconst normalizedProducts = [];\n\nfor (let index = 0; index < (data.selectedProducts || []).length; index += 1) {\n  const fallback = data.selectedProducts[index] || {};\n  const scraped = scrapedItems.find((item) => item.productUrl === fallback.url) || {};\n  const title = (scraped.productTitle || fallback.title || '').trim();\n  const url = (scraped.productUrl || fallback.url || '').trim();\n  const imageUrl = normalizeImage((scraped.productImage || fallback.imageUrl || '').trim());\n  const availability = (scraped.availability || fallback.availability || '').trim().toLowerCase();\n  if (!title || !url || !imageUrl) continue;\n  if (availability.includes('אזל') || availability.includes('out of stock')) continue;\n  const slug = title.toLowerCase().replace(/[^a-z0-9֐-׿]+/g, '-').replace(/^-+|-+$/g, '') || `product-${index + 1}`;\n  const stableImageUrl = await uploadImage(imageUrl, `${siteSlug}/products/${slug}.jpg`);\n  normalizedProducts.push({\n    title,\n    url,\n    imageUrl: stableImageUrl || imageUrl,\n    price: (scraped.productPrice || fallback.price || '').trim(),\n    description: (scraped.productDescription || '').trim(),\n    availability\n  });\n}\n\nlet stableLogoUrl = data.siteData.logoUrl || data.authorImageUrl || '';\nif (stableLogoUrl) {\n  stableLogoUrl = await uploadImage(stableLogoUrl, `${siteSlug}/branding/logo.png`);\n}\n\nreturn {\n  json: {\n    ...data,\n    products: normalizedProducts,\n    authorImageUrl: stableLogoUrl || data.authorImageUrl || data.siteData.logoUrl || '',\n    assetStabilizationEnabled: !!SUPABASE_URL && !!SUPABASE_KEY\n  }\n};"
+      },
+      "id": "node-stabilize-assets",
+      "name": "Stabilize Assets",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2580,
+        220
+      ],
+      "continueOnFail": true
+    },
+    {
+      "parameters": {
+        "jsCode": "const data = $node['Detect Product Relevance'].json;\nreturn {\n  json: {\n    ...data,\n    products: [],\n    assetStabilizationEnabled: false\n  }\n};"
+      },
+      "id": "node-skip-products",
+      "name": "Skip Products",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1860,
+        420
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "combineBySql",
+        "query": "SELECT * FROM input1 UNION ALL SELECT * FROM input2"
+      },
+      "id": "node-merge-product-data",
+      "name": "Merge Product Data",
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3,
+      "position": [
+        2820,
+        320
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $credentials.maximoApiUrl }}/api/v1/improve",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"html\": {{ JSON.stringify($json.content) }},\n  \"title\": {{ JSON.stringify($json.title) }},\n  \"targetKeyword\": {{ JSON.stringify($json.title) }},\n  \"sourceArticleUrl\": {{ JSON.stringify($json.sourceArticleUrl) }},\n  \"outputFormat\": \"html\",\n  \"outputWrapping\": \"article\",\n  \"pageType\": \"blog\",\n  \"language\": \"he\",\n  \"direction\": \"rtl\",\n  \"businessName\": {{ JSON.stringify($json.businessName) }},\n  \"businessDescription\": {{ JSON.stringify($json.businessDescription) }},\n  \"siteUrl\": {{ JSON.stringify($json.siteUrl) }},\n  \"contactUrl\": {{ JSON.stringify($json.contactUrl) }},\n  \"phoneNumber\": {{ JSON.stringify($json.phoneNumber) }},\n  \"authorImageUrl\": {{ JSON.stringify($json.authorImageUrl) }},\n  \"products\": {{ JSON.stringify($json.products || []) }},\n  \"designTokens\": {\n    \"primary\": \"#2b2e34\",\n    \"accent\": \"#bc1f1f\",\n    \"text\": \"#333333\",\n    \"background\": \"#ffffff\",\n    \"border\": \"#e5e5e5\",\n    \"fontFamily\": \"'Assistant', Arial, sans-serif\"\n  },\n  \"rules\": {\n    \"inlineCssOnly\": true,\n    \"noStyleBlocks\": true,\n    \"noClasses\": true,\n    \"noH1Tag\": true,\n    \"tocLabelExact\": \"תוכן עניינים\",\n    \"faqBeforeAuthor\": true,\n    \"authorSectionFinal\": true,\n    \"singleFinalCta\": true,\n    \"noDateLabels\": true,\n    \"noBreadcrumbs\": true,\n    \"noSchemaInArticleBody\": true,\n    \"compressHtmlForWordPress\": true,\n    \"omitFloatingButtonsOnConflict\": true\n  }\n}",
+        "options": {
+          "timeout": 60000
+        }
+      },
+      "id": "node-generate-improved-article",
+      "name": "Generate Improved Article",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [
+        3060,
+        320
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "maximo-api-key",
+          "name": "Maximo API Key"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const improved = $input.first().json;\nconst original = $node['Merge Product Data'].json;\nlet html = improved.improved_html || improved.html || '';\n\nhtml = html.replace(/<style[\\s\\S]*?<\\/style>/gi, '');\nhtml = html.replace(/\\sclass=\"[^\"]*\"/g, '');\nhtml = html.replace(/<!--[\\s\\S]*?-->/g, '');\nhtml = html.replace(/<script[^>]*application\\/ld\\+json[^>]*>[\\s\\S]*?<\\/script>/gi, '');\nhtml = html.replace(/```[\\s\\S]*?```/g, '');\nhtml = html.replace(/<(?:span|p|div)[^>]*>\\s*(?:נכתב בתאריך|עודכן לאחרונה)[^<]*<\\/(?:span|p|div)>/gi, '');\nhtml = html.replace(/<(?:span|p|div)[^>]*>\\s*(?:\\d{1,2}\\/\\d{1,2}\\/\\d{4}|\\d{1,2} [A-Za-z]+ \\d{4})\\s*<\\/(?:span|p|div)>/gi, '');\nhtml = html.trim();\nif (!html.startsWith('<article')) {\n  html = `<article lang=\"he\" dir=\"rtl\">${html}</article>`;\n}\nhtml = html.replace(/>\\s+</g, '><');\n\nreturn {\n  json: {\n    title: original.title,\n    content: html,\n    excerpt: improved.meta_description || '',\n    seoScore: improved.seo_score || 0,\n    publishStatus: original.publishStatus || 'draft',\n    sourceArticleUrl: original.sourceArticleUrl,\n    htmlFileName: 'Improved_HTML_Template.html'\n  }\n};"
+      },
+      "id": "node-prepare-wordpress-html",
+      "name": "Prepare WordPress HTML",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        3300,
+        320
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const item = $input.first();\nconst html = item.json.content || '';\nreturn {\n  json: { ...item.json },\n  binary: {\n    articleHtml: {\n      data: Buffer.from(html, 'utf8').toString('base64'),\n      mimeType: 'text/html',\n      fileName: item.json.htmlFileName || 'Improved_HTML_Template.html'\n    }\n  }\n};"
+      },
+      "id": "node-create-html-artifact",
+      "name": "Create HTML Artifact",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        3540,
+        320
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $credentials.wordpressUrl }}/wp-json/wp/v2/posts",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpBasicAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"title\": {{ JSON.stringify($json.title) }},\n  \"content\": {{ JSON.stringify($json.content) }},\n  \"excerpt\": {{ JSON.stringify($json.excerpt) }},\n  \"status\": {{ JSON.stringify($json.publishStatus || 'draft') }}\n}",
+        "options": {
+          "timeout": 30000
+        }
+      },
+      "id": "node-publish-to-wordpress",
+      "name": "Publish to WordPress",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [
+        3780,
+        320
+      ],
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "wordpress-auth",
+          "name": "WordPress Auth"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": false,
+            "leftValue": "",
+            "typeValidation": "loose"
+          },
+          "conditions": [
+            {
+              "id": "wp-success-check",
+              "leftValue": "={{ $json.id }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "node-check-wp-success",
+      "name": "Check WP Success",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        4020,
+        320
+      ]
+    }
+  ],
+  "connections": {
+    "Google Docs Trigger": {
+      "main": [
+        [
+          {
+            "node": "Get Doc Content",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Doc Content": {
+      "main": [
+        [
+          {
+            "node": "Parse Document",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse Document": {
+      "main": [
+        [
+          {
+            "node": "Discover Site Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Discover Site Data": {
+      "main": [
+        [
+          {
+            "node": "Merge Site Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge Site Data": {
+      "main": [
+        [
+          {
+            "node": "Detect Product Relevance",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Detect Product Relevance": {
+      "main": [
+        [
+          {
+            "node": "Product Needed?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Product Needed?": {
+      "main": [
+        [
+          {
+            "node": "Scrape SPC Category",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Skip Products",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Scrape SPC Category": {
+      "main": [
+        [
+          {
+            "node": "Select Relevant Products",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Select Relevant Products": {
+      "main": [
+        [
+          {
+            "node": "Scrape Product Pages",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Scrape Product Pages": {
+      "main": [
+        [
+          {
+            "node": "Stabilize Assets",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Stabilize Assets": {
+      "main": [
+        [
+          {
+            "node": "Merge Product Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Skip Products": {
+      "main": [
+        [
+          {
+            "node": "Merge Product Data",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Merge Product Data": {
+      "main": [
+        [
+          {
+            "node": "Generate Improved Article",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate Improved Article": {
+      "main": [
+        [
+          {
+            "node": "Prepare WordPress HTML",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare WordPress HTML": {
+      "main": [
+        [
+          {
+            "node": "Create HTML Artifact",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create HTML Artifact": {
+      "main": [
+        [
+          {
+            "node": "Publish to WordPress",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Publish to WordPress": {
+      "main": [
+        [
+          {
+            "node": "Check WP Success",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "saveManualExecutions": true,
+    "callerPolicy": "workflowsFromSameOwner",
+    "timezone": "Asia/Jerusalem"
+  },
+  "staticData": null,
+  "meta": {
+    "templateId": "dtapet-spc-copilot-improved",
+    "instanceId": "dtapet-copilot"
+  },
+  "pinData": {},
+  "tags": [
+    {
+      "name": "dtapet",
+      "id": "1"
+    },
+    {
+      "name": "wordpress",
+      "id": "2"
+    },
+    {
+      "name": "firecrawl",
+      "id": "3"
+    },
+    {
+      "name": "supabase",
+      "id": "4"
+    },
+    {
+      "name": "copilot",
+      "id": "5"
+    },
+    {
+      "name": "spc-flooring",
+      "id": "6"
+    }
+  ]
+}
