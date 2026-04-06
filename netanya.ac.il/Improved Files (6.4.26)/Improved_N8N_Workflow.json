@@ -7,7 +7,52 @@
       "name": "Manual Trigger",
       "type": "n8n-nodes-base.manualTrigger",
       "typeVersion": 1,
-      "position": [220, 300]
+      "position": [
+        220,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "field-topic",
+              "name": "topic",
+              "value": "לימודי מערכות מידע",
+              "type": "string"
+            },
+            {
+              "id": "field-keyword",
+              "name": "keyword",
+              "value": "לימודי מערכות מידע תואר ראשון",
+              "type": "string"
+            },
+            {
+              "id": "field-target-url",
+              "name": "target_url",
+              "value": "https://www.netanya.ac.il/school/management-of-information-systems/",
+              "type": "string"
+            },
+            {
+              "id": "field-wp-api-url",
+              "name": "wp_api_url",
+              "value": "",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "set-input-001",
+      "name": "Set Article Input",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        460,
+        300
+      ],
+      "notes": "Configure article topic, keyword, target URL, and WordPress API endpoint. Edit these values before running."
     },
     {
       "parameters": {
@@ -24,8 +69,11 @@
       "name": "Discover Target Page",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
-      "position": [440, 160],
-      "notes": "Fetches the target page URL to extract content structure and internal links"
+      "position": [
+        720,
+        180
+      ],
+      "notes": "Fetches the target program page to extract content structure and internal links"
     },
     {
       "parameters": {
@@ -42,51 +90,25 @@
       "name": "Discover Homepage",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
-      "position": [440, 440],
-      "notes": "Fetches homepage to extract navigation, social links, and branding"
+      "position": [
+        720,
+        440
+      ],
+      "notes": "Fetches the college homepage to extract navigation, social links, and branding elements"
     },
     {
       "parameters": {
-        "jsCode": "const targetHtml = $('Discover Target Page').first().json.data || '';\nconst homepageHtml = $('Discover Homepage').first().json.data || '';\n\n// Extract internal links from target page\nconst internalLinks = [];\nconst linkRegex = /href=[\"'](https?:\\/\\/(?:www\\.)?netanya\\.ac\\.il[^\"']*)[\"']/gi;\nlet match;\nwhile ((match = linkRegex.exec(targetHtml)) !== null) {\n  if (!internalLinks.includes(match[1])) {\n    internalLinks.push(match[1]);\n  }\n}\n\n// Extract social links from homepage\nconst socialProfiles = {\n  facebook: 'https://www.facebook.com/netanyacollege.ac/',\n  instagram: 'https://www.instagram.com/netanya.acda/',\n  linkedin: 'https://il.linkedin.com/school/netanya-academic-college/'\n};\n\nreturn [{\n  json: {\n    internal_links: internalLinks,\n    social_profiles: socialProfiles,\n    brand: {\n      name: 'המכללה האקדמית נתניה',\n      phone: '09-8607777',\n      hotline: '*2443',\n      email: 'reginfo@netanya.ac.il',\n      contact_url: 'https://www.netanya.ac.il/%D7%A6%D7%95%D7%A8-%D7%A7%D7%A9%D7%A8/',\n      registration_url: 'https://www.netanya.ac.il/consulting-and-registration/',\n      logo: 'https://upload.wikimedia.org/wikipedia/commons/c/c0/Netanya_Academic_College_logo.png'\n    }\n  }\n}];"
+        "jsCode": "const targetHtml = $('Discover Target Page').first().json.data || '';\nconst homepageHtml = $('Discover Homepage').first().json.data || '';\n\n// Extract internal links from target page\nconst internalLinks = [];\nconst linkRegex = /href=[\"'](https?:\\/\\/(?:www\\.)?netanya\\.ac\\.il[^\"']*?)[\"']/gi;\nlet match;\nwhile ((match = linkRegex.exec(targetHtml)) !== null) {\n  const url = match[1];\n  if (!internalLinks.includes(url)) {\n    internalLinks.push(url);\n  }\n}\n\n// Also extract from homepage\nconst linkRegex2 = /href=[\"'](https?:\\/\\/(?:www\\.)?netanya\\.ac\\.il[^\"']*?)[\"']/gi;\nwhile ((match = linkRegex2.exec(homepageHtml)) !== null) {\n  const url = match[1];\n  if (!internalLinks.includes(url)) {\n    internalLinks.push(url);\n  }\n}\n\n// Social profiles (verified real accounts)\nconst socialProfiles = {\n  facebook: 'https://www.facebook.com/netanyacollege.ac/',\n  instagram: 'https://www.instagram.com/netanya.acda/',\n  linkedin: 'https://il.linkedin.com/school/netanya-academic-college/'\n};\n\n// Brand data\nconst brand = {\n  name: '\\u05d4\\u05de\\u05db\\u05dc\\u05dc\\u05d4 \\u05d4\\u05d0\\u05e7\\u05d3\\u05de\\u05d9\\u05ea \\u05e0\\u05ea\\u05e0\\u05d9\\u05d4',\n  name_en: 'Netanya Academic College',\n  website: 'https://www.netanya.ac.il/',\n  founded: '1994',\n  phone: '09-8607777',\n  hotline: '*2443',\n  free_line: '1-800-225-771',\n  email: 'reginfo@netanya.ac.il',\n  contact_url: 'https://www.netanya.ac.il/\\u05e6\\u05d5\\u05e8-\\u05e7\\u05e9\\u05e8/',\n  registration_url: 'https://www.netanya.ac.il/consulting-and-registration/',\n  logo: 'https://upload.wikimedia.org/wikipedia/commons/c/c0/Netanya_Academic_College_logo.png',\n  address: '\\u05e8\\u05d7\\u05d5\\u05d1 \\u05d4\\u05d0\\u05d5\\u05e0\\u05d9\\u05d1\\u05e8\\u05e1\\u05d9\\u05d8\\u05d4 1, \\u05e0\\u05ea\\u05e0\\u05d9\\u05d4 4210002'\n};\n\nreturn [{\n  json: {\n    internal_links: internalLinks.slice(0, 30),\n    social_profiles: socialProfiles,\n    brand: brand,\n    products: [],\n    reviews_data: []\n  }\n}];"
       },
       "id": "process-001",
       "name": "Process Discovery Data",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [680, 300],
-      "notes": "Extracts internal links, social profiles, and brand data from discovered pages"
-    },
-    {
-      "parameters": {
-        "assignments": {
-          "assignments": [
-            {
-              "id": "topic",
-              "name": "topic",
-              "value": "={{ $json.topic || 'לימודי מערכות מידע' }}",
-              "type": "string"
-            },
-            {
-              "id": "keyword",
-              "name": "keyword",
-              "value": "={{ $json.keyword || 'לימודי מערכות מידע תואר ראשון' }}",
-              "type": "string"
-            },
-            {
-              "id": "target_url",
-              "name": "target_url",
-              "value": "={{ $json.target_url || 'https://www.netanya.ac.il/school/management-of-information-systems/' }}",
-              "type": "string"
-            }
-          ]
-        }
-      },
-      "id": "set-input-001",
-      "name": "Set Article Input",
-      "type": "n8n-nodes-base.set",
-      "typeVersion": 3.4,
-      "position": [220, 160],
-      "notes": "Configure article topic, keyword, and target URL"
+      "position": [
+        980,
+        300
+      ],
+      "notes": "Extracts internal links from both pages, sets social profiles and brand data"
     },
     {
       "parameters": {
@@ -94,7 +116,7 @@
         "messages": {
           "values": [
             {
-              "content": "You are a research writer. Write a comprehensive, research-based blog post in Hebrew about the following topic. Use professional academic tone. Include real data, statistics, and references where possible. Structure with clear sections and subheadings.\n\nTopic: {{ $json.topic }}\nKeyword: {{ $json.keyword }}\nTarget institution: המכללה האקדמית נתניה (netanya.ac.il)\n\nInternal links to include:\n{{ JSON.stringify($('Process Discovery Data').first().json.internal_links, null, 2) }}\n\nWrite 2000-2500 words. Include:\n- Definition and overview of the field\n- Why study this now (market trends)\n- What you learn in the degree\n- Comparison with related fields\n- Who this suits\n- Admission requirements\n- Career opportunities with specific roles\n- Salary ranges and career progression\n- Common mistakes when choosing\n- How to choose the right institution\n- FAQ section with 6 real questions\n\nOutput plain text with section markers. Do not include HTML.",
+              "content": "=You are a senior research writer specializing in Hebrew academic content. Write a comprehensive, research-based blog post in Hebrew about the following topic. Use professional academic tone. Include real data, statistics, and references where possible. Structure with clear sections and subheadings.\n\nTopic: {{ $('Set Article Input').first().json.topic }}\nKeyword: {{ $('Set Article Input').first().json.keyword }}\nTarget institution: המכללה האקדמית נתניה (netanya.ac.il)\nTarget page: {{ $('Set Article Input').first().json.target_url }}\n\nInternal links discovered from the institution website:\n{{ JSON.stringify($('Process Discovery Data').first().json.internal_links, null, 2) }}\n\nWrite 2000-2500 words. Include the following sections:\n1. Definition and overview of the field\n2. Why study this field now (current market trends, industry demand)\n3. What you learn in the degree program (curriculum highlights)\n4. Comparison with related fields/programs\n5. Who is this degree suitable for (ideal student profile)\n6. Admission requirements and process\n7. Career opportunities with specific job roles\n8. Salary ranges and career progression paths\n9. Common mistakes when choosing a program\n10. How to choose the right institution\n11. FAQ section with 6 real questions prospective students ask\n\nImportant rules:\n- All dates and years must reflect 2026 (current year). Never reference 2025 or earlier as current.\n- Include specific numbers, percentages, and named sources\n- Link to relevant internal pages using full URLs from the discovered links\n- Include 3-5 external links to authoritative sources (government ministries, CBS, CHE, Innovation Authority)\n- Write naturally in Hebrew, not translated-sounding\n- Output plain text with clear section markers (## for sections, ### for subsections)\n- Do NOT include HTML tags",
               "role": "user"
             }
           ]
@@ -108,19 +130,25 @@
       "name": "Writing Blog",
       "type": "@n8n/n8n-nodes-langchain.lmChatAnthropic",
       "typeVersion": 1.4,
-      "position": [920, 160],
-      "notes": "Generates the research-based blog content in Hebrew"
+      "position": [
+        1260,
+        180
+      ],
+      "notes": "Generates research-based blog content in Hebrew (2000-2500 words) using Claude Sonnet"
     },
     {
       "parameters": {
-        "jsCode": "// Generate image prompts for the article\nconst topic = $('Set Article Input').first().json.topic;\n\nconst imagePrompts = {\n  hero: `Professional academic campus photo, modern university building, students walking, blue sky, academic atmosphere, related to ${topic}`,\n  section_1: `Infographic comparing information systems and computer science programs, academic comparison chart, professional design`,\n  section_2: `University admission documents, student registration, academic paperwork, modern campus office`,\n  section_3: `Career decision making, professional choosing path, modern office workspace, business technology`,\n  section_4: `Job market demand, technology workforce, Israeli tech industry, professional charts and graphs`\n};\n\n// Output image data for downstream processing\nreturn [{\n  json: {\n    images: {\n      hero: { prompt: imagePrompts.hero, url: '' },\n      section_1: { prompt: imagePrompts.section_1, url: '' },\n      section_2: { prompt: imagePrompts.section_2, url: '' },\n      section_3: { prompt: imagePrompts.section_3, url: '' },\n      section_4: { prompt: imagePrompts.section_4, url: '' }\n    }\n  }\n}];"
+        "jsCode": "// Generate image prompt descriptions for the article sections\nconst topic = $('Set Article Input').first().json.topic;\n\nconst imagePrompts = {\n  hero: `Professional academic campus panoramic photo, modern university buildings, students walking on pathways, blue sky, vibrant academic atmosphere, related to ${topic}`,\n  section_1: `Infographic style illustration showing academic program structure, courses and curriculum, modern educational design, related to ${topic}`,\n  section_2: `University admissions office, student registration process, modern campus administrative building, welcoming academic environment`,\n  section_3: `Career opportunities and professional growth, technology workplace, Israeli high-tech office environment, team collaboration`,\n  section_4: `Data visualization, salary charts, job market statistics, professional career progression, modern business analytics`\n};\n\n// Output image data with empty URL placeholders (to be filled by image generation step if added)\nreturn [{\n  json: {\n    images: {\n      hero: { prompt: imagePrompts.hero, url: '' },\n      section_1: { prompt: imagePrompts.section_1, url: '' },\n      section_2: { prompt: imagePrompts.section_2, url: '' },\n      section_3: { prompt: imagePrompts.section_3, url: '' },\n      section_4: { prompt: imagePrompts.section_4, url: '' }\n    }\n  }\n}];"
       },
       "id": "images-001",
       "name": "Preparing Images for HTML",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [920, 440],
-      "notes": "Prepares image prompts and URLs for the HTML template"
+      "position": [
+        1260,
+        440
+      ],
+      "notes": "Creates image prompt descriptions for hero and 4 section images with empty URL placeholders"
     },
     {
       "parameters": {
@@ -128,7 +156,11 @@
         "messages": {
           "values": [
             {
-              "content": "={{ $('Improved_N8N_Prompt').first().json.prompt }}\n\n═══════════════════════════════════════════════════════\nBLOG CONTENT INPUT\n═══════════════════════════════════════════════════════\n\n{{ $('Writing Blog').first().json.output }}\n\n═══════════════════════════════════════════════════════\nIMAGE URLS\n═══════════════════════════════════════════════════════\n\nHero: {{ $items('Preparing Images for HTML')[0].json.images.hero.url }}\nSection 1: {{ $items('Preparing Images for HTML')[0].json.images.section_1.url }}\nSection 2: {{ $items('Preparing Images for HTML')[0].json.images.section_2.url }}\nSection 3: {{ $items('Preparing Images for HTML')[0].json.images.section_3.url }}\nSection 4: {{ $items('Preparing Images for HTML')[0].json.images.section_4.url }}\n\n═══════════════════════════════════════════════════════\nSOCIAL PROFILES\n═══════════════════════════════════════════════════════\n\n{{ JSON.stringify($('Process Discovery Data').first().json.social_profiles, null, 2) }}\n\n═══════════════════════════════════════════════════════\nPRODUCT DATA (if any)\n═══════════════════════════════════════════════════════\n\n{{ JSON.stringify($json['products'], null, 2) }}\n\n═══════════════════════════════════════════════════════\nREVIEW DATA (if any)\n═══════════════════════════════════════════════════════\n\n{{ JSON.stringify($json['reviews_data'], null, 2) }}",
+              "content": "═══════════════════════════════════════════════════════\nARTICLE GENERATION SYSTEM — NETANYA ACADEMIC COLLEGE\n═══════════════════════════════════════════════════════\n\nYou are a senior Hebrew content writer specializing in educational and academic content. You write professional, research-based articles for the Netanya Academic College website (netanya.ac.il). Your articles help prospective students make informed decisions about their academic path.\n\n═══════════════════════════════════════════════════════\nACTIVE DATA INPUTS (DO NOT EDIT EXPRESSION TOKENS)\n═══════════════════════════════════════════════════════\n\n{{ JSON.stringify($json[\"products\"], null, 2) }}\n\n{{ $('Writing Blog').first().json.output }}\n\n{{ JSON.stringify($json[\"reviews_data\"], null, 2) }}\n\n{{ JSON.stringify($json[\"social_profiles\"], null, 2) }}\n\n{{ $items(\"Preparing Images for HTML\")[0].json.images.section_1.url }}\n{{ $items(\"Preparing Images for HTML\")[0].json.images.section_2.url }}\n{{ $items(\"Preparing Images for HTML\")[0].json.images.section_3.url }}\n{{ $items(\"Preparing Images for HTML\")[0].json.images.section_4.url }}\n{{ $items(\"Preparing Images for HTML\")[0].json.images.hero.url }}\n\n═══════════════════════════════════════════════════════\nBRAND IDENTITY\n═══════════════════════════════════════════════════════\n\nBrand: המכללה האקדמית נתניה (Netanya Academic College)\nWebsite: https://www.netanya.ac.il/\nFounded: 1994\nPhone: 09-8607777\nHotline: *2443\nFree line: 1-800-225-771\nEmail: reginfo@netanya.ac.il\nAddress: רחוב האוניברסיטה 1, נתניה 4210002\nContact page: https://www.netanya.ac.il/צור-קשר/\nRegistration: https://www.netanya.ac.il/consulting-and-registration/\n\nSocial profiles:\n- Facebook: https://www.facebook.com/netanyacollege.ac/\n- Instagram: https://www.instagram.com/netanya.acda/\n- LinkedIn: https://il.linkedin.com/school/netanya-academic-college/\n\nLogo URL: https://upload.wikimedia.org/wikipedia/commons/c/c0/Netanya_Academic_College_logo.png\n\n═══════════════════════════════════════════════════════\nLANGUAGE & DIRECTION\n═══════════════════════════════════════════════════════\n\n- Write in Hebrew (he)\n- All HTML must be dir=\"rtl\" lang=\"he\"\n- Text alignment: right\n- Border accents: border-right (not border-left)\n- Accordion indicators: positioned at left end of row (since RTL)\n- Padding: padding-right for list indentation\n- All content must read naturally in Hebrew — not translated-sounding\n\n═══════════════════════════════════════════════════════\nARTICLE TYPE & VERTICAL\n═══════════════════════════════════════════════════════\n\nType: Educational informational article\nVertical: Higher education / Academic institution\nAudience: Prospective students, parents, career changers considering academic studies\nTone: Professional, authoritative, warm but not salesy. Guide the reader to make an informed decision.\nNo disclaimer needed (education vertical, not gambling/health/finance).\n\n═══════════════════════════════════════════════════════\nDESIGN SYSTEM\n═══════════════════════════════════════════════════════\n\nColors:\n- Primary: #0099ff\n- Secondary: #1bb0ce\n- Text: #1a1a1a (body), #555555 (muted)\n- Background: #ffffff (main), #f8f9fa (alt sections)\n- Gradient: linear-gradient(135deg, #0077cc 0%, #0099ff 50%, #1bb0ce 100%)\n\nTypography:\n- Font: 'Assistant', sans-serif (Google Fonts, Hebrew subset)\n- Base: 18px, line-height 1.75\n- H2: clamp(22px, 2.5vw, 26px), font-weight 800\n- H3: clamp(19px, 2.2vw, 22px), font-weight 700\n- Callout text: 17px\n- Small labels: 14-15px\n\nSpacing (8-point grid):\n- Section gaps: 48px\n- Heading margin-bottom: 24px\n- Paragraph margin-bottom: 16px\n- Card/box padding: 20-24px\n- Table cell padding: 12px 16px\n\nShadows:\n- Soft: 0 2px 12px rgba(0,0,0,0.08)\n- Medium: 0 4px 20px rgba(0,0,0,0.12)\n- Floating button: 0 4px 16px rgba(0,0,0,0.15)\n\n═══════════════════════════════════════════════════════\nARTICLE STRUCTURE (MANDATORY)\n═══════════════════════════════════════════════════════\n\nGenerate the article with EXACTLY this structure:\n\n1. HERO BLOCK\n   - Gradient background (#0077cc → #0099ff → #1bb0ce)\n   - Article label: \"מאמר מקצועי מבוסס מחקר | עודכן אחרונה: [YEAR]\"\n   - Main title (H1-equivalent, but use <p> with large font — no H1 tag)\n   - Subtitle explaining what the reader will learn\n   - Reading time: \"זמן קריאה: X דקות\" (calculate from word count, ~200 words/min)\n\n2. INTRO BLOCK\n   - 1-2 paragraphs contextualizing the topic\n   - Background: #f8f9fa with border-right: 4px solid #0099ff\n   - Sets expectations for what the article covers\n\n3. TABLE OF CONTENTS (MANDATORY)\n   - Inside <nav> with <details> accordion (closed by default)\n   - Summary text: \"תוכן העניינים\"\n   - Ordered list with anchor links to all H2 sections\n   - Each link styled: color #0099ff, no text-decoration, hover transitions\n\n4. KEY TAKEAWAYS (MANDATORY)\n   - 4-5 factual bullet points summarizing the article\n   - Border: 2px solid #0099ff\n   - Appears BEFORE the first content section\n\n5. MAIN BODY SECTIONS\n   - 8-12 H2 sections covering the topic comprehensively\n   - Each H2 has an id attribute for TOC anchoring (section1, section2, etc.)\n   - H2 style: border-bottom: 3px solid #0099ff\n   - H3 subsections where appropriate\n   - Each section opens with a direct answer (answer-first for GEO-SEO)\n   - Target 134-167 words per content block\n   - Paragraphs must be self-contained (understandable without surrounding context)\n   - Include specific numbers, dates, percentages where possible\n   - Name the subject explicitly — avoid pronoun-only references\n\n6. EXPERT TIP BOXES (3-5 throughout article)\n   - Background: #f8f9fa, border-right: 4px solid #0099ff\n   - Label: \"טיפ מומחה\" or similar\n   - Short, actionable insight\n\n7. FIELD CASE / STORY BOXES (1-2 throughout article)\n   - Background: #fff8e1, border-right: 4px solid #1bb0ce\n   - Label: \"מקרה מהשטח\"\n   - Real-world scenario illustrating a point\n\n8. COMPARISON/DATA TABLES (where relevant)\n   - Full HTML table (not CSS grid)\n   - Gradient header row: #0077cc → #0099ff\n   - Alternating row backgrounds: #ffffff / #f8f9fa\n   - Responsive: wrapped in overflow-x: auto div\n\n9. IMAGES (4-5 section images)\n   - Use the image URL tokens from data inputs\n   - Style: max-width:800px; margin:0 auto; display:block; border-radius:8px\n   - Aspect ratio: 1200/630, object-fit:cover\n   - Hebrew alt text describing the image content\n   - NO captions below images\n\n10. HOW-TO / TIPS SECTION (MANDATORY)\n    - Step-by-step guide relevant to the article topic\n    - Numbered list with bold step titles in #0099ff\n    - Practical, actionable advice\n\n11. FAQ SECTION (MANDATORY — 5-7 questions)\n    - Each Q&A in a <details> element with <summary>\n    - Border: 1px solid #e0e0e0, border-radius: 8px\n    - Summary: font-size 18px, font-weight 700\n    - Answer: font-size 17px, line-height 1.75\n    - Real questions real readers would ask — direct, non-evasive answers\n\n12. CLOSING CTA BLOCK\n    - Gradient background matching hero\n    - Compelling headline encouraging action\n    - 1-2 CTA buttons: one for site visit, one for phone call (tel:09-8607777)\n\n13. CONTACT CTA ROW\n    - Two buttons: \"צרו קשר עם המכללה\" + \"חייגו: 09-8607777\"\n    - SVG icons (envelope, phone)\n    - Full-width on mobile\n\n14. ABOUT THE BRAND SECTION (MANDATORY — MUST BE LAST)\n    - Background: #f8f9fa, border-radius: 10px\n    - Logo image (from logo URL)\n    - Brand name as heading\n    - Short description (2-3 sentences about the college)\n    - Social buttons: Facebook, Instagram, LinkedIn\n    - Social button hovers MUST use official brand colors\n    - Contact CTA buttons: \"צרו קשר\" + phone number\n\n15. FLOATING BACK TO TOP BUTTON (MANDATORY — RIGHT SIDE)\n    - position: fixed; bottom: 24px; RIGHT: 24px (RIGHT side of page)\n    - Circular (48px x 48px), navy #102745 background, white chevron-up SVG icon\n    - Hover: translateY(-3px), switch to #2EAEE0 blue, stronger shadow\n    - onclick: smooth scroll to top (window.scrollTo with behavior:'smooth')\n    - SVG must be on SAME LINE as the <a> tag — no newlines (wpautop resistance)\n    - Mobile: right: 16px; bottom: 16px; 42x42px\n\n16. FLOATING CONTACT BUTTON (MANDATORY — LEFT SIDE)\n    - position: fixed; bottom: 24px; LEFT: 24px (LEFT side of page)\n    - Pill shape, red #EC282B background, white text\n    - SVG chat icon + \"ייעוץ והרשמה\" text — ALL ON SAME LINE (wpautop resistance)\n    - Hover: darken to #c91f22, lift effect + red glow shadow\n    - Links to contact page\n    - Mobile: left: 16px; bottom: 16px; smaller padding/font\n\n17. PHONE NUMBER HOVER EFFECTS (MANDATORY)\n    - ALL phone number links (tel:) must have hover effects\n    - In gradient/dark backgrounds: hover brightens background, stronger border, slight lift\n    - In light backgrounds: hover fills with navy #102745, white text, slight lift\n    - Transition: 0.25s ease on all properties\n    - Every tel: link must have onmouseover and onmouseout handlers\n\n18. JSON-LD SCHEMAS (MANDATORY — 3 schemas)\n    - Article schema (headline, description, author, publisher, dates, inLanguage: \"he\")\n    - EducationalOrganization schema (name, url, logo, telephone, email, address, sameAs, foundingDate)\n    - FAQPage schema (all Q&A pairs from FAQ section)\n    - All placed inside <article> element, before </article>\n\n═══════════════════════════════════════════════════════\nWORDPRESS WPAUTOP RESISTANCE (CRITICAL)\n═══════════════════════════════════════════════════════\n\nWordPress's wpautop filter converts newlines to <br> and wraps blocks in <p> tags.\nThis BREAKS icon+text alignment inside buttons. Follow these rules:\n\n1. ALL buttons with SVG icons MUST have the SVG and text on the SAME LINE:\n   CORRECT: <a ...><svg ...></svg> Button Text</a>\n   WRONG:   <a ...>\\n  <svg ...></svg>\\n  Button Text\\n</a>\n\n2. NEVER put a newline between <svg> closing tag and the button text.\n3. NEVER put a newline between the opening <a> tag and the <svg>.\n4. Add vertical-align:middle to all SVG elements inside buttons.\n5. Use display:inline-flex (not display:flex) on button links to prevent <p> wrapping.\n6. Add flex-wrap:nowrap to flex button containers.\n7. The floating back-to-top button goes on the RIGHT side (right:24px).\n8. The floating contact button goes on the LEFT side (left:24px).\n9. Both floating buttons must be on SEPARATE sides to avoid overlap.\n\n═══════════════════════════════════════════════════════\nCSS RULES\n═══════════════════════════════════════════════════════\n\n- ALL CSS must be inline styles (WordPress strips <style> blocks)\n- EXCEPTION: One <style> block is allowed for:\n  - Accordion indicators (::after pseudo-elements)\n  - Hover states on TOC/FAQ items\n  - @media responsive breakpoints\n- Font import via <style> block: @import url for Google Fonts\n- No external CSS/JS dependencies\n- No CDN links for styles\n- Transitions: 0.25s ease for hovers\n- Min touch target: 44px (48px for floating button)\n- cursor: pointer on all interactive elements\n\n═══════════════════════════════════════════════════════\nSTYLE BLOCK (INCLUDE AT TOP OF ARTICLE)\n═══════════════════════════════════════════════════════\n\nInclude this exact style block at the start of the article (inside <article>, after opening tag):\n\n<style>\n@import url('https://fonts.googleapis.com/css2?family=Assistant:wght@400;600;700;800&display=swap&subset=hebrew');\n@media screen and (max-width: 768px) {\n  article { padding: 0 16px !important; }\n  .hero-block { padding: 24px 20px !important; }\n  .hero-block .hero-title { font-size: 20px !important; }\n  .hero-block .hero-subtitle { font-size: 15px !important; }\n  .toc-list li { font-size: 16px !important; }\n  .section-heading { font-size: 22px !important; }\n  .sub-heading { font-size: 19px !important; }\n  .responsive-table { font-size: 15px !important; }\n  .responsive-table th, .responsive-table td { padding: 10px 12px !important; }\n  .author-section-inner { flex-direction: column !important; text-align: center !important; }\n  .author-logo { margin: 0 auto 16px auto !important; }\n  .social-buttons { justify-content: center !important; }\n  .contact-cta-row { flex-direction: column !important; }\n  .contact-cta-row a { width: 100% !important; text-align: center !important; }\n  .floating-contact { padding: 12px 20px !important; font-size: 15px !important; }\n  .key-takeaways { padding: 20px !important; }\n  .expert-tip { padding: 18px 20px !important; }\n  .cta-block { padding: 28px 20px !important; }\n  .cta-block .cta-title { font-size: 22px !important; }\n}\n@media screen and (max-width: 480px) {\n  .hero-block .hero-title { font-size: 18px !important; }\n  .section-heading { font-size: 20px !important; }\n}\ndetails > summary { list-style: none; }\ndetails > summary::-webkit-details-marker { display: none; }\ndetails > summary::after {\n  content: '+';\n  font-weight: 700;\n  font-size: 20px;\n  color: #0099ff;\n  margin-right: auto;\n  margin-left: 0;\n  padding-right: 12px;\n  flex-shrink: 0;\n  transition: transform 0.2s ease;\n}\ndetails[open] > summary::after {\n  content: '\\2212';\n}\ndetails > summary:hover {\n  background: rgba(0, 153, 255, 0.06);\n  border-radius: 6px;\n}\n.toc-list a:hover {\n  color: #1bb0ce !important;\n  background: rgba(0, 153, 255, 0.04);\n  border-radius: 4px;\n}\n.faq-item summary:hover {\n  background: rgba(0, 153, 255, 0.06);\n  border-radius: 6px;\n}\n</style>\n\n═══════════════════════════════════════════════════════\nLINKS RULES\n═══════════════════════════════════════════════════════\n\nInternal links (to netanya.ac.il pages):\n- Link to the college homepage at least once\n- Link to the specific degree program page at least twice\n- Link to the contact page at least 3 times throughout the article\n- Link to the registration info page at least once\n- Use descriptive Hebrew anchor text (never \"לחצו כאן\")\n- Style: color: #0099ff; text-decoration: underline\n\nExternal links (to authoritative sources):\n- Include 3-5 external links to government/authority sources\n- Examples: Ministry of Labor, Innovation Authority, CHE, CBS\n- Add target=\"_blank\" rel=\"noopener\" to external links\n- These boost E-E-A-T signals and credibility\n\nPRESERVE all internal and external links from the blog content input. Do not strip links.\n\n═══════════════════════════════════════════════════════\nGEO-SEO OPTIMIZATION RULES\n═══════════════════════════════════════════════════════\n\n1. Every H2 section MUST open with a 1-2 sentence direct answer before expanding\n2. Use definition patterns: \"X הוא [הגדרה].\" or \"X מתייחס ל[הסבר].\"\n3. Target 134-167 words per content block for maximum AI extractability\n4. Each paragraph should be self-contained — understandable without surrounding text\n5. Name the subject explicitly in each passage, avoid pronoun-only references\n6. Include specific numbers, dates, and percentages in every section\n7. Reference named sources when citing data\n8. All JSON-LD schemas must be present (Article, Organization, FAQPage)\n9. sameAs array in Organization schema must include all social profile URLs\n\n═══════════════════════════════════════════════════════\nDATE FRESHNESS RULE (MANDATORY — NON-NEGOTIABLE)\n═══════════════════════════════════════════════════════\n\nAll dates, years, and months mentioned in the article MUST be current or future. This is a HARD rule:\n\n1. The article generation date is the CURRENT date. If today is April 2026, all references must reflect 2026 or later.\n2. NEVER mention a past year as if it is current. Example: if now is 2026, do NOT write \"עודכן אחרונה: 2025\" or reference \"דוח 2025\" as the latest — use 2026.\n3. Report references: always label them with the CURRENT year (e.g., \"דוח רשות החדשנות 2026\").\n4. \"Last updated\" labels: must show the current month and year (e.g., \"עודכן אחרונה: אפריל 2026\").\n5. JSON-LD datePublished and dateModified: must use today's actual date in YYYY-MM-DD format.\n6. Salary/data tables with year ranges: use CURRENT year and one year back max (e.g., \"2025-2026\"), never two years behind.\n7. If referencing a source URL that contains a year in the path (e.g., /report-2025/), keep the URL as-is but update the DISPLAY TEXT to the current year.\n8. This rule applies to ALL text in the article: hero block, body content, callout boxes, footnotes, schema markup, everywhere.\n\n═══════════════════════════════════════════════════════\nCOMPLIANCE RULES (NON-NEGOTIABLE)\n═══════════════════════════════════════════════════════\n\n1. NEVER fabricate reviews, ratings, testimonials, or social proof\n2. NEVER fabricate author identity, credentials, or founding stories\n3. NEVER fabricate prices, offers, or promotional claims\n4. NEVER fabricate licensing, compliance, or legal claims\n5. NEVER hardcode volatile data (prices, availability, specific stats that change)\n6. Only show social buttons for verified real accounts\n7. Only show review sections if real review data is provided in input\n8. If data cannot be verified, omit it — never guess\n9. Contact information must be real and verified (phone, email, URL)\n10. All claims about the institution must be factually accurate\n\n═══════════════════════════════════════════════════════\nIMAGE RULES\n═══════════════════════════════════════════════════════\n\n- Use image URLs from the data input tokens above\n- Place 4-5 images throughout the article (section_1 through section_4 + hero)\n- Style: max-width:800px; margin:0 auto 24px auto; display:block; border-radius:8px\n- Shadow: 0 2px 12px rgba(0,0,0,0.1)\n- Aspect ratio: 1200/630, object-fit:cover, height:auto\n- Hebrew alt text describing the visual content\n- NEVER add captions below images (no figcaption)\n- Hero image can be wider (max-width:1000px)\n\n═══════════════════════════════════════════════════════\nOUTPUT FORMAT\n═══════════════════════════════════════════════════════\n\nReturn ONLY the complete HTML article — starting with <article> and ending with </article>.\nNo markdown. No code fences. No explanations.\nNo HTML comments in the output.\nThe output must be ready to paste directly into WordPress.",
+              "role": "system"
+            },
+            {
+              "content": "=═══════════════════════════════════════════════════\nBLOG CONTENT INPUT\n═══════════════════════════════════════════════════\n\n{{ $('Writing Blog').first().json.output }}\n\n═══════════════════════════════════════════════════\nIMAGE URLS\n═══════════════════════════════════════════════════\n\nHero: {{ $items('Preparing Images for HTML')[0].json.images.hero.url }}\nSection 1: {{ $items('Preparing Images for HTML')[0].json.images.section_1.url }}\nSection 2: {{ $items('Preparing Images for HTML')[0].json.images.section_2.url }}\nSection 3: {{ $items('Preparing Images for HTML')[0].json.images.section_3.url }}\nSection 4: {{ $items('Preparing Images for HTML')[0].json.images.section_4.url }}\n\n═══════════════════════════════════════════════════\nSOCIAL PROFILES\n═══════════════════════════════════════════════════\n\n{{ JSON.stringify($('Process Discovery Data').first().json.social_profiles, null, 2) }}\n\n═══════════════════════════════════════════════════\nPRODUCT DATA (if any)\n═══════════════════════════════════════════════════\n\n{{ JSON.stringify($json['products'], null, 2) }}\n\n═══════════════════════════════════════════════════\nREVIEW DATA (if any)\n═══════════════════════════════════════════════════\n\n{{ JSON.stringify($json['reviews_data'], null, 2) }}\n\n═══════════════════════════════════════════════════\nTOPIC & KEYWORD\n═══════════════════════════════════════════════════\n\nTopic: {{ $('Set Article Input').first().json.topic }}\nKeyword: {{ $('Set Article Input').first().json.keyword }}\nTarget URL: {{ $('Set Article Input').first().json.target_url }}\n\n═══════════════════════════════════════════════════\nINTERNAL LINKS DISCOVERED\n═══════════════════════════════════════════════════\n\n{{ JSON.stringify($('Process Discovery Data').first().json.internal_links, null, 2) }}\n\nGenerate the complete HTML article now. Return ONLY the HTML starting with <article> and ending with </article>. No markdown fences. No explanations.",
               "role": "user"
             }
           ]
@@ -142,19 +174,25 @@
       "name": "Generate HTML Article",
       "type": "@n8n/n8n-nodes-langchain.lmChatAnthropic",
       "typeVersion": 1.4,
-      "position": [1180, 300],
-      "notes": "Generates the final HTML article using the prompt template, blog content, and image URLs"
+      "position": [
+        1540,
+        300
+      ],
+      "notes": "Generates the final HTML article using the full prompt template with blog content, images, and discovery data"
     },
     {
       "parameters": {
-        "jsCode": "const htmlOutput = $('Generate HTML Article').first().json.output || '';\n\n// Clean up the HTML output\nlet cleanHtml = htmlOutput\n  .replace(/```html\\n?/g, '')\n  .replace(/```\\n?/g, '')\n  .trim();\n\n// Fix wpautop-unsafe patterns: ensure SVG+text are on same line\ncleanHtml = cleanHtml.replace(/<\\/svg>\\s*\\n\\s*/g, '</svg> ');\ncleanHtml = cleanHtml.replace(/>\\s*\\n\\s*<svg/g, '><svg');\n\n// Validate basic structure\nconst hasArticleOpen = cleanHtml.includes('<article');\nconst hasArticleClose = cleanHtml.includes('</article>');\nconst hasToc = cleanHtml.includes('תוכן העניינים');\nconst hasFaq = cleanHtml.includes('שאלות נפוצות');\nconst hasAuthor = cleanHtml.includes('המכללה האקדמית נתניה');\nconst hasSchema = cleanHtml.includes('application/ld+json');\nconst hasFloatingContact = cleanHtml.includes('floating-contact');\nconst hasBackToTop = cleanHtml.includes('back-to-top');\nconst hasNoStaleYear = !cleanHtml.match(/עודכן אחרונה:\\s*202[0-5]/);\n\nconst validation = {\n  article_wrapper: hasArticleOpen && hasArticleClose,\n  toc_present: hasToc,\n  faq_present: hasFaq,\n  author_section: hasAuthor,\n  json_ld_schemas: hasSchema,\n  floating_contact: hasFloatingContact,\n  back_to_top: hasBackToTop,\n  date_freshness: hasNoStaleYear,\n  all_passed: hasArticleOpen && hasArticleClose && hasToc && hasFaq && hasAuthor && hasSchema && hasFloatingContact && hasBackToTop && hasNoStaleYear\n};\n\nreturn [{\n  json: {\n    html: cleanHtml,\n    validation: validation,\n    word_count: cleanHtml.split(/\\s+/).length,\n    char_count: cleanHtml.length\n  }\n}];"
+        "jsCode": "const htmlOutput = $('Generate HTML Article').first().json.output || '';\n\n// Step 1: Strip markdown code fences if present\nlet cleanHtml = htmlOutput\n  .replace(/^```html\\s*\\n?/gm, '')\n  .replace(/^```\\s*$/gm, '')\n  .trim();\n\n// Step 2: Fix wpautop-unsafe patterns (SVG + text on separate lines)\ncleanHtml = cleanHtml.replace(/<\\/svg>\\s*\\n\\s*/g, '</svg> ');\ncleanHtml = cleanHtml.replace(/(<a[^>]*>)\\s*\\n\\s*(<svg)/g, '$1$2');\ncleanHtml = cleanHtml.replace(/<\\/svg>\\s*\\n\\s*([^<])/g, '</svg> $1');\n\n// Step 3: Validate mandatory sections\nconst hasArticleOpen = /<article[\\s>]/.test(cleanHtml);\nconst hasArticleClose = cleanHtml.includes('</article>');\nconst hasToc = cleanHtml.includes('\\u05ea\\u05d5\\u05db\\u05df \\u05d4\\u05e2\\u05e0\\u05d9\\u05d9\\u05e0\\u05d9\\u05dd');\nconst hasFaq = /\\u05e9\\u05d0\\u05dc\\u05d5\\u05ea\\s*\\u05e0\\u05e4\\u05d5\\u05e6\\u05d5\\u05ea/.test(cleanHtml) || cleanHtml.includes('faq');\nconst hasAuthor = cleanHtml.includes('\\u05d4\\u05de\\u05db\\u05dc\\u05dc\\u05d4 \\u05d4\\u05d0\\u05e7\\u05d3\\u05de\\u05d9\\u05ea \\u05e0\\u05ea\\u05e0\\u05d9\\u05d4');\nconst hasSchema = cleanHtml.includes('application/ld+json');\nconst hasFloatingContact = /floating.?contact/i.test(cleanHtml) || cleanHtml.includes('\\u05d9\\u05d9\\u05e2\\u05d5\\u05e5 \\u05d5\\u05d4\\u05e8\\u05e9\\u05de\\u05d4');\nconst hasBackToTop = /back.?to.?top/i.test(cleanHtml) || cleanHtml.includes('scrollTo');\n\n// Date freshness: no stale years in \"updated\" labels\nconst stalePattern = /\\u05e2\\u05d5\\u05d3\\u05db\\u05df \\u05d0\\u05d7\\u05e8\\u05d5\\u05e0\\u05d4:\\s*(20[0-1][0-9]|202[0-5])/g;\nconst hasNoStaleYear = !stalePattern.test(cleanHtml);\n\nconst validation = {\n  article_wrapper: hasArticleOpen && hasArticleClose,\n  toc_present: hasToc,\n  faq_present: hasFaq,\n  author_section: hasAuthor,\n  json_ld_schemas: hasSchema,\n  floating_contact: hasFloatingContact,\n  back_to_top: hasBackToTop,\n  date_freshness: hasNoStaleYear,\n  all_passed: (hasArticleOpen && hasArticleClose && hasToc && hasFaq && hasAuthor && hasSchema && hasFloatingContact && hasBackToTop && hasNoStaleYear)\n};\n\n// Count words (strip HTML tags first)\nconst textOnly = cleanHtml.replace(/<[^>]+>/g, ' ').replace(/\\s+/g, ' ').trim();\nconst wordCount = textOnly.split(/\\s+/).length;\n\nreturn [{\n  json: {\n    html: cleanHtml,\n    validation: validation,\n    word_count: wordCount,\n    char_count: cleanHtml.length\n  }\n}];"
       },
       "id": "validate-001",
       "name": "Validate & Clean HTML",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [1420, 300],
-      "notes": "Validates the HTML output has all mandatory sections and cleans up formatting"
+      "position": [
+        1800,
+        300
+      ],
+      "notes": "Strips markdown fences, fixes wpautop patterns, validates all mandatory sections, counts words"
     },
     {
       "parameters": {
@@ -176,19 +214,23 @@
             }
           ],
           "combinator": "and"
-        }
+        },
+        "options": {}
       },
       "id": "switch-001",
       "name": "Validation Check",
       "type": "n8n-nodes-base.if",
       "typeVersion": 2,
-      "position": [1660, 300],
-      "notes": "Routes to WordPress publish if validation passes, or to error handler if not"
+      "position": [
+        2060,
+        300
+      ],
+      "notes": "Routes to WordPress publish if all validations pass, or to error handler if any check fails"
     },
     {
       "parameters": {
         "method": "POST",
-        "url": "={{ $('Set Article Input').first().json.wp_api_url || 'https://example.com/wp-json/wp/v2/pages' }}",
+        "url": "={{ $('Set Article Input').first().json.wp_api_url }}",
         "authentication": "genericCredentialType",
         "genericAuthType": "httpBasicAuth",
         "sendBody": true,
@@ -214,19 +256,25 @@
       "name": "Publish to WordPress",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
-      "position": [1900, 200],
-      "notes": "Publishes the validated HTML as a draft page in WordPress"
+      "position": [
+        2320,
+        200
+      ],
+      "notes": "Publishes the validated HTML article as a draft page in WordPress via REST API"
     },
     {
       "parameters": {
-        "jsCode": "const validation = $('Validate & Clean HTML').first().json.validation;\nconst failures = Object.entries(validation)\n  .filter(([key, val]) => key !== 'all_passed' && val === false)\n  .map(([key]) => key);\n\nreturn [{\n  json: {\n    error: 'HTML validation failed',\n    failed_checks: failures,\n    message: `The following mandatory sections are missing: ${failures.join(', ')}. Please regenerate.`\n  }\n}];"
+        "jsCode": "const validation = $('Validate & Clean HTML').first().json.validation;\nconst wordCount = $('Validate & Clean HTML').first().json.word_count;\nconst charCount = $('Validate & Clean HTML').first().json.char_count;\n\nconst failures = Object.entries(validation)\n  .filter(([key, val]) => key !== 'all_passed' && val === false)\n  .map(([key]) => key.replace(/_/g, ' '));\n\nconst checkLabels = {\n  'article wrapper': 'Missing <article> wrapper element',\n  'toc present': 'Missing Table of Contents section',\n  'faq present': 'Missing FAQ section',\n  'author section': 'Missing About the Brand / Author section',\n  'json ld schemas': 'Missing JSON-LD structured data schemas',\n  'floating contact': 'Missing floating contact button',\n  'back to top': 'Missing back-to-top button',\n  'date freshness': 'Stale dates found (pre-2026 years in \"last updated\" labels)'\n};\n\nconst failureDetails = failures.map(f => ({\n  check: f,\n  description: checkLabels[f] || 'Check failed'\n}));\n\nreturn [{\n  json: {\n    status: 'VALIDATION_FAILED',\n    failed_checks: failures,\n    failure_details: failureDetails,\n    total_checks: Object.keys(validation).length - 1,\n    passed_checks: Object.keys(validation).length - 1 - failures.length,\n    word_count: wordCount,\n    char_count: charCount,\n    message: `HTML validation failed. ${failures.length} check(s) did not pass: ${failures.join(', ')}. Please review and regenerate the article.`\n  }\n}];"
       },
       "id": "error-001",
       "name": "Validation Error Handler",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [1900, 440],
-      "notes": "Reports which validation checks failed"
+      "position": [
+        2320,
+        440
+      ],
+      "notes": "Reports which validation checks failed with detailed descriptions and counts"
     }
   ],
   "connections": {
