@@ -191,19 +191,21 @@ Generate the article with EXACTLY this structure:
     - Social button hovers MUST use official brand colors
     - Contact CTA buttons: "צרו קשר" + phone number
 
-15. FLOATING BACK TO TOP BUTTON (MANDATORY)
-    - position: fixed; bottom: 88px; left: 24px (ABOVE the contact button)
-    - Circular (44px x 44px), navy #102745 background, white chevron-up SVG icon
+15. FLOATING BACK TO TOP BUTTON (MANDATORY — RIGHT SIDE)
+    - position: fixed; bottom: 24px; RIGHT: 24px (RIGHT side of page)
+    - Circular (48px x 48px), navy #102745 background, white chevron-up SVG icon
     - Hover: translateY(-3px), switch to #2EAEE0 blue, stronger shadow
     - onclick: smooth scroll to top (window.scrollTo with behavior:'smooth')
-    - Must appear ABOVE the floating contact button
+    - SVG must be on SAME LINE as the <a> tag — no newlines (wpautop resistance)
+    - Mobile: right: 16px; bottom: 16px; 42x42px
 
-16. FLOATING CONTACT BUTTON (MANDATORY)
-    - position: fixed; bottom: 24px; left: 24px (LEFT side — default)
+16. FLOATING CONTACT BUTTON (MANDATORY — LEFT SIDE)
+    - position: fixed; bottom: 24px; LEFT: 24px (LEFT side of page)
     - Pill shape, red #EC282B background, white text
-    - SVG chat icon + "ייעוץ והרשמה" text
+    - SVG chat icon + "ייעוץ והרשמה" text — ALL ON SAME LINE (wpautop resistance)
     - Hover: darken to #c91f22, lift effect + red glow shadow
     - Links to contact page
+    - Mobile: left: 16px; bottom: 16px; smaller padding/font
 
 17. PHONE NUMBER HOVER EFFECTS (MANDATORY)
     - ALL phone number links (tel:) must have hover effects
@@ -217,6 +219,26 @@ Generate the article with EXACTLY this structure:
     - EducationalOrganization schema (name, url, logo, telephone, email, address, sameAs, foundingDate)
     - FAQPage schema (all Q&A pairs from FAQ section)
     - All placed inside <article> element, before </article>
+
+═══════════════════════════════════════════════════════
+WORDPRESS WPAUTOP RESISTANCE (CRITICAL)
+═══════════════════════════════════════════════════════
+
+WordPress's wpautop filter converts newlines to <br> and wraps blocks in <p> tags.
+This BREAKS icon+text alignment inside buttons. Follow these rules:
+
+1. ALL buttons with SVG icons MUST have the SVG and text on the SAME LINE:
+   CORRECT: <a ...><svg ...></svg> Button Text</a>
+   WRONG:   <a ...>\n  <svg ...></svg>\n  Button Text\n</a>
+
+2. NEVER put a newline between <svg> closing tag and the button text.
+3. NEVER put a newline between the opening <a> tag and the <svg>.
+4. Add vertical-align:middle to all SVG elements inside buttons.
+5. Use display:inline-flex (not display:flex) on button links to prevent <p> wrapping.
+6. Add flex-wrap:nowrap to flex button containers.
+7. The floating back-to-top button goes on the RIGHT side (right:24px).
+8. The floating contact button goes on the LEFT side (left:24px).
+9. Both floating buttons must be on SEPARATE sides to avoid overlap.
 
 ═══════════════════════════════════════════════════════
 CSS RULES
