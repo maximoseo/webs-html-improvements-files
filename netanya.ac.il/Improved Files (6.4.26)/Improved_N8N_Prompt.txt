@@ -71,11 +71,20 @@ DESIGN SYSTEM
 ═══════════════════════════════════════════════════════
 
 Colors:
-- Primary: #0099ff
-- Secondary: #1bb0ce
-- Text: #1a1a1a (body), #555555 (muted)
-- Background: #ffffff (main), #f8f9fa (alt sections)
-- Gradient: linear-gradient(135deg, #0077cc 0%, #0099ff 50%, #1bb0ce 100%)
+- Primary blue: #2EAEE0 (links, borders, TOC/FAQ accents, accordion indicators)
+- Secondary teal: #52BCAC (field case borders, secondary callouts, phone CTA button)
+- CTA red: #EC282B (primary action buttons, floating contact button, "Did You Know?" labels)
+- Navy: #102745 (headings, hero gradient start, table headers, back-to-top button)
+- Text body: #1a1a1a
+- Muted text: #3d5a73 (author description)
+- Background main: #ffffff
+- Background alt panels: #F0EACF (warm cream)
+- Background field case: #FBF8EC (lighter cream)
+- Table/FAQ inner borders: #e8e2cc
+- Outer borders: #d4ceaf
+- Hero gradient: linear-gradient(135deg, #102745 0%, #1a3a5c 50%, #2EAEE0 100%)
+- CTA block gradient: linear-gradient(135deg, #102745 0%, #EC282B 100%)
+- Table header gradient: linear-gradient(135deg, #102745 0%, #1a3a5c 50%, #2EAEE0 100%)
 
 Typography:
 - Font: 'Assistant', sans-serif (Google Fonts, Hebrew subset)
@@ -104,7 +113,7 @@ ARTICLE STRUCTURE (MANDATORY)
 Generate the article with EXACTLY this structure:
 
 1. HERO BLOCK
-   - Gradient background (#0077cc → #0099ff → #1bb0ce)
+   - Gradient background (#102745 → #2EAEE0 → #52BCAC)
    - Article label: "מאמר מקצועי מבוסס מחקר | עודכן אחרונה: [YEAR]"
    - Main title (H1-equivalent, but use <p> with large font — no H1 tag)
    - Subtitle explaining what the reader will learn
@@ -112,24 +121,24 @@ Generate the article with EXACTLY this structure:
 
 2. INTRO BLOCK
    - 1-2 paragraphs contextualizing the topic
-   - Background: #f8f9fa with border-right: 4px solid #0099ff
+   - Background: #F0EACF with border-right: 4px solid #2EAEE0
    - Sets expectations for what the article covers
 
 3. TABLE OF CONTENTS (MANDATORY)
    - Inside <nav> with <details> accordion (closed by default)
    - Summary text: "תוכן העניינים"
    - Ordered list with anchor links to all H2 sections
-   - Each link styled: color #0099ff, no text-decoration, hover transitions
+   - Each link styled: color #2EAEE0, no text-decoration, hover transitions
 
 4. KEY TAKEAWAYS (MANDATORY)
    - 4-5 factual bullet points summarizing the article
-   - Border: 2px solid #0099ff
+   - Border: 2px solid #2EAEE0
    - Appears BEFORE the first content section
 
 5. MAIN BODY SECTIONS
    - 8-12 H2 sections covering the topic comprehensively
    - Each H2 has an id attribute for TOC anchoring (section1, section2, etc.)
-   - H2 style: border-bottom: 3px solid #0099ff
+   - H2 style: border-bottom: 3px solid #2EAEE0
    - H3 subsections where appropriate
    - Each section opens with a direct answer (answer-first for GEO-SEO)
    - Target 134-167 words per content block
@@ -138,19 +147,19 @@ Generate the article with EXACTLY this structure:
    - Name the subject explicitly — avoid pronoun-only references
 
 6. EXPERT TIP BOXES (3-5 throughout article)
-   - Background: #f8f9fa, border-right: 4px solid #0099ff
+   - Background: #F0EACF, border-right: 4px solid #2EAEE0
    - Label: "טיפ מומחה" or similar
    - Short, actionable insight
 
 7. FIELD CASE / STORY BOXES (1-2 throughout article)
-   - Background: #fff8e1, border-right: 4px solid #1bb0ce
+   - Background: #FBF8EC, border-right: 4px solid #52BCAC
    - Label: "מקרה מהשטח"
    - Real-world scenario illustrating a point
 
 8. COMPARISON/DATA TABLES (where relevant)
    - Full HTML table (not CSS grid)
-   - Gradient header row: #0077cc → #0099ff
-   - Alternating row backgrounds: #ffffff / #f8f9fa
+   - Gradient header row: #102745 → #2EAEE0
+   - Alternating row backgrounds: #ffffff / #F0EACF
    - Responsive: wrapped in overflow-x: auto div
 
 9. IMAGES (4-5 section images)
@@ -162,12 +171,12 @@ Generate the article with EXACTLY this structure:
 
 10. HOW-TO / TIPS SECTION (MANDATORY)
     - Step-by-step guide relevant to the article topic
-    - Numbered list with bold step titles in #0099ff
+    - Numbered list with bold step titles in #2EAEE0
     - Practical, actionable advice
 
 11. FAQ SECTION (MANDATORY — 5-7 questions)
     - Each Q&A in a <details> element with <summary>
-    - Border: 1px solid #e0e0e0, border-radius: 8px
+    - Border: 1px solid #d4ceaf, border-radius: 8px
     - Summary: font-size 18px, font-weight 700
     - Answer: font-size 17px, line-height 1.75
     - Real questions real readers would ask — direct, non-evasive answers
@@ -183,7 +192,7 @@ Generate the article with EXACTLY this structure:
     - Full-width on mobile
 
 14. ABOUT THE BRAND SECTION (MANDATORY — MUST BE LAST)
-    - Background: #f8f9fa, border-radius: 10px
+    - Background: #F0EACF, border-radius: 10px
     - Logo image (from logo URL)
     - Brand name as heading
     - Short description (2-3 sentences about the college)
@@ -279,7 +288,8 @@ Include this exact style block at the start of the article (inside <article>, af
   .social-buttons { justify-content: center !important; }
   .contact-cta-row { flex-direction: column !important; }
   .contact-cta-row a { width: 100% !important; text-align: center !important; }
-  .floating-contact { padding: 12px 20px !important; font-size: 15px !important; }
+  .floating-contact { padding: 12px 18px !important; font-size: 14px !important; bottom: 16px !important; left: 16px !important; }
+  .back-to-top { bottom: 16px !important; right: 16px !important; width: 42px !important; height: 42px !important; }
   .key-takeaways { padding: 20px !important; }
   .expert-tip { padding: 18px 20px !important; }
   .cta-block { padding: 28px 20px !important; }
@@ -295,7 +305,7 @@ details > summary::after {
   content: '+';
   font-weight: 700;
   font-size: 20px;
-  color: #0099ff;
+  color: #2EAEE0;
   margin-right: auto;
   margin-left: 0;
   padding-right: 12px;
@@ -306,16 +316,16 @@ details[open] > summary::after {
   content: '\2212';
 }
 details > summary:hover {
-  background: rgba(0, 153, 255, 0.06);
+  background: rgba(46, 174, 224, 0.08);
   border-radius: 6px;
 }
 .toc-list a:hover {
-  color: #1bb0ce !important;
-  background: rgba(0, 153, 255, 0.04);
+  color: #52BCAC !important;
+  background: rgba(46, 174, 224, 0.06);
   border-radius: 4px;
 }
 .faq-item summary:hover {
-  background: rgba(0, 153, 255, 0.06);
+  background: rgba(46, 174, 224, 0.08);
   border-radius: 6px;
 }
 </style>
@@ -330,7 +340,7 @@ Internal links (to netanya.ac.il pages):
 - Link to the contact page at least 3 times throughout the article
 - Link to the registration info page at least once
 - Use descriptive Hebrew anchor text (never "לחצו כאן")
-- Style: color: #0099ff; text-decoration: underline
+- Style: color: #2EAEE0; text-decoration: underline
 
 External links (to authoritative sources):
 - Include 3-5 external links to government/authority sources
