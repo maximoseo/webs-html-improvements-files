@@ -114,10 +114,11 @@ Generate the article with EXACTLY this structure:
 
 1. HERO BLOCK
    - Gradient background (#102745 → #2EAEE0 → #52BCAC)
-   - Article label: "מאמר מקצועי מבוסס מחקר | עודכן אחרונה: [YEAR]"
+   - Article label: "מאמר מקצועי מבוסס מחקר" (NO date, NO year, NO month — do NOT include any date reference in the hero label)
    - Main title (H1-equivalent, but use <p> with large font — no H1 tag)
    - Subtitle explaining what the reader will learn
    - Reading time: "זמן קריאה: X דקות" (calculate from word count, ~200 words/min)
+   - CRITICAL: Do NOT mention any year, month, or date anywhere in the hero block or the intro block. No "עודכן אחרונה", no "2026", no "אפריל" — keep the opening completely date-free
 
 2. INTRO BLOCK
    - 1-2 paragraphs contextualizing the topic
@@ -147,35 +148,42 @@ Generate the article with EXACTLY this structure:
    - Include specific numbers, dates, percentages where possible
    - Name the subject explicitly — avoid pronoun-only references
 
-6. EXPERT TIP BOXES (3-5 throughout article)
+6. EXPERT TIP BOXES (4-6 throughout article — spread evenly)
    - Background: #F0EACF, border-right: 4px solid #2EAEE0
    - Label: "טיפ מומחה" or similar
    - Short, actionable insight
+   - Must appear in at least 4 different sections across the article
 
-7. FIELD CASE / STORY BOXES (1-2 throughout article)
+7. "DID YOU KNOW?" BOXES (2-3 throughout article)
+   - Background: #F0EACF, border-right: 4px solid #EC282B
+   - Label: "הידעתם?" in red (#EC282B), font-weight 800
+   - Surprising or useful statistic/fact relevant to the section topic
+   - Place after sections 3, 7, and optionally 10
+
+8. FIELD CASE / STORY BOXES (1-2 throughout article)
    - Background: #FBF8EC, border-right: 4px solid #52BCAC
    - Label: "מקרה מהשטח"
    - Real-world scenario illustrating a point
 
-8. COMPARISON/DATA TABLES (where relevant)
+9. COMPARISON/DATA TABLES (where relevant)
    - Full HTML table (not CSS grid)
    - Gradient header row: #102745 → #2EAEE0
    - Alternating row backgrounds: #ffffff / #F0EACF
    - Responsive: wrapped in overflow-x: auto div
 
-9. IMAGES (4-5 section images)
+10. IMAGES (4-5 section images)
    - Use the image URL tokens from data inputs
    - Style: max-width:800px; margin:0 auto; display:block; border-radius:8px
    - Aspect ratio: 1200/630, object-fit:cover
    - Hebrew alt text describing the image content
    - NO captions below images
 
-10. HOW-TO / TIPS SECTION (MANDATORY)
+11. HOW-TO / TIPS SECTION (MANDATORY)
     - Step-by-step guide relevant to the article topic
     - Numbered list with bold step titles in #2EAEE0
     - Practical, actionable advice
 
-11. FAQ SECTION (MANDATORY — 5-7 questions)
+12. FAQ SECTION (MANDATORY — 5-7 questions)
     - Each Q&A in a <details class="faq-item"> element with <summary>
     - Border: 1px solid #d4ceaf, border-radius: 8px
     - Summary: font-size 18px, font-weight 700
@@ -183,17 +191,24 @@ Generate the article with EXACTLY this structure:
     - Real questions real readers would ask — direct, non-evasive answers
     - RTL RULE: summary must use display:flex; align-items:center; justify-content:space-between — do NOT use flex-direction:row-reverse (the page is dir="rtl", so plain row already puts text right and icon left)
 
-12. MID-ARTICLE CTA BLOCK (MANDATORY — place after section 6 or 7)
+13. FIRST MID-ARTICLE CTA (MANDATORY — place after section 5 or 6)
     - Background: #F0EACF (warm cream), border-radius: 10px, padding: 28px 32px
     - Border-right: 4px solid #EC282B
-    - Headline: compelling, action-oriented (e.g., "רוצים לשמוע עוד? צוות הייעוץ זמין עבורכם")
+    - Headline: action-oriented (e.g., "רוצים לשמוע עוד? צוות הייעוץ זמין עבורכם")
     - Short 1-2 sentence supporting text
     - 1 CTA button: background #EC282B, white text, links to contact/registration page
     - Hover: darken to #c91f22, translateY(-2px)
-    - This is a soft mid-article nudge, NOT a hard sell — keep it warm and inviting
-    - MUST be visually different from the closing CTA (cream bg vs gradient bg)
+    - Soft mid-article nudge, NOT a hard sell
 
-13. CLOSING CTA BLOCK (at end, before author section)
+14. SECOND MID-ARTICLE CTA (MANDATORY — place after section 9 or 10)
+    - Background: #ffffff, border: 2px solid #2EAEE0, border-radius: 10px, padding: 24px 32px
+    - Headline: different angle from the first CTA (e.g., "יש לכם שאלות? נשמח לעזור", "מתלבטים? שיחת ייעוץ תעשה סדר")
+    - Short supporting text
+    - 1 CTA button: background #102745 (navy), white text, links to contact page
+    - Hover: lighten to #1a3a5c, translateY(-2px)
+    - MUST look visually different from the first mid-CTA (white+blue border vs cream+red border)
+
+15. CLOSING CTA BLOCK (at end, before author section)
     - Gradient background: linear-gradient(135deg, #102745 0%, #EC282B 100%)
     - Compelling headline encouraging action
     - 2 CTA buttons inside the gradient block:
@@ -204,7 +219,7 @@ Generate the article with EXACTLY this structure:
     - These are the ONLY CTA buttons in the bottom area — do NOT add another separate CTA row below this block
     - CRITICAL: NEVER use emoji characters (📞, ☎, 📧) in buttons — always use inline SVG icons that respond to CSS color changes
 
-15. ABOUT THE BRAND SECTION (MANDATORY — MUST BE LAST, NO CTA BUTTONS HERE)
+16. ABOUT THE BRAND SECTION (MANDATORY — MUST BE LAST, NO CTA BUTTONS HERE)
     - Background: #F0EACF, border-radius: 10px
     - Logo image (from logo URL)
     - Brand name as heading
@@ -213,7 +228,7 @@ Generate the article with EXACTLY this structure:
     - Social button hovers MUST use official brand colors
     - DO NOT add contact/phone CTA buttons here — they already exist in the Contact CTA Row above
 
-16. FLOATING BACK TO TOP BUTTON (MANDATORY — RIGHT SIDE)
+17. FLOATING BACK TO TOP BUTTON (MANDATORY — RIGHT SIDE)
     - position: fixed; bottom: 24px; RIGHT: 24px (RIGHT side of page)
     - Circular (48px x 48px), navy #102745 background, white chevron-up SVG icon
     - Hover: translateY(-3px), switch to #2EAEE0 blue, stronger shadow
@@ -221,7 +236,7 @@ Generate the article with EXACTLY this structure:
     - SVG must be on SAME LINE as the <a> tag — no newlines (wpautop resistance)
     - Mobile: right: 16px; bottom: 16px; 42x42px
 
-17. FLOATING CONTACT BUTTON (MANDATORY — LEFT SIDE)
+18. FLOATING CONTACT BUTTON (MANDATORY — LEFT SIDE)
     - position: fixed; bottom: 24px; LEFT: 24px (LEFT side of page)
     - Pill shape, red #EC282B background, white text
     - SVG chat icon + "ייעוץ והרשמה" text — ALL ON SAME LINE (wpautop resistance)
@@ -229,14 +244,14 @@ Generate the article with EXACTLY this structure:
     - Links to contact page
     - Mobile: left: 16px; bottom: 16px; smaller padding/font
 
-18. PHONE NUMBER HOVER EFFECTS (MANDATORY)
+19. PHONE NUMBER HOVER EFFECTS (MANDATORY)
     - ALL phone number links (tel:) must have hover effects
     - In gradient/dark backgrounds: hover brightens background, stronger border, slight lift
     - In light backgrounds: hover fills with navy #102745, white text, slight lift
     - Transition: 0.25s ease on all properties
     - Every tel: link must have onmouseover and onmouseout handlers
 
-19. JSON-LD SCHEMAS (MANDATORY — 3 schemas)
+20. JSON-LD SCHEMAS (MANDATORY — 3 schemas)
     - Article schema (headline, description, author, publisher, dates, inLanguage: "he")
     - EducationalOrganization schema (name, url, logo, telephone, email, address, sameAs, foundingDate)
     - FAQPage schema (all Q&A pairs from FAQ section)
