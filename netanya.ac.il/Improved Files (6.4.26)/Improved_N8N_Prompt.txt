@@ -127,8 +127,9 @@ Generate the article with EXACTLY this structure:
 3. TABLE OF CONTENTS (MANDATORY)
    - Inside <nav> with <details> accordion (closed by default)
    - Summary text: "תוכן העניינים"
-   - Ordered list with anchor links to all H2 sections
+   - Unordered list (no numbering) with anchor links to all H2 sections
    - Each link styled: color #2EAEE0, no text-decoration, hover transitions
+   - RTL RULE: summary must use display:flex; align-items:center; justify-content:space-between — do NOT use flex-direction:row-reverse (the page is dir="rtl", so plain row already puts text right and icon left)
 
 4. KEY TAKEAWAYS (MANDATORY)
    - 4-5 factual bullet points summarizing the article
@@ -175,23 +176,20 @@ Generate the article with EXACTLY this structure:
     - Practical, actionable advice
 
 11. FAQ SECTION (MANDATORY — 5-7 questions)
-    - Each Q&A in a <details> element with <summary>
+    - Each Q&A in a <details class="faq-item"> element with <summary>
     - Border: 1px solid #d4ceaf, border-radius: 8px
     - Summary: font-size 18px, font-weight 700
     - Answer: font-size 17px, line-height 1.75
     - Real questions real readers would ask — direct, non-evasive answers
+    - RTL RULE: summary must use display:flex; align-items:center; justify-content:space-between — do NOT use flex-direction:row-reverse (the page is dir="rtl", so plain row already puts text right and icon left)
 
 12. CLOSING CTA BLOCK
-    - Gradient background matching hero
+    - Gradient background: linear-gradient(135deg, #102745 0%, #EC282B 100%)
     - Compelling headline encouraging action
-    - 1-2 CTA buttons: one for site visit, one for phone call (tel:09-8607777)
+    - 2 CTA buttons inside the gradient block: one for site visit (white bg, red text), one for phone call (transparent bg, white text with border)
+    - These are the ONLY CTA buttons in the bottom area — do NOT add another separate CTA row below this block
 
-13. CONTACT CTA ROW
-    - Two buttons: "צרו קשר עם המכללה" + "חייגו: 09-8607777"
-    - SVG icons (envelope, phone)
-    - Full-width on mobile
-
-14. ABOUT THE BRAND SECTION (MANDATORY — MUST BE LAST)
+13. ABOUT THE BRAND SECTION (MANDATORY — MUST BE LAST, NO CTA BUTTONS HERE)
     - Background: #F0EACF, border-radius: 10px
     - Logo image (from logo URL)
     - Brand name as heading
@@ -200,7 +198,7 @@ Generate the article with EXACTLY this structure:
     - Social button hovers MUST use official brand colors
     - DO NOT add contact/phone CTA buttons here — they already exist in the Contact CTA Row above
 
-15. FLOATING BACK TO TOP BUTTON (MANDATORY — RIGHT SIDE)
+14. FLOATING BACK TO TOP BUTTON (MANDATORY — RIGHT SIDE)
     - position: fixed; bottom: 24px; RIGHT: 24px (RIGHT side of page)
     - Circular (48px x 48px), navy #102745 background, white chevron-up SVG icon
     - Hover: translateY(-3px), switch to #2EAEE0 blue, stronger shadow
@@ -208,7 +206,7 @@ Generate the article with EXACTLY this structure:
     - SVG must be on SAME LINE as the <a> tag — no newlines (wpautop resistance)
     - Mobile: right: 16px; bottom: 16px; 42x42px
 
-16. FLOATING CONTACT BUTTON (MANDATORY — LEFT SIDE)
+15. FLOATING CONTACT BUTTON (MANDATORY — LEFT SIDE)
     - position: fixed; bottom: 24px; LEFT: 24px (LEFT side of page)
     - Pill shape, red #EC282B background, white text
     - SVG chat icon + "ייעוץ והרשמה" text — ALL ON SAME LINE (wpautop resistance)
@@ -216,14 +214,14 @@ Generate the article with EXACTLY this structure:
     - Links to contact page
     - Mobile: left: 16px; bottom: 16px; smaller padding/font
 
-17. PHONE NUMBER HOVER EFFECTS (MANDATORY)
+16. PHONE NUMBER HOVER EFFECTS (MANDATORY)
     - ALL phone number links (tel:) must have hover effects
     - In gradient/dark backgrounds: hover brightens background, stronger border, slight lift
     - In light backgrounds: hover fills with navy #102745, white text, slight lift
     - Transition: 0.25s ease on all properties
     - Every tel: link must have onmouseover and onmouseout handlers
 
-18. JSON-LD SCHEMAS (MANDATORY — 3 schemas)
+17. JSON-LD SCHEMAS (MANDATORY — 3 schemas)
     - Article schema (headline, description, author, publisher, dates, inLanguage: "he")
     - EducationalOrganization schema (name, url, logo, telephone, email, address, sameAs, foundingDate)
     - FAQPage schema (all Q&A pairs from FAQ section)
@@ -248,6 +246,8 @@ This BREAKS icon+text alignment inside buttons. Follow these rules:
 7. The floating back-to-top button goes on the RIGHT side (right:24px).
 8. The floating contact button goes on the LEFT side (left:24px).
 9. Both floating buttons must be on SEPARATE sides to avoid overlap.
+10. RTL CRITICAL: NEVER use flex-direction:row-reverse on summary/accordion elements in RTL pages. The page dir="rtl" already reverses flex rows. Using row-reverse double-reverses and puts the icon on the wrong side. Use flex-direction:row (or omit it) with justify-content:space-between.
+11. Do NOT generate a separate "Contact CTA Row" section. The CTA buttons belong ONLY inside the Closing CTA Block. No duplicate CTA buttons between the CTA block and the author section.
 
 ═══════════════════════════════════════════════════════
 CSS RULES
@@ -286,8 +286,6 @@ Include this exact style block at the start of the article (inside <article>, af
   .author-section-inner { flex-direction: column !important; text-align: center !important; }
   .author-logo { margin: 0 auto 16px auto !important; }
   .social-buttons { justify-content: center !important; }
-  .contact-cta-row { flex-direction: column !important; }
-  .contact-cta-row a { width: 100% !important; text-align: center !important; }
   .floating-contact { padding: 12px 18px !important; font-size: 14px !important; bottom: 16px !important; left: 16px !important; }
   .back-to-top { bottom: 16px !important; right: 16px !important; width: 42px !important; height: 42px !important; }
   .key-takeaways { padding: 20px !important; }
