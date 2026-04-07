@@ -189,7 +189,7 @@ Generate the article with EXACTLY this structure:
     - Short description (2-3 sentences about the college)
     - Social buttons: Facebook, Instagram, LinkedIn
     - Social button hovers MUST use official brand colors
-    - Contact CTA buttons: "צרו קשר" + phone number
+    - DO NOT add contact/phone CTA buttons here — they already exist in the Contact CTA Row above
 
 15. FLOATING BACK TO TOP BUTTON (MANDATORY — RIGHT SIDE)
     - position: fixed; bottom: 24px; RIGHT: 24px (RIGHT side of page)
