@@ -156,6 +156,20 @@ a:hover{color:var(--gold-light)}
 .device-frame.desktop{width:100%;max-width:1280px;height:calc(90vh - 120px);border-radius:8px;border:2px solid #333}
 .device-frame iframe{width:100%;height:100%;border:none;background:#fff}
 .device-label{position:absolute;top:-28px;left:50%;transform:translateX(-50%);font-size:11px;color:var(--muted);white-space:nowrap;font-weight:600}
+.compare-modal{max-width:96vw;width:96vw;height:92vh}
+.compare-container{flex:1;display:flex;flex-direction:column;padding:16px;background:var(--bg);overflow:hidden}
+.compare-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:14px;flex:1;overflow:auto;padding:8px}
+.compare-panel{background:var(--surface);border:1px solid var(--border);border-radius:12px;overflow:hidden;display:flex;flex-direction:column;min-height:320px}
+.compare-panel-header{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 12px;border-bottom:1px solid var(--border);background:var(--card)}
+.compare-panel-title{font-size:12px;font-weight:700;color:var(--text);display:flex;flex-direction:column;gap:2px}
+.compare-panel-title small{font-size:10px;color:var(--muted);font-weight:600}
+.compare-frame-wrap{flex:1;padding:12px;overflow:auto;display:flex;align-items:flex-start;justify-content:center}
+.compare-device-frame{background:#fff;border:2px solid #333;border-radius:8px;overflow:hidden;position:relative;transition:all .25s ease;width:100%;height:100%}
+.compare-device-frame.desktop{max-width:1280px;height:100%}
+.compare-device-frame.tablet{width:768px;max-width:100%;height:100%;border-radius:16px}
+.compare-device-frame.mobile{width:375px;max-width:100%;height:100%;border-radius:24px}
+.compare-device-frame iframe{width:100%;height:100%;border:none;background:#fff}
+.compare-empty{padding:40px 24px;text-align:center;color:var(--muted);font-size:13px}
 
 /* Footer */
 .footer{text-align:center;padding:32px 24px;font-size:11px;color:var(--muted);border-top:1px solid var(--border);margin-top:40px}
@@ -255,6 +269,23 @@ a:hover{color:var(--gold-light)}
 </div>
 </div>
 
+<div class="modal-overlay" id="compare-modal" onclick="if(event.target===this)closeCompare()">
+<div class="modal compare-modal">
+  <div class="modal-header">
+    <div class="modal-title"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path d="M10 3H3v7h7V3zM21 14h-7v7h7v-7zM21 3h-7v7h7V3zM10 14H3v7h7v-7z"/></svg> Compare agents: <span id="compare-filename">—</span></div>
+    <div class="device-tabs" id="compare-device-tabs">
+      <button class="device-tab" onclick="setCompareDevice('mobile',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="2" width="14" height="20" rx="2"/><path d="M12 18h.01"/></svg>Mobile</button>
+      <button class="device-tab" onclick="setCompareDevice('tablet',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="2" width="16" height="20" rx="2"/><path d="M12 18h.01"/></svg>Tablet</button>
+      <button class="device-tab active" onclick="setCompareDevice('desktop',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8m-4-4v4"/></svg>Desktop</button>
+    </div>
+    <button class="modal-close" onclick="closeCompare()">&times;</button>
+  </div>
+  <div class="compare-container">
+    <div class="compare-grid" id="compare-grid"></div>
+  </div>
+</div>
+</div>
+
 <footer class="footer"></footer>
 
 <script>
@@ -291,10 +322,75 @@ function setDevice(mode,btn){
   frame.className='device-frame '+mode;
   const labels={mobile:'Mobile — 375px',tablet:'Tablet — 768px',desktop:'Desktop — 1280px'};
   label.textContent=labels[mode];
-  document.querySelectorAll('.device-tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('#device-tabs .device-tab').forEach(t=>t.classList.remove('active'));
   btn.classList.add('active');
 }
-document.addEventListener('keydown',e=>{if(e.key==='Escape')closePreview()});
+function detectAgent(versionName){
+  const v=(versionName||'').toLowerCase();
+  if(v.includes('hermes')) return 'Hermes Agent';
+  if(v.includes('claude')) return 'Claude Code';
+  if(v.includes('codex')) return 'Codex';
+  if(v.includes('gemini')) return 'Gemini';
+  if(v.includes('copilot')) return 'GitHub Copilot';
+  if(v.includes('manus')) return 'Manus';
+  if(v.includes('cursor')) return 'Cursor';
+  if(v.includes('latest') || v.includes('improved files')) return 'Latest Files';
+  return versionName||'Unknown';
+}
+function compareCandidatesForProject(projectName){
+  const project=allProjects.find(p=>p.name===projectName);
+  if(!project) return [];
+  const byAgent={};
+  project.versions.forEach(v=>{
+    const htmlFiles=v.files.filter(f=>f.name.toLowerCase().endsWith('.html'));
+    if(!htmlFiles.length) return;
+    const agent=detectAgent(v.name);
+    const chosen=htmlFiles[0];
+    const current={agent,version:v.name,date:v.date||'',file:chosen};
+    const existing=byAgent[agent];
+    if(!existing){byAgent[agent]=current;return;}
+    const a=(existing.date||'').split('.').reverse().join('');
+    const b=(current.date||'').split('.').reverse().join('');
+    if(b && (!a || b>a)) byAgent[agent]=current;
+  });
+  return Object.values(byAgent);
+}
+function openCompare(projectName){
+  const items=compareCandidatesForProject(projectName);
+  const grid=document.getElementById('compare-grid');
+  document.getElementById('compare-filename').textContent=projectName;
+  document.getElementById('compare-modal').classList.add('open');
+  document.body.style.overflow='hidden';
+  if(items.length<2){
+    grid.innerHTML='<div class="compare-empty">Need at least two agent/version HTML outputs for side-by-side comparison on this domain.</div>';
+    return;
+  }
+  grid.innerHTML='';
+  items.forEach((item,idx)=>{
+    const panel=document.createElement('div');
+    panel.className='compare-panel';
+    panel.innerHTML=`<div class="compare-panel-header"><div class="compare-panel-title">${item.agent}<small>${item.version}</small></div><a href="${item.file.url}" target="_blank" class="action-btn">View Code</a></div><div class="compare-frame-wrap"><div class="compare-device-frame desktop"><iframe sandbox="allow-same-origin"></iframe></div></div>`;
+    grid.appendChild(panel);
+    fetch(item.file.download).then(r=>r.text()).then(html=>{
+      const iframe=panel.querySelector('iframe');
+      const doc=iframe.contentDocument||iframe.contentWindow.document;
+      doc.open();doc.write(html);doc.close();
+    });
+  });
+  setCompareDevice('desktop', document.querySelector('#compare-device-tabs .device-tab:last-child'));
+}
+function closeCompare(){
+  document.getElementById('compare-modal').classList.remove('open');
+  document.body.style.overflow='';
+  document.getElementById('compare-grid').innerHTML='';
+}
+function setCompareDevice(mode,btn){
+  const labels={mobile:'Mobile — 375px',tablet:'Tablet — 768px',desktop:'Desktop — 1280px'};
+  document.querySelectorAll('.compare-device-frame').forEach(frame=>frame.className='compare-device-frame '+mode);
+  document.querySelectorAll('#compare-device-tabs .device-tab').forEach(t=>t.classList.remove('active'));
+  btn.classList.add('active');
+}
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){closePreview();closeCompare();}});
 
 function setView(mode,btn){
   document.getElementById('projects-grid').className='projects-grid'+(mode==='list'?' list-view':'');
@@ -456,6 +552,8 @@ async function loadDashboard(){
     });
 
     const previewCTA=latestHtmlUrl?`<button class="preview-cta" onclick="event.stopPropagation();openPreview('${latestHtmlUrl}','${latestHtmlName}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="5 3 19 12 5 21 5 3"/></svg>Preview</button>`:'';
+    const compareCandidates=compareCandidatesForProject(p.name);
+    const compareCTA=compareCandidates.length>1?`<button class="preview-cta" onclick="event.stopPropagation();openCompare('${p.name}')" style="background:var(--blue-bg);color:var(--blue);border-color:rgba(59,130,246,0.35)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M10 3H3v7h7V3zM21 14h-7v7h7v-7zM21 3h-7v7h7V3zM10 14H3v7h7v-7z"/></svg>Compare agents</button>`:'';
 
     const card=document.createElement('div');
     card.className='project-card';
@@ -472,6 +570,7 @@ async function loadDashboard(){
           </div>
         </div>
         <div class="card-right">
+          ${compareCTA}
           ${previewCTA}
           <span class="badge ${latest?'badge-live':'badge-archive'}">${latest?'Live':'Archive'}</span>
           <span class="toggle-icon">&#9660;</span>
