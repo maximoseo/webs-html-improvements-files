@@ -170,6 +170,14 @@ a:hover{color:var(--gold-light)}
 .compare-device-frame.mobile{width:375px;max-width:100%;height:100%;border-radius:24px}
 .compare-device-frame iframe{width:100%;height:100%;border:none;background:#fff}
 .compare-empty{padding:40px 24px;text-align:center;color:var(--muted);font-size:13px}
+.focus-modal{max-width:98vw;width:98vw;height:96vh}
+.focus-container{flex:1;display:flex;align-items:center;justify-content:center;padding:18px;background:var(--bg);overflow:auto}
+.focus-device-frame{background:#fff;border:2px solid #333;border-radius:8px;overflow:hidden;position:relative;transition:all .25s ease;width:100%;height:100%}
+.focus-device-frame.desktop{max-width:1600px;height:100%}
+.focus-device-frame.tablet{width:900px;max-width:100%;height:100%;border-radius:18px}
+.focus-device-frame.mobile{width:420px;max-width:100%;height:100%;border-radius:28px}
+.focus-device-frame iframe{width:100%;height:100%;border:none;background:#fff}
+.focus-subtitle{font-size:10px;color:var(--muted);font-weight:600;margin-left:8px}
 
 /* Footer */
 .footer{text-align:center;padding:32px 24px;font-size:11px;color:var(--muted);border-top:1px solid var(--border);margin-top:40px}
@@ -286,6 +294,25 @@ a:hover{color:var(--gold-light)}
 </div>
 </div>
 
+<div class="modal-overlay" id="focus-modal" onclick="if(event.target===this)closeFocusedCompare()">
+<div class="modal focus-modal">
+  <div class="modal-header">
+    <div class="modal-title"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8m-4-4v4"/></svg> Agent focus: <span id="focus-filename">—</span><span id="focus-subtitle" class="focus-subtitle"></span></div>
+    <div class="device-tabs" id="focus-device-tabs">
+      <button class="device-tab" onclick="setFocusedDevice('mobile',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="2" width="14" height="20" rx="2"/><path d="M12 18h.01"/></svg>Mobile</button>
+      <button class="device-tab" onclick="setFocusedDevice('tablet',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="2" width="16" height="20" rx="2"/><path d="M12 18h.01"/></svg>Tablet</button>
+      <button class="device-tab active" onclick="setFocusedDevice('desktop',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8m-4-4v4"/></svg>Desktop</button>
+    </div>
+    <button class="modal-close" onclick="closeFocusedCompare()">&times;</button>
+  </div>
+  <div class="focus-container">
+    <div class="focus-device-frame desktop" id="focus-device-frame">
+      <iframe id="focus-iframe" sandbox="allow-same-origin"></iframe>
+    </div>
+  </div>
+</div>
+</div>
+
 <footer class="footer"></footer>
 
 <script>
@@ -369,7 +396,7 @@ function openCompare(projectName){
   items.forEach((item,idx)=>{
     const panel=document.createElement('div');
     panel.className='compare-panel';
-    panel.innerHTML=`<div class="compare-panel-header"><div class="compare-panel-title">${item.agent}<small>${item.version}</small></div><a href="${item.file.url}" target="_blank" class="action-btn">View Code</a></div><div class="compare-frame-wrap"><div class="compare-device-frame desktop"><iframe sandbox="allow-same-origin"></iframe></div></div>`;
+    panel.innerHTML=`<div class="compare-panel-header"><div class="compare-panel-title">${item.agent}<small>${item.version}</small></div><div style="display:flex;gap:8px;align-items:center"><button class="action-btn" onclick="openFocusedCompare('${item.file.download.replace(/'/g,"%27")}', '${item.agent.replace(/'/g,"%27")}', '${item.version.replace(/'/g,"%27")}')">Expand</button><a href="${item.file.url}" target="_blank" class="action-btn">View Code</a></div></div><div class="compare-frame-wrap"><div class="compare-device-frame desktop"><iframe sandbox="allow-same-origin"></iframe></div></div>`;
     grid.appendChild(panel);
     fetch(item.file.download).then(r=>r.text()).then(html=>{
       const iframe=panel.querySelector('iframe');
@@ -385,12 +412,33 @@ function closeCompare(){
   document.getElementById('compare-grid').innerHTML='';
 }
 function setCompareDevice(mode,btn){
-  const labels={mobile:'Mobile — 375px',tablet:'Tablet — 768px',desktop:'Desktop — 1280px'};
   document.querySelectorAll('.compare-device-frame').forEach(frame=>frame.className='compare-device-frame '+mode);
   document.querySelectorAll('#compare-device-tabs .device-tab').forEach(t=>t.classList.remove('active'));
   btn.classList.add('active');
 }
-document.addEventListener('keydown',e=>{if(e.key==='Escape'){closePreview();closeCompare();}});
+function openFocusedCompare(downloadUrl, agentName, versionName){
+  document.getElementById('focus-filename').textContent=agentName;
+  document.getElementById('focus-subtitle').textContent=versionName;
+  document.getElementById('focus-modal').classList.add('open');
+  const iframe=document.getElementById('focus-iframe');
+  fetch(downloadUrl).then(r=>r.text()).then(html=>{
+    const doc=iframe.contentDocument||iframe.contentWindow.document;
+    doc.open();doc.write(html);doc.close();
+  });
+  setFocusedDevice('desktop', document.querySelector('#focus-device-tabs .device-tab:last-child'));
+}
+function closeFocusedCompare(){
+  document.getElementById('focus-modal').classList.remove('open');
+  const iframe=document.getElementById('focus-iframe');
+  const doc=iframe.contentDocument||iframe.contentWindow.document;
+  doc.open();doc.write('');doc.close();
+}
+function setFocusedDevice(mode,btn){
+  document.getElementById('focus-device-frame').className='focus-device-frame '+mode;
+  document.querySelectorAll('#focus-device-tabs .device-tab').forEach(t=>t.classList.remove('active'));
+  btn.classList.add('active');
+}
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){closePreview();closeCompare();closeFocusedCompare();}});
 
 function setView(mode,btn){
   document.getElementById('projects-grid').className='projects-grid'+(mode==='list'?' list-view':'');
