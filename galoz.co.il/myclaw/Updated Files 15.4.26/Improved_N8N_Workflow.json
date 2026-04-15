@@ -1,0 +1,55 @@
+{
+  "name": "Galoz Article Generator",
+  "nodes": [
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "https://mapril.websmail.net/industrial-control-and-command-equipment/"
+      },
+      "name": "Fetch Source Article",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [100, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Extract article body from HTML\nconst html = $input.first().json.body || $input.first().json.html;\n\n// Simple extraction of main content\nconst articleMatch = html.match(/<article[^>]*>([\\s\\S]*?)<\\/article>/i);\nconst articleBody = articleMatch ? articleMatch[1] : html;\n\n// Extract sections based on H2 headers\nconst sections = [];\nconst h2Regex = /<h2[^>]*id=\"([^\"]+)\"[^>]*>([^<]+)<\\/h2>([\\s\\S]*?)(?=<h2|<\\/article)/gi;\nlet match;\nwhile ((match = h2Regex.exec(articleBody)) !== null) {\n  sections.push({\n    id: match[1],\n    title: match[2],\n    content: match[3].trim()\n  });\n}\n\nreturn [{json: {sections, articleBody}}];"
+      },
+      "name": "Parse Article Sections",
+      "type": "n8n-nodes-base.code",
+      "position": [300, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Generate improved HTML article from sections\nconst sections = $input.first().json.sections;\n\nconst brandColors = {\n  primary: '#005696',\n  accent: '#0E6BA8',\n  dark: '#1F2D3D',\n  text: '#334155',\n  bg: '#ffffff',\n  surface: '#f8fafc',\n  border: '#e2e8f0'\n};\n\n\nconst tocItems = sections.map((s, i) => \n  `<li style=\"padding:8px 0;border-bottom:1px solid ${brandColors.border};\"><a href=\"#${s.id}\" style=\"color:${brandColors.text};text-decoration:none;font-size:0.9rem;display:block;\">${s.title}</a></li>`\n).join('');\n\n\nconst takeaways = [\n  'ציוד פיקוד ובקרה מורכב משלוש שכבות: קליטת נתונים, עיבוד ושליטה, ותגובה והפעלה',\n  'רכישה לפי מחיר בלבד ללא התאמה לתנאי הסביבה היא הטעות הנפוצה ביותר',\n  'לא כל יישום מחייב מערכת אוטומציה מלאה — פתרון ניטור ממוקד יכול להספיק',\n  'בחירת ספק מתאים כוללת תמיכה טכנית בעברית, ניסיון מוכח וגמישות'\n];\n\nconst takeawaysHtml = takeaways.map(t => \n  `<li style=\"padding:6px 0;color:${brandColors.text};font-size:0.95rem;display:flex;align-items:flex-start;gap:8px;\"><span style=\"color:${brandColors.accent};font-weight:700;flex-shrink:0;\">◆</span>${t}</li>`\n).join('');\n\nconst sectionsHtml = sections.map(s => {\n  const content = s.content\n    .replace(/<h2[^>]*>/g, `<h2 id=\"${s.id}\" style=\"font-size:1.5rem;font-weight:700;color:${brandColors.dark};margin:48px 0 16px;border-bottom:2px solid ${brandColors.primary};padding-bottom:8px;\">`)\n    .replace(/<h3[^>]*>/g, `<h3 style=\"font-size:1.2rem;font-weight:600;color:${brandColors.dark};margin:24px 0 12px;\">`)\n    .replace(/<p[^>]*>/g, `<p style=\"font-size:1rem;line-height:1.7;color:${brandColors.text};margin-bottom:16px;\">`)\n    .replace(/style=\"[^\"]*font-family:[^'\"]*Arimo[^'\"]*[^'\"]*\"[^>]*>/g, '')\n    .replace(/#354052/g, brandColors.text)\n    .replace(/#0E6BA8/g, brandColors.accent)\n    .replace(/#005696/g, brandColors.primary);\n  return content;\n}).join('\\n');\n\n\nconst faqItems = [\n  {\n    q: 'מה זה ציוד פיקוד ובקרה?',\n    a: 'ציוד פיקוד ובקרה הוא מכלול רכיבים ומכשירים שתפקידם למדוד, לנטר, לשלוט ולהפעיל תהליכים תעשייתיים. הוא כולל חיישנים, מתמרים, בקרים, תצוגות, רכיבי הפעלה וממשקי תקשורת.'\n  },\n  {\n    q: 'מה ההבדל בין חיישן למתמר?',\n    a: 'חיישן (Sensor) מזהה שינוי פיזיקלי. מתמר (Transducer) ממיר את הגודל הפיזיקלי לאות חשמלי סטנדרטי. רכיבים רבים משלבים את שתי הפונקציות.'\n  },\n  {\n    q: 'כיצד משלבים בקר טמפרטורה במערכת קיימת?',\n    a: 'יש לבדוק סוג החיישן הקיים, סוג האות, מרחק ההולכה ואופן החיבור ללוח. להתאים את תצורת הבקר ולבצע כיול ראשוני.'\n  },\n  {\n    q: 'האם כל מערכת צריכה בקר?',\n    a: 'לא בהכרח. אם המטרה היא רק לראות ערך ולתעד אותו, מערכת ניטור יכולה להספיק. בקר נדרש כשיש צורך בקבלת החלטות אוטומטית.'\n  },\n  {\n    q: 'איך לבחור ציוד לסביבה מאתגרת?',\n    a: 'לבחור ציוד עם דרגת הגנה IP מתאימה, לבדוק טווח טמפרטורת העבודה, ולוודא שחומר המארז עמיד לתנאים הסביבתיים.'\n  },\n  {\n    q: 'כמה עולה פתרון פיקוד ובקרה?',\n    a: 'רכיב בודד עשוי לעלות מאות שקלים, מערכת מלאה יכולה להגיע לאלפי שקלים. חשוב לבחון עלות כוללת הכוללת רכישה, התקנה ותחזוקה.'\n  }\n];\n\nconst faqHtml = faqItems.map(faq => `\n<details style=\"border:1px solid ${brandColors.border};border-radius:8px;margin-bottom:8px;overflow:hidden;\">\n<summary style=\"cursor:pointer;padding:14px 20px;font-weight:700;font-size:1rem;color:${brandColors.dark};list-style:none;display:flex;align-items:center;justify-content:space-between;background:${brandColors.surface};\">\n<span>${faq.q}</span>\n<span style=\"font-size:1.2rem;font-weight:400;color:${brandColors.accent};\">+</span>\n</summary>\n<p style=\"padding:14px 20px 16px;margin:0;color:${brandColors.text};font-size:0.95rem;line-height:1.7;background:${brandColors.bg};\">${faq.a}</p>\n</details>`).join('');\n\nconst html = `<!DOCTYPE html>\n<html dir=\"rtl\" lang=\"he\">\n<head>\n<meta charset=\"UTF-8\">\n<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n<link rel=\"preconnect\" href=\"https://fonts.googleapis.com\">\n<link rel=\"preconnect\" href=\"https://fonts.gstatic.com\" crossorigin>\n<link href=\"https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600;700&display=swap\" rel=\"stylesheet\">\n</head>\n<body style=\"margin:0;padding:0;background:${brandColors.bg};font-family:'Heebo',Arial,sans-serif;color:${brandColors.text};line-height:1.7;font-size:16px;\">\n<article style=\"max-width:720px;margin:0 auto;padding:24px 16px 64px;\">\n\n<!-- Reading Time + Meta -->\n<div style=\"display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:24px;padding:12px 16px;background:${brandColors.surface};border:1px solid ${brandColors.border};border-radius:8px;\">\n<span style=\"font-size:0.85rem;color:${brandColors.text};\">זמן קריאה: 12 דקות</span>\n<span style=\"font-size:0.85rem;color:${brandColors.text};\">עודכן: אפריל 2026</span>\n</div>\n\n<!-- Key Points Badges -->\n<div style=\"display:flex;flex-wrap:wrap;gap:8px;margin-bottom:32px;\">\n<span style=\"display:inline-flex;align-items:center;gap:6px;padding:6px 12px;background:${brandColors.surface};border:1px solid ${brandColors.border};border-radius:20px;font-size:0.8rem;color:${brandColors.text};\">מעל 30 שנות ניסיון</span>\n<span style=\"display:inline-flex;align-items:center;gap:6px;padding:6px 12px;background:${brandColors.surface};border:1px solid ${brandColors.border};border-radius:20px;font-size:0.8rem;color:${brandColors.text};\">פתרונות פיקוד ובקרה</span>\n<span style=\"display:inline-flex;align-items:center;gap:6px;padding:6px 12px;background:${brandColors.surface};border:1px solid ${brandColors.border};border-radius:20px;font-size:0.8rem;color:${brandColors.text};\">ייעוץ מקצועי</span>\n</div>\n\n<!-- TOC -->\n<details style=\"border:1px solid ${brandColors.border};border-radius:8px;margin-bottom:24px;overflow:hidden;\">\n<summary style=\"cursor:pointer;padding:14px 20px;font-weight:700;font-size:1rem;color:${brandColors.dark};list-style:none;display:flex;align-items:center;justify-content:space-between;background:${brandColors.surface};\">\n<span>תוכן עניינים</span>\n<span style=\"font-size:1.2rem;font-weight:400;color:${brandColors.accent};\">+</span>\n</summary>\n<ul style=\"margin:0;padding:0 24px 16px;list-style:none;\">${tocItems}</ul>\n</details>\n\n<!-- Key Takeaways -->\n<div style=\"background:${brandColors.surface};border-right:4px solid ${brandColors.accent};border-radius:8px;padding:20px 24px;margin-bottom:32px;\">\n<h2 style=\"font-size:1.2rem;font-weight:700;color:${brandColors.dark};margin:0 0 12px 0;\">בקצרה</h2>\n<ul style=\"margin:0;padding:0;list-style:none;\">${takeawaysHtml}</ul>\n</div>\n\n<!-- Article Body -->\n${sectionsHtml}\n\n<!-- FAQ -->\n<h2 style=\"font-size:1.5rem;font-weight:700;color:${brandColors.dark};margin:48px 0 16px;border-bottom:2px solid ${brandColors.primary};padding-bottom:8px;\">שאלות נפוצות</h2>\n${faqHtml}\n\n<!-- Contact CTA -->\n<div style=\"background:${brandColors.dark};border-radius:12px;padding:24px;margin:32px 0;text-align:center;\">\n<p style=\"font-size:1.1rem;font-weight:700;color:#ffffff;margin:0 0 6px;\">צריכים הכוונה לפני בחירת ציוד פיקוד ובקרה?</p>\n<p style=\"font-size:0.85rem;color:rgba(255,255,255,0.75);margin:0 0 14px;\">התאמה נכונה של בקר, חיישן או רכיב מדידה חוסכת זמן ותקלות בשטח</p>\n<a href=\"https://www.galoz.co.il/contact\" style=\"display:inline-block;background:${brandColors.accent};color:#ffffff;font-size:0.9rem;font-weight:700;padding:11px 28px;border-radius:8px;text-decoration:none;\">דברו איתנו</a>\n</div>\n\n<!-- Author/Brand Section -->\n<div style=\"background:${brandColors.surface};border:1px solid ${brandColors.border};border-radius:12px;padding:24px;margin-top:32px;display:flex;gap:20px;align-items:flex-start;flex-wrap:wrap;\">\n<div style=\"width:72px;height:72px;border-radius:10px;background:${brandColors.primary};color:#ffffff;font-size:0.85rem;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;text-align:center;line-height:1.3;\">גלעוז<br />אלקטרוניקה</div>\n<div style=\"flex:1;min-width:200px;\">\n<strong style=\"font-size:1rem;color:${brandColors.dark};display:block;margin-bottom:8px;\">צוות גלעוז אלקטרוניקה</strong>\n<p style=\"margin:0 0 8px;font-size:0.9rem;color:${brandColors.text};line-height:1.6;\">גלעוז אלקטרוניקה מתמחה מעל 30 שנה בפתרונות פיקוד, בקרה ומדידה לתעשייה.</p>\n<div style=\"margin-top:12px;display:flex;gap:8px;flex-wrap:wrap;\">\n<a href=\"https://www.galoz.co.il/contact\" style=\"display:inline-flex;align-items:center;gap:6px;padding:8px 16px;border-radius:8px;background:${brandColors.primary};color:#ffffff;text-decoration:none;font-size:0.85rem;font-weight:700;\">יצירת קשר</a>\n<a href=\"mailto:sales@galoz.co.il\" style=\"display:inline-flex;align-items:center;gap:6px;padding:8px 16px;border-radius:8px;background:${brandColors.dark};color:#ffffff;text-decoration:none;font-size:0.85rem;font-weight:700;\">sales@galoz.co.il</a>\n</div>\n</div>\n</div>\n</article>\n</body>\n</html>`;\n\nreturn [{json: {html}}];"
+      },
+      "name": "Generate HTML Article",
+      "type": "n8n-nodes-base.code",
+      "position": [500, 300]
+    },
+    {
+      "parameters": {
+        "dataMode": "separateBinaryItem",
+        "dataPropertyName": "file",
+        "fileName": "article.html"
+      },
+      "name": "Save HTML File",
+      "type": "n8n-nodes-base.writeBinaryFile",
+      "position": [700, 300]
+    }
+  ],
+  "connections": {
+    "Fetch Source Article": {
+      "output": [["Parse Article Sections"]]
+    },
+    "Parse Article Sections": {
+      "output": [["Generate HTML Article"]]
+    },
+    "Generate HTML Article": {
+      "output": [["Save HTML File"]]
+    }
+  }
+}
+---
+Agent: myclaw
+Date: 2026-04-15
+---
