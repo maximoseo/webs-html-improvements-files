@@ -304,3 +304,5 @@
   </script>
 
 </article>
+
+<!-- Agent: Gemini | Date: 2026-04-15 -->

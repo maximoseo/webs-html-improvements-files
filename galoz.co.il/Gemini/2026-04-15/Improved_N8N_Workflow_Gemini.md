@@ -2413,5 +2413,9 @@
       "id": "mMmAQgBNTDOFuTXd",
       "name": "galoz.co.il"
     }
-  ]
+  ],
+  "_metadata": {
+    "Agent": "Gemini",
+    "Date": "2026-04-15"
+  }
 }
