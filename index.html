@@ -306,6 +306,22 @@ function filterProjects(q){
   const cards=document.querySelectorAll('.project-card');
   q=q.toLowerCase();
   cards.forEach(c=>{c.style.display=c.dataset.name.includes(q)?'':'none'});
+  syncBulkToggleLabel();
+}
+
+function syncBulkToggleLabel(){
+  const btn=document.getElementById('bulk-toggle-projects');
+  if(!btn)return;
+  const cards=[...document.querySelectorAll('.project-card')].filter(c=>c.style.display!=='none');
+  const allExpanded=cards.length>0&&cards.every(c=>c.classList.contains('expanded'));
+  btn.textContent=allExpanded?'Collapse all':'Expand all';
+}
+
+function toggleAllProjects(btn){
+  const cards=[...document.querySelectorAll('.project-card')].filter(c=>c.style.display!=='none');
+  const allExpanded=cards.length>0&&cards.every(c=>c.classList.contains('expanded'));
+  cards.forEach(c=>c.classList.toggle('expanded',!allExpanded));
+  syncBulkToggleLabel();
 }
 
 async function fetchJSON(url){
@@ -445,7 +461,7 @@ async function loadDashboard(){
     card.className='project-card';
     card.dataset.name=p.name.toLowerCase();
     card.innerHTML=`
-      <div class="card-header" onclick="this.parentElement.classList.toggle('expanded')">
+      <div class="card-header" onclick="this.parentElement.classList.toggle('expanded');syncBulkToggleLabel()">
         <div class="card-icon" style="background:linear-gradient(135deg,${color},${color}88)">${initials}</div>
         <div class="card-info">
           <h3>${p.name}</h3>
@@ -465,6 +481,7 @@ async function loadDashboard(){
     grid.appendChild(card);
   });
 
+  syncBulkToggleLabel();
   document.getElementById('sync-status').textContent='Synced '+new Date().toLocaleDateString('en-GB');
 }
 
