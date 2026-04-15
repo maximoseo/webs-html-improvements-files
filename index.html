@@ -180,21 +180,48 @@ a:hover{color:var(--gold-light)}
 .focus-device-frame.mobile{width:420px;max-width:100%;height:100%;border-radius:28px}
 .focus-device-frame iframe{width:100%;height:100%;border:none;background:#fff}
 .focus-subtitle{font-size:10px;color:var(--muted);font-weight:600;margin-left:8px}
-.prompt-modal{max-width:1080px;width:94vw;height:88vh}
-.prompt-container{flex:1;display:grid;grid-template-columns:1fr 1fr;gap:16px;padding:16px;background:var(--bg);overflow:hidden}
+.prompt-modal{max-width:1440px;width:97vw;height:90vh}
+.prompt-container{flex:1;display:grid;grid-template-columns:minmax(280px,0.95fr) minmax(280px,0.95fr) minmax(360px,1.2fr);gap:16px;padding:16px;background:var(--bg);overflow:hidden}
 .prompt-panel{display:flex;flex-direction:column;gap:10px;min-height:0}
 .prompt-label{font-size:11px;font-weight:700;color:var(--text-secondary);text-transform:uppercase;letter-spacing:0.7px}
 .prompt-textarea{flex:1;min-height:240px;width:100%;resize:none;border:1px solid var(--border);border-radius:12px;background:var(--surface);color:var(--text);padding:14px;font:13px/1.55 ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;outline:none}
 .prompt-textarea:focus{border-color:var(--gold-dim)}
 .prompt-actions{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
 .prompt-status{font-size:12px;color:var(--muted)}
+.prompt-preview-wrap{flex:1;min-height:0;border:1px solid var(--border);border-radius:12px;overflow:hidden;background:#fff}
+.prompt-preview-frame{width:100%;height:100%;border:none;background:#fff}
+.deploy-status-panel{position:fixed;right:18px;bottom:18px;z-index:1002;width:min(420px,calc(100vw - 36px));background:rgba(20,20,20,0.96);border:1px solid var(--border);border-radius:14px;box-shadow:0 20px 60px rgba(0,0,0,0.45);backdrop-filter:blur(10px);overflow:hidden}
+.deploy-status-header{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;border-bottom:1px solid var(--border);background:rgba(255,255,255,0.02)}
+.deploy-status-title{font-size:12px;font-weight:800;letter-spacing:.5px;text-transform:uppercase;color:var(--text-secondary)}
+.deploy-status-toggle{border:1px solid var(--border);background:var(--bg);color:var(--text-secondary);border-radius:8px;padding:6px 10px;font-size:11px;font-weight:700;cursor:pointer}
+.deploy-status-body{padding:12px 14px;display:flex;flex-direction:column;gap:12px;max-height:50vh;overflow:auto}
+.deploy-status-panel.collapsed .deploy-status-body{display:none}
+.deploy-status-empty{font-size:12px;color:var(--muted)}
+.deploy-job{border:1px solid var(--border);border-radius:12px;padding:12px;background:rgba(255,255,255,0.02);display:flex;flex-direction:column;gap:8px}
+.deploy-job.running{border-color:rgba(201,149,42,0.4);box-shadow:0 0 0 1px rgba(201,149,42,0.08) inset}
+.deploy-job.success{border-color:rgba(34,197,94,0.35)}
+.deploy-job.error{border-color:rgba(239,68,68,0.35)}
+.deploy-job-top{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
+.deploy-job-name{font-size:12px;font-weight:700;color:var(--text)}
+.deploy-job-meta{font-size:11px;color:var(--muted)}
+.deploy-job-badge{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.6px;padding:4px 8px;border-radius:999px;border:1px solid var(--border)}
+.deploy-job.running .deploy-job-badge{color:var(--gold);border-color:rgba(201,149,42,0.35);background:var(--gold-bg)}
+.deploy-job.success .deploy-job-badge{color:var(--green);border-color:rgba(34,197,94,0.35);background:var(--green-bg)}
+.deploy-job.error .deploy-job-badge{color:var(--red);border-color:rgba(239,68,68,0.35);background:var(--red-bg)}
+.deploy-job-step{font-size:12px;color:var(--text-secondary)}
+.deploy-progress{height:7px;border-radius:999px;background:rgba(255,255,255,0.06);overflow:hidden}
+.deploy-progress-bar{height:100%;width:0;background:linear-gradient(90deg,var(--gold),var(--gold-light));transition:width .25s ease}
+.deploy-job.success .deploy-progress-bar{background:linear-gradient(90deg,var(--green),#4ade80)}
+.deploy-job.error .deploy-progress-bar{background:linear-gradient(90deg,var(--red),#f87171)}
+.deploy-job-details{font-size:11px;color:var(--muted);white-space:pre-wrap;word-break:break-word}
 
 /* Footer */
 .footer{text-align:center;padding:32px 24px;font-size:11px;color:var(--muted);border-top:1px solid var(--border);margin-top:40px}
 .footer a{color:var(--text-secondary)}
 
 /* Responsive */
-@media(max-width:900px){.stats{grid-template-columns:repeat(2,1fr)}.prompt-container{grid-template-columns:1fr}}
+@media(max-width:1200px){.prompt-container{grid-template-columns:1fr 1fr}}
+@media(max-width:900px){.stats{grid-template-columns:repeat(2,1fr)}.prompt-container{grid-template-columns:1fr}.deploy-status-panel{left:16px;right:16px;width:auto;bottom:16px}}
 @media(max-width:640px){
   .header-inner{padding:12px 16px}
   .container{padding:16px}
@@ -345,8 +372,24 @@ a:hover{color:var(--gold-light)}
         <button class="action-btn" onclick="copyImprovedPrompt()">Copy output</button>
       </div>
     </div>
+    <div class="prompt-panel">
+      <div class="prompt-label">Selected HTML template preview</div>
+      <div class="prompt-preview-wrap">
+        <iframe id="prompt-preview-frame" class="prompt-preview-frame" sandbox="allow-same-origin"></iframe>
+      </div>
+    </div>
   </div>
 </div>
+</div>
+
+<div class="deploy-status-panel collapsed" id="deploy-status-panel">
+  <div class="deploy-status-header">
+    <div class="deploy-status-title">Deploy to n8n status</div>
+    <button class="deploy-status-toggle" id="deploy-status-toggle" onclick="toggleDeployStatusPanel()">Show</button>
+  </div>
+  <div class="deploy-status-body" id="deploy-status-body">
+    <div class="deploy-status-empty">No deploy jobs yet.</div>
+  </div>
 </div>
 
 <footer class="footer"></footer>
@@ -357,7 +400,8 @@ const API=`https://api.github.com/repos/${REPO}`;
 const RAW=`https://raw.githubusercontent.com/${REPO}/main`;
 const COLORS=['#C9952A','#3b82f6','#22c55e','#a855f7','#ef4444','#06b6d4','#f59e0b','#ec4899'];
 let allProjects=[];
-let promptStudioContext={domain:'',agentName:'',versionName:''};
+let promptStudioContext={domain:'',agentName:'',versionName:'',htmlDownloadUrl:''};
+let deployJobs=[];
 
 function formatSize(bytes){if(!bytes)return'';if(bytes<1024)return bytes+'B';if(bytes<1048576)return(bytes/1024).toFixed(1)+'KB';return(bytes/1048576).toFixed(1)+'MB'}
 
@@ -433,7 +477,7 @@ function openCompare(projectName){
   items.forEach((item,idx)=>{
     const panel=document.createElement('div');
     panel.className='compare-panel';
-    panel.innerHTML=`<div class="compare-panel-header"><div class="compare-panel-title">${item.agent}<small>${item.version}</small></div><div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;justify-content:flex-end"><button class="action-btn success" onclick="openPromptStudio('${encodeURIComponent(projectName)}','${encodeURIComponent(item.agent)}','${encodeURIComponent(item.version)}')">Prompt Studio</button><button class="action-btn" onclick="openFocusedCompare('${item.file.download.replace(/'/g,"%27")}', '${item.agent.replace(/'/g,"%27")}', '${item.version.replace(/'/g,"%27")}')">Expand</button><a href="${item.file.url}" target="_blank" class="action-btn">View Code</a></div></div><div class="compare-frame-wrap"><div class="compare-device-frame desktop"><iframe sandbox="allow-same-origin"></iframe></div></div>`;
+    panel.innerHTML=`<div class="compare-panel-header"><div class="compare-panel-title">${item.agent}<small>${item.version}</small></div><div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;justify-content:flex-end"><button class="action-btn success" onclick="openPromptStudio('${encodeURIComponent(projectName)}','${encodeURIComponent(item.agent)}','${encodeURIComponent(item.version)}','${item.file.download.replace(/'/g,"%27")}')">Prompt Studio</button><button class="action-btn" onclick="openFocusedCompare('${item.file.download.replace(/'/g,"%27")}', '${item.agent.replace(/'/g,"%27")}', '${item.version.replace(/'/g,"%27")}')">Expand</button><a href="${item.file.url}" target="_blank" class="action-btn">View Code</a></div></div><div class="compare-frame-wrap"><div class="compare-device-frame desktop"><iframe sandbox="allow-same-origin"></iframe></div></div>`;
     grid.appendChild(panel);
     fetch(item.file.download).then(r=>r.text()).then(html=>{
       const iframe=panel.querySelector('iframe');
@@ -475,16 +519,27 @@ function setFocusedDevice(mode,btn){
   document.querySelectorAll('#focus-device-tabs .device-tab').forEach(t=>t.classList.remove('active'));
   btn.classList.add('active');
 }
-function openPromptStudio(projectName, agentName, versionName){
+function openPromptStudio(projectName, agentName, versionName, htmlDownloadUrl){
   promptStudioContext={
     domain:decodeURIComponent(projectName||''),
     agentName:decodeURIComponent(agentName||''),
     versionName:decodeURIComponent(versionName||''),
+    htmlDownloadUrl:decodeURIComponent(htmlDownloadUrl||''),
   };
   document.getElementById('prompt-filename').textContent=promptStudioContext.agentName||'Agent';
   document.getElementById('prompt-subtitle').textContent=`${promptStudioContext.domain} • ${promptStudioContext.versionName}`;
   document.getElementById('prompt-output').value='';
   document.getElementById('prompt-status').textContent='Write a draft prompt, then improve it into a paste-ready markdown prompt.';
+  const previewFrame=document.getElementById('prompt-preview-frame');
+  if(promptStudioContext.htmlDownloadUrl){
+    fetch(promptStudioContext.htmlDownloadUrl).then(r=>r.text()).then(html=>{
+      const doc=previewFrame.contentDocument||previewFrame.contentWindow.document;
+      doc.open();doc.write(html);doc.close();
+    }).catch(()=>{
+      const doc=previewFrame.contentDocument||previewFrame.contentWindow.document;
+      doc.open();doc.write('<body style="font-family:Segoe UI,sans-serif;padding:24px;color:#666">Could not load HTML preview.</body>');doc.close();
+    });
+  }
   const draft=document.getElementById('prompt-draft');
   if(!draft.value.trim()){
     draft.value=`Improve the ${promptStudioContext.agentName} version for ${promptStudioContext.domain}.\n\nFocus on:\n- visual polish\n- responsive cleanup\n- hierarchy and spacing\n- premium UI/UX details\n- preserving content meaning\n\nWhat I want changed:\n- `;
@@ -494,6 +549,9 @@ function openPromptStudio(projectName, agentName, versionName){
 }
 function closePromptStudio(){
   document.getElementById('prompt-modal').classList.remove('open');
+  const previewFrame=document.getElementById('prompt-preview-frame');
+  const doc=previewFrame.contentDocument||previewFrame.contentWindow.document;
+  doc.open();doc.write('');doc.close();
 }
 async function improvePrompt(btn){
   const draft=document.getElementById('prompt-draft').value.trim();
@@ -528,6 +586,28 @@ async function copyImprovedPrompt(){
     status.textContent='Copy failed. Select the output manually.';
   }
 }
+function toggleDeployStatusPanel(forceOpen){
+  const panel=document.getElementById('deploy-status-panel');
+  const btn=document.getElementById('deploy-status-toggle');
+  const open=forceOpen===true?true:(forceOpen===false?false:panel.classList.contains('collapsed'));
+  panel.classList.toggle('collapsed',!open);
+  btn.textContent=open?'Hide':'Show';
+}
+function renderDeployJobs(){
+  const body=document.getElementById('deploy-status-body');
+  if(!body)return;
+  if(!deployJobs.length){
+    body.innerHTML='<div class="deploy-status-empty">No deploy jobs yet.</div>';
+    return;
+  }
+  body.innerHTML=deployJobs.map(job=>`<div class="deploy-job ${job.state}"><div class="deploy-job-top"><div><div class="deploy-job-name">${job.fileName}</div><div class="deploy-job-meta">${job.domain} • ${job.versionName}</div></div><div class="deploy-job-badge">${job.state}</div></div><div class="deploy-job-step">${job.step}</div><div class="deploy-progress"><div class="deploy-progress-bar" style="width:${job.progress}%"></div></div><div class="deploy-job-details">${job.details||''}</div></div>`).join('');
+}
+function upsertDeployJob(jobId, patch){
+  const idx=deployJobs.findIndex(job=>job.id===jobId);
+  if(idx===-1)return;
+  deployJobs[idx]={...deployJobs[idx],...patch};
+  renderDeployJobs();
+}
 async function deployToN8n(domain, versionName, filePath, fileName, btn){
   domain=decodeURIComponent(domain||'');
   versionName=decodeURIComponent(versionName||'');
@@ -535,24 +615,31 @@ async function deployToN8n(domain, versionName, filePath, fileName, btn){
   fileName=decodeURIComponent(fileName||'');
   if(!confirm(`Deploy ${fileName} to the live n8n workflow for ${domain}?`)) return;
   const original=btn.textContent;
+  const jobId=`${Date.now()}-${Math.random().toString(16).slice(2)}`;
+  deployJobs.unshift({id:jobId,domain,versionName,fileName,state:'running',step:'Queued deploy request…',progress:8,details:`Preparing ${fileName} for ${domain}.`});
+  deployJobs=deployJobs.slice(0,8);
+  renderDeployJobs();
+  toggleDeployStatusPanel(true);
   btn.disabled=true;
   btn.textContent='Deploying...';
   try{
+    upsertDeployJob(jobId,{step:'Sending workflow JSON to secure deploy endpoint…',progress:42,details:`Source file: ${filePath}`});
     const res=await fetch('/api/n8n/deploy',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({domain,versionName,filePath,fileName})});
     const data=await res.json();
     if(!res.ok||!data.ok){
       const errorText=typeof data.error==='string'?data.error:JSON.stringify(data.error||{});
       throw new Error(errorText);
     }
-    alert(`Deployed ${fileName} to n8n workflow ${data.workflowName||data.workflowId} for ${domain}.`);
+    upsertDeployJob(jobId,{state:'success',step:'Deploy finished successfully.',progress:100,details:`Updated workflow: ${data.workflowName||data.workflowId}`});
   }catch(err){
-    alert(`Deploy to n8n failed for ${domain}.\n\n${err.message||'Unknown error'}`);
+    upsertDeployJob(jobId,{state:'error',step:'Deploy failed.',progress:100,details:err.message||'Unknown error'});
   }finally{
     btn.disabled=false;
     btn.textContent=original;
   }
 }
 document.addEventListener('keydown',e=>{if(e.key==='Escape'){closePreview();closeCompare();closeFocusedCompare();closePromptStudio();}});
+renderDeployJobs();
 
 function setView(mode,btn){
   document.getElementById('projects-grid').className='projects-grid'+(mode==='list'?' list-view':'');
