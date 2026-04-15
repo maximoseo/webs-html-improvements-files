@@ -175,21 +175,28 @@ def improve_prompt_with_model(payload):
     if not headers:
         raise RuntimeError('OPENAI_API_KEY or OPENROUTER_API_KEY is not configured')
     model = os.getenv('PROMPT_IMPROVER_MODEL', 'gpt-5.4')
+    current_date = os.getenv('PROMPT_CURRENT_DATE', '2026-04-15')
     system = (
         'You are a senior prompt engineer for agentic coding and design workflows. '
         'Rewrite the user draft into a production-ready prompt for the specified agent. '
         'Return plain text only, formatted as markdown without code fences. '
         'Preserve user intent, remove ambiguity, add concrete acceptance criteria, include validation steps, '
-        'and make the prompt directly paste-ready for the named agent.'
+        'and make the prompt directly paste-ready for the named agent. '
+        'Mandatory rule: the generated prompt must explicitly require exporting the final improved files into the updated files destination in Obsidian and publishing the same deliverables to the GitHub repo behind https://html-redesign-dashboard.maximo-seo.ai/. '
+        'Mandatory rule: the generated prompt must require replacing or updating the existing files for the same project/version path rather than leaving the old current files as the active deliverables when a replacement is intended. '
+        'Mandatory rule: the generated prompt must use the current working date for output-folder/date references and update any stale date references if needed.'
     )
     user = (
         f"Target domain: {payload.get('domain') or 'unknown'}\n"
         f"Target agent: {payload.get('agentName') or 'unknown'}\n"
-        f"Agent version/context: {payload.get('versionName') or 'unknown'}\n\n"
+        f"Agent version/context: {payload.get('versionName') or 'unknown'}\n"
+        f"Current required working date: {current_date}\n\n"
         'User draft prompt:\n'
         f'{draft}\n\n'
         'Rewrite it so it is optimized for the named agent and suitable for dashboard-driven redesign review work. '
-        'The final output must be paste-ready plain-text markdown.'
+        'The final output must be paste-ready plain-text markdown. '
+        'It must include a mandatory delivery/publish section that says to upload the resulting files into updated files in Obsidian and into the GitHub repo/dashboard path for this same project, replacing the currently active same-project files when appropriate. '
+        'It must also mention the current required working date above and tell the agent to update old dates if they appear in the prompt context.'
     )
     body = {
         'model': model,
