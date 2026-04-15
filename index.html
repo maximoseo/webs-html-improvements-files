@@ -71,15 +71,19 @@ a:hover{color:var(--gold-light)}
 .card-icon{width:50px;height:50px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:800;color:#fff;flex-shrink:0;position:relative;background:linear-gradient(135deg,rgba(113,112,255,0.88),rgba(94,106,210,0.55));box-shadow:0 12px 30px rgba(94,106,210,0.28)}
 .card-icon::after{content:'';position:absolute;inset:0;border-radius:14px;border:1px solid rgba(255,255,255,0.12)}
 .card-info h3{font-size:16px;font-weight:600;margin-bottom:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.03em}
+.card-meta{display:flex;gap:8px;flex-wrap:wrap}
+.card-right{display:flex;align-items:center;gap:14px;flex-shrink:0;flex-wrap:wrap;justify-content:flex-end}
+.card-cta-group{display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:4px;border-radius:14px;background:rgba(255,255,255,0.025);border:1px solid rgba(255,255,255,0.06)}
 .meta-tag{font-size:11px;padding:4px 10px;border-radius:999px;font-weight:600;background:rgba(255,255,255,0.03);color:var(--text-secondary);border:1px solid rgba(255,255,255,0.07)}
 .badge{font-size:10px;padding:6px 12px;border-radius:999px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em}
 .badge-live{background:rgba(39,166,68,0.14);color:#7ee19d;border:1px solid rgba(39,166,68,0.22)}
 .badge-archive{background:rgba(255,255,255,0.04);color:var(--muted);border:1px solid rgba(255,255,255,0.07)}
 .toggle-icon{width:30px;height:30px;border-radius:50%;border:1px solid rgba(255,255,255,0.07);display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:12px;transition:all 0.25s;background:rgba(255,255,255,0.02)}
 .project-card.expanded .toggle-icon{transform:rotate(180deg);color:var(--gold-light);border-color:rgba(113,112,255,0.28);background:rgba(113,112,255,0.14)}
-.preview-cta{display:inline-flex;align-items:center;gap:6px;padding:10px 18px;background:rgba(113,112,255,0.14);color:#c5c8ff;border:1px solid rgba(113,112,255,0.22);border-radius:10px;font-size:12px;font-weight:700;cursor:pointer;transition:all 0.2s;margin-right:8px;white-space:nowrap}
-.preview-cta:hover{background:rgba(113,112,255,0.24);color:#fff;transform:translateY(-1px);box-shadow:0 10px 24px rgba(94,106,210,0.25)}
-.preview-cta svg{width:14px;height:14px}
+.preview-cta{display:inline-flex;align-items:center;justify-content:center;gap:6px;min-height:38px;padding:10px 16px;background:rgba(255,255,255,0.025);color:var(--text-secondary);border:1px solid rgba(255,255,255,0.08);border-radius:12px;font-size:12px;font-weight:700;cursor:pointer;transition:all 0.2s;white-space:nowrap;box-shadow:none}
+.preview-cta:hover{background:rgba(113,112,255,0.12);border-color:rgba(113,112,255,0.22);color:#fff;transform:translateY(-1px);box-shadow:0 8px 20px rgba(0,0,0,0.18)}
+.preview-cta.primary-accent{background:rgba(113,112,255,0.16);color:#d7dbff;border-color:rgba(113,112,255,0.26)}
+.preview-cta.primary-accent:hover{background:rgba(113,112,255,0.24);box-shadow:0 10px 24px rgba(94,106,210,0.22)}
 
 /* Card Body */
 .card-body{max-height:0;overflow:hidden;transition:max-height 0.4s cubic-bezier(0.4,0,0.2,1)}
@@ -104,13 +108,13 @@ a:hover{color:var(--gold-light)}
 .file-badge.json{background:rgba(39,166,68,0.14);color:#8be0a0;border:1px solid rgba(39,166,68,0.16)}
 .file-name{font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:3px;letter-spacing:-0.01em}
 .file-size{font-size:11px;color:var(--muted)}
-.file-actions{display:flex;gap:8px;flex-wrap:wrap}
-.action-btn{padding:7px 14px;border-radius:10px;font-size:11px;font-weight:700;border:1px solid rgba(255,255,255,0.08);background:rgba(255,255,255,0.03);color:var(--text-secondary);cursor:pointer;text-decoration:none;transition:all 0.15s;display:inline-flex;align-items:center;gap:4px}
-.action-btn:hover{border-color:rgba(113,112,255,0.28);color:#fff;background:rgba(113,112,255,0.12)}
-.action-btn.primary{background:linear-gradient(135deg,var(--gold),var(--gold-dim));border-color:transparent;color:#fff;padding:7px 16px;box-shadow:0 10px 22px rgba(94,106,210,0.24)}
-.action-btn.primary:hover{background:linear-gradient(135deg,var(--gold-light),var(--gold));transform:translateY(-1px);box-shadow:0 14px 28px rgba(94,106,210,0.28)}
-.action-btn.success{border-color:rgba(39,166,68,0.24);color:#7ee19d;background:rgba(39,166,68,0.12)}
-.action-btn.success:hover{border-color:rgba(39,166,68,0.38);background:rgba(39,166,68,0.18);color:#b8f3c7}
+.file-actions{display:flex;gap:10px;flex-wrap:wrap;align-items:center;padding-top:2px}
+.action-btn{padding:8px 14px;border-radius:12px;font-size:11px;font-weight:700;border:1px solid rgba(255,255,255,0.08);background:rgba(255,255,255,0.03);color:var(--text-secondary);cursor:pointer;text-decoration:none;transition:all 0.15s;display:inline-flex;align-items:center;justify-content:center;gap:5px;min-height:38px}
+.action-btn:hover{border-color:rgba(113,112,255,0.24);color:#fff;background:rgba(113,112,255,0.1)}
+.action-btn.primary{background:linear-gradient(135deg,var(--gold),var(--gold-dim));border-color:transparent;color:#fff;padding:8px 18px;box-shadow:0 10px 22px rgba(94,106,210,0.18)}
+.action-btn.primary:hover{background:linear-gradient(135deg,var(--gold-light),var(--gold));transform:translateY(-1px);box-shadow:0 14px 28px rgba(94,106,210,0.22)}
+.action-btn.success{border-color:rgba(39,166,68,0.2);color:#7ee19d;background:rgba(39,166,68,0.1)}
+.action-btn.success:hover{border-color:rgba(39,166,68,0.32);background:rgba(39,166,68,0.16);color:#c8f5d2}
 
 /* Sync Bar */
 .sync-bar{background:linear-gradient(180deg,rgba(255,255,255,0.04),rgba(255,255,255,0.02));border:1px solid rgba(255,255,255,0.08);border-radius:18px;padding:22px 24px;margin-top:32px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px;box-shadow:var(--shadow-card)}
@@ -828,9 +832,9 @@ async function loadDashboard(){
         ${filesHTML}</div>`;
     });
 
-    const previewCTA=latestHtmlUrl?`<button class="preview-cta" onclick="event.stopPropagation();openPreview('${latestHtmlUrl}','${latestHtmlName}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="5 3 19 12 5 21 5 3"/></svg>Preview</button>`:'';
+    const previewCTA=latestHtmlUrl?`<button class="preview-cta primary-accent" onclick="event.stopPropagation();openPreview('${latestHtmlUrl}','${latestHtmlName}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="5 3 19 12 5 21 5 3"/></svg>Preview</button>`:'';
     const compareCandidates=compareCandidatesForProject(p.name);
-    const compareCTA=compareCandidates.length>1?`<button class="preview-cta" onclick="event.stopPropagation();openCompare('${p.name}')" style="background:var(--blue-bg);color:var(--blue);border-color:rgba(59,130,246,0.35)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M10 3H3v7h7V3zM21 14h-7v7h7v-7zM21 3h-7v7h7V3zM10 14H3v7h7v-7z"/></svg>Compare agents</button>`:'';
+    const compareCTA=compareCandidates.length>1?`<button class="preview-cta" onclick="event.stopPropagation();openCompare('${p.name}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M10 3H3v7h7V3zM21 14h-7v7h7v-7zM21 3h-7v7h7V3zM10 14H3v7h7v-7z"/></svg>Compare agents</button>`:'';
 
     const card=document.createElement('div');
     card.className='project-card';
@@ -847,8 +851,7 @@ async function loadDashboard(){
           </div>
         </div>
         <div class="card-right">
-          ${compareCTA}
-          ${previewCTA}
+          <div class="card-cta-group">${compareCTA}${previewCTA}</div>
           <span class="badge ${latest?'badge-live':'badge-archive'}">${latest?'Live':'Archive'}</span>
           <span class="toggle-icon">&#9660;</span>
         </div>
