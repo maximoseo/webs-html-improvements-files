@@ -1162,6 +1162,9 @@ const CHECKLIST_GROUPS=[
   {id:'rtl',title:'RTL / Hebrew',items:[
     {id:'rtl-icon-after-text',label:'RTL/Hebrew: place TOC/FAQ icons after the text on the same line in a fixed consistent position. Apply the same-line alignment to CTA and floating buttons with icon+text. Hover color changes must never make text unreadable against the background.'},
   ]},
+  {id:'delivery',title:'Delivery & Sync',items:[
+    {id:'delivery-obsidian-sync',label:'When all work is done, trigger a manual Obsidian vault sync so all new and updated files are indexed and searchable in the vault. Then trigger a Render redeploy (or confirm the dashboard has auto-deployed) so the HTML Redesign Dashboard at https://html-redesign-dashboard.maximo-seo.ai/ reflects the latest published files. Confirm both are complete before finishing.'},
+  ]},
 ];
 const CHECKLIST_STORAGE_KEY='promptStudioChecklist.v1';
 function renderChecklist(){
