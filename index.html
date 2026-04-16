@@ -355,20 +355,23 @@ a:hover{color:var(--gold-light)}
   .header{background:rgba(244,245,247,0.88)}
 }
 
-/* Copy toast notification */
-.copy-toast{
-  position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(12px);
-  background:rgba(34,197,94,0.95);color:#fff;
+/* Action toast notifications */
+.action-toast{
+  position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(14px);
   font-size:13px;font-weight:700;
   padding:10px 20px;border-radius:999px;
-  box-shadow:0 8px 24px rgba(0,0,0,0.30);
+  box-shadow:0 8px 28px rgba(0,0,0,0.32);
   opacity:0;pointer-events:none;
-  transition:opacity 0.18s ease,transform 0.18s ease;
+  transition:opacity 0.17s ease,transform 0.17s ease;
   z-index:9999;white-space:nowrap;
   display:flex;align-items:center;gap:8px;
+  background:rgba(34,197,94,0.95);color:#fff;
 }
-.copy-toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
-.copy-toast svg{width:15px;height:15px;flex-shrink:0}
+.action-toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.action-toast.error{background:rgba(239,68,68,0.95)}
+.action-toast.warn{background:rgba(201,149,42,0.96)}
+.action-toast.info{background:rgba(79,140,255,0.95)}
+.action-toast svg{width:14px;height:14px;flex-shrink:0}
 </style>
 </head>
 <body>
@@ -580,9 +583,9 @@ a:hover{color:var(--gold-light)}
     <button class="shortcuts-close" onclick="closeShortcuts()">Close</button>
   </div>
 </div>
-<div class="copy-toast" id="copy-toast">
-  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
-  Copied to clipboard!
+<div class="action-toast" id="action-toast">
+  <svg id="action-toast-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+  <span id="action-toast-msg">Done</span>
 </div>
 <footer class="footer"></footer>
 
@@ -879,18 +882,26 @@ async function improvePrompt(btn){
     btn.textContent=original;
   }
 }
-function showCopyToast(msg){
-  const t=document.getElementById('copy-toast');
+function showToast(msg,type){
+  const t=document.getElementById('action-toast');
   if(!t)return;
-  t.querySelector('svg+*')
-    ? (t.childNodes[t.childNodes.length-1].textContent=' '+(msg||'Copied to clipboard!'))
-    : null;
-  // Update text node
-  for(const node of t.childNodes){if(node.nodeType===3){node.textContent=' '+(msg||'Copied to clipboard!');break;}}
+  const icons={
+    success:'<polyline points="20 6 9 17 4 12"/>',
+    error:'<line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>',
+    warn:'<path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>',
+    info:'<circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>',
+  };
+  const kind=type||'success';
+  const iconEl=document.getElementById('action-toast-icon');
+  const msgEl=document.getElementById('action-toast-msg');
+  if(iconEl) iconEl.innerHTML=icons[kind]||icons.success;
+  if(msgEl) msgEl.textContent=msg||'Done';
+  t.className='action-toast '+kind;
   t.classList.add('show');
   clearTimeout(t._hideTimer);
-  t._hideTimer=setTimeout(()=>t.classList.remove('show'),2200);
+  t._hideTimer=setTimeout(()=>t.classList.remove('show'),2400);
 }
+function showCopyToast(msg){showToast(msg||'Copied to clipboard!','success');}
 async function copyImprovedPrompt(){
   const value=document.getElementById('prompt-output').value;
   const status=document.getElementById('prompt-status');
@@ -898,7 +909,7 @@ async function copyImprovedPrompt(){
   try{
     await navigator.clipboard.writeText(value);
     status.textContent='Copied to clipboard.';
-    showCopyToast('Prompt copied!');
+    showToast('Prompt copied to clipboard!','success');
   }catch(err){
     status.textContent='Copy failed — select the output manually.';
   }
@@ -948,8 +959,10 @@ async function deployToN8n(domain, versionName, filePath, fileName, btn){
       throw new Error(errorText);
     }
     upsertDeployJob(jobId,{state:'success',step:'Deploy finished successfully.',progress:100,details:`Updated workflow: ${data.workflowName||data.workflowId}`});
+    showToast(`Deployed: ${data.workflowName||fileName}`,'success');
   }catch(err){
     upsertDeployJob(jobId,{state:'error',step:'Deploy failed.',progress:100,details:err.message||'Unknown error'});
+    showToast('Deploy failed: '+(err.message||'Unknown error').substring(0,40),'error');
   }finally{
     btn.disabled=false;
     btn.textContent=original;
@@ -1116,6 +1129,9 @@ function selectAllChecklist(select){
     if(cb) cb.checked=!!select;
   });
   updateChecklistCount();
+  const n=getSelectedChecklistItems().length;
+  if(select) showToast(`${n} rule${n===1?'':'s'} selected`,'info');
+  else showToast('Checklist cleared','info');
 }
 function filterChecklist(q){
   const needle=(q||'').trim().toLowerCase();
@@ -1206,6 +1222,7 @@ function toggleAllProjects(btn){
   const allExpanded=cards.length>0&&cards.every(c=>c.classList.contains('expanded'));
   cards.forEach(c=>c.classList.toggle('expanded',!allExpanded));
   syncBulkToggleLabel();
+  showToast(allExpanded?'All projects collapsed':'All projects expanded','info');
 }
 
 async function fetchJSON(url){
@@ -1401,6 +1418,7 @@ function manualRefresh(){
     document.getElementById('sync-status').textContent='Synced';
     document.querySelector('.status-dot').style.background='var(--green)';
     nextRefresh=600;
+    showToast('Dashboard refreshed','success');
   });
 }
 
