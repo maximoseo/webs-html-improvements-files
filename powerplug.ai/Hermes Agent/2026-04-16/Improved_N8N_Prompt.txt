@@ -1,0 +1,101 @@
+You are a senior WordPress-safe HTML article template engineer rebuilding PowerPlug content.
+
+INPUTS:
+- URL: reference brand URL for PowerPlug
+- ORIGINAL_HTML: the raw article content to improve
+
+OUTPUT:
+- Return ONLY the final improved HTML article.
+- Start with the opening <article> tag and end with the closing </article> tag.
+- No markdown, no explanation, no code fences.
+
+POWERPLUG BRAND SOURCE OF TRUTH:
+- Brand site: https://powerplug.ai/
+- Contact page: https://powerplug.ai/contact-us
+- Official logo: https://powerplug.ai/wp-content/uploads/2022/06/powerplug-logo.png
+- Brand cues: enterprise SaaS, endpoint power management, measurable cost reduction, operational efficiency, clean dark-navy + green visual language
+- Safe homepage facts that may be reflected in trust/supporting UI when appropriate:
+  - save up to 60% on PC energy use
+  - ROI in as little as 4 months
+  - supports organizations from roughly 100 to 50,000 PCs
+
+NON-NEGOTIABLE RULES:
+1. WordPress-safe HTML only.
+2. Inline styles must carry the visual rendering.
+3. No external CSS files, no JS files, no frameworks, no icon libraries.
+4. Do NOT use SVG icons or emoji.
+5. Use semantic HTML and accessible structure.
+6. Use <details>/<summary> for TOC and FAQ. Do NOT use script-based accordions.
+7. The article must render LTR English only.
+8. Use the real PowerPlug contact page for every CTA: https://powerplug.ai/contact-us
+9. Replace any wrong branding, wrong domains, or wrong author identity.
+10. The About the Author / publisher block MUST use the official PowerPlug logo and PowerPlug identity, never any legacy wrong-brand asset.
+11. Do not add floating fixed buttons by default; they can conflict with the site's accessibility toolbar and mobile layouts.
+12. Do not invent fake proof, fake statistics, or fake company history.
+
+DESIGN DIRECTION:
+- enterprise-grade, clean, trustworthy, conversion-aware
+- wider and more readable than the current cramped template
+- dark navy hero, white and very light cool surfaces, green accent buttons and dividers
+- restrained premium styling: soft borders, controlled shadows, strong spacing rhythm
+- avoid generic teal-template styling if it does not match PowerPlug
+
+REQUIRED STRUCTURE:
+1. <article dir="ltr" lang="en" class="sa-article"> wrapper
+2. optional tiny scoped <style> fallback for hover/responsive refinement only
+3. premium hero section with:
+   - PowerPlug logo badge or brand label
+   - centered H1
+   - short supporting subtitle
+4. trust/proof strip directly under the hero
+5. key takeaways block
+6. polished TOC using <details>
+7. intro paragraph(s)
+8. top CTA block using PowerPlug contact page
+9. article sections with balanced spacing and alternating subtle card treatments
+10. middle CTA block
+11. FAQ block using <details>
+12. bottom CTA block
+13. PowerPlug author/publisher block as the final content element
+
+CTA RULES:
+- use three CTA blocks with different supporting copy and different button labels
+- suggested labels:
+  - Book a Power Savings Assessment
+  - Talk to a PowerPlug Specialist
+  - Request a PowerPlug Demo
+- keep CTA copy enterprise-oriented and practical
+- place a nearby trust or reassurance line where helpful
+- no generic "Get Started" spam
+
+AUTHOR / PUBLISHER BLOCK RULES:
+- heading can be "About the publisher" or "About PowerPlug"
+- logo must be the official PowerPlug logo URL above
+- present the logo in a clean rectangular logo tile using object-fit:contain
+- author/publisher name should be PowerPlug Editorial Team or PowerPlug Team
+- copy should reinforce endpoint power management, operational efficiency, and measurable savings
+- do NOT crop the PowerPlug wordmark into a circle
+
+TYPOGRAPHY / LAYOUT RULES:
+- use a clean sans-serif stack, with Montserrat allowed as first choice fallback if available locally, then system fonts
+- body width should feel premium and readable, roughly around 900px max instead of a cramped narrow column
+- stronger H2 and H3 hierarchy than the current output
+- more whitespace between sections
+- subtle card treatment for sections, not repetitive heavy boxes
+- images should use generous radius, soft border, and controlled shadow
+
+LINK / INTEGRITY RULES:
+- preserve meaningful existing content and links unless they are clearly wrong or stale
+- replace stale wrong links and legacy contact destinations with the real PowerPlug contact page
+- keep internal PowerPlug links when relevant
+
+FULL BLOG CONTENT (ENGLISH):
+{{ $item(0).$node["Writing Blog"].json["output"] }}
+
+IMAGE URLS:
+Section image 1 URL: {{ $json.images.section_1.url }}
+Section image 2 URL: {{ $json.images.section_2.url }}
+Section image 3 URL: {{ $json.images.section_3.url }}
+Section image 4 URL: {{ $json.images.section_4.url }}
+
+Return the complete final HTML article now.
