@@ -24,18 +24,19 @@ a:hover{color:var(--gold-light)}
 .logo-icon svg{width:20px;height:20px;color:#fff}
 .logo h1{font-size:18px;font-weight:600;letter-spacing:-0.03em}
 .logo h1 span{color:var(--gold-light)}
-.header-actions{display:flex;align-items:center;gap:12px}
-.header-menu-btn{padding:10px 16px;border-radius:12px;border:1px solid rgba(113,112,255,0.22);background:rgba(255,255,255,0.03);color:var(--text-secondary);font-size:12px;font-weight:700;cursor:pointer;transition:all 0.15s;white-space:nowrap}
-.header-menu-btn:hover{border-color:rgba(113,112,255,0.38);background:rgba(113,112,255,0.12);color:#fff}
-.header-menu-btn.accent{border-color:rgba(201,149,42,0.35);color:#C9952A}
-.header-menu-btn.accent:hover{border-color:rgba(201,149,42,0.5);background:rgba(201,149,42,0.12);color:#f3d58b}
-.search-box{background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:12px;padding:10px 14px 10px 38px;font-size:13px;color:var(--text);width:240px;outline:none;transition:all 0.2s;position:relative}
-.search-box:focus{border-color:rgba(113,112,255,0.45);box-shadow:0 0 0 4px rgba(113,112,255,0.12)}
+.header-actions{display:flex;align-items:center;gap:10px}
+.header-menu-btn{min-height:38px;padding:9px 14px;border-radius:12px;border:1px solid rgba(255,255,255,0.08);background:rgba(255,255,255,0.03);color:var(--text-secondary);font-size:12px;font-weight:700;cursor:pointer;transition:all 0.15s;white-space:nowrap}
+.header-menu-btn:hover{border-color:rgba(255,255,255,0.14);background:rgba(255,255,255,0.06);color:#fff}
+.header-menu-btn.accent{border-color:rgba(255,255,255,0.08);color:var(--text-secondary);background:rgba(255,255,255,0.03)}
+.header-menu-btn.accent:hover{border-color:rgba(255,255,255,0.14);background:rgba(255,255,255,0.06);color:#fff}
+.search-box{background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:12px;padding:9px 14px 9px 38px;font-size:13px;color:var(--text);width:268px;outline:none;transition:all 0.2s;position:relative}
+.search-box:focus{border-color:rgba(113,112,255,0.26);box-shadow:0 0 0 3px rgba(113,112,255,0.1)}
 .search-wrap{position:relative}
 .search-wrap svg{position:absolute;left:12px;top:50%;transform:translateY(-50%);width:16px;height:16px;color:var(--muted);pointer-events:none}
-.status-pill{display:flex;align-items:center;gap:6px;padding:7px 14px;background:rgba(39,166,68,0.12);border:1px solid rgba(39,166,68,0.2);border-radius:999px;font-size:12px;font-weight:600;color:#7ee19d}
-.status-dot{width:7px;height:7px;border-radius:50%;background:#27a644;animation:pulse 2s infinite;box-shadow:0 0 12px rgba(39,166,68,0.35)}
-@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.4}}
+.status-stack{display:flex;align-items:center;gap:10px;padding:0 0 0 2px}
+.status-pill{display:flex;align-items:center;gap:6px;padding:8px 12px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:999px;font-size:12px;font-weight:700;color:var(--text-secondary)}
+.status-dot{width:7px;height:7px;border-radius:50%;background:#27a644;box-shadow:0 0 12px rgba(39,166,68,0.35)}
+.last-sync-meta{font-size:12px;color:var(--muted);padding:8px 12px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);border-radius:999px}
 
 /* Container */
 .container{max-width:1320px;margin:0 auto;padding:32px 28px}
@@ -245,6 +246,7 @@ a:hover{color:var(--gold-light)}
 @media(max-width:900px){
   .header-inner{padding:14px 16px;align-items:flex-start}
   .header-actions{width:100%;flex-wrap:wrap;justify-content:space-between}
+  .status-stack{width:100%;justify-content:space-between;flex-wrap:wrap}
   .search-wrap{flex:1 1 100%}
   .search-box{width:100%}
   .stats{grid-template-columns:repeat(2,1fr);gap:10px}
@@ -265,8 +267,7 @@ a:hover{color:var(--gold-light)}
   .compare-panel-header{flex-direction:column;align-items:flex-start}
   .compare-grid{grid-template-columns:1fr;padding:0}
   .prompt-container{grid-template-columns:1fr}
-  .deploy-status-panel{left:16px;right:16px;width:auto;bottom:16px}
-  .sync-bar{padding:16px}
+  .deploy-status-panel{right:12px;bottom:12px;width:min(280px,calc(100vw - 24px))}
 }
 @media(max-width:640px){
   .container{padding:16px}
@@ -301,8 +302,10 @@ a:hover{color:var(--gold-light)}
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
       <input class="search-box" type="text" placeholder="Search projects..." id="search" oninput="filterProjects(this.value)">
     </div>
-    <div class="status-pill" style="cursor:pointer" onclick="manualRefresh()" title="Click to refresh now"><span class="status-dot"></span><span id="sync-status">Synced</span></div>
-    <div style="font-size:11px;color:var(--muted);padding:4px 10px;background:var(--bg);border:1px solid var(--border);border-radius:6px" id="last-sync-time">Last sync: —</div>
+    <div class="status-stack">
+      <div class="status-pill" style="cursor:pointer" onclick="manualRefresh()" title="Click to refresh now"><span class="status-dot"></span><span id="sync-status">Synced</span></div>
+      <div class="last-sync-meta" id="last-sync-time">Last sync: —</div>
+    </div>
   </div>
 </div>
 </header>
