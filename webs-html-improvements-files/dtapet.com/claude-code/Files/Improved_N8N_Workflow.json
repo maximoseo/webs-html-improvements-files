@@ -1,0 +1,343 @@
+{
+  "name": "Content Pipeline - dtapet.com - Improved",
+  "nodes": [
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        },
+        "triggerOn": "specificFolder",
+        "folderId": "={{$credentials.googleDriveFolderId}}",
+        "options": {}
+      },
+      "id": "google-docs-trigger",
+      "name": "Google Docs Trigger",
+      "type": "n8n-nodes-base.googleDriveTrigger",
+      "typeVersion": 1,
+      "position": [
+        250,
+        300
+      ],
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "google-drive-oauth",
+          "name": "Google Drive OAuth2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "fileId": "={{ $json.id }}",
+        "options": {}
+      },
+      "id": "get-doc-content",
+      "name": "Get Doc Content",
+      "type": "n8n-nodes-base.googleDocs",
+      "typeVersion": 2,
+      "position": [
+        470,
+        300
+      ],
+      "credentials": {
+        "googleDocsOAuth2Api": {
+          "id": "google-docs-oauth",
+          "name": "Google Docs OAuth2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Document parser for dtapet.com article pipeline\nconst doc = $input.first().json;\n\nlet title = doc.title || 'Untitled';\nlet content = '';\nlet h1Found = false;\n\n// Extract text content from document body\nif (doc.body && doc.body.content) {\n  for (const element of doc.body.content) {\n    if (element.paragraph) {\n      const para = element.paragraph;\n      let paraText = '';\n      \n      for (const elem of (para.elements || [])) {\n        if (elem.textRun) {\n          paraText += elem.textRun.content;\n        }\n      }\n      \n      const style = para.paragraphStyle?.namedStyleType || 'NORMAL_TEXT';\n      \n      if (style === 'HEADING_1') {\n        if (!h1Found) {\n          title = paraText.trim();\n          h1Found = true;\n        }\n      } else if (style === 'HEADING_2') {\n        content += `<h2>${paraText.trim()}</h2>\\n`;\n      } else if (style === 'HEADING_3') {\n        content += `<h3>${paraText.trim()}</h3>\\n`;\n      } else if (paraText.trim()) {\n        content += `<p>${paraText.trim()}</p>\\n`;\n      }\n    }\n  }\n}\n\n// dtapet.com business configuration\nconst articleTopic = title;\nconst siteUrl = 'https://www.dtapet.com/';\nconst contactUrl = 'https://www.dtapet.com/%D7%99%D7%A6%D7%99%D7%A8%D7%AA-%D7%A7%D7%A9%D7%A8/';\nconst whatsappUrl = '';\nconst phoneNumber = '03-5235553';\nconst businessName = '\\u05D3\\u05D5\\u05D9\\u05D8\\u05E9\\u05DE\\u05DF \\u05D8\\u05E4\\u05D8\\u05D9\\u05DD';\nconst businessDescription = '\\u05D7\\u05E0\\u05D5\\u05EA \\u05D8\\u05E4\\u05D8\\u05D9\\u05DD, \\u05D5\\u05D9\\u05DC\\u05D5\\u05E0\\u05D5\\u05EA, \\u05D7\\u05D9\\u05E4\\u05D5\\u05D9\\u05D9\\u05DD \\u05E4\\u05D5\\u05DC\\u05D9\\u05DE\\u05E8\\u05D9\\u05D9\\u05DD \\u05D5\\u05E4\\u05E8\\u05E7\\u05D8 SPC \\u05D1\\u05E4\\u05EA\\u05D7 \\u05EA\\u05E7\\u05D5\\u05D5\\u05D4';\nconst authorImageUrl = 'https://www.dtapet.com/wp-content/uploads/2022/09/logo-e1663485891304.png';\nconst productsJson = '[]';\n\nreturn {\n  json: {\n    title,\n    content,\n    docId: doc.documentId,\n    docTitle: doc.title,\n    articleTopic,\n    siteUrl,\n    contactUrl,\n    whatsappUrl,\n    phoneNumber,\n    businessName,\n    businessDescription,\n    authorImageUrl,\n    productsJson\n  }\n};"
+      },
+      "id": "parse-doc",
+      "name": "Parse Document",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        690,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{$credentials.maximoApiUrl}}/api/v1/improve",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"html\": \"{{$json.content}}\",\n  \"pageType\": \"blog\",\n  \"improvements\": [\"seo\", \"readability\", \"structure\", \"wordpress-safety\"],\n  \"targetKeyword\": \"{{$json.articleTopic}}\",\n  \"siteUrl\": \"{{$json.siteUrl}}\",\n  \"businessName\": \"{{$json.businessName}}\",\n  \"productsJson\": \"{{$json.productsJson}}\",\n  \"language\": \"he\",\n  \"direction\": \"rtl\",\n  \"rules\": {\n    \"inlineCssOnly\": true,\n    \"noStyleBlocks\": true,\n    \"noClasses\": true,\n    \"detailsSummaryAccordions\": true,\n    \"tocNearTop\": true,\n    \"faqSeparateAccordions\": true,\n    \"noNumberedTocFaq\": true,\n    \"faqBeforeAuthor\": true,\n    \"authorSectionFinal\": true,\n    \"hoverViaOnmouseover\": true,\n    \"floatingBackToTop\": true,\n    \"noFloatingWhatsapp\": true,\n    \"noH1Tag\": true,\n    \"wordpressSafe\": true,\n    \"noDateLabels\": true,\n    \"noBreadcrumbs\": true\n  }\n}",
+        "options": {}
+      },
+      "id": "maximo-improve",
+      "name": "Maximo API - Improve",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [
+        910,
+        300
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "maximo-api-key",
+          "name": "Maximo API Key"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// WordPress preparation for dtapet.com\nconst improved = $input.first().json;\nconst original = $node['Parse Document'].json;\n\nlet htmlContent = improved.improved_html || improved.html || original.content;\n\n// WordPress safety: strip any <style> blocks that may have leaked in\nhtmlContent = htmlContent.replace(/<style[\\s\\S]*?<\\/style>/gi, '');\n\n// WordPress safety: strip any class= attributes\nhtmlContent = htmlContent.replace(/\\s*class=\"[^\"]*\"/g, '');\n\n// WordPress safety: fix summary elements that use display:flex\nhtmlContent = htmlContent.replace(/(<summary[^>]*style=\"[^\"]*?)display\\s*:\\s*flex(?:!important)?/gi, '$1display:block!important;position:relative!important');\n\n// Strip date labels\nhtmlContent = htmlContent.replace(/<(?:span|p|div)[^>]*>\\s*(?:\\d{1,2}\\s+(?:January|February|March|April|May|June|July|August|September|October|November|December)\\s+\\d{4}|\\d{1,2}\\/\\d{1,2}\\/\\d{4})\\s*<\\/(?:span|p|div)>/gi, '');\n\n// Strip Hebrew date labels\nhtmlContent = htmlContent.replace(/<(?:span|p|div)[^>]*>\\s*(?:\\u05E0\\u05DB\\u05EA\\u05D1 \\u05D1\\u05EA\\u05D0\\u05E8\\u05D9\\u05DA|\\u05E2\\u05D5\\u05D3\\u05DB\\u05DF \\u05DC\\u05D0\\u05D7\\u05E8\\u05D5\\u05E0\\u05D4)[^<]*<\\/(?:span|p|div)>/gi, '');\n\n// Ensure article wrapper\nif (!htmlContent.trim().startsWith('<article')) {\n  htmlContent = '<article lang=\"he\" dir=\"rtl\">' + htmlContent + '</article>';\n}\n\nreturn {\n  json: {\n    title: original.title,\n    content: htmlContent,\n    excerpt: improved.meta_description || '',\n    seoScore: improved.seo_score || 0,\n    improvements: improved.improvements || [],\n    docId: original.docId,\n    status: 'draft'\n  }\n};"
+      },
+      "id": "prepare-wp",
+      "name": "Prepare for WordPress",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1130,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{$credentials.wordpressUrl}}/wp-json/wp/v2/posts",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpBasicAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"title\": \"{{$json.title}}\",\n  \"content\": \"{{$json.content}}\",\n  \"excerpt\": \"{{$json.excerpt}}\",\n  \"status\": \"{{$json.status}}\"\n}",
+        "options": {}
+      },
+      "id": "wordpress-publish",
+      "name": "Publish to WordPress",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [
+        1350,
+        300
+      ],
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "wordpress-auth",
+          "name": "WordPress Auth"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{$credentials.maximoApiUrl}}/api/n8n/generate-social",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"title\": \"{{$node['Prepare for WordPress'].json.title}}\",\n  \"content\": \"{{$node['Prepare for WordPress'].json.content}}\",\n  \"url\": \"{{$json.link}}\",\n  \"platforms\": [\"facebook\", \"instagram\"],\n  \"language\": \"he\",\n  \"businessName\": \"{{$node['Parse Document'].json.businessName}}\",\n  \"siteUrl\": \"{{$node['Parse Document'].json.siteUrl}}\"\n}",
+        "options": {}
+      },
+      "id": "generate-social",
+      "name": "Generate Social Posts",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [
+        1570,
+        300
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "maximo-api-key",
+          "name": "Maximo API Key"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "channel": "#content-pipeline",
+        "text": "=*Content Pipeline Complete — dtapet.com*\n\n*Title:* {{$node['Prepare for WordPress'].json.title}}\n*WordPress URL:* {{$node['Publish to WordPress'].json.link}}\n*SEO Score:* {{$node['Prepare for WordPress'].json.seoScore}}/100\n*Source Doc:* {{$node['Parse Document'].json.docTitle}}\n*Language:* Hebrew (RTL)\n*WordPress Safety:* Inline CSS only, no style blocks, no classes\n\n*Generated Social Posts:*\n{{$json.posts ? $json.posts.map(p => `- ${p.platform}: ${p.text.substring(0, 100)}...`).join('\\n') : 'None generated'}}",
+        "otherOptions": {}
+      },
+      "id": "slack-notify",
+      "name": "Notify Slack",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.1,
+      "position": [
+        1790,
+        300
+      ],
+      "credentials": {
+        "slackApi": {
+          "id": "slack-creds",
+          "name": "Slack API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "={{$credentials.socialPostsSheetId}}",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "Social Posts",
+          "mode": "name"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Date": "={{$now.format('YYYY-MM-DD')}}",
+            "Title": "={{$node['Prepare for WordPress'].json.title}}",
+            "WordPress URL": "={{$node['Publish to WordPress'].json.link}}",
+            "Facebook": "={{$json.posts?.find(p => p.platform === 'facebook')?.text || ''}}",
+            "Instagram": "={{$json.posts?.find(p => p.platform === 'instagram')?.text || ''}}",
+            "Language": "=he",
+            "SEO Score": "={{$node['Prepare for WordPress'].json.seoScore}}"
+          }
+        },
+        "options": {}
+      },
+      "id": "save-social",
+      "name": "Save to Sheets",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.2,
+      "position": [
+        2010,
+        300
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "google-sheets-oauth",
+          "name": "Google Sheets OAuth2"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Google Docs Trigger": {
+      "main": [
+        [
+          {
+            "node": "Get Doc Content",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Doc Content": {
+      "main": [
+        [
+          {
+            "node": "Parse Document",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse Document": {
+      "main": [
+        [
+          {
+            "node": "Maximo API - Improve",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Maximo API - Improve": {
+      "main": [
+        [
+          {
+            "node": "Prepare for WordPress",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare for WordPress": {
+      "main": [
+        [
+          {
+            "node": "Publish to WordPress",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Publish to WordPress": {
+      "main": [
+        [
+          {
+            "node": "Generate Social Posts",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate Social Posts": {
+      "main": [
+        [
+          {
+            "node": "Notify Slack",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Notify Slack": {
+      "main": [
+        [
+          {
+            "node": "Save to Sheets",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "saveManualExecutions": true,
+    "callerPolicy": "workflowsFromSameOwner"
+  },
+  "staticData": null,
+  "meta": {
+    "templateId": "content-pipeline-dtapet-improved",
+    "instanceId": "maximo-seo-report"
+  },
+  "pinData": {},
+  "tags": [
+    {
+      "name": "google-docs",
+      "id": "1"
+    },
+    {
+      "name": "wordpress",
+      "id": "2"
+    },
+    {
+      "name": "social-media",
+      "id": "3"
+    },
+    {
+      "name": "maximo",
+      "id": "4"
+    },
+    {
+      "name": "dtapet",
+      "id": "5"
+    }
+  ]
+}
