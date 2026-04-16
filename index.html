@@ -372,6 +372,9 @@ a:hover{color:var(--gold-light)}
 .action-toast.warn{background:rgba(201,149,42,0.96)}
 .action-toast.info{background:rgba(79,140,255,0.95)}
 .action-toast svg{width:14px;height:14px;flex-shrink:0}
+
+/* Prompt Studio expand/fullscreen */
+.prompt-modal.ps-fullscreen{width:100vw !important;max-width:100vw !important;height:100vh !important;border-radius:0 !important}
 </style>
 </head>
 <body>
@@ -500,6 +503,7 @@ a:hover{color:var(--gold-light)}
 <div class="modal prompt-modal">
   <div class="modal-header">
     <div class="modal-title"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 1 1 3 3L7 19l-4 1 1-4Z"/></svg> Prompt studio: <span id="prompt-filename">â€”</span><span id="prompt-subtitle" class="focus-subtitle"></span></div>
+    <button id="prompt-expand-btn" class="action-btn" style="height:32px;padding:0 12px;font-size:11px;border-color:rgba(255,255,255,0.10);color:var(--text-secondary)" onclick="togglePromptStudioExpand()" title="Expand to full screen" aria-label="Expand Prompt Studio"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:13px;height:13px"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/></svg> Expand</button>
     <button class="modal-close" onclick="closePromptStudio()">&times;</button>
   </div>
   <div class="prompt-container">
@@ -701,7 +705,7 @@ function openCompare(projectName){
     const deployBtnHtml=hasWorkflow
       ? `<button class="action-btn" style="border-color:rgba(249,115,22,0.30);color:#fb923c;background:rgba(249,115,22,0.08)" onclick="deployVersionToN8n('${encodeURIComponent(projectName)}','${encodeURIComponent(item.agent)}','${encodeURIComponent(item.version)}','${_wfEnc}',this,'${panelId}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" style="width:12px;height:12px"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>Deploy to n8n</button>`
       : '';
-    panel.innerHTML=`<div class="compare-panel-header"><div class="compare-panel-title">${item.agent}<small>${item.version}</small></div><div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;justify-content:flex-end">${deployBtnHtml}<button class="action-btn success" onclick="openPromptStudio('${encodeURIComponent(projectName)}','${encodeURIComponent(item.agent)}','${encodeURIComponent(item.version)}','${item.file.download.replace(/'/g,'%27')}',${filesEnc})">Prompt Studio</button><button class="action-btn" onclick="openFocusedCompare('${item.file.download.replace(/'/g,'%27')}','${item.agent.replace(/'/g,'%27')}','${item.version.replace(/'/g,'%27')}')">Expand</button><a href="${item.file.url}" target="_blank" class="action-btn">View Code</a></div></div><div class="compare-frame-wrap"><div class="compare-device-frame desktop"><iframe sandbox="allow-same-origin"></iframe></div></div><div class="compare-deploy-bar" id="${panelId}-bar" style="display:none"><span class="compare-deploy-badge idle" id="${panelId}-badge"><span class="compare-deploy-dot"></span><span id="${panelId}-badge-text">Ready</span></span><span class="compare-deploy-status" id="${panelId}-status"></span></div>`;
+    panel.innerHTML=`<div class="compare-panel-header"><div class="compare-panel-title">${item.agent}<small>${item.version}</small></div><div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;justify-content:flex-end">${deployBtnHtml}<button class="action-btn success" onclick="openPromptStudio('${encodeURIComponent(projectName)}','${encodeURIComponent(item.agent)}','${encodeURIComponent(item.version)}','${item.file.download.replace(/'/g,'%27')}','${filesEnc}')">Prompt Studio</button><button class="action-btn" onclick="openFocusedCompare('${item.file.download.replace(/'/g,'%27')}','${item.agent.replace(/'/g,'%27')}','${item.version.replace(/'/g,'%27')}')">Expand</button><a href="${item.file.url}" target="_blank" class="action-btn">View Code</a></div></div><div class="compare-frame-wrap"><div class="compare-device-frame desktop"><iframe sandbox="allow-same-origin"></iframe></div></div><div class="compare-deploy-bar" id="${panelId}-bar" style="display:none"><span class="compare-deploy-badge idle" id="${panelId}-badge"><span class="compare-deploy-dot"></span><span id="${panelId}-badge-text">Ready</span></span><span class="compare-deploy-status" id="${panelId}-status"></span></div>`;
     grid.appendChild(panel);
     fetch(item.file.download).then(r=>r.text()).then(html=>{
       const iframe=panel.querySelector('iframe');
@@ -874,9 +878,25 @@ Replace the existing files for this project. Upload to BOTH destinations below â
 }
 function closePromptStudio(){
   document.getElementById('prompt-modal').classList.remove('open');
+  document.getElementById('prompt-modal').classList.remove('ps-fullscreen');
+  const btn=document.getElementById('prompt-expand-btn');
+  if(btn){btn.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:13px;height:13px"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/></svg> Expand';btn.title='Expand to full screen';}
   const previewFrame=document.getElementById('prompt-preview-frame');
   const doc=previewFrame.contentDocument||previewFrame.contentWindow.document;
   doc.open();doc.write('');doc.close();
+}
+function togglePromptStudioExpand(){
+  const overlay=document.getElementById('prompt-modal');
+  const modal=overlay?.querySelector('.modal.prompt-modal');
+  const btn=document.getElementById('prompt-expand-btn');
+  if(!modal)return;
+  const isExpanded=modal.classList.toggle('ps-fullscreen');
+  if(btn){
+    btn.innerHTML=isExpanded
+      ?'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:13px;height:13px"><path d="M8 3v5H3m18 0V3h-5M3 16h5v5m13-5h-5v5"/></svg> Collapse'
+      :'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:13px;height:13px"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/></svg> Expand';
+    btn.title=isExpanded?'Collapse':'Expand to full screen';
+  }
 }
 async function improvePrompt(btn){
   const draft=document.getElementById('prompt-draft').value.trim();
@@ -1410,7 +1430,7 @@ async function loadDashboard(){
     const previewCTA=latestHtmlUrl?`<button class="preview-cta primary-accent" onclick="event.stopPropagation();openPreview('${latestHtmlUrl}','${latestHtmlName}','${_previewCtxEnc}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="5 3 19 12 5 21 5 3"/></svg>Preview</button>`:'';
     const compareCandidates=compareCandidatesForProject(p.name);
     const compareCTA=compareCandidates.length>1?`<button class="preview-cta" onclick="event.stopPropagation();openCompare('${p.name}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M10 3H3v7h7V3zM21 14h-7v7h7v-7zM21 3h-7v7h7V3zM10 14H3v7h7v-7z"/></svg>Compare agents</button>`:'';
-    const promptStudioCTA=latestHtmlUrl?`<button class="preview-cta ps-cta" onclick="event.stopPropagation();openPromptStudio('${encodeURIComponent(p.name)}','${encodeURIComponent(_psAgent)}','${encodeURIComponent(_psVersion)}','${latestHtmlUrl.replace(/'/g,"%27")}',${_psFilesEnc})"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" style="width:13px;height:13px"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 1 1 3 3L7 19l-4 1 1-4Z"/></svg>Prompt Studio</button>`:'';
+    const promptStudioCTA=latestHtmlUrl?`<button class="preview-cta ps-cta" onclick="event.stopPropagation();openPromptStudio('${encodeURIComponent(p.name)}','${encodeURIComponent(_psAgent)}','${encodeURIComponent(_psVersion)}','${latestHtmlUrl.replace(/'/g,"%27")}','${_psFilesEnc}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" style="width:13px;height:13px"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 1 1 3 3L7 19l-4 1 1-4Z"/></svg>Prompt Studio</button>`:'';
 
     const latestLabel=latestDate||'Pending sync';
 
