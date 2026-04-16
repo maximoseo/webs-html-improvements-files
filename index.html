@@ -47,7 +47,7 @@ a:hover{color:var(--gold-light)}
 .stat-card:hover{border-color:rgba(113,112,255,0.22);transform:translateY(-3px);box-shadow:0 18px 46px rgba(0,0,0,0.34)}
 .stat-card::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.2),transparent)}
 .stat-card::after{content:'';position:absolute;inset:auto -20% -55% auto;width:160px;height:160px;border-radius:50%;background:radial-gradient(circle,rgba(113,112,255,0.16),transparent 70%);pointer-events:none}
-.stat-number{font-size:42px;font-weight:600;line-height:1;margin-bottom:8px;letter-spacing:-0.05em;color:var(--text)}
+.stat-number{font-size:42px;font-weight:600;line-height:1;margin-bottom:8px;letter-spacing:-0.05em;color:var(--text);font-variant-numeric:tabular-nums}
 .stat-card:nth-child(1) .stat-number{color:#a7afff}
 .stat-card:nth-child(2) .stat-number{color:#91b8ff}
 .stat-card:nth-child(3) .stat-number{color:#7ee19d}
@@ -336,6 +336,24 @@ a:hover{color:var(--gold-light)}
   .sync-flow{flex-direction:column;align-items:flex-start}
   .sync-arrow{display:none}
 }
+
+.shortcuts-modal{position:fixed;inset:0;background:rgba(0,0,0,0.72);z-index:2000;display:none;align-items:center;justify-content:center;backdrop-filter:blur(6px)}
+.shortcuts-modal.open{display:flex}
+.shortcuts-box{background:rgba(12,13,16,0.98);border:1px solid rgba(255,255,255,0.10);border-radius:20px;padding:24px;min-width:300px;box-shadow:0 24px 64px rgba(0,0,0,0.44)}
+.shortcuts-box h3{font-size:14px;font-weight:700;margin-bottom:16px;letter-spacing:-0.02em}
+.shortcut-row{display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid rgba(255,255,255,0.06)}
+.shortcut-row:last-of-type{border-bottom:none}
+.shortcut-key{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;font-size:11px;font-weight:700;background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.10);border-radius:5px;padding:3px 8px;color:var(--text)}
+.shortcut-desc{font-size:12px;color:var(--text-secondary)}
+.shortcuts-close{margin-top:16px;width:100%;height:34px;border-radius:12px;border:1px solid rgba(255,255,255,0.10);background:rgba(255,255,255,0.04);color:var(--text-secondary);font-size:12px;font-weight:600;cursor:pointer;transition:all 0.14s}
+.shortcuts-close:hover{background:rgba(255,255,255,0.08);color:var(--text)}
+
+@media(prefers-reduced-motion:reduce){*{animation-duration:0.01ms !important;animation-iteration-count:1 !important;transition-duration:0.01ms !important}}
+
+@media(prefers-color-scheme:light){
+  :root{--bg:#f4f5f7;--bg-elevated:#ffffff;--surface:rgba(255,255,255,0.96);--card:rgba(0,0,0,0.03);--card-hover:rgba(0,0,0,0.05);--border:rgba(0,0,0,0.07);--border-strong:rgba(0,0,0,0.14);--text:#0a0b0d;--text-secondary:#374151;--muted:#6b7280}
+  .header{background:rgba(244,245,247,0.88)}
+}
 </style>
 </head>
 <body>
@@ -358,7 +376,8 @@ a:hover{color:var(--gold-light)}
       <div class="status-pill" style="cursor:pointer" onclick="manualRefresh()" title="Click to refresh now"><span class="status-dot"></span><span id="sync-status">Synced</span></div>
       <div class="last-sync-meta" id="last-sync-time">Last sync: —</div>
     </div>
-  </div>
+    <button class="header-menu-btn" onclick="toggleShortcuts()" title="Keyboard shortcuts (?)" style="min-width:36px;padding:9px 12px">?</button>
+</div>
 </div>
 </header>
 
@@ -402,7 +421,7 @@ a:hover{color:var(--gold-light)}
   </div>
 </div>
 
-<div class="modal-overlay" id="preview-modal" onclick="if(event.target===this)closePreview()">
+<div class="modal-overlay" id="preview-modal" role="dialog" aria-modal="true" onclick="if(event.target===this)closePreview()">
 <div class="modal">
   <div class="modal-header">
     <div class="modal-title"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8m-4-4v4"/></svg> Preview: <span id="preview-filename">—</span></div>
@@ -411,6 +430,7 @@ a:hover{color:var(--gold-light)}
       <button class="device-tab" onclick="setDevice('tablet',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="2" width="16" height="20" rx="2"/><path d="M12 18h.01"/></svg>Tablet</button>
       <button class="device-tab active" onclick="setDevice('desktop',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8m-4-4v4"/></svg>Desktop</button>
     </div>
+    <button id="preview-ps-btn" class="action-btn" style="display:none;border-color:rgba(139,125,255,0.28);color:#c4b8ff;background:rgba(139,125,255,0.10);height:34px;padding:0 12px;font-size:11px" onclick="openPromptStudioFromPreview()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" style="width:12px;height:12px"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 1 1 3 3L7 19l-4 1 1-4Z"/></svg>Prompt Studio</button>
     <button class="modal-close" onclick="closePreview()">&times;</button>
   </div>
   <div class="preview-container">
@@ -422,7 +442,7 @@ a:hover{color:var(--gold-light)}
 </div>
 </div>
 
-<div class="modal-overlay" id="compare-modal" onclick="if(event.target===this)closeCompare()">
+<div class="modal-overlay" id="compare-modal" role="dialog" aria-modal="true" onclick="if(event.target===this)closeCompare()">
 <div class="modal compare-modal">
   <div class="modal-header">
     <div class="modal-title"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path d="M10 3H3v7h7V3zM21 14h-7v7h7v-7zM21 3h-7v7h7V3zM10 14H3v7h7v-7z"/></svg> Compare agents: <span id="compare-filename">—</span></div>
@@ -439,7 +459,7 @@ a:hover{color:var(--gold-light)}
 </div>
 </div>
 
-<div class="modal-overlay" id="focus-modal" onclick="if(event.target===this)closeFocusedCompare()">
+<div class="modal-overlay" id="focus-modal" role="dialog" aria-modal="true" onclick="if(event.target===this)closeFocusedCompare()">
 <div class="modal focus-modal">
   <div class="modal-header">
     <div class="modal-title"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8m-4-4v4"/></svg> Agent focus: <span id="focus-filename">—</span><span id="focus-subtitle" class="focus-subtitle"></span></div>
@@ -458,7 +478,7 @@ a:hover{color:var(--gold-light)}
 </div>
 </div>
 
-<div class="modal-overlay" id="prompt-modal" onclick="if(event.target===this)closePromptStudio()">
+<div class="modal-overlay" id="prompt-modal" role="dialog" aria-modal="true" onclick="if(event.target===this)closePromptStudio()">
 <div class="modal prompt-modal">
   <div class="modal-header">
     <div class="modal-title"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 1 1 3 3L7 19l-4 1 1-4Z"/></svg> Prompt studio: <span id="prompt-filename">—</span><span id="prompt-subtitle" class="focus-subtitle"></span></div>
@@ -531,6 +551,20 @@ a:hover{color:var(--gold-light)}
   </div>
 </div>
 
+
+<!-- Keyboard Shortcuts Overlay -->
+<div class="shortcuts-modal" id="shortcuts-modal" onclick="if(event.target===this)closeShortcuts()" role="dialog" aria-modal="true" aria-label="Keyboard shortcuts">
+  <div class="shortcuts-box">
+    <h3>Keyboard Shortcuts</h3>
+    <div class="shortcut-row"><span class="shortcut-desc">Focus search</span><kbd class="shortcut-key">/</kbd></div>
+    <div class="shortcut-row"><span class="shortcut-desc">Grid view</span><kbd class="shortcut-key">G</kbd></div>
+    <div class="shortcut-row"><span class="shortcut-desc">List view</span><kbd class="shortcut-key">L</kbd></div>
+    <div class="shortcut-row"><span class="shortcut-desc">Expand / Collapse all</span><kbd class="shortcut-key">E</kbd></div>
+    <div class="shortcut-row"><span class="shortcut-desc">Show shortcuts</span><kbd class="shortcut-key">?</kbd></div>
+    <div class="shortcut-row"><span class="shortcut-desc">Close modal</span><kbd class="shortcut-key">Esc</kbd></div>
+    <button class="shortcuts-close" onclick="closeShortcuts()">Close</button>
+  </div>
+</div>
 <footer class="footer"></footer>
 
 <script>
@@ -540,12 +574,13 @@ const RAW=`https://raw.githubusercontent.com/${REPO}/main`;
 const COLORS=['#C9952A','#3b82f6','#22c55e','#a855f7','#ef4444','#06b6d4','#f59e0b','#ec4899'];
 let allProjects=[];
 let promptStudioContext={domain:'',agentName:'',versionName:'',htmlDownloadUrl:'',fileManifest:[],versionPath:'',githubRepoBase:'',obsidianBase:''};
+let previewContext={domain:'',agentName:'',versionName:'',downloadUrl:'',fileManifest:[]};
 let deployJobs=[];
 
 function formatSize(bytes){if(!bytes)return'';if(bytes<1024)return bytes+'B';if(bytes<1048576)return(bytes/1024).toFixed(1)+'KB';return(bytes/1048576).toFixed(1)+'MB'}
 
 // Preview functions
-function openPreview(downloadUrl,filename){
+function openPreview(downloadUrl,filename,ctx){
   document.getElementById('preview-filename').textContent=filename;
   document.getElementById('preview-modal').classList.add('open');
   document.body.style.overflow='hidden';
@@ -555,6 +590,20 @@ function openPreview(downloadUrl,filename){
     doc.open();doc.write(html);doc.close();
   });
   setDevice('desktop',document.querySelector('.device-tab:last-child'));
+  if(ctx&&typeof ctx==='object'){
+    previewContext={domain:ctx.domain||'',agentName:ctx.agentName||'',versionName:ctx.versionName||'',downloadUrl:downloadUrl,fileManifest:ctx.fileManifest||[]};
+    const psBtn=document.getElementById('preview-ps-btn');
+    if(psBtn)psBtn.style.display='inline-flex';
+  }else{
+    previewContext={domain:'',agentName:'',versionName:'',downloadUrl:downloadUrl,fileManifest:[]};
+    const psBtn=document.getElementById('preview-ps-btn');
+    if(psBtn)psBtn.style.display='none';
+  }
+}
+function openPromptStudioFromPreview(){
+  closePreview();
+  const filesEnc=encodeURIComponent(JSON.stringify(previewContext.fileManifest));
+  openPromptStudio(encodeURIComponent(previewContext.domain),encodeURIComponent(previewContext.agentName),encodeURIComponent(previewContext.versionName),previewContext.downloadUrl.replace(/'/g,'%27'),filesEnc);
 }
 function closePreview(){
   document.getElementById('preview-modal').classList.remove('open');
@@ -937,7 +986,18 @@ async function deployVersionToN8n(domainEnc, agentEnc, versionEnc, workflowFiles
   }
 }
 
-document.addEventListener('keydown',e=>{if(e.key==='Escape'){closePreview();closeCompare();closeFocusedCompare();closePromptStudio();}});
+function toggleShortcuts(){const m=document.getElementById('shortcuts-modal');if(m)m.classList.toggle('open');}
+function closeShortcuts(){const m=document.getElementById('shortcuts-modal');if(m)m.classList.remove('open');}
+document.addEventListener('keydown',e=>{
+  if(e.key==='Escape'){closePreview();closeCompare();closeFocusedCompare();closePromptStudio();closeShortcuts();return;}
+  const tag=(e.target||{}).tagName||'';
+  if(tag==='INPUT'||tag==='TEXTAREA'||tag==='SELECT') return;
+  if(e.key==='?'){e.preventDefault();toggleShortcuts();return;}
+  if(e.key==='/'){e.preventDefault();const s=document.getElementById('search');if(s)s.focus();return;}
+  if(e.key==='g'){setView('grid',document.querySelector('.view-btn'));return;}
+  if(e.key==='l'){setView('list',document.querySelectorAll('.view-btn')[1]);return;}
+  if(e.key==='e'){const b=document.getElementById('bulk-toggle-projects');if(b)toggleAllProjects(b);return;}
+});
 renderDeployJobs();
 
 // ── Pre-Improve Checklist (Additional Improvement Rules) ──
@@ -1230,7 +1290,8 @@ async function loadDashboard(){
         const ext=f.name.split('.').pop().toLowerCase();
         const cls=ext==='html'?'html':ext==='txt'?'txt':'json';
         const label=ext.toUpperCase();
-        const previewBtn=cls==='html'?`<button class="action-btn" onclick="event.preventDefault();event.stopPropagation();openPreview('${f.download}','${p.name} — ${f.name}')" style="border-color:var(--purple);color:var(--purple)">&#9654; Preview</button>`:'';
+        const _fCtx=JSON.stringify({domain:p.name,agentName:detectAgent(v.name),versionName:v.name,fileManifest:v.files}).replace(/'/g,'%27');
+        const previewBtn=cls==='html'?`<button class="action-btn" onclick="event.preventDefault();event.stopPropagation();openPreview('${f.download}','${p.name} — ${f.name}',${_fCtx})" style="border-color:var(--purple);color:var(--purple)">&#9654; Preview</button>`:'';
         const deployBtn=cls==='json'&&/workflow/i.test(f.name)?`<button class="action-btn success" onclick="event.preventDefault();event.stopPropagation();deployToN8n('${encodeURIComponent(p.name)}','${encodeURIComponent(v.name)}','${encodeURIComponent(f.path)}','${encodeURIComponent(f.name)}',this)">Deploy to n8n</button>`:'';
         filesHTML+=`<div class="file-row">
           <div class="file-badge ${cls}">${label}</div>
@@ -1248,13 +1309,14 @@ async function loadDashboard(){
     });
     versionsHTML=Object.entries(versionsByAgent).map(([agentName,sections])=>`<div class="agent-group"><div class="agent-group-header"><strong>${agentName}</strong><span class="agent-group-badge">${sections.length} version${sections.length===1?'':'s'}</span></div>${sections.join('')}</div>`).join('');
 
-    const previewCTA=latestHtmlUrl?`<button class="preview-cta primary-accent" onclick="event.stopPropagation();openPreview('${latestHtmlUrl}','${latestHtmlName}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="5 3 19 12 5 21 5 3"/></svg>Preview</button>`:'';
+    const previewCTA=latestHtmlUrl?`<button class="preview-cta primary-accent" onclick="event.stopPropagation();openPreview('${latestHtmlUrl}','${latestHtmlName}',${_previewCtx})"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="5 3 19 12 5 21 5 3"/></svg>Preview</button>`:'';
     const compareCandidates=compareCandidatesForProject(p.name);
     const compareCTA=compareCandidates.length>1?`<button class="preview-cta" onclick="event.stopPropagation();openCompare('${p.name}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M10 3H3v7h7V3zM21 14h-7v7h7v-7zM21 3h-7v7h7V3zM10 14H3v7h7v-7z"/></svg>Compare agents</button>`:'';
     const _psAgent=latest?detectAgent(latest.name):'Agent';
     const _psVersion=latest?latest.name:'';
     const _psFiles=latest?latest.files.map(f=>({name:f.name,path:f.path,download:f.download,url:f.url,size:f.size})):[];
     const _psFilesEnc=encodeURIComponent(JSON.stringify(_psFiles));
+    const _previewCtx=JSON.stringify({domain:p.name,agentName:_psAgent,versionName:_psVersion,fileManifest:_psFiles}).replace(/'/g,'%27');
     const promptStudioCTA=latestHtmlUrl?`<button class="preview-cta ps-cta" onclick="event.stopPropagation();openPromptStudio('${encodeURIComponent(p.name)}','${encodeURIComponent(_psAgent)}','${encodeURIComponent(_psVersion)}','${latestHtmlUrl.replace(/'/g,"%27")}',${_psFilesEnc})"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" style="width:13px;height:13px"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 1 1 3 3L7 19l-4 1 1-4Z"/></svg>Prompt Studio</button>`:'';
 
     const latestLabel=latestDate||'Pending sync';
