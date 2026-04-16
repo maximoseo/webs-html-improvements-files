@@ -354,6 +354,21 @@ a:hover{color:var(--gold-light)}
   :root{--bg:#f4f5f7;--bg-elevated:#ffffff;--surface:rgba(255,255,255,0.96);--card:rgba(0,0,0,0.03);--card-hover:rgba(0,0,0,0.05);--border:rgba(0,0,0,0.07);--border-strong:rgba(0,0,0,0.14);--text:#0a0b0d;--text-secondary:#374151;--muted:#6b7280}
   .header{background:rgba(244,245,247,0.88)}
 }
+
+/* Copy toast notification */
+.copy-toast{
+  position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(12px);
+  background:rgba(34,197,94,0.95);color:#fff;
+  font-size:13px;font-weight:700;
+  padding:10px 20px;border-radius:999px;
+  box-shadow:0 8px 24px rgba(0,0,0,0.30);
+  opacity:0;pointer-events:none;
+  transition:opacity 0.18s ease,transform 0.18s ease;
+  z-index:9999;white-space:nowrap;
+  display:flex;align-items:center;gap:8px;
+}
+.copy-toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.copy-toast svg{width:15px;height:15px;flex-shrink:0}
 </style>
 </head>
 <body>
@@ -564,6 +579,10 @@ a:hover{color:var(--gold-light)}
     <div class="shortcut-row"><span class="shortcut-desc">Close modal</span><kbd class="shortcut-key">Esc</kbd></div>
     <button class="shortcuts-close" onclick="closeShortcuts()">Close</button>
   </div>
+</div>
+<div class="copy-toast" id="copy-toast">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+  Copied to clipboard!
 </div>
 <footer class="footer"></footer>
 
@@ -860,15 +879,28 @@ async function improvePrompt(btn){
     btn.textContent=original;
   }
 }
+function showCopyToast(msg){
+  const t=document.getElementById('copy-toast');
+  if(!t)return;
+  t.querySelector('svg+*')
+    ? (t.childNodes[t.childNodes.length-1].textContent=' '+(msg||'Copied to clipboard!'))
+    : null;
+  // Update text node
+  for(const node of t.childNodes){if(node.nodeType===3){node.textContent=' '+(msg||'Copied to clipboard!');break;}}
+  t.classList.add('show');
+  clearTimeout(t._hideTimer);
+  t._hideTimer=setTimeout(()=>t.classList.remove('show'),2200);
+}
 async function copyImprovedPrompt(){
   const value=document.getElementById('prompt-output').value;
   const status=document.getElementById('prompt-status');
   if(!value.trim()){status.textContent='Nothing to copy yet.';return;}
   try{
     await navigator.clipboard.writeText(value);
-    status.textContent='Copied improved prompt to clipboard.';
+    status.textContent='Copied to clipboard.';
+    showCopyToast('Prompt copied!');
   }catch(err){
-    status.textContent='Copy failed. Select the output manually.';
+    status.textContent='Copy failed — select the output manually.';
   }
 }
 function toggleDeployStatusPanel(forceOpen){
