@@ -1,0 +1,16 @@
+.blackboxcli/
+
+# Never commit API keys
+.hermes/.env
+.openclaw/.env
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+
+# Large local data
+.ollama/
+.cache/
+.local/
+.bash_history

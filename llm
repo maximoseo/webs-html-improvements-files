@@ -1,0 +1,368 @@
+#!/usr/bin/env python3
+"""
+llm - Simple CLI to chat with any configured LLM provider.
+
+Usage:
+  llm "your prompt"                          # use default provider
+  llm -p openrouter:claude-sonnet-4-6 "..."  # use a specific provider
+  llm --use openrouter:claude-sonnet-4-6     # set default provider
+  llm --current                              # show current default
+  llm --list                                 # list all providers + status
+  llm --interactive                          # start a chat session
+"""
+
+import os
+import sys
+import json
+import time
+from pathlib import Path
+
+# ── Config ────────────────────────────────────────────────────────────────────
+CONFIG_FILE = Path.home() / ".hermes" / "llm_config.json"
+ENV_FILE    = Path.home() / ".hermes" / ".env"
+
+DEFAULT_CONFIG = {
+    "default_provider": "openrouter:claude-sonnet-4-6",
+    "max_tokens": 1024,
+    "temperature": 0.7,
+}
+
+def load_config() -> dict:
+    if CONFIG_FILE.exists():
+        return {**DEFAULT_CONFIG, **json.loads(CONFIG_FILE.read_text())}
+    return DEFAULT_CONFIG.copy()
+
+def save_config(cfg: dict):
+    CONFIG_FILE.parent.mkdir(parents=True, exist_ok=True)
+    CONFIG_FILE.write_text(json.dumps(cfg, indent=2))
+
+def load_env(path: Path) -> dict:
+    env = {}
+    if not path.exists():
+        return env
+    for line in path.read_text().splitlines():
+        line = line.strip()
+        if line and not line.startswith("#") and "=" in line:
+            k, _, v = line.partition("=")
+            env[k.strip()] = v.strip()
+    return env
+
+_env = load_env(ENV_FILE)
+
+def get(key: str, default: str = "") -> str:
+    return os.environ.get(key) or _env.get(key, default)
+
+# ── Provider registry ─────────────────────────────────────────────────────────
+PROVIDERS = {
+    "openrouter:gpt-5.4": (
+        "OpenRouter → GPT-5.4",
+        "openai", "openai/gpt-5.4",
+        "https://openrouter.ai/api/v1",
+        get("OPENROUTER_API_KEY"),
+    ),
+    "openrouter:claude-sonnet-4-6": (
+        "OpenRouter → Claude Sonnet 4.6",
+        "openai", "anthropic/claude-sonnet-4-6",
+        "https://openrouter.ai/api/v1",
+        get("OPENROUTER_API_KEY"),
+    ),
+    "openrouter:gemini-flash": (
+        "OpenRouter → Gemini 3 Flash",
+        "openai", "google/gemini-3-flash-preview",
+        "https://openrouter.ai/api/v1",
+        get("OPENROUTER_API_KEY"),
+    ),
+    "openrouter:hermes-3-405b": (
+        "OpenRouter → Hermes 3 405B",
+        "openai", "nousresearch/hermes-3-llama-3.1-405b",
+        "https://openrouter.ai/api/v1",
+        get("OPENROUTER_API_KEY"),
+    ),
+    "openrouter:hermes-3-70b": (
+        "OpenRouter → Hermes 3 70B",
+        "openai", "nousresearch/hermes-3-llama-3.1-70b",
+        "https://openrouter.ai/api/v1",
+        get("OPENROUTER_API_KEY"),
+    ),
+    "openrouter:hermes-2-pro": (
+        "OpenRouter → Hermes 2 Pro 8B",
+        "openai", "nousresearch/hermes-2-pro-llama-3-8b",
+        "https://openrouter.ai/api/v1",
+        get("OPENROUTER_API_KEY"),
+    ),
+    "anthropic:claude-sonnet-4-6": (
+        "Anthropic Direct → Claude Sonnet 4.6",
+        "anthropic", "claude-sonnet-4-6",
+        None,
+        get("ANTHROPIC_API_KEY"),
+    ),
+    "glm:glm-4-plus": (
+        "GLM (z.ai) → GLM-4-Plus",
+        "openai", "glm-4-plus",
+        get("GLM_BASE_URL", "https://api.z.ai/api/paas/v4"),
+        get("GLM_API_KEY"),
+    ),
+    "kimi:kimi-k2.5": (
+        "Kimi → kimi-k2.5",
+        "openai", "kimi-k2.5",
+        get("KIMI_BASE_URL", "https://api.kimi.com/coding/v1"),
+        get("KIMI_API_KEY"),
+    ),
+    "minimax:text-01": (
+        "MiniMax → text-01",
+        "openai", "text-01",
+        get("MINIMAX_BASE_URL", "https://api.minimax.io/v1"),
+        get("MINIMAX_API_KEY"),
+    ),
+    "opencode:zen": (
+        "OpenCode Zen → claude-opus-4.6",
+        "openai", "anthropic/claude-opus-4.6",
+        get("OPENCODE_ZEN_BASE_URL", "https://opencode.ai/zen/v1"),
+        get("OPENCODE_ZEN_API_KEY"),
+    ),
+    "opencode:go": (
+        "OpenCode Go → GLM-5",
+        "openai", "zhipuai/glm-5",
+        get("OPENCODE_GO_BASE_URL", "https://opencode.ai/zen/go/v1"),
+        get("OPENCODE_GO_API_KEY"),
+    ),
+    "hf:llama-3-8b": (
+        "HuggingFace → Llama-3.1-8B-Instruct",
+        "openai", "meta-llama/Llama-3.1-8B-Instruct",
+        "https://api-inference.huggingface.co/v1",
+        get("HF_TOKEN"),
+    ),
+    # ── Venice AI ────────────────────────────────────────────────────────────
+    "venice:glm-4.7": (
+        "Venice AI → GLM 4.7 (reasoning)",
+        "openai", "zai-org-glm-4.7",
+        "https://api.venice.ai/api/v1",
+        get("VENICE_API_KEY"),
+    ),
+    "venice:uncensored": (
+        "Venice AI → Venice Uncensored",
+        "openai", "venice-uncensored",
+        "https://api.venice.ai/api/v1",
+        get("VENICE_API_KEY"),
+    ),
+    "venice:mistral-31-24b": (
+        "Venice AI → Mistral 3.1 24B (vision)",
+        "openai", "mistral-31-24b",
+        "https://api.venice.ai/api/v1",
+        get("VENICE_API_KEY"),
+    ),
+    "venice:llama-3.3-70b": (
+        "Venice AI → Llama 3.3 70B",
+        "openai", "llama-3.3-70b",
+        "https://api.venice.ai/api/v1",
+        get("VENICE_API_KEY"),
+    ),
+
+    # ── Fireworks AI ───────────────────────────────────────────────────────
+    "fireworks:deepseek-v3p2": (
+        "Fireworks AI → DeepSeek V3 P2",
+        "openai", "accounts/fireworks/models/deepseek-v3p2",
+        "https://api.fireworks.ai/inference/v1",
+        get("FIREWORKS_API_KEY"),
+    ),
+    "fireworks:kimi-k2p5": (
+        "Fireworks AI → Kimi K2.5",
+        "openai", "accounts/fireworks/models/kimi-k2p5",
+        "https://api.fireworks.ai/inference/v1",
+        get("FIREWORKS_API_KEY"),
+    ),
+    "fireworks:gpt-oss-120b": (
+        "Fireworks AI → GPT OSS 120B",
+        "openai", "accounts/fireworks/models/gpt-oss-120b",
+        "https://api.fireworks.ai/inference/v1",
+        get("FIREWORKS_API_KEY"),
+    ),
+    "fireworks:glm-5": (
+        "Fireworks AI → GLM-5",
+        "openai", "accounts/fireworks/models/glm-5",
+        "https://api.fireworks.ai/inference/v1",
+        get("FIREWORKS_API_KEY"),
+    ),
+
+    # ── Ollama (local, no key required) ──────────────────────────────────────
+    "ollama:phi3": (
+        "Ollama Local → phi3:mini",
+        "openai", "phi3:mini",
+        "http://localhost:11434/v1",
+        "ollama",  # dummy key; Ollama doesn't require auth
+    ),
+}
+
+# ── Backend calls ─────────────────────────────────────────────────────────────
+def call_openai(model, base_url, api_key, messages, max_tokens, temperature):
+    from openai import OpenAI
+    client = OpenAI(base_url=base_url, api_key=api_key or "no-key")
+    resp = client.chat.completions.create(
+        model=model, messages=messages,
+        max_tokens=max_tokens, temperature=temperature,
+    )
+    return resp.choices[0].message.content or ""
+
+def call_anthropic(model, api_key, messages, max_tokens, temperature):
+    import anthropic
+    client = anthropic.Anthropic(api_key=api_key)
+    # Convert system message if present
+    system = ""
+    user_msgs = []
+    for m in messages:
+        if m["role"] == "system":
+            system = m["content"]
+        else:
+            user_msgs.append(m)
+    kwargs = dict(model=model, max_tokens=max_tokens,
+                  messages=user_msgs)
+    if system:
+        kwargs["system"] = system
+    resp = client.messages.create(**kwargs)
+    return resp.content[0].text
+
+def chat(provider_key: str, messages: list, cfg: dict) -> str:
+    if provider_key not in PROVIDERS:
+        raise ValueError(f"Unknown provider '{provider_key}'. Run: llm --list")
+
+    label, backend, model, base_url, api_key = PROVIDERS[provider_key]
+
+    if backend == "anthropic":
+        return call_anthropic(model, api_key, messages,
+                              cfg["max_tokens"], cfg["temperature"])
+    else:
+        return call_openai(model, base_url, api_key, messages,
+                           cfg["max_tokens"], cfg["temperature"])
+
+# ── Display helpers ───────────────────────────────────────────────────────────
+def has_key(provider_key: str) -> bool:
+    _, _, _, _, api_key = PROVIDERS[provider_key]
+    return bool(api_key and api_key.strip())
+
+def list_providers(cfg: dict):
+    default = cfg["default_provider"]
+    print(f"\n{'KEY':<38} {'STATUS':<10} LABEL")
+    print("─" * 75)
+    for key, (label, *rest) in PROVIDERS.items():
+        status = "✓ ready" if has_key(key) else "✗ no key"
+        marker = " ◄ default" if key == default else ""
+        print(f"  {key:<36} {status:<10} {label}{marker}")
+    print(f"\nSet API keys in: {ENV_FILE}\n")
+
+# ── Interactive chat ──────────────────────────────────────────────────────────
+def interactive(provider_key: str, cfg: dict):
+    label = PROVIDERS[provider_key][0]
+    print(f"\n💬  Chat with {label}")
+    print(f"    Type 'exit' or Ctrl+C to quit, 'switch <key>' to change provider.\n")
+
+    messages = []
+    while True:
+        try:
+            user_input = input("You: ").strip()
+        except (KeyboardInterrupt, EOFError):
+            print("\nBye!")
+            break
+
+        if not user_input:
+            continue
+        if user_input.lower() in ("exit", "quit", "q"):
+            print("Bye!")
+            break
+        if user_input.lower().startswith("switch "):
+            new_key = user_input.split(None, 1)[1].strip()
+            if new_key in PROVIDERS:
+                provider_key = new_key
+                label = PROVIDERS[provider_key][0]
+                print(f"  ⇄  Switched to {label}\n")
+            else:
+                print(f"  ✗  Unknown provider. Run: llm --list\n")
+            continue
+
+        messages.append({"role": "user", "content": user_input})
+        try:
+            start = time.time()
+            reply = chat(provider_key, messages, cfg)
+            elapsed = time.time() - start
+            messages.append({"role": "assistant", "content": reply})
+            print(f"\nAssistant ({elapsed:.1f}s): {reply}\n")
+        except Exception as e:
+            print(f"  ✗  Error: {e}\n")
+            messages.pop()  # remove failed user message
+
+# ── Main ──────────────────────────────────────────────────────────────────────
+def main():
+    cfg = load_config()
+    args = sys.argv[1:]
+
+    # ── llm --list
+    if not args or args[0] == "--list":
+        list_providers(cfg)
+        return
+
+    # ── llm --current
+    if args[0] == "--current":
+        key = cfg["default_provider"]
+        label = PROVIDERS.get(key, ("unknown",))[0]
+        status = "✓ ready" if has_key(key) else "✗ no API key"
+        print(f"Default provider: {key}  ({label})  [{status}]")
+        return
+
+    # ── llm --use <provider>
+    if args[0] in ("--use", "--switch", "--set"):
+        if len(args) < 2:
+            print("Usage: llm --use <provider-key>")
+            return
+        new_key = args[1]
+        if new_key not in PROVIDERS:
+            print(f"Unknown provider '{new_key}'")
+            list_providers(cfg)
+            return
+        cfg["default_provider"] = new_key
+        save_config(cfg)
+        label = PROVIDERS[new_key][0]
+        print(f"Default set to: {new_key}  ({label})")
+        return
+
+    # ── llm --interactive / --chat
+    if args[0] in ("--interactive", "--chat", "-i"):
+        provider_key = args[1] if len(args) > 1 else cfg["default_provider"]
+        interactive(provider_key, cfg)
+        return
+
+    # ── Parse -p / --provider flag
+    provider_key = cfg["default_provider"]
+    prompt_args  = args
+
+    if args[0] in ("-p", "--provider") and len(args) >= 2:
+        provider_key = args[1]
+        prompt_args  = args[2:]
+    elif args[0].startswith("--provider="):
+        provider_key = args[0].split("=", 1)[1]
+        prompt_args  = args[1:]
+
+    if not prompt_args:
+        print(__doc__)
+        return
+
+    prompt = " ".join(prompt_args)
+
+    if provider_key not in PROVIDERS:
+        print(f"Unknown provider '{provider_key}'. Run: llm --list")
+        sys.exit(1)
+
+    label = PROVIDERS[provider_key][0]
+    print(f"[{label}]")
+
+    try:
+        start  = time.time()
+        reply  = chat(provider_key, [{"role": "user", "content": prompt}], cfg)
+        elapsed = time.time() - start
+        print(reply)
+        print(f"\n({elapsed:.2f}s)", file=sys.stderr)
+    except Exception as e:
+        print(f"Error: {e}", file=sys.stderr)
+        sys.exit(1)
+
+
+if __name__ == "__main__":
+    main()
