@@ -192,7 +192,11 @@ a:hover{color:var(--gold-light)}
 .prompt-status{font-size:12px;color:var(--muted)}
 .prompt-preview-wrap{flex:1;min-height:0;border:1px solid var(--border);border-radius:12px;overflow:hidden;background:#fff}
 .prompt-preview-frame{width:100%;height:100%;border:none;background:#fff}
-.deploy-status-panel{position:fixed;right:18px;bottom:18px;z-index:1002;width:min(420px,calc(100vw - 36px));background:rgba(20,20,20,0.96);border:1px solid var(--border);border-radius:14px;box-shadow:0 20px 60px rgba(0,0,0,0.45);backdrop-filter:blur(10px);overflow:hidden}
+.deploy-status-panel{position:fixed;right:18px;bottom:18px;z-index:900;width:min(420px,calc(100vw - 36px));background:rgba(20,20,20,0.96);border:1px solid var(--border);border-radius:14px;box-shadow:0 20px 60px rgba(0,0,0,0.45);backdrop-filter:blur(10px);overflow:hidden}
+#preview-modal.open ~ #deploy-status-panel,
+#compare-modal.open ~ #deploy-status-panel,
+#focus-modal.open ~ #deploy-status-panel,
+#prompt-modal.open ~ #deploy-status-panel{display:none}
 .deploy-status-header{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;border-bottom:1px solid var(--border);background:rgba(255,255,255,0.02)}
 .deploy-status-title{font-size:12px;font-weight:800;letter-spacing:.5px;text-transform:uppercase;color:var(--text-secondary)}
 .deploy-status-toggle{border:1px solid var(--border);background:var(--bg);color:var(--text-secondary);border-radius:8px;padding:6px 10px;font-size:11px;font-weight:700;cursor:pointer}
