@@ -367,6 +367,13 @@ a:hover{color:var(--gold-light)}
 
 /* Prompt Studio expand/fullscreen */
 .prompt-modal.ps-fullscreen{width:100vw !important;max-width:100vw !important;height:100vh !important;border-radius:0 !important}
+/* Preview modal expand/fullscreen */
+.modal-overlay.preview-fullscreen{padding:0}
+.modal-overlay.preview-fullscreen .modal{width:100vw !important;max-width:100vw !important;height:100vh !important;border-radius:0 !important;border:0 !important}
+.modal-overlay.preview-fullscreen .preview-container{padding:8px}
+.modal-overlay.preview-fullscreen .device-frame.desktop{max-width:100%;width:100%;height:calc(100vh - 70px);border-radius:4px}
+.modal-overlay.preview-fullscreen .device-frame.tablet{height:calc(100vh - 70px);max-height:calc(100vh - 70px)}
+.modal-overlay.preview-fullscreen .device-frame.mobile{height:calc(100vh - 70px);max-height:calc(100vh - 70px)}
 
 /* Header sync button */
 .hdr-sync-btn{
@@ -472,6 +479,7 @@ a:hover{color:var(--gold-light)}
       <button class="device-tab" onclick="setDevice('tablet',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="2" width="16" height="20" rx="2"/><path d="M12 18h.01"/></svg>Tablet</button>
       <button class="device-tab active" onclick="setDevice('desktop',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8m-4-4v4"/></svg>Desktop</button>
     </div>
+    <button id="preview-expand-btn" class="action-btn" style="height:34px;padding:0 12px;font-size:11px;border-color:rgba(180,160,95,0.28);color:var(--gold-light);background:rgba(180,160,95,0.08)" onclick="togglePreviewExpand()" title="Expand to full screen" aria-label="Expand preview"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" style="width:12px;height:12px"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg> Expand</button>
     <button id="preview-ps-btn" class="action-btn" style="display:none;border-color:rgba(139,125,255,0.28);color:#c4b8ff;background:rgba(139,125,255,0.10);height:34px;padding:0 12px;font-size:11px" onclick="openPromptStudioFromPreview()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" style="width:12px;height:12px"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 1 1 3 3L7 19l-4 1 1-4Z"/></svg>Prompt Studio</button>
     <button class="modal-close" onclick="closePreview()">&times;</button>
   </div>
@@ -656,8 +664,24 @@ function openPromptStudioFromPreview(){
   const filesEnc=encodeURIComponent(JSON.stringify(previewContext.fileManifest));
   openPromptStudio(encodeURIComponent(previewContext.domain),encodeURIComponent(previewContext.agentName),encodeURIComponent(previewContext.versionName),previewContext.downloadUrl.replace(/'/g,'%27'),filesEnc);
 }
+function togglePreviewExpand(){
+  const overlay=document.getElementById('preview-modal');
+  const btn=document.getElementById('preview-expand-btn');
+  if(!overlay)return;
+  const isExpanded=overlay.classList.toggle('preview-fullscreen');
+  if(btn){
+    btn.innerHTML=isExpanded
+      ?'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" style="width:12px;height:12px"><path d="M9 3H3v6M15 21h6v-6M3 3l7 7M21 21l-7-7"/></svg> Collapse'
+      :'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" style="width:12px;height:12px"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg> Expand';
+    btn.title=isExpanded?'Collapse to previous view':'Expand to full screen';
+    btn.setAttribute('aria-label',isExpanded?'Collapse preview':'Expand preview');
+  }
+}
 function closePreview(){
   document.getElementById('preview-modal').classList.remove('open');
+  document.getElementById('preview-modal').classList.remove('preview-fullscreen');
+  const _pebtn=document.getElementById('preview-expand-btn');
+  if(_pebtn){_pebtn.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" style="width:12px;height:12px"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg> Expand';_pebtn.title='Expand to full screen';}
   document.body.style.overflow='';
   const iframe=document.getElementById('preview-iframe');
   const doc=iframe.contentDocument||iframe.contentWindow.document;
