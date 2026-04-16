@@ -206,43 +206,65 @@ def improve_prompt_with_model(payload):
     base, headers = prompt_headers()
     if not headers:
         raise RuntimeError('OPENAI_API_KEY or OPENROUTER_API_KEY is not configured')
-    model = os.getenv('PROMPT_IMPROVER_MODEL', 'gpt-5.4')
+    # Accept model override from the browser payload; fall back to env / default
+    default_model = os.getenv('PROMPT_IMPROVER_MODEL', 'openai/gpt-5.4')
+    model = (payload.get('model') or '').strip() or default_model
     current_date = os.getenv('PROMPT_CURRENT_DATE', '2026-04-15')
     checklist_rules = _normalize_checklist(payload.get('checklist'))
+
     system = (
         'You are a senior prompt engineer for agentic coding and design workflows. '
-        'Rewrite the user draft into a production-ready prompt for the specified agent. '
-        'Return plain text only, formatted as markdown without code fences. '
-        'Preserve user intent, remove ambiguity, add concrete acceptance criteria, include validation steps, '
-        'and make the prompt directly paste-ready for the named agent. '
-        'Mandatory rule: the generated prompt must explicitly require exporting the final improved files into the updated files destination in Obsidian and publishing the same deliverables to the GitHub repo behind https://html-redesign-dashboard.maximo-seo.ai/. '
-        'Mandatory rule: the generated prompt must require replacing or updating the existing files for the same project/version path rather than leaving the old current files as the active deliverables when a replacement is intended. '
-        'Mandatory rule: the generated prompt must use the current working date for output-folder/date references and update any stale date references if needed. '
-        'If additional mandatory requirements are provided by the user, embed ALL of them verbatim in the generated prompt as a clearly labeled "Additional mandatory requirements" block and verify every item is addressed in the acceptance criteria.'
+        'Rewrite the user draft into a production-ready, well-structured prompt for the specified agent. '
+        'Return plain-text markdown only — no code fences, no preamble, no "here is your prompt" wrapper. '
+        'The output MUST use clearly labeled sections with markdown headers (## Section Name) so the reader '
+        'can instantly scan the prompt. Required sections in this order:\n'
+        '## Objective — one paragraph, sharp and direct.\n'
+        '## Context — domain, agent, version, relevant background.\n'
+        '## Specific Requirements — numbered list of concrete requirements. No vague instructions.\n'
+        '## Additional Mandatory Rules — present ONLY when the user selected checklist items; '
+        'render each selected rule as a numbered bullet under this section; if no rules were selected, omit this section entirely.\n'
+        '## Acceptance Criteria — numbered checklist the agent must verify before finishing. '
+        'Every item from Specific Requirements and every Additional Mandatory Rule must map to at least one criterion here.\n'
+        '## Delivery — mandatory export and publish instructions (Obsidian + GitHub dashboard).\n'
+        'Mandatory rule: the Delivery section must explicitly require exporting the final improved files '
+        'into the updated files destination in Obsidian and publishing the same deliverables to the GitHub '
+        'repo behind https://html-redesign-dashboard.maximo-seo.ai/. '
+        'Mandatory rule: the Delivery section must require replacing or updating the existing files for the '
+        'same project/version path rather than leaving old files as the active deliverables. '
+        'Mandatory rule: all date references in the generated prompt must use the current working date '
+        'provided in the user message; stale dates must be updated. '
+        'Writing style: direct, professional, zero filler. Every bullet point must be actionable and specific. '
+        'Never use vague phrases like "make it look better" — always state the exact measurable change expected.'
     )
+
     if checklist_rules:
-        bullet_block = '\n'.join(f'- {rule}' for rule in checklist_rules)
+        numbered_rules = '\n'.join(f'{i+1}. {rule}' for i, rule in enumerate(checklist_rules))
         extra_rules_section = (
-            '\n\nAdditional mandatory requirements for this prompt improvement (selected by the user before Improve was clicked). '
-            'The rewritten prompt MUST explicitly include all of the rules below as hard requirements, '
-            'and the acceptance criteria MUST verify each one:\n'
-            f'{bullet_block}\n'
+            '\n\n--- ADDITIONAL MANDATORY RULES (user-selected before clicking Improve) ---\n'
+            'The rewritten prompt MUST include ALL of the following as hard requirements under the '
+            '"## Additional Mandatory Rules" section, and MUST verify each one in "## Acceptance Criteria":\n'
+            f'{numbered_rules}\n'
+            '--- END ADDITIONAL MANDATORY RULES ---\n'
         )
     else:
         extra_rules_section = ''
+
     user = (
         f"Target domain: {payload.get('domain') or 'unknown'}\n"
         f"Target agent: {payload.get('agentName') or 'unknown'}\n"
         f"Agent version/context: {payload.get('versionName') or 'unknown'}\n"
         f"Current required working date: {current_date}\n\n"
-        'User draft prompt:\n'
+        '--- USER DRAFT PROMPT ---\n'
         f'{draft}\n'
+        '--- END DRAFT ---\n'
         f'{extra_rules_section}\n'
-        'Rewrite it so it is optimized for the named agent and suitable for dashboard-driven redesign review work. '
-        'The final output must be paste-ready plain-text markdown. '
-        'It must include a mandatory delivery/publish section that says to upload the resulting files into updated files in Obsidian and into the GitHub repo/dashboard path for this same project, replacing the currently active same-project files when appropriate. '
-        'It must also mention the current required working date above and tell the agent to update old dates if they appear in the prompt context.'
+        'Rewrite the draft into the structured prompt format described in the system instructions. '
+        'Every section must be present and populated. '
+        'The Specific Requirements section must be a numbered list — not a flat paragraph. '
+        'The Delivery section must name Obsidian updated-files path and the GitHub dashboard repo path explicitly. '
+        'Use the current required working date above for all folder/date references and correct any stale dates found in the draft.'
     )
+
     body = {
         'model': model,
         'messages': [
