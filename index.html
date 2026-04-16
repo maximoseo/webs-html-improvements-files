@@ -817,6 +817,7 @@ async function loadDashboard(){
     }
 
     let versionsHTML='';
+    const versionsByAgent={};
     p.versions.forEach(v=>{
       let filesHTML='';
       v.files.forEach(f=>{
@@ -831,10 +832,13 @@ async function loadDashboard(){
           <div class="file-actions">${previewBtn}${deployBtn}<a href="${f.url}" target="_blank" class="action-btn">View Code</a><a href="${f.download}" class="action-btn primary">Download</a></div>
         </div>`;
       });
-      versionsHTML+=`<div class="version-section">
+      const versionSection=`<div class="version-section">
         <div class="version-header"><span class="version-dot ${v.isLatest?'latest':'old'}"></span>
         <span class="version-title">${v.date||v.name}${v.isLatest?' <span class="v-badge">&#x2605; Latest</span>':''}</span></div>
         ${filesHTML}</div>`;
+      const agentName=detectAgent(v.name);
+      if(!versionsByAgent[agentName]) versionsByAgent[agentName]=[];
+      versionsByAgent[agentName].push(versionSection);
     });
     versionsHTML=Object.entries(versionsByAgent).map(([agentName,sections])=>`<div class="agent-group"><div class="agent-group-header"><strong>${agentName}</strong><span class="agent-group-badge">${sections.length} version${sections.length===1?'':'s'}</span></div>${sections.join('')}</div>`).join('');
 
