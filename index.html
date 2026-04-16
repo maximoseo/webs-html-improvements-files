@@ -22,6 +22,10 @@ a:hover{color:var(--gold-light)}
 .logo h1{font-size:18px;font-weight:600;letter-spacing:-0.03em}
 .logo h1 span{color:var(--gold-light)}
 .header-actions{display:flex;align-items:center;gap:12px}
+.header-menu-btn{padding:10px 16px;border-radius:12px;border:1px solid rgba(113,112,255,0.22);background:rgba(255,255,255,0.03);color:var(--text-secondary);font-size:12px;font-weight:700;cursor:pointer;transition:all 0.15s;white-space:nowrap}
+.header-menu-btn:hover{border-color:rgba(113,112,255,0.38);background:rgba(113,112,255,0.12);color:#fff}
+.header-menu-btn.accent{border-color:rgba(201,149,42,0.35);color:#C9952A}
+.header-menu-btn.accent:hover{border-color:rgba(201,149,42,0.5);background:rgba(201,149,42,0.12);color:#f3d58b}
 .search-box{background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:12px;padding:10px 14px 10px 38px;font-size:13px;color:var(--text);width:240px;outline:none;transition:all 0.2s;position:relative}
 .search-box:focus{border-color:rgba(113,112,255,0.45);box-shadow:0 0 0 4px rgba(113,112,255,0.12)}
 .search-wrap{position:relative}
@@ -282,6 +286,7 @@ a:hover{color:var(--gold-light)}
     <h1>HTML <span>Redesign</span></h1>
   </div>
   <div class="header-actions">
+    <button class="header-menu-btn accent" id="bulk-toggle-projects" onclick="toggleAllProjects(this)">Expand all</button>
     <div class="search-wrap">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
       <input class="search-box" type="text" placeholder="Search projects..." id="search" oninput="filterProjects(this.value)">
@@ -306,7 +311,6 @@ a:hover{color:var(--gold-light)}
       Projects <span class="section-count">—</span>
     </div>
     <div class="view-toggle">
-      <button class="view-btn" id="bulk-toggle-projects" onclick="toggleAllProjects(this)" style="border:1px solid rgba(201,149,42,0.35);color:#C9952A;margin-right:6px">Expand all</button>
       <button class="view-btn active" onclick="setView('grid',this)">Grid</button>
       <button class="view-btn" onclick="setView('list',this)">List</button>
     </div>
