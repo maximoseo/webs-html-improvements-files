@@ -687,9 +687,25 @@ function setView(mode,btn){
 }
 
 function filterProjects(q){
-  const cards=document.querySelectorAll('.project-card');
-  q=q.toLowerCase();
+  const grid=document.getElementById('projects-grid');
+  const countEl=document.querySelector('.section-count');
+  const toggleBtn=document.getElementById('bulk-toggle-projects');
+  const cards=[...document.querySelectorAll('.project-card')];
+  const emptyId='projects-empty-state';
+  const previousEmpty=document.getElementById(emptyId);
+  if(previousEmpty) previousEmpty.remove();
+  q=(q||'').toLowerCase().trim();
   cards.forEach(c=>{c.style.display=c.dataset.name.includes(q)?'':'none'});
+  const visibleCards=cards.filter(c=>c.style.display!=='none');
+  if(countEl) countEl.textContent=`${visibleCards.length} site${visibleCards.length===1?'':'s'}`;
+  if(toggleBtn) toggleBtn.style.display=visibleCards.length?'':'none';
+  if(!visibleCards.length){
+    const empty=document.createElement('div');
+    empty.id=emptyId;
+    empty.className='empty-state';
+    empty.innerHTML='<p>No projects found for your search.</p>';
+    grid.appendChild(empty);
+  }
   syncBulkToggleLabel();
 }
 
