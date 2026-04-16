@@ -187,6 +187,15 @@ a:hover{color:var(--gold-light)}
 .compare-device-frame.mobile{width:375px;max-width:100%;height:100%;border-radius:24px}
 .compare-device-frame iframe{width:100%;height:100%;border:none;background:#fff}
 .compare-empty{padding:40px 24px;text-align:center;color:var(--muted);font-size:13px}
+.compare-deploy-bar{display:flex;align-items:center;gap:8px;padding:8px 12px;border-top:1px solid var(--border-hair);background:rgba(255,255,255,0.015);flex-wrap:wrap;min-height:44px}
+.compare-deploy-status{font-size:11px;color:var(--muted);flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.compare-deploy-badge{display:inline-flex;align-items:center;gap:5px;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:0.06em;padding:3px 9px;border-radius:999px;border:1px solid transparent;flex-shrink:0}
+.compare-deploy-badge.idle{background:rgba(255,255,255,0.04);color:var(--muted);border-color:var(--border-hair)}
+.compare-deploy-badge.running{background:rgba(201,149,42,0.14);color:#d4a84a;border-color:rgba(201,149,42,0.30);animation:pulse-badge 1.2s ease-in-out infinite}
+.compare-deploy-badge.success{background:rgba(34,197,94,0.12);color:#4ade80;border-color:rgba(34,197,94,0.26)}
+.compare-deploy-badge.error{background:rgba(239,68,68,0.12);color:var(--red);border-color:rgba(239,68,68,0.26)}
+@keyframes pulse-badge{0%,100%{opacity:1}50%{opacity:0.6}}
+.compare-deploy-dot{width:6px;height:6px;border-radius:50%;background:currentColor}
 .focus-modal{max-width:98vw;width:98vw;height:96vh}
 .focus-container{flex:1;display:flex;align-items:center;justify-content:center;padding:18px;background:var(--bg);overflow:auto}
 .focus-device-frame{background:#fff;border:2px solid #333;border-radius:8px;overflow:hidden;position:relative;transition:all .25s ease;width:100%;height:100%}
@@ -584,7 +593,7 @@ function compareCandidatesForProject(projectName){
     if(!htmlFiles.length) return;
     const agent=detectAgent(v.name);
     const chosen=htmlFiles[0];
-    const current={agent,version:v.name,date:v.date||'',file:chosen};
+    const current={agent,version:v.name,date:v.date||'',file:chosen,allFiles:v.files};
     const existing=byAgent[agent];
     if(!existing){byAgent[agent]=current;return;}
     const a=(existing.date||'').split('.').reverse().join('');
@@ -607,7 +616,17 @@ function openCompare(projectName){
   items.forEach((item,idx)=>{
     const panel=document.createElement('div');
     panel.className='compare-panel';
-    panel.innerHTML=`<div class="compare-panel-header"><div class="compare-panel-title">${item.agent}<small>${item.version}</small></div><div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;justify-content:flex-end"><button class="action-btn success" onclick="openPromptStudio('${encodeURIComponent(projectName)}','${encodeURIComponent(item.agent)}','${encodeURIComponent(item.version)}','${item.file.download.replace(/'/g,"%27")}')">Prompt Studio</button><button class="action-btn" onclick="openFocusedCompare('${item.file.download.replace(/'/g,"%27")}', '${item.agent.replace(/'/g,"%27")}', '${item.version.replace(/'/g,"%27")}')">Expand</button><a href="${item.file.url}" target="_blank" class="action-btn">View Code</a></div></div><div class="compare-frame-wrap"><div class="compare-device-frame desktop"><iframe sandbox="allow-same-origin"></iframe></div></div>`;
+    // Find all deployable JSON workflow files in this version
+    const allFiles=item.allFiles||[];
+    const workflowFiles=allFiles.filter(f=>/workflow/i.test(f.name)&&f.name.toLowerCase().endsWith('.json'));
+    const hasWorkflow=workflowFiles.length>0;
+    const panelId=`cpanel-${idx}-${Date.now()}`;
+    panel.id=panelId;
+    const filesEnc=encodeURIComponent(JSON.stringify(allFiles));
+    const deployBtnHtml=hasWorkflow
+      ? `<button class="action-btn" style="border-color:rgba(249,115,22,0.30);color:#fb923c;background:rgba(249,115,22,0.08)" onclick="deployVersionToN8n('${encodeURIComponent(projectName)}','${encodeURIComponent(item.agent)}','${encodeURIComponent(item.version)}',${JSON.stringify(workflowFiles).replace(/"/g,'&quot;')},this,'${panelId}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" style="width:12px;height:12px"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>Deploy to n8n</button>`
+      : '';
+    panel.innerHTML=`<div class="compare-panel-header"><div class="compare-panel-title">${item.agent}<small>${item.version}</small></div><div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;justify-content:flex-end">${deployBtnHtml}<button class="action-btn success" onclick="openPromptStudio('${encodeURIComponent(projectName)}','${encodeURIComponent(item.agent)}','${encodeURIComponent(item.version)}','${item.file.download.replace(/'/g,'%27')}',${filesEnc})">Prompt Studio</button><button class="action-btn" onclick="openFocusedCompare('${item.file.download.replace(/'/g,'%27')}','${item.agent.replace(/'/g,'%27')}','${item.version.replace(/'/g,'%27')}')">Expand</button><a href="${item.file.url}" target="_blank" class="action-btn">View Code</a></div></div><div class="compare-frame-wrap"><div class="compare-device-frame desktop"><iframe sandbox="allow-same-origin"></iframe></div></div><div class="compare-deploy-bar" id="${panelId}-bar" style="display:none"><span class="compare-deploy-badge idle" id="${panelId}-badge"><span class="compare-deploy-dot"></span><span id="${panelId}-badge-text">Ready</span></span><span class="compare-deploy-status" id="${panelId}-status"></span></div>`;
     grid.appendChild(panel);
     fetch(item.file.download).then(r=>r.text()).then(html=>{
       const iframe=panel.querySelector('iframe');
@@ -851,6 +870,73 @@ async function deployToN8n(domain, versionName, filePath, fileName, btn){
     btn.textContent=original;
   }
 }
+async function deployVersionToN8n(domainEnc, agentEnc, versionEnc, workflowFiles, btn, panelId){
+  const domain=decodeURIComponent(domainEnc||'');
+  const agent=decodeURIComponent(agentEnc||'');
+  const versionName=decodeURIComponent(versionEnc||'');
+  // workflowFiles is already parsed array passed via JSON.stringify in the template
+  const files=Array.isArray(workflowFiles)?workflowFiles:[];
+  if(!files.length){alert('No workflow JSON files found in this version.');return;}
+  if(!confirm(`Deploy ${files.length} workflow file(s) from ${agent} (${versionName}) to n8n for ${domain}?`))return;
+
+  const bar=document.getElementById(panelId+'-bar');
+  const badge=document.getElementById(panelId+'-badge');
+  const badgeText=document.getElementById(panelId+'-badge-text');
+  const statusEl=document.getElementById(panelId+'-status');
+
+  const setStatus=(state,msg)=>{
+    if(bar)bar.style.display='flex';
+    if(badge){badge.className='compare-deploy-badge '+state;}
+    if(badgeText)badgeText.textContent=state.charAt(0).toUpperCase()+state.slice(1);
+    if(statusEl)statusEl.textContent=msg;
+  };
+
+  const original=btn.textContent;
+  btn.disabled=true;
+  btn.textContent='Deploying…';
+  setStatus('running','Starting deploy…');
+
+  let lastError='';
+  let successCount=0;
+
+  for(const f of files){
+    setStatus('running',`Deploying ${f.name}…`);
+    const jobId=`${Date.now()}-${Math.random().toString(16).slice(2)}`;
+    deployJobs.unshift({id:jobId,domain,versionName,fileName:f.name,state:'running',step:`Compare-panel deploy: ${f.name}`,progress:10,details:`From ${agent} / ${versionName}`});
+    deployJobs=deployJobs.slice(0,8);
+    renderDeployJobs();
+    toggleDeployStatusPanel(true);
+    try{
+      upsertDeployJob(jobId,{step:'Sending to n8n deploy endpoint…',progress:45,details:`Path: ${f.path}`});
+      const res=await fetch('/api/n8n/deploy',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({domain,versionName,filePath:f.path,fileName:f.name})});
+      const data=await res.json();
+      if(!res.ok||!data.ok) throw new Error(data.error||'Deploy failed');
+      upsertDeployJob(jobId,{state:'success',step:'Done.',progress:100,details:`Workflow: ${data.workflowName||data.workflowId}`});
+      successCount++;
+      setStatus('running',`${f.name} deployed. ${files.indexOf(f)+1}/${files.length} done…`);
+    }catch(err){
+      lastError=err.message||'Unknown error';
+      upsertDeployJob(jobId,{state:'error',step:'Failed.',progress:100,details:lastError});
+      setStatus('error',`${f.name} failed: ${lastError}`);
+    }
+  }
+
+  btn.disabled=false;
+  btn.textContent=original;
+
+  if(successCount===files.length){
+    setStatus('success',`All ${successCount} file${successCount===1?'':'s'} deployed successfully.`);
+    btn.style.borderColor='rgba(34,197,94,0.35)';
+    btn.style.color='#4ade80';
+    btn.style.background='rgba(34,197,94,0.10)';
+    btn.innerHTML=`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:12px;height:12px"><polyline points="20 6 9 17 4 12"/></svg>Deployed`;
+  } else if(successCount>0){
+    setStatus('error',`${successCount}/${files.length} deployed. Last error: ${lastError}`);
+  } else {
+    setStatus('error',`Deploy failed: ${lastError}`);
+  }
+}
+
 document.addEventListener('keydown',e=>{if(e.key==='Escape'){closePreview();closeCompare();closeFocusedCompare();closePromptStudio();}});
 renderDeployJobs();
 
@@ -873,6 +959,8 @@ const CHECKLIST_GROUPS=[
     {id:'cta-mid-article',label:'Add extra CTA elements in the middle of the article to encourage contacting the company.'},
     {id:'cta-end-article',label:'Add a stronger CTA block near the end of the article.'},
     {id:'cta-contact-elements',label:'Add missing contact-focused conversion elements where relevant.'},
+    {id:'cta-floating-contact',label:'Add a floating Contact Us button that is always visible on screen (fixed position, bottom-right or bottom-left). It must link to the real contact page URL of the site — not a fake or placeholder link. The button must be mobile-friendly (min 44x44px tap target), must not overlap other floating elements, and must have a hover effect. If the site already has a WhatsApp or phone floating button, place the Contact Us button above or beside it without collision.'},
+    {id:'cta-floating-scroll-top',label:'Add a floating Scroll to Top button that appears only after the user scrolls down (e.g. after 300px). It must animate smoothly into view, scroll the page back to the top on click, have a hover effect, and be positioned so it does not overlap the Contact Us floating button or any other fixed elements. On mobile it must stay within safe screen bounds and not block readable content.'},
   ]},
   {id:'content',title:'Content Structure',items:[
     {id:'content-tips-howto',label:'Weave relevant Tips, How-To, and Did You Know blocks naturally throughout the article.'},
