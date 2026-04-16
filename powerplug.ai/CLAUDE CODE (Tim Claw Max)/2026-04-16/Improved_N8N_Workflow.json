@@ -1,0 +1,185 @@
+{
+  "name": "PowerPlug.ai Article Generation System v2.0",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "generate-article",
+        "responseMode": "lastNode",
+        "options": {}
+      },
+      "id": "webhook-trigger",
+      "name": "Webhook Trigger",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [250, 300]
+    },
+    {
+      "parameters": {
+        "url": "https://powerplug.ai/",
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "text"
+            }
+          }
+        }
+      },
+      "id": "fetch-brand-site",
+      "name": "Fetch Brand Site",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [470, 160],
+      "notes": "Fetches the PowerPlug homepage to extract current branding, logo URL, navigation structure, and contact page URL. Used to ensure article branding stays aligned with the live site."
+    },
+    {
+      "parameters": {
+        "jsCode": "// Brand Intelligence Extraction\nconst html = $input.first().json.data || $input.first().json.body || '';\n\n// Extract logo\nconst logoMatch = html.match(/powerplug-logo\\.(png|svg|webp)/i);\nconst logoUrl = logoMatch \n  ? `https://powerplug.ai/wp-content/uploads/2022/06/powerplug-logo.${logoMatch[1]}`\n  : 'https://powerplug.ai/wp-content/uploads/2022/06/powerplug-logo.png';\n\n// Extract contact page\nconst contactMatch = html.match(/href=[\"'](https?:\\/\\/powerplug\\.ai\\/contact[^\"']*)[\"']/i);\nconst contactUrl = contactMatch ? contactMatch[1] : 'https://powerplug.ai/contact-us';\n\nreturn [{\n  json: {\n    brand: {\n      name: 'PowerPlug',\n      domain: 'powerplug.ai',\n      logoUrl: logoUrl,\n      contactUrl: contactUrl,\n      colors: {\n        primaryNavy: '#131b3b',\n        accentGreen: '#8AD628',\n        bodyText: '#2a2a2a',\n        lightBg: '#f8f9fb',\n        altBg: '#fafbfd',\n        cardBg: '#ffffff',\n        border: '#e2e5ea'\n      },\n      social: {\n        facebook: 'https://www.facebook.com/PowerPlugLtd/',\n        twitter: 'https://twitter.com/PowerPlugLtd',\n        linkedin: 'https://powerplug.ai/linkedin-insights'\n      },\n      fontStack: \"'Montserrat',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif\",\n      tone: 'Enterprise B2B, authoritative, data-driven',\n      product: 'PC power management software for enterprises'\n    },\n    articleConfig: {\n      direction: 'ltr',\n      language: 'en',\n      maxWidth: '820px',\n      baseFontSize: '17px',\n      lineHeight: '1.8'\n    }\n  }\n}];"
+      },
+      "id": "extract-brand-intel",
+      "name": "Extract Brand Intelligence",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [690, 160],
+      "notes": "Parses the brand site HTML to extract logo URL, contact URL, and validates brand assets. Outputs a structured brand object used by the AI generation node."
+    },
+    {
+      "parameters": {
+        "jsCode": "// Merge webhook input with brand data\nconst webhookData = $('Webhook Trigger').first().json.body || $('Webhook Trigger').first().json;\nconst brandData = $('Extract Brand Intelligence').first().json;\n\nconst topic = webhookData.topic || webhookData.keyword || 'IT Cost Reduction';\nconst targetKeyword = webhookData.targetKeyword || topic;\nconst wordCount = webhookData.wordCount || 3000;\nconst sections = webhookData.sections || 11;\nconst faqCount = webhookData.faqCount || 6;\nconst includeImages = webhookData.includeImages !== false;\nconst imageUrls = webhookData.imageUrls || [];\n\nreturn [{\n  json: {\n    ...brandData,\n    content: {\n      topic,\n      targetKeyword,\n      wordCount,\n      sections,\n      faqCount,\n      includeImages,\n      imageUrls\n    }\n  }\n}];"
+      },
+      "id": "prepare-prompt-context",
+      "name": "Prepare Prompt Context",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [910, 300],
+      "notes": "Merges the webhook input (topic, keyword, word count, image URLs) with extracted brand intelligence to create the full context object for AI generation."
+    },
+    {
+      "parameters": {
+        "resource": "chat",
+        "model": "gpt-4o",
+        "messages": {
+          "values": [
+            {
+              "role": "system",
+              "content": "={{ $json.systemPrompt }}"
+            },
+            {
+              "role": "user",
+              "content": "Generate a comprehensive, enterprise-grade article about: {{ $json.content.topic }}\n\nTarget keyword: {{ $json.content.targetKeyword }}\nTarget word count: {{ $json.content.wordCount }}\nNumber of sections: {{ $json.content.sections }}\nNumber of FAQ items: {{ $json.content.faqCount }}\n\nBrand configuration:\n- Logo URL: {{ $json.brand.logoUrl }}\n- Contact URL: {{ $json.brand.contactUrl }}\n- Primary color: {{ $json.brand.colors.primaryNavy }}\n- Accent color: {{ $json.brand.colors.accentGreen }}\n- Font: {{ $json.brand.fontStack }}\n\n{{ $json.content.includeImages ? 'Include image placeholders with provided URLs where relevant.' : 'Do not include images.' }}\n\nImage URLs available:\n{{ $json.content.imageUrls.join('\\n') }}\n\nReturn ONLY the complete HTML article content. No explanation, no markdown."
+            }
+          ]
+        },
+        "options": {
+          "temperature": 0.4,
+          "maxTokens": 16000
+        }
+      },
+      "id": "generate-article",
+      "name": "Generate Article (AI)",
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [1130, 300],
+      "notes": "Generates the full HTML article using the system prompt and brand context. Temperature 0.4 for consistency. Uses GPT-4o for high-quality output."
+    },
+    {
+      "parameters": {
+        "jsCode": "// Post-generation validation and cleanup\nlet html = $input.first().json.message?.content || $input.first().json.text || '';\n\n// Strip markdown fences if present\nhtml = html.replace(/^```html?\\n?/i, '').replace(/\\n?```$/i, '').trim();\n\nconst brand = $('Prepare Prompt Context').first().json.brand;\nconst errors = [];\nconst warnings = [];\n\n// CRITICAL VALIDATIONS\n\n// 1. Check for wrong logo (sentice)\nif (html.includes('sentice-author-logo') || html.includes('sentice.com')) {\n  errors.push('CRITICAL: Found sentice reference — replacing with PowerPlug assets');\n  html = html.replace(/https?:\\/\\/[^\"']*sentice-author-logo[^\"']*/gi, brand.logoUrl);\n  html = html.replace(/https?:\\/\\/www\\.sentice\\.com\\/contact/gi, brand.contactUrl);\n  html = html.replace(/sentice\\.com/gi, 'powerplug.ai');\n}\n\n// 2. Verify correct logo is present\nif (!html.includes('powerplug-logo')) {\n  warnings.push('WARNING: PowerPlug logo not found in author section');\n}\n\n// 3. Verify contact URL\nif (!html.includes(brand.contactUrl)) {\n  warnings.push('WARNING: PowerPlug contact URL not found in CTAs');\n}\n\n// 4. Check for JavaScript buttons in TOC/FAQ (should use details/summary)\nconst jsButtonCount = (html.match(/onclick=\"var [ab]=this/g) || []).length;\nif (jsButtonCount > 1) {\n  warnings.push(`WARNING: Found ${jsButtonCount} JS-driven accordions — should use <details>/<summary>`);\n}\n\n// 5. Check section count\nconst sectionCount = (html.match(/id=\"section\\d+\"/g) || []).length;\nconst faqPresent = html.includes('id=\"faq\"');\n\n// 6. Check responsive meta\nconst hasStyle = html.includes('<style>');\nconst hasMediaQuery = html.includes('@media');\n\n// 7. Verify brand colors\nconst hasNavy = html.includes(brand.colors.primaryNavy);\nconst hasGreen = html.includes(brand.colors.accentGreen);\n\nreturn [{\n  json: {\n    html: html,\n    validation: {\n      passed: errors.length === 0,\n      errors,\n      warnings,\n      stats: {\n        sectionCount,\n        faqPresent,\n        hasStyleBlock: hasStyle,\n        hasMediaQueries: hasMediaQuery,\n        correctLogo: html.includes('powerplug-logo'),\n        correctContact: html.includes(brand.contactUrl),\n        usesNavyColor: hasNavy,\n        usesGreenAccent: hasGreen,\n        charCount: html.length,\n        estimatedWordCount: Math.round(html.replace(/<[^>]*>/g, ' ').split(/\\s+/).length)\n      }\n    }\n  }\n}];"
+      },
+      "id": "validate-output",
+      "name": "Validate & Sanitize Output",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1350, 300],
+      "notes": "Post-generation validation: checks for wrong logos (sentice), verifies brand colors, validates section structure, checks for JS accordions vs details/summary, and auto-fixes common issues."
+    },
+    {
+      "parameters": {
+        "jsCode": "// Load the system prompt from the Improved_N8N_Prompt.txt\n// In production, this would be stored in n8n credentials or a connected storage\n// For now, it's embedded in the workflow as a static text node output\n\nconst brandData = $('Extract Brand Intelligence').first().json;\nconst contentData = $('Prepare Prompt Context').first().json;\n\n// The system prompt is the full content of Improved_N8N_Prompt.txt\n// In production deployment, replace this with a file read or credential reference\nconst systemPrompt = `You are a senior B2B content strategist and frontend engineer producing enterprise-grade long-form articles for PowerPlug.ai — a PC power management software company serving large enterprises.\n\nBRAND IDENTITY:\n- Company: PowerPlug (https://powerplug.ai)\n- Logo: ${brandData.brand.logoUrl}\n- Contact: ${brandData.brand.contactUrl}\n- Colors: Navy ${brandData.brand.colors.primaryNavy}, Green ${brandData.brand.colors.accentGreen}\n- Font: ${brandData.brand.fontStack}\n- Social: Facebook, Twitter/X, LinkedIn\n\nCRITICAL RULES:\n1. Use ONLY the PowerPlug logo URL provided above in the About the Author section\n2. ALL CTA buttons link to ${brandData.brand.contactUrl}\n3. Use <details>/<summary> for TOC and FAQ — NO JavaScript onclick buttons\n4. Inline CSS only (one <style> block allowed for pseudo-elements and @media queries)\n5. Direction: LTR, Language: English\n6. Never fabricate statistics or link to non-existent pages\n7. Floating buttons on LEFT side (site has WhatsApp widget on right)\n8. Social hover colors: Facebook=#1877F2, Twitter=#000000, LinkedIn=#0A66C2\n\nOUTPUT: Complete HTML article ready for WordPress paste. No markdown, no explanation.`;\n\nreturn [{\n  json: {\n    ...contentData,\n    systemPrompt\n  }\n}];"
+      },
+      "id": "load-system-prompt",
+      "name": "Load System Prompt",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [910, 160],
+      "notes": "Constructs the system prompt dynamically using extracted brand data. In production, the full prompt from Improved_N8N_Prompt.txt should be loaded from storage."
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ JSON.stringify({ success: $json.validation.passed, html: $json.html, validation: $json.validation }) }}"
+      },
+      "id": "respond-webhook",
+      "name": "Respond to Webhook",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [1570, 300],
+      "notes": "Returns the generated HTML article and validation report to the webhook caller."
+    }
+  ],
+  "connections": {
+    "Webhook Trigger": {
+      "main": [
+        [
+          { "node": "Fetch Brand Site", "type": "main", "index": 0 },
+          { "node": "Prepare Prompt Context", "type": "main", "index": 0 }
+        ]
+      ]
+    },
+    "Fetch Brand Site": {
+      "main": [
+        [
+          { "node": "Extract Brand Intelligence", "type": "main", "index": 0 }
+        ]
+      ]
+    },
+    "Extract Brand Intelligence": {
+      "main": [
+        [
+          { "node": "Load System Prompt", "type": "main", "index": 0 }
+        ]
+      ]
+    },
+    "Load System Prompt": {
+      "main": [
+        [
+          { "node": "Prepare Prompt Context", "type": "main", "index": 0 }
+        ]
+      ]
+    },
+    "Prepare Prompt Context": {
+      "main": [
+        [
+          { "node": "Generate Article (AI)", "type": "main", "index": 0 }
+        ]
+      ]
+    },
+    "Generate Article (AI)": {
+      "main": [
+        [
+          { "node": "Validate & Sanitize Output", "type": "main", "index": 0 }
+        ]
+      ]
+    },
+    "Validate & Sanitize Output": {
+      "main": [
+        [
+          { "node": "Respond to Webhook", "type": "main", "index": 0 }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "powerplug-article-system-v2"
+  },
+  "tags": [
+    { "name": "article-generation" },
+    { "name": "powerplug" },
+    { "name": "content" }
+  ]
+}
