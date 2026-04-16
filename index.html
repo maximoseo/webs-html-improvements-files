@@ -39,7 +39,7 @@ a:hover{color:var(--gold-light)}
 .last-sync-meta{font-size:12px;color:var(--muted);padding:8px 12px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);border-radius:999px}
 
 /* Container */
-.container{max-width:1320px;margin:0 auto;padding:32px 28px}
+.container{max-width:1320px;margin:0 auto;padding:32px 28px 120px}
 
 /* Stats */
 .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:36px}
@@ -203,15 +203,15 @@ a:hover{color:var(--gold-light)}
 .prompt-status{font-size:12px;color:var(--muted)}
 .prompt-preview-wrap{flex:1;min-height:0;border:1px solid var(--border);border-radius:12px;overflow:hidden;background:#fff}
 .prompt-preview-frame{width:100%;height:100%;border:none;background:#fff}
-.deploy-status-panel{position:fixed;right:18px;bottom:18px;z-index:900;width:min(320px,calc(100vw - 36px));background:rgba(20,20,20,0.94);border:1px solid rgba(255,255,255,0.08);border-radius:14px;box-shadow:0 18px 48px rgba(0,0,0,0.38);backdrop-filter:blur(10px);overflow:hidden}
+.deploy-status-panel{position:fixed;right:12px;bottom:12px;z-index:900;width:min(280px,calc(100vw - 24px));background:rgba(18,19,22,0.92);border:1px solid rgba(255,255,255,0.07);border-radius:12px;box-shadow:0 14px 36px rgba(0,0,0,0.34);backdrop-filter:blur(10px);overflow:hidden}
 #preview-modal.open ~ #deploy-status-panel,
 #compare-modal.open ~ #deploy-status-panel,
 #focus-modal.open ~ #deploy-status-panel,
 #prompt-modal.open ~ #deploy-status-panel{display:none}
-.deploy-status-header{display:flex;align-items:center;justify-content:space-between;padding:10px 12px;border-bottom:1px solid rgba(255,255,255,0.06);background:rgba(255,255,255,0.02)}
-.deploy-status-title{font-size:11px;font-weight:700;letter-spacing:.2px;text-transform:none;color:var(--text-secondary)}
-.deploy-status-toggle{border:1px solid rgba(255,255,255,0.08);background:rgba(255,255,255,0.03);color:var(--text-secondary);border-radius:8px;padding:6px 10px;font-size:11px;font-weight:700;cursor:pointer}
-.deploy-status-body{padding:12px 14px;display:flex;flex-direction:column;gap:12px;max-height:50vh;overflow:auto}
+.deploy-status-header{display:flex;align-items:center;justify-content:space-between;padding:9px 10px;border-bottom:1px solid rgba(255,255,255,0.05);background:rgba(255,255,255,0.02)}
+.deploy-status-title{font-size:11px;font-weight:700;letter-spacing:.15px;text-transform:none;color:var(--text-secondary)}
+.deploy-status-toggle{border:1px solid rgba(255,255,255,0.08);background:rgba(255,255,255,0.03);color:var(--text-secondary);border-radius:8px;padding:5px 9px;font-size:11px;font-weight:700;cursor:pointer}
+.deploy-status-body{padding:12px 14px;display:flex;flex-direction:column;gap:12px;max-height:42vh;overflow:auto}
 .deploy-status-panel.collapsed .deploy-status-body{display:none}
 .deploy-status-empty{font-size:12px;color:var(--muted)}
 .deploy-job{border:1px solid var(--border);border-radius:12px;padding:12px;background:rgba(255,255,255,0.02);display:flex;flex-direction:column;gap:8px}
@@ -267,7 +267,7 @@ a:hover{color:var(--gold-light)}
   .compare-panel-header{flex-direction:column;align-items:flex-start}
   .compare-grid{grid-template-columns:1fr;padding:0}
   .prompt-container{grid-template-columns:1fr}
-  .deploy-status-panel{right:12px;bottom:12px;width:min(280px,calc(100vw - 24px))}
+  .deploy-status-panel{right:10px;bottom:10px;width:min(260px,calc(100vw - 20px))}
 }
 @media(max-width:640px){
   .container{padding:16px}
@@ -440,8 +440,8 @@ a:hover{color:var(--gold-light)}
 
 <div class="deploy-status-panel collapsed" id="deploy-status-panel">
   <div class="deploy-status-header">
-    <div class="deploy-status-title">Deploy to n8n status</div>
-    <button class="deploy-status-toggle" id="deploy-status-toggle" onclick="toggleDeployStatusPanel()">Show</button>
+    <div class="deploy-status-title">Deployment status</div>
+    <button class="deploy-status-toggle" id="deploy-status-toggle" onclick="toggleDeployStatusPanel()">View</button>
   </div>
   <div class="deploy-status-body" id="deploy-status-body">
     <div class="deploy-status-empty">No deploy jobs yet.</div>
@@ -647,7 +647,7 @@ function toggleDeployStatusPanel(forceOpen){
   const btn=document.getElementById('deploy-status-toggle');
   const open=forceOpen===true?true:(forceOpen===false?false:panel.classList.contains('collapsed'));
   panel.classList.toggle('collapsed',!open);
-  btn.textContent=open?'Hide':'Show';
+  btn.textContent=open?'Hide':'View';
 }
 function renderDeployJobs(){
   const body=document.getElementById('deploy-status-body');
