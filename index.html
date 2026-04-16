@@ -530,7 +530,7 @@ const API=`https://api.github.com/repos/${REPO}`;
 const RAW=`https://raw.githubusercontent.com/${REPO}/main`;
 const COLORS=['#C9952A','#3b82f6','#22c55e','#a855f7','#ef4444','#06b6d4','#f59e0b','#ec4899'];
 let allProjects=[];
-let promptStudioContext={domain:'',agentName:'',versionName:'',htmlDownloadUrl:''};
+let promptStudioContext={domain:'',agentName:'',versionName:'',htmlDownloadUrl:'',fileManifest:[],versionPath:'',githubRepoBase:'',obsidianBase:''};
 let deployJobs=[];
 
 function formatSize(bytes){if(!bytes)return'';if(bytes<1024)return bytes+'B';if(bytes<1048576)return(bytes/1024).toFixed(1)+'KB';return(bytes/1048576).toFixed(1)+'MB'}
@@ -649,20 +649,40 @@ function setFocusedDevice(mode,btn){
   document.querySelectorAll('#focus-device-tabs .device-tab').forEach(t=>t.classList.remove('active'));
   btn.classList.add('active');
 }
-function openPromptStudio(projectName, agentName, versionName, htmlDownloadUrl){
+function openPromptStudio(projectName, agentName, versionName, htmlDownloadUrl, fileManifestEncoded){
+  const domain=decodeURIComponent(projectName||'');
+  const agent=decodeURIComponent(agentName||'');
+  const version=decodeURIComponent(versionName||'');
+  const dlUrl=decodeURIComponent(htmlDownloadUrl||'');
+  let files=[];
+  try{ files=JSON.parse(decodeURIComponent(fileManifestEncoded||'[]')); }catch(e){}
+
+  // Build repo/obsidian paths from version path
+  const versionPath=version?`${domain}/${version}`:'';
+  const ghBase=`https://github.com/${REPO}/tree/main/${encodeURIComponent(domain)}`;
+  const rawBase=`https://raw.githubusercontent.com/${REPO}/main`;
+  const obsBase=`C:\\Obsidian\\HTML REDESIGN\\HTML REDESIGN\\${domain}\\${agent}\\updated files`;
+
   promptStudioContext={
-    domain:decodeURIComponent(projectName||''),
-    agentName:decodeURIComponent(agentName||''),
-    versionName:decodeURIComponent(versionName||''),
-    htmlDownloadUrl:decodeURIComponent(htmlDownloadUrl||''),
+    domain,
+    agentName:agent,
+    versionName:version,
+    htmlDownloadUrl:dlUrl,
+    fileManifest:files,
+    versionPath,
+    githubRepoBase:ghBase,
+    obsidianBase:obsBase,
   };
-  document.getElementById('prompt-filename').textContent=promptStudioContext.agentName||'Agent';
-  document.getElementById('prompt-subtitle').textContent=`${promptStudioContext.domain} • ${promptStudioContext.versionName}`;
+
+  document.getElementById('prompt-filename').textContent=agent||'Agent';
+  document.getElementById('prompt-subtitle').textContent=`${domain} • ${version}`;
   document.getElementById('prompt-output').value='';
-  document.getElementById('prompt-status').textContent='Write a draft prompt, then improve it into a paste-ready markdown prompt.';
+  document.getElementById('prompt-status').textContent='Review the pre-filled context below, add your instructions, then click Improve.';
+
+  // Load HTML preview
   const previewFrame=document.getElementById('prompt-preview-frame');
-  if(promptStudioContext.htmlDownloadUrl){
-    fetch(promptStudioContext.htmlDownloadUrl).then(r=>r.text()).then(html=>{
+  if(dlUrl){
+    fetch(dlUrl).then(r=>r.text()).then(html=>{
       const doc=previewFrame.contentDocument||previewFrame.contentWindow.document;
       doc.open();doc.write(html);doc.close();
     }).catch(()=>{
@@ -670,10 +690,53 @@ function openPromptStudio(projectName, agentName, versionName, htmlDownloadUrl){
       doc.open();doc.write('<body style="font-family:Segoe UI,sans-serif;padding:24px;color:#666">Could not load HTML preview.</body>');doc.close();
     });
   }
+
+  // Build rich pre-filled draft with full context
   const draft=document.getElementById('prompt-draft');
   if(!draft.value.trim()){
-    draft.value=`Improve the ${promptStudioContext.agentName} version for ${promptStudioContext.domain}.\n\nFocus on:\n- visual polish\n- responsive cleanup\n- hierarchy and spacing\n- premium UI/UX details\n- preserving content meaning\n\nWhat I want changed:\n- `;
+    // File list grouped by type
+    const htmlFiles=files.filter(f=>f.name.toLowerCase().endsWith('.html'));
+    const txtFiles=files.filter(f=>f.name.toLowerCase().endsWith('.txt'));
+    const jsonFiles=files.filter(f=>f.name.toLowerCase().endsWith('.json'));
+    const otherFiles=files.filter(f=>!f.name.toLowerCase().match(/\.(html|txt|json)$/));
+
+    const fileList=(arr,label)=>arr.length
+      ? `\n### ${label}\n`+arr.map(f=>`- ${f.name} (${formatSize(f.size)})\n  GitHub: ${f.url}\n  Raw download: ${f.download}`).join('\n')
+      : '';
+
+    const today=new Date().toLocaleDateString('en-GB').split('/').reverse().join('-');
+
+    draft.value=
+`## Project Context
+
+- Domain: ${domain}
+- Agent: ${agent}
+- Version folder: ${version}
+- Working date: ${today}
+
+## Current Files in This Version
+
+GitHub folder: ${ghBase}
+${fileList(htmlFiles,'HTML Templates')}${fileList(txtFiles,'Prompts / Text Files')}${fileList(jsonFiles,'Workflow / JSON Files')}${fileList(otherFiles,'Other Files')}
+
+## What I Want Changed
+
+- [Describe your improvement goal here]
+
+## Where to Upload After Completing
+
+Replace the existing files in this same version folder. Upload to BOTH destinations:
+
+1. Obsidian vault path:
+   ${obsBase}\\updated files\\${today}\\
+
+2. GitHub repo path (same project, replace active files):
+   ${domain}/${version}/
+   Repo: https://github.com/${REPO}
+   Dashboard: https://html-redesign-dashboard.maximo-seo.ai/
+`;
   }
+
   document.getElementById('prompt-modal').classList.add('open');
   draft.focus();
 }
@@ -700,7 +763,19 @@ async function improvePrompt(btn){
     ? `Improving with ${modelLabel} + ${selected.length} rule${selected.length===1?'':'s'}...`
     : `Improving with ${modelLabel}...`;
   try{
-    const res=await fetch('/api/prompt/improve',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({...promptStudioContext,draftPrompt:draft,checklist:ruleLabels,model:selectedModel})});
+    const res=await fetch('/api/prompt/improve',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({
+      domain:promptStudioContext.domain,
+      agentName:promptStudioContext.agentName,
+      versionName:promptStudioContext.versionName,
+      htmlDownloadUrl:promptStudioContext.htmlDownloadUrl,
+      fileManifest:promptStudioContext.fileManifest,
+      versionPath:promptStudioContext.versionPath,
+      githubRepoBase:promptStudioContext.githubRepoBase,
+      obsidianBase:promptStudioContext.obsidianBase,
+      draftPrompt:draft,
+      checklist:ruleLabels,
+      model:selectedModel,
+    })});
     const data=await res.json();
     if(!res.ok||!data.ok) throw new Error(data.error||'Prompt improvement failed');
     output.value=data.content||'';
@@ -1090,7 +1165,9 @@ async function loadDashboard(){
     const compareCTA=compareCandidates.length>1?`<button class="preview-cta" onclick="event.stopPropagation();openCompare('${p.name}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M10 3H3v7h7V3zM21 14h-7v7h7v-7zM21 3h-7v7h7V3zM10 14H3v7h7v-7z"/></svg>Compare agents</button>`:'';
     const _psAgent=latest?detectAgent(latest.name):'Agent';
     const _psVersion=latest?latest.name:'';
-    const promptStudioCTA=latestHtmlUrl?`<button class="preview-cta ps-cta" onclick="event.stopPropagation();openPromptStudio('${encodeURIComponent(p.name)}','${encodeURIComponent(_psAgent)}','${encodeURIComponent(_psVersion)}','${latestHtmlUrl.replace(/'/g,"%27")}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" style="width:13px;height:13px"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 1 1 3 3L7 19l-4 1 1-4Z"/></svg>Prompt Studio</button>`:'';
+    const _psFiles=latest?latest.files.map(f=>({name:f.name,path:f.path,download:f.download,url:f.url,size:f.size})):[];
+    const _psFilesEnc=encodeURIComponent(JSON.stringify(_psFiles));
+    const promptStudioCTA=latestHtmlUrl?`<button class="preview-cta ps-cta" onclick="event.stopPropagation();openPromptStudio('${encodeURIComponent(p.name)}','${encodeURIComponent(_psAgent)}','${encodeURIComponent(_psVersion)}','${latestHtmlUrl.replace(/'/g,"%27")}',${_psFilesEnc})"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" style="width:13px;height:13px"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 1 1 3 3L7 19l-4 1 1-4Z"/></svg>Prompt Studio</button>`:'';
 
     const latestLabel=latestDate||'Pending sync';
 

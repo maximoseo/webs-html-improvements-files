@@ -249,19 +249,88 @@ def improve_prompt_with_model(payload):
     else:
         extra_rules_section = ''
 
+    # Build file manifest block from payload
+    file_manifest = payload.get('fileManifest') or []
+    version_path = (payload.get('versionPath') or '').strip()
+    github_repo_base = (payload.get('githubRepoBase') or '').strip()
+    obsidian_base = (payload.get('obsidianBase') or '').strip()
+    repo = 'maximoseo/webs-html-improvements-files'
+    domain = payload.get('domain') or 'unknown'
+    agent_name = payload.get('agentName') or 'unknown'
+    version_name = payload.get('versionName') or 'unknown'
+
+    if file_manifest:
+        def _fmt_files(files, label):
+            if not files:
+                return ''
+            lines = [f'### {label}']
+            for f in files:
+                name = f.get('name','')
+                size = f.get('size',0)
+                path = f.get('path','')
+                dl   = f.get('download','')
+                url  = f.get('url','')
+                size_str = (f'{size/1024:.1f} KB' if size >= 1024 else f'{size} B') if size else ''
+                lines.append(f'- {name} {size_str}')
+                if url:  lines.append(f'  View on GitHub: {url}')
+                if dl:   lines.append(f'  Raw download:   {dl}')
+                if path: lines.append(f'  Repo path:      {path}')
+            return '\n'.join(lines)
+
+        html_files  = [f for f in file_manifest if f.get('name','').lower().endswith('.html')]
+        txt_files   = [f for f in file_manifest if f.get('name','').lower().endswith('.txt')]
+        json_files  = [f for f in file_manifest if f.get('name','').lower().endswith('.json')]
+        other_files = [f for f in file_manifest if not f.get('name','').lower().endswith(('.html','.txt','.json'))]
+
+        manifest_block = (
+            f'\n\n--- CURRENT FILE MANIFEST (version: {version_name}) ---\n'
+            + _fmt_files(html_files,  'HTML Templates') + '\n'
+            + _fmt_files(txt_files,   'Prompts / Text Files') + '\n'
+            + _fmt_files(json_files,  'Workflow / JSON Files') + '\n'
+            + _fmt_files(other_files, 'Other Files') + '\n'
+            + '--- END FILE MANIFEST ---\n'
+        )
+    else:
+        manifest_block = ''
+
+    # Build delivery paths block
+    obs_path = obsidian_base or f'C:\\Obsidian\\HTML REDESIGN\\HTML REDESIGN\\{domain}\\{agent_name}\\updated files'
+    gh_folder = version_path or f'{domain}/{version_name}'
+    delivery_block = (
+        f'\n\n--- DELIVERY DESTINATIONS ---\n'
+        f'After completing all work, upload the final files to BOTH destinations below.\n'
+        f'Replace the existing files in the same version folder — do not create a new parallel folder.\n\n'
+        f'1. Obsidian vault (Windows path):\n'
+        f'   {obs_path}\\updated files\\{current_date}\\\n'
+        f'   Upload: HTML template, N8N prompt, N8N workflow, validation note, source map, summary.\n\n'
+        f'2. GitHub repository:\n'
+        f'   Repo:      https://github.com/{repo}\n'
+        f'   Folder:    {gh_folder}\n'
+        f'   Dashboard: https://html-redesign-dashboard.maximo-seo.ai/\n'
+        f'   Commit message: "feat({domain}): [describe what changed] — {current_date}"\n'
+        f'   After pushing, refresh the dashboard and confirm the updated files appear correctly.\n'
+        f'--- END DELIVERY DESTINATIONS ---\n'
+    )
+
     user = (
-        f"Target domain: {payload.get('domain') or 'unknown'}\n"
-        f"Target agent: {payload.get('agentName') or 'unknown'}\n"
-        f"Agent version/context: {payload.get('versionName') or 'unknown'}\n"
-        f"Current required working date: {current_date}\n\n"
-        '--- USER DRAFT PROMPT ---\n'
+        f'Target domain:          {domain}\n'
+        f'Target agent:           {agent_name}\n'
+        f'Version folder:         {version_name}\n'
+        f'GitHub folder URL:      {github_repo_base or f"https://github.com/{repo}/tree/main/{domain}"}\n'
+        f'Obsidian base path:     {obs_path}\n'
+        f'Current working date:   {current_date}\n'
+        f'{manifest_block}'
+        f'{delivery_block}'
+        f'\n--- USER DRAFT PROMPT ---\n'
         f'{draft}\n'
-        '--- END DRAFT ---\n'
+        f'--- END DRAFT ---\n'
         f'{extra_rules_section}\n'
         'Rewrite the draft into the structured prompt format described in the system instructions. '
         'Every section must be present and populated. '
+        'The Context section must list the exact file names from the manifest above so the agent knows exactly which files to work with. '
         'The Specific Requirements section must be a numbered list — not a flat paragraph. '
-        'The Delivery section must name Obsidian updated-files path and the GitHub dashboard repo path explicitly. '
+        'The Delivery section must copy the exact Obsidian path and GitHub repo path from the delivery destinations block above — '
+        'include real folder paths, real file names from the manifest, and the exact commit message format. '
         'Use the current required working date above for all folder/date references and correct any stale dates found in the draft.'
     )
 
