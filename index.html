@@ -73,16 +73,16 @@ a:hover{color:var(--gold-light)}
 .project-card.expanded{grid-column:1/-1;border-color:rgba(113,112,255,0.3);box-shadow:0 22px 56px rgba(0,0,0,0.36)}
 .project-card::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.2),transparent);opacity:0;transition:opacity 0.3s}
 .project-card:hover::before{opacity:1}
-.card-header{padding:22px 22px;display:flex;align-items:flex-start;gap:16px;cursor:pointer;transition:background 0.15s}
+.card-header{padding:22px 22px;display:flex;align-items:flex-start;gap:16px;cursor:pointer;transition:background 0.15s;flex-wrap:wrap}
 .card-header:hover{background:rgba(255,255,255,0.02)}
 .card-icon{width:50px;height:50px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:800;color:#fff;flex-shrink:0;position:relative;background:linear-gradient(135deg,rgba(113,112,255,0.88),rgba(94,106,210,0.55));box-shadow:0 12px 30px rgba(94,106,210,0.28)}
 .card-icon::after{content:'';position:absolute;inset:0;border-radius:14px;border:1px solid rgba(255,255,255,0.12)}
-.card-info{flex:1 1 280px;min-width:240px;padding-top:2px}
+.card-info{flex:1 1 320px;min-width:260px;padding-top:2px}
 .card-info h3{font-size:16px;font-weight:700;margin-bottom:8px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.03em}
 .card-meta{display:flex;gap:8px;flex-wrap:wrap}
-.card-right{margin-left:auto;display:flex;align-items:flex-start;gap:14px;flex:0 1 auto;flex-wrap:wrap;justify-content:flex-end}
-.card-cta-group{display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding:6px;border-radius:16px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);box-shadow:inset 0 1px 0 rgba(255,255,255,0.03)}
-.card-status-group{display:flex;align-items:center;gap:10px;padding:6px 8px;border-radius:16px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.05)}
+.card-right{width:100%;margin-left:66px;display:flex;align-items:center;gap:14px;flex-wrap:wrap;justify-content:space-between;padding-top:4px}
+.card-cta-group{display:flex;align-items:center;gap:12px;flex-wrap:wrap;flex:1 1 360px;padding:6px;border-radius:16px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);box-shadow:inset 0 1px 0 rgba(255,255,255,0.03)}
+.card-status-group{display:flex;align-items:center;gap:10px;flex:0 0 auto;padding:6px 8px;border-radius:16px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.05)}
 .meta-tag{font-size:11px;padding:5px 10px;border-radius:999px;font-weight:600;background:rgba(255,255,255,0.03);color:var(--text-secondary);border:1px solid rgba(255,255,255,0.07)}
 .badge{font-size:10px;padding:7px 12px;border-radius:999px;font-weight:800;text-transform:uppercase;letter-spacing:0.08em}
 .badge-live{background:rgba(39,166,68,0.14);color:#7ee19d;border:1px solid rgba(39,166,68,0.22)}
@@ -255,7 +255,7 @@ a:hover{color:var(--gold-light)}
   .project-card.expanded{grid-column:auto}
   .card-header{flex-wrap:wrap;align-items:flex-start}
   .card-info{min-width:220px}
-  .card-right{width:100%;flex-wrap:wrap;justify-content:space-between;align-items:center}
+  .card-right{width:100%;margin-left:0;flex-wrap:wrap;justify-content:space-between;align-items:center}
   .card-cta-group{flex:1 1 320px}
   .card-status-group{margin-left:auto}
   .file-row{flex-wrap:wrap;align-items:flex-start}
