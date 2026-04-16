@@ -795,39 +795,77 @@ function openPromptStudio(projectName, agentName, versionName, htmlDownloadUrl, 
     const otherFiles=files.filter(f=>!f.name.toLowerCase().match(/\.(html|txt|json)$/));
 
     const fileList=(arr,label)=>arr.length
-      ? `\n### ${label}\n`+arr.map(f=>`- ${f.name} (${formatSize(f.size)})\n  GitHub: ${f.url}\n  Raw download: ${f.download}`).join('\n')
+      ? `\n### ${label}\n`+arr.map(f=>`- **${f.name}** (${formatSize(f.size)})\n  GitHub view: ${f.url}\n  Raw download: ${f.download}`).join('\n')
       : '';
 
     const today=new Date().toLocaleDateString('en-GB').split('/').reverse().join('-');
+
+    // ── Build all other versions list for this domain ──
+    // This tells the agent exactly where to find v1, v2, previous agent outputs etc.
+    let allVersionsBlock='';
+    const proj=allProjects.find(p=>p.name===domain);
+    if(proj&&proj.versions&&proj.versions.length>0){
+      const otherVersions=proj.versions.filter(v=>v.name!==version);
+      const currentVersionObj=proj.versions.find(v=>v.name===version);
+      const RAW_BASE=`https://raw.githubusercontent.com/${REPO}/main`;
+      const GH_BASE=`https://github.com/${REPO}/blob/main`;
+
+      // Current version summary
+      let currentBlock='';
+      if(currentVersionObj){
+        currentBlock=`\n### Current Version Being Improved: ${version}${currentVersionObj.isLatest?' (Latest)':''}\n`
+          +currentVersionObj.files.map(f=>`- **${f.name}** (${formatSize(f.size)})\n  View: ${f.url}\n  Download: ${f.download}`).join('\n');
+      }
+
+      // All other versions (source material the agent can reference)
+      let otherBlock='';
+      if(otherVersions.length>0){
+        otherBlock=`\n### All Other Versions Available for This Domain\n`
+          +`The agent MUST read these files to understand the existing work before making any changes.\n`
+          +otherVersions.map(v=>{
+            const vAgent=detectAgent(v.name);
+            const vGhFolder=`https://github.com/${REPO}/tree/main/${encodeURIComponent(domain)}/${v.name.split('/').map(encodeURIComponent).join('/')}`;
+            const filesSummary=v.files.map(f=>`  - **${f.name}** (${formatSize(f.size)})\n    View: ${f.url}\n    Download: ${f.download}`).join('\n');
+            return `\n#### ${vAgent} — \`${v.name}\`${v.isLatest?' ★ Latest':''}\nFolder: ${vGhFolder}\n${filesSummary}`;
+          }).join('\n');
+      }
+
+      allVersionsBlock=`\n## All Available Versions for ${domain}\n`
+        +(currentBlock||'')
+        +(otherBlock||'')
+        +`\n\n> The agent should read the files above to understand what already exists before creating the improved version.\n`;
+    }
 
     draft.value=
 `## Project Context
 
 - Domain: ${domain}
-- Agent: ${agent}
-- Version folder: ${version}
+- Agent producing the improvement: ${agent}
+- Version folder to improve: ${version}
 - Working date: ${today}
 
-## Current Files in This Version
+## Files to Improve (Current Version)
 
 GitHub folder: ${ghBase}
-${fileList(htmlFiles,'HTML Templates')}${fileList(txtFiles,'Prompts / Text Files')}${fileList(jsonFiles,'Workflow / JSON Files')}${fileList(otherFiles,'Other Files')}
-
+${fileList(htmlFiles,'HTML Templates — Primary file to improve')}${fileList(txtFiles,'N8N Prompts / Text Files — Improve these prompts')}${fileList(jsonFiles,'N8N Workflow JSON Files — Improve these workflows')}${fileList(otherFiles,'Other Files')}
+${allVersionsBlock}
 ## What I Want Changed
 
 - [Describe your improvement goal here]
 
 ## Where to Upload After Completing
 
-Replace the existing files in this same version folder. Upload to BOTH destinations:
+Replace the existing files for this project. Upload to BOTH destinations below — do NOT create a new parallel folder, replace the active files:
 
 1. Obsidian vault path:
    ${obsBase}\\updated files\\${today}\\
+   Upload: HTML template, N8N prompt, N8N workflow, validation note, source map, summary.
 
-2. GitHub repo path (same project, replace active files):
+2. GitHub repo path (same project, same version folder, replace active files):
    ${domain}/${version}/
    Repo: https://github.com/${REPO}
    Dashboard: https://html-redesign-dashboard.maximo-seo.ai/
+   Commit message: "feat(${domain}): [describe what changed] — ${today}"
 `;
   }
 
