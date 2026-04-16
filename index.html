@@ -590,8 +590,11 @@ function openPreview(downloadUrl,filename,ctx){
     doc.open();doc.write(html);doc.close();
   });
   setDevice('desktop',document.querySelector('.device-tab:last-child'));
-  if(ctx&&typeof ctx==='object'){
-    previewContext={domain:ctx.domain||'',agentName:ctx.agentName||'',versionName:ctx.versionName||'',downloadUrl:downloadUrl,fileManifest:ctx.fileManifest||[]};
+  // ctx is always a URI-encoded JSON string from onclick attributes (safe from " injection)
+  let ctxObj=null;
+  if(ctx){try{ctxObj=JSON.parse(decodeURIComponent(ctx));}catch(e){}}
+  if(ctxObj&&ctxObj.domain){
+    previewContext={domain:ctxObj.domain||'',agentName:ctxObj.agentName||'',versionName:ctxObj.versionName||'',downloadUrl:downloadUrl,fileManifest:ctxObj.fileManifest||[]};
     const psBtn=document.getElementById('preview-ps-btn');
     if(psBtn)psBtn.style.display='inline-flex';
   }else{
@@ -672,8 +675,9 @@ function openCompare(projectName){
     const panelId=`cpanel-${idx}-${Date.now()}`;
     panel.id=panelId;
     const filesEnc=encodeURIComponent(JSON.stringify(allFiles));
+    const _wfEnc=encodeURIComponent(JSON.stringify(workflowFiles));
     const deployBtnHtml=hasWorkflow
-      ? `<button class="action-btn" style="border-color:rgba(249,115,22,0.30);color:#fb923c;background:rgba(249,115,22,0.08)" onclick="deployVersionToN8n('${encodeURIComponent(projectName)}','${encodeURIComponent(item.agent)}','${encodeURIComponent(item.version)}',${JSON.stringify(workflowFiles).replace(/"/g,'&quot;')},this,'${panelId}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" style="width:12px;height:12px"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>Deploy to n8n</button>`
+      ? `<button class="action-btn" style="border-color:rgba(249,115,22,0.30);color:#fb923c;background:rgba(249,115,22,0.08)" onclick="deployVersionToN8n('${encodeURIComponent(projectName)}','${encodeURIComponent(item.agent)}','${encodeURIComponent(item.version)}','${_wfEnc}',this,'${panelId}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" style="width:12px;height:12px"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>Deploy to n8n</button>`
       : '';
     panel.innerHTML=`<div class="compare-panel-header"><div class="compare-panel-title">${item.agent}<small>${item.version}</small></div><div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;justify-content:flex-end">${deployBtnHtml}<button class="action-btn success" onclick="openPromptStudio('${encodeURIComponent(projectName)}','${encodeURIComponent(item.agent)}','${encodeURIComponent(item.version)}','${item.file.download.replace(/'/g,'%27')}',${filesEnc})">Prompt Studio</button><button class="action-btn" onclick="openFocusedCompare('${item.file.download.replace(/'/g,'%27')}','${item.agent.replace(/'/g,'%27')}','${item.version.replace(/'/g,'%27')}')">Expand</button><a href="${item.file.url}" target="_blank" class="action-btn">View Code</a></div></div><div class="compare-frame-wrap"><div class="compare-device-frame desktop"><iframe sandbox="allow-same-origin"></iframe></div></div><div class="compare-deploy-bar" id="${panelId}-bar" style="display:none"><span class="compare-deploy-badge idle" id="${panelId}-badge"><span class="compare-deploy-dot"></span><span id="${panelId}-badge-text">Ready</span></span><span class="compare-deploy-status" id="${panelId}-status"></span></div>`;
     grid.appendChild(panel);
@@ -919,12 +923,14 @@ async function deployToN8n(domain, versionName, filePath, fileName, btn){
     btn.textContent=original;
   }
 }
-async function deployVersionToN8n(domainEnc, agentEnc, versionEnc, workflowFiles, btn, panelId){
+async function deployVersionToN8n(domainEnc, agentEnc, versionEnc, workflowFilesEnc, btn, panelId){
   const domain=decodeURIComponent(domainEnc||'');
   const agent=decodeURIComponent(agentEnc||'');
   const versionName=decodeURIComponent(versionEnc||'');
-  // workflowFiles is already parsed array passed via JSON.stringify in the template
-  const files=Array.isArray(workflowFiles)?workflowFiles:[];
+  // workflowFiles is URI-encoded JSON string
+  let files=[];
+  try{files=JSON.parse(decodeURIComponent(workflowFilesEnc||'[]'));}catch(e){}
+  if(!Array.isArray(files))files=[];
   if(!files.length){alert('No workflow JSON files found in this version.');return;}
   if(!confirm(`Deploy ${files.length} workflow file(s) from ${agent} (${versionName}) to n8n for ${domain}?`))return;
 
@@ -1290,8 +1296,8 @@ async function loadDashboard(){
         const ext=f.name.split('.').pop().toLowerCase();
         const cls=ext==='html'?'html':ext==='txt'?'txt':'json';
         const label=ext.toUpperCase();
-        const _fCtx=JSON.stringify({domain:p.name,agentName:detectAgent(v.name),versionName:v.name,fileManifest:v.files}).replace(/'/g,'%27');
-        const previewBtn=cls==='html'?`<button class="action-btn" onclick="event.preventDefault();event.stopPropagation();openPreview('${f.download}','${p.name} — ${f.name}',${_fCtx})" style="border-color:var(--purple);color:var(--purple)">&#9654; Preview</button>`:'';
+        const _fCtxEnc=encodeURIComponent(JSON.stringify({domain:p.name,agentName:detectAgent(v.name),versionName:v.name,fileManifest:v.files}));
+        const previewBtn=cls==='html'?`<button class="action-btn" onclick="event.preventDefault();event.stopPropagation();openPreview('${f.download}','${p.name} — ${f.name}','${_fCtxEnc}')" style="border-color:var(--purple);color:var(--purple)">&#9654; Preview</button>`:'';
         const deployBtn=cls==='json'&&/workflow/i.test(f.name)?`<button class="action-btn success" onclick="event.preventDefault();event.stopPropagation();deployToN8n('${encodeURIComponent(p.name)}','${encodeURIComponent(v.name)}','${encodeURIComponent(f.path)}','${encodeURIComponent(f.name)}',this)">Deploy to n8n</button>`:'';
         filesHTML+=`<div class="file-row">
           <div class="file-badge ${cls}">${label}</div>
@@ -1309,14 +1315,14 @@ async function loadDashboard(){
     });
     versionsHTML=Object.entries(versionsByAgent).map(([agentName,sections])=>`<div class="agent-group"><div class="agent-group-header"><strong>${agentName}</strong><span class="agent-group-badge">${sections.length} version${sections.length===1?'':'s'}</span></div>${sections.join('')}</div>`).join('');
 
-    const previewCTA=latestHtmlUrl?`<button class="preview-cta primary-accent" onclick="event.stopPropagation();openPreview('${latestHtmlUrl}','${latestHtmlName}',${_previewCtx})"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="5 3 19 12 5 21 5 3"/></svg>Preview</button>`:'';
-    const compareCandidates=compareCandidatesForProject(p.name);
-    const compareCTA=compareCandidates.length>1?`<button class="preview-cta" onclick="event.stopPropagation();openCompare('${p.name}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M10 3H3v7h7V3zM21 14h-7v7h7v-7zM21 3h-7v7h7V3zM10 14H3v7h7v-7z"/></svg>Compare agents</button>`:'';
     const _psAgent=latest?detectAgent(latest.name):'Agent';
     const _psVersion=latest?latest.name:'';
     const _psFiles=latest?latest.files.map(f=>({name:f.name,path:f.path,download:f.download,url:f.url,size:f.size})):[];
     const _psFilesEnc=encodeURIComponent(JSON.stringify(_psFiles));
-    const _previewCtx=JSON.stringify({domain:p.name,agentName:_psAgent,versionName:_psVersion,fileManifest:_psFiles}).replace(/'/g,'%27');
+    const _previewCtxEnc=encodeURIComponent(JSON.stringify({domain:p.name,agentName:_psAgent,versionName:_psVersion,fileManifest:_psFiles}));
+    const previewCTA=latestHtmlUrl?`<button class="preview-cta primary-accent" onclick="event.stopPropagation();openPreview('${latestHtmlUrl}','${latestHtmlName}','${_previewCtxEnc}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="5 3 19 12 5 21 5 3"/></svg>Preview</button>`:'';
+    const compareCandidates=compareCandidatesForProject(p.name);
+    const compareCTA=compareCandidates.length>1?`<button class="preview-cta" onclick="event.stopPropagation();openCompare('${p.name}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M10 3H3v7h7V3zM21 14h-7v7h7v-7zM21 3h-7v7h7V3zM10 14H3v7h7v-7z"/></svg>Compare agents</button>`:'';
     const promptStudioCTA=latestHtmlUrl?`<button class="preview-cta ps-cta" onclick="event.stopPropagation();openPromptStudio('${encodeURIComponent(p.name)}','${encodeURIComponent(_psAgent)}','${encodeURIComponent(_psVersion)}','${latestHtmlUrl.replace(/'/g,"%27")}',${_psFilesEnc})"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" style="width:13px;height:13px"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 1 1 3 3L7 19l-4 1 1-4Z"/></svg>Prompt Studio</button>`:'';
 
     const latestLabel=latestDate||'Pending sync';
