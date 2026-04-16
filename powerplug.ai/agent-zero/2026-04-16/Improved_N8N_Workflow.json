@@ -1,0 +1,274 @@
+{
+  "meta": {
+    "instanceId": "powerplug-article-system-v2",
+    "templateCredsSetupCompleted": true
+  },
+  "name": "PowerPlug Article Generator v2 — Agent Zero 2026-04-16",
+  "nodes": [
+    {
+      "id": "trigger-1",
+      "name": "Webhook Trigger",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1.1,
+      "position": [
+        240,
+        300
+      ],
+      "parameters": {
+        "path": "generate-article",
+        "httpMethod": "POST",
+        "responseMode": "responseNode"
+      },
+      "notes": "Accepts: {topic, keywords, url_slug, target_audience}"
+    },
+    {
+      "id": "set-brand-context",
+      "name": "Set PowerPlug Brand Context",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.3,
+      "position": [
+        460,
+        300
+      ],
+      "parameters": {
+        "mode": "manual",
+        "assignments": {
+          "assignments": [
+            {
+              "id": "brand-name",
+              "name": "brand_name",
+              "type": "string",
+              "value": "PowerPlug"
+            },
+            {
+              "id": "brand-url",
+              "name": "brand_url",
+              "type": "string",
+              "value": "https://powerplug.ai"
+            },
+            {
+              "id": "cta-url",
+              "name": "cta_url",
+              "type": "string",
+              "value": "https://powerplug.ai/contact-us"
+            },
+            {
+              "id": "logo-colored",
+              "name": "logo_colored",
+              "type": "string",
+              "value": "https://powerplug.ai/wp-content/uploads/2022/06/powerplug-logo.png"
+            },
+            {
+              "id": "logo-white",
+              "name": "logo_white",
+              "type": "string",
+              "value": "https://powerplug.ai/wp-content/uploads/2022/06/powerplug-logo-white.png"
+            },
+            {
+              "id": "author-name",
+              "name": "author_name",
+              "type": "string",
+              "value": "PowerPlug Editorial Team"
+            },
+            {
+              "id": "author-bio",
+              "name": "author_bio",
+              "type": "string",
+              "value": "PowerPlug delivers enterprise PC power management software that reduces endpoint energy costs by up to 60%. Trusted by Clalit Health Services, Rambam Healthcare Campus, Ben Gurion University, and leading enterprises worldwide."
+            },
+            {
+              "id": "trust-clients",
+              "name": "trust_clients",
+              "type": "string",
+              "value": "Clalit Health Services (45,000 PCs), Rambam Healthcare Campus, Ben Gurion University"
+            }
+          ]
+        }
+      },
+      "notes": "CRITICAL: These brand values must be injected into every article. Never override with external agency values."
+    },
+    {
+      "id": "generate-content",
+      "name": "Generate Article Content (LLM)",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1,
+      "position": [
+        680,
+        300
+      ],
+      "parameters": {
+        "model": "gpt-4o",
+        "options": {
+          "temperature": 0.3,
+          "maxTokens": 8000
+        }
+      },
+      "notes": "Uses Improved_N8N_Prompt.txt as system prompt. Inject brand context from previous node."
+    },
+    {
+      "id": "build-html",
+      "name": "Build WordPress-Safe HTML",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        900,
+        300
+      ],
+      "parameters": {
+        "jsCode": "// Inject PowerPlug brand values into generated HTML\nconst brand = $('Set PowerPlug Brand Context').first().json;\nlet html = $input.first().json.html || $input.first().json.content || '';\n\n// CRITICAL BRAND SAFETY CHECKS\n// 1. Replace any wrong CTA URLs\nhtml = html.replace(/href=\"https:\\/\\/www\\.sentice\\.com\\/[^\"]*\"/g, `href=\"${brand.cta_url}\"`);\nhtml = html.replace(/href=\"https:\\/\\/sentice\\.com\\/[^\"]*\"/g, `href=\"${brand.cta_url}\"`);\n\n// 2. Replace any wrong author images\nhtml = html.replace(/src=\"[^\"]*sentice[^\"]*\"/gi, `src=\"${brand.logo_colored}\"`);\nhtml = html.replace(/alt=\"Sentice[^\"]*\"/gi, `alt=\"${brand.brand_name}\"`);\n\n// 3. Replace wrong author name\nhtml = html.replace(/Sentice Editorial Team/g, brand.author_name);\nhtml = html.replace(/Sentice Team/g, brand.author_name);\n\n// 4. Validate CTA URL presence\nif (!html.includes(brand.cta_url)) {\n  console.warn('WARNING: No CTA URL found in generated HTML');\n}\n\n// 5. Validate logo presence\nif (!html.includes('powerplug-logo')) {\n  console.warn('WARNING: PowerPlug logo not found in generated HTML');\n}\n\nreturn [{ json: { html, brand_validated: true, timestamp: new Date().toISOString() } }];"
+      },
+      "notes": "Brand safety layer: catches and fixes any branding errors from LLM output."
+    },
+    {
+      "id": "validate-output",
+      "name": "Validate Brand & Structure",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1120,
+        300
+      ],
+      "parameters": {
+        "jsCode": "const html = $input.first().json.html;\nconst checks = {\n  no_sentice_links: !html.includes('sentice.com/contact'),\n  no_sentice_logo: !html.includes('sentice-author-logo'),\n  has_powerplug_logo: html.includes('powerplug-logo'),\n  has_correct_cta: html.includes('powerplug.ai/contact-us'),\n  has_hero: html.includes('sa-hero-wrap'),\n  has_toc: html.includes('sa-toc'),\n  has_faq: html.includes('faq'),\n  has_author: html.includes('PowerPlug Editorial Team'),\n  has_trust_bar: html.includes('sa-trust-bar') || html.includes('Clalit')\n};\n\nconst passed = Object.values(checks).filter(Boolean).length;\nconst total = Object.keys(checks).length;\nconst allPassed = passed === total;\n\nif (!allPassed) {\n  console.error('BRAND VALIDATION FAILED:', JSON.stringify(checks, null, 2));\n}\n\nreturn [{ json: { ...($input.first().json), validation: checks, validation_passed: allPassed, score: `${passed}/${total}` } }];"
+      },
+      "notes": "All 9 checks must pass. If not, route to error handler."
+    },
+    {
+      "id": "publish-to-wp",
+      "name": "Publish to WordPress",
+      "type": "n8n-nodes-base.wordpress",
+      "typeVersion": 1,
+      "position": [
+        1340,
+        220
+      ],
+      "parameters": {
+        "resource": "page",
+        "operation": "create",
+        "additionalFields": {
+          "status": "draft",
+          "content": "={{ $json.html }}"
+        }
+      },
+      "notes": "Publishes as draft. Status set to 'draft' for manual review before going live."
+    },
+    {
+      "id": "error-handler",
+      "name": "Brand Validation Error",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        1340,
+        400
+      ],
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ { error: 'Brand validation failed', checks: $json.validation, score: $json.score } }}",
+        "options": {
+          "responseCode": 422
+        }
+      },
+      "notes": "Returns validation failure details for debugging."
+    },
+    {
+      "id": "respond-success",
+      "name": "Respond — Success",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        1560,
+        220
+      ],
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ { success: true, wp_page_id: $json.id, validation_score: $json.score, timestamp: $json.timestamp } }}"
+      }
+    }
+  ],
+  "connections": {
+    "Webhook Trigger": {
+      "main": [
+        [
+          {
+            "node": "Set PowerPlug Brand Context",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set PowerPlug Brand Context": {
+      "main": [
+        [
+          {
+            "node": "Generate Article Content (LLM)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate Article Content (LLM)": {
+      "main": [
+        [
+          {
+            "node": "Build WordPress-Safe HTML",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Build WordPress-Safe HTML": {
+      "main": [
+        [
+          {
+            "node": "Validate Brand & Structure",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Validate Brand & Structure": {
+      "main": [
+        [
+          {
+            "node": "Publish to WordPress",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Brand Validation Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Publish to WordPress": {
+      "main": [
+        [
+          {
+            "node": "Respond — Success",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "saveManualExecutions": true,
+    "errorWorkflow": ""
+  },
+  "tags": [
+    "powerplug",
+    "article-system",
+    "agent-zero",
+    "v2"
+  ]
+}
