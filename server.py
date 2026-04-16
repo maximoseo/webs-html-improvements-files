@@ -167,6 +167,38 @@ def build_workflow_payload(source, live):
     return payload
 
 
+def _normalize_checklist(raw):
+    """Accept list[str] or list[{label: str}] from the client. Return clean list[str]."""
+    if not raw:
+        return []
+    out = []
+    if isinstance(raw, list):
+        for entry in raw:
+            if entry is None:
+                continue
+            if isinstance(entry, str):
+                s = entry.strip()
+            elif isinstance(entry, dict):
+                s = str(entry.get('label') or entry.get('text') or '').strip()
+            elif isinstance(entry, (int, float, bool)):
+                continue
+            else:
+                s = str(entry).strip()
+            if s:
+                out.append(s)
+    # dedupe while preserving order, cap length defensively
+    seen = set()
+    clean = []
+    for s in out:
+        if s in seen:
+            continue
+        seen.add(s)
+        clean.append(s[:500])
+        if len(clean) >= 60:
+            break
+    return clean
+
+
 def improve_prompt_with_model(payload):
     draft = (payload.get('draftPrompt') or '').strip()
     if not draft:
@@ -176,6 +208,7 @@ def improve_prompt_with_model(payload):
         raise RuntimeError('OPENAI_API_KEY or OPENROUTER_API_KEY is not configured')
     model = os.getenv('PROMPT_IMPROVER_MODEL', 'gpt-5.4')
     current_date = os.getenv('PROMPT_CURRENT_DATE', '2026-04-15')
+    checklist_rules = _normalize_checklist(payload.get('checklist'))
     system = (
         'You are a senior prompt engineer for agentic coding and design workflows. '
         'Rewrite the user draft into a production-ready prompt for the specified agent. '
@@ -184,15 +217,27 @@ def improve_prompt_with_model(payload):
         'and make the prompt directly paste-ready for the named agent. '
         'Mandatory rule: the generated prompt must explicitly require exporting the final improved files into the updated files destination in Obsidian and publishing the same deliverables to the GitHub repo behind https://html-redesign-dashboard.maximo-seo.ai/. '
         'Mandatory rule: the generated prompt must require replacing or updating the existing files for the same project/version path rather than leaving the old current files as the active deliverables when a replacement is intended. '
-        'Mandatory rule: the generated prompt must use the current working date for output-folder/date references and update any stale date references if needed.'
+        'Mandatory rule: the generated prompt must use the current working date for output-folder/date references and update any stale date references if needed. '
+        'If additional mandatory requirements are provided by the user, embed ALL of them verbatim in the generated prompt as a clearly labeled "Additional mandatory requirements" block and verify every item is addressed in the acceptance criteria.'
     )
+    if checklist_rules:
+        bullet_block = '\n'.join(f'- {rule}' for rule in checklist_rules)
+        extra_rules_section = (
+            '\n\nAdditional mandatory requirements for this prompt improvement (selected by the user before Improve was clicked). '
+            'The rewritten prompt MUST explicitly include all of the rules below as hard requirements, '
+            'and the acceptance criteria MUST verify each one:\n'
+            f'{bullet_block}\n'
+        )
+    else:
+        extra_rules_section = ''
     user = (
         f"Target domain: {payload.get('domain') or 'unknown'}\n"
         f"Target agent: {payload.get('agentName') or 'unknown'}\n"
         f"Agent version/context: {payload.get('versionName') or 'unknown'}\n"
         f"Current required working date: {current_date}\n\n"
         'User draft prompt:\n'
-        f'{draft}\n\n'
+        f'{draft}\n'
+        f'{extra_rules_section}\n'
         'Rewrite it so it is optimized for the named agent and suitable for dashboard-driven redesign review work. '
         'The final output must be paste-ready plain-text markdown. '
         'It must include a mandatory delivery/publish section that says to upload the resulting files into updated files in Obsidian and into the GitHub repo/dashboard path for this same project, replacing the currently active same-project files when appropriate. '

@@ -203,6 +203,42 @@ a:hover{color:var(--gold-light)}
 .prompt-status{font-size:12px;color:var(--muted)}
 .prompt-preview-wrap{flex:1;min-height:0;border:1px solid var(--border);border-radius:12px;overflow:hidden;background:#fff}
 .prompt-preview-frame{width:100%;height:100%;border:none;background:#fff}
+/* Pre-Improve Checklist (Additional Improvement Rules) */
+#prompt-modal .prompt-panel:first-child .prompt-textarea{min-height:180px}
+.checklist-wrap{border:1px solid var(--border);border-radius:12px;background:var(--surface);display:flex;flex-direction:column;flex:0 0 auto;max-height:42px;overflow:hidden;transition:max-height .25s ease}
+.checklist-wrap.expanded{max-height:48vh}
+.checklist-header{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 14px;background:rgba(255,255,255,0.02);cursor:pointer;user-select:none;border-bottom:1px solid transparent}
+.checklist-wrap.expanded .checklist-header{border-bottom-color:var(--border)}
+.checklist-header-left{display:flex;align-items:center;gap:10px;min-width:0;flex:1}
+.checklist-title{font-size:11px;font-weight:800;letter-spacing:.6px;text-transform:uppercase;color:var(--text-secondary);white-space:nowrap}
+.checklist-count-badge{display:inline-flex;align-items:center;padding:3px 9px;border-radius:999px;font-size:10px;font-weight:800;background:rgba(201,149,42,0.14);color:#d4a84a;border:1px solid rgba(201,149,42,0.35);white-space:nowrap}
+.checklist-count-badge.zero{background:rgba(255,255,255,0.04);color:var(--muted);border-color:var(--border)}
+.checklist-header-actions{display:flex;align-items:center;gap:6px;flex-shrink:0}
+.checklist-header-btn{border:1px solid var(--border);background:var(--bg);color:var(--text-secondary);border-radius:8px;padding:5px 9px;font-size:10px;font-weight:700;cursor:pointer;letter-spacing:.3px;text-transform:uppercase;transition:color .12s,border-color .12s}
+.checklist-header-btn:hover{color:var(--text);border-color:rgba(201,149,42,0.5)}
+.checklist-chevron{width:14px;height:14px;color:var(--muted);transition:transform .2s;flex-shrink:0}
+.checklist-wrap.expanded .checklist-chevron{transform:rotate(180deg)}
+.checklist-body{display:none;flex-direction:column;gap:10px;padding:10px 12px 12px;overflow:auto;min-height:0}
+.checklist-wrap.expanded .checklist-body{display:flex}
+.checklist-filter{position:relative}
+.checklist-filter input{width:100%;padding:7px 10px 7px 30px;border:1px solid var(--border);border-radius:8px;background:var(--bg);color:var(--text);font-size:12px;outline:none}
+.checklist-filter input:focus{border-color:rgba(201,149,42,0.5)}
+.checklist-filter::before{content:'⌕';position:absolute;left:10px;top:50%;transform:translateY(-50%);color:var(--muted);font-size:13px;pointer-events:none}
+.checklist-groups{display:flex;flex-direction:column;gap:10px}
+.checklist-group{border:1px solid var(--border);border-radius:10px;padding:10px 12px 8px;background:rgba(255,255,255,0.015)}
+.checklist-group[data-empty="true"]{display:none}
+.checklist-group-title{font-size:10px;font-weight:800;letter-spacing:.7px;text-transform:uppercase;color:#d4a84a;margin-bottom:8px}
+.checklist-items{display:flex;flex-direction:column;gap:2px}
+.checklist-item{display:flex;align-items:flex-start;gap:9px;padding:6px 8px;border-radius:7px;cursor:pointer;transition:background .12s}
+.checklist-item:hover{background:rgba(255,255,255,0.04)}
+.checklist-item[hidden]{display:none}
+.checklist-item input[type=checkbox]{appearance:none;-webkit-appearance:none;width:15px;height:15px;flex-shrink:0;margin:1px 0 0;border:1.5px solid var(--border);border-radius:4px;background:var(--bg);cursor:pointer;position:relative;transition:border-color .15s,background .15s}
+.checklist-item input[type=checkbox]:hover{border-color:rgba(201,149,42,0.6)}
+.checklist-item input[type=checkbox]:checked{background:#C9952A;border-color:#C9952A}
+.checklist-item input[type=checkbox]:checked::after{content:'';position:absolute;left:3px;top:0;width:5px;height:9px;border:solid #111;border-width:0 2px 2px 0;transform:rotate(45deg)}
+.checklist-item span{font-size:12px;line-height:1.4;color:var(--text-secondary)}
+.checklist-item input[type=checkbox]:checked ~ span{color:var(--text)}
+@media(max-width:900px){.checklist-wrap.expanded{max-height:55vh}.checklist-header{padding:10px 12px}.checklist-title{font-size:10px}.checklist-item span{font-size:11.5px}}
 .deploy-status-panel{position:fixed;right:12px;bottom:12px;z-index:900;width:min(280px,calc(100vw - 24px));background:rgba(18,19,22,0.92);border:1px solid rgba(255,255,255,0.07);border-radius:12px;box-shadow:0 14px 36px rgba(0,0,0,0.34);backdrop-filter:blur(10px);overflow:hidden}
 #preview-modal.open ~ #deploy-status-panel,
 #compare-modal.open ~ #deploy-status-panel,
@@ -416,9 +452,26 @@ a:hover{color:var(--gold-light)}
     <div class="prompt-panel">
       <div class="prompt-label">Your draft prompt</div>
       <textarea id="prompt-draft" class="prompt-textarea" placeholder="Describe what you want this specific agent to change, fix, improve, or regenerate."></textarea>
+      <div class="checklist-wrap" id="checklist-wrap">
+        <div class="checklist-header" onclick="toggleChecklist(event)">
+          <div class="checklist-header-left">
+            <div class="checklist-title">Additional Improvement Rules</div>
+            <span class="checklist-count-badge zero" id="checklist-count">0 selected</span>
+          </div>
+          <div class="checklist-header-actions">
+            <button type="button" class="checklist-header-btn" onclick="event.stopPropagation();selectAllChecklist(true)">Select all</button>
+            <button type="button" class="checklist-header-btn" onclick="event.stopPropagation();selectAllChecklist(false)">Clear</button>
+            <svg class="checklist-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+          </div>
+        </div>
+        <div class="checklist-body">
+          <div class="checklist-filter"><input type="text" id="checklist-filter-input" placeholder="Filter rules..." oninput="filterChecklist(this.value)"></div>
+          <div class="checklist-groups" id="checklist-groups"></div>
+        </div>
+      </div>
       <div class="prompt-actions">
         <button id="prompt-improve-btn" class="action-btn success" onclick="improvePrompt(this)">Improve with GPT-5.4</button>
-        <span id="prompt-status" class="prompt-status">Write a draft prompt, then improve it into a paste-ready markdown prompt.</span>
+        <span id="prompt-status" class="prompt-status">Pick any pre-improve rules, then improve into a paste-ready markdown prompt.</span>
       </div>
     </div>
     <div class="prompt-panel">
@@ -617,13 +670,18 @@ async function improvePrompt(btn){
   const original=btn.textContent;
   btn.disabled=true;
   btn.textContent='Improving...';
-  status.textContent='Improving prompt with GPT-5.4...';
+  const selected=getSelectedChecklistItems();
+  const ruleLabels=selected.map(s=>s.label);
+  status.textContent=selected.length
+    ? `Improving with GPT-5.4 + ${selected.length} extra rule${selected.length===1?'':'s'}...`
+    : 'Improving prompt with GPT-5.4...';
   try{
-    const res=await fetch('/api/prompt/improve',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({...promptStudioContext,draftPrompt:draft})});
+    const res=await fetch('/api/prompt/improve',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({...promptStudioContext,draftPrompt:draft,checklist:ruleLabels})});
     const data=await res.json();
     if(!res.ok||!data.ok) throw new Error(data.error||'Prompt improvement failed');
     output.value=data.content||'';
-    status.textContent=`Ready — improved with ${data.model||'GPT-5.4'}.`;
+    const appliedNote=selected.length ? ` (+${selected.length} extra rule${selected.length===1?'':'s'} applied)` : '';
+    status.textContent=`Ready — improved with ${data.model||'GPT-5.4'}${appliedNote}.`;
   }catch(err){
     status.textContent=err.message||'Prompt improvement failed.';
   }finally{
@@ -696,6 +754,129 @@ async function deployToN8n(domain, versionName, filePath, fileName, btn){
 }
 document.addEventListener('keydown',e=>{if(e.key==='Escape'){closePreview();closeCompare();closeFocusedCompare();closePromptStudio();}});
 renderDeployJobs();
+
+// ── Pre-Improve Checklist (Additional Improvement Rules) ──
+// Edit this list to extend the checklist. Selected labels are injected into
+// the improvement prompt before the model runs.
+const CHECKLIST_GROUPS=[
+  {id:'author',title:'Author Section',items:[
+    {id:'author-real-social',label:'Add real social links (real company social accounts) in the About the Author section.'},
+    {id:'author-logo-home',label:'Ensure the logo in the About the Author section links to the site homepage.'},
+    {id:'author-professional',label:'Make the About the Author section look professional, branded, and trustworthy.'},
+  ]},
+  {id:'toc-faq',title:'TOC / FAQ',items:[
+    {id:'toc-no-numbers',label:'Remove numbers inside TOC headings.'},
+    {id:'toc-early-placement',label:'Place the TOC near the beginning of the article — not the very first element, and no later than after the first paragraph or first image.'},
+    {id:'toc-collapsed-start',label:'TOC and FAQ must start collapsed and open/close correctly in both the HTML template and the live WordPress site.'},
+    {id:'toc-clean-design',label:'Make the FAQ and TOC design clean, modern, and visually consistent with the site brand.'},
+  ]},
+  {id:'cta',title:'CTA / Conversion',items:[
+    {id:'cta-mid-article',label:'Add extra CTA elements in the middle of the article to encourage contacting the company.'},
+    {id:'cta-end-article',label:'Add a stronger CTA block near the end of the article.'},
+    {id:'cta-contact-elements',label:'Add missing contact-focused conversion elements where relevant.'},
+  ]},
+  {id:'content',title:'Content Structure',items:[
+    {id:'content-tips-howto',label:'Weave relevant Tips, How-To, and Did You Know blocks naturally throughout the article.'},
+    {id:'content-single-h1',label:'Enforce exactly one H1 in the final article inside the N8N article-building process.'},
+    {id:'content-internal-external-links',label:'Include both internal and external links where appropriate.'},
+    {id:'content-full-not-thin',label:'Every newly generated redesign HTML template must include full content and images — not thin or placeholder content.'},
+    {id:'content-real-structure',label:'Use real content structure — not shallow filler blocks.'},
+  ]},
+  {id:'responsiveness',title:'Responsiveness / WordPress',items:[
+    {id:'resp-wp-safe',label:'Result must be 100% responsive and WordPress-safe (HTML, inline CSS, and any Tailwind-related styling logic, with safe supporting article elements).'},
+    {id:'resp-wp-compat',label:'Keep the final article fully WordPress-compatible — avoid fragile implementations.'},
+    {id:'resp-floating-no-overlap',label:'Floating buttons must not overlap important content on mobile.'},
+    {id:'resp-all-blocks-good',label:'Author, social, CTA, FAQ, TOC, and content blocks must look good on desktop, tablet, and mobile.'},
+  ]},
+  {id:'branding',title:'Branding',items:[
+    {id:'brand-real-logo-colors',label:'Use the correct real company logo and brand colors from the live site.'},
+    {id:'brand-real-trust-signals',label:'Use real trust signals — real reviews, real company information, real business details — when available.'},
+  ]},
+  {id:'visual',title:'Visual Polish',items:[
+    {id:'visual-hover-effects',label:'Add hover effects to CTA buttons, TOC items, FAQ items, and social buttons. Social hover states use the relevant social network color. Animate TOC/FAQ icons on open/close.'},
+    {id:'visual-readability',label:'Improve readability — width, spacing, typography hierarchy, and section rhythm.'},
+    {id:'visual-alignment',label:'Align all buttons, icons, and interactive elements consistently.'},
+    {id:'visual-no-low-contrast',label:'Avoid low-contrast hover states, icons, backgrounds, and links.'},
+    {id:'visual-images-ok',label:'Ensure all images render correctly — not broken, cropped badly, or stretched.'},
+    {id:'visual-premium-not-generic',label:'Final layout must look premium and clean — not generic or obviously AI-generated.'},
+    {id:'visual-balanced-sections',label:'Balance internal sections — no oversized gaps or cramped areas.'},
+    {id:'visual-accessible-states',label:'Keep links, buttons, and hover states accessible and readable in all states.'},
+  ]},
+  {id:'rtl',title:'RTL / Hebrew',items:[
+    {id:'rtl-icon-after-text',label:'RTL/Hebrew: place TOC/FAQ icons after the text on the same line in a fixed consistent position. Apply the same-line alignment to CTA and floating buttons with icon+text. Hover color changes must never make text unreadable against the background.'},
+  ]},
+];
+const CHECKLIST_STORAGE_KEY='promptStudioChecklist.v1';
+function renderChecklist(){
+  const container=document.getElementById('checklist-groups');
+  if(!container) return;
+  const esc=s=>String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  container.innerHTML=CHECKLIST_GROUPS.map(g=>
+    `<div class="checklist-group" data-group="${esc(g.id)}" data-empty="false"><div class="checklist-group-title">${esc(g.title)}</div><div class="checklist-items">${g.items.map(it=>
+      `<label class="checklist-item" data-id="${esc(it.id)}"><input type="checkbox" data-id="${esc(it.id)}" onchange="updateChecklistCount()"><span>${esc(it.label)}</span></label>`
+    ).join('')}</div></div>`
+  ).join('');
+  restoreChecklistState();
+  updateChecklistCount();
+}
+function toggleChecklist(e){
+  if(e&&e.target&&e.target.closest('.checklist-header-btn')) return;
+  document.getElementById('checklist-wrap').classList.toggle('expanded');
+}
+function selectAllChecklist(select){
+  document.querySelectorAll('#checklist-groups .checklist-item').forEach(item=>{
+    if(item.hidden) return;
+    const cb=item.querySelector('input[type=checkbox]');
+    if(cb) cb.checked=!!select;
+  });
+  updateChecklistCount();
+}
+function filterChecklist(q){
+  const needle=(q||'').trim().toLowerCase();
+  document.querySelectorAll('#checklist-groups .checklist-group').forEach(group=>{
+    let visible=0;
+    group.querySelectorAll('.checklist-item').forEach(item=>{
+      const text=item.textContent.toLowerCase();
+      const match=!needle || text.includes(needle);
+      item.hidden=!match;
+      if(match) visible++;
+    });
+    group.setAttribute('data-empty', visible===0 ? 'true' : 'false');
+  });
+}
+function getSelectedChecklistItems(){
+  const labelById={};
+  CHECKLIST_GROUPS.forEach(g=>g.items.forEach(it=>{labelById[it.id]=it.label;}));
+  return Array.from(document.querySelectorAll('#checklist-groups input[type=checkbox]:checked'))
+    .map(cb=>({id:cb.dataset.id, label:labelById[cb.dataset.id]||''}))
+    .filter(x=>x.label);
+}
+function updateChecklistCount(){
+  const selected=getSelectedChecklistItems();
+  const badge=document.getElementById('checklist-count');
+  if(badge){
+    badge.textContent=`${selected.length} selected`;
+    badge.classList.toggle('zero', selected.length===0);
+  }
+  persistChecklistState();
+}
+function persistChecklistState(){
+  try{
+    const ids=Array.from(document.querySelectorAll('#checklist-groups input[type=checkbox]:checked')).map(cb=>cb.dataset.id);
+    localStorage.setItem(CHECKLIST_STORAGE_KEY, JSON.stringify(ids));
+  }catch(e){}
+}
+function restoreChecklistState(){
+  try{
+    const raw=localStorage.getItem(CHECKLIST_STORAGE_KEY);
+    if(!raw) return;
+    const ids=new Set(JSON.parse(raw)||[]);
+    document.querySelectorAll('#checklist-groups input[type=checkbox]').forEach(cb=>{
+      if(ids.has(cb.dataset.id)) cb.checked=true;
+    });
+  }catch(e){}
+}
+renderChecklist();
 
 function setView(mode,btn){
   document.getElementById('projects-grid').className='projects-grid'+(mode==='list'?' list-view':'');
