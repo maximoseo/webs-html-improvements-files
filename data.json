@@ -1,6 +1,6 @@
 {
-  "sha": "607ea90342d8e54bdea232c5c6e9f246136fd766",
-  "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/607ea90342d8e54bdea232c5c6e9f246136fd766",
+  "sha": "877eceb6c7a95a622a465a0fbca072937521a717",
+  "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/877eceb6c7a95a622a465a0fbca072937521a717",
   "tree": [
     {
       "path": ".dockerignore",
@@ -144,9 +144,9 @@
       "path": "data.json",
       "mode": "100644",
       "type": "blob",
-      "sha": "54fbf4fce17badc29c5f4157a343c7cc6c7344e6",
-      "size": 7317,
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/54fbf4fce17badc29c5f4157a343c7cc6c7344e6"
+      "sha": "93a99d60baa8af1a03b00192232a3a600348f53f",
+      "size": 56927,
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/93a99d60baa8af1a03b00192232a3a600348f53f"
     },
     {
       "path": "dtapet-project",
@@ -916,8 +916,8 @@
       "path": "powerplug.ai",
       "mode": "040000",
       "type": "tree",
-      "sha": "29ab183532715ca8a248a925b98b9c7c264d9b75",
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/29ab183532715ca8a248a925b98b9c7c264d9b75"
+      "sha": "53d82644b2be7ac676614b585fa63a98fdcd7970",
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/53d82644b2be7ac676614b585fa63a98fdcd7970"
     },
     {
       "path": "powerplug.ai/CLAUDE CODE (Tim Claw Max)",
@@ -1231,39 +1231,63 @@
       "path": "powerplug.ai/gemini",
       "mode": "040000",
       "type": "tree",
-      "sha": "3554717989febb29c142177eac921faed3722e96",
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/3554717989febb29c142177eac921faed3722e96"
+      "sha": "50c0fbd769d36bf05f1ce8855c1ad1864f676492",
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/50c0fbd769d36bf05f1ce8855c1ad1864f676492"
     },
     {
       "path": "powerplug.ai/gemini/2026-04-17",
       "mode": "040000",
       "type": "tree",
-      "sha": "485ccd73b82e2a2ea52102db1b546c57f91ee65c",
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/485ccd73b82e2a2ea52102db1b546c57f91ee65c"
+      "sha": "15ec806782e583217b24be41a593478a6f19473b",
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/15ec806782e583217b24be41a593478a6f19473b"
     },
     {
       "path": "powerplug.ai/gemini/2026-04-17/Improved_HTML_Template-gemini-2026-04-17.html",
       "mode": "100644",
       "type": "blob",
-      "sha": "9cb4e0f6e8ce7a47542cba2c8b110f3b48917211",
-      "size": 141231,
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/9cb4e0f6e8ce7a47542cba2c8b110f3b48917211"
+      "sha": "8f6a6aaa7b0597d586ee60405e3b4687d555e4a6",
+      "size": 44596,
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/8f6a6aaa7b0597d586ee60405e3b4687d555e4a6"
     },
     {
       "path": "powerplug.ai/gemini/2026-04-17/Improved_N8N_Prompt-gemini-2026-04-17.txt",
       "mode": "100644",
       "type": "blob",
-      "sha": "9380ccd13e6755bcaf0253a8cdc72e47fbf920b6",
-      "size": 17363,
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/9380ccd13e6755bcaf0253a8cdc72e47fbf920b6"
+      "sha": "7d4ebf23a57a2949aae3c66763bbdce9e2f3ee97",
+      "size": 17425,
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/7d4ebf23a57a2949aae3c66763bbdce9e2f3ee97"
     },
     {
       "path": "powerplug.ai/gemini/2026-04-17/Improved_N8N_Workflow-gemini-2026-04-17.json",
       "mode": "100644",
       "type": "blob",
-      "sha": "fc2827f8fff695e81ef3c476cfd40e5bc05583ef",
-      "size": 147406,
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/fc2827f8fff695e81ef3c476cfd40e5bc05583ef"
+      "sha": "75f76e9283cfe7b9b8181c42f3ae4129286fe977",
+      "size": 129110,
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/75f76e9283cfe7b9b8181c42f3ae4129286fe977"
+    },
+    {
+      "path": "powerplug.ai/gemini/2026-04-17/SOURCE-MAP-2026-04-15.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "ef9872f85d95d549199400cf833b06d08e7bc855",
+      "size": 985,
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/ef9872f85d95d549199400cf833b06d08e7bc855"
+    },
+    {
+      "path": "powerplug.ai/gemini/2026-04-17/SUMMARY-2026-04-15.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "d99fdcead72ff48a438ac65c0479993b0c6c0b68",
+      "size": 1164,
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/d99fdcead72ff48a438ac65c0479993b0c6c0b68"
+    },
+    {
+      "path": "powerplug.ai/gemini/2026-04-17/VALIDATION-NOTE-2026-04-15.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "5cb73d881fc6cb2592ef66fc93a6315b39cf47a0",
+      "size": 1109,
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/5cb73d881fc6cb2592ef66fc93a6315b39cf47a0"
     },
     {
       "path": "prompts",
