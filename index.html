@@ -932,10 +932,10 @@ img,svg,video,canvas{max-width:100%;height:auto}
 .palette-extractor-row button.action-btn.is-running{background:linear-gradient(180deg,#d92b2b,#b82323) !important;border-color:#b82323 !important;color:#fff !important}
 /* Escape-key hint badge when any action is running */
 .prompt-modal .prompt-actions .esc-hint{display:none;font-size:11px;color:rgba(255,255,255,0.55);background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);padding:3px 8px;border-radius:6px;font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;margin-left:4px}
-.prompt-modal.any-running .prompt-actions .esc-hint{display:inline-flex;align-items:center;gap:4px}
+#prompt-modal.any-running .prompt-actions .esc-hint,.prompt-modal.any-running .prompt-actions .esc-hint{display:inline-flex;align-items:center;gap:4px}
 /* Global stop-all button */
 .prompt-modal #prompt-stop-all-btn{display:none}
-.prompt-modal.any-running #prompt-stop-all-btn{display:inline-flex}
+#prompt-modal.any-running #prompt-stop-all-btn,.prompt-modal.any-running #prompt-stop-all-btn{display:inline-flex}
 </style>
 </head>
 <body>
