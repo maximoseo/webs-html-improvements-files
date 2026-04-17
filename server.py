@@ -1,8 +1,12 @@
 #!/usr/bin/env python3
+import base64
+import concurrent.futures
 import json
 import mimetypes
 import os
 import posixpath
+import threading
+import time
 import urllib.error
 import urllib.parse
 import urllib.request
@@ -199,6 +203,239 @@ def _normalize_checklist(raw):
     return clean
 
 
+
+BRAINSTORM_MODELS = [
+    {"id": "google/gemini-3.1-pro-preview",   "label": "Gemini 3 Pro"},
+    {"id": "anthropic/claude-opus-4.7",       "label": "Claude Opus 4.7"},
+    {"id": "openai/gpt-5.4",                  "label": "GPT-5.4"},
+    {"id": "minimax/minimax-m2.7",            "label": "MiniMax M2.7"},
+    {"id": "moonshotai/kimi-k2.5",            "label": "Kimi K2.5"},
+    {"id": "z-ai/glm-5.1",                    "label": "GLM 5.1"},
+]
+SYNTH_MODEL = os.getenv("PROMPT_SYNTH_MODEL", "anthropic/claude-opus-4.7")
+
+
+def _call_one_model(base, headers, model_id, system, user, timeout=180):
+    body = {
+        "model": model_id,
+        "messages": [
+            {"role": "system", "content": system},
+            {"role": "user",   "content": user},
+        ],
+    }
+    try:
+        r = fetch_json(f"{base}/chat/completions", headers=headers, method="POST", body=body, timeout=timeout)
+        choices = r.get("choices") or []
+        content = ""
+        if choices:
+            msg = choices[0].get("message") or {}
+            content = msg.get("content") or ""
+        if isinstance(content, list):
+            content = "".join(p.get("text","") for p in content if isinstance(p, dict))
+        content = str(content).strip()
+        if not content:
+            return {"model": model_id, "ok": False, "error": "empty response"}
+        return {"model": model_id, "ok": True, "content": content}
+    except urllib.error.HTTPError as e:
+        detail = ""
+        try:
+            detail = e.read().decode("utf-8", "replace")[:400]
+        except Exception:
+            pass
+        return {"model": model_id, "ok": False, "error": f"HTTP {e.code}", "detail": detail}
+    except Exception as e:
+        return {"model": model_id, "ok": False, "error": str(e)[:400]}
+
+
+def brainstorm_prompt_multi_model(payload):
+    """Run 6 top LLMs in parallel on the same draft, then synthesize into one final prompt."""
+    draft = (payload.get("draftPrompt") or "").strip()
+    if not draft:
+        raise ValueError("Draft prompt is required")
+    base, headers = prompt_headers()
+    if not headers:
+        raise RuntimeError("OPENAI_API_KEY or OPENROUTER_API_KEY is not configured")
+
+    current_date = os.getenv("PROMPT_CURRENT_DATE", "2026-04-17")
+    checklist_rules = _normalize_checklist(payload.get("checklist"))
+    domain = payload.get("domain") or "unknown"
+    agent_name = payload.get("agentName") or "unknown"
+    version_name = payload.get("versionName") or "unknown"
+    file_manifest = payload.get("fileManifest") or []
+
+    # Build manifest summary for model context
+    manifest_lines = []
+    for f in file_manifest[:40]:
+        name = f.get("name","")
+        path = f.get("path","")
+        if name:
+            manifest_lines.append(f"- {name}  (repo path: {path})")
+    manifest_block = "\n".join(manifest_lines) if manifest_lines else "(no files provided)"
+
+    checklist_block = ""
+    if checklist_rules:
+        checklist_block = "\n".join(f"{i+1}. {r}" for i, r in enumerate(checklist_rules))
+
+    # The system prompt each model sees during the brainstorm round
+    brain_system = (
+        "You are an elite prompt engineer brainstorming the perfect AI-agent prompt for "
+        "a production HTML redesign workflow. You will be given a draft + project context + "
+        "user-selected rules. Produce ONE production-quality rewritten prompt using these sections "
+        "with ## markdown headers IN THIS ORDER:\n"
+        "## Objective\n## Context\n## Specific Requirements\n## Additional Mandatory Rules\n"
+        "## Acceptance Criteria\n## Delivery\n"
+        "All requirements must be numbered, measurable, and concrete. No filler, no 'make it better', "
+        "no vague language. The Delivery section must explicitly require uploading the improved files "
+        "to the GitHub repo behind https://html-redesign-dashboard.maximo-seo.ai/ AND to the local "
+        "Obsidian vault path, replacing old files in the same version folder. "
+        "Every checklist rule the user selected must appear under Additional Mandatory Rules AND be "
+        "verified in Acceptance Criteria. "
+        "Return plain markdown only, no code fences, no preamble."
+    )
+    brain_user = (
+        f"Project domain:   {domain}\n"
+        f"Target agent:     {agent_name}\n"
+        f"Version folder:   {version_name}\n"
+        f"Current date:     {current_date}\n\n"
+        f"--- FILE MANIFEST ---\n{manifest_block}\n--- END MANIFEST ---\n\n"
+        f"{('--- USER CHECKLIST RULES ---\\n' + checklist_block + '\\n--- END CHECKLIST ---\\n\\n') if checklist_block else ''}"
+        f"--- USER DRAFT PROMPT ---\n{draft}\n--- END DRAFT ---\n\n"
+        "Produce the best possible rewritten prompt. Distinguish your work with specificity, measurable "
+        "criteria, and a rock-solid Delivery section that references the real folder paths."
+    )
+
+    results = []
+    with concurrent.futures.ThreadPoolExecutor(max_workers=6) as pool:
+        futures = {
+            pool.submit(_call_one_model, base, headers, m["id"], brain_system, brain_user, 180): m
+            for m in BRAINSTORM_MODELS
+        }
+        for fut in concurrent.futures.as_completed(futures, timeout=240):
+            m = futures[fut]
+            try:
+                r = fut.result()
+            except Exception as e:
+                r = {"model": m["id"], "ok": False, "error": str(e)[:400]}
+            r["label"] = m["label"]
+            results.append(r)
+
+    successes = [r for r in results if r.get("ok") and r.get("content")]
+    if not successes:
+        errors = [{"model": r["model"], "label": r.get("label"), "error": r.get("error"), "detail": r.get("detail","")} for r in results]
+        raise RuntimeError(json.dumps({"code": "all_models_failed", "errors": errors}, ensure_ascii=False))
+
+    # Synthesis step — merge all successful outputs into the perfect final prompt
+    drafts_block = "\n\n".join(
+        f"=== DRAFT FROM {r['label']} ({r['model']}) ===\n{r['content']}\n=== END {r['label']} ==="
+        for r in successes
+    )
+    synth_system = (
+        "You are the head prompt architect. You will be given multiple expert-written versions of the "
+        "same prompt produced by different elite LLMs. Your job is to synthesize ONE FINAL prompt that "
+        "is strictly better than any individual version — pulling in the strongest wording, sharpest "
+        "requirements, and most complete acceptance criteria from each draft, removing duplication, and "
+        "producing a single clean result.\n\n"
+        "Strict rules:\n"
+        "1. Output PLAIN MARKDOWN. No code fences. No 'here is the synthesized prompt' preamble.\n"
+        "2. Keep the exact section order: ## Objective, ## Context, ## Specific Requirements, "
+        "## Additional Mandatory Rules, ## Acceptance Criteria, ## Delivery.\n"
+        "3. Every numbered requirement must map to at least one acceptance criterion.\n"
+        "4. Delivery must include: upload to GitHub repo maximoseo/webs-html-improvements-files "
+        "(folder for the specified domain/version) AND to the Obsidian vault path "
+        "C:\\Obsidian\\HTML REDESIGN\\HTML REDESIGN\\<domain>\\<agent>\\updated files\\<date>\\; "
+        "replace old files in place, do not create parallel folders. Include the exact commit message "
+        "format: feat(<domain>): <summary> — <date>.\n"
+        "5. Use the provided current date for all date references; correct any stale dates from the drafts.\n"
+        "6. Keep the Additional Mandatory Rules section only if user-selected rules exist; otherwise omit it.\n"
+        "7. Style: direct, professional, zero filler. Every bullet is actionable and specific."
+    )
+    synth_user = (
+        f"Project domain:   {domain}\n"
+        f"Target agent:     {agent_name}\n"
+        f"Version folder:   {version_name}\n"
+        f"Current date:     {current_date}\n\n"
+        f"{('--- USER CHECKLIST RULES (MUST all be in the final) ---\\n' + checklist_block + '\\n--- END ---\\n\\n') if checklist_block else ''}"
+        f"--- FILE MANIFEST ---\n{manifest_block}\n--- END MANIFEST ---\n\n"
+        f"--- CANDIDATE DRAFTS FROM MULTIPLE MODELS ---\n{drafts_block}\n--- END CANDIDATES ---\n\n"
+        "Produce the single synthesized final prompt now."
+    )
+
+    synth = _call_one_model(base, headers, SYNTH_MODEL, synth_system, synth_user, timeout=240)
+    if not synth.get("ok") or not synth.get("content"):
+        raise RuntimeError(json.dumps({
+            "code": "synthesis_failed",
+            "synthError": synth.get("error","unknown"),
+            "synthDetail": synth.get("detail",""),
+            "partialModels": [{"model": r["model"], "label": r["label"]} for r in successes],
+        }, ensure_ascii=False))
+
+    return {
+        "ok": True,
+        "finalPrompt": synth["content"],
+        "synthModel": SYNTH_MODEL,
+        "modelsUsed": [{"model": r["model"], "label": r["label"], "chars": len(r["content"])} for r in successes],
+        "modelsFailed": [{"model": r["model"], "label": r.get("label"), "error": r.get("error")} for r in results if not r.get("ok")],
+    }
+
+
+def commit_prompt_to_github(payload):
+    """Commit a single text file (the improved prompt) to the dashboard repo via GitHub Contents API."""
+    token = os.getenv("GITHUB_TOKEN")
+    if not token:
+        raise RuntimeError("GITHUB_TOKEN is not configured on the server")
+    repo_path = (payload.get("path") or "").strip().lstrip("/")
+    content = payload.get("content") or ""
+    message = (payload.get("message") or "chore: update improved prompt").strip()
+    branch = (payload.get("branch") or "main").strip()
+    if not repo_path:
+        raise ValueError("path is required")
+    if not content:
+        raise ValueError("content is required")
+    if ".." in repo_path or repo_path.startswith("/"):
+        raise ValueError("invalid path")
+
+    api_base = f"https://api.github.com/repos/{REPO}/contents/"
+    api_url = api_base + "/".join(urllib.parse.quote(p) for p in repo_path.split("/"))
+    gh_headers = {
+        "Authorization": f"Bearer {token}",
+        "Accept": "application/vnd.github+json",
+        "X-GitHub-Api-Version": "2022-11-28",
+        "User-Agent": "dashboard-commit-bot",
+    }
+
+    # Check for existing sha
+    sha = None
+    try:
+        existing = fetch_json(f"{api_url}?ref={urllib.parse.quote(branch)}", headers=gh_headers, timeout=30)
+        if isinstance(existing, dict) and existing.get("sha"):
+            sha = existing["sha"]
+    except urllib.error.HTTPError as e:
+        if e.code != 404:
+            raise
+
+    body = {
+        "message": message,
+        "content": base64.b64encode(content.encode("utf-8")).decode("ascii"),
+        "branch": branch,
+    }
+    if sha:
+        body["sha"] = sha
+
+    result = fetch_json(api_url, headers=gh_headers, method="PUT", body=body, timeout=60)
+    commit = result.get("commit") or {}
+    contentInfo = result.get("content") or {}
+    return {
+        "ok": True,
+        "path": repo_path,
+        "branch": branch,
+        "replaced": bool(sha),
+        "commitSha": commit.get("sha"),
+        "commitUrl": commit.get("html_url"),
+        "fileUrl": contentInfo.get("html_url"),
+        "downloadUrl": contentInfo.get("download_url"),
+    }
+
+
 def improve_prompt_with_model(payload):
     draft = (payload.get('draftPrompt') or '').strip()
     if not draft:
@@ -375,6 +612,10 @@ class DashboardHandler(BaseHTTPRequestHandler):
                 'ok': True,
                 'n8nConfigured': bool(os.getenv('N8N_API_KEY')),
                 'promptConfigured': bool(os.getenv('OPENAI_API_KEY') or os.getenv('OPENROUTER_API_KEY')),
+                'brainstormConfigured': bool(os.getenv('OPENROUTER_API_KEY') or os.getenv('OPENAI_API_KEY')),
+                'githubCommitConfigured': bool(os.getenv('GITHUB_TOKEN')),
+                'brainstormModels': [{'id': m['id'], 'label': m['label']} for m in BRAINSTORM_MODELS],
+                'synthModel': SYNTH_MODEL,
             })
         if parsed.path == '/api/n8n/status':
             query = urllib.parse.parse_qs(parsed.query)
@@ -412,6 +653,36 @@ class DashboardHandler(BaseHTTPRequestHandler):
             except urllib.error.HTTPError as exc:
                 body = exc.read().decode('utf-8', 'replace')[:1000]
                 return json_response(self, 502, {'ok': False, 'error': f'Model API error {exc.code}', 'details': body})
+            except Exception as exc:
+                return json_response(self, 500, {'ok': False, 'error': str(exc)})
+
+        if parsed.path == '/api/prompt/brainstorm':
+            try:
+                result = brainstorm_prompt_multi_model(payload)
+                return json_response(self, 200, result)
+            except ValueError as exc:
+                return json_response(self, 400, {'ok': False, 'error': str(exc)})
+            except RuntimeError as exc:
+                msg = str(exc)
+                try:
+                    parsed_err = json.loads(msg)
+                    return json_response(self, 502, {'ok': False, 'error': parsed_err})
+                except Exception:
+                    return json_response(self, 503, {'ok': False, 'error': msg})
+            except Exception as exc:
+                return json_response(self, 500, {'ok': False, 'error': str(exc)})
+
+        if parsed.path == '/api/prompt/commit':
+            try:
+                result = commit_prompt_to_github(payload)
+                return json_response(self, 200, result)
+            except ValueError as exc:
+                return json_response(self, 400, {'ok': False, 'error': str(exc)})
+            except RuntimeError as exc:
+                return json_response(self, 503, {'ok': False, 'error': str(exc)})
+            except urllib.error.HTTPError as exc:
+                body = exc.read().decode('utf-8', 'replace')[:1000]
+                return json_response(self, 502, {'ok': False, 'error': f'GitHub API error {exc.code}', 'details': body})
             except Exception as exc:
                 return json_response(self, 500, {'ok': False, 'error': str(exc)})
 

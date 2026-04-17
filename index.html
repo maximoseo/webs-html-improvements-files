@@ -549,6 +549,28 @@ img,svg,video,canvas{max-width:100%;height:auto}
   .project-card{break-inside:avoid;border:1px solid #ccc;box-shadow:none}
 }
 
+/* Prompt studio — brainstorm + sync */
+.action-btn.brainstorm{background:linear-gradient(135deg,rgba(113,112,255,0.22),rgba(198,141,255,0.18));border-color:rgba(180,140,255,0.45);color:#e5dcff}
+.action-btn.brainstorm:hover:not(:disabled){background:linear-gradient(135deg,rgba(113,112,255,0.34),rgba(198,141,255,0.28));border-color:rgba(200,160,255,0.7)}
+.action-btn.brainstorm:disabled{opacity:0.65;cursor:not-allowed}
+.brainstorm-progress{display:none;margin-top:12px;padding:12px 14px;border-radius:12px;background:rgba(113,112,255,0.06);border:1px solid rgba(113,112,255,0.18);font-size:12px;color:var(--text-secondary)}
+.brainstorm-progress.active{display:block}
+.brainstorm-progress-title{font-weight:700;color:#d7dbff;margin-bottom:8px;display:flex;align-items:center;gap:8px}
+.brainstorm-dot{width:8px;height:8px;border-radius:50%;background:var(--gold);animation:bs-pulse 1s ease-in-out infinite}
+@keyframes bs-pulse{0%,100%{opacity:0.3;transform:scale(0.8)}50%{opacity:1;transform:scale(1.1)}}
+.brainstorm-models-list{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+.brainstorm-model-chip{font-size:11px;padding:4px 9px;border-radius:999px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);color:var(--muted);display:inline-flex;align-items:center;gap:5px}
+.brainstorm-model-chip.ok{background:rgba(39,166,68,0.14);color:#7ee19d;border-color:rgba(39,166,68,0.28)}
+.brainstorm-model-chip.err{background:rgba(220,38,38,0.12);color:#ff9aa0;border-color:rgba(220,38,38,0.3)}
+.prompt-sync-panel{display:none;margin-top:12px;padding:14px;border-radius:12px;background:rgba(255,255,255,0.025);border:1px solid rgba(255,255,255,0.08)}
+.prompt-sync-panel.visible{display:block}
+.prompt-sync-title{font-weight:700;font-size:13px;color:var(--text);margin-bottom:10px;display:flex;align-items:center;gap:8px}
+.prompt-sync-row{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:10px}
+.prompt-sync-row .sync-label{font-size:11px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em;min-width:80px}
+.prompt-sync-path{font-family:'SF Mono','Monaco',monospace;font-size:11px;color:#c9d0ff;background:rgba(255,255,255,0.04);padding:6px 10px;border-radius:8px;border:1px solid rgba(255,255,255,0.08);word-break:break-all;flex:1 1 220px}
+.prompt-sync-note{font-size:11px;color:var(--muted);margin-top:6px;line-height:1.5}
+.prompt-sync-note code{font-family:'SF Mono','Monaco',monospace;background:rgba(255,255,255,0.05);padding:1px 6px;border-radius:4px;color:#d7dbff}
+.brainstorm-meta{font-size:11px;color:var(--muted);margin-top:6px}
 </style>
 </head>
 <body>
@@ -709,7 +731,13 @@ img,svg,video,canvas{max-width:100%;height:auto}
       </div>
       <div class="prompt-actions">
         <button id="prompt-improve-btn" class="action-btn success" onclick="improvePrompt(this)">Improve</button>
-        <span id="prompt-status" class="prompt-status">Pick any pre-improve rules, select a model, then click Improve.</span>
+        <button id="prompt-brainstorm-btn" class="action-btn brainstorm" onclick="brainstormPrompt(this)" title="Run 6 top LLMs in parallel and synthesize the best possible prompt"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:13px;height:13px;margin-right:4px;vertical-align:-2px"><circle cx="12" cy="12" r="3"/><circle cx="5" cy="5" r="2"/><circle cx="19" cy="5" r="2"/><circle cx="5" cy="19" r="2"/><circle cx="19" cy="19" r="2"/><line x1="7" y1="6" x2="10" y2="10"/><line x1="17" y1="6" x2="14" y2="10"/><line x1="7" y1="18" x2="10" y2="14"/><line x1="17" y1="18" x2="14" y2="14"/></svg>Brainstorm (6 models)</button>
+        <span id="prompt-status" class="prompt-status">Pick any pre-improve rules, select a model, then click Improve — or use Brainstorm to consult 6 top LLMs.</span>
+      </div>
+      <div id="brainstorm-progress" class="brainstorm-progress">
+        <div class="brainstorm-progress-title"><span class="brainstorm-dot"></span><span id="brainstorm-progress-label">Consulting 6 elite LLMs in parallel...</span></div>
+        <div class="brainstorm-models-list" id="brainstorm-models-list"></div>
+        <div class="brainstorm-meta" id="brainstorm-meta"></div>
       </div>
     </div>
     <div class="prompt-panel">
@@ -717,6 +745,14 @@ img,svg,video,canvas{max-width:100%;height:auto}
       <textarea id="prompt-output" class="prompt-textarea" readonly placeholder="Your improved prompt will appear here."></textarea>
       <div class="prompt-actions">
         <button class="action-btn" onclick="copyImprovedPrompt()">Copy output</button>
+        <button id="prompt-sync-gh-btn" class="action-btn success" onclick="commitPromptToGitHub(this)" style="display:none">&uarr; Sync to GitHub (Render redeploys)</button>
+        <span id="prompt-sync-status" class="prompt-status"></span>
+      </div>
+      <div id="prompt-sync-panel" class="prompt-sync-panel">
+        <div class="prompt-sync-title"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px"><path d="M21 12a9 9 0 0 1-9 9m9-9a9 9 0 0 0-9-9m9 9H3m9 9a9 9 0 0 1-9-9m9 9c2.5-2.5 3.75-5.75 3.75-9S14.5 5.5 12 3m0 18c-2.5-2.5-3.75-5.75-3.75-9S9.5 5.5 12 3"/></svg>Sync destinations</div>
+        <div class="prompt-sync-row"><span class="sync-label">GitHub</span><span class="prompt-sync-path" id="prompt-sync-gh-path">—</span></div>
+        <div class="prompt-sync-row"><span class="sync-label">Obsidian</span><span class="prompt-sync-path" id="prompt-sync-obs-path">—</span><button class="action-btn" onclick="copyObsidianInstructions()" style="font-size:11px;padding:6px 10px">Copy path + content</button></div>
+        <div class="prompt-sync-note">GitHub sync replaces the existing <code>Improved_N8N_Prompt.txt</code> in the project's version folder. Render auto-redeploys within ~40s. For Obsidian: click the button above to copy both the path and the new prompt content to clipboard, then paste into that folder on your PC.</div>
       </div>
     </div>
     <div class="prompt-panel">
@@ -1115,6 +1151,7 @@ async function improvePrompt(btn){
     output.value=data.content||'';
     const appliedNote=selected.length?` · ${selected.length} rule${selected.length===1?'':'s'} applied`:'';
     status.textContent=`Done — ${data.model||modelLabel}${appliedNote}.`;
+    showPromptSyncPanel();
   }catch(err){
     status.textContent=err.message||'Prompt improvement failed.';
   }finally{
@@ -1122,6 +1159,154 @@ async function improvePrompt(btn){
     btn.textContent=original;
   }
 }
+// Brainstorm + Sync helpers — consults 6 top LLMs in parallel + syncs to GitHub
+async function brainstormPrompt(btn){
+  const draft=document.getElementById('prompt-draft').value.trim();
+  const output=document.getElementById('prompt-output');
+  const status=document.getElementById('prompt-status');
+  const progress=document.getElementById('brainstorm-progress');
+  const progressLabel=document.getElementById('brainstorm-progress-label');
+  const chipList=document.getElementById('brainstorm-models-list');
+  const meta=document.getElementById('brainstorm-meta');
+  if(!draft){status.textContent='Please write a draft prompt first.';return;}
+  const BSTORM_MODELS=[
+    {id:'google/gemini-3.1-pro-preview', label:'Gemini 3 Pro'},
+    {id:'anthropic/claude-opus-4.7',     label:'Opus 4.7'},
+    {id:'openai/gpt-5.4',                label:'GPT-5.4'},
+    {id:'minimax/minimax-m2.7',          label:'MiniMax 2.7'},
+    {id:'moonshotai/kimi-k2.5',          label:'Kimi 2.5'},
+    {id:'z-ai/glm-5.1',                  label:'GLM 5.1'},
+  ];
+  const orig=btn.innerHTML;
+  btn.disabled=true;
+  btn.innerHTML='<span class="brainstorm-dot" style="background:#fff"></span> Brainstorming...';
+  document.getElementById('prompt-improve-btn').disabled=true;
+  progress.classList.add('active');
+  progressLabel.textContent='Consulting 6 elite LLMs in parallel...';
+  chipList.innerHTML=BSTORM_MODELS.map(m=>`<span class="brainstorm-model-chip" data-id="${m.id}"><span class="brainstorm-dot" style="width:6px;height:6px"></span>${m.label}</span>`).join('');
+  meta.textContent='This typically takes 45\u201390 seconds. All 6 models run concurrently, then a synthesizer merges the best output.';
+  const t0=Date.now();
+  const selected=getSelectedChecklistItems();
+  const ruleLabels=selected.map(s=>s.label);
+  status.textContent=`Brainstorming with 6 top models${selected.length?' + '+selected.length+' rule'+(selected.length===1?'':'s'):''}...`;
+  try{
+    const res=await fetch('/api/prompt/brainstorm',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({
+      domain:promptStudioContext.domain,
+      agentName:promptStudioContext.agentName,
+      versionName:promptStudioContext.versionName,
+      htmlDownloadUrl:promptStudioContext.htmlDownloadUrl,
+      fileManifest:promptStudioContext.fileManifest,
+      versionPath:promptStudioContext.versionPath,
+      githubRepoBase:promptStudioContext.githubRepoBase,
+      obsidianBase:promptStudioContext.obsidianBase,
+      draftPrompt:draft,
+      checklist:ruleLabels,
+    })});
+    const data=await res.json();
+    if(!res.ok||!data.ok){
+      const msg=(data&&data.error&&typeof data.error==='object')?JSON.stringify(data.error).slice(0,400):(data.error||'Brainstorm failed');
+      throw new Error(msg);
+    }
+    output.value=data.finalPrompt||'';
+    (data.modelsUsed||[]).forEach(m=>{const chip=chipList.querySelector(`[data-id="${m.model}"]`);if(chip){chip.classList.add('ok');chip.innerHTML=`\u2713 ${m.label} <span style="opacity:0.6">\u00b7 ${m.chars}c</span>`}});
+    (data.modelsFailed||[]).forEach(m=>{const chip=chipList.querySelector(`[data-id="${m.model}"]`);if(chip){chip.classList.add('err');chip.innerHTML=`\u2715 ${m.label||m.model}`}});
+    const dt=((Date.now()-t0)/1000).toFixed(1);
+    const okN=(data.modelsUsed||[]).length;
+    const failN=(data.modelsFailed||[]).length;
+    meta.textContent=`Synthesized from ${okN}/${okN+failN} models in ${dt}s \u00b7 synthesizer: ${data.synthModel||'?'}`;
+    progressLabel.textContent='Brainstorm complete \u2014 synthesized final prompt is ready.';
+    status.textContent=`Done \u2014 brainstormed with ${okN} model${okN===1?'':'s'}, synthesized by ${data.synthModel||'synthesizer'}.`;
+    showPromptSyncPanel();
+    showToast(`Brainstorm complete (${okN} models)`,'success');
+  }catch(err){
+    status.textContent=err.message||'Brainstorm failed.';
+    progressLabel.textContent='Brainstorm failed \u2014 see status.';
+    meta.textContent=err.message||'';
+    showToast('Brainstorm failed','error');
+  }finally{
+    btn.disabled=false;
+    btn.innerHTML=orig;
+    document.getElementById('prompt-improve-btn').disabled=false;
+  }
+}
+
+function _promptTxtFileInfo(){
+  // Find the Improved_N8N_Prompt.txt in the current manifest. Fallback: best match on 'prompt' and .txt
+  const files=promptStudioContext.fileManifest||[];
+  let f=files.find(x=>/improved[_\- ]?n8n[_\- ]?prompt/i.test(x.name||'')&&/\.txt$/i.test(x.name||''));
+  if(!f) f=files.find(x=>/prompt/i.test(x.name||'')&&/\.txt$/i.test(x.name||''));
+  if(!f) f=files.find(x=>/\.txt$/i.test(x.name||''));
+  return f||null;
+}
+
+function showPromptSyncPanel(){
+  const panel=document.getElementById('prompt-sync-panel');
+  const btn=document.getElementById('prompt-sync-gh-btn');
+  const ghPath=document.getElementById('prompt-sync-gh-path');
+  const obsPath=document.getElementById('prompt-sync-obs-path');
+  const f=_promptTxtFileInfo();
+  const repo='maximoseo/webs-html-improvements-files';
+  const targetPath=f?f.path:`${promptStudioContext.domain||'<domain>'}/${promptStudioContext.versionName||'<version>'}/Improved_N8N_Prompt.txt`;
+  ghPath.textContent=`${repo}/${targetPath}`;
+  ghPath.dataset.path=targetPath;
+  const obs=(promptStudioContext.obsidianBase||`C:\\Obsidian\\HTML REDESIGN\\HTML REDESIGN\\${promptStudioContext.domain||'<domain>'}\\${promptStudioContext.agentName||'<agent>'}\\updated files`);
+  const today=new Date().toISOString().slice(0,10);
+  obsPath.textContent=`${obs}\\updated files\\${today}\\Improved_N8N_Prompt.txt`;
+  panel.classList.add('visible');
+  btn.style.display='';
+  document.getElementById('prompt-sync-status').textContent='';
+}
+
+async function commitPromptToGitHub(btn){
+  const output=document.getElementById('prompt-output');
+  const content=output.value||'';
+  const statusEl=document.getElementById('prompt-sync-status');
+  if(!content.trim()){showToast('No prompt to sync','warn');return;}
+  const ghPathEl=document.getElementById('prompt-sync-gh-path');
+  const path=ghPathEl.dataset.path||'';
+  if(!path){showToast('Target path missing','error');return;}
+  const domain=promptStudioContext.domain||'project';
+  const today=new Date().toISOString().slice(0,10);
+  const message=`feat(${domain}): brainstorm-improved prompt \u2014 ${today}`;
+  const orig=btn.innerHTML;
+  btn.disabled=true;
+  btn.innerHTML='Syncing...';
+  statusEl.textContent='Committing to GitHub...';
+  try{
+    const res=await fetch('/api/prompt/commit',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({path,content,message,branch:'main'})});
+    const data=await res.json();
+    if(!res.ok||!data.ok){
+      const msg=(data&&data.error&&typeof data.error==='object')?JSON.stringify(data.error).slice(0,400):(data.error||('HTTP '+res.status));
+      throw new Error(msg);
+    }
+    const replaced=data.replaced?'replaced':'created';
+    statusEl.innerHTML=`Synced to GitHub (${replaced}) \u2014 <a href="${data.commitUrl||'#'}" target="_blank" style="color:#d7dbff">${(data.commitSha||'').slice(0,7)}</a>. Render will auto-redeploy in ~40s.`;
+    showToast(`Synced to GitHub (${replaced})`,'success');
+  }catch(err){
+    const msg=err.message||'GitHub sync failed';
+    statusEl.textContent=msg.includes('GITHUB_TOKEN')?'GitHub sync not configured on the server \u2014 add GITHUB_TOKEN to Render env.':msg;
+    showToast('GitHub sync failed','error');
+  }finally{
+    btn.disabled=false;
+    btn.innerHTML=orig;
+  }
+}
+
+async function copyObsidianInstructions(){
+  const content=document.getElementById('prompt-output').value||'';
+  const obsPath=document.getElementById('prompt-sync-obs-path').textContent||'';
+  if(!content.trim()){showToast('No prompt to copy','warn');return;}
+  const block=`# Paste this file to:\n# ${obsPath}\n\n${content}`;
+  try{
+    await navigator.clipboard.writeText(block);
+    showToast('Path + content copied \u2014 paste into Obsidian','success');
+  }catch(e){
+    // fallback
+    const ta=document.createElement('textarea');ta.value=block;document.body.appendChild(ta);ta.select();document.execCommand('copy');ta.remove();
+    showToast('Path + content copied','success');
+  }
+}
+
 function showToast(msg,type){
   const t=document.getElementById('action-toast');
   if(!t)return;
