@@ -1510,7 +1510,7 @@ async function improvePrompt(btn){
     try{ window._improveAbort.abort('user_cancel'); }catch(e){}
     window._improveAbort=null;
     status.textContent='Improvement cancelled.';
-    showToast('Improvement cancelled','warn');
+    showToast('Improvement cancelled','warn'); _syncPromptModalRunningState();
     return;
   }
   output.value='';
@@ -1526,7 +1526,7 @@ async function improvePrompt(btn){
   btn.innerHTML='<span class="btn-spinner" aria-hidden="true"></span>Stop';
   btn.classList.add('is-running');
   btn.title='Click to cancel the current Improve request';
-  window._improveAbort=new AbortController();
+  window._improveAbort=new AbortController(); _syncPromptModalRunningState();
   try{
     const res=await fetch('/api/prompt/improve',{method:'POST',signal:window._improveAbort.signal,headers:{'Content-Type':'application/json'},body:JSON.stringify({
       domain:promptStudioContext.domain,
@@ -1578,7 +1578,7 @@ async function brainstormPrompt(btn){
     status.textContent='Brainstorm cancelled.';
     progressLabel.textContent='Brainstorm cancelled.';
     meta.textContent='Stopped before synthesis completed. Partial results are discarded.';
-    showToast('Brainstorm cancelled','warn');
+    showToast('Brainstorm cancelled','warn'); _syncPromptModalRunningState();
     return;
   }
   output.value='';
@@ -1591,7 +1591,7 @@ async function brainstormPrompt(btn){
     {id:'z-ai/glm-5.1',                  label:'GLM 5.1'},
   ];
   const orig=btn.innerHTML;
-  window._brainstormAbort=new AbortController();
+  window._brainstormAbort=new AbortController(); _syncPromptModalRunningState();
   btn.classList.add('is-running');
   btn.innerHTML='<span class="brainstorm-dot" style="background:#fff"></span> Stop brainstorm';
   btn.title='Click to cancel the running brainstorm';
@@ -1691,7 +1691,7 @@ async function commitPromptToGitHub(btn){
     try{ window._ghSyncAbort.abort('user_cancel'); }catch(e){}
     window._ghSyncAbort=null;
     statusEl.textContent='Sync cancelled.';
-    showToast('Sync cancelled','warn');
+    showToast('Sync cancelled','warn'); _syncPromptModalRunningState();
     return;
   }
   if(!content.trim()){showToast('No prompt to sync','warn');return;}
@@ -1702,7 +1702,7 @@ async function commitPromptToGitHub(btn){
   const today=new Date().toISOString().slice(0,10);
   const message=`feat(${domain}): brainstorm-improved prompt \u2014 ${today}`;
   const orig=btn.innerHTML;
-  window._ghSyncAbort=new AbortController();
+  window._ghSyncAbort=new AbortController(); _syncPromptModalRunningState();
   btn.classList.add('is-running');
   btn.innerHTML='<span class="btn-spinner" aria-hidden="true"></span>Stop sync';
   btn.title='Click to cancel the GitHub sync';
@@ -1760,13 +1760,13 @@ async function extractPaletteFromUrl(btn){
     try{ window._paletteAbort.abort('user_cancel'); }catch(e){}
     window._paletteAbort=null;
     status.textContent='Palette extraction cancelled.';
-    showToast('Palette cancelled','warn');
+    showToast('Palette cancelled','warn'); _syncPromptModalRunningState();
     return;
   }
   if(!url){status.textContent='Paste a URL first.';return;}
   if(!/^https?:\/\//i.test(url)){status.textContent='URL must start with http:// or https://';return;}
   const orig=btn.innerHTML;
-  window._paletteAbort=new AbortController();
+  window._paletteAbort=new AbortController(); _syncPromptModalRunningState();
   btn.classList.add('is-running');
   btn.innerHTML='<span class="btn-spinner" aria-hidden="true"></span>Stop';
   btn.title='Click to cancel palette extraction';
