@@ -585,6 +585,61 @@ img,svg,video,canvas{max-width:100%;height:auto}
 .palette-neutrals{opacity:0.7;margin-top:6px}
 .palette-snippet{margin-top:10px;padding:10px 12px;border-radius:8px;background:#0b0b12;border:1px solid rgba(255,255,255,0.06);font-family:'SF Mono','Monaco',monospace;font-size:11px;color:#d7dbff;white-space:pre-wrap;word-break:break-word;max-height:180px;overflow:auto}
 .palette-actions{display:flex;gap:8px;margin-top:8px;flex-wrap:wrap}
+/* Prompt Studio — scroll + sticky action bar fix (2026-04-17) */
+.prompt-container{overflow:hidden !important}
+.prompt-panel{min-height:0;overflow-y:auto;overflow-x:hidden;padding-bottom:76px;position:relative;scrollbar-width:thin;scrollbar-color:rgba(255,255,255,0.2) transparent}
+.prompt-panel::-webkit-scrollbar{width:8px}
+.prompt-panel::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.14);border-radius:999px}
+.prompt-panel::-webkit-scrollbar-thumb:hover{background:rgba(255,255,255,0.24)}
+/* Sticky primary action bar inside the draft panel — always keeps Improve + Brainstorm visible */
+.prompt-panel > .prompt-actions{position:sticky;bottom:0;margin:0 -12px -10px;padding:10px 12px;background:linear-gradient(0deg,rgba(16,15,24,0.96) 60%,rgba(16,15,24,0.78));backdrop-filter:blur(8px);border-top:1px solid rgba(255,255,255,0.06);z-index:3;gap:8px;flex-wrap:wrap;align-items:center}
+.prompt-panel > .prompt-actions .prompt-status{flex:1 1 200px;min-width:0}
+/* Palette extractor — tighter on narrow panels */
+.palette-extractor{margin-top:10px}
+.palette-extractor-row{gap:8px}
+.palette-swatches{max-height:220px;overflow-y:auto;overflow-x:hidden;padding-right:4px}
+.palette-snippet{max-height:140px}
+/* Make the draft textarea itself not consume the whole panel when palette is showing */
+#prompt-draft{min-height:140px;max-height:320px;resize:vertical}
+/* Output panel on the right — same scroll treatment for consistency */
+.prompt-panel + .prompt-panel{padding-bottom:76px}
+.prompt-panel + .prompt-panel > .prompt-actions{position:sticky;bottom:0;margin:0 -12px -10px;padding:10px 12px;background:linear-gradient(0deg,rgba(16,15,24,0.96) 60%,rgba(16,15,24,0.78));backdrop-filter:blur(8px);border-top:1px solid rgba(255,255,255,0.06);z-index:3;gap:8px;flex-wrap:wrap;align-items:center}
+#prompt-output{min-height:180px}
+
+/* Tablet */
+@media (max-width:1100px){
+  .prompt-container{grid-template-columns:1fr 1fr !important;grid-template-rows:minmax(300px,1fr) minmax(260px,1fr) !important;gap:12px}
+  .prompt-container > .prompt-panel:nth-child(3){grid-column:1 / -1}
+  .palette-swatches{max-height:160px}
+}
+/* Mobile — single column with full-height modal and internal scroll */
+@media (max-width:780px){
+  .modal.prompt-modal{width:100vw !important;height:100vh !important;height:100svh !important;max-height:100dvh !important;border-radius:0 !important;border:0 !important}
+  .prompt-container{grid-template-columns:1fr !important;grid-template-rows:none !important;grid-auto-rows:minmax(260px,auto) !important;gap:12px !important;padding:12px !important;overflow-y:auto !important;overflow-x:hidden !important}
+  .prompt-panel{overflow:visible !important;padding-bottom:12px !important}
+  .prompt-panel > .prompt-actions,.prompt-panel + .prompt-panel > .prompt-actions{position:static !important;margin:0 !important;padding:10px 0 !important;background:transparent !important;backdrop-filter:none !important;border-top:0 !important}
+  .prompt-panel > .prompt-actions{border-top:1px dashed rgba(255,255,255,0.08) !important;padding-top:12px !important;margin-top:6px !important}
+  .palette-swatches{max-height:200px}
+  .palette-snippet{max-height:160px;font-size:10.5px}
+  #prompt-draft{max-height:none;min-height:120px}
+  #prompt-output{min-height:140px}
+  .palette-extractor-row{flex-direction:column;align-items:stretch}
+  .palette-extractor-row input[type=url]{min-width:0;width:100%}
+  .palette-extractor-row button.action-btn{width:100%;justify-content:center}
+  .palette-extractor-row label{margin-bottom:2px}
+  .prompt-actions .action-btn{min-height:44px}
+}
+/* Small phones */
+@media (max-width:380px){
+  .palette-extractor{padding:10px 12px}
+  .palette-chip{font-size:10.5px;padding:5px 8px}
+  .palette-snippet{font-size:10px}
+}
+
+/* Respect reduced motion on the new sticky bar */
+@media (prefers-reduced-motion:reduce){
+  .prompt-panel > .prompt-actions,.prompt-panel + .prompt-panel > .prompt-actions{backdrop-filter:none !important}
+}
 </style>
 </head>
 <body>
@@ -1392,6 +1447,16 @@ function renderPalette(data){
   snippetEl.textContent=buildPaletteSnippet(data);
   snippetEl.style.display='block';
   actionsEl.style.display='flex';
+  // Ensure the primary Improve/Brainstorm action bar is still reachable after palette loads
+  try{
+    const bar=document.querySelector('.prompt-panel > .prompt-actions');
+    if(bar){
+      // briefly pulse the bar background so user notices it is sticky
+      bar.style.transition='box-shadow .4s ease';
+      bar.style.boxShadow='0 -6px 18px rgba(113,112,255,0.25)';
+      setTimeout(()=>{bar.style.boxShadow=''},900);
+    }
+  }catch(e){}
 }
 
 function buildPaletteSnippet(data){
