@@ -1,0 +1,565 @@
+{
+  "name": "https://powerplug.ai/",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "hours",
+              "hoursInterval": 2
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [-1520, 784],
+      "id": "a1b2c3d4-0001-0001-0001-000000000001",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "YOUR_GOOGLE_SHEET_ID",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "Sheet1",
+          "mode": "name"
+        },
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "Published",
+              "lookupValue": "production"
+            }
+          ]
+        },
+        "options": {
+          "returnFirstMatch": true
+        }
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [-1296, 784],
+      "id": "a1b2c3d4-0002-0002-0002-000000000002",
+      "name": "Grab New Cluster"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "assign-research",
+              "name": "research",
+              "value": "={{ $json.Research }}",
+              "type": "string"
+            },
+            {
+              "id": "assign-keyword",
+              "name": "keyword",
+              "value": "={{ $json.Keyword }}",
+              "type": "string"
+            },
+            {
+              "id": "assign-url",
+              "name": "url",
+              "value": "={{ $json.URL }}",
+              "type": "string"
+            },
+            {
+              "id": "assign-row",
+              "name": "rowNumber",
+              "value": "={{ $json.rowNumber }}",
+              "type": "number"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [-496, 784],
+      "id": "a1b2c3d4-0003-0003-0003-000000000003",
+      "name": "Fix Links"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=You are an expert SEO researcher with deep knowledge of enterprise IT and PC power management. Research the following keyword and URL for PowerPlug (powerplug.ai):\n\nKeyword: {{ $json.keyword }}\nURL: {{ $json.url }}\nExisting research notes: {{ $json.research }}\n\nProvide a comprehensive research report covering:\n1. Target audience (IT directors, CIOs, IT managers at enterprises with 100–50,000 PCs)\n2. Key pain points: energy costs, license waste, cloud overspend, manual IT processes\n3. Competitive landscape for PC power management solutions\n4. PowerPlug Pro differentiators: AD/SCCM integration, near-zero maintenance, audit-ready reporting\n5. Real trust signals: Clalit Health Services (45,000 PCs, $1.2M annual savings), Rambam Healthcare Campus (ROI under 4 months), Ben Gurion University (20,000 student PCs, green campus)\n6. High-value keywords and semantic clusters\n7. Authoritative external sources to cite (Flexera, Gartner, IEEE energy standards)\n8. Suggested article structure for maximum conversion and SEO\n\nReturn structured research notes.",
+        "batching": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.5,
+      "position": [-96, 784],
+      "id": "a1b2c3d4-0004-0004-0004-000000000004",
+      "name": "Research"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=You are a professional content strategist specializing in enterprise IT and energy management. Create a detailed article plan for PowerPlug (powerplug.ai).\n\nKeyword: {{ $('Fix Links').item.json.keyword }}\nURL: {{ $('Fix Links').item.json.url }}\nResearch: {{ $json.text }}\n\nCreate a 10-section article plan with:\n- H1 title (no dates/years in intro)\n- 10 H2 section headings\n- 5 FAQ questions with answers\n- Key takeaways (4 bullet points)\n- 2 mid-article CTA angles + 1 bottom CTA angle\n- Callout block placements: TIP, HOW-TO, DID YOU KNOW\n- Image alt text suggestions for 4 sections\n\nPowerPlug brand voice: Enterprise B2B, confident, measurable, pragmatic. Lead with outcomes.\nTarget: IT leaders with 100–50,000 PC fleets.",
+        "batching": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.5,
+      "position": [304, 784],
+      "id": "a1b2c3d4-0005-0005-0005-000000000005",
+      "name": "Post Plan"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=You are a senior enterprise IT content writer for PowerPlug (powerplug.ai). Write a complete, premium-quality blog article.\n\nKeyword: {{ $('Fix Links').item.json.keyword }}\nURL: {{ $('Fix Links').item.json.url }}\nResearch: {{ $('Research').item.json.text }}\nArticle Plan: {{ $json.text }}\n\nWrite a full-length article (1,800–2,500 words) covering:\n1. What a systematic IT cost reduction strategy actually looks like\n2. Why large enterprises struggle to reduce IT operating costs\n3. Identifying the biggest sources of waste (with data table: idle power, duplicate SaaS, over-provisioned cloud, manual tasks, shelfware)\n4. IT cost reduction vs. IT cost optimization (tactical vs structural)\n5. Endpoint energy: the hidden 60% saving (with Clalit/Rambam/Ben Gurion proof points)\n6. Cloud cost control and FinOps discipline\n7. Common mistakes that undermine IT savings programs\n8. KPIs for IT cost efficiency (5-metric table)\n9. A 12-month enterprise savings roadmap (Q1 Measure, Q2 Quick Wins, Q3 Automate, Q4 Optimize)\n10. How to choose a solution that delivers measurable savings\n\nRules:\n- NO dates or years in the first paragraph or H1\n- NO fabricated statistics — use ONLY real PowerPlug proof points\n- Enterprise B2B voice: measurable, pragmatic, outcome-led\n- Write clean prose (no markdown, no code fences, no lists inside paragraphs)\n- Return ONLY the raw article text with clear section headings\n- Include FAQ section with 5 questions",
+        "batching": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.5,
+      "position": [704, 784],
+      "id": "a1b2c3d4-0006-0006-0006-000000000006",
+      "name": "Writing Blog"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=You are a senior HTML/CSS WordPress template engineer rebuilding article pages for PowerPlug (powerplug.ai). Agent: Copilot | Date: 2026-04-17\n\nYou receive a URL and ORIGINAL_HTML for a blog article. Your job is to produce a fully improved, professional, conversion-friendly HTML template that renders 100% Left-To-Right (LTR), works perfectly inside WordPress (even on RTL-capable themes), and is aligned to the real PowerPlug brand.\n\nINPUTS:\n- URL: the reference URL provided (use ONLY for design/branding inspiration; do NOT copy text from it; do NOT add external dependencies)\n- ORIGINAL_HTML: the raw HTML content to improve\n\nOUTPUT:\n- Return ONLY the final improved HTML. No explanations, no commentary, no code fences, no markdown wrappers. Just the raw HTML starting with the opening article tag and ending with the closing article tag.\n\n---\n\nBRAND OF RECORD: POWERPLUG (READ FIRST)\n\nLogo: https://powerplug.ai/wp-content/uploads/2022/06/powerplug-logo.png (horizontal, max-width:180px;height:auto;object-fit:contain — NO border-radius:50%, NO circular frame)\nLogo links to: https://powerplug.ai/\nContact URL: https://powerplug.ai/contact-us (ALL CTAs, ALL buttons, ALL \"Contact Us\" links)\n\nPowerPlug brand tokens:\n- Navy: #131b3b\n- Mid navy: #1e2a52\n- Teal: #0fb5b0\n- Teal hover: #0d9e9a\n- Hero gradient: linear-gradient(135deg,#131b3b 0%,#1e2a52 50%,#0fb5b0 100%)\n- Font: font-family:'Montserrat',sans-serif\n\nSocial links:\n- Facebook: https://www.facebook.com/PowerPlugLtd/ (hover #1877F2)\n- LinkedIn: https://www.linkedin.com/company/powerplug-ltd/ (hover #0A66C2)\n- Twitter/X: https://twitter.com/PowerPlugLtd (hover #1DA1F2)\n\n---\n\nCRITICAL WORDPRESS RULES:\n1. ALL CSS inline only — WordPress strips style blocks\n2. Inline onclick handlers for accordions — no script blocks for these\n3. wpautop-safe: no blank lines between elements in containers\n4. Zero external dependencies\n5. One inline <script> permitted ONLY for scroll-to-top visibility toggle\n\nABSOLUTE RULES:\n- article wrapper: <article id=\"top\" dir=\"ltr\" lang=\"en\" class=\"sa-article\" style=\"direction:ltr !important;text-align:left !important;unicode-bidi:isolate !important;font-family:'Montserrat',sans-serif;...\">\n- Exactly ONE H1 (in hero)\n- NO SVG, NO emoji, NO icon fonts\n- TOC: unordered list, NO numbers, starts COLLAPSED (max-height:0)\n- FAQ: starts COLLAPSED (max-height:0 per item)\n- Author logo: NO border-radius:50%, horizontal, max-width:180px, links to https://powerplug.ai/\n- Floating Contact Us: bottom-RIGHT (right:24px), always visible\n- Floating scroll-to-top: bottom-LEFT (left:24px), appears after 300px scroll\n- NO overlap between the two floating buttons (opposite corners)\n\nREQUIRED SECTIONS (in order):\n1. Hero (H1 centered, gradient bg) — no dates in intro\n2. Key Takeaways box (teal left-border)\n3. Intro paragraph\n4. TOC (collapsed, unordered list, after first paragraph)\n5. Second intro paragraph\n6. Image 1: {{ $json.images.section_1.url }}\n7. CTA #1: teal button \"Get a Free Assessment\" → https://powerplug.ai/contact-us\n8. Sections 1–4 with TIP callout block\n9. Image 2: {{ $json.images.section_2.url }}\n10. CTA #2: navy button \"Talk to the PowerPlug Team\" → https://powerplug.ai/contact-us\n11. Sections 5–6 with HOW-TO and DID YOU KNOW callout blocks\n12. Image 3: {{ $json.images.section_3.url }}\n13. Sections 7–10\n14. Image 4: {{ $json.images.section_4.url }}\n15. FAQ (collapsed, 5+ questions)\n16. CTA #3: gradient block, teal button \"Schedule a Free Consultation\" → https://powerplug.ai/contact-us\n17. Author section: horizontal logo (max-width:180px, no circle) + social links (FB/LI/TW with hover) + contact button\n18. Floating scroll-to-top: id=\"sa-scroll-top\", position:fixed;bottom:28px;left:24px, circle, starts hidden\n19. Floating Contact Us: position:fixed;bottom:28px;right:24px, pill shape, always visible\n20. Scroll-to-top inline script\n\nFULL BLOG CONTENT (ENGLISH):\n{{ $item(0).$node[\"Writing Blog\"].json[\"output\"] }}\n\nIMAGE URLS:\nSection image 1 URL: {{ $json.images.section_1.url }}\nSection image 2 URL: {{ $json.images.section_2.url }}\nSection image 3 URL: {{ $json.images.section_3.url }}\nSection image 4 URL: {{ $json.images.section_4.url }}\n\nGenerate the complete HTML article now. Start with <article and end with </article>. No code fences.",
+        "batching": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.5,
+      "position": [1136, 784],
+      "id": "a1b2c3d4-0007-0007-0007-000000000007",
+      "name": "HTML"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Generate a clean SEO-optimized URL slug for this article about PowerPlug (powerplug.ai).\n\nKeyword: {{ $('Fix Links').item.json.keyword }}\nBlog Content: {{ $('Writing Blog').item.json.text }}\n\nRules:\n- Lowercase only\n- Hyphens as separators (no underscores)\n- 3–6 words maximum\n- Include primary keyword\n- No stop words unless essential\n- No dates or years\n\nReturn ONLY the slug, nothing else. Example: it-cost-reduction-enterprise",
+        "batching": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.5,
+      "position": [1568, 784],
+      "id": "a1b2c3d4-0008-0008-0008-000000000008",
+      "name": "Slug"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Generate an SEO-optimized post title for this PowerPlug (powerplug.ai) blog article.\n\nKeyword: {{ $('Fix Links').item.json.keyword }}\nBlog Content: {{ $('Writing Blog').item.json.text }}\n\nRules:\n- 50–60 characters total (Google title truncation limit)\n- Include primary keyword naturally\n- Enterprise B2B tone — no clickbait, no dates\n- PowerPlug brand voice: measurable, authoritative, practical\n- Capitalize main words (title case)\n- No special characters except colon if needed\n\nReturn ONLY the title string, nothing else.",
+        "batching": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.5,
+      "position": [1968, 784],
+      "id": "a1b2c3d4-0009-0009-0009-000000000009",
+      "name": "Post Title"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Generate an SEO meta description for this PowerPlug (powerplug.ai) blog article.\n\nKeyword: {{ $('Fix Links').item.json.keyword }}\nBlog Content: {{ $('Writing Blog').item.json.text }}\nPost Title: {{ $('Post Title').item.json.text }}\n\nRules:\n- 145–160 characters total (Google truncation limit)\n- Include primary keyword in first 60 characters\n- Action-oriented: start with a verb or benefit\n- Include one quantified outcome from the article (%, $, months, PCs)\n- Enterprise B2B tone — no hype\n- End with a soft CTA (e.g., 'Learn how' or 'See how enterprises save')\n\nReturn ONLY the meta description string, nothing else.",
+        "batching": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.5,
+      "position": [2368, 784],
+      "id": "a1b2c3d4-0010-0010-0010-000000000010",
+      "name": "Meta Description"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "assign-final-html",
+              "name": "finalHTML",
+              "value": "={{ $('HTML').item.json.text }}",
+              "type": "string"
+            },
+            {
+              "id": "assign-final-slug",
+              "name": "slug",
+              "value": "={{ $('Slug').item.json.text }}",
+              "type": "string"
+            },
+            {
+              "id": "assign-final-title",
+              "name": "title",
+              "value": "={{ $('Post Title').item.json.text }}",
+              "type": "string"
+            },
+            {
+              "id": "assign-final-meta",
+              "name": "metaDescription",
+              "value": "={{ $('Meta Description').item.json.text }}",
+              "type": "string"
+            },
+            {
+              "id": "assign-final-keyword",
+              "name": "keyword",
+              "value": "={{ $('Fix Links').item.json.keyword }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [2768, 784],
+      "id": "a1b2c3d4-0011-0011-0011-000000000011",
+      "name": "Prepare Post"
+    },
+    {
+      "parameters": {
+        "resource": "post",
+        "operation": "create",
+        "additionalFields": {
+          "status": "draft",
+          "slug": "={{ $json.slug }}",
+          "excerpt": "={{ $json.metaDescription }}"
+        },
+        "title": "={{ $json.title }}",
+        "content": "={{ $json.finalHTML }}"
+      },
+      "type": "n8n-nodes-base.wordpress",
+      "typeVersion": 1,
+      "position": [3168, 784],
+      "id": "a1b2c3d4-0012-0012-0012-000000000012",
+      "name": "Publish to WordPress"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "YOUR_GOOGLE_SHEET_ID",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "Sheet1",
+          "mode": "name"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "rowNumber": "={{ $('Fix Links').item.json.rowNumber }}",
+            "Published": "published",
+            "WordPress_URL": "={{ $('Publish to WordPress').item.json.link }}",
+            "Post_ID": "={{ $('Publish to WordPress').item.json.id }}"
+          }
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [3568, 784],
+      "id": "a1b2c3d4-0013-0013-0013-000000000013",
+      "name": "Update Sheet Status"
+    },
+    {
+      "parameters": {
+        "content": "## Schedule Trigger\nRuns every 2 hours to check for new articles to process",
+        "height": 120,
+        "width": 280
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [-1560, 640],
+      "id": "a1b2c3d4-0014-0014-0014-000000000014",
+      "name": "Sticky Note 14"
+    },
+    {
+      "parameters": {
+        "content": "## New Post Info\nGrab next article cluster from Google Sheets where Published = 'production'",
+        "height": 120,
+        "width": 280
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [-1336, 640],
+      "id": "a1b2c3d4-0015-0015-0015-000000000015",
+      "name": "Sticky Note 15"
+    },
+    {
+      "parameters": {
+        "content": "## Fix Links\nNormalize field names and prepare data for downstream nodes",
+        "height": 120,
+        "width": 280
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [-536, 640],
+      "id": "a1b2c3d4-0016-0016-0016-000000000016",
+      "name": "Sticky Note 16"
+    },
+    {
+      "parameters": {
+        "content": "## Research\nAI-powered research on keyword and URL using Anthropic Claude. Returns structured notes for article plan.",
+        "height": 140,
+        "width": 280
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [-136, 640],
+      "id": "a1b2c3d4-0017-0017-0017-000000000017",
+      "name": "Sticky Note 17"
+    },
+    {
+      "parameters": {
+        "content": "## Post Plan\nCreate detailed article outline: 10 H2 sections, FAQs, CTA angles, callout block placements",
+        "height": 140,
+        "width": 280
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [264, 640],
+      "id": "a1b2c3d4-0018-0018-0018-000000000018",
+      "name": "Sticky Note 18"
+    },
+    {
+      "parameters": {
+        "content": "## Writing Blog\nWrite full article (1,800–2,500 words) following Post Plan. Enterprise B2B voice. PowerPlug brand. Real proof points only.",
+        "height": 140,
+        "width": 280
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [664, 640],
+      "id": "a1b2c3d4-0019-0019-0019-000000000019",
+      "name": "Sticky Note 19"
+    },
+    {
+      "parameters": {
+        "content": "## HTML\nCopilot Agent — 2026-04-17\nConvert blog text to production-ready WordPress HTML.\nInline CSS only, LTR-enforced, Montserrat font.\nFloating Contact Us (right) + Scroll-to-top (left).\nHorizontal PowerPlug logo, social links, FAQ + TOC collapsed.",
+        "height": 160,
+        "width": 280
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [1096, 640],
+      "id": "a1b2c3d4-0020-0020-0020-000000000020",
+      "name": "Sticky Note 20"
+    },
+    {
+      "parameters": {
+        "content": "## Slug\nGenerate clean SEO URL slug. Lowercase, hyphens, 3–6 words, includes primary keyword.",
+        "height": 120,
+        "width": 280
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [1528, 640],
+      "id": "a1b2c3d4-0021-0021-0021-000000000021",
+      "name": "Sticky Note 21"
+    },
+    {
+      "parameters": {
+        "content": "## Post Title\nGenerate optimized post title. 50–60 chars, primary keyword, enterprise B2B tone.",
+        "height": 120,
+        "width": 280
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [1928, 640],
+      "id": "a1b2c3d4-0022-0022-0022-000000000022",
+      "name": "Sticky Note 22"
+    },
+    {
+      "parameters": {
+        "content": "## Meta Description\nGenerate SEO meta desc. 145–160 chars, keyword in first 60, action-oriented, quantified outcome.",
+        "height": 120,
+        "width": 280
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [2328, 640],
+      "id": "a1b2c3d4-0023-0023-0023-000000000023",
+      "name": "Sticky Note 23"
+    },
+    {
+      "parameters": {
+        "content": "## Publish\nPublish as draft to WordPress and update Google Sheets status.",
+        "height": 120,
+        "width": 280
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [2728, 640],
+      "id": "a1b2c3d4-0024-0024-0024-000000000024",
+      "name": "Sticky Note 24"
+    },
+    {
+      "parameters": {
+        "model": "claude-opus-4-5",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmAnthropicClaude",
+      "typeVersion": 1.3,
+      "position": [-96, 1024],
+      "id": "a1b2c3d4-0025-0025-0025-000000000025",
+      "name": "Anthropic Research"
+    },
+    {
+      "parameters": {
+        "model": "claude-opus-4-5",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmAnthropicClaude",
+      "typeVersion": 1.3,
+      "position": [304, 1024],
+      "id": "a1b2c3d4-0026-0026-0026-000000000026",
+      "name": "Anthropic Post Plan"
+    },
+    {
+      "parameters": {
+        "model": "claude-opus-4-5",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmAnthropicClaude",
+      "typeVersion": 1.3,
+      "position": [704, 1024],
+      "id": "a1b2c3d4-0027-0027-0027-000000000027",
+      "name": "Anthropic Writing"
+    },
+    {
+      "parameters": {
+        "model": "claude-opus-4-5",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmAnthropicClaude",
+      "typeVersion": 1.3,
+      "position": [1136, 1024],
+      "id": "a1b2c3d4-0028-0028-0028-000000000028",
+      "name": "Anthropic HTML"
+    },
+    {
+      "parameters": {
+        "model": "claude-haiku-4-5",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmAnthropicClaude",
+      "typeVersion": 1.3,
+      "position": [1568, 1024],
+      "id": "a1b2c3d4-0029-0029-0029-000000000029",
+      "name": "Anthropic Slug"
+    },
+    {
+      "parameters": {
+        "model": "claude-haiku-4-5",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmAnthropicClaude",
+      "typeVersion": 1.3,
+      "position": [1968, 1024],
+      "id": "a1b2c3d4-0030-0030-0030-000000000030",
+      "name": "Anthropic Title"
+    },
+    {
+      "parameters": {
+        "model": "claude-haiku-4-5",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmAnthropicClaude",
+      "typeVersion": 1.3,
+      "position": [2368, 1024],
+      "id": "a1b2c3d4-0031-0031-0031-000000000031",
+      "name": "Anthropic Meta"
+    }
+  ],
+  "connections": {
+    "Schedule Trigger": {
+      "main": [[{"node": "Grab New Cluster", "type": "main", "index": 0}]]
+    },
+    "Grab New Cluster": {
+      "main": [[{"node": "Fix Links", "type": "main", "index": 0}]]
+    },
+    "Fix Links": {
+      "main": [[{"node": "Research", "type": "main", "index": 0}]]
+    },
+    "Research": {
+      "main": [[{"node": "Post Plan", "type": "main", "index": 0}]]
+    },
+    "Post Plan": {
+      "main": [[{"node": "Writing Blog", "type": "main", "index": 0}]]
+    },
+    "Writing Blog": {
+      "main": [[{"node": "HTML", "type": "main", "index": 0}]]
+    },
+    "HTML": {
+      "main": [[{"node": "Slug", "type": "main", "index": 0}]]
+    },
+    "Slug": {
+      "main": [[{"node": "Post Title", "type": "main", "index": 0}]]
+    },
+    "Post Title": {
+      "main": [[{"node": "Meta Description", "type": "main", "index": 0}]]
+    },
+    "Meta Description": {
+      "main": [[{"node": "Prepare Post", "type": "main", "index": 0}]]
+    },
+    "Prepare Post": {
+      "main": [[{"node": "Publish to WordPress", "type": "main", "index": 0}]]
+    },
+    "Publish to WordPress": {
+      "main": [[{"node": "Update Sheet Status", "type": "main", "index": 0}]]
+    },
+    "Anthropic Research": {
+      "ai_languageModel": [[{"node": "Research", "type": "ai_languageModel", "index": 0}]]
+    },
+    "Anthropic Post Plan": {
+      "ai_languageModel": [[{"node": "Post Plan", "type": "ai_languageModel", "index": 0}]]
+    },
+    "Anthropic Writing": {
+      "ai_languageModel": [[{"node": "Writing Blog", "type": "ai_languageModel", "index": 0}]]
+    },
+    "Anthropic HTML": {
+      "ai_languageModel": [[{"node": "HTML", "type": "ai_languageModel", "index": 0}]]
+    },
+    "Anthropic Slug": {
+      "ai_languageModel": [[{"node": "Slug", "type": "ai_languageModel", "index": 0}]]
+    },
+    "Anthropic Title": {
+      "ai_languageModel": [[{"node": "Post Title", "type": "ai_languageModel", "index": 0}]]
+    },
+    "Anthropic Meta": {
+      "ai_languageModel": [[{"node": "Meta Description", "type": "ai_languageModel", "index": 0}]]
+    }
+  },
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1",
+    "saveManualExecutions": true,
+    "callerPolicy": "workflowsFromSameOwner",
+    "errorWorkflow": ""
+  },
+  "staticData": null,
+  "tags": [
+    {
+      "createdAt": "2026-04-17T00:00:00.000Z",
+      "updatedAt": "2026-04-17T00:00:00.000Z",
+      "id": "powerplug-content",
+      "name": "powerplug.ai"
+    },
+    {
+      "createdAt": "2026-04-17T00:00:00.000Z",
+      "updatedAt": "2026-04-17T00:00:00.000Z",
+      "id": "copilot-agent",
+      "name": "Copilot"
+    }
+  ],
+  "triggerCount": 1,
+  "updatedAt": "2026-04-17T00:00:00.000Z",
+  "versionId": "copilot-2026-04-17-v1"
+}
