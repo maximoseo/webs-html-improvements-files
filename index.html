@@ -640,6 +640,139 @@ img,svg,video,canvas{max-width:100%;height:auto}
 @media (prefers-reduced-motion:reduce){
   .prompt-panel > .prompt-actions,.prompt-panel + .prompt-panel > .prompt-actions{backdrop-filter:none !important}
 }
+/* ====== Prompt Studio — professional polish pass (2026-04-17) ====== */
+/* Goal: cleaner header, softer panels, consistent radii (14px everywhere),
+   one primary color, consistent label style (sentence case, spacious),
+   proportional monospace only where it matters, WCAG-friendly contrasts. */
+
+/* --- Typography unification --- */
+.prompt-modal .prompt-label{font-size:12px;font-weight:600;color:rgba(255,255,255,0.62);text-transform:none;letter-spacing:0.01em;margin-bottom:2px}
+.prompt-modal .prompt-label::before{content:'';display:inline-block;width:4px;height:4px;border-radius:50%;background:var(--purple,#7170ff);margin-right:8px;vertical-align:middle;opacity:.9}
+.prompt-modal .modal-title{font-weight:700;letter-spacing:-0.01em}
+.prompt-modal .focus-subtitle{color:rgba(255,255,255,0.5);font-weight:500;margin-left:10px;font-size:13px}
+
+/* --- Modal frame softening --- */
+.modal.prompt-modal{border-radius:18px;box-shadow:0 24px 64px rgba(0,0,0,0.55),0 0 0 1px rgba(255,255,255,0.04)}
+.prompt-modal .modal-header{border-bottom:1px solid rgba(255,255,255,0.06);padding:16px 22px;gap:14px}
+.prompt-modal .modal-header .modal-title{font-size:15px;display:flex;align-items:center;gap:10px}
+.prompt-modal .modal-header .modal-title svg{width:16px;height:16px;color:var(--purple,#7170ff);flex-shrink:0}
+.prompt-modal .modal-header #prompt-expand-btn{margin-left:auto}
+.prompt-modal .modal-close{width:32px;height:32px;border-radius:10px;display:inline-flex;align-items:center;justify-content:center;transition:background .18s ease,color .18s ease}
+.prompt-modal .modal-close:hover{background:rgba(255,255,255,0.08);color:#fff}
+
+/* --- Panel frames: consistent 14px radius, breathing room --- */
+.prompt-container{gap:18px !important;padding:20px !important;background:transparent !important}
+.prompt-panel{gap:12px}
+.prompt-panel > *{border-radius:14px}
+.prompt-panel .prompt-label{border-radius:0}
+
+/* --- Textareas: still monospace for the code-ish body but softer --- */
+.prompt-modal .prompt-textarea{border-radius:14px;border:1px solid rgba(255,255,255,0.08);background:rgba(255,255,255,0.025);padding:16px 18px;font:13.5px/1.65 ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;color:rgba(255,255,255,0.92);transition:border-color .18s ease,background .18s ease,box-shadow .18s ease}
+.prompt-modal .prompt-textarea:focus-visible,.prompt-modal .prompt-textarea:focus{border-color:rgba(113,112,255,0.55);background:rgba(255,255,255,0.04);outline:none;box-shadow:0 0 0 3px rgba(113,112,255,0.14)}
+.prompt-modal .prompt-textarea::placeholder{color:rgba(255,255,255,0.3)}
+#prompt-output{background:rgba(255,255,255,0.02) !important}
+#prompt-output::placeholder{color:rgba(255,255,255,0.26)}
+
+/* --- Checklist: cleaner header, softer surface --- */
+.prompt-modal .checklist-wrap{border-radius:14px;border:1px solid rgba(255,255,255,0.08);background:rgba(255,255,255,0.02);box-shadow:none}
+.prompt-modal .checklist-header{padding:12px 16px;background:transparent;border-radius:14px 14px 0 0}
+.prompt-modal .checklist-wrap:not(.expanded) .checklist-header{border-radius:14px}
+.prompt-modal .checklist-header:hover{background:rgba(255,255,255,0.04)}
+.prompt-modal .checklist-title{font-weight:600;font-size:13.5px;color:rgba(255,255,255,0.88)}
+.prompt-modal .checklist-count-badge{font-weight:700;font-size:11px}
+.prompt-modal .checklist-header-btn{font-size:11px;padding:6px 10px;border-radius:8px;font-weight:600;letter-spacing:0.01em;text-transform:none}
+
+/* --- Palette extractor — refined container --- */
+.palette-extractor{border-radius:14px !important;padding:14px 16px !important;background:linear-gradient(180deg,rgba(113,112,255,0.055),rgba(113,112,255,0.02)) !important;border:1px solid rgba(113,112,255,0.18) !important}
+.palette-extractor-row{gap:10px !important;align-items:center !important}
+.palette-extractor-row label{font-size:11.5px !important;font-weight:600 !important;color:rgba(255,255,255,0.7) !important;text-transform:none !important;letter-spacing:0.01em !important;display:inline-flex;align-items:center;gap:8px}
+.palette-extractor-row label::before{content:'';display:inline-block;width:6px;height:6px;border-radius:2px;background:linear-gradient(135deg,var(--purple,#7170ff),#bc55ff);box-shadow:0 0 0 2px rgba(113,112,255,0.18)}
+.palette-extractor-row input[type=url]{height:38px !important;padding:0 14px !important;border-radius:10px !important;background:rgba(0,0,0,0.22) !important;border:1px solid rgba(255,255,255,0.09) !important;color:rgba(255,255,255,0.92) !important;font:13px/1 ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace !important;transition:border-color .18s ease,background .18s ease,box-shadow .18s ease !important}
+.palette-extractor-row input[type=url]:focus{border-color:rgba(113,112,255,0.55) !important;background:rgba(0,0,0,0.3) !important;box-shadow:0 0 0 3px rgba(113,112,255,0.14) !important;outline:none !important}
+.palette-extractor-row input[type=url]::placeholder{color:rgba(255,255,255,0.28) !important}
+.palette-extractor-row button.action-btn{height:38px !important;padding:0 14px !important;border-radius:10px !important;font-size:12.5px !important;font-weight:600 !important;display:inline-flex !important;align-items:center !important;gap:6px}
+.palette-extractor-status{font-size:11.5px !important;color:rgba(255,255,255,0.55) !important;line-height:1.55 !important;margin-top:8px !important}
+.palette-extractor-status code{font-size:11px;padding:1px 6px;border-radius:4px;background:rgba(255,255,255,0.06);color:#d7dbff}
+.palette-swatches{gap:6px !important;margin-top:12px !important;padding:2px}
+.palette-chip{border-radius:10px !important;padding:6px 10px 6px 8px !important;background:rgba(255,255,255,0.05) !important;border:1px solid rgba(255,255,255,0.08) !important;font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace !important;font-size:11.5px !important;font-weight:500 !important;transition:all .16s ease !important;cursor:pointer}
+.palette-chip:hover{border-color:rgba(113,112,255,0.4) !important;background:rgba(113,112,255,0.1) !important;transform:translateY(-1px)}
+.palette-chip .swatch{width:16px !important;height:16px !important;border-radius:5px !important;border:1px solid rgba(0,0,0,0.3) !important;box-shadow:inset 0 0 0 1px rgba(255,255,255,0.08) !important}
+.palette-snippet{border-radius:12px !important;padding:12px 14px !important;background:rgba(0,0,0,0.38) !important;border:1px solid rgba(255,255,255,0.06) !important;font:11.5px/1.55 ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace !important;color:#d7dbff !important;max-height:180px !important;scrollbar-width:thin}
+.palette-snippet::-webkit-scrollbar{width:6px}
+.palette-snippet::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.15);border-radius:999px}
+.palette-actions{gap:8px !important;margin-top:10px !important;padding-top:10px !important;border-top:1px dashed rgba(255,255,255,0.08) !important}
+.palette-actions button.action-btn{height:34px !important;padding:0 12px !important;border-radius:8px !important;font-size:12px !important;font-weight:600 !important}
+
+/* --- Model selector block --- */
+.model-select-wrap{gap:10px !important;margin-top:2px}
+.model-select-wrap .model-select-label{font-size:11.5px;font-weight:600;color:rgba(255,255,255,0.62);text-transform:none;letter-spacing:0.01em}
+.prompt-modal .model-select{height:36px !important;padding:0 12px !important;border-radius:10px !important;background:rgba(0,0,0,0.2) !important;border:1px solid rgba(255,255,255,0.09) !important;font-size:12.5px !important;font-weight:500 !important;transition:border-color .18s ease,box-shadow .18s ease}
+.prompt-modal .model-select:hover{border-color:rgba(113,112,255,0.35) !important}
+.prompt-modal .model-select:focus{border-color:rgba(113,112,255,0.55) !important;box-shadow:0 0 0 3px rgba(113,112,255,0.14) !important;outline:none !important}
+
+/* --- Unified primary action bar --- */
+.prompt-modal .prompt-actions{gap:10px !important;align-items:center}
+.prompt-panel > .prompt-actions{padding:12px 14px !important;margin:0 -14px -12px !important;background:linear-gradient(0deg,rgba(14,14,22,0.96) 60%,rgba(14,14,22,0.72)) !important;border-top:1px solid rgba(255,255,255,0.06) !important;border-radius:0 0 14px 14px !important}
+.prompt-panel + .prompt-panel > .prompt-actions{background:linear-gradient(0deg,rgba(14,14,22,0.96) 60%,rgba(14,14,22,0.72)) !important;border-radius:0 0 14px 14px !important}
+
+/* --- Primary/secondary/tertiary button language --- */
+.prompt-modal .action-btn{height:40px;padding:0 16px;border-radius:10px;font-size:13px;font-weight:600;letter-spacing:-0.005em;line-height:1;display:inline-flex;align-items:center;justify-content:center;gap:7px;transition:background .18s ease,border-color .18s ease,transform .12s ease,color .18s ease;white-space:nowrap}
+.prompt-modal .action-btn svg{flex-shrink:0}
+.prompt-modal .action-btn:hover{transform:translateY(-1px)}
+.prompt-modal .action-btn:active{transform:translateY(0)}
+.prompt-modal #prompt-improve-btn{background:linear-gradient(180deg,#7170ff,#5d5cff) !important;color:#fff !important;border:1px solid rgba(255,255,255,0.12) !important;box-shadow:0 6px 18px rgba(113,112,255,0.28)}
+.prompt-modal #prompt-improve-btn:hover{background:linear-gradient(180deg,#8584ff,#6968ff) !important;box-shadow:0 8px 22px rgba(113,112,255,0.36)}
+.prompt-modal #prompt-improve-btn:disabled{opacity:.55}
+.prompt-modal #prompt-brainstorm-btn{background:linear-gradient(180deg,rgba(255,255,255,0.06),rgba(255,255,255,0.02)) !important;border:1px solid rgba(180,140,255,0.45) !important;color:#e5dcff !important}
+.prompt-modal #prompt-brainstorm-btn:hover{border-color:rgba(200,160,255,0.85) !important;background:linear-gradient(180deg,rgba(113,112,255,0.16),rgba(198,141,255,0.1)) !important}
+.prompt-modal #prompt-sync-gh-btn{background:linear-gradient(180deg,#19a974,#148f62) !important;color:#fff !important;border:1px solid rgba(255,255,255,0.12) !important}
+.prompt-modal #prompt-sync-gh-btn:hover{background:linear-gradient(180deg,#21ba82,#17a16e) !important}
+/* Ghost / tertiary */
+.prompt-modal .prompt-actions .action-btn:not(#prompt-improve-btn):not(#prompt-brainstorm-btn):not(#prompt-sync-gh-btn){background:rgba(255,255,255,0.045) !important;border:1px solid rgba(255,255,255,0.09) !important;color:rgba(255,255,255,0.88) !important}
+.prompt-modal .prompt-actions .action-btn:not(#prompt-improve-btn):not(#prompt-brainstorm-btn):not(#prompt-sync-gh-btn):hover{background:rgba(255,255,255,0.075) !important;border-color:rgba(255,255,255,0.18) !important;color:#fff !important}
+
+/* --- Status text density --- */
+.prompt-modal .prompt-status{font-size:12px;color:rgba(255,255,255,0.55);line-height:1.5;flex:1 1 200px;min-width:0}
+
+/* --- Brainstorm progress card refinement --- */
+.brainstorm-progress{border-radius:14px !important;padding:14px 16px !important;background:linear-gradient(180deg,rgba(113,112,255,0.08),rgba(113,112,255,0.02)) !important;border:1px solid rgba(113,112,255,0.22) !important}
+.brainstorm-progress-title{font-size:13px !important;font-weight:700 !important;color:#e5dcff !important}
+.brainstorm-model-chip{border-radius:999px !important;padding:5px 11px !important;font-weight:600 !important}
+
+/* --- Preview panel — remove the weird white gap, add branded device frame --- */
+.prompt-modal .prompt-preview-wrap{border-radius:14px;border:1px solid rgba(255,255,255,0.08);background:#f9fafc;box-shadow:inset 0 0 0 1px rgba(255,255,255,0.02)}
+.prompt-modal .prompt-preview-frame{border-radius:12px}
+
+/* --- Sync panel refinement --- */
+.prompt-sync-panel{border-radius:14px !important;padding:16px !important;background:linear-gradient(180deg,rgba(255,255,255,0.025),rgba(255,255,255,0.01)) !important;border:1px solid rgba(255,255,255,0.08) !important}
+.prompt-sync-title{font-size:13.5px !important;font-weight:700 !important;color:rgba(255,255,255,0.92) !important}
+.prompt-sync-row .sync-label{font-weight:700;font-size:10.5px;color:rgba(255,255,255,0.5)}
+.prompt-sync-path{font-size:11.5px !important;padding:8px 12px !important;border-radius:10px !important;background:rgba(0,0,0,0.25) !important;border:1px solid rgba(255,255,255,0.07) !important;color:#d7dbff !important}
+.prompt-sync-note{font-size:11.5px !important;color:rgba(255,255,255,0.55) !important;line-height:1.6 !important}
+
+/* --- Empty state on the output textarea — subtle lift --- */
+#prompt-output:empty::before,#prompt-output[placeholder]:placeholder-shown{font-style:normal}
+
+/* --- Reduced motion respect --- */
+@media (prefers-reduced-motion:reduce){
+  .prompt-modal .action-btn,.palette-chip,.prompt-modal .prompt-textarea,.prompt-modal .model-select,.palette-extractor-row input[type=url]{transition:none !important}
+  .prompt-modal .action-btn:hover,.palette-chip:hover{transform:none !important}
+}
+
+/* --- Smaller screens: tighten spacing, stack palette row cleanly --- */
+@media (max-width:1100px){
+  .prompt-modal .prompt-label{font-size:11.5px}
+}
+@media (max-width:780px){
+  .prompt-modal .modal-header{padding:12px 14px;flex-wrap:wrap}
+  .prompt-modal .modal-title{font-size:14px}
+  .prompt-modal .focus-subtitle{font-size:12px;margin-left:0;width:100%;margin-top:2px}
+  .prompt-modal .prompt-textarea{padding:14px;font-size:13px;line-height:1.6}
+  .palette-extractor-row{gap:8px !important}
+  .palette-extractor-row input[type=url],.palette-extractor-row button.action-btn{height:42px !important}
+  .prompt-modal .action-btn{height:44px;padding:0 18px;font-size:13.5px}
+  .prompt-modal #prompt-improve-btn,.prompt-modal #prompt-brainstorm-btn{flex:1 1 140px;justify-content:center}
+}
 </style>
 </head>
 <body>
@@ -789,7 +922,7 @@ img,svg,video,canvas{max-width:100%;height:auto}
           <input type="url" id="palette-url" placeholder="https://example.com/" autocomplete="off">
           <button type="button" class="action-btn" onclick="extractPaletteFromUrl(this)" style="font-size:12px;padding:8px 14px"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:13px;height:13px;margin-right:4px;vertical-align:-2px"><circle cx="13.5" cy="6.5" r="2"/><circle cx="17.5" cy="10.5" r="2"/><circle cx="8.5" cy="7.5" r="2"/><circle cx="6.5" cy="12.5" r="2"/><path d="M12 22a10 10 0 0 1 0-20 10 10 0 0 1 7.07 17.07c-1.2 1.2-3.07 1.2-4.25 0-1.2-1.2-1.2-3.07 0-4.25l.08-.08c.4-.4.4-1.05 0-1.45a1.02 1.02 0 0 0-.7-.29H12"/></svg>Extract palette</button>
         </div>
-        <div class="palette-extractor-status" id="palette-status">Paste the homepage URL — e.g. <code style="color:#d7dbff">https://powerplug.ai/</code> — to pull the real brand colors into your draft.</div>
+        <div class="palette-extractor-status" id="palette-status">Enter the site's homepage URL to extract its real brand palette and include it in your prompt.</div>
         <div class="palette-swatches" id="palette-swatches" style="display:none"></div>
         <div class="palette-snippet" id="palette-snippet" style="display:none"></div>
         <div class="palette-actions" id="palette-actions" style="display:none">
@@ -825,7 +958,7 @@ img,svg,video,canvas{max-width:100%;height:auto}
       </div>
     </div>
     <div class="prompt-panel">
-      <div class="prompt-label">Paste-ready prompt (plain-text markdown)</div>
+      <div class="prompt-label">Paste-ready prompt</div>
       <textarea id="prompt-output" class="prompt-textarea" readonly placeholder="Your improved prompt will appear here."></textarea>
       <div class="prompt-actions">
         <button class="action-btn" onclick="copyImprovedPrompt()">Copy output</button>
