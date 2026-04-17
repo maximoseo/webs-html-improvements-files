@@ -273,8 +273,12 @@ def brainstorm_prompt_multi_model(payload):
     manifest_block = "\n".join(manifest_lines) if manifest_lines else "(no files provided)"
 
     checklist_block = ""
+    checklist_brain_block = ""
+    checklist_synth_block = ""
     if checklist_rules:
         checklist_block = "\n".join(f"{i+1}. {r}" for i, r in enumerate(checklist_rules))
+        checklist_brain_block = "--- USER CHECKLIST RULES ---\n" + checklist_block + "\n--- END CHECKLIST ---\n\n"
+        checklist_synth_block = "--- USER CHECKLIST RULES (MUST all be in the final) ---\n" + checklist_block + "\n--- END ---\n\n"
 
     # The system prompt each model sees during the brainstorm round
     brain_system = (
@@ -298,7 +302,7 @@ def brainstorm_prompt_multi_model(payload):
         f"Version folder:   {version_name}\n"
         f"Current date:     {current_date}\n\n"
         f"--- FILE MANIFEST ---\n{manifest_block}\n--- END MANIFEST ---\n\n"
-        f"{('--- USER CHECKLIST RULES ---\\n' + checklist_block + '\\n--- END CHECKLIST ---\\n\\n') if checklist_block else ''}"
+        f"{checklist_brain_block}"
         f"--- USER DRAFT PROMPT ---\n{draft}\n--- END DRAFT ---\n\n"
         "Produce the best possible rewritten prompt. Distinguish your work with specificity, measurable "
         "criteria, and a rock-solid Delivery section that references the real folder paths."
@@ -354,7 +358,7 @@ def brainstorm_prompt_multi_model(payload):
         f"Target agent:     {agent_name}\n"
         f"Version folder:   {version_name}\n"
         f"Current date:     {current_date}\n\n"
-        f"{('--- USER CHECKLIST RULES (MUST all be in the final) ---\\n' + checklist_block + '\\n--- END ---\\n\\n') if checklist_block else ''}"
+        f"{checklist_synth_block}"
         f"--- FILE MANIFEST ---\n{manifest_block}\n--- END MANIFEST ---\n\n"
         f"--- CANDIDATE DRAFTS FROM MULTIPLE MODELS ---\n{drafts_block}\n--- END CANDIDATES ---\n\n"
         "Produce the single synthesized final prompt now."
