@@ -109,6 +109,18 @@ a:hover{color:var(--gold-light)}
 .agent-group-header{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px;padding-bottom:12px;border-bottom:1px solid rgba(255,255,255,0.06)}
 .agent-group-header strong{font-size:14px;font-weight:700;letter-spacing:-0.02em;color:var(--text)}
 .agent-group-badge{display:inline-flex;align-items:center;gap:6px;padding:6px 10px;border-radius:999px;background:rgba(113,112,255,0.12);border:1px solid rgba(113,112,255,0.18);font-size:11px;font-weight:700;color:#d7dbff;white-space:nowrap}
+.agent-group-controls{display:inline-flex;align-items:center;gap:8px;flex-wrap:wrap}
+.agent-hide-btn{display:inline-flex;align-items:center;gap:6px;padding:6px 10px;border-radius:999px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);font-size:11px;font-weight:600;color:var(--muted);cursor:pointer;transition:all 0.18s ease;white-space:nowrap}
+.agent-hide-btn:hover{background:rgba(255,255,255,0.08);color:var(--text);border-color:rgba(255,255,255,0.18)}
+.agent-hide-btn svg{width:12px;height:12px}
+.agent-group.collapsed{opacity:0.72}
+.agent-group.collapsed .agent-group-body{display:none}
+.agent-group.collapsed .agent-group-header{margin-bottom:0;padding-bottom:0;border-bottom:0}
+.agent-group.collapsed .agent-group-badge{background:rgba(255,255,255,0.04);border-color:rgba(255,255,255,0.08);color:var(--muted)}
+.agent-group-hidden-note{font-size:11px;color:var(--muted);font-style:italic}
+.agents-bulk-bar{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:14px;padding:10px 14px;border-radius:12px;background:rgba(255,255,255,0.025);border:1px dashed rgba(255,255,255,0.1);font-size:12px;color:var(--muted);flex-wrap:wrap}
+.agents-bulk-bar button{background:rgba(113,112,255,0.14);border:1px solid rgba(113,112,255,0.28);color:#d7dbff;font-size:11px;font-weight:700;padding:6px 12px;border-radius:999px;cursor:pointer;transition:all 0.18s ease}
+.agents-bulk-bar button:hover{background:rgba(113,112,255,0.22);border-color:rgba(113,112,255,0.4)}
 .version-section{margin-top:14px}
 .version-header{display:flex;align-items:center;gap:8px;margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid var(--border)}
 .version-dot{width:10px;height:10px;border-radius:50%;border:2px solid var(--bg)}
@@ -1468,6 +1480,62 @@ async function fetchJSON(url){
   }catch(e){return null}
 }
 
+// Agent hide/show state (per domain+agent, persisted in localStorage)
+const AGENT_HIDE_KEY='dashboard_hidden_agents_v1';
+function _getHiddenAgents(){try{return JSON.parse(localStorage.getItem(AGENT_HIDE_KEY)||'{}')||{}}catch(e){return{}}}
+function _saveHiddenAgents(m){try{localStorage.setItem(AGENT_HIDE_KEY,JSON.stringify(m))}catch(e){}}
+function isAgentHidden(domain,agent){const m=_getHiddenAgents();return !!(m[domain]&&m[domain][agent])}
+function setAgentHidden(domain,agent,hidden){const m=_getHiddenAgents();if(!m[domain])m[domain]={};if(hidden){m[domain][agent]=true}else{delete m[domain][agent];if(!Object.keys(m[domain]).length)delete m[domain]}_saveHiddenAgents(m)}
+function _updateAgentsBulkBar(domain){
+  const card=document.querySelector(`.project-card[data-name="${domain.toLowerCase().replace(/"/g,'\\"')}"]`);
+  if(!card)return;
+  const inner=card.querySelector('.card-body-inner');if(!inner)return;
+  let bar=inner.querySelector('.agents-bulk-bar');
+  const groups=inner.querySelectorAll('.agent-group');
+  let hidden=0;groups.forEach(g=>{if(g.classList.contains('collapsed'))hidden++});
+  if(hidden>0){
+    if(!bar){bar=document.createElement('div');bar.className='agents-bulk-bar';bar.setAttribute('data-domain-bar',domain);inner.appendChild(bar)}
+    bar.innerHTML=`<span>${hidden} agent${hidden===1?'':'s'} hidden</span><button onclick="event.stopPropagation();showAllAgents('${encodeURIComponent(domain)}')">Show all agents</button>`;
+  }else if(bar){bar.remove()}
+}
+function toggleAgentHidden(domainEnc,agentEnc,btn){
+  const domain=decodeURIComponent(domainEnc);
+  const agent=decodeURIComponent(agentEnc);
+  const group=btn.closest('.agent-group');if(!group)return;
+  const willHide=!group.classList.contains('collapsed');
+  group.classList.toggle('collapsed',willHide);
+  setAgentHidden(domain,agent,willHide);
+  // Update hidden note + button label
+  const header=group.querySelector('.agent-group-header');
+  const note=header?header.querySelector('.agent-group-hidden-note'):null;
+  if(willHide){
+    if(!note){const s=document.createElement('span');s.className='agent-group-hidden-note';s.textContent='hidden';const badge=header.querySelector('.agent-group-badge');if(badge)badge.insertAdjacentElement('afterend',s)}
+    btn.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>Show';
+    btn.title='Show this agent';btn.setAttribute('aria-label','Show agent '+agent);
+  }else{
+    if(note)note.remove();
+    btn.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17.94 17.94A10.94 10.94 0 0 1 12 20c-7 0-11-8-11-8a19.6 19.6 0 0 1 5.06-5.94M9.9 4.24A10.94 10.94 0 0 1 12 4c7 0 11 8 11 8a19.6 19.6 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>Hide';
+    btn.title='Hide this agent';btn.setAttribute('aria-label','Hide agent '+agent);
+  }
+  _updateAgentsBulkBar(domain);
+  showToast((willHide?'Hid ':'Showing ')+agent,'info');
+}
+function showAllAgents(domainEnc){
+  const domain=decodeURIComponent(domainEnc);
+  const m=_getHiddenAgents();delete m[domain];_saveHiddenAgents(m);
+  const card=document.querySelector(`.project-card[data-name="${domain.toLowerCase().replace(/"/g,'\\"')}"]`);
+  if(card){
+    card.querySelectorAll('.agent-group.collapsed').forEach(g=>{
+      g.classList.remove('collapsed');
+      const note=g.querySelector('.agent-group-hidden-note');if(note)note.remove();
+      const btn=g.querySelector('.agent-hide-btn');
+      if(btn){btn.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17.94 17.94A10.94 10.94 0 0 1 12 20c-7 0-11-8-11-8a19.6 19.6 0 0 1 5.06-5.94M9.9 4.24A10.94 10.94 0 0 1 12 4c7 0 11 8 11 8a19.6 19.6 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>Hide';btn.title='Hide this agent';}
+    });
+    const bar=card.querySelector('.agents-bulk-bar');if(bar)bar.remove();
+  }
+  showToast('All agents shown for '+domain,'info');
+}
+
 async function loadDashboard(){
   const grid=document.getElementById('projects-grid');
   // Strategy: load static data.json first (no API call), then try live API
@@ -1593,7 +1661,14 @@ async function loadDashboard(){
       if(!versionsByAgent[agentName]) versionsByAgent[agentName]=[];
       versionsByAgent[agentName].push(versionSection);
     });
-    versionsHTML=Object.entries(versionsByAgent).map(([agentName,sections])=>`<div class="agent-group"><div class="agent-group-header"><strong>${agentName}</strong><span class="agent-group-badge">${sections.length} version${sections.length===1?'':'s'}</span></div>${sections.join('')}</div>`).join('');
+    versionsHTML=Object.entries(versionsByAgent).map(([agentName,sections])=>{
+      const _agEnc=encodeURIComponent(agentName);
+      const _dmEnc=encodeURIComponent(p.name);
+      const _hidden=isAgentHidden(p.name,agentName);
+      return `<div class="agent-group${_hidden?' collapsed':''}" data-domain="${p.name}" data-agent="${agentName.replace(/"/g,'&quot;')}"><div class="agent-group-header"><strong>${agentName}</strong><div class="agent-group-controls"><span class="agent-group-badge">${sections.length} version${sections.length===1?'':'s'}</span>${_hidden?'<span class="agent-group-hidden-note">hidden</span>':''}<button class="agent-hide-btn" onclick="event.stopPropagation();toggleAgentHidden('${_dmEnc}','${_agEnc}',this)" title="${_hidden?'Show this agent':'Hide this agent'}" aria-label="${_hidden?'Show':'Hide'} agent ${agentName}">${_hidden?'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>Show':'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17.94 17.94A10.94 10.94 0 0 1 12 20c-7 0-11-8-11-8a19.6 19.6 0 0 1 5.06-5.94M9.9 4.24A10.94 10.94 0 0 1 12 4c7 0 11 8 11 8a19.6 19.6 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>Hide'}</button></div></div><div class="agent-group-body">${sections.join('')}</div></div>`;}).join('');
+    // Bulk bar if any agents hidden for this domain
+    const _hiddenCount=Object.keys(versionsByAgent).filter(a=>isAgentHidden(p.name,a)).length;
+    if(_hiddenCount>0){versionsHTML+=`<div class="agents-bulk-bar" data-domain-bar="${p.name}"><span>${_hiddenCount} agent${_hiddenCount===1?'':'s'} hidden</span><button onclick="event.stopPropagation();showAllAgents('${encodeURIComponent(p.name)}')">Show all agents</button></div>`;}
 
     const _psAgent=latest?detectAgent(latest.name):'Agent';
     const _psVersion=latest?latest.name:'';
