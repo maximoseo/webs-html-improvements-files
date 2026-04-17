@@ -5,6 +5,7 @@ import json
 import mimetypes
 import os
 import posixpath
+import re
 import threading
 import time
 import urllib.error
@@ -596,6 +597,108 @@ def improve_prompt_with_model(payload):
     return {'model': model, 'content': content}
 
 
+
+# ---------- Palette extractor (Prompt Studio) ----------
+
+_HEX_RE = re.compile(r'#(?:[0-9a-fA-F]{6}|[0-9a-fA-F]{3})\b')
+_RGB_RE = re.compile(r'rgba?\(\s*(\d{1,3})\s*,\s*(\d{1,3})\s*,\s*(\d{1,3})(?:\s*,\s*[\d.]+)?\s*\)')
+
+def _norm_hex(h):
+    h = h.lower().lstrip('#')
+    if len(h) == 3:
+        h = ''.join(c*2 for c in h)
+    return '#' + h
+
+def _hex_from_rgb(r, g, b):
+    return '#{:02x}{:02x}{:02x}'.format(max(0,min(255,int(r))), max(0,min(255,int(g))), max(0,min(255,int(b))))
+
+def _too_greyish(hex_color):
+    h = hex_color.lstrip('#')
+    r = int(h[0:2], 16); g = int(h[2:4], 16); b = int(h[4:6], 16)
+    mx = max(r, g, b); mn = min(r, g, b)
+    if mn >= 240 and mx >= 240: return True
+    if mx <= 20: return True
+    if (mx - mn) <= 8 and 40 <= mx <= 220: return True
+    return False
+
+def _luminance(hex_color):
+    h = hex_color.lstrip('#')
+    r = int(h[0:2], 16); g = int(h[2:4], 16); b = int(h[4:6], 16)
+    return 0.2126*r + 0.7152*g + 0.0722*b
+
+def _fetch_page_text(url, timeout=20):
+    req = urllib.request.Request(url, headers={'User-Agent': 'Mozilla/5.0 (HermesPaletteExtractor/1.0)'})
+    with urllib.request.urlopen(req, timeout=timeout) as resp:
+        data = resp.read()
+        encoding = resp.headers.get_content_charset() or 'utf-8'
+        return data.decode(encoding, errors='replace'), resp.geturl()
+
+def _collect_stylesheet_urls(html, base_url):
+    out = []
+    for m in re.finditer(r'<link\b[^>]*rel\s*=\s*["\']stylesheet["\'][^>]*>', html, re.I):
+        tag = m.group(0)
+        href = re.search(r'href\s*=\s*["\']([^"\']+)["\']', tag)
+        if href:
+            out.append(urllib.parse.urljoin(base_url, href.group(1)))
+        if len(out) >= 5:
+            break
+    return out
+
+def extract_palette_from_url(url, max_colors=10):
+    u = urllib.parse.urlparse(url)
+    if u.scheme not in ('http','https'):
+        raise ValueError('Only http/https URLs allowed')
+    host = (u.hostname or '').lower()
+    if host in ('localhost','127.0.0.1','0.0.0.0','::1'):
+        raise ValueError('Private/loopback host not allowed')
+    if host.startswith('10.') or host.startswith('192.168.') or host.startswith('169.254.') or re.match(r'^172\.(1[6-9]|2[0-9]|3[0-1])\.', host):
+        raise ValueError('Private host not allowed')
+
+    html, final_url = _fetch_page_text(url)
+    css_blobs = [html]
+    for css_url in _collect_stylesheet_urls(html, final_url)[:3]:
+        try:
+            body, _ = _fetch_page_text(css_url, timeout=12)
+            css_blobs.append(body)
+        except Exception:
+            continue
+
+    combined = '\n'.join(css_blobs)
+
+    counts = {}
+    for m in _HEX_RE.finditer(combined):
+        h = _norm_hex(m.group(0))
+        counts[h] = counts.get(h, 0) + 1
+    for m in _RGB_RE.finditer(combined):
+        h = _hex_from_rgb(m.group(1), m.group(2), m.group(3))
+        counts[h] = counts.get(h, 0) + 1
+
+    brand = [(c, n) for c, n in counts.items() if not _too_greyish(c)]
+    brand.sort(key=lambda x: (-x[1], abs(_luminance(x[0]) - 128)))
+    neutrals = sorted([(c, n) for c, n in counts.items() if _too_greyish(c)], key=lambda x: -x[1])[:5]
+
+    top_brand = brand[:max_colors]
+
+    title = ''
+    m = re.search(r'<title[^>]*>([^<]+)</title>', html, re.I)
+    if m:
+        title = m.group(1).strip()[:200]
+    desc = ''
+    m = re.search(r'<meta[^>]+name\s*=\s*["\']description["\'][^>]*content\s*=\s*["\']([^"\']+)["\']', html, re.I)
+    if m:
+        desc = m.group(1).strip()[:300]
+
+    return {
+        'ok': True,
+        'url': final_url,
+        'title': title,
+        'description': desc,
+        'totalDistinctColors': len(counts),
+        'brandPalette': [{'hex': c, 'count': n} for c, n in top_brand],
+        'neutrals': [{'hex': c, 'count': n} for c, n in neutrals],
+    }
+
+
 class DashboardHandler(BaseHTTPRequestHandler):
     server_version = 'DashboardHTTP/1.0'
 
@@ -620,6 +723,7 @@ class DashboardHandler(BaseHTTPRequestHandler):
                 'githubCommitConfigured': bool(os.getenv('GITHUB_TOKEN')),
                 'brainstormModels': [{'id': m['id'], 'label': m['label']} for m in BRAINSTORM_MODELS],
                 'synthModel': SYNTH_MODEL,
+                'paletteExtractorConfigured': True,
             })
         if parsed.path == '/api/n8n/status':
             query = urllib.parse.parse_qs(parsed.query)
@@ -659,6 +763,24 @@ class DashboardHandler(BaseHTTPRequestHandler):
                 return json_response(self, 502, {'ok': False, 'error': f'Model API error {exc.code}', 'details': body})
             except Exception as exc:
                 return json_response(self, 500, {'ok': False, 'error': str(exc)})
+
+        if parsed.path == '/api/prompt/palette':
+            try:
+                url = (payload.get('url') or '').strip()
+                if not url:
+                    return json_response(self, 400, {'ok': False, 'error': 'url is required'})
+                max_colors = int(payload.get('maxColors') or 10)
+                max_colors = max(3, min(max_colors, 20))
+                result = extract_palette_from_url(url, max_colors=max_colors)
+                return json_response(self, 200, result)
+            except ValueError as exc:
+                return json_response(self, 400, {'ok': False, 'error': str(exc)})
+            except urllib.error.HTTPError as exc:
+                return json_response(self, 502, {'ok': False, 'error': f'Fetch failed {exc.code}', 'details': str(exc)[:300]})
+            except urllib.error.URLError as exc:
+                return json_response(self, 502, {'ok': False, 'error': f'Fetch failed: {exc.reason}'})
+            except Exception as exc:
+                return json_response(self, 500, {'ok': False, 'error': str(exc)[:400]})
 
         if parsed.path == '/api/prompt/brainstorm':
             try:

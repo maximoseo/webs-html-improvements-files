@@ -571,6 +571,20 @@ img,svg,video,canvas{max-width:100%;height:auto}
 .prompt-sync-note{font-size:11px;color:var(--muted);margin-top:6px;line-height:1.5}
 .prompt-sync-note code{font-family:'SF Mono','Monaco',monospace;background:rgba(255,255,255,0.05);padding:1px 6px;border-radius:4px;color:#d7dbff}
 .brainstorm-meta{font-size:11px;color:var(--muted);margin-top:6px}
+/* Prompt studio — palette extractor */
+.palette-extractor{margin-top:12px;padding:12px 14px;border-radius:12px;background:rgba(255,255,255,0.025);border:1px solid rgba(255,255,255,0.08)}
+.palette-extractor-row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.palette-extractor-row label{font-size:11px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em}
+.palette-extractor-row input[type=url]{flex:1 1 220px;min-width:180px;padding:8px 12px;border-radius:8px;background:rgba(0,0,0,0.2);border:1px solid rgba(255,255,255,0.08);color:var(--text);font-size:13px}
+.palette-extractor-row input[type=url]:focus{outline:2px solid var(--purple);outline-offset:0}
+.palette-extractor-status{font-size:11px;color:var(--muted);margin-top:6px}
+.palette-swatches{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+.palette-chip{display:inline-flex;align-items:center;gap:6px;padding:6px 10px;border-radius:999px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);font-family:'SF Mono','Monaco',monospace;font-size:11px;color:var(--text);cursor:pointer;transition:all .18s ease}
+.palette-chip:hover{border-color:rgba(255,255,255,0.2);background:rgba(255,255,255,0.08)}
+.palette-chip .swatch{width:14px;height:14px;border-radius:4px;border:1px solid rgba(255,255,255,0.15);flex-shrink:0}
+.palette-neutrals{opacity:0.7;margin-top:6px}
+.palette-snippet{margin-top:10px;padding:10px 12px;border-radius:8px;background:#0b0b12;border:1px solid rgba(255,255,255,0.06);font-family:'SF Mono','Monaco',monospace;font-size:11px;color:#d7dbff;white-space:pre-wrap;word-break:break-word;max-height:180px;overflow:auto}
+.palette-actions{display:flex;gap:8px;margin-top:8px;flex-wrap:wrap}
 </style>
 </head>
 <body>
@@ -712,6 +726,21 @@ img,svg,video,canvas{max-width:100%;height:auto}
         <div class="checklist-body">
           <div class="checklist-filter"><input type="text" id="checklist-filter-input" placeholder="Filter rules..." oninput="filterChecklist(this.value)"></div>
           <div class="checklist-groups" id="checklist-groups"></div>
+        </div>
+      </div>
+      <div class="palette-extractor" id="palette-extractor">
+        <div class="palette-extractor-row">
+          <label for="palette-url">Brand palette from URL</label>
+          <input type="url" id="palette-url" placeholder="https://example.com/" autocomplete="off">
+          <button type="button" class="action-btn" onclick="extractPaletteFromUrl(this)" style="font-size:12px;padding:8px 14px"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:13px;height:13px;margin-right:4px;vertical-align:-2px"><circle cx="13.5" cy="6.5" r="2"/><circle cx="17.5" cy="10.5" r="2"/><circle cx="8.5" cy="7.5" r="2"/><circle cx="6.5" cy="12.5" r="2"/><path d="M12 22a10 10 0 0 1 0-20 10 10 0 0 1 7.07 17.07c-1.2 1.2-3.07 1.2-4.25 0-1.2-1.2-1.2-3.07 0-4.25l.08-.08c.4-.4.4-1.05 0-1.45a1.02 1.02 0 0 0-.7-.29H12"/></svg>Extract palette</button>
+        </div>
+        <div class="palette-extractor-status" id="palette-status">Paste the homepage URL — e.g. <code style="color:#d7dbff">https://powerplug.ai/</code> — to pull the real brand colors into your draft.</div>
+        <div class="palette-swatches" id="palette-swatches" style="display:none"></div>
+        <div class="palette-snippet" id="palette-snippet" style="display:none"></div>
+        <div class="palette-actions" id="palette-actions" style="display:none">
+          <button class="action-btn success" onclick="insertPaletteIntoDraft()" style="font-size:12px;padding:8px 14px">Insert into draft</button>
+          <button class="action-btn" onclick="copyPaletteSnippet()" style="font-size:12px;padding:8px 14px">Copy snippet</button>
+          <button class="action-btn" onclick="clearPaletteExtract()" style="font-size:12px;padding:8px 14px">Clear</button>
         </div>
       </div>
       <div class="model-select-wrap">
@@ -992,6 +1021,8 @@ function openPromptStudio(projectName, agentName, versionName, htmlDownloadUrl, 
 
   document.getElementById('prompt-filename').textContent=agent||'Agent';
   document.getElementById('prompt-subtitle').textContent=`${domain} • ${version}`;
+  // Pre-fill the palette URL with the domain homepage for convenience
+  try{ const paletteUrlEl=document.getElementById('palette-url'); if(paletteUrlEl && !paletteUrlEl.value) paletteUrlEl.value='https://'+domain+'/'; }catch(e){}
   document.getElementById('prompt-output').value='';
   document.getElementById('prompt-status').textContent='Review the pre-filled context below, add your instructions, then click Improve.';
 
@@ -1309,6 +1340,106 @@ async function copyObsidianInstructions(){
     const ta=document.createElement('textarea');ta.value=block;document.body.appendChild(ta);ta.select();document.execCommand('copy');ta.remove();
     showToast('Path + content copied','success');
   }
+}
+
+let _lastPalette=null;
+async function extractPaletteFromUrl(btn){
+  const url=(document.getElementById('palette-url').value||'').trim();
+  const status=document.getElementById('palette-status');
+  const swatchesEl=document.getElementById('palette-swatches');
+  const snippetEl=document.getElementById('palette-snippet');
+  const actionsEl=document.getElementById('palette-actions');
+  if(!url){status.textContent='Paste a URL first.';return;}
+  if(!/^https?:\/\//i.test(url)){status.textContent='URL must start with http:// or https://';return;}
+  const orig=btn.innerHTML;
+  btn.disabled=true;btn.innerHTML='Extracting...';
+  status.textContent='Fetching '+url+' and parsing CSS colors...';
+  swatchesEl.style.display='none';snippetEl.style.display='none';actionsEl.style.display='none';
+  try{
+    const res=await fetch('/api/prompt/palette',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({url,maxColors:10})});
+    const data=await res.json();
+    if(!res.ok||!data.ok) throw new Error(data.error||'Palette extraction failed');
+    _lastPalette=data;
+    renderPalette(data);
+    status.innerHTML=`Found ${data.brandPalette.length} brand color${data.brandPalette.length===1?'':'s'} + ${data.neutrals.length} neutral${data.neutrals.length===1?'':'s'} from <code style="color:#d7dbff">${(data.url||url).replace(/</g,'&lt;')}</code>${data.title?' \u2014 '+data.title.replace(/</g,'&lt;'):''}`;
+    showToast('Palette extracted','success');
+  }catch(e){
+    status.textContent=(e&&e.message)||'Palette extraction failed';
+    showToast('Palette extraction failed','error');
+  }finally{
+    btn.disabled=false;btn.innerHTML=orig;
+  }
+}
+
+function renderPalette(data){
+  const swatchesEl=document.getElementById('palette-swatches');
+  const snippetEl=document.getElementById('palette-snippet');
+  const actionsEl=document.getElementById('palette-actions');
+  let html='';
+  (data.brandPalette||[]).forEach((c,i)=>{
+    const hex=c.hex;
+    const role=i===0?'primary':(i===1?'accent':(i===2?'secondary':''));
+    html+=`<span class="palette-chip" onclick="copyHex('${hex}')" title="Click to copy"><span class="swatch" style="background:${hex}"></span><span>${hex}</span>${role?`<span style="font-size:10px;color:var(--muted)">\u00b7 ${role}</span>`:''}<span style="font-size:10px;color:var(--muted)">x${c.count}</span></span>`;
+  });
+  if((data.neutrals||[]).length){
+    html+='<span style="width:100%;height:0;flex-basis:100%;border-top:1px dashed rgba(255,255,255,0.08);margin:4px 0 2px"></span>';
+    data.neutrals.forEach(c=>{
+      html+=`<span class="palette-chip palette-neutrals" onclick="copyHex('${c.hex}')" title="Click to copy"><span class="swatch" style="background:${c.hex}"></span><span>${c.hex}</span><span style="font-size:10px;color:var(--muted)">\u00b7 neutral \u00b7 x${c.count}</span></span>`;
+    });
+  }
+  swatchesEl.innerHTML=html;
+  swatchesEl.style.display='flex';
+  snippetEl.textContent=buildPaletteSnippet(data);
+  snippetEl.style.display='block';
+  actionsEl.style.display='flex';
+}
+
+function buildPaletteSnippet(data){
+  const bp=(data.brandPalette||[]);
+  const nu=(data.neutrals||[]);
+  const primary=bp[0]?.hex||'#000';
+  const accent=bp[1]?.hex||primary;
+  const sec=bp[2]?.hex||primary;
+  const others=bp.slice(3).map(c=>c.hex);
+  const neu=nu.map(c=>c.hex);
+  const srcHost=(()=>{try{return new URL(data.url).host}catch(e){return data.url||'site'}})();
+  let block=`BRAND PALETTE — extracted from ${data.url||srcHost}\n`;
+  if(data.title) block+=`Site: ${data.title}\n`;
+  block+=`\n:root {\n  --brand-primary: ${primary};\n  --brand-accent: ${accent};\n  --brand-secondary: ${sec};\n`;
+  others.forEach((h,i)=>{block+=`  --brand-${i+1}: ${h};\n`});
+  neu.forEach((h,i)=>{block+=`  --neutral-${i+1}: ${h};\n`});
+  block+=`}\n\nAll brand colors: ${bp.map(c=>c.hex).join(', ')}\nNeutrals: ${neu.join(', ')}\n\nUse these exact hex values in the rewritten prompt and any generated HTML/CSS.`;
+  return block;
+}
+
+function insertPaletteIntoDraft(){
+  if(!_lastPalette){showToast('Nothing to insert','warn');return;}
+  const draft=document.getElementById('prompt-draft');
+  const block='\n\n--- BRAND PALETTE ---\n'+buildPaletteSnippet(_lastPalette)+'\n--- END BRAND PALETTE ---\n';
+  draft.value=(draft.value||'').trim()+block;
+  draft.focus();
+  draft.setSelectionRange(draft.value.length,draft.value.length);
+  showToast('Palette inserted into draft','success');
+}
+
+async function copyPaletteSnippet(){
+  if(!_lastPalette){return;}
+  try{await navigator.clipboard.writeText(buildPaletteSnippet(_lastPalette));showToast('Snippet copied','success');}
+  catch(e){const ta=document.createElement('textarea');ta.value=buildPaletteSnippet(_lastPalette);document.body.appendChild(ta);ta.select();document.execCommand('copy');ta.remove();showToast('Snippet copied','success');}
+}
+
+async function copyHex(hex){
+  try{await navigator.clipboard.writeText(hex);showToast('Copied '+hex,'success');}
+  catch(e){const ta=document.createElement('textarea');ta.value=hex;document.body.appendChild(ta);ta.select();document.execCommand('copy');ta.remove();showToast('Copied '+hex,'success');}
+}
+
+function clearPaletteExtract(){
+  _lastPalette=null;
+  document.getElementById('palette-url').value='';
+  document.getElementById('palette-swatches').style.display='none';
+  document.getElementById('palette-snippet').style.display='none';
+  document.getElementById('palette-actions').style.display='none';
+  document.getElementById('palette-status').innerHTML='Paste the homepage URL \u2014 e.g. <code style="color:#d7dbff">https://powerplug.ai/</code> \u2014 to pull the real brand colors into your draft.';
 }
 
 function showToast(msg,type){
