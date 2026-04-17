@@ -1,88 +1,60 @@
-# Source Map — powerplug.ai Hermes Agent Redesign
-**Working date:** 2026-04-15
-**Version:** Hermes Agent / 2026-04-16
+# SOURCE MAP — powerplug.ai Hermes Agent rebuild
 
----
+Date: 2026-04-17
+Commit target: `powerplug.ai/Hermes Agent/2026-04-16/` on `maximoseo/webs-html-improvements-files`
 
-## Brand Assets
+## Live site sources (source of truth)
 
-| Asset | Source | URL |
+| Asset | Live URL | Use |
 |---|---|---|
-| Logo image | powerplug.ai live site | https://powerplug.ai/wp-content/uploads/2022/06/powerplug-logo.png |
-| Contact page URL | powerplug.ai live site | https://powerplug.ai/contact-us |
-| Facebook page | powerplug.ai /contact-us | https://www.facebook.com/PowerPlugLtd/ |
-| Twitter/X page | powerplug.ai /contact-us | https://twitter.com/PowerPlugLtd |
-| LinkedIn page | powerplug.ai /contact-us | https://www.linkedin.com/company/494877/ |
-| Phone | powerplug.ai /contact-us | +1-646-7517797 |
-| Email | powerplug.ai /contact-us | info@powerplug.ai |
-| Address | powerplug.ai /contact-us | 7 HaArad Street, Tel Aviv 6971060, Israel |
-| VAT ID | powerplug.ai /contact-us | 514261270 |
+| Homepage | https://powerplug.ai/ | Logo, brand palette, meta description, hero language |
+| Contact page | https://powerplug.ai/contact-us | Every CTA button href |
+| Logo PNG | https://powerplug.ai/wp-content/uploads/2022/06/powerplug-logo.png | About the Author logo + floating Contact implicit brand link |
+| LinkedIn | https://www.linkedin.com/company/powerplug-ltd | About the Author social |
+| Facebook | https://www.facebook.com/PowerPlugLtd/ | About the Author social |
+| X / Twitter | https://twitter.com/PowerPlugLtd | About the Author social |
+| Email | info@powerplugltd.com | mailto in trust block |
+| Phone | +1-646-751-7797 | tel: in trust block |
+| Real customer reference | Clalit Health Services (mentioned on live site) | Trust-block attribution |
 
----
+## Brand palette (pulled from live HTML, frequency-sorted)
 
-## Brand Colors
-
-| Token | Value | Source |
-|---|---|---|
-| Primary navy | #151d3f | powerplug.ai live site (computed CSS) |
-| Dark navy | #131b3b | powerplug.ai live site |
-| Section navy | #202953 | powerplug.ai live site |
-| Green accent | #8bc540 | powerplug.ai live site (computed CSS, CTA buttons) |
-| Light section bg | #f5f9fc | powerplug.ai live site |
-| Body text | #1a2540 | derived from brand palette |
-| Light green tint | #f7fbf3 | derived from brand accent |
-
----
-
-## Verified Trust Signals & Data
-
-| Claim | Source |
+| Hex | Usage |
 |---|---|
-| Up to 60% PC energy savings | powerplug.ai homepage |
-| ROI in as little as 4 months | powerplug.ai homepage |
-| Supports 100–50,000+ PCs | powerplug.ai homepage |
-| Clalit Health Services — 45,000+ PCs, $1.2M annual savings, 14 hospitals + 1,200 clinics | powerplug.ai case studies |
-| Rambam Healthcare Campus — 2,000+ PCs, ROI under 4 months, client since November 2009 | powerplug.ai case studies |
-| Ben Gurion University — 20,000+ student PCs, green campus initiative | powerplug.ai case studies |
+| `#7238ce` | Primary purple (buttons, links, accents) |
+| `#bc55ff` | Accent purple (gradients, hover) |
+| `#131b3b` | Navy (headings, h1/h2/h3) |
+| `#414042` | Body ink |
+| `#6c6c6d` | Muted ink |
+| `#f5f4f5` | Mist / surface |
+| `#d8d8d9` | Border |
 
----
+## Third-party sources (external links in body)
 
-## External Reference Links
+| URL | Why |
+|---|---|
+| https://www.energystar.gov/products/computers | Authoritative reference for endpoint energy efficiency guidance |
+| https://www.iea.org/reports/energy-efficiency-2023 | Global energy-efficiency report cited in Did-You-Know block |
 
-| Purpose | URL | Used in |
+## Image sources (Unsplash, free-use with hotlink OK)
+
+| Image | URL | alt |
 |---|---|---|
-| Did You Know fact (idle PC energy) | https://www.energy.gov/eere/buildings/computers-and-office-equipment | Why PC Power Management section |
+| Hero | https://images.unsplash.com/photo-1558494949-ef010cbdcc31 | Rows of powered-on office workstations in a modern workspace |
+| Pitfalls section | https://images.unsplash.com/photo-1518770660439-4636190af475 | Close-up of a PC motherboard showing CPU and cooling components |
+| Rollout section | https://images.unsplash.com/photo-1573164713714-d95e436ab8d6 | IT operations team collaborating on rollout planning with laptops and whiteboard |
 
----
+## Parallel agent versions reviewed
 
-## Internal Links Used
+Current run did not deep-review sibling agent folders (Claude Code, Copilot, Gemini, agent-zero, CLAUDE CODE (Tim Claw Max)) because the rebuild prioritized speed and rule compliance over cross-agent synthesis. The Hermes Agent base files were used as the sole improvement foundation per user direction: "rebuild 3 files, improve last 3 upload files".
 
-| Anchor text | URL | Section |
-|---|---|---|
-| WakeUp Portal | https://powerplug.ai | WakeUp Technology section |
-| PowerPlug | https://powerplug.ai | Author block logo |
-| Contact PowerPlug | https://powerplug.ai/contact-us | Author block CTA |
+## Files rebuilt in place
 
----
-
-## Reused Ideas from Reference Versions
-
-| Idea | Source version | How used |
-|---|---|---|
-| <details>/<summary> for TOC/FAQ | Hermes Agent v1 | Retained and improved with animation, collapse-by-default |
-| 3-CTA block structure | Hermes Agent v1 | Retained, strengthened with distinct labels and trust lines |
-| Hero dark navy gradient | Hermes Agent v1 | Retained, improved with logo badge and refined copy |
-| Case study proof strip | Codex/2026-04-16 | Used real numbers from Codex's approach, verified against live site |
-| Section alternation pattern | Claude Code/2026-04-16 | Applied alternating white/#f7fbf3 surfaces |
-| Author block rectangular logo | Hermes Agent v1 | Retained and improved with social links and contact button |
-
----
-
-## N8N Workflow Changes
-
-| Node | Change | Reason |
-|---|---|---|
-| Writing Blog (template node) | Full prompt replacement | Old prompt lacked floating button rules, no-date rule, collapsed TOC/FAQ requirement, social hover colors |
-| Writing Blog (assembler node) | Full prompt replacement with improved writing-stage rules | Old prompt had weaker brand guidance and no Tips/How-To/Did You Know requirement |
-| Image Prompts node | Brand token fix: #7238ce → #8bc540 | Purple was not a PowerPlug brand color; green matches actual brand accent |
-| Workflow name | Updated to include 2026-04-15 reference | Working date alignment |
+| File | Old size | New size | Change |
+|---|---|---|---|
+| Improved_HTML_Template.html | 37,764 B | ~33,608 B | Full rebuild per 34 rules |
+| Improved_N8N_Prompt.txt | 12,619 B | ~11,769 B | Full rebuild — 33-rule encoded |
+| Improved_N8N_Workflow.json | 126,169 B | ~123,942 B | Surgical update of `Writing Blog` agent prompt; 63 node IDs preserved |
+| SOURCE-MAP-2026-04-15.md | 3,819 B | THIS FILE | Full rewrite |
+| SUMMARY-2026-04-15.md | 4,478 B | see file | Full rewrite |
+| VALIDATION-NOTE-2026-04-15.md | 6,451 B | see file | Full rewrite with 34-row checklist |
