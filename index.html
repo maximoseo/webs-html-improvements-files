@@ -773,6 +773,103 @@ img,svg,video,canvas{max-width:100%;height:auto}
   .prompt-modal .action-btn{height:44px;padding:0 18px;font-size:13.5px}
   .prompt-modal #prompt-improve-btn,.prompt-modal #prompt-brainstorm-btn{flex:1 1 140px;justify-content:center}
 }
+/* Prompt Studio — v2 final polish 2026-04-17 */
+/* 1. One clear primary action — demote Brainstorm to ghost */
+.prompt-modal #prompt-brainstorm-btn{background:transparent !important;border:1px solid rgba(255,255,255,0.14) !important;color:rgba(255,255,255,0.82) !important;box-shadow:none !important}
+.prompt-modal #prompt-brainstorm-btn:hover{background:rgba(113,112,255,0.08) !important;border-color:rgba(180,140,255,0.45) !important;color:#e5dcff !important}
+.prompt-modal #prompt-brainstorm-btn svg{opacity:.78}
+.prompt-modal #prompt-brainstorm-btn:hover svg{opacity:1}
+
+/* 2. Remove the heavy gradient action-bar strip; use a clean seam instead */
+.prompt-panel > .prompt-actions,.prompt-panel + .prompt-panel > .prompt-actions{
+  background:transparent !important;
+  backdrop-filter:none !important;
+  border-top:1px solid rgba(255,255,255,0.07) !important;
+  padding:14px 0 4px !important;
+  margin:8px 0 0 !important;
+  border-radius:0 !important;
+}
+/* keep it sticky with a proper translucent pane only when scrolling actually exists */
+.prompt-panel > .prompt-actions{position:sticky;bottom:0;background:linear-gradient(180deg,transparent 0%,rgba(18,18,26,0.92) 28%,rgba(18,18,26,0.96) 100%) !important;padding:14px 2px 10px !important;margin-top:10px !important}
+
+/* 3. Tighten label styling — clearer hierarchy, slightly brighter */
+.prompt-modal .prompt-label{font-size:12.5px !important;font-weight:700 !important;color:rgba(255,255,255,0.78) !important;letter-spacing:0 !important;margin-bottom:6px !important}
+.prompt-modal .prompt-label::before{width:5px;height:5px}
+
+/* 4. Give the palette extractor a soft divider above it (breathing room) */
+.palette-extractor{margin-top:16px !important}
+
+/* 5. Modal header: even spacing + integrated close button */
+.prompt-modal .modal-header{padding:14px 20px !important}
+.prompt-modal .modal-close{border:0 !important;background:transparent !important;width:34px !important;height:34px !important;border-radius:10px !important;color:rgba(255,255,255,0.7) !important;font-size:20px !important;line-height:1 !important}
+.prompt-modal .modal-close:hover{background:rgba(255,255,255,0.08) !important;color:#fff !important}
+
+/* 6. Checklist — tighter header, softer expanded state */
+.prompt-modal .checklist-header-btn{background:rgba(255,255,255,0.04) !important;border:1px solid rgba(255,255,255,0.08) !important;color:rgba(255,255,255,0.8) !important}
+.prompt-modal .checklist-header-btn:hover{background:rgba(255,255,255,0.08) !important;border-color:rgba(255,255,255,0.16) !important;color:#fff !important}
+.prompt-modal .checklist-count-badge{background:rgba(113,112,255,0.18) !important;color:#d7dbff !important;border:1px solid rgba(113,112,255,0.32) !important;padding:3px 9px !important;border-radius:999px !important}
+.prompt-modal .checklist-count-badge.zero{background:rgba(255,255,255,0.04) !important;color:rgba(255,255,255,0.5) !important;border-color:rgba(255,255,255,0.09) !important}
+
+/* 7. Space between checklist + palette — premium apps use 20-24px */
+.prompt-panel > .checklist-wrap + .palette-extractor{margin-top:18px !important}
+.prompt-panel > .palette-extractor + .model-select-wrap{margin-top:18px !important}
+.prompt-panel > .prompt-draft + *{margin-top:18px !important}
+
+/* 8. Remove the dot prefix on labels — cleaner, more Linear-like */
+.prompt-modal .prompt-label::before{display:none !important}
+
+/* 9. Input focus ring polish — thinner, cleaner */
+.prompt-modal .prompt-textarea:focus-visible,.prompt-modal .prompt-textarea:focus,
+.palette-extractor-row input[type=url]:focus,.prompt-modal .model-select:focus{
+  box-shadow:0 0 0 2px rgba(113,112,255,0.4) !important;
+}
+
+/* 10. Primary Improve button — subtle glow instead of heavy shadow */
+.prompt-modal #prompt-improve-btn{
+  background:#6865ff !important;
+  box-shadow:0 2px 0 rgba(0,0,0,0.18),inset 0 1px 0 rgba(255,255,255,0.12) !important;
+  border:1px solid rgba(104,101,255,0.8) !important;
+}
+.prompt-modal #prompt-improve-btn:hover{
+  background:#7a77ff !important;
+  box-shadow:0 4px 14px rgba(104,101,255,0.35),inset 0 1px 0 rgba(255,255,255,0.15) !important;
+}
+.prompt-modal #prompt-improve-btn:active{
+  box-shadow:0 1px 0 rgba(0,0,0,0.2),inset 0 1px 0 rgba(255,255,255,0.08) !important;
+}
+
+/* 11. Secondary ghost buttons in palette-actions — match language */
+.palette-actions button.action-btn,
+.prompt-modal .prompt-actions button.action-btn:not(#prompt-improve-btn):not(#prompt-brainstorm-btn):not(#prompt-sync-gh-btn){
+  background:rgba(255,255,255,0.05) !important;
+  border:1px solid rgba(255,255,255,0.09) !important;
+  color:rgba(255,255,255,0.82) !important;
+  box-shadow:none !important;
+}
+.palette-actions button.action-btn:hover{background:rgba(255,255,255,0.09) !important;border-color:rgba(255,255,255,0.18) !important;color:#fff !important}
+
+/* 12. "Extract palette" button — treat as primary within its card */
+.palette-extractor-row button.action-btn{
+  background:linear-gradient(180deg,rgba(113,112,255,0.2),rgba(113,112,255,0.08)) !important;
+  border:1px solid rgba(113,112,255,0.4) !important;
+  color:#e5dcff !important;
+}
+.palette-extractor-row button.action-btn:hover{
+  background:linear-gradient(180deg,rgba(113,112,255,0.3),rgba(113,112,255,0.16)) !important;
+  border-color:rgba(180,140,255,0.6) !important;
+  color:#fff !important;
+}
+
+/* 13. Status + sync status text — slightly brighter for scannability */
+.prompt-modal .prompt-status{color:rgba(255,255,255,0.66) !important}
+
+/* 14. Tighter card edges — consistency pass */
+.prompt-modal .checklist-wrap,.palette-extractor,.brainstorm-progress,.prompt-sync-panel{
+  box-shadow:0 1px 0 rgba(255,255,255,0.03),inset 0 0 0 1px rgba(255,255,255,0.01) !important;
+}
+
+/* 15. Hide the sticky gradient on the Output panel's copy bar since there's no scroll issue there */
+.prompt-panel:has(#prompt-output) > .prompt-actions{position:static !important;background:transparent !important;border-top:1px solid rgba(255,255,255,0.07) !important;padding:14px 0 4px !important;margin:8px 0 0 !important}
 </style>
 </head>
 <body>
