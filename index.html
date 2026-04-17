@@ -1518,7 +1518,7 @@ function toggleAgentHidden(domainEnc,agentEnc,btn){
     btn.title='Hide this agent';btn.setAttribute('aria-label','Hide agent '+agent);
   }
   _updateAgentsBulkBar(domain);
-  showToast((willHide?'Hid ':'Showing ')+agent,'info');
+  showToast((willHide?'Hidden: ':'Showing: ')+agent,'info');
 }
 function showAllAgents(domainEnc){
   const domain=decodeURIComponent(domainEnc);
