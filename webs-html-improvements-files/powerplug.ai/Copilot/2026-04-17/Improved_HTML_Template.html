@@ -1,366 +1,361 @@
-<article id="top" dir="ltr" lang="en" class="sa-article" style="direction:ltr !important;text-align:left !important;unicode-bidi:isolate !important;font-family:'Montserrat',sans-serif;color:#2a2a2a;line-height:1.8;max-width:820px;margin:0 auto;padding:20px;font-size:17px;box-sizing:border-box;background:#f7f8fa;">
+﻿<article id="top" dir="ltr" lang="en" class="sa-article" style="direction:ltr !important;text-align:left !important;unicode-bidi:isolate !important;font-family:'Montserrat',sans-serif;color:#2a2a2a;line-height:1.8;max-width:820px;margin:0 auto;padding:20px;font-size:17px;box-sizing:border-box;background:#f7f8fa;">
 <style>
 .sa-article,.sa-article *,.sa-article *::before,.sa-article *::after{direction:ltr !important;text-align:left !important;box-sizing:border-box !important;unicode-bidi:isolate !important}
 .sa-article h1,.sa-article .sa-hero-wrap,.sa-article .sa-hero-wrap *{text-align:center !important}
-.sa-article .sa-cta,.sa-article .sa-cta *{text-align:center !important}
+.sa-article .sa-cta,.sa-article .sa-cta *,.sa-article .sa-cta-bottom,.sa-article .sa-cta-bottom *{text-align:center !important}
 .sa-article .sa-author-wrap,.sa-article .sa-author-wrap *{text-align:left !important}
 .sa-article a{transition:color .2s ease,background .2s ease,border-color .2s ease}
-.sa-article a:hover{color:#0fb5b0 !important}
-.sa-article .sa-btn-teal:hover{background:#0d9e9a !important;box-shadow:0 6px 18px rgba(15,181,176,.30) !important}
-.sa-article .sa-btn-navy:hover{background:#1e2a52 !important}
-.sa-article table tr:hover td{background:#f2f4f6 !important}
+.sa-article a:hover{color:#8AD628 !important}
+.sa-article .sa-btn-green:hover{background:#6db015 !important;box-shadow:0 6px 18px rgba(138,214,40,.32) !important;transform:translateY(-2px)}
+.sa-article .sa-btn-navy:hover{background:#1e2a52 !important;transform:translateY(-2px)}
+.sa-article .sa-float-btn:hover{background:#6db015 !important;transform:translateY(-2px) !important;box-shadow:0 8px 22px rgba(138,214,40,.40) !important}
+.sa-article #sa-scroll-top:hover{background:#1e2a52 !important;transform:translateY(-2px) !important}
+.sa-article table tr:hover td{background:#f0f9ee !important}
 .sa-article .sa-toc-body{max-height:0;overflow:hidden;transition:max-height .4s ease}
 .sa-article .sa-toc-body.open{max-height:3000px}
 .sa-article .faq-answer{max-height:0;overflow:hidden;transition:max-height .4s ease}
 .sa-article .faq-answer.open{max-height:1200px}
 .sa-article .sa-faq-icon,.sa-article .sa-toc-icon{transition:transform .3s;display:inline-block}
 .sa-article .sa-faq-icon.open,.sa-article .sa-toc-icon.open{transform:rotate(45deg)}
-.sa-article .sa-toc-list a:hover{background:#e6f9f9 !important;border-left-color:#0fb5b0 !important}
-.sa-article .sa-faq-q:hover{background:#e6f9f9 !important}
-.sa-article summary br,.sa-article [data-resp="float-group"] br{display:none !important}
-.sa-article [data-resp="container"] > p:empty{display:none !important}
-.sa-float-left{opacity:0;pointer-events:none;transition:opacity .3s ease}
-.sa-float-left.visible{opacity:1;pointer-events:auto}
-@media (max-width:820px){.sa-article{padding:16px !important;font-size:16px !important}}
-@media (max-width:640px){
-.sa-article{padding:14px !important;font-size:15px !important}
-.sa-article h1{font-size:1.75em !important}
-.sa-article h2{font-size:1.35em !important}
-.sa-article .sa-hero-wrap{padding:32px 16px !important}
-.sa-article .sa-section{padding:24px 16px !important}
-.sa-article .sa-cta{padding:20px 16px !important}
-.sa-article .sa-cta-bottom{padding:36px 16px !important}
-.sa-article table{font-size:14px !important}
-.sa-article table th,.sa-article table td{padding:10px 12px !important}
-.sa-article .sa-author-inner{flex-direction:column !important;align-items:center !important}
-.sa-article .sa-author-inner>div{text-align:center !important}
-.sa-article .sa-author-socials{justify-content:center !important;flex-wrap:wrap !important}
+.sa-article .sa-toc-list a:hover{background:#f0f9ee !important;border-left-color:#8AD628 !important;color:#131b3b !important}
+.sa-article .sa-faq-q:hover{background:#f0f9ee !important}
+.sa-article .sa-social-btn{display:inline-flex;align-items:center;justify-content:center;width:40px;height:40px;border-radius:50%;background:#fff;color:#131b3b;border:1px solid #e0e3e8;text-decoration:none;font-size:.78em;font-weight:700;transition:background .2s ease,color .2s ease,border-color .2s ease,transform .2s ease;margin:0 4px}
+.sa-article .sa-social-btn:hover{transform:translateY(-2px)}
+.sa-article .sa-social-fb:hover{background:#1877F2 !important;color:#fff !important;border-color:#1877F2 !important}
+.sa-article .sa-social-li:hover{background:#0A66C2 !important;color:#fff !important;border-color:#0A66C2 !important}
+.sa-article .sa-social-ig:hover{background:#E1306C !important;color:#fff !important;border-color:#E1306C !important}
+.sa-article .sa-social-tw:hover{background:#1DA1F2 !important;color:#fff !important;border-color:#1DA1F2 !important}
+@media (max-width:768px){
+  .sa-article{padding:14px !important;font-size:15px !important}
+  .sa-article h1{font-size:1.75em !important}
+  .sa-article h2{font-size:1.32em !important}
+  .sa-article .sa-hero-wrap{padding:32px 18px !important}
+  .sa-article .sa-section{padding:24px 18px !important}
+  .sa-article .sa-cta,.sa-article .sa-cta-bottom{padding:22px 18px !important}
+  .sa-article table{font-size:14px !important;display:block;overflow-x:auto}
+  .sa-article .sa-author-inner{flex-direction:column !important;align-items:flex-start !important}
+  .sa-article .sa-author-inner > div:first-child{margin:0 0 14px 0 !important}
+  .sa-article .sa-proof-strip{grid-template-columns:1fr !important}
+  .sa-article #sa-scroll-top{bottom:80px;left:16px}
+  .sa-article .sa-float-btn{bottom:16px;right:16px;padding:11px 18px !important;font-size:.88em !important}
 }
-@media (max-width:375px){
-.sa-article{padding:10px !important;font-size:15px !important}
-.sa-article h1{font-size:1.5em !important}
-.sa-article .sa-float-right{bottom:16px !important;right:12px !important;padding:9px 14px !important;font-size:12px !important}
-.sa-article .sa-float-left{bottom:16px !important;left:12px !important;width:40px !important;height:40px !important}
-}
+@media (max-width:480px){.sa-article h1{font-size:1.5em !important}}
 @media (prefers-reduced-motion:reduce){.sa-article *,.sa-article *::before,.sa-article *::after{transition:none !important;animation:none !important}}
 </style>
 
-<div class="sa-hero-wrap" style="background:linear-gradient(135deg,#131b3b 0%,#1e2a52 50%,#0fb5b0 100%);border-radius:18px;padding:52px 36px;margin:0 0 32px 0;box-shadow:0 10px 30px rgba(19,27,59,.18);">
+<!-- HERO -->
+<div class="sa-hero-wrap" style="background:linear-gradient(135deg,#131b3b 0%,#1e2a52 55%,#0fb5b0 100%);border-radius:18px;padding:52px 36px;margin:0 0 24px 0;box-shadow:0 10px 30px rgba(19,27,59,.18);">
 <h1 style="font-size:2.15em;font-weight:800;color:#ffffff;margin:0 0 14px 0;line-height:1.25;letter-spacing:-.01em;text-align:center !important;direction:ltr !important;">IT Cost Reduction Strategies for Enterprises</h1>
-<p style="font-size:1.05em;color:#d8e3ea;margin:0 auto;max-width:640px;line-height:1.6;text-align:center !important;direction:ltr !important;">A practical playbook for IT leaders who need measurable savings — without cutting people, compromising security, or slowing the business down.</p>
+<p style="font-size:1.05em;color:#d8e3ea;margin:0 auto;max-width:640px;line-height:1.65;text-align:center !important;direction:ltr !important;">A practical playbook for IT leaders who need measurable savings — without cutting people, compromising security, or slowing the business down.</p>
 </div>
 
-<div style="background:linear-gradient(135deg,#e6f9f9 0%,#f0fafa 50%,#f7fefe 100%);border-left:4px solid #0fb5b0;border-radius:12px;padding:24px 26px;margin:0 0 32px 0;direction:ltr !important;text-align:left !important;">
-<h2 style="font-size:1.15em;font-weight:700;color:#131b3b;margin:0 0 12px 0;padding:0;border:none;line-height:1.3;direction:ltr !important;text-align:left !important;">Key Takeaways</h2>
-<ul style="margin:0;padding-left:22px;direction:ltr !important;text-align:left !important;">
-<li style="margin-bottom:8px;line-height:1.6;direction:ltr !important;text-align:left !important;">Enterprises typically recover <strong>15–25% of IT operating spend</strong> when they combine automation, PC power management, and disciplined FinOps.</li>
-<li style="margin-bottom:8px;line-height:1.6;direction:ltr !important;text-align:left !important;">Energy is the silent line item — endpoint power management alone can reduce electricity costs <strong>up to 60%</strong> on large PC fleets.</li>
-<li style="margin-bottom:8px;line-height:1.6;direction:ltr !important;text-align:left !important;">Cost reduction programs fail without KPIs, executive sponsorship, and a roadmap longer than one quarter.</li>
-<li style="margin-bottom:0;line-height:1.6;direction:ltr !important;text-align:left !important;">Reduction is short-term; optimization is structural. Enterprises that win do both — starting with a measurable baseline.</li>
+<!-- TRUST PROOF STRIP -->
+<div class="sa-proof-strip" style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:0 0 28px 0;">
+<div style="background:#ffffff;border:1px solid #d6f0d0;border-radius:12px;padding:18px 14px;text-align:center !important;box-shadow:0 2px 8px rgba(19,27,59,.06);direction:ltr !important;">
+<div style="font-size:2em;font-weight:800;color:#131b3b;line-height:1;margin:0 0 6px 0;text-align:center !important;">60%</div>
+<div style="font-size:.85em;color:#52606d;font-weight:600;text-align:center !important;">avg. PC energy savings</div>
+</div>
+<div style="background:#ffffff;border:1px solid #d6f0d0;border-radius:12px;padding:18px 14px;text-align:center !important;box-shadow:0 2px 8px rgba(19,27,59,.06);direction:ltr !important;">
+<div style="font-size:2em;font-weight:800;color:#131b3b;line-height:1;margin:0 0 6px 0;text-align:center !important;">4 mo.</div>
+<div style="font-size:.85em;color:#52606d;font-weight:600;text-align:center !important;">avg. ROI payback period</div>
+</div>
+<div style="background:#ffffff;border:1px solid #d6f0d0;border-radius:12px;padding:18px 14px;text-align:center !important;box-shadow:0 2px 8px rgba(19,27,59,.06);direction:ltr !important;">
+<div style="font-size:2em;font-weight:800;color:#131b3b;line-height:1;margin:0 0 6px 0;text-align:center !important;">45K+</div>
+<div style="font-size:.85em;color:#52606d;font-weight:600;text-align:center !important;">PCs managed per org</div>
+</div>
+</div>
+
+<!-- KEY TAKEAWAYS -->
+<div style="background:linear-gradient(135deg,#e8f9ee 0%,#f5fdf7 100%);border-left:4px solid #8AD628;border-radius:12px;padding:24px 26px;margin:0 0 32px 0;direction:ltr !important;">
+<h2 style="font-size:1.15em;font-weight:700;color:#131b3b;margin:0 0 12px 0;padding:0;border:none;line-height:1.3;direction:ltr !important;">Key Takeaways</h2>
+<ul style="margin:0;padding-left:22px;direction:ltr !important;">
+<li style="margin-bottom:8px;line-height:1.65;">Enterprises typically recover <strong>15-25% of IT operating spend</strong> by combining automation, PC power management, and disciplined FinOps practices.</li>
+<li style="margin-bottom:8px;line-height:1.65;">Endpoint energy is the silent budget leak — PC power management alone cuts electricity costs <strong>up to 60%</strong> on large fleets, with ROI in as little as four months.</li>
+<li style="margin-bottom:8px;line-height:1.65;">Sustained savings require KPIs, executive sponsorship, and a rolling 12-month roadmap — not a one-time project.</li>
+<li style="margin-bottom:0;line-height:1.65;">Cost reduction frees capital; cost optimization compounds it. Enterprises that win long-term do both.</li>
 </ul>
 </div>
 
-<p style="margin:0 0 20px 0;direction:ltr !important;text-align:left !important;">IT budgets grow quietly. Licenses renew, cloud meters keep spinning, endpoints sit idle overnight, and a handful of duplicated systems collect dust on a shelf nobody audits. By the time a CFO requests a 20% reduction, most IT leaders already know where the waste lives — the harder question is how to cut it without breaking the business or burning out the team.</p>
+<!-- INTRO PARAGRAPH — no dates or years -->
+<p style="margin:0 0 20px 0;direction:ltr !important;">IT budgets grow quietly. Licenses renew automatically, cloud meters keep spinning, and endpoints sit idle overnight drawing power with no business value in return. By the time a CFO requests a 20% cost reduction, most IT leaders already know where the waste is — the challenge is capturing it without breaking service delivery, security posture, or team morale.</p>
 
-<div style="background:#ffffff;border:1px solid #e0e3e8;border-radius:12px;margin:0 0 28px 0;overflow:hidden;direction:ltr !important;text-align:left !important;">
-<div onclick="var b=this.parentElement.querySelector('.sa-toc-body'),i=this.querySelector('.sa-toc-icon');b.classList.toggle('open');i.classList.toggle('open');" style="padding:16px 22px;background:#131b3b;color:#ffffff;font-weight:700;font-size:1.02em;cursor:pointer;display:flex;justify-content:space-between;align-items:center;direction:ltr !important;text-align:left !important;">
-<span style="direction:ltr !important;text-align:left !important;">Table of Contents</span>
-<span class="sa-toc-icon" style="display:inline-block;font-size:1.4em;font-weight:400;line-height:1;color:#0fb5b0;">+</span>
+<!-- TABLE OF CONTENTS — after first paragraph (never first) -->
+<div style="background:#ffffff;border:1px solid #e0e3e8;border-radius:12px;margin:0 0 32px 0;overflow:hidden;direction:ltr !important;">
+<div onclick="var b=this.parentElement.querySelector('.sa-toc-body'),i=this.querySelector('.sa-toc-icon');b.classList.toggle('open');i.classList.toggle('open');" style="padding:18px 24px;background:#131b3b;color:#ffffff;font-weight:700;font-size:1.05em;cursor:pointer;display:flex;justify-content:space-between;align-items:center;direction:ltr !important;">
+<span style="direction:ltr !important;">Table of Contents</span>
+<span class="sa-toc-icon" style="display:inline-block;font-size:1.4em;font-weight:400;line-height:1;color:#8AD628;">+</span>
 </div>
 <div class="sa-toc-body" style="max-height:0;overflow:hidden;">
-<ul class="sa-toc-list" style="list-style:none;padding:16px 22px 16px 22px;margin:0;direction:ltr !important;text-align:left !important;">
-<li style="margin-bottom:4px;line-height:1.5;direction:ltr !important;text-align:left !important;"><a href="#sec-1" style="color:#131b3b;text-decoration:none;display:block;padding:7px 12px;border-left:2px solid transparent;border-radius:4px;direction:ltr !important;text-align:left !important;">What a Systematic IT Cost Reduction Strategy Actually Looks Like</a></li>
-<li style="margin-bottom:4px;line-height:1.5;direction:ltr !important;text-align:left !important;"><a href="#sec-2" style="color:#131b3b;text-decoration:none;display:block;padding:7px 12px;border-left:2px solid transparent;border-radius:4px;direction:ltr !important;text-align:left !important;">Why Large Enterprises Struggle to Reduce IT Operating Costs</a></li>
-<li style="margin-bottom:4px;line-height:1.5;direction:ltr !important;text-align:left !important;"><a href="#sec-3" style="color:#131b3b;text-decoration:none;display:block;padding:7px 12px;border-left:2px solid transparent;border-radius:4px;direction:ltr !important;text-align:left !important;">Identifying the Biggest Sources of IT Waste</a></li>
-<li style="margin-bottom:4px;line-height:1.5;direction:ltr !important;text-align:left !important;"><a href="#sec-4" style="color:#131b3b;text-decoration:none;display:block;padding:7px 12px;border-left:2px solid transparent;border-radius:4px;direction:ltr !important;text-align:left !important;">IT Cost Reduction vs. IT Cost Optimization</a></li>
-<li style="margin-bottom:4px;line-height:1.5;direction:ltr !important;text-align:left !important;"><a href="#sec-5" style="color:#131b3b;text-decoration:none;display:block;padding:7px 12px;border-left:2px solid transparent;border-radius:4px;direction:ltr !important;text-align:left !important;">Endpoint Energy: The Hidden 60% Saving</a></li>
-<li style="margin-bottom:4px;line-height:1.5;direction:ltr !important;text-align:left !important;"><a href="#sec-6" style="color:#131b3b;text-decoration:none;display:block;padding:7px 12px;border-left:2px solid transparent;border-radius:4px;direction:ltr !important;text-align:left !important;">Cloud Cost Control and the Rise of FinOps</a></li>
-<li style="margin-bottom:4px;line-height:1.5;direction:ltr !important;text-align:left !important;"><a href="#sec-7" style="color:#131b3b;text-decoration:none;display:block;padding:7px 12px;border-left:2px solid transparent;border-radius:4px;direction:ltr !important;text-align:left !important;">Common Mistakes That Undermine IT Savings Programs</a></li>
-<li style="margin-bottom:4px;line-height:1.5;direction:ltr !important;text-align:left !important;"><a href="#sec-8" style="color:#131b3b;text-decoration:none;display:block;padding:7px 12px;border-left:2px solid transparent;border-radius:4px;direction:ltr !important;text-align:left !important;">KPIs for IT Cost Efficiency</a></li>
-<li style="margin-bottom:4px;line-height:1.5;direction:ltr !important;text-align:left !important;"><a href="#sec-9" style="color:#131b3b;text-decoration:none;display:block;padding:7px 12px;border-left:2px solid transparent;border-radius:4px;direction:ltr !important;text-align:left !important;">A 12-Month Enterprise Savings Roadmap</a></li>
-<li style="margin-bottom:4px;line-height:1.5;direction:ltr !important;text-align:left !important;"><a href="#sec-10" style="color:#131b3b;text-decoration:none;display:block;padding:7px 12px;border-left:2px solid transparent;border-radius:4px;direction:ltr !important;text-align:left !important;">How to Choose a Solution That Delivers Measurable Savings</a></li>
-<li style="margin-bottom:0;line-height:1.5;direction:ltr !important;text-align:left !important;"><a href="#sec-faq" style="color:#131b3b;text-decoration:none;display:block;padding:7px 12px;border-left:2px solid transparent;border-radius:4px;direction:ltr !important;text-align:left !important;">Frequently Asked Questions</a></li>
+<ul class="sa-toc-list" style="list-style:none;padding:18px 24px;margin:0;direction:ltr !important;">
+<li style="margin-bottom:6px;line-height:1.6;"><a href="#sec-1" style="color:#131b3b;text-decoration:none;display:block;padding:6px 10px;border-left:2px solid transparent;border-radius:4px;direction:ltr !important;">What a Systematic IT Cost Reduction Strategy Looks Like</a></li>
+<li style="margin-bottom:6px;line-height:1.6;"><a href="#sec-2" style="color:#131b3b;text-decoration:none;display:block;padding:6px 10px;border-left:2px solid transparent;border-radius:4px;">Why Large Enterprises Struggle to Reduce IT Operating Costs</a></li>
+<li style="margin-bottom:6px;line-height:1.6;"><a href="#sec-3" style="color:#131b3b;text-decoration:none;display:block;padding:6px 10px;border-left:2px solid transparent;border-radius:4px;">Identifying the Biggest Sources of Waste</a></li>
+<li style="margin-bottom:6px;line-height:1.6;"><a href="#sec-4" style="color:#131b3b;text-decoration:none;display:block;padding:6px 10px;border-left:2px solid transparent;border-radius:4px;">IT Cost Reduction vs. IT Cost Optimization</a></li>
+<li style="margin-bottom:6px;line-height:1.6;"><a href="#sec-5" style="color:#131b3b;text-decoration:none;display:block;padding:6px 10px;border-left:2px solid transparent;border-radius:4px;">Endpoint Energy: The Hidden 60% Saving</a></li>
+<li style="margin-bottom:6px;line-height:1.6;"><a href="#sec-6" style="color:#131b3b;text-decoration:none;display:block;padding:6px 10px;border-left:2px solid transparent;border-radius:4px;">Cloud Cost Control and the Rise of FinOps</a></li>
+<li style="margin-bottom:6px;line-height:1.6;"><a href="#sec-7" style="color:#131b3b;text-decoration:none;display:block;padding:6px 10px;border-left:2px solid transparent;border-radius:4px;">Common Mistakes That Undermine IT Savings Programs</a></li>
+<li style="margin-bottom:6px;line-height:1.6;"><a href="#sec-8" style="color:#131b3b;text-decoration:none;display:block;padding:6px 10px;border-left:2px solid transparent;border-radius:4px;">KPIs for IT Cost Efficiency</a></li>
+<li style="margin-bottom:6px;line-height:1.6;"><a href="#sec-9" style="color:#131b3b;text-decoration:none;display:block;padding:6px 10px;border-left:2px solid transparent;border-radius:4px;">A 12-Month Enterprise Savings Roadmap</a></li>
+<li style="margin-bottom:6px;line-height:1.6;"><a href="#sec-10" style="color:#131b3b;text-decoration:none;display:block;padding:6px 10px;border-left:2px solid transparent;border-radius:4px;">How to Choose a Solution That Delivers Measurable Savings</a></li>
+<li style="margin-bottom:0;line-height:1.6;"><a href="#sec-faq" style="color:#131b3b;text-decoration:none;display:block;padding:6px 10px;border-left:2px solid transparent;border-radius:4px;">Frequently Asked Questions</a></li>
 </ul>
 </div>
 </div>
 
-<p style="margin:0 0 24px 0;direction:ltr !important;text-align:left !important;">This guide is written for IT leaders who own real P&amp;Ls in environments with thousands of PCs, hybrid cloud infrastructure, and compliance constraints. It covers what works, what consistently fails, and what a disciplined 12-month savings program looks like when it is built to compound — not just spike in Q1.</p>
+<!-- SECOND INTRO PARAGRAPH -->
+<p style="margin:0 0 24px 0;direction:ltr !important;">This guide is built for IT leaders who own real P&amp;Ls in environments with thousands of endpoints, hybrid cloud infrastructure, and compliance constraints. It covers what works, what typically fails, and what a disciplined 12-month savings program looks like in practice — from the first measurement sprint through to sustainable cost optimization.</p>
 
-<img src="{{ $json.images.section_1.url }}" alt="Enterprise IT cost reduction planning" style="width:100%;max-width:100%;height:auto;border-radius:12px;margin:0 0 32px 0;display:block;border:1px solid #e5e7eb;box-shadow:0 4px 16px rgba(0,0,0,.06);" />
-
-<div class="sa-cta" style="background:linear-gradient(135deg,#e6f9f9 0%,#f0fafa 100%);border:1px solid #b2e8e7;border-radius:12px;padding:26px 28px;margin:0 0 36px 0;direction:ltr !important;text-align:center !important;">
-<p style="margin:0 0 16px 0;font-weight:600;color:#131b3b;font-size:1.02em;direction:ltr !important;text-align:center !important;">Not sure where your fleet is leaking money? Get a free PowerPlug assessment and see where your biggest IT savings actually live.</p>
-<a href="https://powerplug.ai/contact-us" class="sa-btn-teal" style="display:inline-block;background:#0fb5b0;color:#ffffff;padding:13px 30px;border-radius:8px;text-decoration:none;font-weight:700;font-size:1em;box-shadow:0 4px 12px rgba(15,181,176,.25);direction:ltr !important;">Get a Free Assessment</a>
+<!-- CTA #1 — contact-focused -->
+<div class="sa-cta" style="background:#f0faf2;border:1px solid #c5e8b0;border-radius:12px;padding:26px 28px;margin:0 0 36px 0;direction:ltr !important;text-align:center !important;">
+<p style="margin:0 0 16px 0;font-weight:600;color:#131b3b;font-size:1.02em;direction:ltr !important;text-align:center !important;">Not sure where your fleet is leaking money? Talk to PowerPlug and get a focused assessment of your endpoint energy, license, and cloud waste — free and without commitment.</p>
+<a href="https://powerplug.ai/contact-us" class="sa-btn-green" style="display:inline-block;background:#8AD628;color:#ffffff;padding:13px 30px;border-radius:8px;text-decoration:none;font-weight:700;font-size:1em;box-shadow:0 4px 12px rgba(138,214,40,.28);direction:ltr !important;">Get a Free Assessment</a>
 </div>
 
-<section id="sec-1" class="sa-section" style="background:#ffffff;border-radius:14px;padding:32px 28px;margin:0 0 18px 0;direction:ltr !important;text-align:left !important;">
-<h2 style="font-size:1.55em;font-weight:800;color:#131b3b;margin:0 0 18px 0;padding-bottom:10px;border-bottom:3px solid #0fb5b0;line-height:1.3;direction:ltr !important;text-align:left !important;">What a Systematic IT Cost Reduction Strategy Actually Looks Like</h2>
-<p style="margin:0 0 18px 0;direction:ltr !important;text-align:left !important;">A real reduction program is not a cost-cutting sprint. It is a repeatable operating rhythm: measure, target, change, prove, repeat. The enterprises that sustain 15–25% annual savings share four traits — executive sponsorship, clear KPIs, quarterly reviews, and tools that produce evidence rather than opinions.</p>
-<p style="margin:0 0 18px 0;direction:ltr !important;text-align:left !important;">Start with a baseline. You cannot reduce what you have not measured. Capture endpoint count, cloud spend by workload, license utilization rates, average energy draw per PC, and the top five recurring tickets. Every savings claim for the next twelve months should trace directly back to this baseline.</p>
-<h3 style="font-size:1.2em;font-weight:700;color:#131b3b;margin:24px 0 12px 0;line-height:1.4;direction:ltr !important;text-align:left !important;padding-left:14px;border-left:3px solid #0fb5b0;">The Four Pillars of Sustained IT Savings</h3>
-<ul style="margin:0 0 12px 0;padding-left:22px;direction:ltr !important;text-align:left !important;">
-<li style="margin-bottom:8px;line-height:1.6;direction:ltr !important;text-align:left !important;"><strong>Automation</strong> — replace human toil (password resets, provisioning, patching) with deterministic, auditable workflows.</li>
-<li style="margin-bottom:8px;line-height:1.6;direction:ltr !important;text-align:left !important;"><strong>Endpoint efficiency</strong> — power management, lifecycle planning, and right-sizing at the fleet level.</li>
-<li style="margin-bottom:8px;line-height:1.6;direction:ltr !important;text-align:left !important;"><strong>Cloud discipline</strong> — FinOps practices, reserved instances, and workload right-sizing applied on a regular cadence.</li>
-<li style="margin-bottom:0;line-height:1.6;direction:ltr !important;text-align:left !important;"><strong>License hygiene</strong> — eliminate duplicated capability, consolidate SaaS, and audit shelfware on a regular schedule.</li>
+<!-- SECTION 1 -->
+<section id="sec-1" class="sa-section" style="background:#ffffff;border-radius:14px;padding:32px 28px;margin:0 0 18px 0;direction:ltr !important;">
+<h2 style="font-size:1.55em;font-weight:800;color:#131b3b;margin:0 0 18px 0;padding-bottom:10px;border-bottom:3px solid #8AD628;line-height:1.3;direction:ltr !important;">What a Systematic IT Cost Reduction Strategy Looks Like</h2>
+<p style="margin:0 0 18px 0;direction:ltr !important;">A real reduction program is not a cost-cutting sprint. It is a repeatable operating rhythm: measure, target, change, prove, repeat. Enterprises that sustain 15-25% annual savings share four traits — executive sponsorship, clear KPIs, quarterly reviews, and tools that generate evidence rather than estimates.</p>
+<p style="margin:0 0 18px 0;direction:ltr !important;">Start with a baseline. You cannot reduce what you have not measured. Capture endpoint count, cloud spend by workload, license utilization rates, average energy draw per PC, and the top five recurring tickets. Every savings claim for the next 12 months traces back to this baseline — that traceability is what allows the CFO to defend the number.</p>
+<div style="background:#f0faf2;border-left:4px solid #8AD628;border-radius:10px;padding:18px 20px;margin:20px 0;direction:ltr !important;">
+<span style="display:block;font-size:.82em;font-weight:700;letter-spacing:.06em;text-transform:uppercase;margin-bottom:8px;color:#3d7a14;direction:ltr !important;">How To</span>
+<p style="margin:0;direction:ltr !important;">Build your baseline in a single sprint: pull endpoint counts from Active Directory, export cloud spend by project tag, request license utilization from your SaaS admin portal, and ask facilities for the last three months of electricity bills. Four data sources — two weeks of work — is enough to prioritize the first savings wave.</p>
+</div>
+<h3 style="font-size:1.2em;font-weight:700;color:#131b3b;margin:24px 0 12px 0;line-height:1.4;padding-left:14px;border-left:3px solid #8AD628;direction:ltr !important;">The Four Pillars</h3>
+<ul style="margin:0 0 12px 0;padding-left:22px;direction:ltr !important;">
+<li style="margin-bottom:8px;line-height:1.65;"><strong>Automation</strong> — replace manual repetitive work (password resets, provisioning, patching) with deterministic workflows.</li>
+<li style="margin-bottom:8px;line-height:1.65;"><strong>Endpoint efficiency</strong> — power management, lifecycle planning, and right-sizing reduce both energy and hardware spend.</li>
+<li style="margin-bottom:8px;line-height:1.65;"><strong>Cloud discipline</strong> — FinOps practices, reserved instances, workload right-sizing, and consistent tagging prevent uncontrolled spend growth.</li>
+<li style="margin-bottom:0;line-height:1.65;"><strong>License hygiene</strong> — eliminating duplicated capability, consolidating SaaS, and auditing shelfware is one of the fastest payback exercises available.</li>
 </ul>
-<div style="background:#f4fefe;border-left:4px solid #0fb5b0;border-radius:8px;padding:16px 20px;margin:20px 0 0 0;direction:ltr !important;text-align:left !important;">
-<p style="margin:0;font-weight:700;color:#131b3b;font-size:.97em;direction:ltr !important;text-align:left !important;">TIP: Before launching any savings initiative, appoint a single owner for each pillar. Distributed accountability is the single most common reason enterprise IT savings programs stall before they reach the CFO's report.</p>
+</section>
+
+<!-- N8N IMAGE 1 -->
+<img src="{{ $json.images.section_1.url }}" alt="IT cost reduction strategy framework for enterprise organizations" style="width:100%;max-width:100%;height:auto;border-radius:12px;margin:0 0 18px 0;display:block;border:1px solid #e5e7eb;box-shadow:0 4px 16px rgba(0,0,0,.06);" loading="lazy" />
+
+<!-- SECTION 2 -->
+<section id="sec-2" class="sa-section" style="background:#f9fcf9;border-left:3px solid #c5e8b0;border-radius:14px;padding:32px 28px;margin:0 0 18px 0;direction:ltr !important;">
+<h2 style="font-size:1.55em;font-weight:800;color:#131b3b;margin:0 0 18px 0;padding-bottom:10px;border-bottom:3px solid #8AD628;line-height:1.3;direction:ltr !important;">Why Large Enterprises Struggle to Reduce IT Operating Costs</h2>
+<p style="margin:0 0 18px 0;direction:ltr !important;">Scale creates its own problems. In a 20,000-PC environment, nobody owns the electricity bill. In a 400-application portfolio, nobody remembers why half the tools were purchased. Savings programs stall not because teams lack ideas but because accountability is distributed across too many owners with conflicting priorities.</p>
+<p style="margin:0 0 18px 0;direction:ltr !important;">The second barrier is measurement latency. Cloud bills arrive monthly; endpoint energy draw is rarely measured at all; license utilization is usually estimated. By the time a decision reaches the CFO, the data is already stale. Enterprises that reduce costs successfully shorten this feedback loop from quarters to weeks.</p>
+<div style="background:#fffdf0;border-left:4px solid #f59e0b;border-radius:10px;padding:18px 20px;margin:20px 0;direction:ltr !important;">
+<span style="display:block;font-size:.82em;font-weight:700;letter-spacing:.06em;text-transform:uppercase;margin-bottom:8px;color:#b45309;direction:ltr !important;">Tip</span>
+<p style="margin:0;direction:ltr !important;">Assign a named owner for each of the four pillars (energy, licenses, cloud, automation). A savings program with four named accountable people progresses faster than a committee of twelve. Weekly 15-minute standups with this group — not monthly steering reviews — is the operating model that works.</p>
 </div>
 </section>
 
-<section id="sec-2" class="sa-section" style="background:#fafcfc;border-left:3px solid #d6edec;border-radius:14px;padding:32px 28px;margin:0 0 18px 0;direction:ltr !important;text-align:left !important;">
-<h2 style="font-size:1.55em;font-weight:800;color:#131b3b;margin:0 0 18px 0;padding-bottom:10px;border-bottom:3px solid #0fb5b0;line-height:1.3;direction:ltr !important;text-align:left !important;">Why Large Enterprises Struggle to Reduce IT Operating Costs</h2>
-<p style="margin:0 0 18px 0;direction:ltr !important;text-align:left !important;">Scale creates its own problems. In a 20,000-PC environment, nobody truly owns the electricity bill. In a 400-application portfolio, nobody remembers why half the tools were originally purchased. Savings programs stall not because teams lack ideas but because accountability is distributed across too many owners — and each owner has other priorities.</p>
-<p style="margin:0 0 18px 0;direction:ltr !important;text-align:left !important;">The second barrier is measurement latency. Cloud bills arrive monthly; endpoint energy draw is rarely measured at all; license utilization is usually estimated rather than audited. By the time actionable data reaches a decision-maker, it is already stale. Enterprises that reduce cost successfully shorten this feedback loop to weeks, not quarters — creating a flywheel of measurable, reportable progress.</p>
-</section>
-
-<section id="sec-3" class="sa-section" style="background:#ffffff;border-radius:14px;padding:32px 28px;margin:0 0 18px 0;direction:ltr !important;text-align:left !important;">
-<h2 style="font-size:1.55em;font-weight:800;color:#131b3b;margin:0 0 18px 0;padding-bottom:10px;border-bottom:3px solid #0fb5b0;line-height:1.3;direction:ltr !important;text-align:left !important;">Identifying the Biggest Sources of IT Waste</h2>
-<p style="margin:0 0 18px 0;direction:ltr !important;text-align:left !important;">Most IT waste concentrates in five places. Audit these first before reorganizing teams or renegotiating contracts — the data will make vendor conversations much stronger.</p>
-<div style="overflow-x:auto;margin:0 0 20px 0;border-radius:10px;box-shadow:0 2px 8px rgba(19,27,59,.06);">
+<!-- SECTION 3 -->
+<section id="sec-3" class="sa-section" style="background:#ffffff;border-radius:14px;padding:32px 28px;margin:0 0 18px 0;direction:ltr !important;">
+<h2 style="font-size:1.55em;font-weight:800;color:#131b3b;margin:0 0 18px 0;padding-bottom:10px;border-bottom:3px solid #8AD628;line-height:1.3;direction:ltr !important;">Identifying the Biggest Sources of Waste</h2>
+<p style="margin:0 0 18px 0;direction:ltr !important;">Most IT waste lives in five places. Audit these first before reorganizing teams or renegotiating vendor contracts.</p>
+<div style="overflow-x:auto;margin:0 0 8px 0;border-radius:10px;box-shadow:0 2px 8px rgba(19,27,59,.06);">
 <table style="width:100%;border-collapse:collapse;background:#ffffff;direction:ltr !important;">
 <thead>
 <tr style="background:linear-gradient(135deg,#131b3b 0%,#1e2a52 100%);">
 <th style="padding:14px 16px;text-align:left !important;font-weight:600;font-size:.93em;color:#ffffff;direction:ltr !important;">Waste Source</th>
-<th style="padding:14px 16px;text-align:left !important;font-weight:600;font-size:.93em;color:#ffffff;direction:ltr !important;">Typical Root Cause</th>
+<th style="padding:14px 16px;text-align:left !important;font-weight:600;font-size:.93em;color:#ffffff;direction:ltr !important;">Typical Impact</th>
 <th style="padding:14px 16px;text-align:left !important;font-weight:600;font-size:.93em;color:#ffffff;direction:ltr !important;">Recovery Range</th>
 </tr>
 </thead>
 <tbody>
-<tr>
-<td style="padding:13px 16px;border-bottom:1px solid #eceef1;direction:ltr !important;text-align:left !important;font-weight:600;">Idle endpoint power</td>
-<td style="padding:13px 16px;border-bottom:1px solid #eceef1;direction:ltr !important;text-align:left !important;">PCs running overnight and on weekends</td>
-<td style="padding:13px 16px;border-bottom:1px solid #eceef1;direction:ltr !important;text-align:left !important;color:#0fb5b0;font-weight:700;">Up to 60%</td>
-</tr>
-<tr style="background:#f2f4f6;">
-<td style="padding:13px 16px;border-bottom:1px solid #eceef1;direction:ltr !important;text-align:left !important;font-weight:600;">Duplicate SaaS subscriptions</td>
-<td style="padding:13px 16px;border-bottom:1px solid #eceef1;direction:ltr !important;text-align:left !important;">Multiple tools solving the same job</td>
-<td style="padding:13px 16px;border-bottom:1px solid #eceef1;direction:ltr !important;text-align:left !important;color:#0fb5b0;font-weight:700;">10–20%</td>
-</tr>
-<tr>
-<td style="padding:13px 16px;border-bottom:1px solid #eceef1;direction:ltr !important;text-align:left !important;font-weight:600;">Over-provisioned cloud workloads</td>
-<td style="padding:13px 16px;border-bottom:1px solid #eceef1;direction:ltr !important;text-align:left !important;">VMs sized for peak, idle otherwise</td>
-<td style="padding:13px 16px;border-bottom:1px solid #eceef1;direction:ltr !important;text-align:left !important;color:#0fb5b0;font-weight:700;">20–35%</td>
-</tr>
-<tr style="background:#f2f4f6;">
-<td style="padding:13px 16px;border-bottom:1px solid #eceef1;direction:ltr !important;text-align:left !important;font-weight:600;">Manual repetitive tasks</td>
-<td style="padding:13px 16px;border-bottom:1px solid #eceef1;direction:ltr !important;text-align:left !important;">Password resets, provisioning, patching done by humans</td>
-<td style="padding:13px 16px;border-bottom:1px solid #eceef1;direction:ltr !important;text-align:left !important;color:#0fb5b0;font-weight:700;">30–50% of ticket hours</td>
-</tr>
-<tr>
-<td style="padding:13px 16px;direction:ltr !important;text-align:left !important;font-weight:600;">Unused licenses and shelfware</td>
-<td style="padding:13px 16px;direction:ltr !important;text-align:left !important;">Paid seats never activated or rarely used</td>
-<td style="padding:13px 16px;direction:ltr !important;text-align:left !important;color:#0fb5b0;font-weight:700;">15–30%</td>
-</tr>
+<tr><td style="padding:13px 16px;border-bottom:1px solid #eceef1;font-weight:600;direction:ltr !important;">Idle endpoint power</td><td style="padding:13px 16px;border-bottom:1px solid #eceef1;direction:ltr !important;">PCs running overnight and weekends with no users</td><td style="padding:13px 16px;border-bottom:1px solid #eceef1;color:#5a9e12;font-weight:700;">Up to 60%</td></tr>
+<tr style="background:#f2f4f6;"><td style="padding:13px 16px;border-bottom:1px solid #eceef1;font-weight:600;direction:ltr !important;">Duplicate SaaS</td><td style="padding:13px 16px;border-bottom:1px solid #eceef1;direction:ltr !important;">Multiple tools solving the same problem</td><td style="padding:13px 16px;border-bottom:1px solid #eceef1;color:#5a9e12;font-weight:700;">10-20%</td></tr>
+<tr><td style="padding:13px 16px;border-bottom:1px solid #eceef1;font-weight:600;direction:ltr !important;">Over-provisioned cloud</td><td style="padding:13px 16px;border-bottom:1px solid #eceef1;direction:ltr !important;">VMs sized for peak, idle otherwise</td><td style="padding:13px 16px;border-bottom:1px solid #eceef1;color:#5a9e12;font-weight:700;">20-35%</td></tr>
+<tr style="background:#f2f4f6;"><td style="padding:13px 16px;border-bottom:1px solid #eceef1;font-weight:600;direction:ltr !important;">Manual repetitive tasks</td><td style="padding:13px 16px;border-bottom:1px solid #eceef1;direction:ltr !important;">Password resets, provisioning, routine patching</td><td style="padding:13px 16px;border-bottom:1px solid #eceef1;color:#5a9e12;font-weight:700;">30-50% ticket hours</td></tr>
+<tr><td style="padding:13px 16px;font-weight:600;direction:ltr !important;">Unused licenses / shelfware</td><td style="padding:13px 16px;direction:ltr !important;">Paid seats never activated</td><td style="padding:13px 16px;color:#5a9e12;font-weight:700;">15-30%</td></tr>
 </tbody>
 </table>
 </div>
-<div style="background:#fff8e6;border-left:4px solid #f5a623;border-radius:8px;padding:16px 20px;margin:0;direction:ltr !important;text-align:left !important;">
-<p style="margin:0;font-weight:700;color:#131b3b;font-size:.97em;direction:ltr !important;text-align:left !important;">DID YOU KNOW? An average enterprise PC left idle overnight consumes 18 to 30 times more wattage than when in power-saving mode. For a fleet of 10,000 machines, this translates to hundreds of thousands of dollars in avoidable electricity spend — every year.</p>
+</section>
+
+<!-- SECTION 4 -->
+<section id="sec-4" class="sa-section" style="background:#f9fcf9;border-left:3px solid #c5e8b0;border-radius:14px;padding:32px 28px;margin:0 0 18px 0;direction:ltr !important;">
+<h2 style="font-size:1.55em;font-weight:800;color:#131b3b;margin:0 0 18px 0;padding-bottom:10px;border-bottom:3px solid #8AD628;line-height:1.3;direction:ltr !important;">IT Cost Reduction vs. IT Cost Optimization</h2>
+<p style="margin:0 0 18px 0;direction:ltr !important;">Reduction removes spend. Optimization reshapes it. A reduction program cancels a duplicated subscription; an optimization program redesigns how the team consumes that capability in the first place. Both matter, but they operate on different timelines and require different skills.</p>
+<p style="margin:0 0 18px 0;direction:ltr !important;">Reduction is tactical and visible — easy to quantify, easy to explain to a CFO. Optimization is structural and compounding — harder to explain, but the source of durable savings in years two and three. Treat year one as a reduction sprint to free capital, then redirect that capital into structural optimization.</p>
+<div style="background:#f0f0ff;border-left:4px solid #6366f1;border-radius:10px;padding:18px 20px;margin:20px 0;direction:ltr !important;">
+<span style="display:block;font-size:.82em;font-weight:700;letter-spacing:.06em;text-transform:uppercase;margin-bottom:8px;color:#4338ca;direction:ltr !important;">Did You Know</span>
+<p style="margin:0;direction:ltr !important;">Enterprises that implement formal cost governance programs — not just one-time audits — achieve significantly better savings retention over a 24-month period compared to ad-hoc approaches. The operating rhythm matters more than the tool selection.</p>
 </div>
 </section>
 
-<section id="sec-4" class="sa-section" style="background:#fafcfc;border-left:3px solid #d6edec;border-radius:14px;padding:32px 28px;margin:0 0 18px 0;direction:ltr !important;text-align:left !important;">
-<h2 style="font-size:1.55em;font-weight:800;color:#131b3b;margin:0 0 18px 0;padding-bottom:10px;border-bottom:3px solid #0fb5b0;line-height:1.3;direction:ltr !important;text-align:left !important;">IT Cost Reduction vs. IT Cost Optimization</h2>
-<p style="margin:0 0 18px 0;direction:ltr !important;text-align:left !important;">Reduction removes spend. Optimization reshapes it. A reduction program cancels a duplicated subscription; an optimization program redesigns how the team consumes that capability in the first place. Both matter, but they operate on different timelines and require different skills.</p>
-<p style="margin:0 0 18px 0;direction:ltr !important;text-align:left !important;">Reduction is tactical and immediately visible — easy to quantify, easy to explain to a CFO. Optimization is structural and compounding — harder to present, but the source of durable savings in year two and three. Treat the first year as a reduction sprint to free capital, then redirect that capital into structural optimization that compounds indefinitely.</p>
+<!-- N8N IMAGE 2 -->
+<img src="{{ $json.images.section_2.url }}" alt="Enterprise endpoint energy management and optimization overview" style="width:100%;max-width:100%;height:auto;border-radius:12px;margin:0 0 18px 0;display:block;border:1px solid #e5e7eb;box-shadow:0 4px 16px rgba(0,0,0,.06);" loading="lazy" />
+
+<!-- SECTION 5 -->
+<section id="sec-5" class="sa-section" style="background:#ffffff;border-radius:14px;padding:32px 28px;margin:0 0 18px 0;direction:ltr !important;">
+<h2 style="font-size:1.55em;font-weight:800;color:#131b3b;margin:0 0 18px 0;padding-bottom:10px;border-bottom:3px solid #8AD628;line-height:1.3;direction:ltr !important;">Endpoint Energy: The Hidden 60% Saving</h2>
+<p style="margin:0 0 18px 0;direction:ltr !important;">An enterprise fleet of 10,000 PCs left running overnight creates a substantial electricity burden with almost no business value. The machines sit idle while offices are empty, yet the spend accumulates. Endpoint energy is often one of the largest recoverable line items in an IT operating budget — and it is one of the easiest to prove with a controlled pilot.</p>
+<p style="margin:0 0 18px 0;direction:ltr !important;">Modern <a href="https://powerplug.ai/" style="color:#5a9e12;text-decoration:underline;">PC power management</a> goes beyond the operating system sleep timer. It distinguishes between truly idle machines and those still running patches or backups; it wakes machines on demand when users need remote access; and it integrates with Active Directory and SCCM so security operations are never compromised by a lighter power policy.</p>
+<h3 style="font-size:1.2em;font-weight:700;color:#131b3b;margin:24px 0 12px 0;line-height:1.4;padding-left:14px;border-left:3px solid #8AD628;direction:ltr !important;">Real-World Deployments</h3>
+<p style="margin:0 0 18px 0;direction:ltr !important;">Clalit Health Services deployed PowerPlug Pro across 45,000 PCs and saves approximately $1.2 million annually. Rambam Healthcare Campus recovered its full investment in under four months across a 2,000-PC rollout. Ben Gurion University reduced power draw on 20,000 student-facing machines while preserving remote access for faculty and research staff. These are audited figures presented to finance departments — not vendor estimates.</p>
+<div style="background:#f0faf2;border-left:4px solid #8AD628;border-radius:10px;padding:18px 20px;margin:20px 0;direction:ltr !important;">
+<span style="display:block;font-size:.82em;font-weight:700;letter-spacing:.06em;text-transform:uppercase;margin-bottom:8px;color:#3d7a14;direction:ltr !important;">How To</span>
+<p style="margin:0;direction:ltr !important;">Run a 30-day pilot on a single department (200-500 PCs). Measure kWh before and after deployment. Calculate the annualized projection and present it to finance with actual meter data. If payback is under six months — which it typically is — you will have budget approval for the full fleet rollout before the pilot ends.</p>
+</div>
 </section>
 
-<img src="{{ $json.images.section_2.url }}" alt="Endpoint power management and IT optimization" style="width:100%;max-width:100%;height:auto;border-radius:12px;margin:0 0 32px 0;display:block;border:1px solid #e5e7eb;box-shadow:0 4px 16px rgba(0,0,0,.06);" />
+<!-- SECTION 6 -->
+<section id="sec-6" class="sa-section" style="background:#f9fcf9;border-left:3px solid #c5e8b0;border-radius:14px;padding:32px 28px;margin:0 0 36px 0;direction:ltr !important;">
+<h2 style="font-size:1.55em;font-weight:800;color:#131b3b;margin:0 0 18px 0;padding-bottom:10px;border-bottom:3px solid #8AD628;line-height:1.3;direction:ltr !important;">Cloud Cost Control and the Rise of FinOps</h2>
+<p style="margin:0 0 18px 0;direction:ltr !important;">Cloud elasticity is a feature when engineering uses it deliberately and a liability when set and forgotten. FinOps — the operational discipline of allocating, measuring, and optimizing cloud spend — exists because most enterprises discovered that a 30-50% cloud overspend is the normal baseline without active governance.</p>
+<p style="margin:0 0 18px 0;direction:ltr !important;">A mature FinOps practice produces three outputs weekly: a forecast, an allocation report by team, and a list of workloads flagged for right-sizing. If any of those three are missing, cloud spend will drift. The tooling matters less than the operating rhythm. Learn more at the <a href="https://www.finops.org/introduction/what-is-finops/" style="color:#5a9e12;text-decoration:underline;" target="_blank" rel="noopener">FinOps Foundation</a>.</p>
+</section>
 
-<div class="sa-cta" style="background:#ffffff;border:2px solid #0fb5b0;border-radius:12px;padding:28px 30px;margin:0 0 36px 0;direction:ltr !important;text-align:center !important;">
-<p style="margin:0 0 18px 0;font-weight:700;color:#131b3b;font-size:1.08em;direction:ltr !important;text-align:center !important;">Want a number on your own fleet? PowerPlug maps endpoint energy draw and duplicate-license exposure in a focused diagnostic review.</p>
+<!-- CTA #2 — mid-article, contact-focused -->
+<div class="sa-cta" style="background:#ffffff;border:2px solid #8AD628;border-radius:12px;padding:28px 30px;margin:0 0 36px 0;direction:ltr !important;text-align:center !important;">
+<p style="margin:0 0 18px 0;font-weight:700;color:#131b3b;font-size:1.08em;direction:ltr !important;text-align:center !important;">Want a precise number on your own fleet? PowerPlug maps endpoint energy draw and duplicate-license exposure in a focused diagnostic review — no obligation required.</p>
 <a href="https://powerplug.ai/contact-us" class="sa-btn-navy" style="display:inline-block;background:#131b3b;color:#ffffff;padding:13px 32px;border-radius:8px;text-decoration:none;font-weight:700;font-size:1em;direction:ltr !important;">Talk to the PowerPlug Team</a>
 </div>
 
-<section id="sec-5" class="sa-section" style="background:#ffffff;border-radius:14px;padding:32px 28px;margin:0 0 18px 0;direction:ltr !important;text-align:left !important;">
-<h2 style="font-size:1.55em;font-weight:800;color:#131b3b;margin:0 0 18px 0;padding-bottom:10px;border-bottom:3px solid #0fb5b0;line-height:1.3;direction:ltr !important;text-align:left !important;">Endpoint Energy: The Hidden 60% Saving</h2>
-<p style="margin:0 0 18px 0;direction:ltr !important;text-align:left !important;">An enterprise fleet of 10,000 PCs left running overnight creates a surprisingly large electricity burden with almost no business value in return. Machines sit idle while offices are empty, yet the spend continues to accumulate. This is often one of the largest recoverable line items in the IT operating budget — and it is one of the easiest to prove with a structured pilot.</p>
-<p style="margin:0 0 18px 0;direction:ltr !important;text-align:left !important;">Modern PC power management goes far beyond the operating system's built-in sleep timer. It distinguishes between truly idle machines and those still running patches or backups; it wakes machines on demand when users need remote access; and it integrates natively with Active Directory and SCCM so security operations never pay the cost of a lighter power policy.</p>
-<div style="background:#e8f5ff;border-left:4px solid #0A66C2;border-radius:8px;padding:16px 20px;margin:0 0 20px 0;direction:ltr !important;text-align:left !important;">
-<p style="margin:0 0 10px 0;font-weight:700;color:#131b3b;font-size:.97em;direction:ltr !important;text-align:left !important;">HOW TO: Deploy Endpoint Power Management Without Disrupting Operations</p>
-<ol style="margin:0;padding-left:20px;direction:ltr !important;text-align:left !important;">
-<li style="margin-bottom:6px;line-height:1.6;direction:ltr !important;text-align:left !important;">Baseline current energy draw using fleet management tools — establish actual kWh per endpoint per month.</li>
-<li style="margin-bottom:6px;line-height:1.6;direction:ltr !important;text-align:left !important;">Pilot on a single department or site (200–500 PCs) to measure real savings before fleet-wide rollout.</li>
-<li style="margin-bottom:6px;line-height:1.6;direction:ltr !important;text-align:left !important;">Configure wake-on-LAN schedules so patching and backup windows complete normally — never compromise security for savings.</li>
-<li style="margin-bottom:0;line-height:1.6;direction:ltr !important;text-align:left !important;">Report savings monthly to finance using auditable kWh data — not vendor estimates.</li>
-</ol>
-</div>
-<h3 style="font-size:1.2em;font-weight:700;color:#131b3b;margin:24px 0 12px 0;line-height:1.4;direction:ltr !important;text-align:left !important;padding-left:14px;border-left:3px solid #0fb5b0;">Real Enterprise Deployments</h3>
-<p style="margin:0 0 0 0;direction:ltr !important;text-align:left !important;"><a href="https://powerplug.ai/" style="color:#0fb5b0;text-decoration:underline;">PowerPlug Pro</a> has delivered documented savings across large enterprise environments. Clalit Health Services deployed across 45,000 PCs and now saves approximately $1.2M annually. Rambam Healthcare Campus recovered its investment in under four months on a 2,000-PC deployment. <a href="https://powerplug.ai/contact-us" style="color:#0fb5b0;text-decoration:underline;">Ben Gurion University</a> cut power draw across 20,000 student-facing machines while preserving full remote access for faculty. These are audited results from IT operations teams that needed the savings to hold up to finance review.</p>
-</section>
-
-<section id="sec-6" class="sa-section" style="background:#fafcfc;border-left:3px solid #d6edec;border-radius:14px;padding:32px 28px;margin:0 0 18px 0;direction:ltr !important;text-align:left !important;">
-<h2 style="font-size:1.55em;font-weight:800;color:#131b3b;margin:0 0 18px 0;padding-bottom:10px;border-bottom:3px solid #0fb5b0;line-height:1.3;direction:ltr !important;text-align:left !important;">Cloud Cost Control and the Rise of FinOps</h2>
-<p style="margin:0 0 18px 0;direction:ltr !important;text-align:left !important;">Cloud elasticity is a feature when engineering uses it deliberately and a liability when it is set and forgotten. FinOps — the operational discipline of allocating, measuring, and optimizing cloud spend — exists because most enterprises discovered that a 30–50% cloud overspend is the normal state without active governance.</p>
-<p style="margin:0 0 18px 0;direction:ltr !important;text-align:left !important;">A mature FinOps practice produces three things weekly: a forecast, an allocation report by team, and a list of workloads flagged for right-sizing. If any of those three are missing, cloud spend will drift. The tooling matters far less than the cadence and accountability model behind it.</p>
-<div style="background:#fff8e6;border-left:4px solid #f5a623;border-radius:8px;padding:16px 20px;margin:0;direction:ltr !important;text-align:left !important;">
-<p style="margin:0;font-weight:700;color:#131b3b;font-size:.97em;direction:ltr !important;text-align:left !important;">DID YOU KNOW? According to Flexera's State of the Cloud Report, organizations waste an average of 32% of their cloud spend. The primary causes are idle resources, oversized instances, and lack of automated scheduling — all correctable with the right governance processes in place.</p>
-</div>
-</section>
-
-<img src="{{ $json.images.section_3.url }}" alt="Cloud FinOps and IT cost management dashboard" style="width:100%;max-width:100%;height:auto;border-radius:12px;margin:0 0 32px 0;display:block;border:1px solid #e5e7eb;box-shadow:0 4px 16px rgba(0,0,0,.06);" />
-
-<section id="sec-7" class="sa-section" style="background:#ffffff;border-radius:14px;padding:32px 28px;margin:0 0 18px 0;direction:ltr !important;text-align:left !important;">
-<h2 style="font-size:1.55em;font-weight:800;color:#131b3b;margin:0 0 18px 0;padding-bottom:10px;border-bottom:3px solid #0fb5b0;line-height:1.3;direction:ltr !important;text-align:left !important;">Common Mistakes That Undermine IT Savings Programs</h2>
-<ul style="margin:0 0 0 0;padding-left:22px;direction:ltr !important;text-align:left !important;">
-<li style="margin-bottom:10px;line-height:1.65;direction:ltr !important;text-align:left !important;"><strong>Treating savings as a project, not a practice.</strong> Projects end; costs come right back without a permanent operating rhythm.</li>
-<li style="margin-bottom:10px;line-height:1.65;direction:ltr !important;text-align:left !important;"><strong>Optimizing without measuring.</strong> Claimed savings that do not appear in the CFO's report are not real savings — they are narratives.</li>
-<li style="margin-bottom:10px;line-height:1.65;direction:ltr !important;text-align:left !important;"><strong>Cutting endpoints without protecting user experience.</strong> Slower machines cost more in lost productivity than they ever save in hardware.</li>
-<li style="margin-bottom:10px;line-height:1.65;direction:ltr !important;text-align:left !important;"><strong>Ignoring the energy line item.</strong> IT leaders rarely see the facilities electricity bill; the savings are often hiding there anyway.</li>
-<li style="margin-bottom:0;line-height:1.65;direction:ltr !important;text-align:left !important;"><strong>Over-promising quarter-one results.</strong> Most programs compound across a 12-month curve — plan accordingly, not as a 90-day spike.</li>
+<!-- SECTION 7 -->
+<section id="sec-7" class="sa-section" style="background:#ffffff;border-radius:14px;padding:32px 28px;margin:0 0 18px 0;direction:ltr !important;">
+<h2 style="font-size:1.55em;font-weight:800;color:#131b3b;margin:0 0 18px 0;padding-bottom:10px;border-bottom:3px solid #8AD628;line-height:1.3;direction:ltr !important;">Common Mistakes That Undermine IT Savings Programs</h2>
+<ul style="margin:0 0 8px 0;padding-left:22px;direction:ltr !important;">
+<li style="margin-bottom:10px;line-height:1.65;"><strong>Treating savings as a project, not a practice.</strong> Projects end. Costs come back. Savings need an owner and a monthly review cycle.</li>
+<li style="margin-bottom:10px;line-height:1.65;"><strong>Optimizing without measuring.</strong> Claimed savings that do not appear in the CFO's operating report are not accepted savings.</li>
+<li style="margin-bottom:10px;line-height:1.65;"><strong>Cutting endpoints without protecting user experience.</strong> Slower machines cost more in lost productivity than they save in hardware depreciation.</li>
+<li style="margin-bottom:10px;line-height:1.65;"><strong>Ignoring the energy line item.</strong> IT leaders rarely see the facilities electricity bill — yet it is one of the most responsive areas to change.</li>
+<li style="margin-bottom:0;line-height:1.65;"><strong>Over-promising quarter-one savings.</strong> Most programs compound over time. Plan a 12-month curve, not a single 90-day spike that disappears after the presentation.</li>
 </ul>
 </section>
 
-<section id="sec-8" class="sa-section" style="background:#fafcfc;border-left:3px solid #d6edec;border-radius:14px;padding:32px 28px;margin:0 0 18px 0;direction:ltr !important;text-align:left !important;">
-<h2 style="font-size:1.55em;font-weight:800;color:#131b3b;margin:0 0 18px 0;padding-bottom:10px;border-bottom:3px solid #0fb5b0;line-height:1.3;direction:ltr !important;text-align:left !important;">KPIs for IT Cost Efficiency</h2>
-<p style="margin:0 0 18px 0;direction:ltr !important;text-align:left !important;">If you track these five metrics monthly, you will have more actionable visibility than 90% of enterprise IT organizations currently operating without a formal cost-management practice.</p>
+<!-- N8N IMAGE 3 -->
+<img src="{{ $json.images.section_3.url }}" alt="IT cost reduction KPIs and enterprise performance metrics dashboard" style="width:100%;max-width:100%;height:auto;border-radius:12px;margin:0 0 18px 0;display:block;border:1px solid #e5e7eb;box-shadow:0 4px 16px rgba(0,0,0,.06);" loading="lazy" />
+
+<!-- SECTION 8 -->
+<section id="sec-8" class="sa-section" style="background:#f9fcf9;border-left:3px solid #c5e8b0;border-radius:14px;padding:32px 28px;margin:0 0 18px 0;direction:ltr !important;">
+<h2 style="font-size:1.55em;font-weight:800;color:#131b3b;margin:0 0 18px 0;padding-bottom:10px;border-bottom:3px solid #8AD628;line-height:1.3;direction:ltr !important;">KPIs for IT Cost Efficiency</h2>
+<p style="margin:0 0 18px 0;direction:ltr !important;">If you track these five metrics monthly, you will have more cost visibility than 90% of enterprise IT organizations.</p>
 <div style="overflow-x:auto;border-radius:10px;box-shadow:0 2px 8px rgba(19,27,59,.06);">
 <table style="width:100%;border-collapse:collapse;background:#ffffff;direction:ltr !important;">
 <thead>
 <tr style="background:linear-gradient(135deg,#131b3b 0%,#1e2a52 100%);">
 <th style="padding:14px 16px;text-align:left !important;font-weight:600;font-size:.93em;color:#ffffff;direction:ltr !important;">KPI</th>
 <th style="padding:14px 16px;text-align:left !important;font-weight:600;font-size:.93em;color:#ffffff;direction:ltr !important;">What It Tells You</th>
-<th style="padding:14px 16px;text-align:left !important;font-weight:600;font-size:.93em;color:#ffffff;direction:ltr !important;">Target Frequency</th>
 </tr>
 </thead>
 <tbody>
-<tr>
-<td style="padding:13px 16px;border-bottom:1px solid #eceef1;direction:ltr !important;text-align:left !important;font-weight:600;">Cost per active endpoint / month</td>
-<td style="padding:13px 16px;border-bottom:1px solid #eceef1;direction:ltr !important;text-align:left !important;">True total cost — energy, licenses, support, depreciation.</td>
-<td style="padding:13px 16px;border-bottom:1px solid #eceef1;direction:ltr !important;text-align:left !important;color:#0fb5b0;font-weight:600;">Monthly</td>
-</tr>
-<tr style="background:#f2f4f6;">
-<td style="padding:13px 16px;border-bottom:1px solid #eceef1;direction:ltr !important;text-align:left !important;font-weight:600;">Cloud spend variance to forecast</td>
-<td style="padding:13px 16px;border-bottom:1px solid #eceef1;direction:ltr !important;text-align:left !important;">Whether FinOps discipline is actually working.</td>
-<td style="padding:13px 16px;border-bottom:1px solid #eceef1;direction:ltr !important;text-align:left !important;color:#0fb5b0;font-weight:600;">Weekly</td>
-</tr>
-<tr>
-<td style="padding:13px 16px;border-bottom:1px solid #eceef1;direction:ltr !important;text-align:left !important;font-weight:600;">License utilization rate</td>
-<td style="padding:13px 16px;border-bottom:1px solid #eceef1;direction:ltr !important;text-align:left !important;">Ratio of used seats to paid seats — the shelfware hunt.</td>
-<td style="padding:13px 16px;border-bottom:1px solid #eceef1;direction:ltr !important;text-align:left !important;color:#0fb5b0;font-weight:600;">Monthly</td>
-</tr>
-<tr style="background:#f2f4f6;">
-<td style="padding:13px 16px;border-bottom:1px solid #eceef1;direction:ltr !important;text-align:left !important;font-weight:600;">Automation deflection rate</td>
-<td style="padding:13px 16px;border-bottom:1px solid #eceef1;direction:ltr !important;text-align:left !important;">Share of tickets resolved without human touch.</td>
-<td style="padding:13px 16px;border-bottom:1px solid #eceef1;direction:ltr !important;text-align:left !important;color:#0fb5b0;font-weight:600;">Weekly</td>
-</tr>
-<tr>
-<td style="padding:13px 16px;direction:ltr !important;text-align:left !important;font-weight:600;">kWh per endpoint / month</td>
-<td style="padding:13px 16px;direction:ltr !important;text-align:left !important;">The line item most CIOs never see — and the one most responsive to immediate change.</td>
-<td style="padding:13px 16px;direction:ltr !important;text-align:left !important;color:#0fb5b0;font-weight:600;">Monthly</td>
-</tr>
+<tr><td style="padding:13px 16px;border-bottom:1px solid #eceef1;font-weight:600;direction:ltr !important;">Cost per active endpoint / month</td><td style="padding:13px 16px;border-bottom:1px solid #eceef1;direction:ltr !important;">True total cost — energy, licenses, support, and depreciation rolled up.</td></tr>
+<tr style="background:#f2f4f6;"><td style="padding:13px 16px;border-bottom:1px solid #eceef1;font-weight:600;direction:ltr !important;">Cloud spend variance to forecast</td><td style="padding:13px 16px;border-bottom:1px solid #eceef1;direction:ltr !important;">Whether FinOps discipline is actually working month to month.</td></tr>
+<tr><td style="padding:13px 16px;border-bottom:1px solid #eceef1;font-weight:600;direction:ltr !important;">License utilization rate</td><td style="padding:13px 16px;border-bottom:1px solid #eceef1;direction:ltr !important;">Ratio of used seats to paid seats — the shelfware audit metric.</td></tr>
+<tr style="background:#f2f4f6;"><td style="padding:13px 16px;border-bottom:1px solid #eceef1;font-weight:600;direction:ltr !important;">Automation deflection rate</td><td style="padding:13px 16px;border-bottom:1px solid #eceef1;direction:ltr !important;">Share of support tickets resolved without a human touch.</td></tr>
+<tr><td style="padding:13px 16px;font-weight:600;direction:ltr !important;">kWh per endpoint / month</td><td style="padding:13px 16px;direction:ltr !important;">The line item most CIOs never see — and the one most responsive to improvement with power management.</td></tr>
 </tbody>
 </table>
 </div>
+<div style="background:#fffdf0;border-left:4px solid #f59e0b;border-radius:10px;padding:18px 20px;margin:20px 0;direction:ltr !important;">
+<span style="display:block;font-size:.82em;font-weight:700;letter-spacing:.06em;text-transform:uppercase;margin-bottom:8px;color:#b45309;direction:ltr !important;">Tip</span>
+<p style="margin:0;direction:ltr !important;">Report these five KPIs in a single page that can be shared with any stakeholder — IT leadership, finance, and sustainability leads alike. A one-page monthly cost scorecard creates accountability far more effectively than a quarterly deep-dive deck that most stakeholders do not read.</p>
+</div>
 </section>
 
-<section id="sec-9" class="sa-section" style="background:#ffffff;border-radius:14px;padding:32px 28px;margin:0 0 18px 0;direction:ltr !important;text-align:left !important;">
-<h2 style="font-size:1.55em;font-weight:800;color:#131b3b;margin:0 0 18px 0;padding-bottom:10px;border-bottom:3px solid #0fb5b0;line-height:1.3;direction:ltr !important;text-align:left !important;">A 12-Month Enterprise Savings Roadmap</h2>
-<h3 style="font-size:1.2em;font-weight:700;color:#131b3b;margin:0 0 12px 0;line-height:1.4;direction:ltr !important;text-align:left !important;padding-left:14px;border-left:3px solid #0fb5b0;">Quarter 1 — Measure</h3>
-<p style="margin:0 0 18px 0;direction:ltr !important;text-align:left !important;">Establish baselines: endpoint count and energy draw, cloud spend by workload, license utilization, and the top five recurring tickets. Commit to monthly KPI reporting. Make no savings claims this quarter — build the data foundation only.</p>
-<h3 style="font-size:1.2em;font-weight:700;color:#131b3b;margin:0 0 12px 0;line-height:1.4;direction:ltr !important;text-align:left !important;padding-left:14px;border-left:3px solid #0fb5b0;">Quarter 2 — Quick Wins</h3>
-<p style="margin:0 0 18px 0;direction:ltr !important;text-align:left !important;">Deploy endpoint power management (largest ROI, fastest deployment cycle), cancel duplicated SaaS subscriptions, and right-size the three largest over-provisioned cloud workloads. Capture the first wave of documented savings before the quarter ends.</p>
-<h3 style="font-size:1.2em;font-weight:700;color:#131b3b;margin:0 0 12px 0;line-height:1.4;direction:ltr !important;text-align:left !important;padding-left:14px;border-left:3px solid #0fb5b0;">Quarter 3 — Automate</h3>
-<p style="margin:0 0 18px 0;direction:ltr !important;text-align:left !important;">Deploy automation for password resets, provisioning, and patching. Build FinOps rituals — weekly forecast, monthly allocation review by team. This is where the second savings wave and a measurably lighter support load begin to compound.</p>
-<h3 style="font-size:1.2em;font-weight:700;color:#131b3b;margin:0 0 12px 0;line-height:1.4;direction:ltr !important;text-align:left !important;padding-left:14px;border-left:3px solid #0fb5b0;">Quarter 4 — Optimize and Lock In</h3>
-<p style="margin:0 0 0 0;direction:ltr !important;text-align:left !important;">Consolidate vendors, renegotiate enterprise agreements with fresh utilization data, and retire remaining shelfware. Lock in the operating rhythm so next year starts from a stronger baseline. Target: cumulative 15–25% annualized reduction confirmed in finance.</p>
+<!-- SECTION 9 -->
+<section id="sec-9" class="sa-section" style="background:#ffffff;border-radius:14px;padding:32px 28px;margin:0 0 18px 0;direction:ltr !important;">
+<h2 style="font-size:1.55em;font-weight:800;color:#131b3b;margin:0 0 18px 0;padding-bottom:10px;border-bottom:3px solid #8AD628;line-height:1.3;direction:ltr !important;">A 12-Month Enterprise Savings Roadmap</h2>
+<h3 style="font-size:1.2em;font-weight:700;color:#131b3b;margin:0 0 12px 0;line-height:1.4;padding-left:14px;border-left:3px solid #8AD628;direction:ltr !important;">Quarter 1 — Measure</h3>
+<p style="margin:0 0 18px 0;direction:ltr !important;">Establish baselines: endpoint count and energy draw, cloud spend by workload, license utilization, top five recurring tickets. Commit to five monthly KPIs. No savings claims this quarter — data collection and baselining only.</p>
+<h3 style="font-size:1.2em;font-weight:700;color:#131b3b;margin:0 0 12px 0;line-height:1.4;padding-left:14px;border-left:3px solid #8AD628;direction:ltr !important;">Quarter 2 — Quick Wins</h3>
+<p style="margin:0 0 18px 0;direction:ltr !important;">Deploy endpoint power management (best ROI, fastest deployment), cancel duplicate SaaS, and right-size the three largest over-provisioned cloud workloads. Capture the first wave of documented savings before the quarter closes.</p>
+<h3 style="font-size:1.2em;font-weight:700;color:#131b3b;margin:0 0 12px 0;line-height:1.4;padding-left:14px;border-left:3px solid #8AD628;direction:ltr !important;">Quarter 3 — Automate</h3>
+<p style="margin:0 0 18px 0;direction:ltr !important;">Build automation for password resets, provisioning, and patching. Establish FinOps rituals — weekly forecast, monthly allocation review. The second wave of savings and a lighter support burden begin to compound.</p>
+<h3 style="font-size:1.2em;font-weight:700;color:#131b3b;margin:0 0 12px 0;line-height:1.4;padding-left:14px;border-left:3px solid #8AD628;direction:ltr !important;">Quarter 4 — Optimize</h3>
+<p style="margin:0 0 0 0;direction:ltr !important;">Consolidate vendors, renegotiate enterprise agreements with fresh utilization data, retire shelfware. Lock in the operating rhythm so next year starts from a stronger baseline. Target: cumulative 15-25% annualized cost reduction.</p>
 </section>
 
-<img src="{{ $json.images.section_4.url }}" alt="IT cost optimization roadmap and strategy planning" style="width:100%;max-width:100%;height:auto;border-radius:12px;margin:0 0 32px 0;display:block;border:1px solid #e5e7eb;box-shadow:0 4px 16px rgba(0,0,0,.06);" />
+<!-- N8N IMAGE 4 -->
+<img src="{{ $json.images.section_4.url }}" alt="12-month IT enterprise savings roadmap with quarterly milestones" style="width:100%;max-width:100%;height:auto;border-radius:12px;margin:0 0 18px 0;display:block;border:1px solid #e5e7eb;box-shadow:0 4px 16px rgba(0,0,0,.06);" loading="lazy" />
 
-<section id="sec-10" class="sa-section" style="background:#fafcfc;border-left:3px solid #d6edec;border-radius:14px;padding:32px 28px;margin:0 0 18px 0;direction:ltr !important;text-align:left !important;">
-<h2 style="font-size:1.55em;font-weight:800;color:#131b3b;margin:0 0 18px 0;padding-bottom:10px;border-bottom:3px solid #0fb5b0;line-height:1.3;direction:ltr !important;text-align:left !important;">How to Choose a Solution That Delivers Measurable Savings</h2>
-<p style="margin:0 0 18px 0;direction:ltr !important;text-align:left !important;">Four non-negotiables separate serious enterprise tools from vendor demoware:</p>
-<ol style="margin:0 0 12px 0;padding-left:22px;direction:ltr !important;text-align:left !important;">
-<li style="margin-bottom:10px;line-height:1.65;direction:ltr !important;text-align:left !important;"><strong>Audit-ready reporting.</strong> Numbers your CFO can defend to the board — not a vendor-generated estimate produced in a marketing spreadsheet.</li>
-<li style="margin-bottom:10px;line-height:1.65;direction:ltr !important;text-align:left !important;"><strong>Works with existing infrastructure.</strong> Native integration with Active Directory and SCCM; no shadow agents, no parallel admin consoles your team has to maintain.</li>
-<li style="margin-bottom:10px;line-height:1.65;direction:ltr !important;text-align:left !important;"><strong>Near-zero maintenance.</strong> If your IT operations team has to babysit the tool, the savings are already being consumed in support overhead.</li>
-<li style="margin-bottom:0;line-height:1.65;direction:ltr !important;text-align:left !important;"><strong>Case studies in your sector.</strong> Healthcare, higher education, finance, and public sector each carry different compliance constraints. Require references from comparable environments before committing.</li>
+<!-- SECTION 10 -->
+<section id="sec-10" class="sa-section" style="background:#f9fcf9;border-left:3px solid #c5e8b0;border-radius:14px;padding:32px 28px;margin:0 0 18px 0;direction:ltr !important;">
+<h2 style="font-size:1.55em;font-weight:800;color:#131b3b;margin:0 0 18px 0;padding-bottom:10px;border-bottom:3px solid #8AD628;line-height:1.3;direction:ltr !important;">How to Choose a Solution That Delivers Measurable Savings</h2>
+<p style="margin:0 0 18px 0;direction:ltr !important;">Four non-negotiable criteria separate serious enterprise IT cost tools from demoware:</p>
+<ol style="margin:0 0 12px 0;padding-left:22px;direction:ltr !important;">
+<li style="margin-bottom:10px;line-height:1.65;"><strong>Audit-ready reporting.</strong> Numbers the CFO can defend — not a vendor-generated savings estimate without independently verifiable data.</li>
+<li style="margin-bottom:10px;line-height:1.65;"><strong>Native integration with existing infrastructure.</strong> Active Directory and SCCM compatibility with no shadow agents and no parallel admin consoles to manage.</li>
+<li style="margin-bottom:10px;line-height:1.65;"><strong>Near-zero maintenance burden.</strong> If IT operations has to babysit the tool, the productivity savings are already consumed by the overhead of running it.</li>
+<li style="margin-bottom:0;line-height:1.65;"><strong>Case studies from comparable environments.</strong> Healthcare, higher-education, finance, and public sector each carry different compliance constraints. Require references from organizations similar in size and sector to yours.</li>
 </ol>
+<div style="background:#f0f0ff;border-left:4px solid #6366f1;border-radius:10px;padding:18px 20px;margin:20px 0;direction:ltr !important;">
+<span style="display:block;font-size:.82em;font-weight:700;letter-spacing:.06em;text-transform:uppercase;margin-bottom:8px;color:#4338ca;direction:ltr !important;">Did You Know</span>
+<p style="margin:0;direction:ltr !important;">PowerPlug Pro is deployed across enterprise environments ranging from 100 to 50,000 PCs. Its <a href="https://powerplug.ai/contact-us" style="color:#5a9e12;text-decoration:underline;">free assessment process</a> benchmarks your current endpoint energy spend against comparable organizations in the same sector — giving you a CFO-defensible projection before committing to a full rollout.</p>
+</div>
 </section>
 
-<section id="sec-faq" class="sa-section" style="background:#ffffff;border-radius:14px;padding:32px 28px;margin:0 0 36px 0;direction:ltr !important;text-align:left !important;">
-<h2 style="font-size:1.55em;font-weight:800;color:#131b3b;margin:0 0 24px 0;padding-bottom:10px;border-bottom:3px solid #0fb5b0;line-height:1.3;direction:ltr !important;text-align:left !important;">Frequently Asked Questions</h2>
+<!-- FAQ -->
+<section id="sec-faq" class="sa-section" style="background:#ffffff;border-radius:14px;padding:32px 28px;margin:0 0 36px 0;direction:ltr !important;">
+<h2 style="font-size:1.55em;font-weight:800;color:#131b3b;margin:0 0 24px 0;padding-bottom:10px;border-bottom:3px solid #8AD628;line-height:1.3;direction:ltr !important;">Frequently Asked Questions</h2>
 <div style="border:1px solid #e0e3e8;border-radius:10px;margin:0 0 12px 0;overflow:hidden;">
-<div class="sa-faq-q" onclick="var a=this.parentElement.querySelector('.faq-answer'),i=this.querySelector('.sa-faq-icon');if(a.classList.contains('open')){a.style.maxHeight='0';a.classList.remove('open');}else{a.style.maxHeight=a.scrollHeight+'px';a.classList.add('open');}i.classList.toggle('open');" style="padding:16px 20px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;font-weight:700;color:#131b3b;direction:ltr !important;text-align:left !important;">
-<span style="direction:ltr !important;text-align:left !important;">How quickly can we see real savings from PC power management?</span>
-<span class="sa-faq-icon" style="display:inline-block;font-size:1.4em;font-weight:400;line-height:1;color:#0fb5b0;margin-left:12px;">+</span>
+<div class="sa-faq-q" onclick="var a=this.parentElement.querySelector('.faq-answer'),i=this.querySelector('.sa-faq-icon');if(a.classList.contains('open')){a.style.maxHeight='0';a.classList.remove('open');}else{a.style.maxHeight=a.scrollHeight+'px';a.classList.add('open');}i.classList.toggle('open');" style="padding:16px 20px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;font-weight:700;color:#131b3b;direction:ltr !important;">
+<span style="direction:ltr !important;">How quickly can enterprises see savings from endpoint power management?</span>
+<span class="sa-faq-icon" style="display:inline-block;font-size:1.4em;font-weight:400;line-height:1;color:#8AD628;margin-left:12px;">+</span>
 </div>
-<div class="faq-answer" style="max-height:0;overflow:hidden;">
-<div style="padding:0 20px 20px 20px;color:#2a2a2a;line-height:1.65;direction:ltr !important;text-align:left !important;">Most enterprise deployments show a measurable reduction in electricity cost within 30 days of go-live. Full ROI typically arrives in under six months for fleets above 2,000 PCs — in high-density environments like healthcare, payback can be under four months, as demonstrated by Rambam Healthcare Campus with PowerPlug Pro.</div>
-</div>
-</div>
-<div style="border:1px solid #e0e3e8;border-radius:10px;margin:0 0 12px 0;overflow:hidden;">
-<div class="sa-faq-q" onclick="var a=this.parentElement.querySelector('.faq-answer'),i=this.querySelector('.sa-faq-icon');if(a.classList.contains('open')){a.style.maxHeight='0';a.classList.remove('open');}else{a.style.maxHeight=a.scrollHeight+'px';a.classList.add('open');}i.classList.toggle('open');" style="padding:16px 20px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;font-weight:700;color:#131b3b;direction:ltr !important;text-align:left !important;">
-<span style="direction:ltr !important;text-align:left !important;">Can we reduce IT costs significantly without layoffs?</span>
-<span class="sa-faq-icon" style="display:inline-block;font-size:1.4em;font-weight:400;line-height:1;color:#0fb5b0;margin-left:12px;">+</span>
-</div>
-<div class="faq-answer" style="max-height:0;overflow:hidden;">
-<div style="padding:0 20px 20px 20px;color:#2a2a2a;line-height:1.65;direction:ltr !important;text-align:left !important;">Yes. The majority of addressable IT savings live in energy, licenses, and cloud — not headcount. Automation deflects ticket volume so teams can do higher-value work. The result is a lower cost-per-endpoint and cost-per-ticket, not a smaller team.</div>
-</div>
+<div class="faq-answer" style="max-height:0;overflow:hidden;"><div style="padding:0 20px 20px 20px;color:#2a2a2a;line-height:1.65;direction:ltr !important;">Most enterprise deployments show measurable electricity cost reduction within 30 days of go-live. Full ROI typically arrives in under six months for fleets above 2,000 PCs. In high-density environments like healthcare, payback can be under four months — as demonstrated by Rambam Healthcare Campus.</div></div>
 </div>
 <div style="border:1px solid #e0e3e8;border-radius:10px;margin:0 0 12px 0;overflow:hidden;">
-<div class="sa-faq-q" onclick="var a=this.parentElement.querySelector('.faq-answer'),i=this.querySelector('.sa-faq-icon');if(a.classList.contains('open')){a.style.maxHeight='0';a.classList.remove('open');}else{a.style.maxHeight=a.scrollHeight+'px';a.classList.add('open');}i.classList.toggle('open');" style="padding:16px 20px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;font-weight:700;color:#131b3b;direction:ltr !important;text-align:left !important;">
-<span style="direction:ltr !important;text-align:left !important;">Does PC power management interfere with security patching and backups?</span>
-<span class="sa-faq-icon" style="display:inline-block;font-size:1.4em;font-weight:400;line-height:1;color:#0fb5b0;margin-left:12px;">+</span>
+<div class="sa-faq-q" onclick="var a=this.parentElement.querySelector('.faq-answer'),i=this.querySelector('.sa-faq-icon');if(a.classList.contains('open')){a.style.maxHeight='0';a.classList.remove('open');}else{a.style.maxHeight=a.scrollHeight+'px';a.classList.add('open');}i.classList.toggle('open');" style="padding:16px 20px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;font-weight:700;color:#131b3b;direction:ltr !important;">
+<span style="direction:ltr !important;">Can IT cost reduction be achieved without reducing staff headcount?</span>
+<span class="sa-faq-icon" style="display:inline-block;font-size:1.4em;font-weight:400;line-height:1;color:#8AD628;margin-left:12px;">+</span>
 </div>
-<div class="faq-answer" style="max-height:0;overflow:hidden;">
-<div style="padding:0 20px 20px 20px;color:#2a2a2a;line-height:1.65;direction:ltr !important;text-align:left !important;">No — a properly designed solution wakes machines on a schedule so security patches and backup operations complete normally. PowerPlug Pro integrates with Active Directory and SCCM, keeping patching windows intact while recovering idle-hour energy spend.</div>
-</div>
+<div class="faq-answer" style="max-height:0;overflow:hidden;"><div style="padding:0 20px 20px 20px;color:#2a2a2a;line-height:1.65;direction:ltr !important;">Yes. The majority of recoverable IT savings are in energy, licenses, and cloud infrastructure — not headcount. Automation deflects ticket volume so teams can focus on higher-value work rather than being replaced. Cost-per-endpoint and cost-per-ticket metrics improve without any staff reduction required.</div></div>
 </div>
 <div style="border:1px solid #e0e3e8;border-radius:10px;margin:0 0 12px 0;overflow:hidden;">
-<div class="sa-faq-q" onclick="var a=this.parentElement.querySelector('.faq-answer'),i=this.querySelector('.sa-faq-icon');if(a.classList.contains('open')){a.style.maxHeight='0';a.classList.remove('open');}else{a.style.maxHeight=a.scrollHeight+'px';a.classList.add('open');}i.classList.toggle('open');" style="padding:16px 20px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;font-weight:700;color:#131b3b;direction:ltr !important;text-align:left !important;">
-<span style="direction:ltr !important;text-align:left !important;">What fleet size justifies a formal IT cost-reduction program?</span>
-<span class="sa-faq-icon" style="display:inline-block;font-size:1.4em;font-weight:400;line-height:1;color:#0fb5b0;margin-left:12px;">+</span>
+<div class="sa-faq-q" onclick="var a=this.parentElement.querySelector('.faq-answer'),i=this.querySelector('.sa-faq-icon');if(a.classList.contains('open')){a.style.maxHeight='0';a.classList.remove('open');}else{a.style.maxHeight=a.scrollHeight+'px';a.classList.add('open');}i.classList.toggle('open');" style="padding:16px 20px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;font-weight:700;color:#131b3b;direction:ltr !important;">
+<span style="direction:ltr !important;">Does PC power management interfere with security patching and backups?</span>
+<span class="sa-faq-icon" style="display:inline-block;font-size:1.4em;font-weight:400;line-height:1;color:#8AD628;margin-left:12px;">+</span>
 </div>
-<div class="faq-answer" style="max-height:0;overflow:hidden;">
-<div style="padding:0 20px 20px 20px;color:#2a2a2a;line-height:1.65;direction:ltr !important;text-align:left !important;">PowerPlug Pro is effective for organizations with as few as 100 PCs — and scales to 50,000+. Once fleets reach the high hundreds or low thousands, endpoint energy waste and operational friction become visible enough to produce a compelling ROI case for finance review.</div>
+<div class="faq-answer" style="max-height:0;overflow:hidden;"><div style="padding:0 20px 20px 20px;color:#2a2a2a;line-height:1.65;direction:ltr !important;">A properly designed solution wakes machines on a defined schedule so security patching and backup operations complete normally. PowerPlug Pro integrates with Active Directory and SCCM, preserving all existing maintenance windows while recovering idle-hour energy across the rest of the day.</div></div>
 </div>
+<div style="border:1px solid #e0e3e8;border-radius:10px;margin:0 0 12px 0;overflow:hidden;">
+<div class="sa-faq-q" onclick="var a=this.parentElement.querySelector('.faq-answer'),i=this.querySelector('.sa-faq-icon');if(a.classList.contains('open')){a.style.maxHeight='0';a.classList.remove('open');}else{a.style.maxHeight=a.scrollHeight+'px';a.classList.add('open');}i.classList.toggle('open');" style="padding:16px 20px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;font-weight:700;color:#131b3b;direction:ltr !important;">
+<span style="direction:ltr !important;">What fleet size justifies a formal IT cost reduction program?</span>
+<span class="sa-faq-icon" style="display:inline-block;font-size:1.4em;font-weight:400;line-height:1;color:#8AD628;margin-left:12px;">+</span>
+</div>
+<div class="faq-answer" style="max-height:0;overflow:hidden;"><div style="padding:0 20px 20px 20px;color:#2a2a2a;line-height:1.65;direction:ltr !important;">Organizations with 100 or more PCs can benefit from endpoint power management. From a thousand endpoints upward, the ROI case becomes straightforward because idle-hour waste, maintenance constraints, and license drift become significant line items. PowerPlug Pro scales from 100 to 50,000 PCs within a single deployment.</div></div>
 </div>
 <div style="border:1px solid #e0e3e8;border-radius:10px;margin:0;overflow:hidden;">
-<div class="sa-faq-q" onclick="var a=this.parentElement.querySelector('.faq-answer'),i=this.querySelector('.sa-faq-icon');if(a.classList.contains('open')){a.style.maxHeight='0';a.classList.remove('open');}else{a.style.maxHeight=a.scrollHeight+'px';a.classList.add('open');}i.classList.toggle('open');" style="padding:16px 20px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;font-weight:700;color:#131b3b;direction:ltr !important;text-align:left !important;">
-<span style="direction:ltr !important;text-align:left !important;">How does endpoint energy saving connect to ESG and sustainability reporting?</span>
-<span class="sa-faq-icon" style="display:inline-block;font-size:1.4em;font-weight:400;line-height:1;color:#0fb5b0;margin-left:12px;">+</span>
+<div class="sa-faq-q" onclick="var a=this.parentElement.querySelector('.faq-answer'),i=this.querySelector('.sa-faq-icon');if(a.classList.contains('open')){a.style.maxHeight='0';a.classList.remove('open');}else{a.style.maxHeight=a.scrollHeight+'px';a.classList.add('open');}i.classList.toggle('open');" style="padding:16px 20px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;font-weight:700;color:#131b3b;direction:ltr !important;">
+<span style="direction:ltr !important;">How does endpoint energy saving connect to ESG and sustainability reporting?</span>
+<span class="sa-faq-icon" style="display:inline-block;font-size:1.4em;font-weight:400;line-height:1;color:#8AD628;margin-left:12px;">+</span>
 </div>
-<div class="faq-answer" style="max-height:0;overflow:hidden;">
-<div style="padding:0 20px 20px 20px;color:#2a2a2a;line-height:1.65;direction:ltr !important;text-align:left !important;">kWh reduction maps directly to scope-2 emissions reduction. Once energy use is measured at the fleet level, the savings data feeds directly into ESG and sustainability reports without requiring a parallel tracking program — as Ben Gurion University demonstrated when choosing PowerPlug Pro for green-campus positioning.</div>
-</div>
+<div class="faq-answer" style="max-height:0;overflow:hidden;"><div style="padding:0 20px 20px 20px;color:#2a2a2a;line-height:1.65;direction:ltr !important;">kWh reduction maps directly to Scope 2 carbon emissions. Once endpoint energy use is measured at fleet level, the savings data can feed ESG and sustainability reporting frameworks without requiring a separate tracking program. Ben Gurion University used this approach to demonstrate green-campus progress to external stakeholders.</div></div>
 </div>
 </section>
 
-<div class="sa-cta sa-cta-bottom" style="background:linear-gradient(135deg,#131b3b 0%,#1e2a52 50%,#0fb5b0 100%);border-radius:16px;padding:48px 36px;margin:0 0 40px 0;direction:ltr !important;text-align:center !important;box-shadow:0 10px 30px rgba(19,27,59,.18);">
-<h2 style="font-size:1.55em;font-weight:800;color:#ffffff;margin:0 0 14px 0;padding:0;border:none;line-height:1.3;direction:ltr !important;text-align:center !important;">Ready to quantify your savings?</h2>
-<p style="margin:0 auto 22px auto;color:#d8e3ea;max-width:560px;font-size:1.05em;line-height:1.6;direction:ltr !important;text-align:center !important;">PowerPlug benchmarks enterprise IT fleets across energy, license, and cloud waste — and returns a report your CFO can defend. Trusted by Clalit Health Services (45,000 PCs), Rambam Healthcare Campus, and Ben Gurion University.</p>
-<a href="https://powerplug.ai/contact-us" class="sa-btn-teal" style="display:inline-block;background:#0fb5b0;color:#ffffff;padding:16px 40px;border-radius:10px;text-decoration:none;font-weight:700;font-size:1.05em;box-shadow:0 8px 22px rgba(15,181,176,.32);direction:ltr !important;">Schedule a Free Consultation</a>
+<!-- STRONG END CTA -->
+<div class="sa-cta sa-cta-bottom" style="background:linear-gradient(135deg,#131b3b 0%,#1e2a52 50%,#0a8c88 100%);border-radius:16px;padding:48px 36px;margin:0 0 40px 0;direction:ltr !important;text-align:center !important;box-shadow:0 10px 30px rgba(19,27,59,.18);">
+<h2 style="font-size:1.55em;font-weight:800;color:#ffffff;margin:0 0 14px 0;padding:0;border:none;line-height:1.3;direction:ltr !important;text-align:center !important;">Ready to quantify your IT savings?</h2>
+<p style="margin:0 auto 22px auto;color:#d8e3ea;max-width:560px;font-size:1.05em;line-height:1.6;direction:ltr !important;text-align:center !important;">PowerPlug benchmarks enterprise IT fleets across energy, license, and cloud waste — and delivers a report your CFO can defend. Organizations like Clalit Health Services (45,000 PCs) and Rambam Healthcare have recovered full deployment costs in as little as four months while maintaining full endpoint availability for patching and remote access.</p>
+<a href="https://powerplug.ai/contact-us" class="sa-btn-green" style="display:inline-block;background:#8AD628;color:#ffffff;padding:16px 40px;border-radius:10px;text-decoration:none;font-weight:700;font-size:1.05em;box-shadow:0 8px 22px rgba(138,214,40,.32);direction:ltr !important;">Schedule a Free Consultation</a>
 </div>
 
-<div class="sa-author-wrap" style="background:#ffffff;border:1px solid #e0e3e8;border-radius:14px;padding:28px 30px;margin:0 0 28px 0;direction:ltr !important;text-align:left !important;">
-<div class="sa-author-inner" style="display:flex;align-items:flex-start;gap:24px;direction:ltr !important;text-align:left !important;">
+<!-- ABOUT AUTHOR — horizontal logo, NO border-radius:50%, real socials -->
+<div class="sa-author-wrap" style="background:#ffffff;border:1px solid #e0e3e8;border-radius:14px;padding:26px 28px;margin:0 0 24px 0;direction:ltr !important;">
+<div class="sa-author-inner" style="display:flex;align-items:center;gap:24px;direction:ltr !important;">
 <div style="flex-shrink:0;direction:ltr !important;">
-<a href="https://powerplug.ai/" style="display:block;text-decoration:none;direction:ltr !important;"><img src="https://powerplug.ai/wp-content/uploads/2022/06/powerplug-logo.png" alt="PowerPlug — PC Power Management Software" style="max-width:180px;height:auto;object-fit:contain;display:block;border:none;background:transparent;" /></a>
+<a href="https://powerplug.ai/" style="display:block;border-bottom:none !important;">
+<img src="https://powerplug.ai/wp-content/uploads/2022/06/powerplug-logo.png" alt="PowerPlug — Enterprise PC Power Management Software" style="max-width:180px;height:auto;object-fit:contain;display:block;" />
+</a>
 </div>
-<div style="direction:ltr !important;text-align:left !important;">
-<div style="font-size:.8em;font-weight:700;color:#0fb5b0;letter-spacing:.08em;text-transform:uppercase;margin:0 0 4px 0;direction:ltr !important;text-align:left !important;">ABOUT THE AUTHOR</div>
-<div style="font-size:1.15em;font-weight:700;color:#131b3b;margin:0 0 8px 0;line-height:1.3;direction:ltr !important;text-align:left !important;">The PowerPlug Team</div>
-<p style="margin:0 0 16px 0;font-size:.95em;color:#52606d;line-height:1.6;direction:ltr !important;text-align:left !important;">PowerPlug builds PC power management software for enterprise IT fleets — trusted by healthcare, higher-education, and public-sector organizations to cut electricity costs up to 60% with near-zero maintenance and full Active Directory + SCCM integration.</p>
-<div class="sa-author-socials" style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin:0 0 14px 0;direction:ltr !important;">
-<a href="https://www.facebook.com/PowerPlugLtd/" target="_blank" rel="noopener" onmouseover="this.style.background='#1877F2';this.style.color='#fff';" onmouseout="this.style.background='#f0f4f8';this.style.color='#1877F2';" style="display:inline-flex;align-items:center;justify-content:center;padding:8px 14px;border-radius:6px;background:#f0f4f8;color:#1877F2;text-decoration:none;font-size:.85em;font-weight:700;direction:ltr !important;transition:background .2s,color .2s;">Facebook</a>
-<a href="https://www.linkedin.com/company/powerplug-ltd/" target="_blank" rel="noopener" onmouseover="this.style.background='#0A66C2';this.style.color='#fff';" onmouseout="this.style.background='#f0f4f8';this.style.color='#0A66C2';" style="display:inline-flex;align-items:center;justify-content:center;padding:8px 14px;border-radius:6px;background:#f0f4f8;color:#0A66C2;text-decoration:none;font-size:.85em;font-weight:700;direction:ltr !important;transition:background .2s,color .2s;">LinkedIn</a>
-<a href="https://twitter.com/PowerPlugLtd" target="_blank" rel="noopener" onmouseover="this.style.background='#1DA1F2';this.style.color='#fff';" onmouseout="this.style.background='#f0f4f8';this.style.color='#1DA1F2';" style="display:inline-flex;align-items:center;justify-content:center;padding:8px 14px;border-radius:6px;background:#f0f4f8;color:#1DA1F2;text-decoration:none;font-size:.85em;font-weight:700;direction:ltr !important;transition:background .2s,color .2s;">Twitter / X</a>
+<div style="direction:ltr !important;">
+<div style="font-size:.8em;font-weight:700;color:#8AD628;letter-spacing:.08em;text-transform:uppercase;margin:0 0 4px 0;direction:ltr !important;">ABOUT THE AUTHOR</div>
+<div style="font-size:1.15em;font-weight:700;color:#131b3b;margin:0 0 6px 0;line-height:1.3;direction:ltr !important;">The PowerPlug Team</div>
+<p style="margin:0 0 14px 0;font-size:.95em;color:#52606d;line-height:1.6;direction:ltr !important;">PowerPlug builds PC power management software for enterprise IT fleets — trusted by healthcare, higher-education, and public-sector organizations to cut electricity costs up to 60% with near-zero maintenance and full Active Directory + SCCM integration.</p>
+<div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;direction:ltr !important;">
+<a href="https://www.facebook.com/powerplugpro" target="_blank" rel="noopener" class="sa-social-btn sa-social-fb" style="display:inline-flex;align-items:center;justify-content:center;width:40px;height:40px;border-radius:50%;background:#ffffff;color:#131b3b;border:1px solid #e0e3e8;text-decoration:none;font-size:.78em;font-weight:700;" aria-label="PowerPlug on Facebook">fb</a>
+<a href="https://www.linkedin.com/company/powerplug-pro" target="_blank" rel="noopener" class="sa-social-btn sa-social-li" style="display:inline-flex;align-items:center;justify-content:center;width:40px;height:40px;border-radius:50%;background:#ffffff;color:#131b3b;border:1px solid #e0e3e8;text-decoration:none;font-size:.78em;font-weight:700;" aria-label="PowerPlug on LinkedIn">in</a>
+<a href="https://www.instagram.com/powerplugpro" target="_blank" rel="noopener" class="sa-social-btn sa-social-ig" style="display:inline-flex;align-items:center;justify-content:center;width:40px;height:40px;border-radius:50%;background:#ffffff;color:#131b3b;border:1px solid #e0e3e8;text-decoration:none;font-size:.78em;font-weight:700;" aria-label="PowerPlug on Instagram">ig</a>
+<a href="https://twitter.com/powerplugpro" target="_blank" rel="noopener" class="sa-social-btn sa-social-tw" style="display:inline-flex;align-items:center;justify-content:center;width:40px;height:40px;border-radius:50%;background:#ffffff;color:#131b3b;border:1px solid #e0e3e8;text-decoration:none;font-size:.78em;font-weight:700;" aria-label="PowerPlug on Twitter">tw</a>
+<a href="https://powerplug.ai/contact-us" class="sa-btn-navy" style="display:inline-block;background:#131b3b;color:#ffffff;padding:10px 22px;border-radius:8px;text-decoration:none;font-weight:700;font-size:.9em;margin-left:6px;direction:ltr !important;">Contact Us</a>
 </div>
-<a href="https://powerplug.ai/contact-us" style="display:inline-block;background:#131b3b;color:#ffffff;padding:10px 22px;border-radius:8px;text-decoration:none;font-weight:700;font-size:.9em;direction:ltr !important;" onmouseover="this.style.background='#1e2a52';" onmouseout="this.style.background='#131b3b';">Contact Us</a>
 </div>
 </div>
 </div>
 
-<a id="sa-scroll-top" href="#top" class="sa-float-left" aria-label="Back to top" style="position:fixed;bottom:28px;left:24px;width:46px;height:46px;border-radius:50%;background:#131b3b;color:#0fb5b0;display:inline-flex;align-items:center;justify-content:center;text-decoration:none;font-size:1.3em;font-weight:700;box-shadow:0 6px 18px rgba(19,27,59,.28);z-index:9998;direction:ltr !important;">&uarr;</a>
+<!-- FLOATING SCROLL TO TOP — bottom-LEFT, appears after 300px scroll -->
+<a id="sa-scroll-top" href="#top" aria-label="Back to top" style="display:none;position:fixed;bottom:92px;left:24px;width:46px;height:46px;border-radius:50%;background:#131b3b;color:#8AD628;text-decoration:none;font-size:1.3em;font-weight:700;align-items:center;justify-content:center;box-shadow:0 6px 18px rgba(19,27,59,.28);z-index:9998;transition:background .2s ease,transform .2s ease;" onclick="window.scrollTo({top:0,behavior:'smooth'});return false;">&uarr;</a>
 
-<a href="https://powerplug.ai/contact-us" class="sa-float-right" style="position:fixed;bottom:28px;right:24px;background:#0fb5b0;color:#ffffff;padding:12px 20px;border-radius:30px;text-decoration:none;font-weight:700;font-size:.95em;display:inline-flex;align-items:center;white-space:nowrap;box-shadow:0 6px 18px rgba(15,181,176,.30);z-index:9999;direction:ltr !important;" onmouseover="this.style.background='#0d9e9a';" onmouseout="this.style.background='#0fb5b0';">Contact Us</a>
+<!-- FLOATING CONTACT US — bottom-RIGHT, always visible, min 44x44px -->
+<a href="https://powerplug.ai/contact-us" class="sa-float-btn" aria-label="Contact PowerPlug" style="position:fixed;bottom:28px;right:24px;background:#8AD628;color:#ffffff;padding:13px 22px;border-radius:30px;text-decoration:none;font-weight:700;font-size:.95em;display:inline-flex;align-items:center;white-space:nowrap;box-shadow:0 6px 18px rgba(138,214,40,.32);z-index:9999;direction:ltr !important;min-width:44px;min-height:44px;transition:background .2s ease,transform .2s ease,box-shadow .2s ease;">Contact Us</a>
 
-<script>
-(function(){var b=document.getElementById('sa-scroll-top');if(!b)return;function t(){if(window.pageYOffset>300){b.classList.add('visible');}else{b.classList.remove('visible');}}window.addEventListener('scroll',t,{passive:true});t();})();
-</script>
-
+<script>(function(){var b=document.getElementById('sa-scroll-top');if(!b)return;function t(){b.style.display=window.scrollY>300?'flex':'none';}window.addEventListener('scroll',t,{passive:true});t();})();</script>
 </article>
