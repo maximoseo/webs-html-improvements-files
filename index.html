@@ -725,11 +725,15 @@ img,svg,video,canvas{max-width:100%;height:auto}
 .prompt-modal #prompt-improve-btn:disabled{opacity:.55}
 .prompt-modal #prompt-brainstorm-btn{background:linear-gradient(180deg,rgba(255,255,255,0.06),rgba(255,255,255,0.02)) !important;border:1px solid rgba(180,140,255,0.45) !important;color:#e5dcff !important}
 .prompt-modal #prompt-brainstorm-btn:hover{border-color:rgba(200,160,255,0.85) !important;background:linear-gradient(180deg,rgba(113,112,255,0.16),rgba(198,141,255,0.1)) !important}
-.prompt-modal #prompt-sync-gh-btn{background:linear-gradient(180deg,#19a974,#148f62) !important;color:#fff !important;border:1px solid rgba(255,255,255,0.12) !important}
-.prompt-modal #prompt-sync-gh-btn:hover{background:linear-gradient(180deg,#21ba82,#17a16e) !important}
+.prompt-modal #prompt-sync-gh-btn,.prompt-modal #prompt-apply-html-btn{background:linear-gradient(180deg,#19a974,#148f62) !important;color:#fff !important;border:1px solid rgba(255,255,255,0.12) !important}
+.prompt-modal #prompt-tweak-btn{background:rgba(104,101,255,0.12) !important;border:1px solid rgba(104,101,255,0.35) !important;color:#e7e6ff !important}
+.prompt-modal #prompt-tweak-btn:hover{background:rgba(104,101,255,0.18) !important;border-color:rgba(134,131,255,0.55) !important}
+.prompt-tweak-panel{margin-top:14px;padding:14px;border:1px solid rgba(255,255,255,0.08);border-radius:14px;background:rgba(255,255,255,0.025)}
+#prompt-tweak-output{min-height:220px;max-height:420px;resize:vertical;background:rgba(0,0,0,0.16) !important}
+.prompt-modal #prompt-sync-gh-btn:hover,.prompt-modal #prompt-apply-html-btn:hover{background:linear-gradient(180deg,#21ba82,#17a16e) !important}
 /* Ghost / tertiary */
-.prompt-modal .prompt-actions .action-btn:not(#prompt-improve-btn):not(#prompt-brainstorm-btn):not(#prompt-sync-gh-btn){background:rgba(255,255,255,0.045) !important;border:1px solid rgba(255,255,255,0.09) !important;color:rgba(255,255,255,0.88) !important}
-.prompt-modal .prompt-actions .action-btn:not(#prompt-improve-btn):not(#prompt-brainstorm-btn):not(#prompt-sync-gh-btn):hover{background:rgba(255,255,255,0.075) !important;border-color:rgba(255,255,255,0.18) !important;color:#fff !important}
+.prompt-modal .prompt-actions .action-btn:not(#prompt-improve-btn):not(#prompt-brainstorm-btn):not(#prompt-sync-gh-btn):not(#prompt-apply-html-btn){background:rgba(255,255,255,0.045) !important;border:1px solid rgba(255,255,255,0.09) !important;color:rgba(255,255,255,0.88) !important}
+.prompt-modal .prompt-actions .action-btn:not(#prompt-improve-btn):not(#prompt-brainstorm-btn):not(#prompt-sync-gh-btn):not(#prompt-apply-html-btn):hover{background:rgba(255,255,255,0.075) !important;border-color:rgba(255,255,255,0.18) !important;color:#fff !important}
 
 /* --- Status text density --- */
 .prompt-modal .prompt-status{font-size:12px;color:rgba(255,255,255,0.55);line-height:1.5;flex:1 1 200px;min-width:0}
@@ -1111,8 +1115,9 @@ img,svg,video,canvas{max-width:100%;height:auto}
       </div>
       <div class="prompt-actions">
         <button id="prompt-improve-btn" class="action-btn success" onclick="improvePrompt(this)">Improve</button>
+        <button id="prompt-tweak-btn" class="action-btn" onclick="tweakTemplate(this)" title="Use the improved prompt to produce the required HTML fixes via the dashboard itself"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:13px;height:13px;margin-right:4px;vertical-align:-2px"><path d="M4 13.5V20h6.5L20 10.5 13.5 4 4 13.5Z"/><path d="M12 6l6 6"/></svg>Tweaking</button>
         <button id="prompt-brainstorm-btn" class="action-btn brainstorm" onclick="brainstormPrompt(this)" title="Run 6 top LLMs in parallel and synthesize the best possible prompt"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:13px;height:13px;margin-right:4px;vertical-align:-2px"><circle cx="12" cy="12" r="3"/><circle cx="5" cy="5" r="2"/><circle cx="19" cy="5" r="2"/><circle cx="5" cy="19" r="2"/><circle cx="19" cy="19" r="2"/><line x1="7" y1="6" x2="10" y2="10"/><line x1="17" y1="6" x2="14" y2="10"/><line x1="7" y1="18" x2="10" y2="14"/><line x1="17" y1="18" x2="14" y2="14"/></svg>Brainstorm (6 models)</button>
-        <span id="prompt-status" class="prompt-status">Pick any pre-improve rules, select a model, then click Improve — or use Brainstorm to consult 6 top LLMs.</span>
+        <span id="prompt-status" class="prompt-status">Pick rules, improve the prompt, then use Tweaking to generate the required HTML corrections directly in the dashboard.</span>
         <button id="prompt-stop-all-btn" class="action-btn" onclick="stopAllPromptStudio()" title="Cancel any running action" style="background:rgba(217,43,43,0.18);border-color:rgba(217,43,43,0.55);color:#ffb7b7"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:12px;height:12px;margin-right:4px;vertical-align:-1px"><rect x="6" y="6" width="12" height="12" rx="1"/></svg>Stop all</button>
         <span class="esc-hint" aria-hidden="true"><kbd style="font:inherit;background:transparent;border:0;padding:0">Esc</kbd> to cancel</span>
       </div>
@@ -1129,6 +1134,17 @@ img,svg,video,canvas{max-width:100%;height:auto}
         <button class="action-btn" onclick="copyImprovedPrompt()">Copy output</button>
         <button id="prompt-sync-gh-btn" class="action-btn success" onclick="commitPromptToGitHub(this)" style="display:none">&uarr; Sync to GitHub (Render redeploys)</button>
         <span id="prompt-sync-status" class="prompt-status"></span>
+      </div>
+      <div class="prompt-tweak-panel" id="prompt-tweak-panel">
+        <div class="prompt-sync-title"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px"><path d="M12 3v3m0 12v3m9-9h-3M6 12H3m15.36 6.36-2.12-2.12M8.76 8.76 6.64 6.64m11.72 0-2.12 2.12M8.76 15.24l-2.12 2.12"/></svg>Tweaked HTML candidate</div>
+        <textarea id="prompt-tweak-output" class="prompt-textarea" readonly placeholder="Tweaked HTML example will appear here after you run Tweaking."></textarea>
+        <div class="prompt-actions">
+          <button class="action-btn" onclick="copyTweakedHtml()">Copy tweaked HTML</button>
+          <button id="prompt-apply-html-btn" class="action-btn success" onclick="applyTweakedHtmlToGitHub(this)" style="display:none">Apply to latest HTML file</button>
+          <button id="prompt-copy-html-obs-btn" class="action-btn" onclick="copyTweakedHtmlInstructions()" style="display:none">Copy HTML path + content</button>
+          <span id="prompt-tweak-status" class="prompt-status"></span>
+        </div>
+        <div class="prompt-sync-note" id="prompt-tweak-note">Tweaking generates one updated HTML example from the improved prompt. If it looks right, use Apply to replace the current active HTML file in the same version path instead of keeping older corrected files around.</div>
       </div>
       <div id="prompt-sync-panel" class="prompt-sync-panel">
         <div class="prompt-sync-title"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px"><path d="M21 12a9 9 0 0 1-9 9m9-9a9 9 0 0 0-9-9m9 9H3m9 9a9 9 0 0 1-9-9m9 9c2.5-2.5 3.75-5.75 3.75-9S14.5 5.5 12 3m0 18c-2.5-2.5-3.75-5.75-3.75-9S9.5 5.5 12 3"/></svg>Sync destinations</div>
@@ -1183,7 +1199,7 @@ const API=`https://api.github.com/repos/${REPO}`;
 const RAW=`https://raw.githubusercontent.com/${REPO}/main`;
 const COLORS=['#C9952A','#3b82f6','#22c55e','#a855f7','#ef4444','#06b6d4','#f59e0b','#ec4899'];
 let allProjects=[];
-let promptStudioContext={domain:'',agentName:'',versionName:'',htmlDownloadUrl:'',fileManifest:[],versionPath:'',githubRepoBase:'',obsidianBase:''};
+let promptStudioContext={domain:'',agentName:'',versionName:'',htmlDownloadUrl:'',fileManifest:[],versionPath:'',githubRepoBase:'',obsidianBase:'',htmlFilePath:'',htmlFileName:'',promptFilePath:'',workflowFilePath:'',lastImprovedPrompt:'',lastTweakedHtml:'',lastTweakedSummary:'',latestOnly:true};
 let previewContext={domain:'',agentName:'',versionName:'',downloadUrl:'',fileManifest:[]};
 let deployJobs=[];
 
@@ -1361,6 +1377,9 @@ function openPromptStudio(projectName, agentName, versionName, htmlDownloadUrl, 
   const rawBase=`https://raw.githubusercontent.com/${REPO}/main`;
   const obsBase=`C:\\Obsidian\\HTML REDESIGN\\HTML REDESIGN\\${domain}\\${agent}\\updated files`;
 
+  const htmlFile=files.find(f=>(f.name||'').toLowerCase().endsWith('.html'))||null;
+  const promptFile=files.find(f=>/prompt/i.test(f.name||'')&&(f.name||'').toLowerCase().endsWith('.txt'))||null;
+  const workflowFile=files.find(f=>/workflow/i.test(f.name||'')&&(f.name||'').toLowerCase().endsWith('.json'))||null;
   promptStudioContext={
     domain,
     agentName:agent,
@@ -1370,6 +1389,14 @@ function openPromptStudio(projectName, agentName, versionName, htmlDownloadUrl, 
     versionPath,
     githubRepoBase:ghBase,
     obsidianBase:obsBase,
+    htmlFilePath:htmlFile&&htmlFile.path?htmlFile.path:'',
+    htmlFileName:htmlFile&&htmlFile.name?htmlFile.name:'',
+    promptFilePath:promptFile&&promptFile.path?promptFile.path:'',
+    workflowFilePath:workflowFile&&workflowFile.path?workflowFile.path:'',
+    lastImprovedPrompt:'',
+    lastTweakedHtml:'',
+    lastTweakedSummary:'',
+    latestOnly:true,
   };
 
   document.getElementById('prompt-filename').textContent=agent||'Agent';
@@ -1377,6 +1404,10 @@ function openPromptStudio(projectName, agentName, versionName, htmlDownloadUrl, 
   // Pre-fill the palette URL with the domain homepage for convenience
   try{ const paletteUrlEl=document.getElementById('palette-url'); if(paletteUrlEl && !paletteUrlEl.value) paletteUrlEl.value='https://'+domain+'/'; }catch(e){}
   document.getElementById('prompt-output').value='';
+  document.getElementById('prompt-tweak-output').value='';
+  document.getElementById('prompt-tweak-status').textContent='';
+  document.getElementById('prompt-apply-html-btn').style.display='none';
+  document.getElementById('prompt-copy-html-obs-btn').style.display='none';
   document.getElementById('prompt-status').textContent='Review the pre-filled context below, add your instructions, then click Improve.';
 
   // Load HTML preview
@@ -1544,6 +1575,13 @@ async function improvePrompt(btn){
     const data=await res.json();
     if(!res.ok||!data.ok) throw new Error(data.error||'Prompt improvement failed');
     output.value=data.content||'';
+    promptStudioContext.lastImprovedPrompt=output.value;
+    promptStudioContext.lastTweakedHtml='';
+    promptStudioContext.lastTweakedSummary='';
+    document.getElementById('prompt-tweak-output').value='';
+    document.getElementById('prompt-tweak-status').textContent='';
+    document.getElementById('prompt-apply-html-btn').style.display='none';
+    document.getElementById('prompt-copy-html-obs-btn').style.display='none';
     const appliedNote=selected.length?` · ${selected.length} rule${selected.length===1?'':'s'} applied`:'';
     status.textContent=`Done — ${data.model||modelLabel}${appliedNote}.`;
     showPromptSyncPanel();
@@ -1623,6 +1661,13 @@ async function brainstormPrompt(btn){
       throw new Error(msg);
     }
     output.value=data.finalPrompt||'';
+    promptStudioContext.lastImprovedPrompt=output.value;
+    promptStudioContext.lastTweakedHtml='';
+    promptStudioContext.lastTweakedSummary='';
+    document.getElementById('prompt-tweak-output').value='';
+    document.getElementById('prompt-tweak-status').textContent='';
+    document.getElementById('prompt-apply-html-btn').style.display='none';
+    document.getElementById('prompt-copy-html-obs-btn').style.display='none';
     (data.modelsUsed||[]).forEach(m=>{const chip=chipList.querySelector(`[data-id="${m.model}"]`);if(chip){chip.classList.add('ok');chip.innerHTML=`\u2713 ${m.label} <span style="opacity:0.6">\u00b7 ${m.chars}c</span>`}});
     (data.modelsFailed||[]).forEach(m=>{const chip=chipList.querySelector(`[data-id="${m.model}"]`);if(chip){chip.classList.add('err');chip.innerHTML=`\u2715 ${m.label||m.model}`}});
     const dt=((Date.now()-t0)/1000).toFixed(1);
@@ -1746,6 +1791,112 @@ async function copyObsidianInstructions(){
     // fallback
     const ta=document.createElement('textarea');ta.value=block;document.body.appendChild(ta);ta.select();document.execCommand('copy');ta.remove();
     showToast('Path + content copied','success');
+  }
+}
+
+function _htmlFileInfo(){
+  const files=promptStudioContext.fileManifest||[];
+  let f=files.find(x=>/\.html$/i.test(x.name||''));
+  return f||null;
+}
+async function tweakTemplate(btn){
+  const improved=(document.getElementById('prompt-output').value||'').trim();
+  const status=document.getElementById('prompt-status');
+  const tweakOut=document.getElementById('prompt-tweak-output');
+  const tweakStatus=document.getElementById('prompt-tweak-status');
+  if(window._tweakAbort){
+    try{ window._tweakAbort.abort('user_cancel'); }catch(e){}
+    window._tweakAbort=null;
+    tweakStatus.textContent='Tweaking cancelled.';
+    showToast('Tweaking cancelled','warn'); _syncPromptModalRunningState();
+    return;
+  }
+  if(!improved){status.textContent='Run Improve or Brainstorm first so Tweaking has a prompt to apply.';return;}
+  const htmlFile=_htmlFileInfo();
+  if(!htmlFile || !htmlFile.download){status.textContent='No HTML template found in the selected version.';return;}
+  const modelEl=document.getElementById('prompt-model-select');
+  const selectedModel=modelEl?modelEl.value:'anthropic/claude-opus-4.7';
+  const original=btn.innerHTML;
+  btn.classList.add('is-running');
+  btn.innerHTML='<span class="btn-spinner" aria-hidden="true"></span>Stop';
+  btn.title='Click to cancel the current Tweaking request';
+  tweakOut.value='';
+  tweakStatus.textContent='Generating tweaked HTML example from the improved prompt...';
+  window._tweakAbort=new AbortController(); _syncPromptModalRunningState();
+  try{
+    const res=await fetch('/api/prompt/tweak',{method:'POST',signal:window._tweakAbort.signal,headers:{'Content-Type':'application/json'},body:JSON.stringify({domain:promptStudioContext.domain,agentName:promptStudioContext.agentName,versionName:promptStudioContext.versionName,htmlDownloadUrl:htmlFile.download,htmlFileName:htmlFile.name,htmlFilePath:htmlFile.path,fileManifest:promptStudioContext.fileManifest,improvedPrompt:improved,model:selectedModel||'anthropic/claude-opus-4.7',latestOnly:true})});
+    const data=await res.json();
+    if(!res.ok||!data.ok) throw new Error(data.error||'Tweaking failed');
+    tweakOut.value=data.html||'';
+    promptStudioContext.lastTweakedHtml=tweakOut.value;
+    promptStudioContext.lastTweakedSummary=data.summary||'';
+    tweakStatus.textContent=`Tweaked example ready — ${data.model||selectedModel}. If approved, apply it to replace the current active HTML file.`;
+    document.getElementById('prompt-apply-html-btn').style.display='';
+    document.getElementById('prompt-copy-html-obs-btn').style.display='';
+    showToast('Tweaked HTML example ready','success');
+  }catch(err){
+    if(err && (err.name==='AbortError' || String(err).includes('user_cancel'))){tweakStatus.textContent='Tweaking cancelled.';}else{tweakStatus.textContent=(err&&err.message)||'Tweaking failed.';showToast('Tweaking failed','error');}
+  }finally{
+    window._tweakAbort=null;
+    btn.disabled=false;
+    btn.innerHTML=original;
+    btn.classList.remove('is-running');
+    btn.title='';
+  }
+}
+async function copyTweakedHtml(){
+  const value=document.getElementById('prompt-tweak-output').value||'';
+  if(!value.trim()){showToast('No tweaked HTML to copy','warn');return;}
+  try{await navigator.clipboard.writeText(value);showToast('Tweaked HTML copied','success');}
+  catch(e){const ta=document.createElement('textarea');ta.value=value;document.body.appendChild(ta);ta.select();document.execCommand('copy');ta.remove();showToast('Tweaked HTML copied','success');}
+}
+async function copyTweakedHtmlInstructions(){
+  const content=document.getElementById('prompt-tweak-output').value||'';
+  const htmlFile=_htmlFileInfo();
+  if(!content.trim()){showToast('No tweaked HTML to copy','warn');return;}
+  const fallbackPath=`${promptStudioContext.domain||'<domain>'}/${promptStudioContext.versionName||'<version>'}/${promptStudioContext.htmlFileName||'Improved_HTML_Template.html'}`;
+  const path=(htmlFile&&htmlFile.path)||promptStudioContext.htmlFilePath||fallbackPath;
+  const block=`# Replace this HTML file:\n# ${path}\n\n${content}`;
+  try{await navigator.clipboard.writeText(block);showToast('HTML path + content copied','success');}
+  catch(e){const ta=document.createElement('textarea');ta.value=block;document.body.appendChild(ta);ta.select();document.execCommand('copy');ta.remove();showToast('HTML path + content copied','success');}
+}
+async function applyTweakedHtmlToGitHub(btn){
+  const content=document.getElementById('prompt-tweak-output').value||'';
+  const statusEl=document.getElementById('prompt-tweak-status');
+  if(window._htmlApplyAbort){
+    try{ window._htmlApplyAbort.abort('user_cancel'); }catch(e){}
+    window._htmlApplyAbort=null;
+    statusEl.textContent='HTML apply cancelled.';
+    showToast('HTML apply cancelled','warn'); _syncPromptModalRunningState();
+    return;
+  }
+  if(!content.trim()){showToast('No tweaked HTML to apply','warn');return;}
+  const htmlFile=_htmlFileInfo();
+  const path=(htmlFile&&htmlFile.path)||promptStudioContext.htmlFilePath||'';
+  if(!path){showToast('HTML target path missing','error');return;}
+  const domain=promptStudioContext.domain||'project';
+  const today=new Date().toISOString().slice(0,10);
+  const message=`feat(${domain}): apply tweaked html from prompt studio — ${today}`;
+  const orig=btn.innerHTML;
+  window._htmlApplyAbort=new AbortController(); _syncPromptModalRunningState();
+  btn.classList.add('is-running');
+  btn.innerHTML='<span class="btn-spinner" aria-hidden="true"></span>Stop apply';
+  btn.title='Click to cancel the HTML apply';
+  statusEl.textContent='Replacing the active HTML file in GitHub...';
+  try{
+    const res=await fetch('/api/prompt/commit',{method:'POST',signal:window._htmlApplyAbort.signal,headers:{'Content-Type':'application/json'},body:JSON.stringify({path,content,message,branch:'main'})});
+    const data=await res.json();
+    if(!res.ok||!data.ok){const msg=(data&&data.error&&typeof data.error==='object')?JSON.stringify(data.error).slice(0,400):(data.error||('HTTP '+res.status));throw new Error(msg);}
+    statusEl.innerHTML=`Applied to latest HTML file — <a href="${data.commitUrl||'#'}" target="_blank" style="color:#d7dbff">${(data.commitSha||'').slice(0,7)}</a>. Refresh after Render redeploys.`;
+    showToast('Latest HTML file replaced','success');
+  }catch(err){
+    if(err && (err.name==='AbortError' || String(err).includes('user_cancel'))){statusEl.textContent='HTML apply cancelled.';}else{const msg=(err&&err.message)||'HTML apply failed';statusEl.textContent=msg.includes('GITHUB_TOKEN')?'GitHub sync not configured on the server — add GITHUB_TOKEN to Render env.':msg;showToast('HTML apply failed','error');}
+  }finally{
+    window._htmlApplyAbort=null;
+    btn.disabled=false;
+    btn.innerHTML=orig;
+    btn.classList.remove('is-running');
+    btn.title='';
   }
 }
 
@@ -1877,7 +2028,7 @@ function clearPaletteExtract(){
   document.getElementById('palette-status').innerHTML='Paste the homepage URL \u2014 e.g. <code style="color:#d7dbff">https://powerplug.ai/</code> \u2014 to pull the real brand colors into your draft.';
 }
 
-function _anyPromptStudioRunning(){return !!(window._improveAbort||window._brainstormAbort||window._paletteAbort||window._ghSyncAbort);}
+function _anyPromptStudioRunning(){return !!(window._improveAbort||window._brainstormAbort||window._paletteAbort||window._ghSyncAbort||window._tweakAbort||window._htmlApplyAbort);}
 function _syncPromptModalRunningState(){
   const modal=document.getElementById('prompt-modal');
   if(!modal) return;
@@ -1901,6 +2052,8 @@ function stopAllPromptStudio(){
   try{ if(window._brainstormAbort){window._brainstormAbort.abort('user_cancel'); window._brainstormAbort=null; stopped.push('Brainstorm');} }catch(e){}
   try{ if(window._paletteAbort){window._paletteAbort.abort('user_cancel'); window._paletteAbort=null; stopped.push('Palette');} }catch(e){}
   try{ if(window._ghSyncAbort){window._ghSyncAbort.abort('user_cancel'); window._ghSyncAbort=null; stopped.push('GitHub sync');} }catch(e){}
+  try{ if(window._tweakAbort){window._tweakAbort.abort('user_cancel'); window._tweakAbort=null; stopped.push('Tweaking');} }catch(e){}
+  try{ if(window._htmlApplyAbort){window._htmlApplyAbort.abort('user_cancel'); window._htmlApplyAbort=null; stopped.push('HTML apply');} }catch(e){}
   if(stopped.length){
     showToast('Stopped: '+stopped.join(', '),'warn');
     const st=document.getElementById('prompt-status');
@@ -2425,6 +2578,15 @@ async function loadDashboard(){
     let versionsHTML='';
     const versionsByAgent={};
     p.versions.forEach(v=>{
+      const agentName=detectAgent(v.name);
+      const existing=versionsByAgent[agentName];
+      const currentDate=(v.date||'').split('.').reverse().join('');
+      const existingDate=existing?(existing.date||'').split('.').reverse().join(''):'';
+      if(!existing || (currentDate && (!existingDate || currentDate>existingDate)) || (!existingDate && v.isLatest)){
+        versionsByAgent[agentName]=v;
+      }
+    });
+    versionsHTML=Object.entries(versionsByAgent).map(([agentName,v])=>{
       let filesHTML='';
       v.files.forEach(f=>{
         const ext=f.name.split('.').pop().toLowerCase();
@@ -2439,19 +2601,11 @@ async function loadDashboard(){
           <div class="file-actions">${previewBtn}${deployBtn}<a href="${f.url}" target="_blank" class="action-btn">View Code</a><a href="${f.download}" class="action-btn primary">Download</a></div>
         </div>`;
       });
-      const versionSection=`<div class="version-section">
-        <div class="version-header"><span class="version-dot ${v.isLatest?'latest':'old'}"></span>
-        <span class="version-title">${v.date||v.name}${v.isLatest?' <span class="v-badge">&#x2605; Latest</span>':''}</span></div>
-        ${filesHTML}</div>`;
-      const agentName=detectAgent(v.name);
-      if(!versionsByAgent[agentName]) versionsByAgent[agentName]=[];
-      versionsByAgent[agentName].push(versionSection);
-    });
-    versionsHTML=Object.entries(versionsByAgent).map(([agentName,sections])=>{
       const _agEnc=encodeURIComponent(agentName);
       const _dmEnc=encodeURIComponent(p.name);
       const _hidden=isAgentHidden(p.name,agentName);
-      return `<div class="agent-group${_hidden?' collapsed':''}" data-domain="${p.name}" data-agent="${agentName.replace(/"/g,'&quot;')}"><div class="agent-group-header"><strong>${agentName}</strong><div class="agent-group-controls"><span class="agent-group-badge">${sections.length} version${sections.length===1?'':'s'}</span>${_hidden?'<span class="agent-group-hidden-note">hidden</span>':''}<button class="agent-hide-btn" onclick="event.stopPropagation();toggleAgentHidden('${_dmEnc}','${_agEnc}',this)" title="${_hidden?'Show this agent':'Hide this agent'}" aria-label="${_hidden?'Show':'Hide'} agent ${agentName}">${_hidden?'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>Show':'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17.94 17.94A10.94 10.94 0 0 1 12 20c-7 0-11-8-11-8a19.6 19.6 0 0 1 5.06-5.94M9.9 4.24A10.94 10.94 0 0 1 12 4c7 0 11 8 11 8a19.6 19.6 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>Hide'}</button></div></div><div class="agent-group-body">${sections.join('')}</div></div>`;}).join('');
+      return `<div class="agent-group${_hidden?' collapsed':''}" data-domain="${p.name}" data-agent="${agentName.replace(/"/g,'&quot;')}"><div class="agent-group-header"><strong>${agentName}</strong><div class="agent-group-controls"><span class="agent-group-badge">Latest file set</span>${_hidden?'<span class="agent-group-hidden-note">hidden</span>':''}<button class="agent-hide-btn" onclick="event.stopPropagation();toggleAgentHidden('${_dmEnc}','${_agEnc}',this)" title="${_hidden?'Show this agent':'Hide this agent'}" aria-label="${_hidden?'Show':'Hide'} agent ${agentName}">${_hidden?'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>Show':'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17.94 17.94A10.94 10.94 0 0 1 12 20c-7 0-11-8-11-8a19.6 19.6 0 0 1 5.06-5.94M9.9 4.24A10.94 10.94 0 0 1 12 4c7 0 11 8 11 8a19.6 19.6 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>Hide'}</button></div></div><div class="agent-group-body"><div class="version-section"><div class="version-header"><span class="version-dot latest"></span><span class="version-title">${v.date||v.name} <span class="v-badge">&#x2605; Latest</span></span></div>${filesHTML}</div></div></div>`;
+    }).join('');
     // Bulk bar if any agents hidden for this domain
     const _hiddenCount=Object.keys(versionsByAgent).filter(a=>isAgentHidden(p.name,a)).length;
     if(_hiddenCount>0){versionsHTML+=`<div class="agents-bulk-bar" data-domain-bar="${p.name}"><span>${_hiddenCount} agent${_hiddenCount===1?'':'s'} hidden</span><button onclick="event.stopPropagation();showAllAgents('${encodeURIComponent(p.name)}')">Show all agents</button></div>`;}
@@ -2478,7 +2632,7 @@ async function loadDashboard(){
           <h3>${p.name}</h3>
           <div class="card-meta">
             <span class="meta-tag">${lang}</span>
-            <span class="meta-tag">${p.versions.length} ver</span>
+            <span class="meta-tag">${Object.keys(versionsByAgent).length} latest sets</span>
             <span class="meta-tag">Latest: ${latestLabel}</span>
           </div>
         </div>

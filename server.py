@@ -441,6 +441,55 @@ def commit_prompt_to_github(payload):
     }
 
 
+def tweak_html_with_prompt(payload):
+    improved_prompt = (payload.get('improvedPrompt') or '').strip()
+    html_download_url = (payload.get('htmlDownloadUrl') or '').strip()
+    if not improved_prompt:
+        raise ValueError('improvedPrompt is required')
+    if not html_download_url:
+        raise ValueError('htmlDownloadUrl is required')
+    base, headers = prompt_headers()
+    if not headers:
+        raise RuntimeError('OPENAI_API_KEY or OPENROUTER_API_KEY is not configured')
+    default_model = os.getenv('PROMPT_TWEAK_MODEL', 'anthropic/claude-opus-4.7')
+    model = (payload.get('model') or '').strip() or default_model
+    domain = payload.get('domain') or 'unknown'
+    agent_name = payload.get('agentName') or 'unknown'
+    version_name = payload.get('versionName') or 'unknown'
+    html_file_name = (payload.get('htmlFileName') or 'Improved_HTML_Template.html').strip()
+    html_file_path = (payload.get('htmlFilePath') or '').strip()
+    latest_only = bool(payload.get('latestOnly', True))
+    file_manifest = payload.get('fileManifest') or []
+    current_html = fetch_text(html_download_url)
+    manifest_lines = []
+    for f in file_manifest:
+        name = (f.get('name') or '').strip()
+        if not name:
+            continue
+        manifest_lines.append(f"- {name} | path: {(f.get('path') or '').strip()} | download: {(f.get('download') or '').strip()}")
+    manifest_block = '\n'.join(manifest_lines) if manifest_lines else '- No manifest provided'
+    latest_rule = 'Only output the final latest replacement HTML for the active file. Do not mention old parallel files, duplicate versions, or archival outputs.' if latest_only else ''
+    system = ('You are a senior HTML redesign engineer. Apply the improved prompt to the provided HTML template and return the full corrected HTML file. Return raw HTML only. No markdown fences. No explanations before or after the HTML. Preserve working content and structure unless the improved prompt explicitly requires a change. Keep the file production-ready and self-contained.')
+    user = (f'Target domain: {domain}\n' f'Target agent: {agent_name}\n' f'Active version folder: {version_name}\n' f'Active HTML file name: {html_file_name}\n' f'Active HTML file path: {html_file_path}\n' f'{latest_rule}\n\n' f'--- FILE MANIFEST ---\n{manifest_block}\n--- END FILE MANIFEST ---\n\n' f'--- IMPROVED PROMPT TO APPLY ---\n{improved_prompt}\n--- END IMPROVED PROMPT ---\n\n' f'--- CURRENT HTML TEMPLATE ---\n{current_html}\n--- END CURRENT HTML TEMPLATE ---\n\n' 'Now return the fully updated HTML for the active file only.')
+    body = {'model': model, 'messages': [{'role': 'system', 'content': system}, {'role': 'user', 'content': user}]}
+    response = fetch_json(f'{base}/chat/completions', headers=headers, method='POST', body=body, timeout=240)
+    choices = response.get('choices') or []
+    content = ''
+    if choices:
+        message = choices[0].get('message') or {}
+        content = message.get('content') or ''
+    if isinstance(content, list):
+        content = ''.join(part.get('text', '') for part in content if isinstance(part, dict))
+    content = str(content).strip()
+    if content.startswith('```'):
+        content = content.strip('`')
+        if content.lower().startswith('html'):
+            content = content[4:].lstrip()
+    if not content:
+        raise RuntimeError('Model returned empty HTML content')
+    return {'ok': True, 'model': model, 'html': content, 'summary': f'Tweaked {html_file_name} for {domain}'}
+
+
 def improve_prompt_with_model(payload):
     draft = (payload.get('draftPrompt') or '').strip()
     if not draft:
@@ -724,6 +773,7 @@ class DashboardHandler(BaseHTTPRequestHandler):
                 'brainstormModels': [{'id': m['id'], 'label': m['label']} for m in BRAINSTORM_MODELS],
                 'synthModel': SYNTH_MODEL,
                 'paletteExtractorConfigured': True,
+                'tweakConfigured': bool(os.getenv('OPENAI_API_KEY') or os.getenv('OPENROUTER_API_KEY')),
             })
         if parsed.path == '/api/n8n/status':
             query = urllib.parse.parse_qs(parsed.query)
@@ -795,6 +845,20 @@ class DashboardHandler(BaseHTTPRequestHandler):
                     return json_response(self, 502, {'ok': False, 'error': parsed_err})
                 except Exception:
                     return json_response(self, 503, {'ok': False, 'error': msg})
+            except Exception as exc:
+                return json_response(self, 500, {'ok': False, 'error': str(exc)})
+
+        if parsed.path == '/api/prompt/tweak':
+            try:
+                result = tweak_html_with_prompt(payload)
+                return json_response(self, 200, result)
+            except RuntimeError as exc:
+                return json_response(self, 503, {'ok': False, 'error': str(exc)})
+            except ValueError as exc:
+                return json_response(self, 400, {'ok': False, 'error': str(exc)})
+            except urllib.error.HTTPError as exc:
+                body = exc.read().decode('utf-8', 'replace')[:1000]
+                return json_response(self, 502, {'ok': False, 'error': f'Model API error {exc.code}', 'details': body})
             except Exception as exc:
                 return json_response(self, 500, {'ok': False, 'error': str(exc)})
 
