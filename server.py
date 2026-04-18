@@ -91,6 +91,125 @@ def prompt_headers():
     return base.rstrip('/'), headers
 
 
+
+def supabase_comments_config():
+    url = (os.getenv('SUPABASE_URL') or '').strip().rstrip('/')
+    key = (
+        (os.getenv('SUPABASE_SERVICE_ROLE_KEY') or '').strip()
+        or (os.getenv('SUPABASE_ANON_KEY') or '').strip()
+        or (os.getenv('SUPABASE_API_KEY') or '').strip()
+    )
+    table = (os.getenv('SUPABASE_COMMENTS_TABLE') or 'dashboard_comments').strip() or 'dashboard_comments'
+    schema = (os.getenv('SUPABASE_SCHEMA') or 'public').strip() or 'public'
+    return {'url': url, 'key': key, 'table': table, 'schema': schema, 'configured': bool(url and key and table)}
+
+
+def supabase_comments_headers(prefer=None):
+    cfg = supabase_comments_config()
+    if not cfg['configured']:
+        return None
+    headers = {
+        'apikey': cfg['key'],
+        'Authorization': f"Bearer {cfg['key']}",
+        'Accept': 'application/json',
+        'Accept-Profile': cfg['schema'],
+        'Content-Profile': cfg['schema'],
+    }
+    if prefer:
+        headers['Prefer'] = prefer
+    return headers
+
+
+def serialize_comment_row(row):
+    return {
+        'id': row.get('id'),
+        'createdAt': row.get('created_at'),
+        'domain': row.get('domain') or '',
+        'agentName': row.get('agent_name') or '',
+        'versionName': row.get('version_name') or '',
+        'contextType': row.get('context_type') or '',
+        'contextKey': row.get('context_key') or '',
+        'filePath': row.get('file_path') or '',
+        'commentText': row.get('comment_text') or '',
+        'authorName': row.get('author_name') or '',
+        'metadata': row.get('metadata') or {},
+    }
+
+
+def list_supabase_comments(filters):
+    cfg = supabase_comments_config()
+    if not cfg['configured']:
+        return {'ok': True, 'configured': False, 'table': cfg['table'], 'comments': []}
+    context_key = (filters.get('contextKey') or '').strip()
+    domain = normalize_domain(filters.get('domain') or '')
+    agent_name = (filters.get('agentName') or '').strip()
+    version_name = (filters.get('versionName') or '').strip()
+    context_type = (filters.get('contextType') or '').strip()
+    file_path = (filters.get('filePath') or '').strip()
+    try:
+        limit = int(filters.get('limit') or 50)
+    except Exception:
+        limit = 50
+    limit = max(1, min(limit, 100))
+    if not context_key and not any([domain, agent_name, version_name, context_type, file_path]):
+        raise ValueError('contextKey or at least one context filter is required')
+    query = [
+        'select=' + urllib.parse.quote('id,created_at,domain,agent_name,version_name,context_type,context_key,file_path,comment_text,author_name,metadata', safe=',_'),
+        'order=' + urllib.parse.quote('created_at.desc', safe='._'),
+        f'limit={limit}',
+    ]
+    if context_key:
+        query.append('context_key=eq.' + urllib.parse.quote(context_key, safe=''))
+    if domain:
+        query.append('domain=eq.' + urllib.parse.quote(domain, safe=''))
+    if agent_name:
+        query.append('agent_name=eq.' + urllib.parse.quote(agent_name, safe=''))
+    if version_name:
+        query.append('version_name=eq.' + urllib.parse.quote(version_name, safe=''))
+    if context_type:
+        query.append('context_type=eq.' + urllib.parse.quote(context_type, safe=''))
+    if file_path:
+        query.append('file_path=eq.' + urllib.parse.quote(file_path, safe=''))
+    url = f"{cfg['url']}/rest/v1/{urllib.parse.quote(cfg['table'], safe='')}?{'&'.join(query)}"
+    rows = fetch_json(url, headers=supabase_comments_headers(), timeout=30)
+    rows = rows if isinstance(rows, list) else []
+    return {'ok': True, 'configured': True, 'table': cfg['table'], 'comments': [serialize_comment_row(r) for r in rows]}
+
+
+def save_supabase_comment(payload):
+    cfg = supabase_comments_config()
+    if not cfg['configured']:
+        raise RuntimeError('SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY/SUPABASE_ANON_KEY are not configured')
+    comment_text = (payload.get('commentText') or payload.get('comment') or '').strip()
+    if not comment_text:
+        raise ValueError('commentText is required')
+    if len(comment_text) > 5000:
+        raise ValueError('commentText is too long (max 5000 chars)')
+    domain = normalize_domain(payload.get('domain') or '')
+    agent_name = (payload.get('agentName') or '').strip()
+    version_name = (payload.get('versionName') or '').strip()
+    context_type = (payload.get('contextType') or 'general').strip() or 'general'
+    file_path = (payload.get('filePath') or '').strip()
+    context_key = (payload.get('contextKey') or '').strip() or '::'.join([context_type, domain, agent_name, version_name, file_path])
+    author_name = (payload.get('authorName') or '').strip()
+    metadata = payload.get('metadata') if isinstance(payload.get('metadata'), dict) else {}
+    row = {
+        'domain': domain,
+        'agent_name': agent_name,
+        'version_name': version_name,
+        'context_type': context_type,
+        'context_key': context_key,
+        'file_path': file_path,
+        'comment_text': comment_text,
+        'author_name': author_name or None,
+        'metadata': metadata,
+    }
+    url = f"{cfg['url']}/rest/v1/{urllib.parse.quote(cfg['table'], safe='')}"
+    result = fetch_json(url, headers=supabase_comments_headers('return=representation'), method='POST', body=row, timeout=30)
+    saved = result[0] if isinstance(result, list) and result else row
+    return {'ok': True, 'configured': True, 'table': cfg['table'], 'comment': serialize_comment_row(saved)}
+
+
 def normalize_domain(value: str) -> str:
     value = (value or '').strip().lower()
     if not value:
@@ -777,7 +896,23 @@ class DashboardHandler(BaseHTTPRequestHandler):
                 'promptSynthDefaultModel': SYNTH_MODEL,
                 'paletteExtractorConfigured': True,
                 'tweakConfigured': bool(os.getenv('OPENAI_API_KEY') or os.getenv('OPENROUTER_API_KEY')),
+                'commentsConfigured': supabase_comments_config()['configured'],
+                'commentsTable': supabase_comments_config()['table'],
             })
+        if parsed.path == '/api/comments':
+            query = urllib.parse.parse_qs(parsed.query)
+            filters = {k: (v[0] if isinstance(v, list) and v else '') for k, v in query.items()}
+            try:
+                result = list_supabase_comments(filters)
+                return json_response(self, 200, result)
+            except ValueError as exc:
+                return json_response(self, 400, {'ok': False, 'error': str(exc)})
+            except urllib.error.HTTPError as exc:
+                body = exc.read().decode('utf-8', 'replace')[:1000]
+                return json_response(self, 502, {'ok': False, 'error': f'Supabase API error {exc.code}', 'details': body})
+            except Exception as exc:
+                return json_response(self, 500, {'ok': False, 'error': str(exc)})
+
         if parsed.path == '/api/n8n/status':
             query = urllib.parse.parse_qs(parsed.query)
             domain = (query.get('domain') or [''])[0]
@@ -876,6 +1011,20 @@ class DashboardHandler(BaseHTTPRequestHandler):
             except urllib.error.HTTPError as exc:
                 body = exc.read().decode('utf-8', 'replace')[:1000]
                 return json_response(self, 502, {'ok': False, 'error': f'GitHub API error {exc.code}', 'details': body})
+            except Exception as exc:
+                return json_response(self, 500, {'ok': False, 'error': str(exc)})
+
+        if parsed.path == '/api/comments':
+            try:
+                result = save_supabase_comment(payload)
+                return json_response(self, 200, result)
+            except ValueError as exc:
+                return json_response(self, 400, {'ok': False, 'error': str(exc)})
+            except RuntimeError as exc:
+                return json_response(self, 503, {'ok': False, 'error': str(exc)})
+            except urllib.error.HTTPError as exc:
+                body = exc.read().decode('utf-8', 'replace')[:1200]
+                return json_response(self, 502, {'ok': False, 'error': f'Supabase API error {exc.code}', 'details': body})
             except Exception as exc:
                 return json_response(self, 500, {'ok': False, 'error': str(exc)})
 
