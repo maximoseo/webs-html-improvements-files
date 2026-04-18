@@ -1041,6 +1041,662 @@ img,svg,video,canvas{max-width:100%;height:auto}
   .prompt-modal .prompt-preview-wrap{background:#ffffff !important;border-color:rgba(15,23,42,0.12) !important;box-shadow:inset 0 0 0 1px rgba(94,106,210,0.08),0 10px 26px rgba(15,23,42,0.08) !important}
 }
 
+/* ================================================================
+   PROMPT STUDIO — Full Premium Redesign (2026-04)
+   Design language: clean dark, Inter, 16px radius system,
+   one primary action, generous whitespace, step-based clarity
+   ================================================================ */
+
+/* ── Variables ── */
+:root {
+  --ps-bg: #0d0d14;
+  --ps-surface: #13131f;
+  --ps-surface-2: #1a1a2a;
+  --ps-border: rgba(255,255,255,0.08);
+  --ps-border-focus: rgba(108,99,255,0.7);
+  --ps-indigo: #6c63ff;
+  --ps-indigo-hover: #7d75ff;
+  --ps-indigo-soft: rgba(108,99,255,0.12);
+  --ps-indigo-glow: rgba(108,99,255,0.25);
+  --ps-text: rgba(255,255,255,0.93);
+  --ps-text-2: rgba(255,255,255,0.62);
+  --ps-text-3: rgba(255,255,255,0.38);
+  --ps-green: #22c55e;
+  --ps-green-soft: rgba(34,197,94,0.12);
+  --ps-red: #f87171;
+  --ps-red-soft: rgba(248,113,113,0.14);
+  --ps-radius: 16px;
+  --ps-radius-sm: 10px;
+  --ps-radius-xs: 7px;
+}
+
+/* ── Modal shell ── */
+#prompt-modal .modal {
+  background: var(--ps-bg) !important;
+  border: 1px solid rgba(255,255,255,0.06) !important;
+  border-radius: 20px !important;
+  box-shadow: 0 32px 80px rgba(0,0,0,0.7), 0 0 0 1px rgba(108,99,255,0.08) !important;
+  overflow: hidden !important;
+}
+
+/* ── Header ── */
+#prompt-modal .modal-header {
+  background: var(--ps-surface) !important;
+  border-bottom: 1px solid var(--ps-border) !important;
+  padding: 0 24px !important;
+  height: 56px !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 0 !important;
+  flex-shrink: 0 !important;
+}
+#prompt-modal .modal-title {
+  font-size: 14px !important;
+  font-weight: 600 !important;
+  color: var(--ps-text) !important;
+  letter-spacing: -0.01em !important;
+  gap: 10px !important;
+  flex: 1 1 auto !important;
+}
+#prompt-modal .modal-title svg {
+  width: 16px !important; height: 16px !important;
+  color: var(--ps-indigo) !important;
+  flex-shrink: 0 !important;
+}
+#prompt-modal .focus-subtitle {
+  color: var(--ps-text-3) !important;
+  font-weight: 400 !important;
+  font-size: 13px !important;
+  margin-left: 6px !important;
+}
+#prompt-modal .modal-close {
+  width: 32px !important; height: 32px !important;
+  border-radius: var(--ps-radius-xs) !important;
+  border: none !important;
+  background: transparent !important;
+  color: var(--ps-text-2) !important;
+  font-size: 18px !important;
+  cursor: pointer !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  transition: background 0.15s, color 0.15s !important;
+  margin-left: 4px !important;
+}
+#prompt-modal .modal-close:hover {
+  background: rgba(248,113,113,0.12) !important;
+  color: var(--ps-red) !important;
+}
+#prompt-modal #prompt-expand-btn {
+  height: 32px !important;
+  padding: 0 10px !important;
+  font-size: 12px !important;
+  font-weight: 500 !important;
+  color: var(--ps-text-2) !important;
+  background: transparent !important;
+  border: 1px solid var(--ps-border) !important;
+  border-radius: var(--ps-radius-xs) !important;
+  gap: 5px !important;
+}
+#prompt-modal #prompt-expand-btn:hover {
+  background: var(--ps-surface-2) !important;
+  color: var(--ps-text) !important;
+}
+
+/* ── Container grid ── */
+#prompt-modal .prompt-container {
+  background: var(--ps-bg) !important;
+  padding: 0 !important;
+  gap: 0 !important;
+  grid-template-columns: 340px 340px 1fr !important;
+  overflow: hidden !important;
+}
+
+/* ── Panels — each is a full-height column ── */
+#prompt-modal .prompt-panel {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 0 !important;
+  min-height: 0 !important;
+  overflow: hidden !important;
+  border-right: 1px solid var(--ps-border) !important;
+  background: var(--ps-surface) !important;
+  padding: 0 !important;
+}
+#prompt-modal .prompt-panel:last-child {
+  border-right: none !important;
+}
+
+/* ── Step header bar inside each panel ── */
+#prompt-modal .prompt-label {
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  color: var(--ps-text-3) !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.08em !important;
+  padding: 14px 20px 10px !important;
+  flex-shrink: 0 !important;
+  border-bottom: 1px solid var(--ps-border) !important;
+  background: var(--ps-surface) !important;
+  margin: 0 !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+}
+#prompt-modal .prompt-label::before {
+  display: none !important;
+}
+
+/* ── Textareas ── */
+#prompt-modal .prompt-textarea {
+  flex: 1 !important;
+  width: 100% !important;
+  resize: none !important;
+  border: none !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  color: var(--ps-text) !important;
+  padding: 20px !important;
+  font: 13.5px/1.75 'Inter', -apple-system, BlinkMacSystemFont, sans-serif !important;
+  outline: none !important;
+  transition: background 0.15s !important;
+  min-height: 0 !important;
+}
+#prompt-modal .prompt-textarea:focus {
+  background: rgba(108,99,255,0.03) !important;
+  border-color: transparent !important;
+}
+#prompt-modal .prompt-textarea::placeholder {
+  color: var(--ps-text-3) !important;
+  font-style: normal !important;
+}
+#prompt-modal #prompt-draft {
+  max-height: none !important;
+  min-height: 0 !important;
+}
+#prompt-modal #prompt-output {
+  min-height: 0 !important;
+  background: rgba(108,99,255,0.015) !important;
+}
+
+/* ── Sticky action bar inside draft panel ── */
+#prompt-modal .prompt-panel > .prompt-actions {
+  flex-shrink: 0 !important;
+  position: sticky !important;
+  bottom: 0 !important;
+  padding: 12px 20px !important;
+  margin: 0 !important;
+  background: var(--ps-surface) !important;
+  border-top: 1px solid var(--ps-border) !important;
+  border-radius: 0 !important;
+  backdrop-filter: none !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  flex-wrap: wrap !important;
+}
+/* Output panel action bar */
+#prompt-modal .prompt-panel + .prompt-panel > .prompt-actions {
+  background: var(--ps-surface) !important;
+  border-top: 1px solid var(--ps-border) !important;
+  border-radius: 0 !important;
+}
+
+/* ── Checklist ── */
+#prompt-modal .checklist-wrap {
+  flex-shrink: 0 !important;
+  border: none !important;
+  border-top: 1px solid var(--ps-border) !important;
+  border-bottom: 1px solid var(--ps-border) !important;
+  border-radius: 0 !important;
+  background: var(--ps-surface) !important;
+  max-height: 40px !important;
+  overflow: hidden !important;
+  transition: max-height 0.25s ease !important;
+}
+#prompt-modal .checklist-wrap.expanded {
+  max-height: 260px !important;
+}
+#prompt-modal .checklist-header {
+  padding: 0 20px !important;
+  height: 40px !important;
+  background: transparent !important;
+  border-bottom: 1px solid transparent !important;
+  border-radius: 0 !important;
+}
+#prompt-modal .checklist-header:hover {
+  background: var(--ps-indigo-soft) !important;
+}
+#prompt-modal .checklist-title {
+  font-size: 12px !important;
+  font-weight: 600 !important;
+  color: var(--ps-text-2) !important;
+}
+#prompt-modal .checklist-count-badge {
+  font-size: 11px !important;
+  font-weight: 600 !important;
+  background: var(--ps-indigo-soft) !important;
+  color: #a5a0ff !important;
+  border: 1px solid rgba(108,99,255,0.22) !important;
+  padding: 2px 8px !important;
+  border-radius: 999px !important;
+}
+#prompt-modal .checklist-count-badge.zero {
+  background: rgba(255,255,255,0.04) !important;
+  color: var(--ps-text-3) !important;
+  border-color: var(--ps-border) !important;
+}
+#prompt-modal .checklist-body {
+  overflow-y: auto !important;
+  max-height: 200px !important;
+  padding: 8px 16px 12px !important;
+}
+#prompt-modal .checklist-header-btn {
+  font-size: 11px !important;
+  font-weight: 600 !important;
+  color: var(--ps-text-3) !important;
+  background: transparent !important;
+  border: 1px solid transparent !important;
+  border-radius: var(--ps-radius-xs) !important;
+  padding: 3px 8px !important;
+  cursor: pointer !important;
+}
+#prompt-modal .checklist-header-btn:hover {
+  color: var(--ps-text-2) !important;
+  background: var(--ps-surface-2) !important;
+  border-color: var(--ps-border) !important;
+}
+
+/* ── Palette extractor ── */
+#prompt-modal .palette-extractor {
+  flex-shrink: 0 !important;
+  border: none !important;
+  border-top: 1px solid var(--ps-border) !important;
+  border-radius: 0 !important;
+  background: var(--ps-surface) !important;
+  padding: 14px 20px !important;
+  margin: 0 !important;
+}
+#prompt-modal .palette-extractor-row label {
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  color: var(--ps-text-3) !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.07em !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  width: 100% !important;
+  margin-bottom: 8px !important;
+}
+#prompt-modal .palette-extractor-row label::before {
+  display: none !important;
+}
+#prompt-modal .palette-extractor-row {
+  flex-direction: column !important;
+  align-items: stretch !important;
+  gap: 6px !important;
+}
+#prompt-modal .palette-extractor-row > div {
+  display: flex !important;
+  gap: 8px !important;
+}
+#prompt-modal .palette-extractor-row input[type=url] {
+  flex: 1 !important;
+  height: 36px !important;
+  background: var(--ps-bg) !important;
+  border: 1px solid var(--ps-border) !important;
+  border-radius: var(--ps-radius-sm) !important;
+  color: var(--ps-text) !important;
+  font-size: 12.5px !important;
+  padding: 0 12px !important;
+}
+#prompt-modal .palette-extractor-row input[type=url]:focus {
+  border-color: var(--ps-border-focus) !important;
+  box-shadow: 0 0 0 3px var(--ps-indigo-glow) !important;
+  outline: none !important;
+}
+#prompt-modal .palette-extractor-row button.action-btn {
+  height: 36px !important;
+  padding: 0 12px !important;
+  font-size: 12px !important;
+  font-weight: 600 !important;
+  background: var(--ps-indigo-soft) !important;
+  border: 1px solid rgba(108,99,255,0.3) !important;
+  color: #a5a0ff !important;
+  border-radius: var(--ps-radius-sm) !important;
+  white-space: nowrap !important;
+}
+#prompt-modal .palette-extractor-row button.action-btn:hover {
+  background: rgba(108,99,255,0.22) !important;
+  color: #fff !important;
+}
+#prompt-modal .palette-extractor-status {
+  font-size: 11.5px !important;
+  color: var(--ps-text-3) !important;
+  margin-top: 8px !important;
+  line-height: 1.5 !important;
+}
+#prompt-modal .palette-swatches {
+  max-height: 130px !important;
+  overflow-y: auto !important;
+  gap: 6px !important;
+  margin-top: 10px !important;
+}
+#prompt-modal .palette-chip {
+  background: var(--ps-bg) !important;
+  border: 1px solid var(--ps-border) !important;
+  border-radius: var(--ps-radius-xs) !important;
+  font-size: 11px !important;
+  padding: 4px 8px !important;
+  color: var(--ps-text-2) !important;
+}
+#prompt-modal .palette-chip:hover {
+  border-color: rgba(108,99,255,0.4) !important;
+  background: var(--ps-indigo-soft) !important;
+  color: var(--ps-text) !important;
+}
+#prompt-modal .palette-chip .swatch {
+  width: 14px !important;
+  height: 14px !important;
+  border-radius: 4px !important;
+}
+#prompt-modal .palette-snippet {
+  background: var(--ps-bg) !important;
+  border: 1px solid var(--ps-border) !important;
+  border-radius: var(--ps-radius-sm) !important;
+  font-size: 11px !important;
+  max-height: 120px !important;
+  padding: 10px 12px !important;
+  color: rgba(165,160,255,0.85) !important;
+  margin-top: 10px !important;
+}
+#prompt-modal .palette-actions {
+  margin-top: 10px !important;
+  padding-top: 10px !important;
+  border-top: 1px solid var(--ps-border) !important;
+  gap: 6px !important;
+}
+#prompt-modal .palette-actions button.action-btn {
+  height: 30px !important;
+  padding: 0 10px !important;
+  font-size: 11.5px !important;
+  font-weight: 600 !important;
+  background: var(--ps-surface-2) !important;
+  border: 1px solid var(--ps-border) !important;
+  color: var(--ps-text-2) !important;
+  border-radius: var(--ps-radius-xs) !important;
+}
+#prompt-modal .palette-actions button.action-btn:hover {
+  color: var(--ps-text) !important;
+  border-color: rgba(255,255,255,0.15) !important;
+  background: rgba(255,255,255,0.06) !important;
+}
+
+/* ── Model selector ── */
+#prompt-modal .model-select-wrap {
+  flex-shrink: 0 !important;
+  padding: 10px 20px !important;
+  border-top: 1px solid var(--ps-border) !important;
+  background: var(--ps-surface) !important;
+  gap: 10px !important;
+  display: flex !important;
+  align-items: center !important;
+  flex-wrap: nowrap !important;
+}
+#prompt-modal .model-select-label {
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  color: var(--ps-text-3) !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.07em !important;
+  white-space: nowrap !important;
+  flex-shrink: 0 !important;
+}
+#prompt-modal .model-select {
+  height: 34px !important;
+  background: var(--ps-bg) !important;
+  border: 1px solid var(--ps-border) !important;
+  color: var(--ps-text) !important;
+  font-size: 12.5px !important;
+  font-weight: 500 !important;
+  border-radius: var(--ps-radius-sm) !important;
+  padding: 0 10px !important;
+  flex: 1 !important;
+  min-width: 0 !important;
+  cursor: pointer !important;
+}
+#prompt-modal .model-select:focus {
+  border-color: var(--ps-border-focus) !important;
+  box-shadow: 0 0 0 3px var(--ps-indigo-glow) !important;
+  outline: none !important;
+}
+
+/* ── Buttons — unified language ── */
+#prompt-modal .action-btn {
+  height: 34px !important;
+  padding: 0 14px !important;
+  border-radius: var(--ps-radius-xs) !important;
+  font-size: 12.5px !important;
+  font-weight: 600 !important;
+  letter-spacing: -0.005em !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 6px !important;
+  transition: all 0.15s ease !important;
+  cursor: pointer !important;
+  white-space: nowrap !important;
+}
+/* Primary — Improve */
+#prompt-modal #prompt-improve-btn {
+  background: var(--ps-indigo) !important;
+  color: #fff !important;
+  border: 1px solid var(--ps-indigo) !important;
+  box-shadow: 0 2px 8px rgba(108,99,255,0.35) !important;
+}
+#prompt-modal #prompt-improve-btn:hover:not(:disabled) {
+  background: var(--ps-indigo-hover) !important;
+  border-color: var(--ps-indigo-hover) !important;
+  box-shadow: 0 4px 16px rgba(108,99,255,0.45) !important;
+  transform: translateY(-1px) !important;
+}
+#prompt-modal #prompt-improve-btn:active { transform: none !important; }
+#prompt-modal #prompt-improve-btn:disabled { opacity: 0.45 !important; }
+/* Secondary — Brainstorm */
+#prompt-modal #prompt-brainstorm-btn {
+  background: transparent !important;
+  color: var(--ps-text-2) !important;
+  border: 1px solid var(--ps-border) !important;
+  box-shadow: none !important;
+}
+#prompt-modal #prompt-brainstorm-btn:hover:not(:disabled) {
+  background: var(--ps-indigo-soft) !important;
+  border-color: rgba(108,99,255,0.4) !important;
+  color: #a5a0ff !important;
+}
+/* Stop running state */
+#prompt-modal .action-btn.is-running {
+  background: rgba(248,113,113,0.14) !important;
+  border-color: rgba(248,113,113,0.4) !important;
+  color: var(--ps-red) !important;
+  box-shadow: none !important;
+  animation: ps-stop-pulse 2s ease-in-out infinite !important;
+}
+@keyframes ps-stop-pulse {
+  0%,100% { box-shadow: 0 0 0 0 rgba(248,113,113,0); }
+  50%      { box-shadow: 0 0 0 4px rgba(248,113,113,0.15); }
+}
+/* Stop-all */
+#prompt-modal #prompt-stop-all-btn {
+  background: rgba(248,113,113,0.08) !important;
+  border-color: rgba(248,113,113,0.28) !important;
+  color: rgba(248,113,113,0.8) !important;
+}
+/* Green — GitHub sync */
+#prompt-modal #prompt-sync-gh-btn {
+  background: var(--ps-green-soft) !important;
+  border: 1px solid rgba(34,197,94,0.28) !important;
+  color: #4ade80 !important;
+}
+#prompt-modal #prompt-sync-gh-btn:hover {
+  background: rgba(34,197,94,0.2) !important;
+  color: #86efac !important;
+}
+/* Ghost / tertiary */
+#prompt-modal .prompt-actions .action-btn:not(#prompt-improve-btn):not(#prompt-brainstorm-btn):not(#prompt-sync-gh-btn):not(#prompt-stop-all-btn):not(.is-running) {
+  background: transparent !important;
+  border: 1px solid var(--ps-border) !important;
+  color: var(--ps-text-2) !important;
+}
+#prompt-modal .prompt-actions .action-btn:not(#prompt-improve-btn):not(#prompt-brainstorm-btn):not(#prompt-sync-gh-btn):not(#prompt-stop-all-btn):not(.is-running):hover {
+  background: rgba(255,255,255,0.05) !important;
+  color: var(--ps-text) !important;
+  border-color: rgba(255,255,255,0.14) !important;
+}
+
+/* ── Status text ── */
+#prompt-modal .prompt-status {
+  font-size: 12px !important;
+  color: var(--ps-text-3) !important;
+  flex: 1 !important;
+  line-height: 1.5 !important;
+}
+
+/* ── Brainstorm progress ── */
+#prompt-modal .brainstorm-progress {
+  flex-shrink: 0 !important;
+  border-radius: 0 !important;
+  border: none !important;
+  border-top: 1px solid var(--ps-border) !important;
+  padding: 12px 20px !important;
+  background: var(--ps-indigo-soft) !important;
+}
+#prompt-modal .brainstorm-progress.active { display: block !important; }
+#prompt-modal .brainstorm-progress-title {
+  font-size: 12px !important;
+  font-weight: 700 !important;
+  color: #a5a0ff !important;
+  margin-bottom: 8px !important;
+}
+#prompt-modal .brainstorm-model-chip {
+  font-size: 11px !important;
+  padding: 3px 9px !important;
+  border-radius: 999px !important;
+  font-weight: 500 !important;
+}
+#prompt-modal .brainstorm-meta {
+  font-size: 11px !important;
+  color: var(--ps-text-3) !important;
+  margin-top: 6px !important;
+}
+
+/* ── Sync panel ── */
+#prompt-modal .prompt-sync-panel {
+  flex-shrink: 0 !important;
+  border-radius: 0 !important;
+  border: none !important;
+  border-top: 1px solid var(--ps-border) !important;
+  padding: 14px 20px !important;
+  background: var(--ps-surface) !important;
+}
+#prompt-modal .prompt-sync-title {
+  font-size: 12px !important;
+  font-weight: 700 !important;
+  color: var(--ps-text-3) !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.07em !important;
+  margin-bottom: 10px !important;
+}
+#prompt-modal .prompt-sync-row {
+  gap: 10px !important;
+  align-items: flex-start !important;
+  margin-bottom: 8px !important;
+}
+#prompt-modal .sync-label {
+  font-size: 10.5px !important;
+  font-weight: 700 !important;
+  color: var(--ps-text-3) !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.06em !important;
+  padding-top: 6px !important;
+  min-width: 70px !important;
+}
+#prompt-modal .prompt-sync-path {
+  font-size: 11.5px !important;
+  background: var(--ps-bg) !important;
+  border: 1px solid var(--ps-border) !important;
+  border-radius: var(--ps-radius-xs) !important;
+  color: rgba(165,160,255,0.85) !important;
+  padding: 6px 10px !important;
+}
+#prompt-modal .prompt-sync-note {
+  font-size: 11px !important;
+  color: var(--ps-text-3) !important;
+  line-height: 1.6 !important;
+  margin-top: 8px !important;
+}
+#prompt-modal #prompt-sync-status {
+  font-size: 12px !important;
+  color: var(--ps-text-2) !important;
+}
+
+/* ── Preview panel (col 3) ── */
+#prompt-modal .prompt-preview-wrap {
+  border: none !important;
+  border-radius: 0 !important;
+  background: #f5f6fa !important;
+  flex: 1 !important;
+}
+
+/* ── Esc hint + Stop All badge ── */
+#prompt-modal .esc-hint {
+  font-size: 11px !important;
+  color: var(--ps-text-3) !important;
+  background: rgba(248,113,113,0.08) !important;
+  border: 1px solid rgba(248,113,113,0.2) !important;
+  border-radius: var(--ps-radius-xs) !important;
+  padding: 3px 8px !important;
+}
+
+/* ── Scrollbar inside panels ── */
+#prompt-modal .prompt-panel::-webkit-scrollbar { width: 5px; }
+#prompt-modal .prompt-panel::-webkit-scrollbar-track { background: transparent; }
+#prompt-modal .prompt-panel::-webkit-scrollbar-thumb {
+  background: rgba(255,255,255,0.1);
+  border-radius: 999px;
+}
+#prompt-modal .prompt-panel::-webkit-scrollbar-thumb:hover {
+  background: rgba(255,255,255,0.2);
+}
+
+/* ── Responsive ── */
+@media (max-width:1400px) {
+  #prompt-modal .prompt-container {
+    grid-template-columns: 300px 300px 1fr !important;
+  }
+}
+@media (max-width:1100px) {
+  #prompt-modal .prompt-container {
+    grid-template-columns: 1fr 1fr !important;
+  }
+  #prompt-modal .prompt-panel:nth-child(3) {
+    display: none !important;
+  }
+}
+@media (max-width:720px) {
+  #prompt-modal .modal { border-radius: 0 !important; }
+  #prompt-modal .prompt-container {
+    grid-template-columns: 1fr !important;
+    overflow-y: auto !important;
+  }
+  #prompt-modal .prompt-panel {
+    overflow: visible !important;
+    border-right: none !important;
+    border-bottom: 1px solid var(--ps-border) !important;
+  }
+}
+
 </style>
 </head>
 <body>
@@ -1166,7 +1822,7 @@ img,svg,video,canvas{max-width:100%;height:auto}
   </div>
   <div class="prompt-container">
     <div class="prompt-panel">
-      <div class="prompt-label">Step 1 — Draft instructions</div>
+      <div class="prompt-label">1 &nbsp;·&nbsp; Write your instructions</div>
       <div class="prompt-status" style="margin-bottom:8px">Describe what should change in the active file set, what must stay, and what success looks like.</div>
       <textarea id="prompt-draft" class="prompt-textarea" placeholder="Describe what to change in this active file set, what to preserve, and what success should look like."></textarea>
       <div class="checklist-wrap" id="checklist-wrap">
@@ -1231,9 +1887,9 @@ img,svg,video,canvas{max-width:100%;height:auto}
       </div>
     </div>
     <div class="prompt-panel">
-      <div class="prompt-label">Step 2 — Improved prompt</div>
+      <div class="prompt-label">2 &nbsp;·&nbsp; Improved prompt</div>
       <div class="prompt-status" style="margin-bottom:8px">Review the improved prompt before generating an HTML candidate or syncing anything.</div>
-      <textarea id="prompt-output" class="prompt-textarea" readonly placeholder="Your improved prompt will appear here."></textarea>
+      <textarea id="prompt-output" class="prompt-textarea" readonly placeholder="Your improved, structured prompt will appear here — ready to copy and use."></textarea>
       <div class="prompt-actions">
         <button class="action-btn" onclick="copyImprovedPrompt()">Copy output</button>
         <button id="prompt-sync-gh-btn" class="action-btn success" onclick="commitPromptToGitHub(this)" style="display:none">&uarr; Sync to GitHub (Render redeploys)</button>
@@ -1258,7 +1914,7 @@ img,svg,video,canvas{max-width:100%;height:auto}
       </div>
     </div>
     <div class="prompt-panel">
-      <div class="prompt-label">Step 3 — Generate and review HTML candidate</div>
+      <div class="prompt-label">3 &nbsp;·&nbsp; Live template preview</div>
       <div class="prompt-preview-wrap">
         <iframe id="prompt-preview-frame" class="prompt-preview-frame" sandbox="allow-same-origin"></iframe>
       </div>
