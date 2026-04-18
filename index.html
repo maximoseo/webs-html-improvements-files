@@ -2551,6 +2551,23 @@ async function loadDashboard(){
 
   allProjects=projects;
 
+  // Precompute latest-only stats before rendering cards
+  projects.forEach(p=>{
+    const versionsByAgent={};
+    p.versions.forEach(v=>{
+      const agentName=detectAgent(v.name);
+      const existing=versionsByAgent[agentName];
+      const currentDate=(v.date||'').split('.').reverse().join('');
+      const existingDate=existing?(existing.date||'').split('.').reverse().join(''):'';
+      if(!existing || (currentDate && (!existingDate || currentDate>existingDate)) || (!existingDate && v.isLatest)){
+        versionsByAgent[agentName]=v;
+      }
+    });
+    latestSetCount += Object.keys(versionsByAgent).length;
+    visibleAgentCount += Object.keys(versionsByAgent).length;
+    latestSetFileCount += Object.values(versionsByAgent).reduce((sum,v)=>sum+(v.files?v.files.length:0),0);
+  });
+
   // Stats
   document.getElementById('stats-grid').innerHTML=`
     <div class="stat-card"><div class="stat-number">${projects.length}</div><div class="stat-label">Domains</div><div class="stat-icon">&#9672;</div></div>
@@ -2588,9 +2605,6 @@ async function loadDashboard(){
       }
     });
     const currentSetCount=Object.keys(versionsByAgent).length;
-    latestSetCount += currentSetCount;
-    visibleAgentCount += currentSetCount;
-    latestSetFileCount += Object.values(versionsByAgent).reduce((sum,v)=>sum+(v.files?v.files.length:0),0);
     versionsHTML=Object.entries(versionsByAgent).map(([agentName,v])=>{
       let filesHTML='';
       v.files.forEach(f=>{
