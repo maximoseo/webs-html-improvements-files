@@ -213,7 +213,7 @@ BRAINSTORM_MODELS = [
     {"id": "moonshotai/kimi-k2.5",            "label": "Kimi K2.5"},
     {"id": "z-ai/glm-5.1",                    "label": "GLM 5.1"},
 ]
-SYNTH_MODEL = os.getenv("PROMPT_SYNTH_MODEL", "anthropic/claude-opus-4.7")
+SYNTH_MODEL = os.getenv("PROMPT_SYNTH_MODEL", "anthropic/claude-sonnet-4.6")
 
 
 def _call_one_model(base, headers, model_id, system, user, timeout=180):
@@ -451,7 +451,7 @@ def tweak_html_with_prompt(payload):
     base, headers = prompt_headers()
     if not headers:
         raise RuntimeError('OPENAI_API_KEY or OPENROUTER_API_KEY is not configured')
-    default_model = os.getenv('PROMPT_TWEAK_MODEL', 'anthropic/claude-opus-4.7')
+    default_model = os.getenv('PROMPT_TWEAK_MODEL', 'anthropic/claude-sonnet-4.6')
     model = (payload.get('model') or '').strip() or default_model
     domain = payload.get('domain') or 'unknown'
     agent_name = payload.get('agentName') or 'unknown'
@@ -498,7 +498,7 @@ def improve_prompt_with_model(payload):
     if not headers:
         raise RuntimeError('OPENAI_API_KEY or OPENROUTER_API_KEY is not configured')
     # Accept model override from the browser payload; fall back to env / default
-    default_model = os.getenv('PROMPT_IMPROVER_MODEL', 'openai/gpt-5.4')
+    default_model = os.getenv('PROMPT_IMPROVER_MODEL', 'anthropic/claude-sonnet-4.6')
     model = (payload.get('model') or '').strip() or default_model
     current_date = os.getenv('PROMPT_CURRENT_DATE', '2026-04-15')
     checklist_rules = _normalize_checklist(payload.get('checklist'))
@@ -772,6 +772,9 @@ class DashboardHandler(BaseHTTPRequestHandler):
                 'githubCommitConfigured': bool(os.getenv('GITHUB_TOKEN')),
                 'brainstormModels': [{'id': m['id'], 'label': m['label']} for m in BRAINSTORM_MODELS],
                 'synthModel': SYNTH_MODEL,
+                'promptImproveDefaultModel': os.getenv('PROMPT_IMPROVER_MODEL', 'anthropic/claude-sonnet-4.6'),
+                'promptTweakDefaultModel': os.getenv('PROMPT_TWEAK_MODEL', 'anthropic/claude-sonnet-4.6'),
+                'promptSynthDefaultModel': SYNTH_MODEL,
                 'paletteExtractorConfigured': True,
                 'tweakConfigured': bool(os.getenv('OPENAI_API_KEY') or os.getenv('OPENROUTER_API_KEY')),
             })

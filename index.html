@@ -102,6 +102,7 @@ a:hover{color:var(--gold-light)}
 .card-body{max-height:0;overflow:hidden;transition:max-height 0.4s cubic-bezier(0.4,0,0.2,1)}
 .project-card.expanded .card-body{max-height:20000px;overflow:visible}
 .card-body-inner{padding:4px 22px 22px;border-top:1px solid var(--border);overflow:visible}
+.card-tools-row{display:flex;flex-wrap:wrap;gap:10px;padding:14px 0 12px;border-bottom:1px solid rgba(255,255,255,0.06);margin-bottom:14px}
 
 /* Version */
 .agent-group{margin-top:18px;padding:16px;border:1px solid rgba(255,255,255,0.06);border-radius:16px;background:rgba(255,255,255,0.02)}
@@ -961,6 +962,7 @@ img,svg,video,canvas{max-width:100%;height:auto}
     <div class="status-stack">
       <div class="status-pill" style="cursor:pointer" onclick="fullSync()" title="Click to refresh now"><span class="status-dot"></span><span id="sync-status">Synced</span></div>
       <div class="last-sync-meta" id="last-sync-time">Last sync: —</div>
+      <div class="last-sync-meta" id="data-source-detail">Source: checking live data…</div>
     </div>
     <button class="header-menu-btn" onclick="toggleShortcuts()" title="Keyboard shortcuts (?)" style="min-width:36px;padding:9px 12px">?</button>
     <button class="hdr-sync-btn" id="hdr-sync-btn" onclick="fullSync(this)" title="Sync latest files from GitHub and refresh dashboard" aria-label="Sync dashboard">
@@ -991,7 +993,7 @@ img,svg,video,canvas{max-width:100%;height:auto}
   </div>
 
   <div class="projects-grid" id="projects-grid">
-    <div class="loading"><div class="spinner"></div><div class="loading-text">Loading projects from GitHub...</div></div>
+    <div class="loading"><div class="spinner"></div><div class="loading-text">Loading bundled snapshot, then checking live GitHub for fresher data...</div></div>
   </div>
 
 
@@ -1022,7 +1024,7 @@ img,svg,video,canvas{max-width:100%;height:auto}
 <div class="modal-overlay" id="compare-modal" role="dialog" aria-modal="true" onclick="if(event.target===this)closeCompare()">
 <div class="modal compare-modal">
   <div class="modal-header">
-    <div class="modal-title"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path d="M10 3H3v7h7V3zM21 14h-7v7h7v-7zM21 3h-7v7h7V3zM10 14H3v7h7v-7z"/></svg> Compare agents: <span id="compare-filename">—</span></div>
+    <div class="modal-title"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path d="M10 3H3v7h7V3zM21 14h-7v7h7v-7zM21 3h-7v7h7V3zM10 14H3v7h7v-7z"/></svg> Compare agents: <span id="compare-filename">—</span><span class="focus-subtitle">Current HTML candidate per visible agent</span></div>
     <div class="device-tabs" id="compare-device-tabs">
       <button class="device-tab" onclick="setCompareDevice('mobile',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="2" width="14" height="20" rx="2"/><path d="M12 18h.01"/></svg>Mobile</button>
       <button class="device-tab" onclick="setCompareDevice('tablet',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="2" width="16" height="20" rx="2"/><path d="M12 18h.01"/></svg>Tablet</button>
@@ -1058,14 +1060,15 @@ img,svg,video,canvas{max-width:100%;height:auto}
 <div class="modal-overlay" id="prompt-modal" role="dialog" aria-modal="true" onclick="if(event.target===this)closePromptStudio()">
 <div class="modal prompt-modal">
   <div class="modal-header">
-    <div class="modal-title"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 1 1 3 3L7 19l-4 1 1-4Z"/></svg> Prompt studio: <span id="prompt-filename">—</span><span id="prompt-subtitle" class="focus-subtitle"></span></div>
+    <div class="modal-title"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 1 1 3 3L7 19l-4 1 1-4Z"/></svg> Prompt Studio: <span id="prompt-filename">—</span><span id="prompt-subtitle" class="focus-subtitle"></span></div>
     <button id="prompt-expand-btn" class="action-btn" style="height:32px;padding:0 12px;font-size:11px;border-color:rgba(255,255,255,0.10);color:var(--text-secondary)" onclick="togglePromptStudioExpand()" title="Expand to full screen" aria-label="Expand Prompt Studio"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:13px;height:13px"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/></svg> Expand</button>
     <button class="modal-close" onclick="closePromptStudio()">&times;</button>
   </div>
   <div class="prompt-container">
     <div class="prompt-panel">
-      <div class="prompt-label">Your draft prompt</div>
-      <textarea id="prompt-draft" class="prompt-textarea" placeholder="Describe what you want this specific agent to change, fix, improve, or regenerate."></textarea>
+      <div class="prompt-label">Step 1 — Draft instructions</div>
+      <div class="prompt-status" style="margin-bottom:8px">Describe what should change in the active file set, what must stay, and what success looks like.</div>
+      <textarea id="prompt-draft" class="prompt-textarea" placeholder="Describe what to change in this active file set, what to preserve, and what success should look like."></textarea>
       <div class="checklist-wrap" id="checklist-wrap">
         <div class="checklist-header" onclick="toggleChecklist(event)">
           <div class="checklist-header-left">
@@ -1101,11 +1104,11 @@ img,svg,video,canvas{max-width:100%;height:auto}
       <div class="model-select-wrap">
         <span class="model-select-label">Model</span>
         <select id="prompt-model-select" class="model-select" aria-label="Select model for prompt improvement">
-          <option value="openai/gpt-5.4" selected>GPT-5.4 — OpenAI</option>
+          <option value="openai/gpt-5.4">GPT-5.4 — OpenAI</option>
           <option value="anthropic/claude-opus-4.7">Claude Opus 4.7 — Anthropic</option>
           <option value="anthropic/claude-opus-4.6">Claude Opus 4.6 — Anthropic</option>
           <option value="anthropic/claude-opus-4.6-fast">Claude Opus 4.6 Fast — Anthropic</option>
-          <option value="anthropic/claude-sonnet-4.6">Claude Sonnet 4.6 — Anthropic</option>
+          <option value="anthropic/claude-sonnet-4.6" selected>Claude Sonnet 4.6 — Anthropic</option>
           <option value="moonshotai/kimi-k2-thinking">Kimi K2 Thinking — Moonshot</option>
           <option value="x-ai/grok-4.20-multi-agent">Grok 4.20 Multi-Agent — xAI</option>
           <option value="z-ai/glm-5.1">GLM-5.1 — ZAI</option>
@@ -1114,10 +1117,10 @@ img,svg,video,canvas{max-width:100%;height:auto}
         </select>
       </div>
       <div class="prompt-actions">
-        <button id="prompt-improve-btn" class="action-btn success" onclick="improvePrompt(this)">Improve</button>
-        <button id="prompt-tweak-btn" class="action-btn" onclick="tweakTemplate(this)" title="Use the improved prompt to produce the required HTML fixes via the dashboard itself"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:13px;height:13px;margin-right:4px;vertical-align:-2px"><path d="M4 13.5V20h6.5L20 10.5 13.5 4 4 13.5Z"/><path d="M12 6l6 6"/></svg>Tweaking</button>
-        <button id="prompt-brainstorm-btn" class="action-btn brainstorm" onclick="brainstormPrompt(this)" title="Run 6 top LLMs in parallel and synthesize the best possible prompt"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:13px;height:13px;margin-right:4px;vertical-align:-2px"><circle cx="12" cy="12" r="3"/><circle cx="5" cy="5" r="2"/><circle cx="19" cy="5" r="2"/><circle cx="5" cy="19" r="2"/><circle cx="19" cy="19" r="2"/><line x1="7" y1="6" x2="10" y2="10"/><line x1="17" y1="6" x2="14" y2="10"/><line x1="7" y1="18" x2="10" y2="14"/><line x1="17" y1="18" x2="14" y2="14"/></svg>Brainstorm (6 models)</button>
-        <span id="prompt-status" class="prompt-status">Pick rules, improve the prompt, then use Tweaking to generate an updated HTML candidate directly in the dashboard.</span>
+        <button id="prompt-improve-btn" class="action-btn success" onclick="improvePrompt(this)">Improve prompt</button>
+        <button id="prompt-tweak-btn" class="action-btn" onclick="tweakTemplate(this)" title="Use the improved prompt to produce the required HTML fixes via the dashboard itself"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:13px;height:13px;margin-right:4px;vertical-align:-2px"><path d="M4 13.5V20h6.5L20 10.5 13.5 4 4 13.5Z"/><path d="M12 6l6 6"/></svg>Generate HTML candidate</button>
+        <button id="prompt-brainstorm-btn" class="action-btn brainstorm" onclick="brainstormPrompt(this)" title="Run 6 top LLMs in parallel and synthesize the best possible prompt"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:13px;height:13px;margin-right:4px;vertical-align:-2px"><circle cx="12" cy="12" r="3"/><circle cx="5" cy="5" r="2"/><circle cx="19" cy="5" r="2"/><circle cx="5" cy="19" r="2"/><circle cx="19" cy="19" r="2"/><line x1="7" y1="6" x2="10" y2="10"/><line x1="17" y1="6" x2="14" y2="10"/><line x1="7" y1="18" x2="10" y2="14"/><line x1="17" y1="18" x2="14" y2="14"/></svg>Compare ideas (6 models)</button>
+        <span id="prompt-status" class="prompt-status">Step 1: write instructions. Step 2: improve the prompt with Claude Sonnet 4.6 by default. Step 3: generate and review an HTML candidate before replacing the active file.</span>
         <button id="prompt-stop-all-btn" class="action-btn" onclick="stopAllPromptStudio()" title="Cancel any running action" style="background:rgba(217,43,43,0.18);border-color:rgba(217,43,43,0.55);color:#ffb7b7"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:12px;height:12px;margin-right:4px;vertical-align:-1px"><rect x="6" y="6" width="12" height="12" rx="1"/></svg>Stop all</button>
         <span class="esc-hint" aria-hidden="true"><kbd style="font:inherit;background:transparent;border:0;padding:0">Esc</kbd> to cancel</span>
       </div>
@@ -1128,7 +1131,8 @@ img,svg,video,canvas{max-width:100%;height:auto}
       </div>
     </div>
     <div class="prompt-panel">
-      <div class="prompt-label">Paste-ready prompt</div>
+      <div class="prompt-label">Step 2 — Improved prompt</div>
+      <div class="prompt-status" style="margin-bottom:8px">Review the improved prompt before generating an HTML candidate or syncing anything.</div>
       <textarea id="prompt-output" class="prompt-textarea" readonly placeholder="Your improved prompt will appear here."></textarea>
       <div class="prompt-actions">
         <button class="action-btn" onclick="copyImprovedPrompt()">Copy output</button>
@@ -1140,7 +1144,7 @@ img,svg,video,canvas{max-width:100%;height:auto}
         <textarea id="prompt-tweak-output" class="prompt-textarea" readonly placeholder="Tweaked HTML example will appear here after you run Tweaking."></textarea>
         <div class="prompt-actions">
           <button class="action-btn" onclick="copyTweakedHtml()">Copy tweaked HTML</button>
-          <button id="prompt-apply-html-btn" class="action-btn success" onclick="applyTweakedHtmlToGitHub(this)" style="display:none">Apply to latest HTML file</button>
+          <button id="prompt-apply-html-btn" class="action-btn success" onclick="applyTweakedHtmlToGitHub(this)" style="display:none">Replace active HTML file</button>
           <button id="prompt-copy-html-obs-btn" class="action-btn" onclick="copyTweakedHtmlInstructions()" style="display:none">Copy HTML path + content</button>
           <span id="prompt-tweak-status" class="prompt-status"></span>
         </div>
@@ -1154,7 +1158,7 @@ img,svg,video,canvas{max-width:100%;height:auto}
       </div>
     </div>
     <div class="prompt-panel">
-      <div class="prompt-label">Selected HTML template preview (desktop-friendly)</div>
+      <div class="prompt-label">Step 3 — Generate and review HTML candidate</div>
       <div class="prompt-preview-wrap">
         <iframe id="prompt-preview-frame" class="prompt-preview-frame" sandbox="allow-same-origin"></iframe>
       </div>
@@ -1321,7 +1325,7 @@ function openCompare(projectName){
     const deployBtnHtml=hasWorkflow
       ? `<button class="action-btn" style="border-color:rgba(249,115,22,0.30);color:#fb923c;background:rgba(249,115,22,0.08)" onclick="deployVersionToN8n('${encodeURIComponent(projectName)}','${encodeURIComponent(item.agent)}','${encodeURIComponent(item.version)}','${_wfEnc}',this,'${panelId}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" style="width:12px;height:12px"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>Deploy to n8n</button>`
       : '';
-    panel.innerHTML=`<div class="compare-panel-header"><div class="compare-panel-title">${item.agent}<small>${item.version}</small></div><div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;justify-content:flex-end">${deployBtnHtml}<button class="action-btn success" onclick="openPromptStudio('${encodeURIComponent(projectName)}','${encodeURIComponent(item.agent)}','${encodeURIComponent(item.version)}','${item.file.download.replace(/'/g,'%27')}','${filesEnc}')">Prompt Studio</button><button class="action-btn" onclick="openFocusedCompare('${item.file.download.replace(/'/g,'%27')}','${item.agent.replace(/'/g,'%27')}','${item.version.replace(/'/g,'%27')}')">Expand</button><a href="${item.file.url}" target="_blank" class="action-btn">View Code</a></div></div><div class="compare-frame-wrap"><div class="compare-device-frame desktop"><iframe sandbox="allow-same-origin"></iframe></div></div><div class="compare-deploy-bar" id="${panelId}-bar" style="display:none"><span class="compare-deploy-badge idle" id="${panelId}-badge"><span class="compare-deploy-dot"></span><span id="${panelId}-badge-text">Ready</span></span><span class="compare-deploy-status" id="${panelId}-status"></span></div>`;
+    panel.innerHTML=`<div class="compare-panel-header"><div class="compare-panel-title">${item.agent}<small>${item.version}</small></div><div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;justify-content:flex-end">${deployBtnHtml}<button class="action-btn" onclick="openPromptStudio('${encodeURIComponent(projectName)}','${encodeURIComponent(item.agent)}','${encodeURIComponent(item.version)}','${item.file.download.replace(/'/g,'%27')}','${filesEnc}')">Prompt Studio</button><button class="action-btn" onclick="openFocusedCompare('${item.file.download.replace(/'/g,'%27')}','${item.agent.replace(/'/g,'%27')}','${item.version.replace(/'/g,'%27')}')">Expand</button><a href="${item.file.url}" target="_blank" class="action-btn">View Code</a></div></div><div class="compare-frame-wrap"><div class="compare-device-frame desktop"><iframe sandbox="allow-same-origin"></iframe></div></div><div class="compare-deploy-bar" id="${panelId}-bar" style="display:none"><span class="compare-deploy-badge idle" id="${panelId}-badge"><span class="compare-deploy-dot"></span><span id="${panelId}-badge-text">Ready</span></span><span class="compare-deploy-status" id="${panelId}-status"></span></div>`;
     grid.appendChild(panel);
     fetch(item.file.download).then(r=>r.text()).then(html=>{
       const iframe=panel.querySelector('iframe');
@@ -1546,7 +1550,7 @@ async function improvePrompt(btn){
   }
   output.value='';
   const modelEl=document.getElementById('prompt-model-select');
-  const selectedModel=modelEl?modelEl.value:'openai/gpt-5.4';
+  const selectedModel=modelEl?modelEl.value:'anthropic/claude-sonnet-4.6';
   const modelLabel=modelEl?modelEl.options[modelEl.selectedIndex].text:selectedModel;
   const original=btn.innerHTML;
   const selected=getSelectedChecklistItems();
@@ -1815,7 +1819,7 @@ async function tweakTemplate(btn){
   const htmlFile=_htmlFileInfo();
   if(!htmlFile || !htmlFile.download){status.textContent='No HTML template found in the selected version.';return;}
   const modelEl=document.getElementById('prompt-model-select');
-  const selectedModel=modelEl?modelEl.value:'anthropic/claude-opus-4.7';
+  const selectedModel=modelEl?modelEl.value:'anthropic/claude-sonnet-4.6';
   const original=btn.innerHTML;
   btn.classList.add('is-running');
   btn.innerHTML='<span class="btn-spinner" aria-hidden="true"></span>Stop';
@@ -2412,11 +2416,11 @@ async function fetchJSON(url){
     const r=await fetch(url);
     if(r.status===403||r.status===429){
       console.warn('Rate limited, using cache');
-      return null;
+      return {ok:false, rateLimited:true, status:r.status};
     }
-    if(!r.ok)return null;
-    return r.json();
-  }catch(e){return null}
+    if(!r.ok)return {ok:false, status:r.status};
+    return {ok:true, data:await r.json(), status:r.status};
+  }catch(e){return {ok:false, error:String(e||'fetch failed')}}
 }
 
 // Agent hide/show state (per domain+agent, persisted in localStorage)
@@ -2481,23 +2485,28 @@ async function loadDashboard(){
   let tree=null;
 
   // 1. Try static data.json (always works, no rate limit)
-  tree=await fetchJSON('./data.json');
+  const snapshotResult=await fetchJSON('./data.json');
+  tree=snapshotResult&&snapshotResult.ok?snapshotResult.data:null;
   let source='static';
+  let sourceDetail='Source: bundled snapshot';
 
   // 2. Try live GitHub API for fresh data (may fail if rate-limited)
   const liveTree=await fetchJSON(`${API}/git/trees/main?recursive=1`);
-  if(liveTree&&liveTree.tree){tree=liveTree;source='live'}
+  if(liveTree&&liveTree.ok&&liveTree.data&&liveTree.data.tree){tree=liveTree.data;source='live';sourceDetail='Source: Live GitHub'}
 
   // 3. Fallback to localStorage cache
   if(!tree||!tree.tree){
-    try{const c=localStorage.getItem('dashboard_cache');if(c){tree=JSON.parse(c);source='cached'}}catch(e){}
+    try{const c=localStorage.getItem('dashboard_cache');if(c){tree=JSON.parse(c);source='cached';sourceDetail='Source: cached fallback'}}catch(e){}
   }
 
   // 4. Save to cache on any success
   if(tree&&tree.tree){try{localStorage.setItem('dashboard_cache',JSON.stringify(tree))}catch(e){}}
 
-  if(!tree||!tree.tree){grid.innerHTML='<div class="empty-state"><p>Could not load data. Try refreshing.</p></div>';return}
-  if(source!=='live')document.getElementById('sync-status').textContent=source==='static'?'Synced (static)':'Cached';
+  if(!tree||!tree.tree){grid.innerHTML='<div class="empty-state"><p>Could not load data. Try refreshing.</p></div>';document.getElementById('data-source-detail').textContent='Source: unavailable';return}
+  document.getElementById('data-source-detail').textContent=sourceDetail;
+  if(source==='static')document.getElementById('sync-status').textContent='Snapshot';
+  if(source==='cached')document.getElementById('sync-status').textContent='Cached';
+  if(source==='live')document.getElementById('sync-status').textContent='Live GitHub';
 
   const RAW_BASE=`https://raw.githubusercontent.com/${REPO}/main`;
   const GH_BASE=`https://github.com/${REPO}/blob/main`;
@@ -2636,10 +2645,11 @@ async function loadDashboard(){
     const _previewCtxEnc=encodeURIComponent(JSON.stringify({domain:p.name,agentName:_psAgent,versionName:_psVersion,fileManifest:_psFiles}));
     const previewCTA=latestHtmlUrl?`<button class="preview-cta primary-accent" onclick="event.stopPropagation();openPreview('${latestHtmlUrl}','${latestHtmlName}','${_previewCtxEnc}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="5 3 19 12 5 21 5 3"/></svg>Preview</button>`:'';
     const compareCandidates=compareCandidatesForProject(p.name);
-    const compareCTA=compareCandidates.length>1?`<button class="preview-cta" onclick="event.stopPropagation();openCompare('${p.name}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M10 3H3v7h7V3zM21 14h-7v7h7v-7zM21 3h-7v7h7V3zM10 14H3v7h7v-7z"/></svg>Compare agents</button>`:'';
-    const promptStudioCTA=latestHtmlUrl?`<button class="preview-cta ps-cta" onclick="event.stopPropagation();openPromptStudio('${encodeURIComponent(p.name)}','${encodeURIComponent(_psAgent)}','${encodeURIComponent(_psVersion)}','${latestHtmlUrl.replace(/'/g,"%27")}','${_psFilesEnc}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" style="width:13px;height:13px"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 1 1 3 3L7 19l-4 1 1-4Z"/></svg>Prompt Studio</button>`:'';
+    const compareCTA=compareCandidates.length>1?`<button class="action-btn" onclick="event.stopPropagation();openCompare('${p.name}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M10 3H3v7h7V3zM21 14h-7v7h7v-7zM21 3h-7v7h7V3zM10 14H3v7h7v-7z"/></svg>Compare agents</button>`:'';
+    const promptStudioCTA=latestHtmlUrl?`<button class="action-btn" onclick="event.stopPropagation();openPromptStudio('${encodeURIComponent(p.name)}','${encodeURIComponent(_psAgent)}','${encodeURIComponent(_psVersion)}','${latestHtmlUrl.replace(/'/g,"%27")}','${_psFilesEnc}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" style="width:13px;height:13px"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 1 1 3 3L7 19l-4 1 1-4Z"/></svg>Prompt Studio</button>`:'';
 
     const latestLabel=latestDate||'Pending sync';
+    const expandedTools=(compareCTA||promptStudioCTA)?`<div class="card-tools-row">${compareCTA}${promptStudioCTA}</div>`:'';
 
     const card=document.createElement('div');
     card.className='project-card';
@@ -2652,20 +2662,20 @@ async function loadDashboard(){
           <div class="card-meta">
             <span class="meta-tag">${lang}</span>
             <span class="meta-tag">${currentSetCount} current sets</span>
-            <span class="meta-tag">Latest: ${latestLabel}</span>
+            <span class="meta-tag">Updated: ${latestLabel}</span>
           </div>
         </div>
         <div class="card-right">
-          <div class="card-cta-group">${compareCTA}${previewCTA}${promptStudioCTA}</div>
-          <div class="card-status-group"><span class="badge ${latest?'badge-live':'badge-archive'}">${latest?'Live':'Archive'}</span><span class="toggle-icon">&#9660;</span></div>
+          <div class="card-cta-group">${previewCTA}</div>
+          <div class="card-status-group"><span class="toggle-icon">&#9660;</span></div>
         </div>
       </div>
-      <div class="card-body"><div class="card-body-inner">${versionsHTML}</div></div>`;
+      <div class="card-body"><div class="card-body-inner">${expandedTools}${versionsHTML}</div></div>`;
     grid.appendChild(card);
   });
 
   syncBulkToggleLabel();
-  document.getElementById('sync-status').textContent='Synced '+new Date().toLocaleDateString('en-GB');
+  if(source==='live'){document.getElementById('sync-status').textContent='Live GitHub';}
 }
 
 function updateLastSync(){
@@ -2681,6 +2691,7 @@ async function fullSync(btnEl){
   const label=document.getElementById('hdr-sync-label');
   if(btn){btn.classList.add('syncing');btn.disabled=true;}
   if(label) label.textContent='Syncing...';
+  document.getElementById('data-source-detail').textContent='Source: refreshing live GitHub data…';
   // Header status pill
   const statusEl=document.getElementById('sync-status');
   const dot=document.querySelector('.status-dot');
@@ -2704,6 +2715,7 @@ async function fullSync(btnEl){
     btn.disabled=false;
     setTimeout(()=>btn.classList.remove('done'),2200);
   }
+  document.getElementById('data-source-detail').textContent='Source: Live GitHub';
   showToast('Dashboard synced from GitHub','success');
 }
 function manualRefresh(){fullSync();}
