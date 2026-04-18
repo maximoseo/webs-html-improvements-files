@@ -2303,6 +2303,164 @@ img,svg,video,canvas{max-width:100%;height:auto}
   border-radius: 999px;
 }
 
+
+
+/* =========================================================
+   v2.1 BUG FIX — overlap + hidden buttons + modal height
+   ========================================================= */
+
+/* Modal fills proper height (was only ~50vh) */
+#prompt-modal .modal.prompt-modal {
+  max-width: min(1600px, 96vw) !important;
+  width: 96vw !important;
+  height: 92vh !important;
+  max-height: 92vh !important;
+  display: flex !important;
+  flex-direction: column !important;
+  margin: 0 auto !important;
+}
+#prompt-modal .prompt-container {
+  flex: 1 !important;
+  min-height: 0 !important;
+  overflow: hidden !important;
+}
+
+/* Fix the checklist header overlap in narrow column: wrap on 2 rows if needed */
+#prompt-modal .checklist-header {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 8px !important;
+  min-width: 0 !important;
+}
+#prompt-modal .checklist-header-left {
+  display: flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+  min-width: 0 !important;
+  overflow: hidden !important;
+  flex: 1 1 auto !important;
+}
+#prompt-modal .checklist-title {
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  min-width: 0 !important;
+}
+#prompt-modal .checklist-header-actions {
+  display: flex !important;
+  align-items: center !important;
+  gap: 2px !important;
+  flex-shrink: 0 !important;
+}
+/* Only show Select all / Clear when expanded — reduces clutter on collapsed state */
+#prompt-modal .checklist-wrap:not(.expanded) .checklist-header-btn {
+  display: none !important;
+}
+/* Chevron indicator always visible */
+#prompt-modal .checklist-chevron {
+  width: 14px !important;
+  height: 14px !important;
+  color: rgba(255,255,255,0.45) !important;
+  transition: transform 0.2s !important;
+  flex-shrink: 0 !important;
+}
+#prompt-modal .checklist-wrap.expanded .checklist-chevron {
+  transform: rotate(180deg) !important;
+}
+
+/* HIDE redundant buttons: Generate HTML candidate & Compare ideas are
+   mostly duplicates of Improve + Brainstorm flows. Demote them. */
+#prompt-modal #prompt-generate-btn,
+#prompt-modal #prompt-compare-btn {
+  display: none !important;
+}
+
+/* Hide the redundant helper text under primary actions */
+#prompt-modal .prompt-actions + .prompt-status,
+#prompt-modal .prompt-actions .prompt-status:not(#prompt-status) {
+  display: none !important;
+}
+
+/* Also hide the initial "Review the pre-filled context..." static helper
+   that appears ABOVE the action bar — the textarea placeholder covers it. */
+#prompt-modal .prompt-panel > .prompt-status:nth-of-type(2),
+#prompt-modal .prompt-panel > .prompt-status:nth-of-type(3) {
+  display: none !important;
+}
+
+/* Tidy Stop all — less scary, smaller */
+#prompt-modal #prompt-stop-all-btn {
+  opacity: 0.7 !important;
+  background: transparent !important;
+  border: 1px solid rgba(248,113,113,0.25) !important;
+  color: rgba(248,113,113,0.85) !important;
+  font-size: 11px !important;
+  height: 28px !important;
+  padding: 0 10px !important;
+  border-radius: 6px !important;
+}
+#prompt-modal #prompt-stop-all-btn:hover {
+  opacity: 1 !important;
+  background: rgba(248,113,113,0.1) !important;
+}
+
+/* Middle column: clean up button wall under output */
+#prompt-modal .prompt-panel:nth-child(2) .prompt-actions {
+  display: grid !important;
+  grid-template-columns: 1fr 1fr !important;
+  gap: 8px !important;
+  padding: 12px 20px !important;
+}
+#prompt-modal #prompt-copy-output-btn,
+#prompt-modal #prompt-sync-gh-btn,
+#prompt-modal #prompt-copy-html-btn,
+#prompt-modal #prompt-replace-btn,
+#prompt-modal #prompt-copy-full-btn {
+  height: 36px !important;
+  font-size: 12.5px !important;
+  font-weight: 500 !important;
+  border-radius: 8px !important;
+  padding: 0 12px !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}
+#prompt-modal #prompt-sync-gh-btn {
+  grid-column: 1 / -1 !important;
+}
+#prompt-modal #prompt-copy-full-btn {
+  grid-column: 1 / -1 !important;
+}
+
+/* Unified label style — no more "5 different weights" per AI review */
+#prompt-modal .prompt-panel-separator {
+  display: none !important;
+}
+
+/* Remove horizontal separator line inside left column (AI review flagged it as too heavy) */
+#prompt-modal .prompt-panel > .prompt-status:first-of-type {
+  border-bottom: none !important;
+}
+
+/* Softer focus glow on Improve (less "2021-era") */
+#prompt-modal #prompt-improve-btn {
+  box-shadow: 0 1px 2px rgba(0,0,0,0.2) !important;
+}
+#prompt-modal #prompt-improve-btn:hover:not(:disabled) {
+  box-shadow: 0 2px 8px rgba(108,99,255,0.3) !important;
+}
+
+/* Brainstorm progress — hide when not running (some builds leave it showing) */
+#prompt-modal .brainstorm-progress:not(.active) {
+  display: none !important;
+}
+
+/* Better status text placement */
+#prompt-modal #prompt-status:empty {
+  display: none !important;
+}
+
 </style>
 </head>
 <body>
