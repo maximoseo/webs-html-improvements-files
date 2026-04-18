@@ -76,7 +76,11 @@ a:hover{color:var(--gold-light)}
 .project-card:hover::before{opacity:1}
 .card-header{padding:22px 22px;display:flex;align-items:flex-start;gap:16px;cursor:pointer;transition:background 0.15s;flex-wrap:wrap}
 .card-header:hover{background:rgba(255,255,255,0.02)}
-.card-icon{width:50px;height:50px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:800;color:#fff;flex-shrink:0;position:relative;background:linear-gradient(135deg,rgba(113,112,255,0.88),rgba(94,106,210,0.55));box-shadow:0 12px 30px rgba(94,106,210,0.28)}
+.card-icon{width:50px;height:50px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:800;color:#fff;flex-shrink:0;position:relative;background:linear-gradient(135deg,rgba(113,112,255,0.88),rgba(94,106,210,0.55));box-shadow:0 12px 30px rgba(94,106,210,0.28);overflow:hidden}
+.card-icon img.favicon{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;border-radius:14px;opacity:0;transition:opacity 0.3s ease}
+.card-icon img.favicon.loaded{opacity:1}
+.card-icon .icon-initials{position:relative;z-index:1;transition:opacity 0.3s ease}
+.card-icon.has-logo .icon-initials{opacity:0}
 .card-icon::after{content:'';position:absolute;inset:0;border-radius:14px;border:1px solid rgba(255,255,255,0.12)}
 .card-info{flex:1 1 320px;min-width:260px;padding-top:2px}
 .card-info h3{font-size:16px;font-weight:700;margin-bottom:8px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.03em}
@@ -334,7 +338,7 @@ a:hover{color:var(--gold-light)}
   .stat-card{padding:16px}
   .stat-number{font-size:28px}
   .card-meta{display:none}
-  .card-icon{width:42px;height:42px}
+  .card-icon{width:42px;height:42px;overflow:hidden}
   .preview-cta,.action-btn,.sync-btn{min-height:40px}
   .device-tabs{width:100%;overflow:auto}
   .modal-header{padding:12px;gap:10px;align-items:flex-start;flex-wrap:wrap}
@@ -2938,7 +2942,7 @@ async function loadDashboard(){
     card.dataset.name=p.name.toLowerCase();
     card.innerHTML=`
       <div class="card-header" onclick="this.parentElement.classList.toggle('expanded');syncBulkToggleLabel()">
-        <div class="card-icon" style="background:linear-gradient(135deg,${color},${color}88)">${initials}</div>
+        <div class="card-icon" id="icon-${p.name.replace(/[^a-z0-9]/gi,'-')}" style="background:linear-gradient(135deg,${color},${color}88)"><span class="icon-initials">${initials}</span><img class="favicon" src="https://www.google.com/s2/favicons?domain=${p.name}&sz=64" alt="" loading="lazy" onerror="this.onerror=null;this.src='https://'+'${p.name}'+'/favicon.ico'" onload="this.classList.add('loaded');this.closest('.card-icon').classList.add('has-logo')"></div>
         <div class="card-info">
           <h3>${p.name}</h3>
           <div class="card-meta">
