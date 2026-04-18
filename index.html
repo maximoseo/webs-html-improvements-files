@@ -2520,6 +2520,95 @@ img,svg,video,canvas{max-width:100%;height:auto}
 #prompt-modal .brainstorm-progress:not(.active) {
   display: none !important;
 }
+
+
+/* =========================================================
+   v2.3 FINAL POLISH — button widths, spacing, centering
+   ========================================================= */
+
+/* Middle column: unify all buttons to full-width stack = cleaner vertical flow */
+#prompt-modal .prompt-panel:nth-child(2) .prompt-actions {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 8px !important;
+  padding: 12px 20px !important;
+}
+#prompt-modal .prompt-panel:nth-child(2) .prompt-actions > button {
+  width: 100% !important;
+  height: 38px !important;
+  justify-content: center !important;
+}
+
+/* Tweak panel actions: same treatment */
+#prompt-modal .prompt-tweak-panel .prompt-actions {
+  display: grid !important;
+  grid-template-columns: 1fr 1fr !important;
+  gap: 8px !important;
+  padding: 12px 20px !important;
+}
+#prompt-modal .prompt-tweak-panel .prompt-actions > button {
+  height: 38px !important;
+  font-size: 12.5px !important;
+}
+#prompt-modal #prompt-copy-html-obs-btn {
+  grid-column: 1 / -1 !important;
+}
+
+/* Extra breathing room between accordion header and palette section below */
+#prompt-modal .checklist-wrap + .palette-extractor {
+  margin-top: 0 !important;
+}
+#prompt-modal .palette-extractor::before {
+  padding-top: 2px !important;
+}
+
+/* Preview panel: center the frame vertically with small equal margins */
+#prompt-modal .prompt-preview-wrap {
+  margin: 0 !important;
+  border-radius: 0 !important;
+}
+#prompt-modal .prompt-panel:last-child {
+  padding: 0 !important;
+}
+#prompt-modal .prompt-panel:last-child > .prompt-label {
+  padding: 18px 24px 12px !important;
+}
+
+/* Empty state: give output panel a friendly placeholder when empty */
+#prompt-modal #prompt-output:placeholder-shown {
+  background: rgba(255,255,255,0.01) !important;
+}
+
+/* Polish: badge alignment in checklist header */
+#prompt-modal .checklist-count-badge {
+  line-height: 1 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  height: 20px !important;
+}
+
+/* Consistency: modal-close subtle, not jarring red on hover */
+#prompt-modal .modal-close:hover {
+  background: rgba(255,255,255,0.08) !important;
+  color: rgba(255,255,255,0.9) !important;
+}
+
+/* "Esc to cancel" hint: only show when something is running */
+#prompt-modal .prompt-panel:first-child .esc-hint {
+  display: none !important;
+}
+#prompt-modal.is-running .prompt-panel:first-child .esc-hint {
+  display: inline-block !important;
+}
+
+/* Stop all: hidden until something is running (cleaner idle state) */
+#prompt-modal .prompt-panel:first-child #prompt-stop-all-btn {
+  display: none !important;
+}
+#prompt-modal.is-running .prompt-panel:first-child #prompt-stop-all-btn {
+  display: inline-flex !important;
+}
+
 </style>
 </head>
 <body>
@@ -4507,6 +4596,17 @@ document.addEventListener('click', function(ev){
     // ignore
   }
 });
+
+// v2.3 — reflect running state on the modal itself
+(function(){
+  const modal = document.getElementById('prompt-modal');
+  if (!modal) return;
+  const obs = new MutationObserver(() => {
+    const anyRunning = modal.querySelector('.is-running, .running, [data-running="true"]');
+    modal.classList.toggle('is-running', !!anyRunning);
+  });
+  obs.observe(modal, {attributes:true, subtree:true, attributeFilter:['class','data-running']});
+})();
 </script>
 </body>
 </html>
