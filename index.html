@@ -973,10 +973,10 @@ img,svg,video,canvas{max-width:100%;height:auto}
 
 <div class="container">
   <div class="stats" id="stats-grid">
-    <div class="stat-card"><div class="stat-number">-</div><div class="stat-label">Projects</div></div>
-    <div class="stat-card"><div class="stat-number">-</div><div class="stat-label">Total Files</div></div>
-    <div class="stat-card"><div class="stat-number">-</div><div class="stat-label">Latest</div></div>
-    <div class="stat-card"><div class="stat-number">-</div><div class="stat-label">Versions</div></div>
+    <div class="stat-card"><div class="stat-number">-</div><div class="stat-label">Domains</div></div>
+    <div class="stat-card"><div class="stat-number">-</div><div class="stat-label">Latest File Sets</div></div>
+    <div class="stat-card"><div class="stat-number">-</div><div class="stat-label">Files in Latest Sets</div></div>
+    <div class="stat-card"><div class="stat-number">-</div><div class="stat-label">Agents Visible</div></div>
   </div>
 
   <div class="section-head">
@@ -1117,7 +1117,7 @@ img,svg,video,canvas{max-width:100%;height:auto}
         <button id="prompt-improve-btn" class="action-btn success" onclick="improvePrompt(this)">Improve</button>
         <button id="prompt-tweak-btn" class="action-btn" onclick="tweakTemplate(this)" title="Use the improved prompt to produce the required HTML fixes via the dashboard itself"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:13px;height:13px;margin-right:4px;vertical-align:-2px"><path d="M4 13.5V20h6.5L20 10.5 13.5 4 4 13.5Z"/><path d="M12 6l6 6"/></svg>Tweaking</button>
         <button id="prompt-brainstorm-btn" class="action-btn brainstorm" onclick="brainstormPrompt(this)" title="Run 6 top LLMs in parallel and synthesize the best possible prompt"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:13px;height:13px;margin-right:4px;vertical-align:-2px"><circle cx="12" cy="12" r="3"/><circle cx="5" cy="5" r="2"/><circle cx="19" cy="5" r="2"/><circle cx="5" cy="19" r="2"/><circle cx="19" cy="19" r="2"/><line x1="7" y1="6" x2="10" y2="10"/><line x1="17" y1="6" x2="14" y2="10"/><line x1="7" y1="18" x2="10" y2="14"/><line x1="17" y1="18" x2="14" y2="14"/></svg>Brainstorm (6 models)</button>
-        <span id="prompt-status" class="prompt-status">Pick rules, improve the prompt, then use Tweaking to generate the required HTML corrections directly in the dashboard.</span>
+        <span id="prompt-status" class="prompt-status">Pick rules, improve the prompt, then use Tweaking to generate an updated HTML candidate directly in the dashboard.</span>
         <button id="prompt-stop-all-btn" class="action-btn" onclick="stopAllPromptStudio()" title="Cancel any running action" style="background:rgba(217,43,43,0.18);border-color:rgba(217,43,43,0.55);color:#ffb7b7"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:12px;height:12px;margin-right:4px;vertical-align:-1px"><rect x="6" y="6" width="12" height="12" rx="1"/></svg>Stop all</button>
         <span class="esc-hint" aria-hidden="true"><kbd style="font:inherit;background:transparent;border:0;padding:0">Esc</kbd> to cancel</span>
       </div>
@@ -1144,7 +1144,7 @@ img,svg,video,canvas{max-width:100%;height:auto}
           <button id="prompt-copy-html-obs-btn" class="action-btn" onclick="copyTweakedHtmlInstructions()" style="display:none">Copy HTML path + content</button>
           <span id="prompt-tweak-status" class="prompt-status"></span>
         </div>
-        <div class="prompt-sync-note" id="prompt-tweak-note">Tweaking generates one updated HTML example from the improved prompt. If it looks right, use Apply to replace the current active HTML file in the same version path instead of keeping older corrected files around.</div>
+        <div class="prompt-sync-note" id="prompt-tweak-note">Tweaking generates one updated HTML example from the improved prompt. Review it, then use Apply to replace the current active HTML file in the same version path so the dashboard keeps only the active deliverable visible.</div>
       </div>
       <div id="prompt-sync-panel" class="prompt-sync-panel">
         <div class="prompt-sync-title"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px"><path d="M21 12a9 9 0 0 1-9 9m9-9a9 9 0 0 0-9-9m9 9H3m9 9a9 9 0 0 1-9-9m9 9c2.5-2.5 3.75-5.75 3.75-9S14.5 5.5 12 3m0 18c-2.5-2.5-3.75-5.75-3.75-9S9.5 5.5 12 3"/></svg>Sync destinations</div>
@@ -2503,6 +2503,7 @@ async function loadDashboard(){
   const GH_BASE=`https://github.com/${REPO}/blob/main`;
   const skipRoots=new Set(['Dockerfile','README.md','index.html','render.yaml']);
   let totalFiles=0,totalVersions=0,latestCount=0;
+  let latestSetCount=0, latestSetFileCount=0, visibleAgentCount=0;
   const projectMap={};
 
   for(const item of tree.tree){
@@ -2552,11 +2553,11 @@ async function loadDashboard(){
 
   // Stats
   document.getElementById('stats-grid').innerHTML=`
-    <div class="stat-card"><div class="stat-number">${projects.length}</div><div class="stat-label">Projects</div><div class="stat-icon">&#9672;</div></div>
-    <div class="stat-card"><div class="stat-number">${totalFiles}</div><div class="stat-label">Total Files</div><div class="stat-icon">&#9776;</div></div>
-    <div class="stat-card"><div class="stat-number">${latestCount}</div><div class="stat-label">Latest</div><div class="stat-icon">&#10003;</div></div>
-    <div class="stat-card"><div class="stat-number">${totalVersions}</div><div class="stat-label">Versions</div><div class="stat-icon">&#8635;</div></div>`;
-  document.querySelector('.section-count').textContent=projects.length+' sites';
+    <div class="stat-card"><div class="stat-number">${projects.length}</div><div class="stat-label">Domains</div><div class="stat-icon">&#9672;</div></div>
+    <div class="stat-card"><div class="stat-number">${latestSetCount}</div><div class="stat-label">Latest File Sets</div><div class="stat-icon">&#10003;</div></div>
+    <div class="stat-card"><div class="stat-number">${latestSetFileCount}</div><div class="stat-label">Files in Latest Sets</div><div class="stat-icon">&#9776;</div></div>
+    <div class="stat-card"><div class="stat-number">${visibleAgentCount}</div><div class="stat-label">Agents Visible</div><div class="stat-icon">&#8635;</div></div>`;
+  document.querySelector('.section-count').textContent=projects.length+' domains';
 
   // Cards
   grid.innerHTML='';
@@ -2586,6 +2587,9 @@ async function loadDashboard(){
         versionsByAgent[agentName]=v;
       }
     });
+    latestSetCount += Object.keys(versionsByAgent).length;
+    visibleAgentCount += Object.keys(versionsByAgent).length;
+    latestSetFileCount += Object.values(versionsByAgent).reduce((sum,v)=>sum+(v.files?v.files.length:0),0);
     versionsHTML=Object.entries(versionsByAgent).map(([agentName,v])=>{
       let filesHTML='';
       v.files.forEach(f=>{
@@ -2604,7 +2608,7 @@ async function loadDashboard(){
       const _agEnc=encodeURIComponent(agentName);
       const _dmEnc=encodeURIComponent(p.name);
       const _hidden=isAgentHidden(p.name,agentName);
-      return `<div class="agent-group${_hidden?' collapsed':''}" data-domain="${p.name}" data-agent="${agentName.replace(/"/g,'&quot;')}"><div class="agent-group-header"><strong>${agentName}</strong><div class="agent-group-controls"><span class="agent-group-badge">Latest file set</span>${_hidden?'<span class="agent-group-hidden-note">hidden</span>':''}<button class="agent-hide-btn" onclick="event.stopPropagation();toggleAgentHidden('${_dmEnc}','${_agEnc}',this)" title="${_hidden?'Show this agent':'Hide this agent'}" aria-label="${_hidden?'Show':'Hide'} agent ${agentName}">${_hidden?'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>Show':'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17.94 17.94A10.94 10.94 0 0 1 12 20c-7 0-11-8-11-8a19.6 19.6 0 0 1 5.06-5.94M9.9 4.24A10.94 10.94 0 0 1 12 4c7 0 11 8 11 8a19.6 19.6 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>Hide'}</button></div></div><div class="agent-group-body"><div class="version-section"><div class="version-header"><span class="version-dot latest"></span><span class="version-title">${v.date||v.name} <span class="v-badge">&#x2605; Latest</span></span></div>${filesHTML}</div></div></div>`;
+      return `<div class="agent-group${_hidden?' collapsed':''}" data-domain="${p.name}" data-agent="${agentName.replace(/"/g,'&quot;')}"><div class="agent-group-header"><strong>${agentName}</strong><div class="agent-group-controls"><span class="agent-group-badge">Current file set</span>${_hidden?'<span class="agent-group-hidden-note">hidden</span>':''}<button class="agent-hide-btn" onclick="event.stopPropagation();toggleAgentHidden('${_dmEnc}','${_agEnc}',this)" title="${_hidden?'Show this agent':'Hide this agent'}" aria-label="${_hidden?'Show':'Hide'} agent ${agentName}">${_hidden?'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>Show':'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17.94 17.94A10.94 10.94 0 0 1 12 20c-7 0-11-8-11-8a19.6 19.6 0 0 1 5.06-5.94M9.9 4.24A10.94 10.94 0 0 1 12 4c7 0 11 8 11 8a19.6 19.6 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>Hide'}</button></div></div><div class="agent-group-body"><div class="version-section"><div class="version-header"><span class="version-dot latest"></span><span class="version-title">${v.date||v.name} <span class="v-badge">&#x2605; Latest</span></span></div>${filesHTML}</div></div></div>`;
     }).join('');
     // Bulk bar if any agents hidden for this domain
     const _hiddenCount=Object.keys(versionsByAgent).filter(a=>isAgentHidden(p.name,a)).length;
@@ -2632,7 +2636,7 @@ async function loadDashboard(){
           <h3>${p.name}</h3>
           <div class="card-meta">
             <span class="meta-tag">${lang}</span>
-            <span class="meta-tag">${Object.keys(versionsByAgent).length} latest sets</span>
+            <span class="meta-tag">${Object.keys(versionsByAgent).length} current sets</span>
             <span class="meta-tag">Latest: ${latestLabel}</span>
           </div>
         </div>
