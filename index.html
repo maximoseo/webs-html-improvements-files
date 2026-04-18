@@ -2587,8 +2587,9 @@ async function loadDashboard(){
         versionsByAgent[agentName]=v;
       }
     });
-    latestSetCount += Object.keys(versionsByAgent).length;
-    visibleAgentCount += Object.keys(versionsByAgent).length;
+    const currentSetCount=Object.keys(versionsByAgent).length;
+    latestSetCount += currentSetCount;
+    visibleAgentCount += currentSetCount;
     latestSetFileCount += Object.values(versionsByAgent).reduce((sum,v)=>sum+(v.files?v.files.length:0),0);
     versionsHTML=Object.entries(versionsByAgent).map(([agentName,v])=>{
       let filesHTML='';
@@ -2636,7 +2637,7 @@ async function loadDashboard(){
           <h3>${p.name}</h3>
           <div class="card-meta">
             <span class="meta-tag">${lang}</span>
-            <span class="meta-tag">${Object.keys(versionsByAgent).length} current sets</span>
+            <span class="meta-tag">${currentSetCount} current sets</span>
             <span class="meta-tag">Latest: ${latestLabel}</span>
           </div>
         </div>
