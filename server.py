@@ -133,6 +133,137 @@ def prompt_headers():
     return base.rstrip('/'), headers
 
 
+# ---------- LLM Provider Fallback Chain ----------
+# Order: OpenRouter -> GitHub Copilot -> Anthropic (Claude Code Max) -> OpenAI
+# Each provider is tried in sequence; if one fails with a 4xx/5xx or connection
+# error the next provider is attempted automatically.
+
+def _get_provider_chain():
+    """Return list of (provider_name, base_url, headers, model_map) in priority order."""
+    chain = []
+
+    # 1. OpenRouter
+    or_key = os.getenv('OPENROUTER_API_KEY')
+    if or_key:
+        chain.append({
+            'name': 'openrouter',
+            'base': 'https://openrouter.ai/api/v1',
+            'headers': {
+                'Authorization': f'Bearer {or_key}',
+                'Accept': 'application/json',
+                'HTTP-Referer': os.getenv('OPENROUTER_SITE_URL', 'https://html-redesign-dashboard.maximo-seo.ai/'),
+                'X-Title': os.getenv('OPENROUTER_APP_NAME', 'HTML Redesign Dashboard'),
+            },
+            # model passed through as-is (OpenRouter uses full model IDs)
+            'model_override': None,
+        })
+
+    # 2. GitHub Copilot
+    copilot_key = os.getenv('COPILOT_API_KEY') or os.getenv('GITHUB_COPILOT_TOKEN')
+    if copilot_key:
+        chain.append({
+            'name': 'copilot',
+            'base': 'https://api.githubcopilot.com',
+            'headers': {
+                'Authorization': f'Bearer {copilot_key}',
+                'Accept': 'application/json',
+                'Copilot-Integration-Id': 'vscode-chat',
+                'Editor-Version': 'vscode/1.95.0',
+                'Editor-Plugin-Version': 'copilot-chat/0.22.4',
+            },
+            # Copilot uses short model IDs
+            'model_override': os.getenv('COPILOT_MODEL', 'claude-sonnet-4.6'),
+        })
+
+    # 3. Anthropic direct (Claude Code Max plan)
+    anthropic_key = os.getenv('ANTHROPIC_API_KEY')
+    if anthropic_key:
+        chain.append({
+            'name': 'anthropic',
+            'base': 'https://api.anthropic.com/v1',
+            'headers': {
+                'x-api-key': anthropic_key,
+                'anthropic-version': '2023-06-01',
+                'Accept': 'application/json',
+            },
+            'model_override': os.getenv('ANTHROPIC_MODEL', 'claude-sonnet-4-5'),
+            'anthropic_native': True,  # uses /messages endpoint, not /chat/completions
+        })
+
+    # 4. OpenAI fallback
+    oai_key = os.getenv('OPENAI_API_KEY')
+    if oai_key:
+        base = os.getenv('OPENAI_BASE_URL', 'https://api.openai.com/v1')
+        chain.append({
+            'name': 'openai',
+            'base': base.rstrip('/'),
+            'headers': {
+                'Authorization': f'Bearer {oai_key}',
+                'Accept': 'application/json',
+            },
+            'model_override': os.getenv('OPENAI_FALLBACK_MODEL', 'gpt-4o'),
+        })
+
+    return chain
+
+
+def call_with_fallback(messages, model, timeout=120):
+    """
+    Call the LLM with automatic provider fallback.
+    Tries each provider in the chain; returns (content, provider_used) on success.
+    Raises RuntimeError if all providers fail.
+    """
+    chain = _get_provider_chain()
+    if not chain:
+        raise RuntimeError('No LLM provider configured. Set OPENROUTER_API_KEY, COPILOT_API_KEY, ANTHROPIC_API_KEY, or OPENAI_API_KEY.')
+
+    errors = []
+    for provider in chain:
+        p_name = provider['name']
+        base = provider['base']
+        hdrs = dict(provider['headers'])
+        m = provider.get('model_override') or model
+        is_anthropic_native = provider.get('anthropic_native', False)
+
+        try:
+            if is_anthropic_native:
+                # Anthropic /messages format
+                hdrs['Content-Type'] = 'application/json'
+                system_msgs = [msg['content'] for msg in messages if msg['role'] == 'system']
+                user_msgs = [msg for msg in messages if msg['role'] != 'system']
+                body = {
+                    'model': m,
+                    'max_tokens': 8192,
+                    'system': system_msgs[0] if system_msgs else '',
+                    'messages': user_msgs,
+                }
+                resp = fetch_json(f'{base}/messages', headers=hdrs, method='POST', body=body, timeout=timeout)
+                content_blocks = resp.get('content') or []
+                content = ''.join(b.get('text', '') for b in content_blocks if isinstance(b, dict))
+            else:
+                # OpenAI-compatible /chat/completions
+                body = {'model': m, 'messages': messages}
+                resp = fetch_json(f'{base}/chat/completions', headers=hdrs, method='POST', body=body, timeout=timeout)
+                choices = resp.get('choices') or []
+                content = ''
+                if choices:
+                    content = (choices[0].get('message') or {}).get('content') or ''
+                if isinstance(content, list):
+                    content = ''.join(part.get('text', '') for part in content if isinstance(part, dict))
+
+            content = str(content).strip()
+            if content:
+                return content, p_name
+
+            errors.append(f'{p_name}: empty response')
+
+        except Exception as exc:
+            errors.append(f'{p_name}: {exc}')
+            continue  # try next provider
+
+    raise RuntimeError('All LLM providers failed:\n' + '\n'.join(errors))
+
+
 
 def supabase_comments_config():
     url = (os.getenv('SUPABASE_URL') or '').strip().rstrip('/')
@@ -634,12 +765,10 @@ def tweak_html_with_prompt(payload):
     system = ('You are a senior HTML redesign engineer. Apply the improved prompt to the provided HTML template and return the full corrected HTML file. Return raw HTML only. No markdown fences. No explanations before or after the HTML. Preserve working content and structure unless the improved prompt explicitly requires a change. Keep the file production-ready and self-contained.')
     user = (f'Target domain: {domain}\n' f'Target agent: {agent_name}\n' f'Active version folder: {version_name}\n' f'Active HTML file name: {html_file_name}\n' f'Active HTML file path: {html_file_path}\n' f'{latest_rule}\n\n' f'--- FILE MANIFEST ---\n{manifest_block}\n--- END FILE MANIFEST ---\n\n' f'--- IMPROVED PROMPT TO APPLY ---\n{improved_prompt}\n--- END IMPROVED PROMPT ---\n\n' f'--- CURRENT HTML TEMPLATE ---\n{current_html}\n--- END CURRENT HTML TEMPLATE ---\n\n' 'Now return the fully updated HTML for the active file only.')
     body = {'model': model, 'messages': [{'role': 'system', 'content': system}, {'role': 'user', 'content': user}]}
-    response = fetch_json(f'{base}/chat/completions', headers=headers, method='POST', body=body, timeout=240)
-    choices = response.get('choices') or []
-    content = ''
-    if choices:
-        message = choices[0].get('message') or {}
-        content = message.get('content') or ''
+    content, provider_used = call_with_fallback(
+        [{'role': 'system', 'content': system}, {'role': 'user', 'content': user}],
+        model, timeout=240
+    )
     if isinstance(content, list):
         content = ''.join(part.get('text', '') for part in content if isinstance(part, dict))
     content = str(content).strip()
@@ -649,7 +778,7 @@ def tweak_html_with_prompt(payload):
             content = content[4:].lstrip()
     if not content:
         raise RuntimeError('Model returned empty HTML content')
-    return {'ok': True, 'model': model, 'html': content, 'summary': f'Tweaked {html_file_name} for {domain}'}
+    return {'ok': True, 'model': model, 'provider': provider_used, 'html': content, 'summary': f'Tweaked {html_file_name} for {domain}'}
 
 
 def improve_prompt_with_model(payload):
@@ -820,25 +949,14 @@ def improve_prompt_with_model(payload):
         'Use the current required working date above for all folder/date references and correct any stale dates found in the draft.'
     )
 
-    body = {
-        'model': model,
-        'messages': [
-            {'role': 'system', 'content': system},
-            {'role': 'user', 'content': user},
-        ],
-    }
-    response = fetch_json(f'{base}/chat/completions', headers=headers, method='POST', body=body, timeout=120)
-    choices = response.get('choices') or []
-    content = ''
-    if choices:
-        message = choices[0].get('message') or {}
-        content = message.get('content') or ''
-    if isinstance(content, list):
-        content = ''.join(part.get('text', '') for part in content if isinstance(part, dict))
-    content = str(content).strip()
+    messages = [
+        {'role': 'system', 'content': system},
+        {'role': 'user', 'content': user},
+    ]
+    content, provider_used = call_with_fallback(messages, model, timeout=120)
     if not content:
         raise RuntimeError('Model returned empty content')
-    return {'model': model, 'content': content}
+    return {'model': model, 'provider': provider_used, 'content': content}
 
 
 
@@ -1678,7 +1796,7 @@ class DashboardHandler(BaseHTTPRequestHandler):
 
                 base, headers = prompt_headers()
                 if not headers:
-                    return json_response(self, 503, {'ok': False, 'error': 'OPENROUTER_API_KEY is not configured'})
+                    return json_response(self, 503, {'ok': False, 'error': 'No LLM provider configured'})
 
                 system_prompt = (
                     "You are an expert N8N workflow debugger and repair engineer. Analyze the provided N8N workflow JSON and fix all issues.\n\n"
@@ -1723,20 +1841,11 @@ class DashboardHandler(BaseHTTPRequestHandler):
                     context_parts.append(f"\nTARGET WORKFLOW ID: {target_id}")
                 user_message = '\n'.join(context_parts)
 
-                body = {
-                    'model': model,
-                    'messages': [
+                fixer_messages = [
                         {'role': 'system', 'content': system_prompt},
                         {'role': 'user', 'content': user_message},
-                    ],
-                    'max_tokens': 32000,
-                }
-                resp = fetch_json(f'{base}/chat/completions', headers=headers, method='POST', body=body, timeout=300)
-                raw_content = ''
-                choices = resp.get('choices') or []
-                if choices:
-                    msg = choices[0].get('message') or {}
-                    raw_content = msg.get('content') or ''
+                    ]
+                raw_content, fixer_provider = call_with_fallback(fixer_messages, model, timeout=300)
                 if isinstance(raw_content, list):
                     raw_content = ''.join(p.get('text', '') for p in raw_content if isinstance(p, dict))
                 raw_content = str(raw_content).strip()
@@ -1777,6 +1886,7 @@ class DashboardHandler(BaseHTTPRequestHandler):
                     'warnings': result.get('warnings', []),
                     'fixedWorkflowJson': fixed_str,
                     'backupDir': str(backup_dir),
+                    'providerUsed': fixer_provider,
                 })
             except urllib.error.HTTPError as exc:
                 body_bytes = exc.read().decode('utf-8', 'replace')[:1500]
@@ -2217,8 +2327,11 @@ def _extract_skills_from_source(source, content_text, topics=None):
         ],
     }
     try:
-        resp = fetch_json(f'{base}/chat/completions', headers=headers, method='POST', body=body, timeout=60)
-        raw = resp.get('choices', [{}])[0].get('message', {}).get('content', '')
+        raw, _ = call_with_fallback(
+            [{'role': 'system', 'content': system_prompt},
+             {'role': 'user', 'content': f"Extract skills from this content:\n\n{content_trimmed}"}],
+            'anthropic/claude-sonnet-4.6', timeout=60
+        )
         raw = raw.strip()
         # Strip markdown fences if present
         if raw.startswith('```'):
