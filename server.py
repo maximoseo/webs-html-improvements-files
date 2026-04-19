@@ -1456,7 +1456,27 @@ class DashboardHandler(BaseHTTPRequestHandler):
                     rows = []
                 return json_response(self, 200, {'ok': True, 'runs': rows})
             except Exception as exc:
-                return json_response(self, 500, {'ok': False, 'error': str(exc)})
+                # Degrade gracefully — missing table / permission error shouldn't break UI
+                return json_response(self, 200, {'ok': True, 'runs': [], 'warning': str(exc)[:200]})
+
+        if parsed.path == '/api/fixer/history':
+            try:
+                supabase_url = (os.getenv('SUPABASE_URL') or '').rstrip('/')
+                supabase_key = (os.getenv('SUPABASE_SERVICE_ROLE_KEY') or os.getenv('SUPABASE_ANON_KEY') or '').strip()
+                if not (supabase_url and supabase_key):
+                    return json_response(self, 200, {'ok': True, 'records': []})
+                sb_headers = {
+                    'apikey': supabase_key,
+                    'Authorization': f'Bearer {supabase_key}',
+                    'Accept': 'application/json',
+                }
+                url = f'{supabase_url}/rest/v1/n8n_fixer_records?select=id,created_at,workflow_name,workflow_id,site_url,model_used,confidence_score,deploy_status,issue_summary&order=created_at.desc&limit=10'
+                rows = fetch_json(url, headers=sb_headers, timeout=20)
+                if not isinstance(rows, list):
+                    rows = []
+                return json_response(self, 200, {'ok': True, 'records': rows})
+            except Exception as exc:
+                return json_response(self, 200, {'ok': True, 'records': [], 'warning': str(exc)[:200]})
 
         return self.serve_static(parsed.path)
 
@@ -2166,25 +2186,6 @@ class DashboardHandler(BaseHTTPRequestHandler):
                 return json_response(self, 502, {'ok': False, 'error': f'n8n API error {exc.code}', 'details': body_bytes})
             except Exception as exc:
                 return json_response(self, 500, {'ok': False, 'error': str(exc)})
-
-        if parsed.path == '/api/fixer/history':
-            try:
-                supabase_url = (os.getenv('SUPABASE_URL') or '').rstrip('/')
-                supabase_key = (os.getenv('SUPABASE_SERVICE_ROLE_KEY') or os.getenv('SUPABASE_ANON_KEY') or '').strip()
-                if not (supabase_url and supabase_key):
-                    return json_response(self, 200, {'ok': True, 'records': []})
-                sb_headers = {
-                    'apikey': supabase_key,
-                    'Authorization': f'Bearer {supabase_key}',
-                    'Accept': 'application/json',
-                }
-                url = f'{supabase_url}/rest/v1/n8n_fixer_records?select=id,created_at,workflow_name,workflow_id,site_url,model_used,confidence_score,deploy_status,issue_summary&order=created_at.desc&limit=10'
-                rows = fetch_json(url, headers=sb_headers, timeout=20)
-                if not isinstance(rows, list):
-                    rows = []
-                return json_response(self, 200, {'ok': True, 'records': rows})
-            except Exception as exc:
-                return json_response(self, 200, {'ok': True, 'records': [], 'warning': str(exc)})
 
         return json_response(self, 404, {'ok': False, 'error': 'Not found'})
 
