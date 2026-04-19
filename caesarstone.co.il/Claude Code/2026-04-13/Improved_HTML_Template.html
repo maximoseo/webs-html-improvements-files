@@ -10,9 +10,6 @@ details>summary:hover{background:rgba(135,86,46,0.04);border-radius:8px}
 [data-toc-link]:hover{color:#87562E !important;background:rgba(135,86,46,0.05);border-radius:4px;padding-right:8px}
 [data-resp="cta-btn"]:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(135,86,46,0.3) !important}
 [data-resp="cta-btn-outline"]:hover{background:#87562E !important;color:#fff !important;transform:translateY(-2px)}
-[data-resp="float-btn"]:hover{transform:translateY(-2px);box-shadow:0 3px 12px rgba(0,0,0,0.1),0 10px 24px rgba(135,86,46,0.28) !important;background:#6B4323 !important}
-[data-resp="top-btn"]:hover{background:#87562E !important;border-color:#87562E !important;color:#fff !important;transform:translateY(-2px);box-shadow:0 3px 10px rgba(0,0,0,0.08),0 6px 16px rgba(135,86,46,0.18) !important}
-[data-resp="top-btn"]:hover svg{stroke:#fff !important}
 [data-social="facebook"]:hover{background:#1877F2 !important;color:#fff !important;border-color:#1877F2 !important}
 [data-social="instagram"]:hover{background:linear-gradient(45deg,#F58529 0%,#DD2A7B 50%,#8134AF 100%) !important;color:#fff !important;border-color:#DD2A7B !important}
 [data-social="pinterest"]:hover{background:#E60023 !important;color:#fff !important;border-color:#E60023 !important}
@@ -39,10 +36,6 @@ details>summary:hover{background:rgba(135,86,46,0.04);border-radius:8px}
 [data-resp="callout-howto"]{background:#FAF8F5;border:1px solid #A0704A;border-radius:8px;padding:clamp(18px,3vw,24px);margin:clamp(20px,3vw,28px) 0;box-shadow:0 2px 12px rgba(135,86,46,0.08)}
 [data-resp="callout-didyouknow"]{background:#DCDAD8;border-radius:8px;padding:clamp(18px,3vw,24px);margin:clamp(20px,3vw,28px) 0;box-shadow:0 2px 12px rgba(135,86,46,0.08);position:relative}
 [data-resp="callout-label"]{display:inline-flex;align-items:center;gap:8px;font-family:'Frank Ruhl Libre',serif;font-size:clamp(0.9rem,2vw,1rem);font-weight:700;color:#87562E;letter-spacing:0.5px;text-transform:uppercase;margin-bottom:10px}
-[data-resp="top-btn"]{opacity:1;pointer-events:auto;transition:opacity 0.3s ease, transform 0.25s ease, background 0.25s ease, border-color 0.25s ease, color 0.25s ease, box-shadow 0.25s ease}
-[data-resp="top-btn"].js-hidden{opacity:0;pointer-events:none;transform:translateY(10px)}
-[data-resp="top-btn"] svg{transition:stroke 0.25s ease}
-[data-resp="float-btn"]{transition:all 0.25s ease}
 @media(max-width:1024px){
 [data-resp="container"]{padding:0 8%}
 [data-resp="grid"]{grid-template-columns:repeat(2,1fr) !important}
@@ -78,10 +71,6 @@ footer{padding-inline:5% !important}
 [data-resp="footer-grid"]{grid-template-columns:1fr !important;gap:16px !important}
 [data-resp="footer-grid"] > div{text-align:right}
 [data-resp="faq-item"]{padding:12px}
-[data-resp="float-btn"]{padding:9px 14px !important;font-size:0.82rem !important;bottom:14px !important;left:14px !important;min-height:44px !important;gap:6px !important}
-[data-resp="float-btn"] svg{width:14px !important;height:14px !important}
-[data-resp="top-btn"]{bottom:68px !important;left:14px !important;width:44px !important;height:44px !important;min-height:44px !important;min-width:44px !important}
-[data-resp="top-btn"] svg{width:14px !important;height:14px !important}
 [data-resp="author-box"]{gap:16px !important}
 [data-resp="author-box"] img{max-width:160px !important}
 footer{padding:clamp(24px,5vw,32px) 4% !important}
@@ -92,6 +81,87 @@ footer h4{font-size:0.95rem !important}
 [data-resp="simple-table"] td{display:flex;justify-content:space-between;padding:8px 12px}
 [data-resp="simple-table"] td::before{content:attr(data-label);font-weight:bold}
 [data-resp="simple-table"] thead{display:none}
+}
+
+/* ── Floating buttons — professional, no overlap, all devices ── */
+[data-resp="float-btn"]{
+  position:fixed;
+  bottom:24px;
+  left:24px;
+  z-index:9999;
+  display:inline-flex;
+  align-items:center;
+  gap:7px;
+  background:#87562E;
+  color:#fff;
+  padding:0 18px;
+  height:40px;
+  border-radius:20px;
+  text-decoration:none;
+  font-size:0.82rem;
+  font-weight:600;
+  letter-spacing:0.02em;
+  white-space:nowrap;
+  box-shadow:0 2px 8px rgba(0,0,0,0.12),0 4px 16px rgba(135,86,46,0.22);
+  transition:transform 0.2s ease,box-shadow 0.2s ease,background 0.2s ease;
+  cursor:pointer;
+}
+[data-resp="float-btn"]:hover{
+  background:#6B4323;
+  transform:translateY(-2px);
+  box-shadow:0 4px 14px rgba(0,0,0,0.14),0 8px 24px rgba(135,86,46,0.28);
+}
+[data-resp="float-btn"] svg{width:13px;height:13px;flex-shrink:0}
+
+[data-resp="top-btn"]{
+  position:fixed;
+  bottom:74px;
+  left:24px;
+  z-index:9998;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  width:40px;
+  height:40px;
+  background:#fff;
+  color:#87562E;
+  border:1.5px solid #C8C1B8;
+  border-radius:50%;
+  text-decoration:none;
+  box-shadow:0 2px 6px rgba(0,0,0,0.07),0 4px 12px rgba(135,86,46,0.10);
+  cursor:pointer;
+  transition:opacity 0.3s ease,transform 0.2s ease,background 0.2s ease,border-color 0.2s ease,box-shadow 0.2s ease;
+  opacity:1;
+  pointer-events:auto;
+}
+[data-resp="top-btn"].js-hidden{opacity:0;pointer-events:none;transform:translateY(8px)}
+[data-resp="top-btn"]:hover{
+  background:#87562E;
+  border-color:#87562E;
+  color:#fff;
+  transform:translateY(-2px);
+  box-shadow:0 4px 12px rgba(135,86,46,0.22);
+}
+[data-resp="top-btn"]:hover svg{stroke:#fff}
+[data-resp="top-btn"] svg{width:14px;height:14px;transition:stroke 0.2s ease}
+
+/* Mobile: slightly smaller, same safe gap */
+@media(max-width:600px){
+  [data-resp="float-btn"]{
+    bottom:16px;
+    left:16px;
+    height:38px;
+    padding:0 14px;
+    font-size:0.80rem;
+    gap:6px;
+  }
+  [data-resp="float-btn"] svg{width:12px;height:12px}
+  [data-resp="top-btn"]{
+    bottom:64px;
+    left:16px;
+    width:38px;
+    height:38px;
+  }
 }
 </style>
 
@@ -454,11 +524,11 @@ footer h4{font-size:0.95rem !important}
 </div>
 </footer>
 
-<a data-resp="top-btn" href="#article-top" onclick="window.scrollTo({top:0,behavior:'smooth'});return false;" style="position:fixed;bottom:76px;left:20px;z-index:9998;display:inline-flex;align-items:center;justify-content:center;width:44px;height:44px;background:#ffffff;color:#87562E;border:1px solid #C8C1B8;border-radius:50%;text-decoration:none;box-shadow:0 2px 8px rgba(0,0,0,0.06),0 4px 14px rgba(135,86,46,0.12);cursor:pointer;min-height:44px;min-width:44px" aria-label="חזרה למעלה"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 15l-6-6-6 6"/></svg></a>
+<a data-resp="top-btn" href="#article-top" onclick="window.scrollTo({top:0,behavior:'smooth'});return false;" aria-label="חזרה למעלה"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 15l-6-6-6 6"/></svg></a>
 
-<a data-resp="float-btn" href="https://www.caesarstone.co.il/contact-us/" style="position:fixed;bottom:20px;left:20px;z-index:9999;display:inline-flex;align-items:center;gap:8px;background:#87562E;color:#fff;padding:10px 20px;border-radius:999px;text-decoration:none;font-size:0.88rem;font-weight:600;box-shadow:0 2px 10px rgba(0,0,0,0.08),0 6px 18px rgba(135,86,46,0.2);cursor:pointer;white-space:nowrap;min-height:44px;letter-spacing:0.01em" aria-label="צור קשר עם אבן קיסר">
+<a data-resp="float-btn" href="https://www.caesarstone.co.il/contact-us/" aria-label="צור קשר עם אבן קיסר">
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
 <span>צור קשר</span>
-<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
 </a>
 
 <script type="application/ld+json">
