@@ -38,38 +38,49 @@ details>summary:hover{background:rgba(135,86,46,0.04);border-radius:8px}
 [data-resp="callout-howto"]{background:#FAF8F5;border:1px solid #A0704A;border-radius:8px;padding:clamp(18px,3vw,24px);margin:clamp(20px,3vw,28px) 0;box-shadow:0 2px 12px rgba(135,86,46,0.08)}
 [data-resp="callout-didyouknow"]{background:#DCDAD8;border-radius:8px;padding:clamp(18px,3vw,24px);margin:clamp(20px,3vw,28px) 0;box-shadow:0 2px 12px rgba(135,86,46,0.08);position:relative}
 [data-resp="callout-label"]{display:inline-flex;align-items:center;gap:8px;font-family:'Frank Ruhl Libre',serif;font-size:clamp(0.9rem,2vw,1rem);font-weight:700;color:#87562E;letter-spacing:0.5px;text-transform:uppercase;margin-bottom:10px}
-[data-resp="top-btn"]{opacity:0;pointer-events:none;transition:opacity 0.3s ease, transform 0.25s ease, background 0.25s ease}
-[data-resp="top-btn"].visible{opacity:1;pointer-events:auto}
+[data-resp="top-btn"]{opacity:1;pointer-events:auto;transition:opacity 0.3s ease, transform 0.25s ease, background 0.25s ease}
+[data-resp="top-btn"].js-hidden{opacity:0;pointer-events:none}
 @media(max-width:1024px){
 [data-resp="container"]{padding:0 8%}
-[data-resp="grid"]{grid-template-columns:repeat(2,1fr)}
-[data-resp="stat-grid"]{grid-template-columns:repeat(2,1fr)}
-[data-resp="footer-grid"]{grid-template-columns:1fr 1fr}
+[data-resp="grid"]{grid-template-columns:repeat(2,1fr) !important}
+[data-resp="stat-grid"]{grid-template-columns:repeat(2,1fr) !important}
+[data-resp="footer-grid"]{grid-template-columns:1fr 1fr !important}
 }
 @media(max-width:768px){
 [data-resp="container"]{padding:0 5%}
 [data-resp="heading"]{font-size:1.8rem}
 [data-resp="table"]{font-size:0.85rem}
 [data-resp="cta-btn"]{padding:14px 24px;font-size:1rem;width:100%;box-sizing:border-box}
-[data-resp="grid"]{grid-template-columns:1fr}
+[data-resp="grid"]{grid-template-columns:1fr !important}
 [data-resp="card"]{padding:16px}
 [data-resp="toc"]{padding:16px}
-[data-resp="author-box"]{flex-direction:column;text-align:center}
-[data-resp="stat-grid"]{grid-template-columns:repeat(2,1fr);gap:12px}
-[data-resp="social-grid"]{justify-content:center}
-[data-resp="footer-grid"]{grid-template-columns:1fr 1fr;gap:20px}
+[data-resp="author-box"]{flex-direction:column !important;text-align:center !important;align-items:center !important;gap:20px !important}
+[data-resp="author-box"] > div{width:100% !important;text-align:center !important}
+[data-resp="author-box"] > div > div{justify-content:center !important;flex-wrap:wrap !important}
+[data-resp="author-box"] p{text-align:center !important}
+[data-resp="author-section"] .author-section-h3{text-align:center !important}
+[data-resp="stat-grid"]{grid-template-columns:repeat(2,1fr) !important;gap:12px}
+[data-resp="social-grid"]{justify-content:center !important}
+[data-resp="footer-grid"]{grid-template-columns:1fr 1fr !important;gap:20px !important;text-align:right}
 [data-resp="sticky-header"]{padding:10px 5% !important}
+.author-section-h3{text-align:center !important}
+footer{padding-inline:5% !important}
 }
 @media(max-width:480px){
 [data-resp="container"]{padding:0 4%}
 [data-resp="heading"]{font-size:1.5rem}
 [data-resp="table"]{font-size:0.75rem;min-width:500px}
 [data-resp="cta-btn"]{padding:12px 20px;font-size:0.95rem}
-[data-resp="stat-grid"]{grid-template-columns:1fr 1fr;gap:8px}
-[data-resp="footer-grid"]{grid-template-columns:1fr}
+[data-resp="stat-grid"]{grid-template-columns:1fr 1fr !important;gap:8px}
+[data-resp="footer-grid"]{grid-template-columns:1fr !important;gap:16px !important}
+[data-resp="footer-grid"] > div{text-align:right}
 [data-resp="faq-item"]{padding:12px}
-[data-resp="float-btn"]{padding:12px 18px;font-size:0.9rem;bottom:16px;left:16px}
-[data-resp="top-btn"]{bottom:76px;left:16px;width:42px;height:42px}
+[data-resp="float-btn"]{padding:10px 16px !important;font-size:0.85rem !important;bottom:16px !important;left:16px !important}
+[data-resp="top-btn"]{bottom:72px !important;left:16px !important;width:42px !important;height:42px !important}
+[data-resp="author-box"]{gap:16px !important}
+[data-resp="author-box"] img{max-width:160px !important}
+footer{padding:clamp(24px,5vw,32px) 4% !important}
+footer h4{font-size:0.95rem !important}
 }
 @media(max-width:480px){
 [data-resp="simple-table"] tr{display:block;margin-bottom:16px;border:1px solid #C8C1B8;border-radius:8px}
@@ -373,8 +384,8 @@ details>summary:hover{background:rgba(135,86,46,0.04);border-radius:8px}
 <details data-resp="accordion" style="margin:12px 0;border:1px solid #C8C1B8;border-radius:8px;overflow:hidden;background:#ffffff"><summary style="padding:clamp(14px,3vw,20px);font-weight:600;font-size:clamp(0.95rem,2.5vw,1.1rem);color:#333333;display:flex;justify-content:space-between;align-items:center;transition:background 0.25s ease">איך משלבים אי במטבח קטן?</summary><div style="padding:clamp(14px,3vw,20px);border-top:1px solid #C8C1B8;background:#F5F3F1"><p style="font-size:clamp(0.95rem,2.5vw,1.05rem);color:#333333;margin:0;line-height:1.75">במטבח קטן, אי נייד או דלפק צר שמשמש גם כמשטח עבודה וגם כפינת ישיבה הוא פתרון מצוין. חשוב לוודא שנשאר מעבר נוח של לפחות 90 ס"מ סביב האי בכל צד.</p></div></details>
 </section>
 
-<section style="margin:clamp(48px,6vw,64px) 0 clamp(32px,5vw,48px);background:#F5F3F1;border-radius:12px;padding:clamp(24px,5vw,40px);border:1px solid #C8C1B8">
-<h3 style="font-family:'Frank Ruhl Libre',serif;font-size:clamp(1.2rem,3vw,1.5rem);font-weight:700;color:#333333;margin:0 0 clamp(16px,3vw,24px);text-align:right">אודות המחבר</h3>
+<section data-resp="author-section" style="margin:clamp(48px,6vw,64px) 0 clamp(32px,5vw,48px);background:#F5F3F1;border-radius:12px;padding:clamp(24px,5vw,40px);border:1px solid #C8C1B8">
+<h3 class="author-section-h3" style="font-family:'Frank Ruhl Libre',serif;font-size:clamp(1.2rem,3vw,1.5rem);font-weight:700;color:#333333;margin:0 0 clamp(16px,3vw,24px);text-align:right">אודות המחבר</h3>
 <div data-resp="author-box" style="display:flex;flex-direction:row;gap:clamp(20px,4vw,32px);align-items:flex-start">
 <div style="flex-shrink:0;text-align:center">
 <a href="https://www.caesarstone.co.il/" aria-label="Caesarstone homepage" style="display:inline-block;text-decoration:none;background:#ffffff;padding:16px 20px;border-radius:8px;border:1px solid #C8C1B8;box-shadow:0 2px 12px rgba(135,86,46,0.08);transition:all 0.25s ease">
@@ -455,6 +466,6 @@ details>summary:hover{background:rgba(135,86,46,0.04);border-radius:8px}
 {"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"מהו סגנון המטבח הכי פופולרי בישראל כיום?","acceptedAnswer":{"@type":"Answer","text":"הסגנון המודרני הוא הנפוץ ביותר, הודות להתאמתו לחללים פתוחים, לדירות בגדלים שונים ולשילוב טבעי עם פתרונות אחסון וטכנולוגיה."}},{"@type":"Question","name":"איך לבחור בין מטבח מודרני למטבח כפרי?","acceptedAnswer":{"@type":"Answer","text":"שאלו את עצמכם מה חשוב לכם יותר: תחושת סדר ונקיון ויזואלי (מודרני) או חמימות ביתית ואווירה מזמינה (כפרי)."}},{"@type":"Question","name":"האם מטבח לבן מתאים גם לבית עם ילדים?","acceptedAnswer":{"@type":"Answer","text":"בהחלט, בתנאי שבוחרים חומרים עמידים ונוחים לניקוי."}},{"@type":"Question","name":"מה ההבדל בין מטבח מודרני למינימליסטי?","acceptedAnswer":{"@type":"Answer","text":"מטבח מודרני מאופיין בקווים נקיים ובפתרונות פרקטיים אך מאפשר שילוב טקסטורות. מטבח מינימליסטי מצמצם את הכל למינימום."}},{"@type":"Question","name":"איך משלבים אי במטבח קטן?","acceptedAnswer":{"@type":"Answer","text":"אי נייד או דלפק צר שמשמש גם כמשטח עבודה וגם כפינת ישיבה הוא פתרון מצוין. חשוב לוודא שנשאר מעבר של לפחות 90 ס\"מ סביב האי."}}]}
 </script>
 <script>
-(function(){var b=document.querySelector('[data-resp="top-btn"]');if(!b)return;var t=function(){if(window.pageYOffset>300){b.classList.add('visible')}else{b.classList.remove('visible')}};window.addEventListener('scroll',t,{passive:true});t();})();
+(function(){var b=document.querySelector('[data-resp="top-btn"]');if(!b)return;var t=function(){if(window.pageYOffset<=300){b.classList.add('js-hidden')}else{b.classList.remove('js-hidden')}};window.addEventListener('scroll',t,{passive:true});t();})();
 </script>
 </article>
