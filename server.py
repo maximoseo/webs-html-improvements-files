@@ -122,10 +122,10 @@ def n8n_headers():
 
 
 def prompt_headers():
-    key = os.getenv('OPENAI_API_KEY') or os.getenv('OPENROUTER_API_KEY')
+    key = os.getenv('OPENROUTER_API_KEY')
     if not key:
         return None, None
-    base = os.getenv('OPENAI_BASE_URL') or ('https://openrouter.ai/api/v1' if os.getenv('OPENROUTER_API_KEY') and not os.getenv('OPENAI_API_KEY') else 'https://api.openai.com/v1')
+    base = os.getenv('OPENROUTER_BASE_URL', 'https://openrouter.ai/api/v1')
     headers = {'Authorization': f'Bearer {key}', 'Accept': 'application/json'}
     if 'openrouter.ai' in base:
         headers['HTTP-Referer'] = os.getenv('OPENROUTER_SITE_URL', 'https://html-redesign-dashboard.maximo-seo.ai/')
@@ -134,14 +134,16 @@ def prompt_headers():
 
 
 # ---------- LLM Provider Fallback Chain ----------
-# Order: OpenRouter -> GitHub Copilot -> Anthropic (Claude Code Max) -> OpenAI
+# Order: Copilot -> Gemini -> Venice -> Fireworks -> Kimi -> OpenRouter
 # Each provider is tried in sequence; if one fails with a 4xx/5xx or connection
 # error the next provider is attempted automatically.
+# NOTE: Direct OpenAI is intentionally disabled. GPT models are accessed
+# exclusively via GitHub Copilot (unlimited under subscription).
 
 def _get_provider_chain():
     """
     Return list of providers in priority order.
-    Priority: Copilot -> Gemini -> OpenAI -> Venice -> Fireworks -> OpenRouter (last resort).
+    Priority: Copilot -> Gemini -> Venice -> Fireworks -> Kimi -> OpenRouter (last resort).
     OpenRouter is tried last because it has rate limits and costs per token.
     """
     chain = []
@@ -176,21 +178,7 @@ def _get_provider_chain():
             'gemini_native': True,
         })
 
-    # 3. OpenAI direct
-    oai_key = os.getenv('OPENAI_API_KEY')
-    if oai_key:
-        base = os.getenv('OPENAI_BASE_URL', 'https://api.openai.com/v1')
-        chain.append({
-            'name': 'openai',
-            'base': base.rstrip('/'),
-            'headers': {
-                'Authorization': f'Bearer {oai_key}',
-                'Accept': 'application/json',
-            },
-            'model_override': os.getenv('OPENAI_FALLBACK_MODEL', 'gpt-4o'),
-        })
-
-    # 4. Venice AI (privacy-focused, uncensored models)
+    # 3. Venice AI (privacy-focused, uncensored models)
     venice_key = os.getenv('VENICE_API_KEY')
     if venice_key:
         chain.append({
@@ -287,7 +275,7 @@ def call_with_fallback(messages, model, timeout=120):
     """
     chain = _get_provider_chain()
     if not chain:
-        raise RuntimeError('No LLM provider configured. Set OPENROUTER_API_KEY, COPILOT_API_KEY, ANTHROPIC_API_KEY, or OPENAI_API_KEY.')
+        raise RuntimeError('No LLM provider configured. Set COPILOT_API_KEY, GEMINI_API_KEY, VENICE_API_KEY, FIREWORKS_API_KEY, KIMI_API_KEY, or OPENROUTER_API_KEY.')
 
     # Reorder chain so the best-matched provider is tried first
     preferred = _detect_preferred_provider(model)
@@ -653,7 +641,7 @@ def brainstorm_prompt_multi_model(payload):
         raise ValueError("Draft prompt is required")
     base, headers = prompt_headers()
     if not headers:
-        raise RuntimeError("OPENAI_API_KEY or OPENROUTER_API_KEY is not configured")
+        raise RuntimeError("OPENROUTER_API_KEY is not configured")
 
     current_date = os.getenv("PROMPT_CURRENT_DATE", "2026-04-17")
     checklist_rules = _normalize_checklist(payload.get("checklist"))
@@ -848,7 +836,7 @@ def tweak_html_with_prompt(payload):
         raise ValueError('htmlDownloadUrl is required')
     base, headers = prompt_headers()
     if not headers:
-        raise RuntimeError('OPENAI_API_KEY or OPENROUTER_API_KEY is not configured')
+        raise RuntimeError('OPENROUTER_API_KEY is not configured')
     default_model = os.getenv('PROMPT_TWEAK_MODEL', 'anthropic/claude-sonnet-4.6')
     model = (payload.get('model') or '').strip() or default_model
     domain = payload.get('domain') or 'unknown'
@@ -892,7 +880,7 @@ def improve_prompt_with_model(payload):
         raise ValueError('Draft prompt is required')
     base, headers = prompt_headers()
     if not headers:
-        raise RuntimeError('OPENAI_API_KEY or OPENROUTER_API_KEY is not configured')
+        raise RuntimeError('OPENROUTER_API_KEY is not configured')
     # Accept model override from the browser payload; fall back to env / default
     default_model = os.getenv('PROMPT_IMPROVER_MODEL', 'anthropic/claude-sonnet-4.6')
     model = (payload.get('model') or '').strip() or default_model
@@ -1185,8 +1173,8 @@ class DashboardHandler(BaseHTTPRequestHandler):
             return json_response(self, 200, {
                 'ok': True,
                 'n8nConfigured': bool(os.getenv('N8N_API_KEY')),
-                'promptConfigured': bool(os.getenv('OPENAI_API_KEY') or os.getenv('OPENROUTER_API_KEY') or os.getenv('COPILOT_API_KEY') or os.getenv('ANTHROPIC_API_KEY') or os.getenv('GEMINI_API_KEY')),
-                'brainstormConfigured': bool(os.getenv('OPENROUTER_API_KEY') or os.getenv('OPENAI_API_KEY') or os.getenv('GEMINI_API_KEY')),
+                'promptConfigured': bool(os.getenv('OPENROUTER_API_KEY') or os.getenv('COPILOT_API_KEY') or os.getenv('ANTHROPIC_API_KEY') or os.getenv('GEMINI_API_KEY')),
+                'brainstormConfigured': bool(os.getenv('OPENROUTER_API_KEY') or os.getenv('GEMINI_API_KEY')),
                 'githubCommitConfigured': bool(os.getenv('GITHUB_TOKEN')),
                 'brainstormModels': [{'id': m['id'], 'label': m['label']} for m in BRAINSTORM_MODELS],
                 'synthModel': SYNTH_MODEL,
@@ -1194,7 +1182,7 @@ class DashboardHandler(BaseHTTPRequestHandler):
                 'promptTweakDefaultModel': os.getenv('PROMPT_TWEAK_MODEL', 'anthropic/claude-sonnet-4.6'),
                 'promptSynthDefaultModel': SYNTH_MODEL,
                 'paletteExtractorConfigured': True,
-                'tweakConfigured': bool(os.getenv('OPENAI_API_KEY') or os.getenv('OPENROUTER_API_KEY') or os.getenv('COPILOT_API_KEY') or os.getenv('ANTHROPIC_API_KEY') or os.getenv('GEMINI_API_KEY')),
+                'tweakConfigured': bool(os.getenv('OPENROUTER_API_KEY') or os.getenv('COPILOT_API_KEY') or os.getenv('ANTHROPIC_API_KEY') or os.getenv('GEMINI_API_KEY')),
                 'commentsConfigured': supabase_comments_config()['configured'],
                 'commentsTable': supabase_comments_config()['table'],
                 # Active provider chain — shows which providers are available
