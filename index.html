@@ -265,6 +265,13 @@ a:hover{color:var(--gold-light)}
 .checklist-item input[type=checkbox]:checked::after{content:'';position:absolute;left:3px;top:0;width:5px;height:9px;border:solid #111;border-width:0 2px 2px 0;transform:rotate(45deg)}
 .checklist-item span{font-size:12px;line-height:1.4;color:var(--text-secondary)}
 .checklist-item input[type=checkbox]:checked ~ span{color:var(--text)}
+.mandatory-group .checklist-group-title{color:#e05252;letter-spacing:.8px}
+.mandatory-group{border-color:rgba(224,82,82,0.25);background:rgba(224,82,82,0.04)}
+.mandatory-item{cursor:default;background:rgba(224,82,82,0.05);border-radius:7px}
+.mandatory-item input[type=checkbox]:disabled{cursor:not-allowed;opacity:.7;background:#e05252;border-color:#e05252}
+.mandatory-item input[type=checkbox]:disabled::after{content:'';position:absolute;left:3px;top:0;width:5px;height:9px;border:solid #111;border-width:0 2px 2px 0;transform:rotate(45deg)}
+.mandatory-item > span:first-of-type{color:var(--text);font-weight:500}
+.mandatory-badge{display:inline-flex;align-items:center;margin-left:8px;padding:2px 7px;border-radius:999px;font-size:9px;font-weight:800;letter-spacing:.5px;text-transform:uppercase;background:rgba(224,82,82,0.18);color:#ff9898;border:1px solid rgba(224,82,82,0.35);white-space:nowrap;flex-shrink:0}
 @media(max-width:900px){.checklist-wrap.expanded{max-height:55vh}.checklist-header{padding:10px 12px}.checklist-title{font-size:10px}.checklist-item span{font-size:11.5px}}
 .deploy-status-panel{position:fixed;right:12px;bottom:12px;z-index:900;width:min(280px,calc(100vw - 24px));background:rgba(18,19,22,0.92);border:1px solid rgba(255,255,255,0.07);border-radius:12px;box-shadow:0 14px 36px rgba(0,0,0,0.34);backdrop-filter:blur(10px);overflow:hidden}
 #preview-modal.open ~ #deploy-status-panel,
@@ -4143,6 +4150,11 @@ const CHECKLIST_GROUPS=[
   {id:'delivery',title:'Delivery & Sync',items:[
     {id:'delivery-obsidian-sync',label:'When all work is done, trigger a manual Obsidian vault sync so all new and updated files are indexed and searchable in the vault. Then trigger a Render redeploy (or confirm the dashboard has auto-deployed) so the HTML Redesign Dashboard at https://html-redesign-dashboard.maximo-seo.ai/ reflects the latest published files. Confirm both are complete before finishing.'},
   ]},
+  {id:'mandatory-always',title:'Always-On Mandatory Rules',items:[
+    {id:'mandatory-full-content-images',label:'MANDATORY — Full Content + Images: The HTML template must include the full real article content (every section, paragraph, heading) and all real images with actual src URLs — exactly as they appear in the N8N workflow output. No placeholder text, no lorem ipsum, no [image here], no empty src. The file must be drop-in ready for N8N with zero additional content filling required.',mandatory:true},
+    {id:'mandatory-file-extensions',label:'MANDATORY — Correct File Extensions: Every output file must use its real extension: .html for HTML templates, .txt for N8N prompt files, .json for N8N workflow files. Never upload extensionless files or files with wrong/doubled extensions (e.g. no .html.txt). File names in the GitHub commit must match the extensions on disk exactly.',mandatory:true},
+    {id:'mandatory-3-files-per-folder',label:'MANDATORY — Max 3 Files Per Agent Folder: Each agent version folder in the GitHub repo (maximoseo/webs-html-improvements-files) must contain exactly 3 files: Improved_HTML_Template.html, Improved_N8N_Prompt.txt, Improved_N8N_Workflow.json. Do not add MD files, summary notes, validation reports, source maps, or import notes inside the agent folder. Remove any existing extra files in the same commit.',mandatory:true},
+  ]},
 ];
 const CHECKLIST_STORAGE_KEY='promptStudioChecklist.v1';
 function renderChecklist(){
@@ -4150,10 +4162,13 @@ function renderChecklist(){
   if(!container) return;
   const esc=s=>String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
   container.innerHTML=CHECKLIST_GROUPS.map(g=>
-    `<div class="checklist-group" data-group="${esc(g.id)}" data-empty="false"><div class="checklist-group-title">${esc(g.title)}</div><div class="checklist-items">${g.items.map(it=>
-      `<label class="checklist-item" data-id="${esc(it.id)}"><input type="checkbox" data-id="${esc(it.id)}" onchange="updateChecklistCount()"><span>${esc(it.label)}</span></label>`
+    `<div class="checklist-group${g.id==='mandatory-always'?' mandatory-group':''}" data-group="${esc(g.id)}" data-empty="false"><div class="checklist-group-title">${esc(g.title)}</div><div class="checklist-items">${g.items.map(it=>
+      it.mandatory
+        ? `<label class="checklist-item mandatory-item" data-id="${esc(it.id)}" title="Always-on rule — cannot be deselected"><input type="checkbox" data-id="${esc(it.id)}" checked disabled><span>${esc(it.label)}</span><span class="mandatory-badge">Always On</span></label>`
+        : `<label class="checklist-item" data-id="${esc(it.id)}"><input type="checkbox" data-id="${esc(it.id)}" onchange="updateChecklistCount()"><span>${esc(it.label)}</span></label>`
     ).join('')}</div></div>`
   ).join('');
+  // Force mandatory items checked in getSelectedChecklistItems even though disabled
   restoreChecklistState();
   updateChecklistCount();
 }
@@ -4187,10 +4202,17 @@ function filterChecklist(q){
 }
 function getSelectedChecklistItems(){
   const labelById={};
-  CHECKLIST_GROUPS.forEach(g=>g.items.forEach(it=>{labelById[it.id]=it.label;}));
-  return Array.from(document.querySelectorAll('#checklist-groups input[type=checkbox]:checked'))
-    .map(cb=>({id:cb.dataset.id, label:labelById[cb.dataset.id]||''}))
-    .filter(x=>x.label);
+  const mandatoryIds=new Set();
+  CHECKLIST_GROUPS.forEach(g=>g.items.forEach(it=>{
+    labelById[it.id]=it.label;
+    if(it.mandatory) mandatoryIds.add(it.id);
+  }));
+  // Include disabled mandatory items even though :checked selector skips disabled inputs
+  const selectedIds=new Set(
+    Array.from(document.querySelectorAll('#checklist-groups input[type=checkbox]:checked')).map(cb=>cb.dataset.id)
+  );
+  mandatoryIds.forEach(id=>selectedIds.add(id));
+  return Array.from(selectedIds).map(id=>({id,label:labelById[id]||''})).filter(x=>x.label);
 }
 function updateChecklistCount(){
   const selected=getSelectedChecklistItems();
