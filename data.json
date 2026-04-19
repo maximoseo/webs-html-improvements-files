@@ -1,1339 +1,1063 @@
 {
-  "sha": "51b484bfc4c027566ac38f71710418c6d0b3225e",
-  "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/51b484bfc4c027566ac38f71710418c6d0b3225e",
+  "sha": "6e30ca2b54947f1c0264f6288360d45dc2f14d70",
+  "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/6e30ca2b54947f1c0264f6288360d45dc2f14d70",
   "tree": [
-    {
-      "path": ".dockerignore",
-      "mode": "100644",
-      "type": "blob",
-      "sha": "d58e8ed5571ebd23107f39f121da90aa8f1c1986",
-      "size": 143,
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/d58e8ed5571ebd23107f39f121da90aa8f1c1986"
-    },
     {
       "path": "Dockerfile",
       "mode": "100644",
       "type": "blob",
-      "sha": "b9a6ca9d29b15a77d743b374eb19d9f626b5544d",
+      "sha": "0000000000000000000000000000000000000000",
       "size": 228,
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/b9a6ca9d29b15a77d743b374eb19d9f626b5544d"
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/0000000000000000000000000000000000000000"
     },
     {
       "path": "GALOZ-REDESIGN-SUMMARY.md",
       "mode": "100644",
       "type": "blob",
-      "sha": "2d614b4c9c0c93fbcdf303809a697a82853eaa5b",
+      "sha": "0000000000000000000000000000000000000000",
       "size": 5701,
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/2d614b4c9c0c93fbcdf303809a697a82853eaa5b"
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/0000000000000000000000000000000000000000"
     },
     {
       "path": "Reports",
       "mode": "040000",
       "type": "tree",
-      "sha": "6c84bdc16d89b873b553d42de2a1ed6c4fc03d4f",
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/6c84bdc16d89b873b553d42de2a1ed6c4fc03d4f"
+      "sha": "0000000000000000000000000000000000000000",
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0000000000000000000000000000000000000000"
     },
     {
       "path": "Reports/locksmithsanantonio-247-SEO-Growth-Blueprint.pdf",
       "mode": "100644",
       "type": "blob",
-      "sha": "058464bdc56f62a07363449d404dba0f364508a9",
+      "sha": "0000000000000000000000000000000000000000",
       "size": 198242,
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/058464bdc56f62a07363449d404dba0f364508a9"
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/0000000000000000000000000000000000000000"
     },
     {
       "path": "Tim_Claw_Max",
       "mode": "040000",
       "type": "tree",
-      "sha": "38ac65e69943767142bbc989e8c96b8e925a02e6",
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/38ac65e69943767142bbc989e8c96b8e925a02e6"
+      "sha": "0000000000000000000000000000000000000000",
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0000000000000000000000000000000000000000"
     },
     {
       "path": "Tim_Claw_Max/NTN",
       "mode": "040000",
       "type": "tree",
-      "sha": "a92bc19f22cb1027c2d701e542808c3428141bbd",
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/a92bc19f22cb1027c2d701e542808c3428141bbd"
+      "sha": "0000000000000000000000000000000000000000",
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0"
     },
     {
       "path": "Tim_Claw_Max/NTN/N8N-Workflow-NTN.md",
       "mode": "100644",
       "type": "blob",
-      "sha": "8e3a5c252c647bb62f2f8063aecdfa951cd180c3",
+      "sha": "0000000000000000000000000000000000000000",
       "size": 7675,
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/8e3a5c252c647bb62f2f8063aecdfa951cd180c3"
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/0000000000000000000000000000000000000000"
     },
     {
       "path": "Tim_Claw_Max/NTN/NTN-Landing-Page.html",
       "mode": "100644",
       "type": "blob",
-      "sha": "3115599b6a98f10b8003d0ecf7d5619a7a36db36",
+      "sha": "0000000000000000000000000000000000000000",
       "size": 27285,
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/3115599b6a98f10b8003d0ecf7d5619a7a36db36"
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/0000000000000000000000000000000000000000"
     },
     {
       "path": "caesarstone.co.il",
       "mode": "040000",
       "type": "tree",
-      "sha": "21dd69b0623a0ffdcdffd368d9da9b5b4d159c41",
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/21dd69b0623a0ffdcdffd368d9da9b5b4d159c41"
-    },
-    {
-      "path": "caesarstone.co.il/Improved Files (12.4.26)",
-      "mode": "040000",
-      "type": "tree",
-      "sha": "2ba02be97fe8e78664e0e669d6e977c12c7cfc0a",
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/2ba02be97fe8e78664e0e669d6e977c12c7cfc0a"
-    },
-    {
-      "path": "caesarstone.co.il/Improved Files (12.4.26)/Improved_HTML_Template.html",
-      "mode": "100644",
-      "type": "blob",
-      "sha": "35b0dde9654c68c5d998b70f043ee52f7c2c668c",
-      "size": 66049,
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/35b0dde9654c68c5d998b70f043ee52f7c2c668c"
-    },
-    {
-      "path": "caesarstone.co.il/Improved Files (12.4.26)/Improved_N8N_Prompt.txt",
-      "mode": "100644",
-      "type": "blob",
-      "sha": "75ce747eee358d6343aa6c15fd851a12511ba614",
-      "size": 18063,
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/75ce747eee358d6343aa6c15fd851a12511ba614"
-    },
-    {
-      "path": "caesarstone.co.il/Improved Files (12.4.26)/Improved_N8N_Workflow.json",
-      "mode": "100644",
-      "type": "blob",
-      "sha": "0b1e5b4b2eb8b29e1b5ca72f7204c38b01310049",
-      "size": 152039,
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/0b1e5b4b2eb8b29e1b5ca72f7204c38b01310049"
+      "sha": "0000000000000000000000000000000000000000",
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0000000000000000000000000000000000000000"
     },
     {
       "path": "caesarstone.co.il/Improved Files (13.4.26)",
       "mode": "040000",
       "type": "tree",
-      "sha": "e32269754070b71a9e720aae2069b40d355d6ebf",
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/e32269754070b71a9e720aae2069b40d355d6ebf"
+      "sha": "0000000000000000000000000000000000000000",
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0"
     },
     {
       "path": "caesarstone.co.il/Improved Files (13.4.26)/Improved_HTML_Template.html",
       "mode": "100644",
       "type": "blob",
-      "sha": "ba413a5d3cca99bd7188b4789a2c9c20df6fe487",
-      "size": 65002,
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/ba413a5d3cca99bd7188b4789a2c9c20df6fe487"
+      "sha": "0000000000000000000000000000000000000000",
+      "size": 87787,
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/0000000000000000000000000000000000000000"
     },
     {
       "path": "caesarstone.co.il/Improved Files (13.4.26)/Improved_N8N_Prompt.txt",
       "mode": "100644",
       "type": "blob",
-      "sha": "ef18b1e4ed73c0d88724e06eb6da3884eb700a9c",
-      "size": 23108,
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/ef18b1e4ed73c0d88724e06eb6da3884eb700a9c"
+      "sha": "0000000000000000000000000000000000000000",
+      "size": 38743,
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/0000000000000000000000000000000000000000"
     },
     {
       "path": "caesarstone.co.il/Improved Files (13.4.26)/Improved_N8N_Workflow.json",
       "mode": "100644",
       "type": "blob",
-      "sha": "f80b1f97c9a1a06f5444aff0c40fdd0a5e4a4f81",
-      "size": 154781,
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/f80b1f97c9a1a06f5444aff0c40fdd0a5e4a4f81"
-    },
-    {
-      "path": "data.json",
-      "mode": "100644",
-      "type": "blob",
-      "sha": "272bf76608c86b24e3219fc9377ddb2f8495e82b",
-      "size": 57957,
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/272bf76608c86b24e3219fc9377ddb2f8495e82b"
+      "sha": "0000000000000000000000000000000000000000",
+      "size": 175926,
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/0000000000000000000000000000000000000000"
     },
     {
       "path": "dtapet-project",
       "mode": "040000",
       "type": "tree",
-      "sha": "1a941f5cb0353a0728cd8989a727873562630506",
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/1a941f5cb0353a0728cd8989a727873562630506"
+      "sha": "0000000000000000000000000000000000000000",
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0000000000000000000000000000000000000000"
     },
     {
       "path": "dtapet-project/improved",
       "mode": "040000",
       "type": "tree",
-      "sha": "ca6ea4421b191a3be92fada194dec9e465648584",
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/ca6ea4421b191a3be92fada194dec9e465648584"
+      "sha": "0000000000000000000000000000000000000000",
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0"
     },
     {
       "path": "dtapet-project/improved/FINAL",
       "mode": "040000",
       "type": "tree",
-      "sha": "4fceda7093e8eb4a6f667d442df5a736a2994e93",
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/4fceda7093e8eb4a6f667d442df5a736a2994e93"
+      "sha": "0000000000000000000000000000000000000000",
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0"
     },
     {
       "path": "dtapet-project/improved/FINAL/DTAPET_WORDPRESS_FIXED_V4.html",
       "mode": "100644",
       "type": "blob",
-      "sha": "991aadb75b0306c081cf71971fade25a935312fc",
+      "sha": "0000000000000000000000000000000000000000",
       "size": 10450,
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/991aadb75b0306c081cf71971fade25a935312fc"
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/0000000000000000000000000000000000000000"
     },
     {
       "path": "dtapet-project/improved/FINAL/HTML_Template_V2_Sample.html",
       "mode": "100644",
       "type": "blob",
-      "sha": "56a0b566878319bff0c961e21795889cbc20e0ea",
+      "sha": "0000000000000000000000000000000000000000",
       "size": 13613,
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/56a0b566878319bff0c961e21795889cbc20e0ea"
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/0000000000000000000000000000000000000000"
     },
     {
       "path": "dtapet-project/improved/FINAL/HTML_Template_V2_With_Products.html",
       "mode": "100644",
       "type": "blob",
-      "sha": "9416c9cab6d69f4ea63a47ca065c1bae3a635bdc",
+      "sha": "0000000000000000000000000000000000000000",
       "size": 15680,
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/9416c9cab6d69f4ea63a47ca065c1bae3a635bdc"
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/0000000000000000000000000000000000000000"
     },
     {
       "path": "dtapet-project/improved/FINAL/HTML_Template_V3_WP_SAFE.html",
       "mode": "100644",
       "type": "blob",
-      "sha": "9416c9cab6d69f4ea63a47ca065c1bae3a635bdc",
+      "sha": "0000000000000000000000000000000000000000",
       "size": 15680,
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/9416c9cab6d69f4ea63a47ca065c1bae3a635bdc"
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/0000000000000000000000000000000000000000"
     },
     {
       "path": "dtapet-project/improved/FINAL/IMPROVEMENTS_SUMMARY.md",
       "mode": "100644",
       "type": "blob",
-      "sha": "c516cfcc9ea73fa49164af0fd2862cc82f18ebcf",
+      "sha": "0000000000000000000000000000000000000000",
       "size": 2530,
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/c516cfcc9ea73fa49164af0fd2862cc82f18ebcf"
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/0000000000000000000000000000000000000000"
     },
     {
       "path": "dtapet-project/improved/FINAL/N8N_Generate_Product_HTML.js",
       "mode": "100644",
       "type": "blob",
-      "sha": "6100641fd28180e8d6b5f3a9f384b7f9c45c05d3",
+      "sha": "0000000000000000000000000000000000000000",
       "size": 6200,
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/6100641fd28180e8d6b5f3a9f384b7f9c45c05d3"
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/0000000000000000000000000000000000000000"
     },
     {
       "path": "dtapet-project/improved/FINAL/N8N_Product_Grid_Fix.md",
       "mode": "100644",
       "type": "blob",
-      "sha": "78d16ad4578d1c927270f70c72ceef112d0a1f69",
+      "sha": "0000000000000000000000000000000000000000",
       "size": 6605,
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/78d16ad4578d1c927270f70c72ceef112d0a1f69"
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/0000000000000000000000000000000000000000"
     },
     {
       "path": "dtapet-project/improved/FINAL/N8N_Prompt_v2.md",
       "mode": "100644",
       "type": "blob",
-      "sha": "6f3b842c9aeac126540c52e06e9702d39bc4df54",
+      "sha": "0000000000000000000000000000000000000000",
       "size": 46928,
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/6f3b842c9aeac126540c52e06e9702d39bc4df54"
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/0000000000000000000000000000000000000000"
     },
     {
       "path": "dtapet-project/improved/FINAL/N8N_Prompt_v3_FIXED.txt",
       "mode": "100644",
       "type": "blob",
-      "sha": "a7196bd7419be5b9717b8a67f514270c0bdf25c6",
+      "sha": "0000000000000000000000000000000000000000",
       "size": 12132,
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/a7196bd7419be5b9717b8a67f514270c0bdf25c6"
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/0000000000000000000000000000000000000000"
     },
     {
       "path": "dtapet-project/improved/FINAL/PRODUCT_CARD_HTML_Reference.html",
       "mode": "100644",
       "type": "blob",
-      "sha": "0044bb83a6e5345a7997d98984422c684f570d92",
+      "sha": "0000000000000000000000000000000000000000",
       "size": 9519,
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/0044bb83a6e5345a7997d98984422c684f570d92"
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/0000000000000000000000000000000000000000"
     },
     {
       "path": "dtapet-project/improved/FINAL/ROOT_CAUSE_REPORT.md",
       "mode": "100644",
       "type": "blob",
-      "sha": "54553d5a5d65287e81a81178b537cec6da9f3f6e",
+      "sha": "0000000000000000000000000000000000000000",
       "size": 7452,
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/54553d5a5d65287e81a81178b537cec6da9f3f6e"
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/0000000000000000000000000000000000000000"
     },
     {
       "path": "dtapet-project/improved/FINAL/WORKFLOW_IMPROVEMENTS.md",
       "mode": "100644",
       "type": "blob",
-      "sha": "cb0b17f2086a37ef0ecedc9aac8e14e9b8d69da2",
+      "sha": "0000000000000000000000000000000000000000",
       "size": 2814,
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/cb0b17f2086a37ef0ecedc9aac8e14e9b8d69da2"
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/0000000000000000000000000000000000000000"
     },
     {
       "path": "dtapet-project/improved/FINAL/dtapet_improved_v2.tar.gz",
       "mode": "100644",
       "type": "blob",
-      "sha": "f66d646eaf9dbac5948dd98b0022925594c66051",
+      "sha": "0000000000000000000000000000000000000000",
       "size": 18519,
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/f66d646eaf9dbac5948dd98b0022925594c66051"
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/0000000000000000000000000000000000000000"
     },
     {
       "path": "dtapet-project/original",
       "mode": "040000",
       "type": "tree",
-      "sha": "1c8064141ab4e9c66c26ef18d5b825f2c88ba981",
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/1c8064141ab4e9c66c26ef18d5b825f2c88ba981"
+      "sha": "0000000000000000000000000000000000000000",
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0"
     },
     {
       "path": "dtapet-project/original/html_template.txt",
       "mode": "100644",
       "type": "blob",
-      "sha": "9a35783d6a6e0ba7653d3442e8d3881a3c4b3e7c",
+      "sha": "0000000000000000000000000000000000000000",
       "size": 80919,
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/9a35783d6a6e0ba7653d3442e8d3881a3c4b3e7c"
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/0000000000000000000000000000000000000000"
     },
     {
       "path": "dtapet-project/original/n8n_prompt.txt",
       "mode": "100644",
       "type": "blob",
-      "sha": "e5e0546f9d0a50806478e1bf9f6e30a55975a530",
+      "sha": "0000000000000000000000000000000000000000",
       "size": 42127,
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/e5e0546f9d0a50806478e1bf9f6e30a55975a530"
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/0000000000000000000000000000000000000000"
     },
     {
       "path": "dtapet-project/original/n8n_workflow.json",
       "mode": "100644",
       "type": "blob",
-      "sha": "768042df126be71d30d072754899c937838c9e16",
+      "sha": "0000000000000000000000000000000000000000",
       "size": 188414,
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/768042df126be71d30d072754899c937838c9e16"
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/0000000000000000000000000000000000000000"
     },
     {
       "path": "dtapet.com",
       "mode": "040000",
       "type": "tree",
-      "sha": "f3c1a0332f659cb93927ca14760f419b28b3132d",
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/f3c1a0332f659cb93927ca14760f419b28b3132d"
+      "sha": "0000000000000000000000000000000000000000",
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0000000000000000000000000000000000000000"
     },
     {
-      "path": "dtapet.com/Improved Files (6.4.26) \u2726 Latest",
+      "path": "dtapet.com/Improved Files (6.4.26) ✦ Latest",
       "mode": "040000",
       "type": "tree",
-      "sha": "4250e7041263fb6ff7b41856d8a0700319e4e187",
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/4250e7041263fb6ff7b41856d8a0700319e4e187"
+      "sha": "0000000000000000000000000000000000000000",
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0"
     },
     {
-      "path": "dtapet.com/Improved Files (6.4.26) \u2726 Latest/HERMES-IMPORT-NOTE-2026-04-15.md",
+      "path": "dtapet.com/Improved Files (6.4.26) ✦ Latest/Improved_HTML_Template.html",
       "mode": "100644",
       "type": "blob",
-      "sha": "caf4c02a6476acb5c28a92a2711e0646da2a9fe1",
-      "size": 224,
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/caf4c02a6476acb5c28a92a2711e0646da2a9fe1"
-    },
-    {
-      "path": "dtapet.com/Improved Files (6.4.26) \u2726 Latest/Improved_HTML_Template.html",
-      "mode": "100644",
-      "type": "blob",
-      "sha": "72683e0f0df6bb720924a4bed8ae4d5bb2c20368",
+      "sha": "0000000000000000000000000000000000000000",
       "size": 60885,
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/72683e0f0df6bb720924a4bed8ae4d5bb2c20368"
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/0000000000000000000000000000000000000000"
     },
     {
-      "path": "dtapet.com/Improved Files (6.4.26) \u2726 Latest/Improved_N8N_Prompt.txt",
+      "path": "dtapet.com/Improved Files (6.4.26) ✦ Latest/Improved_N8N_Prompt.txt",
       "mode": "100644",
       "type": "blob",
-      "sha": "1408aafe34ce2250a5dc1d8018120a7ddbe6509c",
+      "sha": "0000000000000000000000000000000000000000",
       "size": 51034,
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/1408aafe34ce2250a5dc1d8018120a7ddbe6509c"
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/0000000000000000000000000000000000000000"
     },
     {
-      "path": "dtapet.com/Improved Files (6.4.26) \u2726 Latest/N8N_Workflow.json",
+      "path": "dtapet.com/Improved Files (6.4.26) ✦ Latest/N8N_Workflow.json",
       "mode": "100644",
       "type": "blob",
-      "sha": "feebb7bdffff0a7d2f77706ffc56379b9c9ff5c0",
+      "sha": "0000000000000000000000000000000000000000",
       "size": 191804,
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/feebb7bdffff0a7d2f77706ffc56379b9c9ff5c0"
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/0000000000000000000000000000000000000000"
     },
     {
       "path": "galoz-article-template-2026-04-15.html",
       "mode": "100644",
       "type": "blob",
-      "sha": "e3f765d6a21524cb58399589fc04cf7b234aecde",
+      "sha": "0000000000000000000000000000000000000000",
       "size": 12395,
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/e3f765d6a21524cb58399589fc04cf7b234aecde"
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/0000000000000000000000000000000000000000"
     },
     {
       "path": "galoz-article-template-qwen-code-2026-04-15.html",
       "mode": "100644",
       "type": "blob",
-      "sha": "0bd9ab2815abd075899997996ab1604fac4432fc",
+      "sha": "0000000000000000000000000000000000000000",
       "size": 12637,
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/0bd9ab2815abd075899997996ab1604fac4432fc"
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/0000000000000000000000000000000000000000"
     },
     {
       "path": "galoz-redesign-summary-qwen-code-2026-04-15.md",
       "mode": "100644",
       "type": "blob",
-      "sha": "af771bd2a97c857e41bac7686a366f50d98ccac8",
+      "sha": "0000000000000000000000000000000000000000",
       "size": 5754,
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/af771bd2a97c857e41bac7686a366f50d98ccac8"
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/0000000000000000000000000000000000000000"
     },
     {
       "path": "galoz-source-mapping-2026-04-15.md",
       "mode": "100644",
       "type": "blob",
-      "sha": "6c7cfeb4290be8f6b80bdaeb6f2ec91f71bb7d34",
+      "sha": "0000000000000000000000000000000000000000",
       "size": 2729,
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/6c7cfeb4290be8f6b80bdaeb6f2ec91f71bb7d34"
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/0000000000000000000000000000000000000000"
     },
     {
       "path": "galoz-source-mapping-qwen-code-2026-04-15.md",
       "mode": "100644",
       "type": "blob",
-      "sha": "85951136d79d1f948a68eeab76e40189ff4fa656",
+      "sha": "0000000000000000000000000000000000000000",
       "size": 2796,
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/85951136d79d1f948a68eeab76e40189ff4fa656"
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/0000000000000000000000000000000000000000"
     },
     {
       "path": "galoz-validation-report-2026-04-15.md",
       "mode": "100644",
       "type": "blob",
-      "sha": "6b3190c90873c7b172f30d84c344857e129c5bc8",
+      "sha": "0000000000000000000000000000000000000000",
       "size": 6780,
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/6b3190c90873c7b172f30d84c344857e129c5bc8"
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/0000000000000000000000000000000000000000"
     },
     {
       "path": "galoz-validation-report-qwen-code-2026-04-15.md",
       "mode": "100644",
       "type": "blob",
-      "sha": "a7f4e7f82a5bae2cddb48d8dca7dbc39d41a4f50",
+      "sha": "0000000000000000000000000000000000000000",
       "size": 6813,
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/a7f4e7f82a5bae2cddb48d8dca7dbc39d41a4f50"
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/0000000000000000000000000000000000000000"
     },
     {
       "path": "galoz.co.il",
       "mode": "040000",
       "type": "tree",
-      "sha": "972b2a6464156f51d24ebefdfba9d813172698b4",
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/972b2a6464156f51d24ebefdfba9d813172698b4"
+      "sha": "0000000000000000000000000000000000000000",
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0000000000000000000000000000000000000000"
     },
     {
       "path": "galoz.co.il/Codex",
       "mode": "040000",
       "type": "tree",
-      "sha": "d46cc08d4acf72859ce17998df1d52d75c0bd2ef",
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/d46cc08d4acf72859ce17998df1d52d75c0bd2ef"
+      "sha": "0000000000000000000000000000000000000000",
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0"
     },
     {
       "path": "galoz.co.il/Codex/2026-04-15",
       "mode": "040000",
       "type": "tree",
-      "sha": "4acef96ab6932033e30064f7658fd4f9e733de3c",
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/4acef96ab6932033e30064f7658fd4f9e733de3c"
+      "sha": "0000000000000000000000000000000000000000",
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0"
     },
     {
       "path": "galoz.co.il/Codex/2026-04-15/Improved_HTML_Template.html",
       "mode": "100644",
       "type": "blob",
-      "sha": "dc3a02e5299c1aa037e617a7af264a4413670e03",
+      "sha": "0000000000000000000000000000000000000000",
       "size": 47851,
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/dc3a02e5299c1aa037e617a7af264a4413670e03"
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/0000000000000000000000000000000000000000"
     },
     {
       "path": "galoz.co.il/Codex/2026-04-15/Improved_N8N_Prompt.txt",
       "mode": "100644",
       "type": "blob",
-      "sha": "27cfe401ebee4b6583c210ed61ff9c37911a83dc",
+      "sha": "0000000000000000000000000000000000000000",
       "size": 14827,
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/27cfe401ebee4b6583c210ed61ff9c37911a83dc"
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/0000000000000000000000000000000000000000"
     },
     {
       "path": "galoz.co.il/Codex/2026-04-15/Improved_N8N_Workflow.json",
       "mode": "100644",
       "type": "blob",
-      "sha": "2869f2ac22a67a3635723ee92ef1d64da7b9996b",
+      "sha": "0000000000000000000000000000000000000000",
       "size": 135512,
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/2869f2ac22a67a3635723ee92ef1d64da7b9996b"
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/0000000000000000000000000000000000000000"
     },
     {
       "path": "galoz.co.il/Copilot",
       "mode": "040000",
       "type": "tree",
-      "sha": "60614ddf59e7c6b2dd398e270848615f783527af",
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/60614ddf59e7c6b2dd398e270848615f783527af"
+      "sha": "0000000000000000000000000000000000000000",
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0"
     },
     {
       "path": "galoz.co.il/Copilot/2026-04-15",
       "mode": "040000",
       "type": "tree",
-      "sha": "cef68fa7c32e6f28e3ae60c65ac018b19aae7d91",
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/cef68fa7c32e6f28e3ae60c65ac018b19aae7d91"
+      "sha": "0000000000000000000000000000000000000000",
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0"
     },
     {
       "path": "galoz.co.il/Copilot/2026-04-15/Improved_HTML_Template.html",
       "mode": "100644",
       "type": "blob",
-      "sha": "40ba930e931e480fdae8687110e38977626d9c0b",
+      "sha": "0000000000000000000000000000000000000000",
       "size": 64023,
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/40ba930e931e480fdae8687110e38977626d9c0b"
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/0000000000000000000000000000000000000000"
     },
     {
       "path": "galoz.co.il/Copilot/2026-04-15/Improved_N8N_Prompt.txt",
       "mode": "100644",
       "type": "blob",
-      "sha": "84a1de2f4d906b603e1636b8c972cc514d4672e8",
+      "sha": "0000000000000000000000000000000000000000",
       "size": 56427,
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/84a1de2f4d906b603e1636b8c972cc514d4672e8"
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/0000000000000000000000000000000000000000"
     },
     {
       "path": "galoz.co.il/Copilot/2026-04-15/Improved_N8N_Workflow.json",
       "mode": "100644",
       "type": "blob",
-      "sha": "b26aad877fefb0f312e226382825a1eaaf68ffdc",
+      "sha": "0000000000000000000000000000000000000000",
       "size": 181974,
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/b26aad877fefb0f312e226382825a1eaaf68ffdc"
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/0000000000000000000000000000000000000000"
     },
     {
       "path": "galoz.co.il/Gemini",
       "mode": "040000",
       "type": "tree",
-      "sha": "e9a2da519e869e3f7d5d032cad4c833ce8accfae",
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/e9a2da519e869e3f7d5d032cad4c833ce8accfae"
+      "sha": "0000000000000000000000000000000000000000",
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0"
     },
     {
       "path": "galoz.co.il/Gemini/2026-04-15",
       "mode": "040000",
       "type": "tree",
-      "sha": "43570574a46bbd45fadb4ecd0bd1878bcc115bdc",
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/43570574a46bbd45fadb4ecd0bd1878bcc115bdc"
+      "sha": "0000000000000000000000000000000000000000",
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0"
     },
     {
       "path": "galoz.co.il/Gemini/2026-04-15/Improved_HTML_Template_Gemini.html",
       "mode": "100644",
       "type": "blob",
-      "sha": "cd85ed0e576db39a4e8ad480665bf48217a82713",
+      "sha": "0000000000000000000000000000000000000000",
       "size": 37382,
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/cd85ed0e576db39a4e8ad480665bf48217a82713"
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/0000000000000000000000000000000000000000"
     },
     {
       "path": "galoz.co.il/Gemini/2026-04-15/Improved_N8N_Prompt_Gemini.txt",
       "mode": "100644",
       "type": "blob",
-      "sha": "5cdb5f51b7276b24c5b8f6e51f586ee0dfff0b5d",
+      "sha": "0000000000000000000000000000000000000000",
       "size": 55826,
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/5cdb5f51b7276b24c5b8f6e51f586ee0dfff0b5d"
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/0000000000000000000000000000000000000000"
     },
     {
       "path": "galoz.co.il/Gemini/2026-04-15/Improved_N8N_Workflow_Gemini.json",
       "mode": "100644",
       "type": "blob",
-      "sha": "fdaa863c63040118362938beff805d7d15075ae2",
+      "sha": "0000000000000000000000000000000000000000",
       "size": 179743,
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/fdaa863c63040118362938beff805d7d15075ae2"
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/0000000000000000000000000000000000000000"
     },
     {
       "path": "galoz.co.il/Hermes Agent",
       "mode": "040000",
       "type": "tree",
-      "sha": "08dd9df1e876b371a48d5b67805a86702c411639",
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/08dd9df1e876b371a48d5b67805a86702c411639"
+      "sha": "0000000000000000000000000000000000000000",
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0"
     },
     {
-      "path": "galoz.co.il/Hermes Agent/updated files",
+      "path": "galoz.co.il/Hermes Agent/2026-04-15",
       "mode": "040000",
       "type": "tree",
-      "sha": "df4d60696282ee260680448820c05be49ad73335",
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/df4d60696282ee260680448820c05be49ad73335"
+      "sha": "0000000000000000000000000000000000000000",
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0"
     },
     {
-      "path": "galoz.co.il/Hermes Agent/updated files/2026-04-15",
-      "mode": "040000",
-      "type": "tree",
-      "sha": "47a790ae5573a166ca4a5f4fbe66f946f367d1aa",
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/47a790ae5573a166ca4a5f4fbe66f946f367d1aa"
-    },
-    {
-      "path": "galoz.co.il/Hermes Agent/updated files/2026-04-15/HERMES-SOURCE-MAP-2026-04-15.md",
+      "path": "galoz.co.il/Hermes Agent/2026-04-15/Improved_HTML_Template.html",
       "mode": "100644",
       "type": "blob",
-      "sha": "b995683c7b8cd1225d5a5b932edf877dd379d626",
-      "size": 1278,
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/b995683c7b8cd1225d5a5b932edf877dd379d626"
-    },
-    {
-      "path": "galoz.co.il/Hermes Agent/updated files/2026-04-15/HERMES-SUMMARY-2026-04-15.md",
-      "mode": "100644",
-      "type": "blob",
-      "sha": "9c43927ca54f4ae49a7ef37f12f2148a6c6c152d",
-      "size": 995,
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/9c43927ca54f4ae49a7ef37f12f2148a6c6c152d"
-    },
-    {
-      "path": "galoz.co.il/Hermes Agent/updated files/2026-04-15/HERMES-VALIDATION-2026-04-15.md",
-      "mode": "100644",
-      "type": "blob",
-      "sha": "40ccfca72ac2e22bf28d89b4bc92926877d58bb5",
-      "size": 1837,
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/40ccfca72ac2e22bf28d89b4bc92926877d58bb5"
-    },
-    {
-      "path": "galoz.co.il/Hermes Agent/updated files/2026-04-15/Hermes_Full_HTML_Template_Example_2026-04-15.html",
-      "mode": "100644",
-      "type": "blob",
-      "sha": "e4a161d0d727440c15f5d872aa059b1bb0aa8a0c",
+      "sha": "0000000000000000000000000000000000000000",
       "size": 44592,
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/e4a161d0d727440c15f5d872aa059b1bb0aa8a0c"
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/0000000000000000000000000000000000000000"
     },
     {
-      "path": "galoz.co.il/Hermes Agent/updated files/2026-04-15/Hermes_Improved_N8N_Prompt.txt",
+      "path": "galoz.co.il/Hermes Agent/2026-04-15/Improved_N8N_Prompt.txt",
       "mode": "100644",
       "type": "blob",
-      "sha": "7b6419b4275749f6a0d3456c3bce90df0741dec6",
+      "sha": "0000000000000000000000000000000000000000",
       "size": 15549,
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/7b6419b4275749f6a0d3456c3bce90df0741dec6"
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/0000000000000000000000000000000000000000"
     },
     {
-      "path": "galoz.co.il/Hermes Agent/updated files/2026-04-15/Hermes_Improved_N8N_Workflow.json",
+      "path": "galoz.co.il/Hermes Agent/2026-04-15/Improved_N8N_Workflow.json",
       "mode": "100644",
       "type": "blob",
-      "sha": "a504edd02104fcb444791630368dd43031a68db9",
+      "sha": "0000000000000000000000000000000000000000",
       "size": 135447,
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/a504edd02104fcb444791630368dd43031a68db9"
-    },
-    {
-      "path": "galoz.co.il/Hermes Agent/updated files/2026-04-15/UPDATED-FILES-NOTE-2026-04-15.md",
-      "mode": "100644",
-      "type": "blob",
-      "sha": "a3b852c41d88563f7ea0fba81b5bc6188fd0de03",
-      "size": 322,
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/a3b852c41d88563f7ea0fba81b5bc6188fd0de03"
-    },
-    {
-      "path": "galoz.co.il/Hermes Agent/updated files/2026-04-15/WINDOWS-PATH-NOTE-2026-04-15.md",
-      "mode": "100644",
-      "type": "blob",
-      "sha": "1ad6e39519147900edd51ec66ede38c08ce67746",
-      "size": 284,
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/1ad6e39519147900edd51ec66ede38c08ce67746"
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/0000000000000000000000000000000000000000"
     },
     {
       "path": "galoz.co.il/claude-code-15.4.26",
       "mode": "040000",
       "type": "tree",
-      "sha": "03d6397c1515e211823eb79f4b6d14814cf4fc2d",
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/03d6397c1515e211823eb79f4b6d14814cf4fc2d"
+      "sha": "0000000000000000000000000000000000000000",
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0"
     },
     {
       "path": "galoz.co.il/claude-code-15.4.26/Improved_HTML_Template-claude-code-15.4.26.html",
       "mode": "100644",
       "type": "blob",
-      "sha": "1c697a4a1996a0998df87c6cba9702e04c0d54d6",
+      "sha": "0000000000000000000000000000000000000000",
       "size": 51687,
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/1c697a4a1996a0998df87c6cba9702e04c0d54d6"
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/0000000000000000000000000000000000000000"
     },
     {
       "path": "galoz.co.il/claude-code-15.4.26/Improved_N8N_Prompt-claude-code-15.4.26.txt",
       "mode": "100644",
       "type": "blob",
-      "sha": "2db6c5a686c76f1a21ab508fd342d5db68cc20ae",
+      "sha": "0000000000000000000000000000000000000000",
       "size": 56257,
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/2db6c5a686c76f1a21ab508fd342d5db68cc20ae"
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/0000000000000000000000000000000000000000"
     },
     {
       "path": "galoz.co.il/claude-code-15.4.26/Improved_N8N_Workflow-claude-code-15.4.26.json",
       "mode": "100644",
       "type": "blob",
-      "sha": "b5910b3f45b8bbd842641eddbca8a00e4f7e9311",
+      "sha": "0000000000000000000000000000000000000000",
       "size": 179470,
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/b5910b3f45b8bbd842641eddbca8a00e4f7e9311"
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/0000000000000000000000000000000000000000"
     },
     {
       "path": "galoz.co.il/myclaw",
       "mode": "040000",
       "type": "tree",
-      "sha": "0c3346e7fdd6985e8380c8e2c62cef637fc66e1a",
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0c3346e7fdd6985e8380c8e2c62cef637fc66e1a"
+      "sha": "0000000000000000000000000000000000000000",
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0"
     },
     {
       "path": "galoz.co.il/myclaw/Updated Files 15.4.26",
       "mode": "040000",
       "type": "tree",
-      "sha": "511ec810d5c9ce120f20ebc65d96529e3761c8d0",
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/511ec810d5c9ce120f20ebc65d96529e3761c8d0"
+      "sha": "0000000000000000000000000000000000000000",
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0"
     },
     {
       "path": "galoz.co.il/myclaw/Updated Files 15.4.26/galoz.co.il_Improved_HTML_Template-myclaw-15.4.26.html",
       "mode": "100644",
       "type": "blob",
-      "sha": "4fdb7bd856c0cb58453a8fcba3ebddef80643dcd",
+      "sha": "0000000000000000000000000000000000000000",
       "size": 57531,
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/4fdb7bd856c0cb58453a8fcba3ebddef80643dcd"
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/0000000000000000000000000000000000000000"
     },
     {
       "path": "galoz.co.il/myclaw/Updated Files 15.4.26/galoz.co.il_Improved_N8N_Prompt-myclaw-15.4.26.txt",
       "mode": "100644",
       "type": "blob",
-      "sha": "c03f47ba476440220c977b14ebeedd5f5417161b",
+      "sha": "0000000000000000000000000000000000000000",
       "size": 2939,
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/c03f47ba476440220c977b14ebeedd5f5417161b"
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/0000000000000000000000000000000000000000"
     },
     {
       "path": "galoz.co.il/myclaw/Updated Files 15.4.26/galoz.co.il_Improved_N8N_Workflow-myclaw-15.4.26.json",
       "mode": "100644",
       "type": "blob",
-      "sha": "5f821f56521110c63e7c0e0befaf24fd190d6930",
+      "sha": "0000000000000000000000000000000000000000",
       "size": 12115,
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/5f821f56521110c63e7c0e0befaf24fd190d6930"
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/0000000000000000000000000000000000000000"
     },
     {
       "path": "hondabike.co.il",
       "mode": "040000",
       "type": "tree",
-      "sha": "ddabd96d68d37c18eddc89f1b1a86d7ced22413c",
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/ddabd96d68d37c18eddc89f1b1a86d7ced22413c"
+      "sha": "0000000000000000000000000000000000000000",
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0000000000000000000000000000000000000000"
     },
     {
-      "path": "hondabike.co.il/Improved Files (12.4.26) \u2726 Latest",
+      "path": "hondabike.co.il/Improved Files (12.4.26) ✦ Latest",
       "mode": "040000",
       "type": "tree",
-      "sha": "742391f5b39542b44f750088aab438094db67f55",
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/742391f5b39542b44f750088aab438094db67f55"
+      "sha": "0000000000000000000000000000000000000000",
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0"
     },
     {
-      "path": "hondabike.co.il/Improved Files (12.4.26) \u2726 Latest/HERMES-IMPORT-NOTE-2026-04-15.md",
+      "path": "hondabike.co.il/Improved Files (12.4.26) ✦ Latest/Improved_HTML_Template.html",
       "mode": "100644",
       "type": "blob",
-      "sha": "bdbd8edaffab26e544da600494fb72fbe1437cf2",
-      "size": 230,
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/bdbd8edaffab26e544da600494fb72fbe1437cf2"
-    },
-    {
-      "path": "hondabike.co.il/Improved Files (12.4.26) \u2726 Latest/Improved_HTML_Template.html",
-      "mode": "100644",
-      "type": "blob",
-      "sha": "cd02695cc357bca785d93e4bda961ab807e330fc",
+      "sha": "0000000000000000000000000000000000000000",
       "size": 72389,
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/cd02695cc357bca785d93e4bda961ab807e330fc"
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/0000000000000000000000000000000000000000"
     },
     {
-      "path": "hondabike.co.il/Improved Files (12.4.26) \u2726 Latest/Improved_N8N_Prompt.txt",
+      "path": "hondabike.co.il/Improved Files (12.4.26) ✦ Latest/Improved_N8N_Prompt.txt",
       "mode": "100644",
       "type": "blob",
-      "sha": "0a5f261a57cac261701b72f1ada06b52fb79993a",
+      "sha": "0000000000000000000000000000000000000000",
       "size": 31069,
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/0a5f261a57cac261701b72f1ada06b52fb79993a"
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/0000000000000000000000000000000000000000"
     },
     {
-      "path": "hondabike.co.il/Improved Files (12.4.26) \u2726 Latest/Improved_N8N_Workflow.json",
+      "path": "hondabike.co.il/Improved Files (12.4.26) ✦ Latest/Improved_N8N_Workflow.json",
       "mode": "100644",
       "type": "blob",
-      "sha": "77ee427f3e8476755b2e4fb756cdc2d9dd7ed4bc",
+      "sha": "0000000000000000000000000000000000000000",
       "size": 164749,
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/77ee427f3e8476755b2e4fb756cdc2d9dd7ed4bc"
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/0000000000000000000000000000000000000000"
     },
     {
       "path": "index.html",
       "mode": "100644",
       "type": "blob",
-      "sha": "0b69f1c35964c37253feaca4b51e73dd609975b8",
-      "size": 116944,
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/0b69f1c35964c37253feaca4b51e73dd609975b8"
+      "sha": "0000000000000000000000000000000000000000",
+      "size": 260360,
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/0000000000000000000000000000000000000000"
     },
     {
       "path": "jacknows.ai",
       "mode": "040000",
       "type": "tree",
-      "sha": "c64e62c5c1094d79dbf04f1ffd7c8a00b4779ad0",
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/c64e62c5c1094d79dbf04f1ffd7c8a00b4779ad0"
+      "sha": "0000000000000000000000000000000000000000",
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0000000000000000000000000000000000000000"
     },
     {
-      "path": "jacknows.ai/Improved Files (31.3.26) \u2726 Latest",
+      "path": "jacknows.ai/Improved Files (31.3.26) ✦ Latest",
       "mode": "040000",
       "type": "tree",
-      "sha": "91edfb49f9bb767efc49c5e572d17787d8f9eb3a",
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/91edfb49f9bb767efc49c5e572d17787d8f9eb3a"
+      "sha": "0000000000000000000000000000000000000000",
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0"
     },
     {
-      "path": "jacknows.ai/Improved Files (31.3.26) \u2726 Latest/HERMES-IMPORT-NOTE-2026-04-15.md",
+      "path": "jacknows.ai/Improved Files (31.3.26) ✦ Latest/Improved_HTML_Template.html",
       "mode": "100644",
       "type": "blob",
-      "sha": "6f562b453af94acfd371749b8397af9de4acb896",
-      "size": 226,
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/6f562b453af94acfd371749b8397af9de4acb896"
-    },
-    {
-      "path": "jacknows.ai/Improved Files (31.3.26) \u2726 Latest/Improved_HTML_Template.html",
-      "mode": "100644",
-      "type": "blob",
-      "sha": "3ba552f818dc571b3340014a3310aae36973b92b",
+      "sha": "0000000000000000000000000000000000000000",
       "size": 49584,
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/3ba552f818dc571b3340014a3310aae36973b92b"
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/0000000000000000000000000000000000000000"
     },
     {
-      "path": "jacknows.ai/Improved Files (31.3.26) \u2726 Latest/Improved_N8N_Prompt.txt",
+      "path": "jacknows.ai/Improved Files (31.3.26) ✦ Latest/Improved_N8N_Prompt.txt",
       "mode": "100644",
       "type": "blob",
-      "sha": "76c6b40dc40ac9f50196ee1bcc6a702f6cef6825",
+      "sha": "0000000000000000000000000000000000000000",
       "size": 20037,
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/76c6b40dc40ac9f50196ee1bcc6a702f6cef6825"
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/0000000000000000000000000000000000000000"
     },
     {
-      "path": "jacknows.ai/Improved Files (31.3.26) \u2726 Latest/Improved_N8N_Workflow.json",
+      "path": "jacknows.ai/Improved Files (31.3.26) ✦ Latest/Improved_N8N_Workflow.json",
       "mode": "100644",
       "type": "blob",
-      "sha": "2b3d695777d48097e9863e8b83ed150ec7e8891b",
+      "sha": "0000000000000000000000000000000000000000",
       "size": 142686,
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/2b3d695777d48097e9863e8b83ed150ec7e8891b"
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/0000000000000000000000000000000000000000"
     },
     {
       "path": "n8n-workflow-map.json",
       "mode": "100644",
       "type": "blob",
-      "sha": "430de867d424ec2a21b7d3a6271cf6b309cd18cc",
+      "sha": "0000000000000000000000000000000000000000",
       "size": 236,
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/430de867d424ec2a21b7d3a6271cf6b309cd18cc"
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/0000000000000000000000000000000000000000"
     },
     {
       "path": "netanya.ac.il",
       "mode": "040000",
       "type": "tree",
-      "sha": "c1ba6b9891732b5e0cfe23bfe9b3e563c1e79430",
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/c1ba6b9891732b5e0cfe23bfe9b3e563c1e79430"
+      "sha": "0000000000000000000000000000000000000000",
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0000000000000000000000000000000000000000"
     },
     {
       "path": "netanya.ac.il/Improved Files (5.4.26)",
       "mode": "040000",
       "type": "tree",
-      "sha": "0404cec8eb1a5b7376ca7c90603b7e41520c8762",
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0404cec8eb1a5b7376ca7c90603b7e41520c8762"
+      "sha": "0000000000000000000000000000000000000000",
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0"
     },
     {
       "path": "netanya.ac.il/Improved Files (5.4.26)/Improved_HTML_Template.html",
       "mode": "100644",
       "type": "blob",
-      "sha": "5108fe0df9340d06345b3ed4fec7d2bac24c7028",
+      "sha": "0000000000000000000000000000000000000000",
       "size": 75510,
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/5108fe0df9340d06345b3ed4fec7d2bac24c7028"
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/0000000000000000000000000000000000000000"
     },
     {
       "path": "netanya.ac.il/Improved Files (5.4.26)/Improved_N8N_Prompt.txt",
       "mode": "100644",
       "type": "blob",
-      "sha": "02cb2b137986e91247b2509bd7d1526f2381476a",
+      "sha": "0000000000000000000000000000000000000000",
       "size": 17821,
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/02cb2b137986e91247b2509bd7d1526f2381476a"
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/0000000000000000000000000000000000000000"
     },
     {
       "path": "netanya.ac.il/Improved Files (5.4.26)/Improved_N8N_Workflow.json",
       "mode": "100644",
       "type": "blob",
-      "sha": "e157e257f641e96139769221beff6a0658730c2a",
+      "sha": "0000000000000000000000000000000000000000",
       "size": 16596,
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/e157e257f641e96139769221beff6a0658730c2a"
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/0000000000000000000000000000000000000000"
     },
     {
       "path": "netanya.ac.il/Improved Files (6.4.26)",
       "mode": "040000",
       "type": "tree",
-      "sha": "f552d0b264e6ca03e7c016508f633df88348fe30",
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/f552d0b264e6ca03e7c016508f633df88348fe30"
+      "sha": "0000000000000000000000000000000000000000",
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0"
     },
     {
       "path": "netanya.ac.il/Improved Files (6.4.26)/Improved_HTML_Template.html",
       "mode": "100644",
       "type": "blob",
-      "sha": "7a715deed550d09539a0920c9518f47b224bd1e5",
+      "sha": "0000000000000000000000000000000000000000",
       "size": 80700,
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/7a715deed550d09539a0920c9518f47b224bd1e5"
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/0000000000000000000000000000000000000000"
     },
     {
       "path": "netanya.ac.il/Improved Files (6.4.26)/Improved_N8N_Prompt.txt",
       "mode": "100644",
       "type": "blob",
-      "sha": "d626c8a4244a3ae5cd9f5b0083ea6f67cc46b104",
+      "sha": "0000000000000000000000000000000000000000",
       "size": 26172,
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/d626c8a4244a3ae5cd9f5b0083ea6f67cc46b104"
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/0000000000000000000000000000000000000000"
     },
     {
       "path": "netanya.ac.il/Improved Files (6.4.26)/Improved_N8N_Workflow.json",
       "mode": "100644",
       "type": "blob",
-      "sha": "0d322ae77cbfbd4c21b56362874071f036d5646d",
+      "sha": "0000000000000000000000000000000000000000",
       "size": 154138,
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/0d322ae77cbfbd4c21b56362874071f036d5646d"
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/0000000000000000000000000000000000000000"
     },
     {
       "path": "netanya.ac.il/claude-code",
       "mode": "040000",
       "type": "tree",
-      "sha": "5f65006711d0c6122b230ae01b8fe1974ac6dee5",
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/5f65006711d0c6122b230ae01b8fe1974ac6dee5"
+      "sha": "0000000000000000000000000000000000000000",
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0"
     },
     {
       "path": "netanya.ac.il/claude-code/06.04.26",
       "mode": "040000",
       "type": "tree",
-      "sha": "807b1f15e966a3deb45901c05b9d60f443e825cf",
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/807b1f15e966a3deb45901c05b9d60f443e825cf"
-    },
-    {
-      "path": "netanya.ac.il/claude-code/06.04.26/Change_Summary.md",
-      "mode": "100644",
-      "type": "blob",
-      "sha": "6c1454a84ca54da10bf5e1845d3136ef408dd3d7",
-      "size": 3173,
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/6c1454a84ca54da10bf5e1845d3136ef408dd3d7"
+      "sha": "0000000000000000000000000000000000000000",
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0"
     },
     {
       "path": "netanya.ac.il/claude-code/06.04.26/Improved_HTML_Template.html",
       "mode": "100644",
       "type": "blob",
-      "sha": "7a715deed550d09539a0920c9518f47b224bd1e5",
+      "sha": "0000000000000000000000000000000000000000",
       "size": 80700,
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/7a715deed550d09539a0920c9518f47b224bd1e5"
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/0000000000000000000000000000000000000000"
     },
     {
       "path": "netanya.ac.il/claude-code/06.04.26/Improved_N8N_Prompt.txt",
       "mode": "100644",
       "type": "blob",
-      "sha": "d626c8a4244a3ae5cd9f5b0083ea6f67cc46b104",
+      "sha": "0000000000000000000000000000000000000000",
       "size": 26172,
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/d626c8a4244a3ae5cd9f5b0083ea6f67cc46b104"
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/0000000000000000000000000000000000000000"
     },
     {
       "path": "netanya.ac.il/claude-code/06.04.26/Improved_N8N_Workflow.json",
       "mode": "100644",
       "type": "blob",
-      "sha": "0d322ae77cbfbd4c21b56362874071f036d5646d",
+      "sha": "0000000000000000000000000000000000000000",
       "size": 154138,
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/0d322ae77cbfbd4c21b56362874071f036d5646d"
-    },
-    {
-      "path": "netanya.ac.il/claude-code/06.04.26/Validation_Report.md",
-      "mode": "100644",
-      "type": "blob",
-      "sha": "5c4fd8666bfd3768adc54b6900a007529ec41d0b",
-      "size": 2476,
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/5c4fd8666bfd3768adc54b6900a007529ec41d0b"
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/0000000000000000000000000000000000000000"
     },
     {
       "path": "powerplug.ai",
       "mode": "040000",
       "type": "tree",
-      "sha": "a8d6e97852af940b01f43db7eef9f896081836ac",
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/a8d6e97852af940b01f43db7eef9f896081836ac"
+      "sha": "0000000000000000000000000000000000000000",
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0000000000000000000000000000000000000000"
     },
     {
       "path": "powerplug.ai/CLAUDE CODE (Tim Claw Max)",
       "mode": "040000",
       "type": "tree",
-      "sha": "884b0c058cdaee0f5bf5e33a3598c27f22d69add",
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/884b0c058cdaee0f5bf5e33a3598c27f22d69add"
+      "sha": "0000000000000000000000000000000000000000",
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0"
     },
     {
       "path": "powerplug.ai/CLAUDE CODE (Tim Claw Max)/2026-04-16",
       "mode": "040000",
       "type": "tree",
-      "sha": "2585b7998821be1055c94ad1d1629af3f0dcc7b2",
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/2585b7998821be1055c94ad1d1629af3f0dcc7b2"
+      "sha": "0000000000000000000000000000000000000000",
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0"
     },
     {
       "path": "powerplug.ai/CLAUDE CODE (Tim Claw Max)/2026-04-16/Improved_HTML_Template.html",
       "mode": "100644",
       "type": "blob",
-      "sha": "b44c84c0686a5d8234f8eff66d81408488d2b8a0",
+      "sha": "0000000000000000000000000000000000000000",
       "size": 57234,
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/b44c84c0686a5d8234f8eff66d81408488d2b8a0"
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/0000000000000000000000000000000000000000"
     },
     {
       "path": "powerplug.ai/CLAUDE CODE (Tim Claw Max)/2026-04-16/Improved_N8N_Prompt.txt",
       "mode": "100644",
       "type": "blob",
-      "sha": "f051f8a375375da4ebc2ef0b4af8f160f9b32696",
+      "sha": "0000000000000000000000000000000000000000",
       "size": 13577,
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/f051f8a375375da4ebc2ef0b4af8f160f9b32696"
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/0000000000000000000000000000000000000000"
     },
     {
       "path": "powerplug.ai/CLAUDE CODE (Tim Claw Max)/2026-04-16/Improved_N8N_Workflow.json",
       "mode": "100644",
       "type": "blob",
-      "sha": "3f5a2d2a1441c10e7c4e6b065ab0510229765d44",
+      "sha": "0000000000000000000000000000000000000000",
       "size": 16335,
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/3f5a2d2a1441c10e7c4e6b065ab0510229765d44"
-    },
-    {
-      "path": "powerplug.ai/CLAUDE CODE (Tim Claw Max)/2026-04-16/source-map.md",
-      "mode": "100644",
-      "type": "blob",
-      "sha": "29df1819bf0e36aafa38b1104fe8bccbd9bb250d",
-      "size": 4855,
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/29df1819bf0e36aafa38b1104fe8bccbd9bb250d"
-    },
-    {
-      "path": "powerplug.ai/CLAUDE CODE (Tim Claw Max)/2026-04-16/summary.md",
-      "mode": "100644",
-      "type": "blob",
-      "sha": "db8be1f46c1a1f467d2bf86987b712f12dc0974f",
-      "size": 3118,
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/db8be1f46c1a1f467d2bf86987b712f12dc0974f"
-    },
-    {
-      "path": "powerplug.ai/CLAUDE CODE (Tim Claw Max)/2026-04-16/validation-note.md",
-      "mode": "100644",
-      "type": "blob",
-      "sha": "4370d3080326386d27a0234a155a42de07a26e21",
-      "size": 4403,
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/4370d3080326386d27a0234a155a42de07a26e21"
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/0000000000000000000000000000000000000000"
     },
     {
       "path": "powerplug.ai/Claude Code",
       "mode": "040000",
       "type": "tree",
-      "sha": "274456d2f8a7baebb466d566fdeecac87c0b2ac0",
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/274456d2f8a7baebb466d566fdeecac87c0b2ac0"
+      "sha": "0000000000000000000000000000000000000000",
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0"
     },
     {
       "path": "powerplug.ai/Claude Code/2026-04-16",
       "mode": "040000",
       "type": "tree",
-      "sha": "23ad3bda1f6bb8eddce7e29a66517e12a9ddd52a",
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/23ad3bda1f6bb8eddce7e29a66517e12a9ddd52a"
+      "sha": "0000000000000000000000000000000000000000",
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0"
     },
     {
       "path": "powerplug.ai/Claude Code/2026-04-16/Improved_HTML_Template.html",
       "mode": "100644",
       "type": "blob",
-      "sha": "881a58c98e8bb2264e1ae751ca5848d805a040c1",
+      "sha": "0000000000000000000000000000000000000000",
       "size": 49175,
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/881a58c98e8bb2264e1ae751ca5848d805a040c1"
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/0000000000000000000000000000000000000000"
     },
     {
       "path": "powerplug.ai/Claude Code/2026-04-16/Improved_N8N_Prompt.txt",
       "mode": "100644",
       "type": "blob",
-      "sha": "280184596f1960c898e255250d081022ea3cca64",
+      "sha": "0000000000000000000000000000000000000000",
       "size": 18688,
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/280184596f1960c898e255250d081022ea3cca64"
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/0000000000000000000000000000000000000000"
     },
     {
       "path": "powerplug.ai/Claude Code/2026-04-16/Improved_N8N_Workflow.json",
       "mode": "100644",
       "type": "blob",
-      "sha": "d8b48e131cda39e93a5eb4ce3cd7c245de6c82b8",
+      "sha": "0000000000000000000000000000000000000000",
       "size": 20768,
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/d8b48e131cda39e93a5eb4ce3cd7c245de6c82b8"
-    },
-    {
-      "path": "powerplug.ai/Claude Code/2026-04-16/SOURCE-MAP-2026-04-15.md",
-      "mode": "100644",
-      "type": "blob",
-      "sha": "e4139680633991c685f8e4bdec9f3faeb6e6075f",
-      "size": 10252,
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/e4139680633991c685f8e4bdec9f3faeb6e6075f"
-    },
-    {
-      "path": "powerplug.ai/Claude Code/2026-04-16/SUMMARY-2026-04-15.md",
-      "mode": "100644",
-      "type": "blob",
-      "sha": "95022569dcea368914ba4103498bf127aa1cc324",
-      "size": 9511,
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/95022569dcea368914ba4103498bf127aa1cc324"
-    },
-    {
-      "path": "powerplug.ai/Claude Code/2026-04-16/VALIDATION-NOTE-2026-04-15.md",
-      "mode": "100644",
-      "type": "blob",
-      "sha": "2ed2d73b1e2e08b880e075556a767b7ba099595e",
-      "size": 10836,
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/2ed2d73b1e2e08b880e075556a767b7ba099595e"
-    },
-    {
-      "path": "powerplug.ai/Claude Code/2026-04-16/source-map.md",
-      "mode": "100644",
-      "type": "blob",
-      "sha": "e9687f1bac456e9d5bd886b0ca3f8e4739678585",
-      "size": 4396,
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/e9687f1bac456e9d5bd886b0ca3f8e4739678585"
-    },
-    {
-      "path": "powerplug.ai/Claude Code/2026-04-16/summary.md",
-      "mode": "100644",
-      "type": "blob",
-      "sha": "12e1515a030b5efb5712abf16c1f5c24963688f0",
-      "size": 3430,
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/12e1515a030b5efb5712abf16c1f5c24963688f0"
-    },
-    {
-      "path": "powerplug.ai/Claude Code/2026-04-16/validation-note.md",
-      "mode": "100644",
-      "type": "blob",
-      "sha": "3922c7e885f3d5978a401d920007f1288a8836ed",
-      "size": 8607,
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/3922c7e885f3d5978a401d920007f1288a8836ed"
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/0000000000000000000000000000000000000000"
     },
     {
       "path": "powerplug.ai/Copilot",
       "mode": "040000",
       "type": "tree",
-      "sha": "6c5d74037a47f86cf64cadbe2a9ed8b8c4bd2961",
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/6c5d74037a47f86cf64cadbe2a9ed8b8c4bd2961"
+      "sha": "0000000000000000000000000000000000000000",
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0"
     },
     {
       "path": "powerplug.ai/Copilot/2026-04-17",
       "mode": "040000",
       "type": "tree",
-      "sha": "805c01c3e055985e7bd7b993140d243451192a74",
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/805c01c3e055985e7bd7b993140d243451192a74"
+      "sha": "0000000000000000000000000000000000000000",
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0"
     },
     {
       "path": "powerplug.ai/Copilot/2026-04-17/Improved_HTML_Template-copilot-2026-04-17.html",
       "mode": "100644",
       "type": "blob",
-      "sha": "5eb5a34ebdac41e360cb188ad5398d3c70e54659",
+      "sha": "0000000000000000000000000000000000000000",
       "size": 44444,
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/5eb5a34ebdac41e360cb188ad5398d3c70e54659"
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/0000000000000000000000000000000000000000"
     },
     {
       "path": "powerplug.ai/Copilot/2026-04-17/Improved_N8N_Prompt-copilot-2026-04-17.txt",
       "mode": "100644",
       "type": "blob",
-      "sha": "2f32ab6a71b5be47a29a9c1d3c70b72ea60a077f",
+      "sha": "0000000000000000000000000000000000000000",
       "size": 17427,
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/2f32ab6a71b5be47a29a9c1d3c70b72ea60a077f"
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/0000000000000000000000000000000000000000"
     },
     {
       "path": "powerplug.ai/Copilot/2026-04-17/Improved_N8N_Workflow-copilot-2026-04-17.json",
       "mode": "100644",
       "type": "blob",
-      "sha": "805df97b14e8dd4a8b8cc26b83a4087a25fdc477",
+      "sha": "0000000000000000000000000000000000000000",
       "size": 129113,
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/805df97b14e8dd4a8b8cc26b83a4087a25fdc477"
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/0000000000000000000000000000000000000000"
     },
     {
       "path": "powerplug.ai/Hermes Agent",
       "mode": "040000",
       "type": "tree",
-      "sha": "3c900883fa644a5b663a2d8541d58411ea3e3a9f",
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/3c900883fa644a5b663a2d8541d58411ea3e3a9f"
+      "sha": "0000000000000000000000000000000000000000",
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0"
     },
     {
       "path": "powerplug.ai/Hermes Agent/2026-04-16",
       "mode": "040000",
       "type": "tree",
-      "sha": "c1a5a15effcd7692d021815b395cad57b75304f1",
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/c1a5a15effcd7692d021815b395cad57b75304f1"
+      "sha": "0000000000000000000000000000000000000000",
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0"
     },
     {
       "path": "powerplug.ai/Hermes Agent/2026-04-16/Improved_HTML_Template.html",
       "mode": "100644",
       "type": "blob",
-      "sha": "536e7ab296b8000b6190a7a47d17d0418e926cbb",
-      "size": 37764,
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/536e7ab296b8000b6190a7a47d17d0418e926cbb"
+      "sha": "0000000000000000000000000000000000000000",
+      "size": 33652,
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/0000000000000000000000000000000000000000"
     },
     {
       "path": "powerplug.ai/Hermes Agent/2026-04-16/Improved_N8N_Prompt.txt",
       "mode": "100644",
       "type": "blob",
-      "sha": "6103a5f3df525c2448d73fbf74aaaa0dad7ad653",
-      "size": 12619,
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/6103a5f3df525c2448d73fbf74aaaa0dad7ad653"
+      "sha": "0000000000000000000000000000000000000000",
+      "size": 11769,
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/0000000000000000000000000000000000000000"
     },
     {
       "path": "powerplug.ai/Hermes Agent/2026-04-16/Improved_N8N_Workflow.json",
       "mode": "100644",
       "type": "blob",
-      "sha": "dd484aa621cbc18114ddcb0eff18655786f098a4",
-      "size": 126169,
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/dd484aa621cbc18114ddcb0eff18655786f098a4"
-    },
-    {
-      "path": "powerplug.ai/Hermes Agent/2026-04-16/SOURCE-MAP-2026-04-15.md",
-      "mode": "100644",
-      "type": "blob",
-      "sha": "848ef72ff435b8cbfb931f53cf626c63a04400f1",
-      "size": 3819,
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/848ef72ff435b8cbfb931f53cf626c63a04400f1"
-    },
-    {
-      "path": "powerplug.ai/Hermes Agent/2026-04-16/SUMMARY-2026-04-15.md",
-      "mode": "100644",
-      "type": "blob",
-      "sha": "7e3432e42ab0bc2f65d9f6a9f4d39d778621456e",
-      "size": 4478,
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/7e3432e42ab0bc2f65d9f6a9f4d39d778621456e"
-    },
-    {
-      "path": "powerplug.ai/Hermes Agent/2026-04-16/VALIDATION-NOTE-2026-04-15.md",
-      "mode": "100644",
-      "type": "blob",
-      "sha": "7e36199f78d85c60e89c774fb9406b2b369756ac",
-      "size": 6451,
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/7e36199f78d85c60e89c774fb9406b2b369756ac"
+      "sha": "0000000000000000000000000000000000000000",
+      "size": 128442,
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/0000000000000000000000000000000000000000"
     },
     {
       "path": "powerplug.ai/agent-zero",
       "mode": "040000",
       "type": "tree",
-      "sha": "bbf8a85abfa5d9485de4734bb1e7c71490ba159a",
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/bbf8a85abfa5d9485de4734bb1e7c71490ba159a"
+      "sha": "0000000000000000000000000000000000000000",
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0"
     },
     {
       "path": "powerplug.ai/agent-zero/2026-04-16",
       "mode": "040000",
       "type": "tree",
-      "sha": "4d4698398850e98fff5f4d7bee3b062cb8d00c40",
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/4d4698398850e98fff5f4d7bee3b062cb8d00c40"
+      "sha": "0000000000000000000000000000000000000000",
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0"
     },
     {
       "path": "powerplug.ai/agent-zero/2026-04-16/Improved_HTML_Template.html",
       "mode": "100644",
       "type": "blob",
-      "sha": "67450a37caa0b0e28637e1be919c71b65a60c78c",
+      "sha": "0000000000000000000000000000000000000000",
       "size": 60199,
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/67450a37caa0b0e28637e1be919c71b65a60c78c"
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/0000000000000000000000000000000000000000"
     },
     {
       "path": "powerplug.ai/agent-zero/2026-04-16/Improved_N8N_Prompt.txt",
       "mode": "100644",
       "type": "blob",
-      "sha": "2bf3832adbf03ba7316364081e86a1d91f87f6b8",
+      "sha": "0000000000000000000000000000000000000000",
       "size": 8171,
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/2bf3832adbf03ba7316364081e86a1d91f87f6b8"
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/0000000000000000000000000000000000000000"
     },
     {
       "path": "powerplug.ai/agent-zero/2026-04-16/Improved_N8N_Workflow.json",
       "mode": "100644",
       "type": "blob",
-      "sha": "9caaaceddabf5d8a4e223cd7d55db6c77ffcd5c0",
+      "sha": "0000000000000000000000000000000000000000",
       "size": 9157,
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/9caaaceddabf5d8a4e223cd7d55db6c77ffcd5c0"
-    },
-    {
-      "path": "powerplug.ai/agent-zero/2026-04-16/updated-files",
-      "mode": "040000",
-      "type": "tree",
-      "sha": "8e19e81ee5d875b84f6f740716d4e2563e9c1842",
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/8e19e81ee5d875b84f6f740716d4e2563e9c1842"
-    },
-    {
-      "path": "powerplug.ai/agent-zero/2026-04-16/updated-files/2026-04-15",
-      "mode": "040000",
-      "type": "tree",
-      "sha": "d211fb5ff907a39932a137b2523f51acb09c9fa7",
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/d211fb5ff907a39932a137b2523f51acb09c9fa7"
-    },
-    {
-      "path": "powerplug.ai/agent-zero/2026-04-16/updated-files/2026-04-15/Improved_HTML_Template_v2.html",
-      "mode": "100644",
-      "type": "blob",
-      "sha": "7256b63f90f8ed034fec0d80006d4d7e770314d1",
-      "size": 48703,
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/7256b63f90f8ed034fec0d80006d4d7e770314d1"
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/0000000000000000000000000000000000000000"
     },
     {
       "path": "powerplug.ai/gemini",
       "mode": "040000",
       "type": "tree",
-      "sha": "46cf85d928675b05397f3bcf8e597fe583cbe0dd",
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/46cf85d928675b05397f3bcf8e597fe583cbe0dd"
+      "sha": "0000000000000000000000000000000000000000",
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0"
     },
     {
       "path": "powerplug.ai/gemini/2026-04-17",
       "mode": "040000",
       "type": "tree",
-      "sha": "6544667d49a7c6fcd41ef129df9a300d9c4c573c",
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/6544667d49a7c6fcd41ef129df9a300d9c4c573c"
+      "sha": "0000000000000000000000000000000000000000",
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0"
     },
     {
       "path": "powerplug.ai/gemini/2026-04-17/Improved_HTML_Template-gemini-2026-04-17.html",
       "mode": "100644",
       "type": "blob",
-      "sha": "e5e5add7fd78bb6394b9fc325fb2069b8fdd5b07",
+      "sha": "0000000000000000000000000000000000000000",
       "size": 13546,
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/e5e5add7fd78bb6394b9fc325fb2069b8fdd5b07"
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/0000000000000000000000000000000000000000"
     },
     {
       "path": "powerplug.ai/gemini/2026-04-17/Improved_N8N_Prompt-gemini-2026-04-17.txt",
       "mode": "100644",
       "type": "blob",
-      "sha": "7d4ebf23a57a2949aae3c66763bbdce9e2f3ee97",
+      "sha": "0000000000000000000000000000000000000000",
       "size": 17425,
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/7d4ebf23a57a2949aae3c66763bbdce9e2f3ee97"
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/0000000000000000000000000000000000000000"
     },
     {
       "path": "powerplug.ai/gemini/2026-04-17/Improved_N8N_Workflow-gemini-2026-04-17.json",
       "mode": "100644",
       "type": "blob",
-      "sha": "75f76e9283cfe7b9b8181c42f3ae4129286fe977",
+      "sha": "0000000000000000000000000000000000000000",
       "size": 129110,
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/75f76e9283cfe7b9b8181c42f3ae4129286fe977"
-    },
-    {
-      "path": "powerplug.ai/gemini/2026-04-17/SOURCE-MAP-2026-04-15.md",
-      "mode": "100644",
-      "type": "blob",
-      "sha": "ef9872f85d95d549199400cf833b06d08e7bc855",
-      "size": 985,
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/ef9872f85d95d549199400cf833b06d08e7bc855"
-    },
-    {
-      "path": "powerplug.ai/gemini/2026-04-17/SUMMARY-2026-04-15.md",
-      "mode": "100644",
-      "type": "blob",
-      "sha": "d99fdcead72ff48a438ac65c0479993b0c6c0b68",
-      "size": 1164,
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/d99fdcead72ff48a438ac65c0479993b0c6c0b68"
-    },
-    {
-      "path": "powerplug.ai/gemini/2026-04-17/VALIDATION-NOTE-2026-04-15.md",
-      "mode": "100644",
-      "type": "blob",
-      "sha": "5cb73d881fc6cb2592ef66fc93a6315b39cf47a0",
-      "size": 1109,
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/5cb73d881fc6cb2592ef66fc93a6315b39cf47a0"
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/0000000000000000000000000000000000000000"
     },
     {
       "path": "prompts",
       "mode": "040000",
       "type": "tree",
-      "sha": "5abb97092ef3177984e34530f3732875a47103ae",
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/5abb97092ef3177984e34530f3732875a47103ae"
+      "sha": "0000000000000000000000000000000000000000",
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0000000000000000000000000000000000000000"
     },
     {
       "path": "prompts/claude-code-15.4.26",
       "mode": "040000",
       "type": "tree",
-      "sha": "3fbe3a2d1cc829c6ef466a44e6a877ce36bcd543",
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/3fbe3a2d1cc829c6ef466a44e6a877ce36bcd543"
+      "sha": "0000000000000000000000000000000000000000",
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0"
     },
     {
       "path": "prompts/claude-code-15.4.26/deploy-to-n8n-button-request-claude-code-15.4.26.md",
       "mode": "100644",
       "type": "blob",
-      "sha": "8bbed3f61e1282850a254480d8c6c1a001841cc1",
+      "sha": "0000000000000000000000000000000000000000",
       "size": 1113,
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/8bbed3f61e1282850a254480d8c6c1a001841cc1"
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/0000000000000000000000000000000000000000"
     },
     {
       "path": "server.py",
       "mode": "100644",
       "type": "blob",
-      "sha": "ccd9fec79fa155343682aa52be58cb3a6dc75976",
-      "size": 22665,
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/ccd9fec79fa155343682aa52be58cb3a6dc75976"
+      "sha": "0000000000000000000000000000000000000000",
+      "size": 54505,
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/0000000000000000000000000000000000000000"
     },
     {
       "path": "test-article-2026-04-15.html",
       "mode": "100644",
       "type": "blob",
-      "sha": "a479fd529a019ad3aa283aa81dfe4dc361fc719c",
+      "sha": "0000000000000000000000000000000000000000",
       "size": 9477,
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/a479fd529a019ad3aa283aa81dfe4dc361fc719c"
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/0000000000000000000000000000000000000000"
     },
     {
       "path": "validation-report-2026-04-15.md",
       "mode": "100644",
       "type": "blob",
-      "sha": "6c51731875d1788eacb1c7b51f51b463bd0b84d4",
+      "sha": "0000000000000000000000000000000000000000",
       "size": 4160,
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/6c51731875d1788eacb1c7b51f51b463bd0b84d4"
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/0000000000000000000000000000000000000000"
     }
   ],
   "truncated": false
