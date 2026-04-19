@@ -2670,6 +2670,164 @@ body {
 }
 /* ====================================================================== */
 
+/* ====== N8N WORKFLOW FIXER — CSS (2026) ====== */
+.fixer-tab-nav{display:flex;align-items:center;gap:4px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);border-radius:12px;padding:3px}
+.fixer-tab-btn{display:inline-flex;align-items:center;gap:6px;padding:7px 13px;border-radius:9px;border:none;background:transparent;color:var(--muted);font-size:12px;font-weight:700;cursor:pointer;transition:all 0.15s;white-space:nowrap;font-family:inherit}
+.fixer-tab-btn:hover{color:var(--text);background:rgba(255,255,255,0.05)}
+.fixer-tab-btn.active{background:rgba(113,112,255,0.18);color:#e0deff;box-shadow:0 2px 8px rgba(113,112,255,0.15)}
+.fixer-tab-btn svg{width:14px;height:14px;flex-shrink:0}
+@media(max-width:768px){.fixer-tab-btn span.tab-label{display:none}.fixer-tab-btn{padding:7px 10px}}
+
+.fixer-page{max-width:1320px;margin:0 auto;padding:32px 28px 120px;display:none}
+.fixer-page.active{display:block}
+
+.fixer-page-header{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;margin-bottom:28px;flex-wrap:wrap}
+.fixer-page-title{font-size:24px;font-weight:700;letter-spacing:-0.04em;display:flex;align-items:center;gap:12px}
+.fixer-page-title svg{width:26px;height:26px;color:var(--gold)}
+.fixer-page-desc{font-size:13px;color:var(--muted);margin-top:6px;line-height:1.5}
+.fixer-page-actions{display:flex;gap:10px;flex-wrap:wrap;align-items:center;flex-shrink:0}
+
+.fixer-section{background:linear-gradient(180deg,rgba(255,255,255,0.035),rgba(255,255,255,0.02));border:1px solid rgba(255,255,255,0.08);border-radius:18px;padding:22px;margin-bottom:18px;position:relative}
+.fixer-section::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.18),transparent)}
+.fixer-section-title{font-size:13px;font-weight:700;color:var(--text-secondary);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:16px;display:flex;align-items:center;gap:8px}
+.fixer-section-title svg{width:15px;height:15px;color:var(--gold-light)}
+
+.stuck-panel{margin-bottom:18px}
+.stuck-panel-header{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 18px;background:linear-gradient(180deg,rgba(255,255,255,0.03),rgba(255,255,255,0.015));border:1px solid rgba(255,255,255,0.08);border-radius:14px;cursor:pointer;user-select:none;transition:background 0.15s}
+.stuck-panel-header:hover{background:rgba(255,255,255,0.05)}
+.stuck-panel-header.open{border-radius:14px 14px 0 0;border-bottom-color:transparent}
+.stuck-panel-title{font-size:13px;font-weight:700;display:flex;align-items:center;gap:8px;color:var(--text)}
+.stuck-panel-title svg{width:15px;height:15px}
+.stuck-badge{font-size:10px;font-weight:800;padding:3px 8px;border-radius:999px;background:rgba(239,95,107,0.14);color:var(--red);border:1px solid rgba(239,95,107,0.22)}
+.stuck-chevron{width:16px;height:16px;color:var(--muted);transition:transform 0.2s;flex-shrink:0}
+.stuck-panel-header.open .stuck-chevron{transform:rotate(180deg)}
+.stuck-panel-body{border:1px solid rgba(255,255,255,0.08);border-top:0;border-radius:0 0 14px 14px;padding:14px;display:none;flex-direction:column;gap:8px;background:rgba(255,255,255,0.01)}
+.stuck-panel-body.open{display:flex}
+.stuck-workflow-card{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 14px;border-radius:12px;background:rgba(255,255,255,0.025);border:1px solid rgba(255,255,255,0.06);transition:border-color 0.15s;flex-wrap:wrap}
+.stuck-workflow-card:hover{border-color:rgba(113,112,255,0.2)}
+.stuck-workflow-card.stuck{border-color:rgba(239,95,107,0.22);background:rgba(239,95,107,0.04)}
+.stuck-workflow-card.error{border-color:rgba(239,95,107,0.18);background:rgba(239,95,107,0.03)}
+.stuck-workflow-card.waiting{border-color:rgba(201,149,42,0.2);background:rgba(201,149,42,0.03)}
+.stuck-wf-name{font-size:13px;font-weight:600;color:var(--text)}
+.stuck-wf-meta{font-size:11px;color:var(--muted);margin-top:2px}
+.stuck-status-badge{font-size:10px;font-weight:800;padding:4px 9px;border-radius:999px;text-transform:uppercase;letter-spacing:0.06em;border:1px solid;flex-shrink:0}
+.stuck-status-badge.running{background:rgba(79,140,255,0.12);color:#9dc0ff;border-color:rgba(79,140,255,0.22)}
+.stuck-status-badge.stuck{background:rgba(239,95,107,0.14);color:var(--red);border-color:rgba(239,95,107,0.25)}
+.stuck-status-badge.error{background:rgba(239,95,107,0.14);color:var(--red);border-color:rgba(239,95,107,0.25)}
+.stuck-status-badge.waiting{background:rgba(201,149,42,0.12);color:#d4a84a;border-color:rgba(201,149,42,0.25)}
+.stuck-load-btn{font-size:11px;font-weight:700;padding:5px 11px;border-radius:8px;background:rgba(113,112,255,0.12);border:1px solid rgba(113,112,255,0.22);color:#d4d0ff;cursor:pointer;transition:all 0.15s;white-space:nowrap}
+.stuck-load-btn:hover{background:rgba(113,112,255,0.22);border-color:rgba(113,112,255,0.4);color:#fff}
+.stuck-empty{font-size:12px;color:var(--muted);text-align:center;padding:14px 0}
+
+.fixer-meta-strip{display:flex;gap:10px;flex-wrap:wrap;padding:14px 18px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);border-radius:12px;margin-bottom:18px;align-items:center}
+.fixer-meta-item{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--muted)}
+.fixer-meta-item strong{color:var(--text-secondary);font-weight:700}
+.fixer-meta-sep{width:1px;height:14px;background:rgba(255,255,255,0.08);flex-shrink:0}
+
+.fixer-drop-zone{border:2px dashed rgba(113,112,255,0.3);border-radius:16px;padding:32px 24px;text-align:center;cursor:pointer;transition:all 0.2s;position:relative;background:rgba(113,112,255,0.04)}
+.fixer-drop-zone:hover,.fixer-drop-zone.drag-over{border-color:rgba(113,112,255,0.6);background:rgba(113,112,255,0.1)}
+.fixer-drop-zone.has-file{border-color:rgba(39,166,68,0.4);background:rgba(39,166,68,0.05)}
+.fixer-drop-icon{font-size:28px;margin-bottom:10px;opacity:0.6}
+.fixer-drop-title{font-size:14px;font-weight:700;color:var(--text);margin-bottom:4px}
+.fixer-drop-sub{font-size:12px;color:var(--muted)}
+.fixer-drop-zone input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
+.fixer-file-info{display:flex;align-items:center;gap:12px;padding:12px 16px;background:rgba(39,166,68,0.08);border:1px solid rgba(39,166,68,0.2);border-radius:12px;margin-top:12px}
+.fixer-file-icon{font-size:20px;flex-shrink:0}
+.fixer-file-name{font-size:13px;font-weight:600;color:var(--text)}
+.fixer-file-size{font-size:11px;color:var(--muted)}
+.fixer-file-valid{font-size:11px;font-weight:700;padding:3px 9px;border-radius:999px;flex-shrink:0}
+.fixer-file-valid.ok{background:rgba(39,166,68,0.14);color:#7ee19d;border:1px solid rgba(39,166,68,0.22)}
+.fixer-file-valid.err{background:rgba(239,95,107,0.14);color:var(--red);border:1px solid rgba(239,95,107,0.22)}
+
+.fixer-screenshots-zone{display:flex;gap:10px;flex-wrap:wrap;align-items:center;padding:14px;border:1px dashed rgba(255,255,255,0.1);border-radius:12px;min-height:56px;position:relative;cursor:pointer;transition:border-color 0.15s}
+.fixer-screenshots-zone:hover{border-color:rgba(255,255,255,0.22)}
+.fixer-screenshots-zone input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
+.fixer-screenshot-thumb{width:54px;height:54px;border-radius:8px;object-fit:cover;border:1px solid rgba(255,255,255,0.12)}
+.fixer-screenshots-empty{font-size:12px;color:var(--muted);pointer-events:none}
+
+.fixer-form-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media(max-width:768px){.fixer-form-grid{grid-template-columns:1fr}}
+.fixer-field{display:flex;flex-direction:column;gap:6px}
+.fixer-label{font-size:11px;font-weight:700;color:var(--text-secondary);text-transform:uppercase;letter-spacing:0.07em}
+.fixer-textarea{width:100%;border:1px solid rgba(255,255,255,0.1);border-radius:12px;background:rgba(255,255,255,0.03);color:var(--text);padding:12px 14px;font:13px/1.6 'Inter',system-ui,sans-serif;outline:none;resize:vertical;transition:border-color 0.15s,box-shadow 0.15s}
+.fixer-textarea:focus{border-color:rgba(113,112,255,0.4);box-shadow:0 0 0 3px rgba(113,112,255,0.12)}
+.fixer-textarea::placeholder{color:rgba(255,255,255,0.22)}
+.fixer-input{width:100%;border:1px solid rgba(255,255,255,0.1);border-radius:10px;background:rgba(255,255,255,0.03);color:var(--text);padding:9px 12px;font-size:13px;font-family:inherit;outline:none;transition:border-color 0.15s,box-shadow 0.15s}
+.fixer-input:focus{border-color:rgba(113,112,255,0.4);box-shadow:0 0 0 3px rgba(113,112,255,0.12)}
+.fixer-select{width:100%;border:1px solid rgba(255,255,255,0.1);border-radius:10px;background:rgba(255,255,255,0.03);color:var(--text);padding:9px 12px;font-size:13px;font-family:inherit;outline:none;cursor:pointer;transition:border-color 0.15s}
+.fixer-select:focus{border-color:rgba(113,112,255,0.4)}
+.fixer-select option{background:#0f1011;color:#f0f1f3}
+
+.fixer-analyze-btn{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;padding:16px 24px;border-radius:14px;border:none;background:linear-gradient(135deg,var(--gold),var(--gold-dim));color:#fff;font-size:15px;font-weight:800;cursor:pointer;transition:all 0.2s;box-shadow:0 12px 30px rgba(94,106,210,0.25);letter-spacing:-0.01em;font-family:inherit}
+.fixer-analyze-btn:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 18px 40px rgba(94,106,210,0.32)}
+.fixer-analyze-btn:disabled{opacity:0.55;cursor:not-allowed;transform:none}
+.fixer-analyze-btn svg{width:18px;height:18px;flex-shrink:0}
+
+.fixer-progress{margin-top:18px;display:none}
+.fixer-progress.active{display:block}
+.fixer-progress-bar-wrap{height:6px;border-radius:999px;background:rgba(255,255,255,0.06);overflow:hidden;margin-bottom:16px}
+.fixer-progress-bar{height:100%;width:0%;background:linear-gradient(90deg,var(--gold),var(--gold-light));transition:width 0.4s ease;border-radius:999px}
+.fixer-stages{display:flex;gap:6px;flex-wrap:wrap}
+.fixer-stage{display:inline-flex;align-items:center;gap:6px;padding:5px 10px;border-radius:8px;font-size:11px;font-weight:700;border:1px solid rgba(255,255,255,0.07);background:rgba(255,255,255,0.02);color:var(--muted);transition:all 0.25s}
+.fixer-stage.active{background:rgba(113,112,255,0.12);border-color:rgba(113,112,255,0.25);color:#d4d0ff}
+.fixer-stage.done{background:rgba(39,166,68,0.1);border-color:rgba(39,166,68,0.22);color:#7ee19d}
+.fixer-stage.error{background:rgba(239,95,107,0.1);border-color:rgba(239,95,107,0.22);color:var(--red)}
+.fixer-stage-dot{width:7px;height:7px;border-radius:50%;background:currentColor;flex-shrink:0}
+.fixer-stage.active .fixer-stage-dot{animation:bs-pulse 1s ease-in-out infinite}
+
+.fixer-result{display:none;margin-top:20px}
+.fixer-result.active{display:block}
+.fixer-result-card{background:linear-gradient(180deg,rgba(255,255,255,0.035),rgba(255,255,255,0.02));border:1px solid rgba(255,255,255,0.08);border-radius:16px;padding:18px 20px;margin-bottom:14px;position:relative}
+.fixer-result-card::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.15),transparent)}
+.fixer-result-label{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:0.1em;color:var(--muted);margin-bottom:8px}
+.fixer-result-text{font-size:13px;line-height:1.65;color:var(--text-secondary)}
+.fixer-changes-list{list-style:none;display:flex;flex-direction:column;gap:6px;margin-top:4px}
+.fixer-changes-list li{display:flex;align-items:flex-start;gap:8px;font-size:13px;color:var(--text-secondary);line-height:1.5}
+.fixer-changes-list li::before{content:'✓';color:var(--green);font-weight:800;flex-shrink:0;margin-top:1px}
+.fixer-warnings-list{list-style:none;display:flex;flex-direction:column;gap:6px;margin-top:4px}
+.fixer-warnings-list li{display:flex;align-items:flex-start;gap:8px;font-size:13px;color:#d4a84a;line-height:1.5}
+.fixer-warnings-list li::before{content:'⚠';flex-shrink:0;margin-top:1px}
+
+.fixer-confidence-badge{display:inline-flex;align-items:center;gap:6px;padding:6px 14px;border-radius:999px;font-size:13px;font-weight:800;border:1px solid}
+.fixer-confidence-badge.high{background:rgba(39,166,68,0.12);color:#7ee19d;border-color:rgba(39,166,68,0.25)}
+.fixer-confidence-badge.med{background:rgba(201,149,42,0.12);color:#d4a84a;border-color:rgba(201,149,42,0.25)}
+.fixer-confidence-badge.low{background:rgba(239,95,107,0.12);color:var(--red);border-color:rgba(239,95,107,0.25)}
+
+.fixer-json-viewer{border:1px solid rgba(255,255,255,0.08);border-radius:12px;background:#0a0a12;overflow:auto;max-height:400px;padding:16px;font:12px/1.55 ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;color:#d7e0ff;white-space:pre;word-break:normal}
+.fixer-json-viewer::-webkit-scrollbar{width:8px;height:8px}
+.fixer-json-viewer::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.12);border-radius:999px}
+.fixer-json-actions{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap;align-items:center}
+
+.fixer-deploy-btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:12px 24px;border-radius:12px;border:none;background:linear-gradient(135deg,rgba(39,166,68,0.85),rgba(28,130,54,0.7));color:#fff;font-size:13px;font-weight:800;cursor:pointer;transition:all 0.2s;box-shadow:0 8px 20px rgba(39,166,68,0.2);font-family:inherit}
+.fixer-deploy-btn:hover:not(:disabled){transform:translateY(-1px);box-shadow:0 12px 28px rgba(39,166,68,0.28)}
+.fixer-deploy-btn:disabled{opacity:0.45;cursor:not-allowed;transform:none}
+.fixer-deploy-btn svg{width:15px;height:15px;flex-shrink:0}
+
+.fixer-deploy-result{display:none;padding:14px 18px;border-radius:14px;background:rgba(39,166,68,0.08);border:1px solid rgba(39,166,68,0.2);margin-top:14px}
+.fixer-deploy-result.active{display:block}
+.fixer-deploy-result.error{background:rgba(239,95,107,0.08);border-color:rgba(239,95,107,0.2)}
+.fixer-deploy-result-title{font-size:13px;font-weight:700;color:#7ee19d;margin-bottom:4px;display:flex;align-items:center;gap:8px}
+.fixer-deploy-result.error .fixer-deploy-result-title{color:var(--red)}
+.fixer-deploy-result-meta{font-size:12px;color:var(--muted)}
+
+.fixer-history{margin-top:28px}
+.fixer-history-title{font-size:16px;font-weight:700;display:flex;align-items:center;gap:10px;margin-bottom:16px;letter-spacing:-0.02em}
+.fixer-history-title svg{width:18px;height:18px;color:var(--gold-light)}
+.fixer-history-grid{display:flex;flex-direction:column;gap:8px}
+.fixer-history-item{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 16px;border-radius:13px;background:linear-gradient(180deg,rgba(255,255,255,0.03),rgba(255,255,255,0.015));border:1px solid rgba(255,255,255,0.07);transition:border-color 0.15s;flex-wrap:wrap}
+.fixer-history-item:hover{border-color:rgba(113,112,255,0.2)}
+.fixer-history-name{font-size:13px;font-weight:700;color:var(--text)}
+.fixer-history-summary{font-size:11px;color:var(--muted);margin-top:2px;max-width:500px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.fixer-history-meta{display:flex;align-items:center;gap:8px;flex-shrink:0;flex-wrap:wrap}
+.fixer-history-conf{font-size:11px;font-weight:700;padding:3px 8px;border-radius:999px;background:rgba(113,112,255,0.1);color:#d4d0ff;border:1px solid rgba(113,112,255,0.18)}
+.fixer-history-date{font-size:11px;color:var(--muted)}
+.fixer-history-empty{text-align:center;padding:28px;color:var(--muted);font-size:13px;border:1px dashed rgba(255,255,255,0.08);border-radius:14px}
+
+.fixer-section-cols{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media(max-width:768px){.fixer-section-cols{grid-template-columns:1fr}}
+
+/* ====================================================================== */
+
 </style>
 </head>
 <body>
@@ -2683,6 +2841,16 @@ body {
     </a>
   </div>
   <div class="header-actions">
+    <div class="fixer-tab-nav" id="fixer-tab-nav">
+      <button class="fixer-tab-btn active" id="tab-projects" onclick="showPage('projects')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+        <span class="tab-label">Projects</span>
+      </button>
+      <button class="fixer-tab-btn" id="tab-fixer" onclick="showPage('fixer')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+        <span class="tab-label">N8N Fixer</span>
+      </button>
+    </div>
     <button class="header-menu-btn accent" id="bulk-toggle-projects" onclick="toggleAllProjects(this)">Expand all</button>
     <div class="search-wrap">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
@@ -2727,6 +2895,277 @@ body {
 
 
 </div>
+
+<!-- ============================================================
+     N8N WORKFLOW FIXER PAGE
+     ============================================================ -->
+<div id="page-fixer" class="fixer-page" style="display:none">
+
+  <!-- Page Header -->
+  <div class="fixer-page-header">
+    <div>
+      <div class="fixer-page-title">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+        N8N Workflow Fixer
+      </div>
+      <div class="fixer-page-desc">Upload a broken N8N workflow JSON, describe the issue, and AI will analyze and fix it automatically. Then deploy directly to your N8N account.</div>
+    </div>
+    <div class="fixer-page-actions">
+      <button class="action-btn" onclick="loadStuckWorkflows()" title="Load live executions from N8N">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:13px;height:13px"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg>
+        Check Live Executions
+      </button>
+      <button class="action-btn primary" onclick="loadFromN8NAccount()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:13px;height:13px"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        Load from N8N Account
+      </button>
+    </div>
+  </div>
+
+  <!-- Stuck Workflows Panel -->
+  <div class="stuck-panel" id="stuck-panel">
+    <div class="stuck-panel-header" id="stuck-panel-header" onclick="toggleStuckPanel()">
+      <div class="stuck-panel-title">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        Live Executions Monitor
+        <span class="stuck-badge" id="stuck-count-badge" style="display:none">0 issues</span>
+      </div>
+      <svg class="stuck-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+    </div>
+    <div class="stuck-panel-body" id="stuck-panel-body">
+      <div class="stuck-empty" id="stuck-empty-msg">Click "Check Live Executions" to load running workflows from your N8N account.</div>
+      <div id="stuck-list"></div>
+    </div>
+  </div>
+
+  <!-- Metadata strip -->
+  <div class="fixer-meta-strip" id="fixer-meta-strip">
+    <div class="fixer-meta-item"><strong>Workflow:</strong> <span id="meta-wf-name">—</span></div>
+    <div class="fixer-meta-sep"></div>
+    <div class="fixer-meta-item"><strong>Site URL:</strong> <span id="meta-site-url">—</span></div>
+    <div class="fixer-meta-sep"></div>
+    <div class="fixer-meta-item"><strong>Target ID:</strong> <span id="meta-target-id">—</span></div>
+    <div class="fixer-meta-sep"></div>
+    <div class="fixer-meta-item"><strong>Model:</strong> <span id="meta-model">claude-opus-4.7</span></div>
+    <div class="fixer-meta-sep"></div>
+    <div class="fixer-meta-item"><strong>Status:</strong> <span id="meta-status">Ready</span></div>
+  </div>
+
+  <!-- Section 1: JSON Upload -->
+  <div class="fixer-section">
+    <div class="fixer-section-title">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+      Workflow JSON
+    </div>
+    <div class="fixer-drop-zone" id="fixer-drop-zone"
+      ondragover="event.preventDefault();this.classList.add('drag-over')"
+      ondragleave="this.classList.remove('drag-over')"
+      ondrop="handleJsonDrop(event)">
+      <input type="file" accept=".json,application/json" onchange="handleJsonSelect(event)" id="fixer-json-input">
+      <div class="fixer-drop-icon">📋</div>
+      <div class="fixer-drop-title">Drop N8N workflow JSON here</div>
+      <div class="fixer-drop-sub">or click to browse — accepts .json files from N8N export</div>
+    </div>
+    <div class="fixer-file-info" id="fixer-file-info" style="display:none">
+      <span class="fixer-file-icon">📄</span>
+      <div style="flex:1;min-width:0">
+        <div class="fixer-file-name" id="fixer-file-name">—</div>
+        <div class="fixer-file-size" id="fixer-file-size">—</div>
+      </div>
+      <span class="fixer-file-valid" id="fixer-file-valid">—</span>
+      <button class="action-btn" style="padding:5px 10px;font-size:11px" onclick="clearFixerJson()">✕ Clear</button>
+    </div>
+  </div>
+
+  <!-- Section 2: Screenshots -->
+  <div class="fixer-section">
+    <div class="fixer-section-title">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+      Error Screenshots (Optional)
+    </div>
+    <div class="fixer-screenshots-zone" id="fixer-screenshots-zone">
+      <input type="file" accept="image/*" multiple onchange="handleScreenshots(event)" id="fixer-screenshots-input">
+      <div class="fixer-screenshots-empty" id="fixer-screenshots-empty">📸 Click or drop screenshots of the error (optional — helps AI understand the issue)</div>
+      <div id="fixer-screenshot-thumbs" style="display:flex;gap:8px;flex-wrap:wrap"></div>
+    </div>
+  </div>
+
+  <!-- Section 3: Problem Description -->
+  <div class="fixer-section">
+    <div class="fixer-section-title">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+      Problem Description
+    </div>
+    <div class="fixer-field">
+      <label class="fixer-label" for="fixer-problem">Describe what's going wrong</label>
+      <textarea class="fixer-textarea" id="fixer-problem" rows="5"
+        placeholder="e.g. The workflow stops at the HTTP Request node with a 401 error&#10;e.g. SplitInBatches loop never finishes — runs forever&#10;e.g. Code node throws 'Cannot read property of undefined'&#10;e.g. Webhook trigger not receiving data after node update"></textarea>
+    </div>
+  </div>
+
+  <!-- Section 4: Comments + Notes -->
+  <div class="fixer-section">
+    <div class="fixer-section-title">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+      Additional Context
+    </div>
+    <div class="fixer-section-cols">
+      <div class="fixer-field">
+        <label class="fixer-label" for="fixer-comments">Comments</label>
+        <textarea class="fixer-textarea" id="fixer-comments" rows="4"
+          placeholder="Any comments from the workflow owner or error logs…"></textarea>
+      </div>
+      <div class="fixer-field">
+        <label class="fixer-label" for="fixer-notes">Notes</label>
+        <textarea class="fixer-textarea" id="fixer-notes" rows="4"
+          placeholder="Internal notes, last known working state, recent changes…"></textarea>
+      </div>
+    </div>
+  </div>
+
+  <!-- Section 5: Optional Details + Model -->
+  <div class="fixer-section">
+    <div class="fixer-section-title">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M4.93 4.93a10 10 0 0 0 0 14.14"/></svg>
+      Configuration
+    </div>
+    <div class="fixer-form-grid">
+      <div class="fixer-field">
+        <label class="fixer-label" for="fixer-wf-name">Workflow Name</label>
+        <input class="fixer-input" type="text" id="fixer-wf-name" placeholder="My N8N Workflow" oninput="updateFixerMeta()">
+      </div>
+      <div class="fixer-field">
+        <label class="fixer-label" for="fixer-site-url">Site / Project URL</label>
+        <input class="fixer-input" type="text" id="fixer-site-url" placeholder="https://example.com" oninput="updateFixerMeta()">
+      </div>
+      <div class="fixer-field">
+        <label class="fixer-label" for="fixer-suspected-node">Suspected Node (optional)</label>
+        <input class="fixer-input" type="text" id="fixer-suspected-node" placeholder="HTTP Request, Code, SplitInBatches…">
+      </div>
+      <div class="fixer-field">
+        <label class="fixer-label" for="fixer-target-wf-id">Target Workflow ID</label>
+        <select class="fixer-select" id="fixer-target-wf-id" onchange="updateFixerMeta()">
+          <option value="">Select workflow to overwrite (or auto-detect from JSON)…</option>
+        </select>
+      </div>
+      <div class="fixer-field">
+        <label class="fixer-label" for="fixer-model">AI Model</label>
+        <select class="fixer-select" id="fixer-model" onchange="updateFixerMeta()">
+          <option value="anthropic/claude-opus-4.7" selected>Claude Opus 4.7 (Recommended)</option>
+          <option value="anthropic/claude-sonnet-4.6">Claude Sonnet 4.6</option>
+          <option value="openai/gpt-5.4">GPT-5.4</option>
+          <option value="google/gemini-3.1-pro-preview">Gemini 3.1 Pro</option>
+          <option value="moonshotai/kimi-k2.5">Kimi K2.5</option>
+          <option value="minimax/minimax-m2.7">MiniMax M2.7</option>
+          <option value="z-ai/glm-5.1">GLM 5.1</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <!-- Primary Action Button -->
+  <div style="margin-bottom:18px">
+    <button class="fixer-analyze-btn" id="fixer-analyze-btn" onclick="runAnalysis()" disabled>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12l2 2 4-4"/><path d="M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0z"/></svg>
+      <span id="fixer-analyze-btn-label">Analyze &amp; Fix Workflow</span>
+    </button>
+  </div>
+
+  <!-- Progress Section -->
+  <div class="fixer-progress" id="fixer-progress">
+    <div class="fixer-progress-bar-wrap"><div class="fixer-progress-bar" id="fixer-progress-bar"></div></div>
+    <div class="fixer-stages" id="fixer-stages">
+      <div class="fixer-stage" id="fstage-0"><span class="fixer-stage-dot"></span>Upload Received</div>
+      <div class="fixer-stage" id="fstage-1"><span class="fixer-stage-dot"></span>JSON Validated</div>
+      <div class="fixer-stage" id="fstage-2"><span class="fixer-stage-dot"></span>Issue Analysis</div>
+      <div class="fixer-stage" id="fstage-3"><span class="fixer-stage-dot"></span>Fix Generation</div>
+      <div class="fixer-stage" id="fstage-4"><span class="fixer-stage-dot"></span>Validation</div>
+      <div class="fixer-stage" id="fstage-5"><span class="fixer-stage-dot"></span>Ready for Review</div>
+    </div>
+  </div>
+
+  <!-- Results Section -->
+  <div class="fixer-result" id="fixer-result">
+
+    <!-- Issue Summary + Root Cause side by side -->
+    <div class="fixer-section-cols" style="margin-bottom:14px">
+      <div class="fixer-result-card">
+        <div class="fixer-result-label">🔍 Issue Summary</div>
+        <div class="fixer-result-text" id="result-issue-summary">—</div>
+      </div>
+      <div class="fixer-result-card">
+        <div class="fixer-result-label">🎯 Root Cause</div>
+        <div class="fixer-result-text" id="result-root-cause">—</div>
+      </div>
+    </div>
+
+    <!-- Changes Made + Confidence -->
+    <div class="fixer-section-cols" style="margin-bottom:14px">
+      <div class="fixer-result-card">
+        <div class="fixer-result-label">✅ Changes Made</div>
+        <ul class="fixer-changes-list" id="result-changes-list"></ul>
+      </div>
+      <div class="fixer-result-card">
+        <div class="fixer-result-label">📊 Confidence &amp; Warnings</div>
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px;flex-wrap:wrap">
+          <span class="fixer-confidence-badge" id="result-confidence-badge">—</span>
+        </div>
+        <ul class="fixer-warnings-list" id="result-warnings-list"></ul>
+      </div>
+    </div>
+
+    <!-- Fixed JSON Viewer -->
+    <div class="fixer-result-card">
+      <div class="fixer-result-label">🔧 Fixed Workflow JSON</div>
+      <div class="fixer-json-viewer" id="fixer-json-viewer">// Fixed workflow JSON will appear here</div>
+      <div class="fixer-json-actions">
+        <button class="action-btn" onclick="copyFixedJson()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:12px;height:12px"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          Copy JSON
+        </button>
+        <button class="action-btn" onclick="downloadFixedJson()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:12px;height:12px"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Download .json
+        </button>
+        <button class="action-btn success" onclick="saveFixRecord(null)" title="Save to Supabase + Obsidian">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:12px;height:12px"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+          Save Record
+        </button>
+      </div>
+    </div>
+
+    <!-- Deploy Button -->
+    <div style="margin-top:20px;display:flex;align-items:center;gap:14px;flex-wrap:wrap">
+      <button class="fixer-deploy-btn" id="fixer-deploy-btn" onclick="deployFixed()" disabled>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 2L11 13"/><path d="M22 2L15 22 11 13 2 9l20-7z"/></svg>
+        Deploy Fixed Workflow to N8N
+      </button>
+      <span style="font-size:12px;color:var(--muted)">Will overwrite the selected workflow in N8N</span>
+    </div>
+
+    <!-- Deploy Result -->
+    <div class="fixer-deploy-result" id="fixer-deploy-result">
+      <div class="fixer-deploy-result-title" id="fixer-deploy-result-title">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:15px;height:15px"><path d="m9 12 2 2 4-4"/><circle cx="12" cy="12" r="10"/></svg>
+        Deployed successfully
+      </div>
+      <div class="fixer-deploy-result-meta" id="fixer-deploy-result-meta"></div>
+    </div>
+
+  </div><!-- end .fixer-result -->
+
+  <!-- Fix History -->
+  <div class="fixer-history" id="fixer-history">
+    <div class="fixer-history-title">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v5h5"/><path d="M3.05 13A9 9 0 1 0 6 5.3L3 8"/></svg>
+      Fix History
+    </div>
+    <div class="fixer-history-grid" id="fixer-history-grid">
+      <div class="fixer-history-empty">Loading history…</div>
+    </div>
+  </div>
+
+</div><!-- end #page-fixer -->
 
 <div class="modal-overlay" id="preview-modal" role="dialog" aria-modal="true" onclick="if(event.target===this)closePreview()">
 <div class="modal">
@@ -4775,6 +5214,694 @@ document.addEventListener('click', function(ev){
   });
   obs.observe(modal, {attributes:true, subtree:true, attributeFilter:['class','data-running']});
 })();
+
+// ============================================================
+// N8N WORKFLOW FIXER — JavaScript
+// ============================================================
+
+(function(){
+
+  // ---- State ----
+  let _fixerJsonStr = null;       // raw JSON string loaded from file
+  let _fixerJsonObj = null;       // parsed object
+  let _fixerResultData = null;    // last AI analysis result
+  let _fixerScreenshots = [];     // array of {name, dataUrl}
+  let _fixerWorkflows = [];       // N8N workflows list cache
+
+  // ---- Page navigation ----
+  window.showPage = function(name) {
+    const isProjects = (name === 'projects');
+    const container = document.querySelector('.container');
+    const fixerPage = document.getElementById('page-fixer');
+    const statsGrid = document.getElementById('stats-grid');
+    const sectionHeads = document.querySelectorAll('.section-head');
+    const projectsGrid = document.getElementById('projects-grid');
+
+    if (container) container.style.display = isProjects ? '' : 'none';
+    if (fixerPage) {
+      fixerPage.style.display = isProjects ? 'none' : 'block';
+      if (!isProjects) fixerPage.classList.add('active');
+      else fixerPage.classList.remove('active');
+    }
+    if (statsGrid) statsGrid.style.display = isProjects ? '' : 'none';
+    sectionHeads.forEach(el => el.style.display = isProjects ? '' : 'none');
+    if (projectsGrid) projectsGrid.style.display = isProjects ? '' : 'none';
+
+    // Update tab buttons
+    const tabProj = document.getElementById('tab-projects');
+    const tabFixer = document.getElementById('tab-fixer');
+    if (tabProj) tabProj.classList.toggle('active', isProjects);
+    if (tabFixer) tabFixer.classList.toggle('active', !isProjects);
+
+    if (!isProjects) {
+      initFixerPage();
+    }
+  };
+
+  // ---- Init ----
+  window.initFixerPage = function() {
+    loadWorkflowsDropdown();
+    loadFixHistory();
+  };
+
+  // ---- Meta strip update ----
+  window.updateFixerMeta = function() {
+    const wfName = (document.getElementById('fixer-wf-name') || {}).value || (_fixerJsonObj && _fixerJsonObj.name) || '—';
+    const siteUrl = (document.getElementById('fixer-site-url') || {}).value || '—';
+    const targetSel = document.getElementById('fixer-target-wf-id');
+    const targetId = targetSel ? (targetSel.options[targetSel.selectedIndex] || {}).text || targetSel.value || '—' : '—';
+    const modelSel = document.getElementById('fixer-model');
+    const modelVal = modelSel ? modelSel.value : 'claude-opus-4.7';
+    const modelShort = modelVal.split('/').pop();
+
+    setText('meta-wf-name', wfName || '—');
+    setText('meta-site-url', siteUrl || '—');
+    setText('meta-target-id', targetId || '—');
+    setText('meta-model', modelShort || '—');
+  };
+
+  function setText(id, val) {
+    const el = document.getElementById(id);
+    if (el) el.textContent = val;
+  }
+
+  // ---- JSON Upload ----
+  window.handleJsonDrop = function(e) {
+    e.preventDefault();
+    const zone = document.getElementById('fixer-drop-zone');
+    if (zone) zone.classList.remove('drag-over');
+    const file = e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0];
+    if (file) processJsonFile(file);
+  };
+
+  window.handleJsonSelect = function(e) {
+    const file = e.target && e.target.files && e.target.files[0];
+    if (file) processJsonFile(file);
+    // Reset input so same file can be re-selected
+    if (e.target) e.target.value = '';
+  };
+
+  function processJsonFile(file) {
+    const reader = new FileReader();
+    reader.onload = function(ev) {
+      const text = ev.target.result;
+      const info = document.getElementById('fixer-file-info');
+      const nameEl = document.getElementById('fixer-file-name');
+      const sizeEl = document.getElementById('fixer-file-size');
+      const validEl = document.getElementById('fixer-file-valid');
+      const zone = document.getElementById('fixer-drop-zone');
+
+      if (nameEl) nameEl.textContent = file.name;
+      if (sizeEl) sizeEl.textContent = formatBytes(file.size);
+      if (info) info.style.display = 'flex';
+
+      let parsed = null;
+      let isValid = false;
+      try {
+        parsed = JSON.parse(text);
+        if (parsed && typeof parsed === 'object' && (Array.isArray(parsed.nodes) || parsed.nodes !== undefined)) {
+          isValid = true;
+        } else {
+          isValid = false;
+        }
+      } catch(ex) {
+        isValid = false;
+      }
+
+      if (isValid) {
+        _fixerJsonStr = text;
+        _fixerJsonObj = parsed;
+        if (validEl) { validEl.textContent = '✓ Valid N8N JSON'; validEl.className = 'fixer-file-valid ok'; }
+        if (zone) zone.classList.add('has-file');
+        // Auto-populate name
+        if (parsed.name) {
+          const nameInput = document.getElementById('fixer-wf-name');
+          if (nameInput && !nameInput.value) nameInput.value = parsed.name;
+        }
+        // Enable analyze button
+        const btn = document.getElementById('fixer-analyze-btn');
+        if (btn) btn.disabled = false;
+        // Update deploy button based on target ID
+        updateDeployBtnState();
+      } else {
+        _fixerJsonStr = null;
+        _fixerJsonObj = null;
+        if (validEl) { validEl.textContent = '✗ Invalid / Not N8N workflow JSON'; validEl.className = 'fixer-file-valid err'; }
+        if (zone) zone.classList.remove('has-file');
+        const btn = document.getElementById('fixer-analyze-btn');
+        if (btn) btn.disabled = true;
+      }
+      updateFixerMeta();
+    };
+    reader.readAsText(file);
+  }
+
+  window.clearFixerJson = function() {
+    _fixerJsonStr = null;
+    _fixerJsonObj = null;
+    const info = document.getElementById('fixer-file-info');
+    const zone = document.getElementById('fixer-drop-zone');
+    const btn = document.getElementById('fixer-analyze-btn');
+    if (info) info.style.display = 'none';
+    if (zone) zone.classList.remove('has-file');
+    if (btn) btn.disabled = true;
+    const input = document.getElementById('fixer-json-input');
+    if (input) input.value = '';
+    updateFixerMeta();
+  };
+
+  function formatBytes(bytes) {
+    if (bytes < 1024) return bytes + ' B';
+    if (bytes < 1024*1024) return (bytes/1024).toFixed(1) + ' KB';
+    return (bytes/(1024*1024)).toFixed(2) + ' MB';
+  }
+
+  // ---- Screenshots ----
+  window.handleScreenshots = function(e) {
+    const files = e.target && e.target.files ? Array.from(e.target.files) : [];
+    const thumbsEl = document.getElementById('fixer-screenshot-thumbs');
+    const emptyEl = document.getElementById('fixer-screenshots-empty');
+
+    files.forEach(file => {
+      if (!file.type.startsWith('image/')) return;
+      const reader = new FileReader();
+      reader.onload = function(ev) {
+        _fixerScreenshots.push({name: file.name, dataUrl: ev.target.result});
+        if (thumbsEl) {
+          const img = document.createElement('img');
+          img.src = ev.target.result;
+          img.className = 'fixer-screenshot-thumb';
+          img.title = file.name;
+          thumbsEl.appendChild(img);
+        }
+        if (emptyEl) emptyEl.style.display = 'none';
+      };
+      reader.readAsDataURL(file);
+    });
+    if (e.target) e.target.value = '';
+  };
+
+  // ---- Stages ----
+  const STAGE_NAMES = ['Upload Received','JSON Validated','Issue Analysis','Fix Generation','Validation','Ready for Review'];
+  const STAGE_PCTS = [8, 18, 35, 70, 88, 100];
+
+  window.setFixerStage = function(n, status) {
+    // status: 'active' | 'done' | 'error'
+    for (let i = 0; i < STAGE_NAMES.length; i++) {
+      const el = document.getElementById('fstage-' + i);
+      if (!el) continue;
+      el.className = 'fixer-stage';
+      if (i < n) el.classList.add('done');
+      else if (i === n) el.classList.add(status || 'active');
+    }
+    const bar = document.getElementById('fixer-progress-bar');
+    if (bar) bar.style.width = STAGE_PCTS[Math.min(n, STAGE_NAMES.length-1)] + '%';
+    setText('meta-status', STAGE_NAMES[n] || 'Running…');
+  };
+
+  // ---- Main Analysis ----
+  window.runAnalysis = function() {
+    if (!_fixerJsonStr) {
+      showToast('Please upload a workflow JSON file first', 'error');
+      return;
+    }
+
+    const btn = document.getElementById('fixer-analyze-btn');
+    const label = document.getElementById('fixer-analyze-btn-label');
+    const progressEl = document.getElementById('fixer-progress');
+    const resultEl = document.getElementById('fixer-result');
+
+    if (btn) btn.disabled = true;
+    if (label) label.innerHTML = '<span class="btn-spinner" aria-hidden="true"></span> Analyzing…';
+    if (progressEl) progressEl.classList.add('active');
+    if (resultEl) resultEl.classList.remove('active');
+
+    // Reset stages
+    for (let i = 0; i < STAGE_NAMES.length; i++) {
+      const el = document.getElementById('fstage-' + i);
+      if (el) el.className = 'fixer-stage';
+    }
+    const bar = document.getElementById('fixer-progress-bar');
+    if (bar) bar.style.width = '0%';
+
+    setFixerStage(0, 'active');
+    setTimeout(() => setFixerStage(0, 'done'), 400);
+    setTimeout(() => setFixerStage(1, 'active'), 500);
+    setTimeout(() => setFixerStage(1, 'done'), 900);
+    setTimeout(() => setFixerStage(2, 'active'), 1000);
+
+    const model = (document.getElementById('fixer-model') || {}).value || 'anthropic/claude-opus-4.7';
+    const workflowName = (document.getElementById('fixer-wf-name') || {}).value || (_fixerJsonObj && _fixerJsonObj.name) || '';
+    const siteUrl = (document.getElementById('fixer-site-url') || {}).value || '';
+    const suspectedNode = (document.getElementById('fixer-suspected-node') || {}).value || '';
+    const targetSel = document.getElementById('fixer-target-wf-id');
+    const targetWorkflowId = targetSel ? targetSel.value : '';
+    const problem = (document.getElementById('fixer-problem') || {}).value || '';
+    const comments = (document.getElementById('fixer-comments') || {}).value || '';
+    const notes = (document.getElementById('fixer-notes') || {}).value || '';
+
+    const body = {
+      workflowJson: _fixerJsonStr,
+      problemDescription: problem,
+      comments,
+      notes,
+      model,
+      workflowName,
+      siteUrl,
+      suspectedNode,
+      targetWorkflowId,
+    };
+
+    // Animate stage 3 after a short wait
+    const stage3Timer = setTimeout(() => setFixerStage(3, 'active'), 3000);
+
+    fetch('/api/fixer/analyze', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify(body),
+    })
+    .then(r => r.json())
+    .then(data => {
+      clearTimeout(stage3Timer);
+      if (!data.ok) {
+        setFixerStage(4, 'error');
+        setText('meta-status', 'Error');
+        if (btn) btn.disabled = false;
+        if (label) label.textContent = 'Analyze & Fix Workflow';
+        showToast('Analysis failed: ' + (data.error || 'unknown error'), 'error');
+        return;
+      }
+      setFixerStage(3, 'done');
+      setFixerStage(4, 'active');
+      setTimeout(() => {
+        setFixerStage(4, 'done');
+        setFixerStage(5, 'done');
+        _fixerResultData = data;
+        showFixerResults(data);
+        if (btn) btn.disabled = false;
+        if (label) label.textContent = 'Re-Analyze Workflow';
+        setText('meta-status', 'Ready for Review');
+        showToast('Workflow analysis complete', 'success');
+      }, 600);
+    })
+    .catch(err => {
+      clearTimeout(stage3Timer);
+      setFixerStage(4, 'error');
+      setText('meta-status', 'Error');
+      if (btn) btn.disabled = false;
+      if (label) label.textContent = 'Analyze & Fix Workflow';
+      showToast('Network error: ' + err.message, 'error');
+    });
+  };
+
+  // ---- Show Results ----
+  window.showFixerResults = function(data) {
+    const resultEl = document.getElementById('fixer-result');
+    if (resultEl) resultEl.classList.add('active');
+
+    setText('result-issue-summary', data.issueSummary || '(no summary)');
+    setText('result-root-cause', data.rootCause || '(no root cause identified)');
+
+    // Changes list
+    const changesList = document.getElementById('result-changes-list');
+    if (changesList) {
+      changesList.innerHTML = '';
+      const changes = Array.isArray(data.changesMade) ? data.changesMade : [];
+      if (changes.length === 0) {
+        changesList.innerHTML = '<li>No changes made</li>';
+      } else {
+        changes.forEach(c => {
+          const li = document.createElement('li');
+          li.textContent = c;
+          changesList.appendChild(li);
+        });
+      }
+    }
+
+    // Confidence badge
+    const conf = parseFloat(data.confidence) || 0;
+    const confPct = Math.round(conf * 100);
+    const confBadge = document.getElementById('result-confidence-badge');
+    if (confBadge) {
+      confBadge.textContent = confPct + '% confidence';
+      confBadge.className = 'fixer-confidence-badge ' + (confPct >= 75 ? 'high' : confPct >= 50 ? 'med' : 'low');
+    }
+
+    // Warnings
+    const warnList = document.getElementById('result-warnings-list');
+    if (warnList) {
+      warnList.innerHTML = '';
+      const warns = Array.isArray(data.warnings) ? data.warnings : [];
+      if (warns.length === 0) {
+        warnList.innerHTML = '<li style="color:var(--muted)">No warnings</li>';
+      } else {
+        warns.forEach(w => {
+          const li = document.createElement('li');
+          li.textContent = w;
+          warnList.appendChild(li);
+        });
+      }
+    }
+
+    // JSON viewer
+    const viewer = document.getElementById('fixer-json-viewer');
+    if (viewer) {
+      viewer.textContent = data.fixedWorkflowJson || '';
+    }
+
+    // Enable deploy button if JSON is valid
+    updateDeployBtnState();
+
+    // Reset deploy result
+    const deployResult = document.getElementById('fixer-deploy-result');
+    if (deployResult) deployResult.classList.remove('active', 'error');
+
+    // Scroll to results
+    resultEl && resultEl.scrollIntoView({behavior:'smooth', block:'start'});
+  };
+
+  function updateDeployBtnState() {
+    const btn = document.getElementById('fixer-deploy-btn');
+    if (!btn) return;
+    const fixedStr = _fixerResultData && _fixerResultData.fixedWorkflowJson;
+    if (!fixedStr) { btn.disabled = true; return; }
+    try {
+      const obj = JSON.parse(fixedStr);
+      const valid = obj && Array.isArray(obj.nodes) && obj.connections !== undefined;
+      btn.disabled = !valid;
+    } catch(ex) {
+      btn.disabled = true;
+    }
+  }
+
+  // ---- Deploy ----
+  window.deployFixed = function() {
+    if (!_fixerResultData || !_fixerResultData.fixedWorkflowJson) {
+      showToast('No fixed workflow to deploy', 'error');
+      return;
+    }
+    const targetSel = document.getElementById('fixer-target-wf-id');
+    const targetId = (targetSel && targetSel.value) || '';
+
+    const wfNameForConfirm = (document.getElementById('fixer-wf-name') || {}).value
+      || (_fixerJsonObj && _fixerJsonObj.name) || 'this workflow';
+
+    if (!confirm('Deploy fixed workflow to N8N?\n\nThis will OVERWRITE "' + wfNameForConfirm + '" (ID: ' + (targetId || 'auto-detect') + ') in your live N8N account.\n\nThis cannot be undone. Continue?')) {
+      return;
+    }
+
+    const btn = document.getElementById('fixer-deploy-btn');
+    const deployResult = document.getElementById('fixer-deploy-result');
+    const deployTitle = document.getElementById('fixer-deploy-result-title');
+    const deployMeta = document.getElementById('fixer-deploy-result-meta');
+
+    if (btn) { btn.disabled = true; btn.innerHTML = '<span class="btn-spinner"></span> Deploying…'; }
+    if (deployResult) deployResult.classList.remove('active', 'error');
+
+    fetch('/api/fixer/deploy', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({
+        fixedWorkflowJson: _fixerResultData.fixedWorkflowJson,
+        targetWorkflowId: targetId,
+      }),
+    })
+    .then(r => r.json())
+    .then(data => {
+      if (btn) {
+        btn.disabled = false;
+        btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 2L11 13"/><path d="M22 2L15 22 11 13 2 9l20-7z"/></svg> Deploy Fixed Workflow to N8N';
+      }
+      if (!data.ok) {
+        if (deployResult) deployResult.classList.add('active', 'error');
+        if (deployTitle) deployTitle.innerHTML = '❌ Deploy failed';
+        if (deployMeta) deployMeta.textContent = data.error || 'Unknown error';
+        showToast('Deploy failed: ' + (data.error || 'unknown error'), 'error');
+        return;
+      }
+      if (deployResult) deployResult.classList.add('active');
+      if (deployTitle) deployTitle.innerHTML = '✅ Deployed successfully to N8N';
+      if (deployMeta) deployMeta.textContent = 'Workflow "' + data.workflowName + '" (ID: ' + data.workflowId + ') updated at ' + (data.deployedAt || new Date().toISOString());
+      showToast('Workflow deployed to N8N!', 'success');
+      // Auto-save record with deployed status
+      if (_fixerResultData) {
+        saveFixRecord({deployStatus: 'deployed', deployedAt: data.deployedAt});
+      }
+    })
+    .catch(err => {
+      if (btn) { btn.disabled = false; btn.textContent = 'Deploy Fixed Workflow to N8N'; }
+      if (deployResult) deployResult.classList.add('active', 'error');
+      if (deployTitle) deployTitle.textContent = '❌ Deploy failed';
+      if (deployMeta) deployMeta.textContent = err.message;
+      showToast('Deploy error: ' + err.message, 'error');
+    });
+  };
+
+  // ---- Save Record ----
+  window.saveFixRecord = function(extra) {
+    if (!_fixerResultData) { showToast('No analysis result to save', 'error'); return; }
+    const d = _fixerResultData;
+    const wfName = (document.getElementById('fixer-wf-name') || {}).value || (_fixerJsonObj && _fixerJsonObj.name) || 'unnamed';
+    const targetSel = document.getElementById('fixer-target-wf-id');
+    const wfId = (targetSel && targetSel.value) || (_fixerJsonObj && _fixerJsonObj.id) || '';
+    const siteUrl = (document.getElementById('fixer-site-url') || {}).value || '';
+    const problem = (document.getElementById('fixer-problem') || {}).value || '';
+    const comments = (document.getElementById('fixer-comments') || {}).value || '';
+    const notes = (document.getElementById('fixer-notes') || {}).value || '';
+    const model = (document.getElementById('fixer-model') || {}).value || '';
+
+    const record = {
+      workflowName: wfName,
+      workflowId: wfId,
+      siteUrl,
+      problemDescription: problem,
+      comments,
+      notes,
+      modelUsed: model,
+      issueSummary: d.issueSummary || '',
+      rootCause: d.rootCause || '',
+      changesMade: d.changesMade || [],
+      warnings: d.warnings || [],
+      confidence: d.confidence || 0,
+      deployStatus: (extra && extra.deployStatus) || 'pending',
+      originalJson: _fixerJsonObj || null,
+      fixedJson: d.fixedWorkflowJson ? tryParse(d.fixedWorkflowJson) : null,
+    };
+
+    fetch('/api/fixer/save', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify(record),
+    })
+    .then(r => r.json())
+    .then(data => {
+      if (data.ok) {
+        showToast('Record saved' + (data.obsidianPath ? ' to Obsidian' : ''), 'success');
+        loadFixHistory();
+      } else {
+        showToast('Save failed: ' + (data.error || ''), 'error');
+      }
+    })
+    .catch(err => showToast('Save error: ' + err.message, 'error'));
+  };
+
+  function tryParse(str) {
+    try { return JSON.parse(str); } catch(e) { return null; }
+  }
+
+  // ---- Copy / Download JSON ----
+  window.copyFixedJson = function() {
+    const json = _fixerResultData && _fixerResultData.fixedWorkflowJson;
+    if (!json) { showToast('No fixed JSON to copy', 'error'); return; }
+    navigator.clipboard.writeText(json).then(
+      () => showToast('Fixed JSON copied to clipboard', 'success'),
+      () => showToast('Copy failed', 'error')
+    );
+  };
+
+  window.downloadFixedJson = function() {
+    const json = _fixerResultData && _fixerResultData.fixedWorkflowJson;
+    if (!json) { showToast('No fixed JSON to download', 'error'); return; }
+    const wfName = (document.getElementById('fixer-wf-name') || {}).value || 'fixed-workflow';
+    const safeName = wfName.replace(/[^a-zA-Z0-9_-]/g, '-').toLowerCase();
+    const blob = new Blob([json], {type: 'application/json'});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = safeName + '-fixed.json';
+    a.click();
+    URL.revokeObjectURL(url);
+    showToast('Downloaded ' + a.download, 'success');
+  };
+
+  // ---- Load Stuck Workflows ----
+  window.loadStuckWorkflows = function() {
+    const list = document.getElementById('stuck-list');
+    const empty = document.getElementById('stuck-empty-msg');
+    const badge = document.getElementById('stuck-count-badge');
+
+    // Open the panel
+    const panelHeader = document.getElementById('stuck-panel-header');
+    const panelBody = document.getElementById('stuck-panel-body');
+    if (panelHeader) panelHeader.classList.add('open');
+    if (panelBody) panelBody.classList.add('open');
+
+    if (empty) empty.textContent = 'Loading live executions…';
+    if (list) list.innerHTML = '';
+
+    fetch('/api/n8n/executions')
+    .then(r => r.json())
+    .then(data => {
+      const execs = data.executions || [];
+      if (empty) empty.style.display = execs.length ? 'none' : 'block';
+      if (empty && !execs.length) empty.textContent = data.configured === false ? 'N8N is not configured on the server.' : 'No running, waiting, or errored executions found.';
+
+      const issues = execs.filter(e => e.status === 'stuck' || e.status === 'error' || e.status === 'waiting');
+      if (badge) {
+        badge.style.display = issues.length ? '' : 'none';
+        badge.textContent = issues.length + ' issue' + (issues.length !== 1 ? 's' : '');
+      }
+
+      if (list) {
+        list.innerHTML = '';
+        execs.forEach(exec => {
+          const card = document.createElement('div');
+          card.className = 'stuck-workflow-card ' + (exec.status || '');
+          const startedAgo = exec.startedAt ? timeAgo(exec.startedAt) : 'unknown';
+          card.innerHTML = `
+            <div>
+              <div class="stuck-wf-name">${escHtml(exec.workflowName || exec.workflowId || 'Unknown Workflow')}</div>
+              <div class="stuck-wf-meta">Started ${startedAgo} · ID: ${escHtml(String(exec.id || '—'))} · Mode: ${escHtml(exec.mode || '—')}</div>
+            </div>
+            <div style="display:flex;align-items:center;gap:8px;flex-shrink:0">
+              <span class="stuck-status-badge ${exec.status}">${exec.status}</span>
+              <button class="stuck-load-btn" onclick="loadWorkflowForFixer(${JSON.stringify(exec.workflowId || '')})">Load for Fix</button>
+            </div>`;
+          list.appendChild(card);
+        });
+      }
+    })
+    .catch(err => {
+      if (empty) { empty.style.display = 'block'; empty.textContent = 'Error loading executions: ' + err.message; }
+    });
+  };
+
+  window.toggleStuckPanel = function() {
+    const h = document.getElementById('stuck-panel-header');
+    const b = document.getElementById('stuck-panel-body');
+    if (!h || !b) return;
+    const isOpen = h.classList.toggle('open');
+    b.classList.toggle('open', isOpen);
+  };
+
+  window.loadWorkflowForFixer = function(workflowId) {
+    if (!workflowId) return;
+    // Fetch workflow from N8N and load it
+    showToast('Loading workflow ' + workflowId + '…', 'info');
+    fetch('/api/n8n/workflows')
+    .then(r => r.json())
+    .then(data => {
+      const wf = (data.workflows || []).find(w => String(w.id) === String(workflowId));
+      if (wf) {
+        // Set target ID
+        const sel = document.getElementById('fixer-target-wf-id');
+        if (sel) sel.value = workflowId;
+        // Set name
+        const nameInput = document.getElementById('fixer-wf-name');
+        if (nameInput && !nameInput.value) nameInput.value = wf.name || '';
+        updateFixerMeta();
+        showToast('Workflow "' + (wf.name || workflowId) + '" selected as target. Please upload the workflow JSON file.', 'info');
+      } else {
+        showToast('Workflow ' + workflowId + ' not found in workflow list', 'error');
+      }
+    })
+    .catch(err => showToast('Error: ' + err.message, 'error'));
+  };
+
+  // ---- Load Workflows Dropdown ----
+  window.loadWorkflowsDropdown = function() {
+    const sel = document.getElementById('fixer-target-wf-id');
+    if (!sel) return;
+    fetch('/api/n8n/workflows')
+    .then(r => r.json())
+    .then(data => {
+      _fixerWorkflows = data.workflows || [];
+      // Keep first default option
+      while (sel.options.length > 1) sel.remove(1);
+      _fixerWorkflows.forEach(wf => {
+        const opt = document.createElement('option');
+        opt.value = wf.id || '';
+        opt.textContent = (wf.name || wf.id) + (wf.active ? ' ✓' : '');
+        sel.appendChild(opt);
+      });
+    })
+    .catch(() => {}); // silent fail if N8N not configured
+  };
+
+  // ---- Load N8N Account ----
+  window.loadFromN8NAccount = function() {
+    loadWorkflowsDropdown();
+    const sel = document.getElementById('fixer-target-wf-id');
+    if (sel) sel.focus();
+    showToast('Select a workflow from the dropdown, then upload its exported JSON file', 'info');
+  };
+
+  // ---- Fix History ----
+  window.loadFixHistory = function() {
+    const grid = document.getElementById('fixer-history-grid');
+    if (!grid) return;
+    grid.innerHTML = '<div class="fixer-history-empty">Loading…</div>';
+
+    fetch('/api/fixer/history')
+    .then(r => r.json())
+    .then(data => {
+      const records = data.records || [];
+      if (!records.length) {
+        grid.innerHTML = '<div class="fixer-history-empty">No fix records yet. Run your first analysis to see history here.</div>';
+        return;
+      }
+      grid.innerHTML = '';
+      records.forEach(rec => {
+        const item = document.createElement('div');
+        item.className = 'fixer-history-item';
+        const conf = parseFloat(rec.confidence_score || 0);
+        const date = rec.created_at ? new Date(rec.created_at).toLocaleDateString('en-GB') : '—';
+        item.innerHTML = `
+          <div style="min-width:0;flex:1">
+            <div class="fixer-history-name">${escHtml(rec.workflow_name || '—')}</div>
+            <div class="fixer-history-summary">${escHtml(rec.issue_summary || rec.workflow_id || '—')}</div>
+          </div>
+          <div class="fixer-history-meta">
+            <span class="fixer-history-conf">${Math.round(conf*100)}%</span>
+            <span class="stuck-status-badge ${rec.deploy_status || 'pending'}">${escHtml(rec.deploy_status || 'pending')}</span>
+            <span class="fixer-history-date">${date}</span>
+          </div>`;
+        grid.appendChild(item);
+      });
+    })
+    .catch(err => {
+      if (grid) grid.innerHTML = '<div class="fixer-history-empty">Could not load history: ' + escHtml(err.message) + '</div>';
+    });
+  };
+
+  // ---- Helpers ----
+  function escHtml(s) {
+    return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+
+  function timeAgo(isoStr) {
+    try {
+      const diff = (Date.now() - new Date(isoStr).getTime()) / 1000;
+      if (diff < 60) return Math.round(diff) + 's ago';
+      if (diff < 3600) return Math.round(diff/60) + 'm ago';
+      return Math.round(diff/3600) + 'h ago';
+    } catch(e) { return isoStr; }
+  }
+
+  // ---- Init model selector from health ----
+  // (No-op: models are hardcoded in the select, consistent with Prompt Studio)
+
+})(); // end N8N Fixer IIFE
 </script>
 </body>
 </html>
