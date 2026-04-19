@@ -139,26 +139,14 @@ def prompt_headers():
 # error the next provider is attempted automatically.
 
 def _get_provider_chain():
-    """Return list of (provider_name, base_url, headers, model_map) in priority order."""
+    """
+    Return list of providers in priority order.
+    Priority: Copilot -> Anthropic -> Gemini -> OpenAI -> OpenRouter (last resort).
+    OpenRouter is tried last because it has rate limits and costs per token.
+    """
     chain = []
 
-    # 1. OpenRouter
-    or_key = os.getenv('OPENROUTER_API_KEY')
-    if or_key:
-        chain.append({
-            'name': 'openrouter',
-            'base': 'https://openrouter.ai/api/v1',
-            'headers': {
-                'Authorization': f'Bearer {or_key}',
-                'Accept': 'application/json',
-                'HTTP-Referer': os.getenv('OPENROUTER_SITE_URL', 'https://html-redesign-dashboard.maximo-seo.ai/'),
-                'X-Title': os.getenv('OPENROUTER_APP_NAME', 'HTML Redesign Dashboard'),
-            },
-            # model passed through as-is (OpenRouter uses full model IDs)
-            'model_override': None,
-        })
-
-    # 2. GitHub Copilot
+    # 1. GitHub Copilot (unlimited via subscription — try first)
     copilot_key = os.getenv('COPILOT_API_KEY') or os.getenv('GITHUB_COPILOT_TOKEN')
     if copilot_key:
         chain.append({
@@ -171,11 +159,10 @@ def _get_provider_chain():
                 'Editor-Version': 'vscode/1.95.0',
                 'Editor-Plugin-Version': 'copilot-chat/0.22.4',
             },
-            # Copilot uses short model IDs
             'model_override': os.getenv('COPILOT_MODEL', 'claude-sonnet-4.6'),
         })
 
-    # 3. Anthropic direct (Claude Code Max plan)
+    # 2. Anthropic direct (Claude Code Max plan)
     anthropic_key = os.getenv('ANTHROPIC_API_KEY')
     if anthropic_key:
         chain.append({
@@ -187,10 +174,10 @@ def _get_provider_chain():
                 'Accept': 'application/json',
             },
             'model_override': os.getenv('ANTHROPIC_MODEL', 'claude-sonnet-4-5'),
-            'anthropic_native': True,  # uses /messages endpoint, not /chat/completions
+            'anthropic_native': True,
         })
 
-    # 4. Google Gemini (native REST API — uses X-goog-api-key header)
+    # 3. Google Gemini (native REST API)
     gemini_key = os.getenv('GEMINI_API_KEY')
     if gemini_key:
         chain.append({
@@ -200,12 +187,11 @@ def _get_provider_chain():
                 'Content-Type': 'application/json',
                 'X-goog-api-key': gemini_key,
             },
-            # Default model — env var lets you pin a specific version
-            'model_override': os.getenv('GEMINI_MODEL', 'gemini-2.5-pro'),
-            'gemini_native': True,  # Uses /models/{model}:generateContent endpoint
+            'model_override': os.getenv('GEMINI_MODEL', 'gemini-3.1-pro-preview'),
+            'gemini_native': True,
         })
 
-    # 5. OpenAI fallback
+    # 4. OpenAI direct
     oai_key = os.getenv('OPENAI_API_KEY')
     if oai_key:
         base = os.getenv('OPENAI_BASE_URL', 'https://api.openai.com/v1')
@@ -219,18 +205,65 @@ def _get_provider_chain():
             'model_override': os.getenv('OPENAI_FALLBACK_MODEL', 'gpt-4o'),
         })
 
+    # 5. OpenRouter — last resort (pay-per-token, rate-limited)
+    or_key = os.getenv('OPENROUTER_API_KEY')
+    if or_key:
+        chain.append({
+            'name': 'openrouter',
+            'base': 'https://openrouter.ai/api/v1',
+            'headers': {
+                'Authorization': f'Bearer {or_key}',
+                'Accept': 'application/json',
+                'HTTP-Referer': os.getenv('OPENROUTER_SITE_URL', 'https://html-redesign-dashboard.maximo-seo.ai/'),
+                'X-Title': os.getenv('OPENROUTER_APP_NAME', 'HTML Redesign Dashboard'),
+            },
+            'model_override': None,
+        })
+
     return chain
+
+
+def _detect_preferred_provider(model: str) -> str | None:
+    """
+    Detect which provider to try first based on model ID format.
+    OpenRouter:  contains '/'  (e.g. 'anthropic/claude-sonnet-4.6')
+    Gemini:      starts with 'gemini-'
+    Copilot:     short IDs like 'claude-sonnet-4.6', 'gpt-4o', 'o3', 'gpt-4.1', 'o4-mini'
+    Anthropic:   hyphenated IDs like 'claude-opus-4', 'claude-sonnet-4-5' (no dots)
+    """
+    if not model:
+        return None
+    if '/' in model:
+        return 'openrouter'
+    if model.startswith('gemini-'):
+        return 'gemini'
+    # Copilot short IDs have dots (version numbers like 4.6, 5.4)
+    if '.' in model:
+        return 'copilot'
+    # Anthropic native IDs: claude-* with hyphens only
+    if model.startswith('claude-'):
+        return 'anthropic'
+    return None
 
 
 def call_with_fallback(messages, model, timeout=120):
     """
     Call the LLM with automatic provider fallback.
-    Tries each provider in the chain; returns (content, provider_used) on success.
+    Detects the preferred provider from the model ID and tries it first,
+    then falls through to remaining providers in priority order.
+    Returns (content, provider_used) on success.
     Raises RuntimeError if all providers fail.
     """
     chain = _get_provider_chain()
     if not chain:
         raise RuntimeError('No LLM provider configured. Set OPENROUTER_API_KEY, COPILOT_API_KEY, ANTHROPIC_API_KEY, or OPENAI_API_KEY.')
+
+    # Reorder chain so the best-matched provider is tried first
+    preferred = _detect_preferred_provider(model)
+    if preferred:
+        preferred_providers = [p for p in chain if p['name'] == preferred]
+        other_providers    = [p for p in chain if p['name'] != preferred]
+        chain = preferred_providers + other_providers
 
     errors = []
     for provider in chain:
@@ -538,8 +571,9 @@ def _normalize_checklist(raw):
 
 BRAINSTORM_MODELS = [
     {"id": "google/gemini-3.1-pro-preview",   "label": "Gemini 3.1 Pro (OpenRouter)"},
-    {"id": "gemini-3.1-pro-preview",          "label": "Gemini 3.1 Pro (Direct)", "provider": "gemini"},
-    {"id": "gemini-2.5-pro",                  "label": "Gemini 2.5 Pro (Direct)",  "provider": "gemini"},
+    {"id": "gemini-3.1-pro-preview",          "label": "Gemini 3.1 Pro Preview (Direct)", "provider": "gemini"},
+    {"id": "gemini-3-pro-preview",            "label": "Gemini 3 Pro Preview (Direct)",   "provider": "gemini"},
+    {"id": "gemini-2.5-pro",                  "label": "Gemini 2.5 Pro (Direct)",          "provider": "gemini"},
     {"id": "anthropic/claude-opus-4.7",       "label": "Claude Opus 4.7"},
     {"id": "openai/gpt-5.4",                  "label": "GPT-5.4"},
     {"id": "minimax/minimax-m2.7",            "label": "MiniMax M2.7"},
@@ -1147,12 +1181,17 @@ class DashboardHandler(BaseHTTPRequestHandler):
                     {'id': 'claude-sonnet-4.6',                 'label': 'Claude Sonnet 4.6 (Copilot)',     'provider': 'copilot'},
                     {'id': 'gpt-4o',                            'label': 'GPT-4o (Copilot)',                'provider': 'copilot'},
                     {'id': 'o3',                                 'label': 'o3 (Copilot)',                    'provider': 'copilot'},
-                    # --- Google Gemini (direct API) ---
-                    {'id': 'gemini-2.5-pro',                    'label': 'Gemini 2.5 Pro (Direct)',         'provider': 'gemini'},
-                    {'id': 'gemini-3.1-pro-preview',            'label': 'Gemini 3.1 Pro (Direct)',         'provider': 'gemini'},
-                    {'id': 'gemini-3-pro-preview',              'label': 'Gemini 3 Pro (Direct)',           'provider': 'gemini'},
-                    {'id': 'gemini-2.5-flash',                  'label': 'Gemini 2.5 Flash (Direct)',       'provider': 'gemini'},
-                    {'id': 'gemini-2.0-flash',                  'label': 'Gemini 2.0 Flash (Direct)',       'provider': 'gemini'},
+                    # --- Google Gemini (direct API) — newest first ---
+                    {'id': 'gemini-3.1-pro-preview',            'label': 'Gemini 3.1 Pro Preview',         'provider': 'gemini'},
+                    {'id': 'gemini-3-pro-preview',              'label': 'Gemini 3 Pro Preview',           'provider': 'gemini'},
+                    {'id': 'gemini-3.1-flash-lite-preview',     'label': 'Gemini 3.1 Flash Lite Preview',  'provider': 'gemini'},
+                    {'id': 'gemini-3-flash-preview',            'label': 'Gemini 3 Flash Preview',         'provider': 'gemini'},
+                    {'id': 'gemini-flash-latest',               'label': 'Gemini Flash Latest (alias)',     'provider': 'gemini'},
+                    {'id': 'gemini-2.5-pro',                    'label': 'Gemini 2.5 Pro',                 'provider': 'gemini'},
+                    {'id': 'gemini-2.5-flash',                  'label': 'Gemini 2.5 Flash',               'provider': 'gemini'},
+                    {'id': 'gemini-2.5-flash-lite',             'label': 'Gemini 2.5 Flash Lite',          'provider': 'gemini'},
+                    {'id': 'gemini-2.0-flash',                  'label': 'Gemini 2.0 Flash',               'provider': 'gemini'},
+                    {'id': 'gemini-2.0-flash-lite',             'label': 'Gemini 2.0 Flash Lite',          'provider': 'gemini'},
                     # --- Anthropic direct (Claude Code Max plan) ---
                     {'id': 'claude-sonnet-4-5',                 'label': 'Claude Sonnet 4.5 (Anthropic)',   'provider': 'anthropic'},
                     {'id': 'claude-opus-4',                     'label': 'Claude Opus 4 (Anthropic)',       'provider': 'anthropic'},
