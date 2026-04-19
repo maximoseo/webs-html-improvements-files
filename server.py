@@ -270,24 +270,25 @@ def resolve_workflow_id(domain: str, explicit_id=None):
 
 
 def build_workflow_payload(source, live):
+    # n8n PUT /workflows/:id only accepts: name, nodes, connections, settings, staticData, pinData
+    # Read-only fields that must be OMITTED: active, versionId, meta, tags, id
+    # settings must only contain allowed keys — extra keys cause 400
+    ALLOWED_SETTINGS = {
+        'executionOrder', 'saveManualExecutions', 'callerPolicy',
+        'errorWorkflow', 'timezone', 'saveDataSuccessExecution',
+        'saveDataErrorExecution', 'maxConcurrency',
+    }
+    raw_settings = source.get('settings') if 'settings' in source else live.get('settings') or {}
+    clean_settings = {k: v for k, v in raw_settings.items() if k in ALLOWED_SETTINGS}
+
     payload = {
         'name': source.get('name') or live.get('name'),
         'nodes': source.get('nodes') or live.get('nodes') or [],
         'connections': source.get('connections') or live.get('connections') or {},
-        'settings': source.get('settings') if 'settings' in source else live.get('settings') or {},
+        'settings': clean_settings,
         'staticData': source.get('staticData') if 'staticData' in source else live.get('staticData'),
         'pinData': source.get('pinData') if 'pinData' in source else live.get('pinData') or {},
     }
-    if 'meta' in source or live.get('meta') is not None:
-        payload['meta'] = source.get('meta') if 'meta' in source else live.get('meta')
-    if 'tags' in source:
-        payload['tags'] = source.get('tags')
-    elif live.get('tags'):
-        payload['tags'] = live.get('tags')
-    if 'active' in source or live.get('active') is not None:
-        payload['active'] = source.get('active') if 'active' in source else live.get('active')
-    if live.get('versionId'):
-        payload['versionId'] = live.get('versionId')
     return payload
 
 
