@@ -1347,7 +1347,6 @@ class DashboardHandler(BaseHTTPRequestHandler):
 
         if parsed.path == '/api/radar/config':
             try:
-                global _radar_state
                 if 'schedule_hour' in payload:
                     sh = int(payload['schedule_hour'])
                     if not (0 <= sh <= 23):
