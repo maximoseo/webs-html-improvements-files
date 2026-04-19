@@ -216,7 +216,20 @@ def _get_provider_chain():
             'model_override': os.getenv('FIREWORKS_MODEL', 'accounts/fireworks/models/llama-v3p3-70b-instruct'),
         })
 
-    # 6. OpenRouter — last resort (pay-per-token, rate-limited)
+    # 6. Kimi Code (Moonshot AI — code-optimized models)
+    kimi_key = os.getenv('KIMI_API_KEY')
+    if kimi_key:
+        chain.append({
+            'name': 'kimi',
+            'base': 'https://api.moonshot.cn/v1',
+            'headers': {
+                'Authorization': f'Bearer {kimi_key}',
+                'Accept': 'application/json',
+            },
+            'model_override': os.getenv('KIMI_MODEL', 'kimi-latest'),
+        })
+
+    # 7. OpenRouter — last resort (pay-per-token, rate-limited)
     or_key = os.getenv('OPENROUTER_API_KEY')
     if or_key:
         chain.append({
@@ -253,6 +266,8 @@ def _detect_preferred_provider(model: str) -> str | None:
         return 'gemini'
     if model.startswith('venice-'):
         return 'venice'
+    if model.startswith('kimi') or model.startswith('moonshot-'):
+        return 'kimi'
     # Copilot short IDs have dots (version numbers like 4.6, 5.4, 4.1)
     if '.' in model:
         return 'copilot'
@@ -1208,12 +1223,12 @@ class DashboardHandler(BaseHTTPRequestHandler):
                     {'id': 'gemini-2.5-flash-lite',             'label': 'Gemini 2.5 Flash Lite',          'provider': 'gemini'},
                     {'id': 'gemini-2.0-flash',                  'label': 'Gemini 2.0 Flash',               'provider': 'gemini'},
                     {'id': 'gemini-2.0-flash-lite',             'label': 'Gemini 2.0 Flash Lite',          'provider': 'gemini'},
-                    # --- Anthropic direct (Claude Code Max plan) ---
-                    {'id': 'claude-opus-4-5',                   'label': 'Claude Opus 4.5 (Anthropic)',     'provider': 'anthropic'},
-                    {'id': 'claude-sonnet-4-5',                 'label': 'Claude Sonnet 4.5 (Anthropic)',   'provider': 'anthropic'},
-                    {'id': 'claude-opus-4',                     'label': 'Claude Opus 4 (Anthropic)',       'provider': 'anthropic'},
-                    {'id': 'claude-sonnet-4',                   'label': 'Claude Sonnet 4 (Anthropic)',     'provider': 'anthropic'},
-                    {'id': 'claude-haiku-3-5',                  'label': 'Claude Haiku 3.5 (Anthropic)',    'provider': 'anthropic'},
+                    # --- Kimi Code (Moonshot AI) ---
+                    {'id': 'kimi-latest',                       'label': 'Kimi Latest',                     'provider': 'kimi'},
+                    {'id': 'kimi-k2',                           'label': 'Kimi K2',                         'provider': 'kimi'},
+                    {'id': 'kimi-k1.5',                         'label': 'Kimi K1.5',                       'provider': 'kimi'},
+                    {'id': 'moonshot-v1-128k',                  'label': 'Moonshot v1 128K',                 'provider': 'kimi'},
+                    {'id': 'moonshot-v1-32k',                   'label': 'Moonshot v1 32K',                  'provider': 'kimi'},
                     # --- Venice AI ---
                     {'id': 'llama-3.3-70b',                     'label': 'Llama 3.3 70B (Venice)',          'provider': 'venice'},
                     {'id': 'llama-3.1-405b',                    'label': 'Llama 3.1 405B (Venice)',         'provider': 'venice'},
