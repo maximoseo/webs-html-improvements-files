@@ -9,6 +9,7 @@
 *{margin:0;padding:0;box-sizing:border-box}
 :root{--bg:#08090a;--bg-elevated:#0f1011;--surface:rgba(15,16,17,0.82);--surface-strong:#131416;--card:rgba(255,255,255,0.025);--card-hover:rgba(255,255,255,0.045);--border:rgba(255,255,255,0.08);--border-strong:rgba(255,255,255,0.14);--border-hover:rgba(113,112,255,0.32);--gold:#7170ff;--gold-light:#828fff;--gold-dim:#5e6ad2;--gold-bg:rgba(113,112,255,0.14);--text:#f7f8f8;--text-secondary:#d0d6e0;--muted:#8a8f98;--green:#27a644;--green-bg:rgba(39,166,68,0.16);--blue:#4f8cff;--blue-bg:rgba(79,140,255,0.14);--red:#ef5f6b;--red-bg:rgba(239,95,107,0.14);--purple:#8b7dff;--purple-bg:rgba(139,125,255,0.18);--shadow-soft:0 24px 80px rgba(0,0,0,0.42);--shadow-card:0 10px 30px rgba(0,0,0,0.28);--radius:16px;--radius-sm:10px}
 body{font-family:'Inter',system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:radial-gradient(circle at top center,rgba(113,112,255,0.12),transparent 28%),linear-gradient(180deg,#0a0b0d 0%,#08090a 100%);color:var(--text);min-height:100vh;-webkit-font-smoothing:antialiased;font-feature-settings:"cv01","ss03";letter-spacing:-0.01em}
+body.scroll-locked{overflow:hidden !important;}
 a{color:var(--gold);text-decoration:none;transition:color 0.15s}
 a:hover{color:var(--gold-light)}
 ::selection{background:var(--gold);color:#000}
@@ -442,8 +443,8 @@ a:hover{color:var(--gold-light)}
 
 
 /* ==== Responsive polish — all devices (added 2026-04-16) ==== */
-html{overflow-x:hidden;-webkit-text-size-adjust:100%;scroll-behavior:smooth;overflow-y:auto}
-body{overflow:visible;width:100%}
+html{overflow:visible;-webkit-text-size-adjust:100%;scroll-behavior:smooth}
+body{overflow:visible}
 *{min-width:0}
 img,svg,video,canvas{max-width:100%;height:auto}
 
@@ -2620,24 +2621,28 @@ img,svg,video,canvas{max-width:100%;height:auto}
 }
 
 
-/* ===== STICKY HEADER — definitive rule, all breakpoints, all devices =====
-   Scroll container: html (not body). Body must be overflow:visible.
-   JS modals use documentElement.style.overflowY so body stays transparent.
-   will-change:transform creates a new compositing layer for smooth scroll.
-   ======================================================================== */
+
+/* ===== STICKY HEADER - definitive, viewport scroll, all devices ===== */
+/* Rule: html and body must be overflow:visible so the VIEWPORT is the  */
+/* scroll container. position:sticky is relative to scroll container.   */
+/* If html or body intercepts scroll, sticky breaks. Keep them visible. */
+html, body {
+  overflow-x: hidden;
+  overflow-y: visible;
+}
 header.header,
 .header {
   position: -webkit-sticky !important;
   position: sticky !important;
   top: 0 !important;
-  z-index: 500 !important;
-  will-change: transform;
-  -webkit-backdrop-filter: blur(18px);
-  backdrop-filter: blur(18px);
+  z-index: 9000 !important;
+  width: 100%;
 }
 @media print {
   header.header, .header { position: static !important; }
 }
+/* ===================================================================== */
+
 </style>
 </head>
 <body>
@@ -2938,7 +2943,7 @@ function formatSize(bytes){if(!bytes)return'';if(bytes<1024)return bytes+'B';if(
 function openPreview(downloadUrl,filename,ctx){
   document.getElementById('preview-filename').textContent=filename;
   document.getElementById('preview-modal').classList.add('open');
-  document.documentElement.style.overflowY='hidden';
+  document.body.classList.add('scroll-locked');
   const iframe=document.getElementById('preview-iframe');
   fetch(downloadUrl).then(r=>r.text()).then(html=>{
     const doc=iframe.contentDocument||iframe.contentWindow.document;
@@ -3076,14 +3081,14 @@ function openCommentsModal(ctx){
   if(input) input.value='';
   const status=document.getElementById('comments-status');
   if(status) status.textContent='Ready.';
-  if(modal){modal.classList.add('open'); document.documentElement.style.overflowY='hidden';}
+  if(modal){modal.classList.add('open'); document.body.classList.add('scroll-locked');}
   loadComments();
 }
 function closeCommentsModal(){
   const modal=document.getElementById('comments-modal');
   if(modal) modal.classList.remove('open');
   if(!document.getElementById('preview-modal')?.classList.contains('open') && !document.getElementById('compare-modal')?.classList.contains('open') && !document.getElementById('focus-modal')?.classList.contains('open') && !document.getElementById('prompt-modal')?.classList.contains('open')){
-    document.documentElement.style.overflowY='';
+    document.body.classList.remove('scroll-locked');
   }
 }
 function openCommentsFromPreview(){
@@ -3138,7 +3143,7 @@ function closePreview(){
   document.getElementById('preview-modal').classList.remove('preview-fullscreen');
   const _pebtn=document.getElementById('preview-expand-btn');
   if(_pebtn){_pebtn.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" style="width:12px;height:12px"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg> Expand';_pebtn.title='Expand to full screen';}
-  document.documentElement.style.overflowY='';
+  document.body.classList.remove('scroll-locked');
   const iframe=document.getElementById('preview-iframe');
   const doc=iframe.contentDocument||iframe.contentWindow.document;
   doc.open();doc.write('');doc.close();
@@ -3191,7 +3196,7 @@ function openCompare(projectName){
   const grid=document.getElementById('compare-grid');
   document.getElementById('compare-filename').textContent=projectName;
   document.getElementById('compare-modal').classList.add('open');
-  document.documentElement.style.overflowY='hidden';
+  document.body.classList.add('scroll-locked');
   if(items.length<2){
     grid.innerHTML='<div class="compare-empty">Need at least two agent/version HTML outputs for side-by-side comparison on this domain.</div>';
     return;
@@ -3223,7 +3228,7 @@ function openCompare(projectName){
 }
 function closeCompare(){
   document.getElementById('compare-modal').classList.remove('open');
-  document.documentElement.style.overflowY='';
+  document.body.classList.remove('scroll-locked');
   document.getElementById('compare-grid').innerHTML='';
 }
 function setCompareDevice(mode,btn){
