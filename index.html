@@ -15,7 +15,7 @@ a:hover{color:var(--gold-light)}
 ::selection{background:var(--gold);color:#000}
 
 /* Header */
-.header{background:rgba(8,9,10,0.72);border-bottom:1px solid rgba(255,255,255,0.06);position:sticky;top:0;z-index:500;backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);will-change:transform}
+.header{background:rgba(8,9,10,0.92);border-bottom:1px solid rgba(255,255,255,0.08);position:fixed;top:0;left:0;right:0;width:100%;z-index:9999;backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px)}
 .header-inner{max-width:1320px;margin:0 auto;padding:18px 28px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:14px}
 .logo{display:flex;align-items:center;gap:12px}
 .logo-link{display:flex;align-items:center;gap:12px;color:var(--text);text-decoration:none}
@@ -2622,7 +2622,6 @@ img,svg,video,canvas{max-width:100%;height:auto}
 
 
 
-/* ===== STICKY HEADER - definitive, viewport scroll, all devices ===== */
 /* Rule: html and body must be overflow:visible so the VIEWPORT is the  */
 /* scroll container. position:sticky is relative to scroll container.   */
 /* If html or body intercepts scroll, sticky breaks. Keep them visible. */
@@ -2642,6 +2641,34 @@ header.header,
   header.header, .header { position: static !important; }
 }
 /* ===================================================================== */
+
+
+/* ===== FIXED HEADER — position:fixed, works on ALL browsers/devices ===== */
+header.header,
+.header {
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  width: 100% !important;
+  z-index: 9999 !important;
+  box-sizing: border-box;
+}
+/* Push page content below the fixed header */
+body {
+  padding-top: var(--header-h, 72px);
+}
+@media (max-width: 900px) {
+  body { padding-top: var(--header-h, 60px); }
+}
+@media (max-width: 480px) {
+  body { padding-top: var(--header-h, 56px); }
+}
+@media print {
+  header.header, .header { position: static !important; }
+  body { padding-top: 0 !important; }
+}
+/* ====================================================================== */
 
 </style>
 </head>
@@ -4026,6 +4053,22 @@ function upsertDeployJob(jobId, patch){
   if(idx===-1)return;
   deployJobs[idx]={...deployJobs[idx],...patch};
   renderDeployJobs();
+
+// Measure real header height and keep body padding-top in sync
+(function(){
+  function syncHeaderHeight(){
+    var h = document.querySelector('header.header') || document.querySelector('.header');
+    if(h){
+      var ht = h.getBoundingClientRect().height || h.offsetHeight;
+      document.documentElement.style.setProperty('--header-h', ht+'px');
+      document.body.style.paddingTop = ht+'px';
+    }
+  }
+  syncHeaderHeight();
+  window.addEventListener('resize', syncHeaderHeight);
+  // Also run after fonts/images load
+  window.addEventListener('load', syncHeaderHeight);
+})();
 }
 async function deployToN8n(domain, versionName, filePath, fileName, btn){
   domain=decodeURIComponent(domain||'');
@@ -4039,6 +4082,22 @@ async function deployToN8n(domain, versionName, filePath, fileName, btn){
   deployJobs.unshift({id:jobId,domain,versionName,fileName,state:'running',step:'Starting deploy…',progress:5,details:'',ts});
   deployJobs=deployJobs.slice(0,8);
   renderDeployJobs();
+
+// Measure real header height and keep body padding-top in sync
+(function(){
+  function syncHeaderHeight(){
+    var h = document.querySelector('header.header') || document.querySelector('.header');
+    if(h){
+      var ht = h.getBoundingClientRect().height || h.offsetHeight;
+      document.documentElement.style.setProperty('--header-h', ht+'px');
+      document.body.style.paddingTop = ht+'px';
+    }
+  }
+  syncHeaderHeight();
+  window.addEventListener('resize', syncHeaderHeight);
+  // Also run after fonts/images load
+  window.addEventListener('load', syncHeaderHeight);
+})();
   toggleDeployStatusPanel(true);
   btn.disabled=true;
   btn.innerHTML='<span class="btn-spinner" aria-hidden="true"></span>Deploying…';
@@ -4102,6 +4161,22 @@ async function deployVersionToN8n(domainEnc, agentEnc, versionEnc, workflowFiles
     deployJobs.unshift({id:jobId,domain,versionName,fileName:f.name,state:'running',step:`Compare-panel deploy: ${f.name}`,progress:10,details:`From ${agent} / ${versionName}`});
     deployJobs=deployJobs.slice(0,8);
     renderDeployJobs();
+
+// Measure real header height and keep body padding-top in sync
+(function(){
+  function syncHeaderHeight(){
+    var h = document.querySelector('header.header') || document.querySelector('.header');
+    if(h){
+      var ht = h.getBoundingClientRect().height || h.offsetHeight;
+      document.documentElement.style.setProperty('--header-h', ht+'px');
+      document.body.style.paddingTop = ht+'px';
+    }
+  }
+  syncHeaderHeight();
+  window.addEventListener('resize', syncHeaderHeight);
+  // Also run after fonts/images load
+  window.addEventListener('load', syncHeaderHeight);
+})();
     toggleDeployStatusPanel(true);
     try{
       upsertDeployJob(jobId,{step:'Sending to n8n deploy endpoint…',progress:45,details:`Path: ${f.path}`});
@@ -4147,6 +4222,22 @@ document.addEventListener('keydown',e=>{
   if(e.key==='e'){const b=document.getElementById('bulk-toggle-projects');if(b)toggleAllProjects(b);return;}
 });
 renderDeployJobs();
+
+// Measure real header height and keep body padding-top in sync
+(function(){
+  function syncHeaderHeight(){
+    var h = document.querySelector('header.header') || document.querySelector('.header');
+    if(h){
+      var ht = h.getBoundingClientRect().height || h.offsetHeight;
+      document.documentElement.style.setProperty('--header-h', ht+'px');
+      document.body.style.paddingTop = ht+'px';
+    }
+  }
+  syncHeaderHeight();
+  window.addEventListener('resize', syncHeaderHeight);
+  // Also run after fonts/images load
+  window.addEventListener('load', syncHeaderHeight);
+})();
 
 // ── Pre-Improve Checklist (Additional Improvement Rules) ──
 // Edit this list to extend the checklist. Selected labels are injected into
