@@ -21,6 +21,29 @@
 .sr-only{position:absolute!important;width:1px!important;height:1px!important;padding:0!important;margin:-1px!important;overflow:hidden!important;clip:rect(0,0,0,0)!important;white-space:nowrap!important;border:0!important}
 :where(button,a,select,input,textarea,summary,[tabindex]):focus-visible{outline:2px solid var(--gold);outline-offset:var(--focus-ring-offset);border-radius:8px}
 @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:0.01ms!important;animation-iteration-count:1!important;transition-duration:0.01ms!important;scroll-behavior:auto!important}}
+
+/* Phase-1.5 reusable page primitives (additive — opt-in by class) */
+.page-header{display:flex;flex-direction:column;gap:var(--space-2);margin-bottom:var(--space-6)}
+.page-header__breadcrumb{display:flex;align-items:center;gap:var(--space-2);font-size:var(--text-xs);color:var(--muted);text-transform:uppercase;letter-spacing:0.08em;font-weight:600}
+.page-header__breadcrumb a{color:var(--muted)}
+.page-header__breadcrumb a:hover{color:var(--text-secondary)}
+.page-header__title-row{display:flex;align-items:flex-start;justify-content:space-between;gap:var(--space-4);flex-wrap:wrap}
+.page-header__title{font-size:var(--text-2xl);font-weight:600;letter-spacing:-0.03em;color:var(--text);line-height:1.2}
+.page-header__subtitle{font-size:var(--text-sm);color:var(--text-secondary);margin-top:var(--space-1);max-width:62ch}
+.page-header__actions{display:flex;gap:var(--space-2);flex-wrap:wrap;align-items:center}
+
+.metadata-strip{display:flex;flex-wrap:wrap;gap:var(--space-4);padding:var(--space-3) var(--space-4);border:1px solid var(--border);border-radius:var(--radius-sm);background:var(--card);margin-bottom:var(--space-4);container-type:inline-size}
+.metadata-strip__item{display:flex;flex-direction:column;gap:2px;min-width:0}
+.metadata-strip__label{font-size:var(--text-xs);color:var(--muted);text-transform:uppercase;letter-spacing:0.08em;font-weight:600}
+.metadata-strip__value{font-size:var(--text-sm);color:var(--text);font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+@container (max-width:42rem){.metadata-strip{flex-direction:column;gap:var(--space-2)}}
+
+.action-bar{display:flex;align-items:center;justify-content:space-between;gap:var(--space-3);padding:var(--space-3);border-top:1px solid var(--border);background:var(--surface);flex-wrap:wrap}
+.action-bar__group{display:flex;gap:var(--space-2);align-items:center;flex-wrap:wrap}
+
+/* Container-query responsive enabling for project-card (component-level) */
+.project-card{container-type:inline-size}
+@container (max-width:24rem){.card-header{padding:var(--space-4);flex-direction:column;align-items:stretch}}
 body{font-family:'Inter',system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:radial-gradient(circle at top center,rgba(113,112,255,0.12),transparent 28%),linear-gradient(180deg,#0a0b0d 0%,#08090a 100%);color:var(--text);min-height:100vh;-webkit-font-smoothing:antialiased;font-feature-settings:"cv01","ss03";letter-spacing:-0.01em}
 body.scroll-locked{overflow:hidden !important;}
 a{color:var(--gold);text-decoration:none;transition:color 0.15s}
@@ -3637,7 +3660,7 @@ body {
 <!-- Skill Drawer -->
 <div class="radar-overlay" id="radar-overlay" onclick="closeSkillDrawer()"></div>
 <div class="radar-drawer" id="radar-drawer">
-  <button class="radar-drawer-close" onclick="closeSkillDrawer()">&#10005;</button>
+  <button class="radar-drawer-close" onclick="closeSkillDrawer()" aria-label="Close skill details">&#10005;</button>
   <div id="radar-drawer-content"></div>
 </div>
 
@@ -5234,7 +5257,7 @@ async function deployVersionToN8n(domainEnc, agentEnc, versionEnc, workflowFiles
 function toggleShortcuts(){const m=document.getElementById('shortcuts-modal');if(m)m.classList.toggle('open');}
 function closeShortcuts(){const m=document.getElementById('shortcuts-modal');if(m)m.classList.remove('open');}
 document.addEventListener('keydown',e=>{
-  if(e.key==='Escape'){closePreview();closeCompare();closeFocusedCompare();closePromptStudio();closeShortcuts();return;}
+  if(e.key==='Escape'){closePreview();closeCompare();closeFocusedCompare();closePromptStudio();closeShortcuts();try{closeSkillDrawer&&closeSkillDrawer()}catch(_){}try{closeAutoImportModal&&closeAutoImportModal()}catch(_){}try{closeCommentsModal&&closeCommentsModal()}catch(_){}return;}
   const tag=(e.target||{}).tagName||'';
   if(tag==='INPUT'||tag==='TEXTAREA'||tag==='SELECT') return;
   if(e.key==='?'){e.preventDefault();toggleShortcuts();return;}
