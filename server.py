@@ -37,6 +37,8 @@ _radar_state = {
     'paused': False,
     'schedule_hour': 2,
     'schedule_enabled': True,
+    'topics': ['n8n', 'automation', 'seo', 'local seo', 'claude code', 'coding', 'ai agents', 'scraping', 'wordpress'],
+    'custom_topics': [],
 }
 
 RADAR_SOURCES = [
@@ -1123,6 +1125,8 @@ class DashboardHandler(BaseHTTPRequestHandler):
             state_copy['x_enabled'] = bool(os.getenv('X_BEARER_TOKEN'))
             state_copy['x_sources_found'] = _radar_state.get('x_sources_found', 0)
             state_copy['last_email'] = _radar_state.get('last_email')
+            state_copy['topics'] = _radar_state.get('topics', [])
+            state_copy['custom_topics'] = _radar_state.get('custom_topics', [])
             return json_response(self, 200, {'ok': True, 'state': state_copy, 'last_run': last_run})
 
         if parsed.path == '/api/radar/results':
@@ -1158,6 +1162,9 @@ class DashboardHandler(BaseHTTPRequestHandler):
                     rows = []
                 if agent:
                     rows = [r for r in rows if agent in (r.get('target_agents') or [])]
+                topic_filter = (qs.get('topic') or [''])[0]
+                if topic_filter:
+                    rows = [r for r in rows if topic_filter.lower() in [t.lower() for t in (r.get('matched_topics') or [])]]
                 # Count total
                 count_headers = dict(hdrs)
                 count_headers['Prefer'] = 'count=exact'
@@ -1338,6 +1345,26 @@ class DashboardHandler(BaseHTTPRequestHandler):
                     errors=[],
                 )
                 return json_response(self, 200, result)
+            except Exception as exc:
+                return json_response(self, 500, {'ok': False, 'error': str(exc)})
+
+        if parsed.path == '/api/radar/topics':
+            try:
+                topics = payload.get('topics')
+                custom_topics = payload.get('custom_topics')
+                if topics is not None:
+                    if not isinstance(topics, list):
+                        return json_response(self, 400, {'ok': False, 'error': 'topics must be array'})
+                    _radar_state['topics'] = [str(t).strip().lower() for t in topics if str(t).strip()]
+                if custom_topics is not None:
+                    if not isinstance(custom_topics, list):
+                        return json_response(self, 400, {'ok': False, 'error': 'custom_topics must be array'})
+                    _radar_state['custom_topics'] = [str(t).strip().lower() for t in custom_topics if str(t).strip()]
+                return json_response(self, 200, {
+                    'ok': True,
+                    'topics': _radar_state['topics'],
+                    'custom_topics': _radar_state['custom_topics'],
+                })
             except Exception as exc:
                 return json_response(self, 500, {'ok': False, 'error': str(exc)})
 
@@ -2155,11 +2182,17 @@ def _is_duplicate_skill(title, existing_titles_list):
     return False
 
 
-def _extract_skills_from_source(source, content_text):
+def _extract_skills_from_source(source, content_text, topics=None):
     base, headers = prompt_headers()
     if not headers:
         return []
     content_trimmed = content_text[:8000]
+    topics_str = ', '.join(topics) if topics else ''
+    topics_instruction = (
+        f'\nFocus on skills related to these topics: {topics_str}. '
+        f'Prioritize results matching these topics. '
+        f'Add a "topics" field to each skill with matching topics from this list.\n'
+    ) if topics_str else ''
     system_prompt = (
         "You are an expert agent skill analyst. Extract actionable skills from the provided source content.\n"
         "For each skill, return ONLY a JSON array (no markdown, no explanation) with objects containing:\n"
@@ -2169,9 +2202,11 @@ def _extract_skills_from_source(source, content_text):
         "- skill_type: one of: tool_integration, workflow_pattern, api_capability, framework, prompt_pattern, automation_recipe, knowledge_artifact\n"
         "- target_agents: array of relevant agents from: [\"Hermes\", \"Claude Code\", \"Manus\", \"CTO\", \"CEO\", \"Prompt Studio\", \"General\"]\n"
         "- usefulness_score: 0.0 to 1.0 float\n"
-        "- implementation_idea: one sentence how to implement or use this skill\n\n"
+        "- implementation_idea: one sentence how to implement or use this skill\n"
+        "- topics: array of matching topic strings from the focus list (empty array if none match)\n\n"
         "Return 3-8 skills maximum. Only include genuinely useful, actionable skills. Skip obvious/generic ones.\n"
-        f"Source: {source['title']} ({source['type']})"
+        + topics_instruction
+        + f"Source: {source['title']} ({source['type']})"
     )
     body = {
         'model': 'anthropic/claude-sonnet-4.6',
@@ -2288,7 +2323,8 @@ def _run_radar_discovery(config=None):
         _radar_state['progress'] = int((i / len(sources)) * 60) + 5
 
         try:
-            skills = _extract_skills_from_source(source, content)
+            active_topics = list((_radar_state.get('topics') or []) + (_radar_state.get('custom_topics') or []))
+            skills = _extract_skills_from_source(source, content, topics=active_topics if active_topics else None)
         except Exception as e:
             errors.append({'source': source['title'], 'error': f'LLM error: {e}'})
             _radar_state['sources_done'] = i + 1
@@ -2323,6 +2359,7 @@ def _run_radar_discovery(config=None):
                 'github_path': None,
                 'obsidian_path': None,
                 'approval_notes': None,
+                'matched_topics': skill.get('topics', []),
                 'created_at': _dt2.datetime.utcnow().isoformat() + 'Z',
             }
             try:
