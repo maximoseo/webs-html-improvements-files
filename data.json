@@ -1,6 +1,6 @@
 {
-  "sha": "65980799f89ca9fd99b4b05c3970c8a93ff827d4",
-  "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/65980799f89ca9fd99b4b05c3970c8a93ff827d4",
+  "sha": "pending-commit",
+  "url": "",
   "tree": [
     {
       "path": "Dockerfile",
@@ -8,7 +8,7 @@
       "type": "blob",
       "sha": "0000000000000000000000000000000000000000",
       "size": 228,
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/0000000000000000000000000000000000000000"
+      "url": ""
     },
     {
       "path": "GALOZ-REDESIGN-SUMMARY.md",
@@ -16,14 +16,14 @@
       "type": "blob",
       "sha": "0000000000000000000000000000000000000000",
       "size": 5701,
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/0000000000000000000000000000000000000000"
+      "url": ""
     },
     {
       "path": "Reports",
       "mode": "040000",
       "type": "tree",
       "sha": "0000000000000000000000000000000000000000",
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0000000000000000000000000000000000000000"
+      "url": ""
     },
     {
       "path": "Reports/locksmithsanantonio-247-SEO-Growth-Blueprint.pdf",
@@ -31,21 +31,21 @@
       "type": "blob",
       "sha": "0000000000000000000000000000000000000000",
       "size": 198242,
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/0000000000000000000000000000000000000000"
+      "url": ""
     },
     {
       "path": "Tim_Claw_Max",
       "mode": "040000",
       "type": "tree",
       "sha": "0000000000000000000000000000000000000000",
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0000000000000000000000000000000000000000"
+      "url": ""
     },
     {
       "path": "Tim_Claw_Max/NTN",
       "mode": "040000",
       "type": "tree",
       "sha": "0000000000000000000000000000000000000000",
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0000000000000000000000000000000000000000"
+      "url": ""
     },
     {
       "path": "Tim_Claw_Max/NTN/N8N-Workflow-NTN.md",
@@ -53,7 +53,7 @@
       "type": "blob",
       "sha": "0000000000000000000000000000000000000000",
       "size": 7675,
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/0000000000000000000000000000000000000000"
+      "url": ""
     },
     {
       "path": "Tim_Claw_Max/NTN/NTN-Landing-Page.html",
@@ -61,66 +61,73 @@
       "type": "blob",
       "sha": "0000000000000000000000000000000000000000",
       "size": 27285,
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/0000000000000000000000000000000000000000"
+      "url": ""
     },
     {
       "path": "caesarstone.co.il",
       "mode": "040000",
       "type": "tree",
       "sha": "0000000000000000000000000000000000000000",
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0000000000000000000000000000000000000000"
+      "url": ""
     },
     {
-      "path": "caesarstone.co.il/Improved Files (13.4.26)",
+      "path": "caesarstone.co.il/Claude Code",
       "mode": "040000",
       "type": "tree",
       "sha": "0000000000000000000000000000000000000000",
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0000000000000000000000000000000000000000"
+      "url": ""
     },
     {
-      "path": "caesarstone.co.il/Improved Files (13.4.26)/Improved_HTML_Template.html",
+      "path": "caesarstone.co.il/Claude Code/2026-04-13",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "0000000000000000000000000000000000000000",
+      "url": ""
+    },
+    {
+      "path": "caesarstone.co.il/Claude Code/2026-04-13/Improved_HTML_Template.html",
       "mode": "100644",
       "type": "blob",
       "sha": "0000000000000000000000000000000000000000",
       "size": 88546,
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/0000000000000000000000000000000000000000"
+      "url": ""
     },
     {
-      "path": "caesarstone.co.il/Improved Files (13.4.26)/Improved_N8N_Prompt.txt",
+      "path": "caesarstone.co.il/Claude Code/2026-04-13/Improved_N8N_Prompt.txt",
       "mode": "100644",
       "type": "blob",
       "sha": "0000000000000000000000000000000000000000",
       "size": 40498,
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/0000000000000000000000000000000000000000"
+      "url": ""
     },
     {
-      "path": "caesarstone.co.il/Improved Files (13.4.26)/Improved_N8N_Workflow.json",
+      "path": "caesarstone.co.il/Claude Code/2026-04-13/Improved_N8N_Workflow.json",
       "mode": "100644",
       "type": "blob",
       "sha": "0000000000000000000000000000000000000000",
       "size": 177704,
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/0000000000000000000000000000000000000000"
+      "url": ""
     },
     {
       "path": "dtapet-project",
       "mode": "040000",
       "type": "tree",
       "sha": "0000000000000000000000000000000000000000",
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0000000000000000000000000000000000000000"
+      "url": ""
     },
     {
       "path": "dtapet-project/improved",
       "mode": "040000",
       "type": "tree",
       "sha": "0000000000000000000000000000000000000000",
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0000000000000000000000000000000000000000"
+      "url": ""
     },
     {
       "path": "dtapet-project/improved/FINAL",
       "mode": "040000",
       "type": "tree",
       "sha": "0000000000000000000000000000000000000000",
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0000000000000000000000000000000000000000"
+      "url": ""
     },
     {
       "path": "dtapet-project/improved/FINAL/DTAPET_WORDPRESS_FIXED_V4.html",
@@ -128,7 +135,7 @@
       "type": "blob",
       "sha": "0000000000000000000000000000000000000000",
       "size": 10450,
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/0000000000000000000000000000000000000000"
+      "url": ""
     },
     {
       "path": "dtapet-project/improved/FINAL/HTML_Template_V2_Sample.html",
@@ -136,7 +143,7 @@
       "type": "blob",
       "sha": "0000000000000000000000000000000000000000",
       "size": 13613,
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/0000000000000000000000000000000000000000"
+      "url": ""
     },
     {
       "path": "dtapet-project/improved/FINAL/HTML_Template_V2_With_Products.html",
@@ -144,7 +151,7 @@
       "type": "blob",
       "sha": "0000000000000000000000000000000000000000",
       "size": 15680,
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/0000000000000000000000000000000000000000"
+      "url": ""
     },
     {
       "path": "dtapet-project/improved/FINAL/HTML_Template_V3_WP_SAFE.html",
@@ -152,7 +159,7 @@
       "type": "blob",
       "sha": "0000000000000000000000000000000000000000",
       "size": 15680,
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/0000000000000000000000000000000000000000"
+      "url": ""
     },
     {
       "path": "dtapet-project/improved/FINAL/IMPROVEMENTS_SUMMARY.md",
@@ -160,7 +167,7 @@
       "type": "blob",
       "sha": "0000000000000000000000000000000000000000",
       "size": 2530,
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/0000000000000000000000000000000000000000"
+      "url": ""
     },
     {
       "path": "dtapet-project/improved/FINAL/N8N_Generate_Product_HTML.js",
@@ -168,7 +175,7 @@
       "type": "blob",
       "sha": "0000000000000000000000000000000000000000",
       "size": 6200,
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/0000000000000000000000000000000000000000"
+      "url": ""
     },
     {
       "path": "dtapet-project/improved/FINAL/N8N_Product_Grid_Fix.md",
@@ -176,7 +183,7 @@
       "type": "blob",
       "sha": "0000000000000000000000000000000000000000",
       "size": 6605,
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/0000000000000000000000000000000000000000"
+      "url": ""
     },
     {
       "path": "dtapet-project/improved/FINAL/N8N_Prompt_v2.md",
@@ -184,7 +191,7 @@
       "type": "blob",
       "sha": "0000000000000000000000000000000000000000",
       "size": 46928,
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/0000000000000000000000000000000000000000"
+      "url": ""
     },
     {
       "path": "dtapet-project/improved/FINAL/N8N_Prompt_v3_FIXED.txt",
@@ -192,7 +199,7 @@
       "type": "blob",
       "sha": "0000000000000000000000000000000000000000",
       "size": 12132,
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/0000000000000000000000000000000000000000"
+      "url": ""
     },
     {
       "path": "dtapet-project/improved/FINAL/PRODUCT_CARD_HTML_Reference.html",
@@ -200,7 +207,7 @@
       "type": "blob",
       "sha": "0000000000000000000000000000000000000000",
       "size": 9519,
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/0000000000000000000000000000000000000000"
+      "url": ""
     },
     {
       "path": "dtapet-project/improved/FINAL/ROOT_CAUSE_REPORT.md",
@@ -208,7 +215,7 @@
       "type": "blob",
       "sha": "0000000000000000000000000000000000000000",
       "size": 7452,
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/0000000000000000000000000000000000000000"
+      "url": ""
     },
     {
       "path": "dtapet-project/improved/FINAL/WORKFLOW_IMPROVEMENTS.md",
@@ -216,7 +223,7 @@
       "type": "blob",
       "sha": "0000000000000000000000000000000000000000",
       "size": 2814,
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/0000000000000000000000000000000000000000"
+      "url": ""
     },
     {
       "path": "dtapet-project/improved/FINAL/dtapet_improved_v2.tar.gz",
@@ -224,14 +231,14 @@
       "type": "blob",
       "sha": "0000000000000000000000000000000000000000",
       "size": 18519,
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/0000000000000000000000000000000000000000"
+      "url": ""
     },
     {
       "path": "dtapet-project/original",
       "mode": "040000",
       "type": "tree",
       "sha": "0000000000000000000000000000000000000000",
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0000000000000000000000000000000000000000"
+      "url": ""
     },
     {
       "path": "dtapet-project/original/html_template.txt",
@@ -239,7 +246,7 @@
       "type": "blob",
       "sha": "0000000000000000000000000000000000000000",
       "size": 80919,
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/0000000000000000000000000000000000000000"
+      "url": ""
     },
     {
       "path": "dtapet-project/original/n8n_prompt.txt",
@@ -247,7 +254,7 @@
       "type": "blob",
       "sha": "0000000000000000000000000000000000000000",
       "size": 42127,
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/0000000000000000000000000000000000000000"
+      "url": ""
     },
     {
       "path": "dtapet-project/original/n8n_workflow.json",
@@ -255,21 +262,21 @@
       "type": "blob",
       "sha": "0000000000000000000000000000000000000000",
       "size": 188414,
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/0000000000000000000000000000000000000000"
+      "url": ""
     },
     {
       "path": "dtapet.com",
       "mode": "040000",
       "type": "tree",
       "sha": "0000000000000000000000000000000000000000",
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0000000000000000000000000000000000000000"
+      "url": ""
     },
     {
       "path": "dtapet.com/Improved Files (6.4.26) ✦ Latest",
       "mode": "040000",
       "type": "tree",
       "sha": "0000000000000000000000000000000000000000",
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0000000000000000000000000000000000000000"
+      "url": ""
     },
     {
       "path": "dtapet.com/Improved Files (6.4.26) ✦ Latest/Improved_HTML_Template.html",
@@ -277,7 +284,7 @@
       "type": "blob",
       "sha": "0000000000000000000000000000000000000000",
       "size": 60885,
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/0000000000000000000000000000000000000000"
+      "url": ""
     },
     {
       "path": "dtapet.com/Improved Files (6.4.26) ✦ Latest/Improved_N8N_Prompt.txt",
@@ -285,7 +292,7 @@
       "type": "blob",
       "sha": "0000000000000000000000000000000000000000",
       "size": 51034,
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/0000000000000000000000000000000000000000"
+      "url": ""
     },
     {
       "path": "dtapet.com/Improved Files (6.4.26) ✦ Latest/N8N_Workflow.json",
@@ -293,7 +300,7 @@
       "type": "blob",
       "sha": "0000000000000000000000000000000000000000",
       "size": 191804,
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/0000000000000000000000000000000000000000"
+      "url": ""
     },
     {
       "path": "galoz-article-template-2026-04-15.html",
@@ -301,7 +308,7 @@
       "type": "blob",
       "sha": "0000000000000000000000000000000000000000",
       "size": 12395,
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/0000000000000000000000000000000000000000"
+      "url": ""
     },
     {
       "path": "galoz-article-template-qwen-code-2026-04-15.html",
@@ -309,7 +316,7 @@
       "type": "blob",
       "sha": "0000000000000000000000000000000000000000",
       "size": 12637,
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/0000000000000000000000000000000000000000"
+      "url": ""
     },
     {
       "path": "galoz-redesign-summary-qwen-code-2026-04-15.md",
@@ -317,7 +324,7 @@
       "type": "blob",
       "sha": "0000000000000000000000000000000000000000",
       "size": 5754,
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/0000000000000000000000000000000000000000"
+      "url": ""
     },
     {
       "path": "galoz-source-mapping-2026-04-15.md",
@@ -325,7 +332,7 @@
       "type": "blob",
       "sha": "0000000000000000000000000000000000000000",
       "size": 2729,
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/0000000000000000000000000000000000000000"
+      "url": ""
     },
     {
       "path": "galoz-source-mapping-qwen-code-2026-04-15.md",
@@ -333,7 +340,7 @@
       "type": "blob",
       "sha": "0000000000000000000000000000000000000000",
       "size": 2796,
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/0000000000000000000000000000000000000000"
+      "url": ""
     },
     {
       "path": "galoz-validation-report-2026-04-15.md",
@@ -341,7 +348,7 @@
       "type": "blob",
       "sha": "0000000000000000000000000000000000000000",
       "size": 6780,
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/0000000000000000000000000000000000000000"
+      "url": ""
     },
     {
       "path": "galoz-validation-report-qwen-code-2026-04-15.md",
@@ -349,28 +356,28 @@
       "type": "blob",
       "sha": "0000000000000000000000000000000000000000",
       "size": 6813,
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/0000000000000000000000000000000000000000"
+      "url": ""
     },
     {
       "path": "galoz.co.il",
       "mode": "040000",
       "type": "tree",
       "sha": "0000000000000000000000000000000000000000",
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0000000000000000000000000000000000000000"
+      "url": ""
     },
     {
       "path": "galoz.co.il/Codex",
       "mode": "040000",
       "type": "tree",
       "sha": "0000000000000000000000000000000000000000",
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0000000000000000000000000000000000000000"
+      "url": ""
     },
     {
       "path": "galoz.co.il/Codex/2026-04-15",
       "mode": "040000",
       "type": "tree",
       "sha": "0000000000000000000000000000000000000000",
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0000000000000000000000000000000000000000"
+      "url": ""
     },
     {
       "path": "galoz.co.il/Codex/2026-04-15/Improved_HTML_Template.html",
@@ -378,7 +385,7 @@
       "type": "blob",
       "sha": "0000000000000000000000000000000000000000",
       "size": 47851,
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/0000000000000000000000000000000000000000"
+      "url": ""
     },
     {
       "path": "galoz.co.il/Codex/2026-04-15/Improved_N8N_Prompt.txt",
@@ -386,7 +393,7 @@
       "type": "blob",
       "sha": "0000000000000000000000000000000000000000",
       "size": 14827,
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/0000000000000000000000000000000000000000"
+      "url": ""
     },
     {
       "path": "galoz.co.il/Codex/2026-04-15/Improved_N8N_Workflow.json",
@@ -394,21 +401,21 @@
       "type": "blob",
       "sha": "0000000000000000000000000000000000000000",
       "size": 135512,
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/0000000000000000000000000000000000000000"
+      "url": ""
     },
     {
       "path": "galoz.co.il/Copilot",
       "mode": "040000",
       "type": "tree",
       "sha": "0000000000000000000000000000000000000000",
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0000000000000000000000000000000000000000"
+      "url": ""
     },
     {
       "path": "galoz.co.il/Copilot/2026-04-15",
       "mode": "040000",
       "type": "tree",
       "sha": "0000000000000000000000000000000000000000",
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0000000000000000000000000000000000000000"
+      "url": ""
     },
     {
       "path": "galoz.co.il/Copilot/2026-04-15/Improved_HTML_Template.html",
@@ -416,7 +423,7 @@
       "type": "blob",
       "sha": "0000000000000000000000000000000000000000",
       "size": 64023,
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/0000000000000000000000000000000000000000"
+      "url": ""
     },
     {
       "path": "galoz.co.il/Copilot/2026-04-15/Improved_N8N_Prompt.txt",
@@ -424,7 +431,7 @@
       "type": "blob",
       "sha": "0000000000000000000000000000000000000000",
       "size": 56427,
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/0000000000000000000000000000000000000000"
+      "url": ""
     },
     {
       "path": "galoz.co.il/Copilot/2026-04-15/Improved_N8N_Workflow.json",
@@ -432,21 +439,21 @@
       "type": "blob",
       "sha": "0000000000000000000000000000000000000000",
       "size": 181974,
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/0000000000000000000000000000000000000000"
+      "url": ""
     },
     {
       "path": "galoz.co.il/Gemini",
       "mode": "040000",
       "type": "tree",
       "sha": "0000000000000000000000000000000000000000",
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0000000000000000000000000000000000000000"
+      "url": ""
     },
     {
       "path": "galoz.co.il/Gemini/2026-04-15",
       "mode": "040000",
       "type": "tree",
       "sha": "0000000000000000000000000000000000000000",
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0000000000000000000000000000000000000000"
+      "url": ""
     },
     {
       "path": "galoz.co.il/Gemini/2026-04-15/Improved_HTML_Template_Gemini.html",
@@ -454,7 +461,7 @@
       "type": "blob",
       "sha": "0000000000000000000000000000000000000000",
       "size": 37382,
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/0000000000000000000000000000000000000000"
+      "url": ""
     },
     {
       "path": "galoz.co.il/Gemini/2026-04-15/Improved_N8N_Prompt_Gemini.txt",
@@ -462,7 +469,7 @@
       "type": "blob",
       "sha": "0000000000000000000000000000000000000000",
       "size": 55826,
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/0000000000000000000000000000000000000000"
+      "url": ""
     },
     {
       "path": "galoz.co.il/Gemini/2026-04-15/Improved_N8N_Workflow_Gemini.json",
@@ -470,21 +477,21 @@
       "type": "blob",
       "sha": "0000000000000000000000000000000000000000",
       "size": 179743,
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/0000000000000000000000000000000000000000"
+      "url": ""
     },
     {
       "path": "galoz.co.il/Hermes Agent",
       "mode": "040000",
       "type": "tree",
       "sha": "0000000000000000000000000000000000000000",
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0000000000000000000000000000000000000000"
+      "url": ""
     },
     {
       "path": "galoz.co.il/Hermes Agent/2026-04-15",
       "mode": "040000",
       "type": "tree",
       "sha": "0000000000000000000000000000000000000000",
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0000000000000000000000000000000000000000"
+      "url": ""
     },
     {
       "path": "galoz.co.il/Hermes Agent/2026-04-15/Improved_HTML_Template.html",
@@ -492,7 +499,7 @@
       "type": "blob",
       "sha": "0000000000000000000000000000000000000000",
       "size": 44592,
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/0000000000000000000000000000000000000000"
+      "url": ""
     },
     {
       "path": "galoz.co.il/Hermes Agent/2026-04-15/Improved_N8N_Prompt.txt",
@@ -500,7 +507,7 @@
       "type": "blob",
       "sha": "0000000000000000000000000000000000000000",
       "size": 15549,
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/0000000000000000000000000000000000000000"
+      "url": ""
     },
     {
       "path": "galoz.co.il/Hermes Agent/2026-04-15/Improved_N8N_Workflow.json",
@@ -508,14 +515,14 @@
       "type": "blob",
       "sha": "0000000000000000000000000000000000000000",
       "size": 135447,
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/0000000000000000000000000000000000000000"
+      "url": ""
     },
     {
       "path": "galoz.co.il/claude-code-15.4.26",
       "mode": "040000",
       "type": "tree",
       "sha": "0000000000000000000000000000000000000000",
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0000000000000000000000000000000000000000"
+      "url": ""
     },
     {
       "path": "galoz.co.il/claude-code-15.4.26/Improved_HTML_Template-claude-code-15.4.26.html",
@@ -523,7 +530,7 @@
       "type": "blob",
       "sha": "0000000000000000000000000000000000000000",
       "size": 51687,
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/0000000000000000000000000000000000000000"
+      "url": ""
     },
     {
       "path": "galoz.co.il/claude-code-15.4.26/Improved_N8N_Prompt-claude-code-15.4.26.txt",
@@ -531,7 +538,7 @@
       "type": "blob",
       "sha": "0000000000000000000000000000000000000000",
       "size": 56257,
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/0000000000000000000000000000000000000000"
+      "url": ""
     },
     {
       "path": "galoz.co.il/claude-code-15.4.26/Improved_N8N_Workflow-claude-code-15.4.26.json",
@@ -539,21 +546,21 @@
       "type": "blob",
       "sha": "0000000000000000000000000000000000000000",
       "size": 179470,
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/0000000000000000000000000000000000000000"
+      "url": ""
     },
     {
       "path": "galoz.co.il/myclaw",
       "mode": "040000",
       "type": "tree",
       "sha": "0000000000000000000000000000000000000000",
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0000000000000000000000000000000000000000"
+      "url": ""
     },
     {
       "path": "galoz.co.il/myclaw/Updated Files 15.4.26",
       "mode": "040000",
       "type": "tree",
       "sha": "0000000000000000000000000000000000000000",
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0000000000000000000000000000000000000000"
+      "url": ""
     },
     {
       "path": "galoz.co.il/myclaw/Updated Files 15.4.26/galoz.co.il_Improved_HTML_Template-myclaw-15.4.26.html",
@@ -561,7 +568,7 @@
       "type": "blob",
       "sha": "0000000000000000000000000000000000000000",
       "size": 57531,
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/0000000000000000000000000000000000000000"
+      "url": ""
     },
     {
       "path": "galoz.co.il/myclaw/Updated Files 15.4.26/galoz.co.il_Improved_N8N_Prompt-myclaw-15.4.26.txt",
@@ -569,7 +576,7 @@
       "type": "blob",
       "sha": "0000000000000000000000000000000000000000",
       "size": 2939,
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/0000000000000000000000000000000000000000"
+      "url": ""
     },
     {
       "path": "galoz.co.il/myclaw/Updated Files 15.4.26/galoz.co.il_Improved_N8N_Workflow-myclaw-15.4.26.json",
@@ -577,21 +584,21 @@
       "type": "blob",
       "sha": "0000000000000000000000000000000000000000",
       "size": 12115,
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/0000000000000000000000000000000000000000"
+      "url": ""
     },
     {
       "path": "hondabike.co.il",
       "mode": "040000",
       "type": "tree",
       "sha": "0000000000000000000000000000000000000000",
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0000000000000000000000000000000000000000"
+      "url": ""
     },
     {
       "path": "hondabike.co.il/Improved Files (12.4.26) ✦ Latest",
       "mode": "040000",
       "type": "tree",
       "sha": "0000000000000000000000000000000000000000",
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0000000000000000000000000000000000000000"
+      "url": ""
     },
     {
       "path": "hondabike.co.il/Improved Files (12.4.26) ✦ Latest/Improved_HTML_Template.html",
@@ -599,7 +606,7 @@
       "type": "blob",
       "sha": "0000000000000000000000000000000000000000",
       "size": 72389,
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/0000000000000000000000000000000000000000"
+      "url": ""
     },
     {
       "path": "hondabike.co.il/Improved Files (12.4.26) ✦ Latest/Improved_N8N_Prompt.txt",
@@ -607,7 +614,7 @@
       "type": "blob",
       "sha": "0000000000000000000000000000000000000000",
       "size": 31069,
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/0000000000000000000000000000000000000000"
+      "url": ""
     },
     {
       "path": "hondabike.co.il/Improved Files (12.4.26) ✦ Latest/Improved_N8N_Workflow.json",
@@ -615,7 +622,7 @@
       "type": "blob",
       "sha": "0000000000000000000000000000000000000000",
       "size": 164749,
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/0000000000000000000000000000000000000000"
+      "url": ""
     },
     {
       "path": "index.html",
@@ -623,21 +630,21 @@
       "type": "blob",
       "sha": "0000000000000000000000000000000000000000",
       "size": 260834,
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/0000000000000000000000000000000000000000"
+      "url": ""
     },
     {
       "path": "jacknows.ai",
       "mode": "040000",
       "type": "tree",
       "sha": "0000000000000000000000000000000000000000",
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0000000000000000000000000000000000000000"
+      "url": ""
     },
     {
       "path": "jacknows.ai/Improved Files (31.3.26) ✦ Latest",
       "mode": "040000",
       "type": "tree",
       "sha": "0000000000000000000000000000000000000000",
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0000000000000000000000000000000000000000"
+      "url": ""
     },
     {
       "path": "jacknows.ai/Improved Files (31.3.26) ✦ Latest/Improved_HTML_Template.html",
@@ -645,7 +652,7 @@
       "type": "blob",
       "sha": "0000000000000000000000000000000000000000",
       "size": 49584,
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/0000000000000000000000000000000000000000"
+      "url": ""
     },
     {
       "path": "jacknows.ai/Improved Files (31.3.26) ✦ Latest/Improved_N8N_Prompt.txt",
@@ -653,7 +660,7 @@
       "type": "blob",
       "sha": "0000000000000000000000000000000000000000",
       "size": 20037,
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/0000000000000000000000000000000000000000"
+      "url": ""
     },
     {
       "path": "jacknows.ai/Improved Files (31.3.26) ✦ Latest/Improved_N8N_Workflow.json",
@@ -661,7 +668,7 @@
       "type": "blob",
       "sha": "0000000000000000000000000000000000000000",
       "size": 142686,
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/0000000000000000000000000000000000000000"
+      "url": ""
     },
     {
       "path": "n8n-workflow-map.json",
@@ -669,21 +676,21 @@
       "type": "blob",
       "sha": "0000000000000000000000000000000000000000",
       "size": 236,
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/0000000000000000000000000000000000000000"
+      "url": ""
     },
     {
       "path": "netanya.ac.il",
       "mode": "040000",
       "type": "tree",
       "sha": "0000000000000000000000000000000000000000",
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0000000000000000000000000000000000000000"
+      "url": ""
     },
     {
       "path": "netanya.ac.il/Improved Files (5.4.26)",
       "mode": "040000",
       "type": "tree",
       "sha": "0000000000000000000000000000000000000000",
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0000000000000000000000000000000000000000"
+      "url": ""
     },
     {
       "path": "netanya.ac.il/Improved Files (5.4.26)/Improved_HTML_Template.html",
@@ -691,7 +698,7 @@
       "type": "blob",
       "sha": "0000000000000000000000000000000000000000",
       "size": 75510,
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/0000000000000000000000000000000000000000"
+      "url": ""
     },
     {
       "path": "netanya.ac.il/Improved Files (5.4.26)/Improved_N8N_Prompt.txt",
@@ -699,7 +706,7 @@
       "type": "blob",
       "sha": "0000000000000000000000000000000000000000",
       "size": 17821,
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/0000000000000000000000000000000000000000"
+      "url": ""
     },
     {
       "path": "netanya.ac.il/Improved Files (5.4.26)/Improved_N8N_Workflow.json",
@@ -707,14 +714,14 @@
       "type": "blob",
       "sha": "0000000000000000000000000000000000000000",
       "size": 16596,
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/0000000000000000000000000000000000000000"
+      "url": ""
     },
     {
       "path": "netanya.ac.il/Improved Files (6.4.26)",
       "mode": "040000",
       "type": "tree",
       "sha": "0000000000000000000000000000000000000000",
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0000000000000000000000000000000000000000"
+      "url": ""
     },
     {
       "path": "netanya.ac.il/Improved Files (6.4.26)/Improved_HTML_Template.html",
@@ -722,7 +729,7 @@
       "type": "blob",
       "sha": "0000000000000000000000000000000000000000",
       "size": 80700,
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/0000000000000000000000000000000000000000"
+      "url": ""
     },
     {
       "path": "netanya.ac.il/Improved Files (6.4.26)/Improved_N8N_Prompt.txt",
@@ -730,7 +737,7 @@
       "type": "blob",
       "sha": "0000000000000000000000000000000000000000",
       "size": 26172,
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/0000000000000000000000000000000000000000"
+      "url": ""
     },
     {
       "path": "netanya.ac.il/Improved Files (6.4.26)/Improved_N8N_Workflow.json",
@@ -738,21 +745,21 @@
       "type": "blob",
       "sha": "0000000000000000000000000000000000000000",
       "size": 154138,
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/0000000000000000000000000000000000000000"
+      "url": ""
     },
     {
       "path": "netanya.ac.il/claude-code",
       "mode": "040000",
       "type": "tree",
       "sha": "0000000000000000000000000000000000000000",
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0000000000000000000000000000000000000000"
+      "url": ""
     },
     {
       "path": "netanya.ac.il/claude-code/06.04.26",
       "mode": "040000",
       "type": "tree",
       "sha": "0000000000000000000000000000000000000000",
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0000000000000000000000000000000000000000"
+      "url": ""
     },
     {
       "path": "netanya.ac.il/claude-code/06.04.26/Improved_HTML_Template.html",
@@ -760,7 +767,7 @@
       "type": "blob",
       "sha": "0000000000000000000000000000000000000000",
       "size": 80700,
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/0000000000000000000000000000000000000000"
+      "url": ""
     },
     {
       "path": "netanya.ac.il/claude-code/06.04.26/Improved_N8N_Prompt.txt",
@@ -768,7 +775,7 @@
       "type": "blob",
       "sha": "0000000000000000000000000000000000000000",
       "size": 26172,
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/0000000000000000000000000000000000000000"
+      "url": ""
     },
     {
       "path": "netanya.ac.il/claude-code/06.04.26/Improved_N8N_Workflow.json",
@@ -776,28 +783,28 @@
       "type": "blob",
       "sha": "0000000000000000000000000000000000000000",
       "size": 154138,
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/0000000000000000000000000000000000000000"
+      "url": ""
     },
     {
       "path": "powerplug.ai",
       "mode": "040000",
       "type": "tree",
       "sha": "0000000000000000000000000000000000000000",
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0000000000000000000000000000000000000000"
+      "url": ""
     },
     {
       "path": "powerplug.ai/CLAUDE CODE (Tim Claw Max)",
       "mode": "040000",
       "type": "tree",
       "sha": "0000000000000000000000000000000000000000",
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0000000000000000000000000000000000000000"
+      "url": ""
     },
     {
       "path": "powerplug.ai/CLAUDE CODE (Tim Claw Max)/2026-04-16",
       "mode": "040000",
       "type": "tree",
       "sha": "0000000000000000000000000000000000000000",
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0000000000000000000000000000000000000000"
+      "url": ""
     },
     {
       "path": "powerplug.ai/CLAUDE CODE (Tim Claw Max)/2026-04-16/Improved_HTML_Template.html",
@@ -805,7 +812,7 @@
       "type": "blob",
       "sha": "0000000000000000000000000000000000000000",
       "size": 57234,
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/0000000000000000000000000000000000000000"
+      "url": ""
     },
     {
       "path": "powerplug.ai/CLAUDE CODE (Tim Claw Max)/2026-04-16/Improved_N8N_Prompt.txt",
@@ -813,7 +820,7 @@
       "type": "blob",
       "sha": "0000000000000000000000000000000000000000",
       "size": 13577,
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/0000000000000000000000000000000000000000"
+      "url": ""
     },
     {
       "path": "powerplug.ai/CLAUDE CODE (Tim Claw Max)/2026-04-16/Improved_N8N_Workflow.json",
@@ -821,21 +828,21 @@
       "type": "blob",
       "sha": "0000000000000000000000000000000000000000",
       "size": 16335,
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/0000000000000000000000000000000000000000"
+      "url": ""
     },
     {
       "path": "powerplug.ai/Claude Code",
       "mode": "040000",
       "type": "tree",
       "sha": "0000000000000000000000000000000000000000",
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0000000000000000000000000000000000000000"
+      "url": ""
     },
     {
       "path": "powerplug.ai/Claude Code/2026-04-16",
       "mode": "040000",
       "type": "tree",
       "sha": "0000000000000000000000000000000000000000",
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0000000000000000000000000000000000000000"
+      "url": ""
     },
     {
       "path": "powerplug.ai/Claude Code/2026-04-16/Improved_HTML_Template.html",
@@ -843,7 +850,7 @@
       "type": "blob",
       "sha": "0000000000000000000000000000000000000000",
       "size": 49175,
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/0000000000000000000000000000000000000000"
+      "url": ""
     },
     {
       "path": "powerplug.ai/Claude Code/2026-04-16/Improved_N8N_Prompt.txt",
@@ -851,7 +858,7 @@
       "type": "blob",
       "sha": "0000000000000000000000000000000000000000",
       "size": 18688,
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/0000000000000000000000000000000000000000"
+      "url": ""
     },
     {
       "path": "powerplug.ai/Claude Code/2026-04-16/Improved_N8N_Workflow.json",
@@ -859,21 +866,21 @@
       "type": "blob",
       "sha": "0000000000000000000000000000000000000000",
       "size": 20768,
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/0000000000000000000000000000000000000000"
+      "url": ""
     },
     {
       "path": "powerplug.ai/Copilot",
       "mode": "040000",
       "type": "tree",
       "sha": "0000000000000000000000000000000000000000",
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0000000000000000000000000000000000000000"
+      "url": ""
     },
     {
       "path": "powerplug.ai/Copilot/2026-04-17",
       "mode": "040000",
       "type": "tree",
       "sha": "0000000000000000000000000000000000000000",
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0000000000000000000000000000000000000000"
+      "url": ""
     },
     {
       "path": "powerplug.ai/Copilot/2026-04-17/Improved_HTML_Template-copilot-2026-04-17.html",
@@ -881,7 +888,7 @@
       "type": "blob",
       "sha": "0000000000000000000000000000000000000000",
       "size": 44444,
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/0000000000000000000000000000000000000000"
+      "url": ""
     },
     {
       "path": "powerplug.ai/Copilot/2026-04-17/Improved_N8N_Prompt-copilot-2026-04-17.txt",
@@ -889,7 +896,7 @@
       "type": "blob",
       "sha": "0000000000000000000000000000000000000000",
       "size": 17427,
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/0000000000000000000000000000000000000000"
+      "url": ""
     },
     {
       "path": "powerplug.ai/Copilot/2026-04-17/Improved_N8N_Workflow-copilot-2026-04-17.json",
@@ -897,21 +904,21 @@
       "type": "blob",
       "sha": "0000000000000000000000000000000000000000",
       "size": 129113,
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/0000000000000000000000000000000000000000"
+      "url": ""
     },
     {
       "path": "powerplug.ai/Hermes Agent",
       "mode": "040000",
       "type": "tree",
       "sha": "0000000000000000000000000000000000000000",
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0000000000000000000000000000000000000000"
+      "url": ""
     },
     {
       "path": "powerplug.ai/Hermes Agent/2026-04-16",
       "mode": "040000",
       "type": "tree",
       "sha": "0000000000000000000000000000000000000000",
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0000000000000000000000000000000000000000"
+      "url": ""
     },
     {
       "path": "powerplug.ai/Hermes Agent/2026-04-16/Improved_HTML_Template.html",
@@ -919,7 +926,7 @@
       "type": "blob",
       "sha": "0000000000000000000000000000000000000000",
       "size": 33652,
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/0000000000000000000000000000000000000000"
+      "url": ""
     },
     {
       "path": "powerplug.ai/Hermes Agent/2026-04-16/Improved_N8N_Prompt.txt",
@@ -927,7 +934,7 @@
       "type": "blob",
       "sha": "0000000000000000000000000000000000000000",
       "size": 11769,
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/0000000000000000000000000000000000000000"
+      "url": ""
     },
     {
       "path": "powerplug.ai/Hermes Agent/2026-04-16/Improved_N8N_Workflow.json",
@@ -935,21 +942,21 @@
       "type": "blob",
       "sha": "0000000000000000000000000000000000000000",
       "size": 128442,
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/0000000000000000000000000000000000000000"
+      "url": ""
     },
     {
       "path": "powerplug.ai/agent-zero",
       "mode": "040000",
       "type": "tree",
       "sha": "0000000000000000000000000000000000000000",
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0000000000000000000000000000000000000000"
+      "url": ""
     },
     {
       "path": "powerplug.ai/agent-zero/2026-04-16",
       "mode": "040000",
       "type": "tree",
       "sha": "0000000000000000000000000000000000000000",
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0000000000000000000000000000000000000000"
+      "url": ""
     },
     {
       "path": "powerplug.ai/agent-zero/2026-04-16/Improved_HTML_Template.html",
@@ -957,7 +964,7 @@
       "type": "blob",
       "sha": "0000000000000000000000000000000000000000",
       "size": 60199,
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/0000000000000000000000000000000000000000"
+      "url": ""
     },
     {
       "path": "powerplug.ai/agent-zero/2026-04-16/Improved_N8N_Prompt.txt",
@@ -965,7 +972,7 @@
       "type": "blob",
       "sha": "0000000000000000000000000000000000000000",
       "size": 8171,
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/0000000000000000000000000000000000000000"
+      "url": ""
     },
     {
       "path": "powerplug.ai/agent-zero/2026-04-16/Improved_N8N_Workflow.json",
@@ -973,21 +980,21 @@
       "type": "blob",
       "sha": "0000000000000000000000000000000000000000",
       "size": 9157,
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/0000000000000000000000000000000000000000"
+      "url": ""
     },
     {
       "path": "powerplug.ai/gemini",
       "mode": "040000",
       "type": "tree",
       "sha": "0000000000000000000000000000000000000000",
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0000000000000000000000000000000000000000"
+      "url": ""
     },
     {
       "path": "powerplug.ai/gemini/2026-04-17",
       "mode": "040000",
       "type": "tree",
       "sha": "0000000000000000000000000000000000000000",
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0000000000000000000000000000000000000000"
+      "url": ""
     },
     {
       "path": "powerplug.ai/gemini/2026-04-17/Improved_HTML_Template-gemini-2026-04-17.html",
@@ -995,7 +1002,7 @@
       "type": "blob",
       "sha": "0000000000000000000000000000000000000000",
       "size": 13546,
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/0000000000000000000000000000000000000000"
+      "url": ""
     },
     {
       "path": "powerplug.ai/gemini/2026-04-17/Improved_N8N_Prompt-gemini-2026-04-17.txt",
@@ -1003,7 +1010,7 @@
       "type": "blob",
       "sha": "0000000000000000000000000000000000000000",
       "size": 17425,
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/0000000000000000000000000000000000000000"
+      "url": ""
     },
     {
       "path": "powerplug.ai/gemini/2026-04-17/Improved_N8N_Workflow-gemini-2026-04-17.json",
@@ -1011,21 +1018,21 @@
       "type": "blob",
       "sha": "0000000000000000000000000000000000000000",
       "size": 129110,
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/0000000000000000000000000000000000000000"
+      "url": ""
     },
     {
       "path": "prompts",
       "mode": "040000",
       "type": "tree",
       "sha": "0000000000000000000000000000000000000000",
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0000000000000000000000000000000000000000"
+      "url": ""
     },
     {
       "path": "prompts/claude-code-15.4.26",
       "mode": "040000",
       "type": "tree",
       "sha": "0000000000000000000000000000000000000000",
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/trees/0000000000000000000000000000000000000000"
+      "url": ""
     },
     {
       "path": "prompts/claude-code-15.4.26/deploy-to-n8n-button-request-claude-code-15.4.26.md",
@@ -1033,7 +1040,7 @@
       "type": "blob",
       "sha": "0000000000000000000000000000000000000000",
       "size": 1113,
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/0000000000000000000000000000000000000000"
+      "url": ""
     },
     {
       "path": "server.py",
@@ -1041,7 +1048,7 @@
       "type": "blob",
       "sha": "0000000000000000000000000000000000000000",
       "size": 54696,
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/0000000000000000000000000000000000000000"
+      "url": ""
     },
     {
       "path": "test-article-2026-04-15.html",
@@ -1049,7 +1056,7 @@
       "type": "blob",
       "sha": "0000000000000000000000000000000000000000",
       "size": 9477,
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/0000000000000000000000000000000000000000"
+      "url": ""
     },
     {
       "path": "validation-report-2026-04-15.md",
@@ -1057,7 +1064,7 @@
       "type": "blob",
       "sha": "0000000000000000000000000000000000000000",
       "size": 4160,
-      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/git/blobs/0000000000000000000000000000000000000000"
+      "url": ""
     }
   ],
   "truncated": false
