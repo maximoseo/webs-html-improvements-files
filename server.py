@@ -141,7 +141,7 @@ def prompt_headers():
 def _get_provider_chain():
     """
     Return list of providers in priority order.
-    Priority: Copilot -> Anthropic -> Gemini -> OpenAI -> OpenRouter (last resort).
+    Priority: Copilot -> Gemini -> OpenAI -> Venice -> Fireworks -> OpenRouter (last resort).
     OpenRouter is tried last because it has rate limits and costs per token.
     """
     chain = []
@@ -162,22 +162,7 @@ def _get_provider_chain():
             'model_override': os.getenv('COPILOT_MODEL', 'claude-sonnet-4.6'),
         })
 
-    # 2. Anthropic direct (Claude Code Max plan)
-    anthropic_key = os.getenv('ANTHROPIC_API_KEY')
-    if anthropic_key:
-        chain.append({
-            'name': 'anthropic',
-            'base': 'https://api.anthropic.com/v1',
-            'headers': {
-                'x-api-key': anthropic_key,
-                'anthropic-version': '2023-06-01',
-                'Accept': 'application/json',
-            },
-            'model_override': os.getenv('ANTHROPIC_MODEL', 'claude-sonnet-4-5'),
-            'anthropic_native': True,
-        })
-
-    # 3. Google Gemini (native REST API)
+    # 2. Google Gemini (native REST API)
     gemini_key = os.getenv('GEMINI_API_KEY')
     if gemini_key:
         chain.append({
@@ -191,7 +176,7 @@ def _get_provider_chain():
             'gemini_native': True,
         })
 
-    # 4. OpenAI direct
+    # 3. OpenAI direct
     oai_key = os.getenv('OPENAI_API_KEY')
     if oai_key:
         base = os.getenv('OPENAI_BASE_URL', 'https://api.openai.com/v1')
@@ -205,7 +190,33 @@ def _get_provider_chain():
             'model_override': os.getenv('OPENAI_FALLBACK_MODEL', 'gpt-4o'),
         })
 
-    # 5. OpenRouter — last resort (pay-per-token, rate-limited)
+    # 4. Venice AI (privacy-focused, uncensored models)
+    venice_key = os.getenv('VENICE_API_KEY')
+    if venice_key:
+        chain.append({
+            'name': 'venice',
+            'base': 'https://api.venice.ai/api/v1',
+            'headers': {
+                'Authorization': f'Bearer {venice_key}',
+                'Accept': 'application/json',
+            },
+            'model_override': os.getenv('VENICE_MODEL', 'llama-3.3-70b'),
+        })
+
+    # 5. Fireworks AI (fast inference)
+    fireworks_key = os.getenv('FIREWORKS_API_KEY')
+    if fireworks_key:
+        chain.append({
+            'name': 'fireworks',
+            'base': 'https://api.fireworks.ai/inference/v1',
+            'headers': {
+                'Authorization': f'Bearer {fireworks_key}',
+                'Accept': 'application/json',
+            },
+            'model_override': os.getenv('FIREWORKS_MODEL', 'accounts/fireworks/models/llama-v3p3-70b-instruct'),
+        })
+
+    # 6. OpenRouter — last resort (pay-per-token, rate-limited)
     or_key = os.getenv('OPENROUTER_API_KEY')
     if or_key:
         chain.append({
@@ -228,21 +239,26 @@ def _detect_preferred_provider(model: str) -> str | None:
     Detect which provider to try first based on model ID format.
     OpenRouter:  contains '/'  (e.g. 'anthropic/claude-sonnet-4.6')
     Gemini:      starts with 'gemini-'
-    Copilot:     short IDs like 'claude-sonnet-4.6', 'gpt-4o', 'o3', 'gpt-4.1', 'o4-mini'
-    Anthropic:   hyphenated IDs like 'claude-opus-4', 'claude-sonnet-4-5' (no dots)
+    Copilot:     short IDs with dots (e.g. 'claude-sonnet-4.6', 'gpt-4.1', 'o4-mini')
+    Venice:      starts with 'venice-' or known venice model slugs
+    Fireworks:   starts with 'accounts/fireworks/'
     """
     if not model:
         return None
     if '/' in model:
+        if model.startswith('accounts/fireworks/'):
+            return 'fireworks'
         return 'openrouter'
     if model.startswith('gemini-'):
         return 'gemini'
-    # Copilot short IDs have dots (version numbers like 4.6, 5.4)
+    if model.startswith('venice-'):
+        return 'venice'
+    # Copilot short IDs have dots (version numbers like 4.6, 5.4, 4.1)
     if '.' in model:
         return 'copilot'
-    # Anthropic native IDs: claude-* with hyphens only
+    # Anthropic native IDs: claude-* with hyphens only (no dots) — still route via copilot fallback
     if model.startswith('claude-'):
-        return 'anthropic'
+        return 'copilot'
     return None
 
 
@@ -1193,8 +1209,25 @@ class DashboardHandler(BaseHTTPRequestHandler):
                     {'id': 'gemini-2.0-flash',                  'label': 'Gemini 2.0 Flash',               'provider': 'gemini'},
                     {'id': 'gemini-2.0-flash-lite',             'label': 'Gemini 2.0 Flash Lite',          'provider': 'gemini'},
                     # --- Anthropic direct (Claude Code Max plan) ---
+                    {'id': 'claude-opus-4-5',                   'label': 'Claude Opus 4.5 (Anthropic)',     'provider': 'anthropic'},
                     {'id': 'claude-sonnet-4-5',                 'label': 'Claude Sonnet 4.5 (Anthropic)',   'provider': 'anthropic'},
                     {'id': 'claude-opus-4',                     'label': 'Claude Opus 4 (Anthropic)',       'provider': 'anthropic'},
+                    {'id': 'claude-sonnet-4',                   'label': 'Claude Sonnet 4 (Anthropic)',     'provider': 'anthropic'},
+                    {'id': 'claude-haiku-3-5',                  'label': 'Claude Haiku 3.5 (Anthropic)',    'provider': 'anthropic'},
+                    # --- Venice AI ---
+                    {'id': 'llama-3.3-70b',                     'label': 'Llama 3.3 70B (Venice)',          'provider': 'venice'},
+                    {'id': 'llama-3.1-405b',                    'label': 'Llama 3.1 405B (Venice)',         'provider': 'venice'},
+                    {'id': 'mistral-31-24b',                    'label': 'Mistral 3.1 24B (Venice)',        'provider': 'venice'},
+                    {'id': 'qwen-2.5-72b',                      'label': 'Qwen 2.5 72B (Venice)',           'provider': 'venice'},
+                    {'id': 'deepseek-r1-671b',                  'label': 'DeepSeek R1 671B (Venice)',       'provider': 'venice'},
+                    {'id': 'deepseek-v3-0324',                  'label': 'DeepSeek V3 0324 (Venice)',       'provider': 'venice'},
+                    # --- Fireworks AI ---
+                    {'id': 'accounts/fireworks/models/llama-v3p3-70b-instruct',  'label': 'Llama 3.3 70B (Fireworks)',   'provider': 'fireworks'},
+                    {'id': 'accounts/fireworks/models/llama-v3p1-405b-instruct', 'label': 'Llama 3.1 405B (Fireworks)',  'provider': 'fireworks'},
+                    {'id': 'accounts/fireworks/models/deepseek-r1',              'label': 'DeepSeek R1 (Fireworks)',     'provider': 'fireworks'},
+                    {'id': 'accounts/fireworks/models/deepseek-v3',              'label': 'DeepSeek V3 (Fireworks)',     'provider': 'fireworks'},
+                    {'id': 'accounts/fireworks/models/qwen2p5-72b-instruct',     'label': 'Qwen 2.5 72B (Fireworks)',    'provider': 'fireworks'},
+                    {'id': 'accounts/fireworks/models/mixtral-8x22b-instruct',   'label': 'Mixtral 8x22B (Fireworks)',   'provider': 'fireworks'},
                 ],
             })
         if parsed.path == '/api/comments':
