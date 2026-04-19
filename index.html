@@ -2715,15 +2715,15 @@ header.header,
   z-index: 9999 !important;
   box-sizing: border-box;
 }
-/* Push page content below the fixed header */
+/* Push page content below the fixed header — fallbacks tuned to actual rendered heights to avoid CLS */
 body {
-  padding-top: var(--header-h, 72px);
+  padding-top: var(--header-h, 80px);
 }
 @media (max-width: 900px) {
-  body { padding-top: var(--header-h, 60px); }
+  body { padding-top: var(--header-h, 140px); }
 }
 @media (max-width: 480px) {
-  body { padding-top: var(--header-h, 56px); }
+  body { padding-top: var(--header-h, 200px); }
 }
 @media print {
   header.header, .header { position: static !important; }
