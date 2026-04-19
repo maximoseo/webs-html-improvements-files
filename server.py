@@ -1122,6 +1122,7 @@ class DashboardHandler(BaseHTTPRequestHandler):
             # X integration status
             state_copy['x_enabled'] = bool(os.getenv('X_BEARER_TOKEN'))
             state_copy['x_sources_found'] = _radar_state.get('x_sources_found', 0)
+            state_copy['last_email'] = _radar_state.get('last_email')
             return json_response(self, 200, {'ok': True, 'state': state_copy, 'last_run': last_run})
 
         if parsed.path == '/api/radar/results':
@@ -1329,9 +1330,19 @@ class DashboardHandler(BaseHTTPRequestHandler):
 
         # ===== RADAR POST ENDPOINTS =====
 
+        if parsed.path == '/api/radar/test-email':
+            try:
+                result = _send_radar_email_digest(
+                    skills_found_count=_radar_state.get('skills_found', 0),
+                    run_id=_radar_state.get('run_id'),
+                    errors=[],
+                )
+                return json_response(self, 200, result)
+            except Exception as exc:
+                return json_response(self, 500, {'ok': False, 'error': str(exc)})
+
         if parsed.path == '/api/radar/run':
             try:
-                global _radar_state
                 if _radar_state.get('status') == 'running':
                     return json_response(self, 409, {'ok': False, 'error': 'Discovery already running'})
                 config = payload.get('config') or {}
@@ -2339,6 +2350,270 @@ def _run_radar_discovery(config=None):
             'skills_found': skills_found,
             'errors': errors,
         })
+
+    # Send email digest after every run
+    _radar_state['stage'] = 'Sending email digest'
+    try:
+        email_result = _send_radar_email_digest(
+            skills_found_count=skills_found,
+            run_id=run_id,
+            errors=errors,
+        )
+        _radar_state['last_email'] = email_result
+    except Exception as _ee:
+        _radar_state['last_email'] = {'ok': False, 'error': str(_ee)}
+
+    _radar_state['stage'] = 'Complete'
+
+
+def _send_radar_email_digest(skills_found_count, run_id=None, errors=None):
+    """Send a clean HTML digest email via Resend API after each discovery run."""
+    import datetime as _dt
+    api_key  = (os.getenv('RESEND_API_KEY') or '').strip()
+    to_addr  = (os.getenv('RADAR_EMAIL_TO')  or 'service@maximo-seo.com').strip()
+    from_addr= (os.getenv('RADAR_EMAIL_FROM') or 'onboarding@resend.dev').strip()
+    if not api_key:
+        return {'ok': False, 'error': 'RESEND_API_KEY not configured'}
+
+    now_str = _dt.datetime.utcnow().strftime('%Y-%m-%d %H:%M UTC')
+    date_str = _dt.datetime.utcnow().strftime('%A, %d %B %Y')
+
+    # Fetch the latest pending skills for this run
+    skills_rows = []
+    cfg = supabase_radar_config()
+    if cfg['configured']:
+        try:
+            hdrs = _radar_sb_headers()
+            url = f"{cfg['url']}/rest/v1/skill_discoveries?select=*&status=eq.pending&order=created_at.desc&limit=30"
+            if run_id:
+                url += f"&run_id=eq.{urllib.parse.quote(str(run_id))}"
+            rows = fetch_json(url, headers=hdrs, timeout=15)
+            if isinstance(rows, list):
+                skills_rows = rows
+        except Exception:
+            pass
+
+    # X sources count
+    x_count = sum(1 for s in skills_rows if (s.get('source_type') or '').startswith('x_'))
+
+    # ── Category breakdown
+    from collections import Counter
+    cat_counts = Counter(s.get('category', 'other') for s in skills_rows)
+    cat_rows_html = ''.join(
+        f'<tr><td style="padding:6px 12px;color:#94a3b8;font-size:13px">{cat}</td>'
+        f'<td style="padding:6px 12px;color:#e2e8f0;font-size:13px;font-weight:700;text-align:right">{cnt}</td></tr>'
+        for cat, cnt in cat_counts.most_common()
+    )
+
+    # ── Skill cards HTML (top 20)
+    type_labels = {
+        'github_repo': 'GitHub', 'awesome_list': 'Awesome List',
+        'x_timeline': 'X Timeline', 'x_bookmark': 'X Bookmark',
+        'x_like': 'X Like', 'official_docs': 'Docs',
+    }
+    type_colors = {
+        'github_repo': '#22c55e', 'awesome_list': '#f59e0b',
+        'x_timeline': '#60a5fa', 'x_bookmark': '#3b82f6',
+        'x_like': '#f9a8d4', 'official_docs': '#a78bfa',
+    }
+    cat_icons = {
+        'automation': '⚙️', 'coding': '💻', 'ai_agents': '🤖', 'seo': '🔍',
+        'scraping': '🕷️', 'data': '📊', 'prompting': '💬', 'integration': '🔗',
+        'n8n': '🔀', 'research': '🔬', 'ui_ux': '🎨', 'memory': '🧠', 'other': '📦',
+    }
+
+    def _esc(s):
+        return str(s or '').replace('&','&amp;').replace('<','&lt;').replace('>','&gt;').replace('"','&quot;')
+
+    skill_cards_html = ''
+    for s in skills_rows[:20]:
+        src_type  = s.get('source_type','')
+        src_label = type_labels.get(src_type, src_type)
+        src_color = type_colors.get(src_type, '#94a3b8')
+        icon      = cat_icons.get(s.get('category','other'), '📦')
+        score     = int(float(s.get('usefulness_score') or s.get('source_quality') or 0.5) * 100)
+        agents    = ', '.join(s.get('target_agents') or ['General'])
+        src_url   = _esc(s.get('source_url') or '#')
+        src_title = _esc(s.get('source_title') or s.get('source_url') or '—')
+        skill_cards_html += f'''
+        <tr>
+          <td style="padding:16px;border-bottom:1px solid #1e293b">
+            <table width="100%" cellpadding="0" cellspacing="0">
+              <tr>
+                <td width="36" valign="top" style="padding-right:12px">
+                  <div style="width:34px;height:34px;border-radius:10px;background:linear-gradient(135deg,#312e81,#4c1d95);text-align:center;line-height:34px;font-size:16px">{icon}</div>
+                </td>
+                <td valign="top">
+                  <div style="font-size:15px;font-weight:700;color:#e2e8f0;margin-bottom:4px">{_esc(s.get("title","Untitled"))}</div>
+                  <div style="font-size:12px;color:#64748b;margin-bottom:6px">
+                    <span style="display:inline-block;padding:2px 7px;border-radius:8px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);color:{src_color};font-weight:700;font-size:10px">{src_label}</span>
+                    &nbsp;<a href="{src_url}" style="color:#a78bfa;text-decoration:none">{src_title}</a>
+                  </div>
+                  <div style="font-size:13px;color:#94a3b8;line-height:1.55;margin-bottom:8px">{_esc(s.get("summary",""))}</div>
+                  <div style="font-size:11px;color:#64748b">
+                    Agents: <span style="color:#c4b5fd">{_esc(agents)}</span>
+                    &nbsp;·&nbsp; Score: <span style="color:#e2e8f0;font-weight:700">{score}%</span>
+                    {("&nbsp;·&nbsp; <span style='color:#94a3b8'>" + _esc(s.get("implementation_idea","")) + "</span>") if s.get("implementation_idea") else ""}
+                  </div>
+                </td>
+                <td width="80" valign="top" style="text-align:right">
+                  <a href="https://html-redesign-dashboard.maximo-seo.ai/#radar"
+                     style="display:inline-block;padding:6px 12px;border-radius:8px;background:linear-gradient(135deg,#7c3aed,#6d28d9);color:#fff;font-size:11px;font-weight:700;text-decoration:none">Review</a>
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>'''
+
+    if not skill_cards_html:
+        skill_cards_html = '<tr><td style="padding:24px;text-align:center;color:#64748b;font-size:13px">No new skill candidates found this run.</td></tr>'
+
+    # ── Error rows
+    error_section = ''
+    if errors:
+        err_rows = ''.join(
+            f'<tr><td style="padding:4px 0;font-size:12px;color:#f87171">⚠ {_esc(e.get("source","?"))}: {_esc(e.get("error",""))}</td></tr>'
+            for e in (errors or [])[:5]
+        )
+        error_section = f'''
+        <table width="100%" cellpadding="0" cellspacing="0" style="margin-top:24px;background:#1e1b4b;border-radius:10px;overflow:hidden">
+          <tr><td style="padding:12px 16px;font-size:12px;font-weight:700;color:#f87171;border-bottom:1px solid #312e81">⚠ Errors ({len(errors)})</td></tr>
+          {err_rows}
+        </table>'''
+
+    # ── Full HTML email
+    html_body = f'''<!DOCTYPE html>
+<html>
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head>
+<body style="margin:0;padding:0;background:#0f172a;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif">
+<table width="100%" cellpadding="0" cellspacing="0" style="background:#0f172a;padding:32px 16px">
+<tr><td align="center">
+<table width="600" cellpadding="0" cellspacing="0" style="max-width:600px;width:100%">
+
+  <!-- Header -->
+  <tr><td style="background:linear-gradient(135deg,#1e1b4b,#312e81);border-radius:16px 16px 0 0;padding:28px 32px">
+    <table width="100%" cellpadding="0" cellspacing="0">
+      <tr>
+        <td>
+          <div style="font-size:11px;font-weight:700;color:#7c3aed;text-transform:uppercase;letter-spacing:.1em;margin-bottom:6px">Maximo SEO · Daily Radar</div>
+          <div style="font-size:24px;font-weight:800;color:#f1f5f9">📡 Skills Radar Digest</div>
+          <div style="font-size:13px;color:#94a3b8;margin-top:6px">{date_str} · {now_str}</div>
+        </td>
+        <td align="right" valign="top">
+          <a href="https://html-redesign-dashboard.maximo-seo.ai/#radar"
+             style="display:inline-block;padding:10px 20px;border-radius:10px;background:#7c3aed;color:#fff;font-size:13px;font-weight:700;text-decoration:none">Open Dashboard →</a>
+        </td>
+      </tr>
+    </table>
+  </td></tr>
+
+  <!-- Stats bar -->
+  <tr><td style="background:#1e293b;padding:20px 32px">
+    <table width="100%" cellpadding="0" cellspacing="0">
+      <tr>
+        <td style="text-align:center;border-right:1px solid #334155">
+          <div style="font-size:28px;font-weight:800;color:#a78bfa">{skills_found_count}</div>
+          <div style="font-size:11px;color:#64748b;font-weight:700;text-transform:uppercase;letter-spacing:.05em">New Skills</div>
+        </td>
+        <td style="text-align:center;border-right:1px solid #334155">
+          <div style="font-size:28px;font-weight:800;color:#60a5fa">{x_count}</div>
+          <div style="font-size:11px;color:#64748b;font-weight:700;text-transform:uppercase;letter-spacing:.05em">From X Feed</div>
+        </td>
+        <td style="text-align:center;border-right:1px solid #334155">
+          <div style="font-size:28px;font-weight:800;color:#fbbf24">{len(cat_counts)}</div>
+          <div style="font-size:11px;color:#64748b;font-weight:700;text-transform:uppercase;letter-spacing:.05em">Categories</div>
+        </td>
+        <td style="text-align:center">
+          <div style="font-size:28px;font-weight:800;color:#4ade80">{len(errors or [])}</div>
+          <div style="font-size:11px;color:#64748b;font-weight:700;text-transform:uppercase;letter-spacing:.05em">Errors</div>
+        </td>
+      </tr>
+    </table>
+  </td></tr>
+
+  <!-- Category breakdown -->
+  {'<tr><td style="background:#0f172a;padding:20px 32px"><div style="font-size:12px;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:.08em;margin-bottom:10px">By Category</div><table width="100%" cellpadding="0" cellspacing="0" style="background:#1e293b;border-radius:10px;overflow:hidden">' + cat_rows_html + '</table></td></tr>' if cat_counts else ''}
+
+  <!-- Skill cards heading -->
+  <tr><td style="background:#0f172a;padding:20px 32px 8px">
+    <div style="font-size:16px;font-weight:800;color:#e2e8f0">🎯 Top Discovered Skills</div>
+    <div style="font-size:12px;color:#64748b;margin-top:4px">Showing up to 20 · Pending your review</div>
+  </td></tr>
+
+  <!-- Skill cards -->
+  <tr><td style="background:#0f172a;padding:0 32px">
+    <table width="100%" cellpadding="0" cellspacing="0" style="background:#1e293b;border-radius:12px;overflow:hidden">
+      {skill_cards_html}
+    </table>
+  </td></tr>
+
+  {error_section}
+
+  <!-- CTA -->
+  <tr><td style="background:#0f172a;padding:24px 32px;text-align:center">
+    <a href="https://html-redesign-dashboard.maximo-seo.ai/#radar"
+       style="display:inline-block;padding:14px 32px;border-radius:12px;background:linear-gradient(135deg,#7c3aed,#6d28d9);color:#fff;font-size:15px;font-weight:800;text-decoration:none">
+      Review &amp; Approve Skills →
+    </a>
+    <div style="font-size:11px;color:#475569;margin-top:12px">Runs daily at 02:00 UTC · maximo-seo.com</div>
+  </td></tr>
+
+  <!-- Footer -->
+  <tr><td style="background:#0f172a;border-top:1px solid #1e293b;padding:16px 32px;border-radius:0 0 16px 16px">
+    <div style="font-size:11px;color:#475569;text-align:center">
+      Daily Skills Radar · HTML Redesign Dashboard · Maximo SEO<br>
+      Sent to {_esc(to_addr)} · {now_str}
+    </div>
+  </td></tr>
+
+</table>
+</td></tr>
+</table>
+</body>
+</html>'''
+
+    # ── Plain text fallback
+    text_lines = [
+        f"DAILY SKILLS RADAR DIGEST — {date_str}",
+        f"New Skills: {skills_found_count}  |  From X: {x_count}  |  Errors: {len(errors or [])}",
+        "",
+        "TOP DISCOVERED SKILLS:",
+    ]
+    for s in skills_rows[:20]:
+        text_lines.append(f"  • {s.get('title','?')} [{s.get('category','?')}] — {s.get('summary','')[:80]}")
+        if s.get('source_url'):
+            text_lines.append(f"    Source: {s.get('source_url','')}")
+    text_lines += ["", f"Review at: https://html-redesign-dashboard.maximo-seo.ai/#radar"]
+    plain_text = '\n'.join(text_lines)
+
+    subject = f"📡 Skills Radar: {skills_found_count} new skills found — {date_str}"
+
+    # ── Send via Resend API
+    payload = {
+        'from': from_addr,
+        'to': [to_addr],
+        'subject': subject,
+        'html': html_body,
+        'text': plain_text,
+    }
+    try:
+        req = urllib.request.Request(
+            'https://api.resend.com/emails',
+            data=json.dumps(payload).encode('utf-8'),
+            headers={
+                'Authorization': f'Bearer {api_key}',
+                'Content-Type': 'application/json',
+            },
+            method='POST'
+        )
+        with urllib.request.urlopen(req, timeout=20) as r:
+            resp = json.loads(r.read())
+            return {'ok': True, 'email_id': resp.get('id'), 'to': to_addr}
+    except urllib.error.HTTPError as exc:
+        body_err = exc.read().decode('utf-8', 'replace')[:400]
+        return {'ok': False, 'error': f'Resend HTTP {exc.code}: {body_err}'}
+    except Exception as exc:
+        return {'ok': False, 'error': str(exc)}
 
 
 def _radar_scheduler_loop():

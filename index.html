@@ -3337,6 +3337,10 @@ body {
       <button class="header-menu-btn accent" id="radar-run-btn" onclick="radarRunNow()" style="padding:8px 18px;font-size:13px">
         &#9654; Run Now
       </button>
+      <button class="skill-action-btn" onclick="radarSendTestEmail()" id="radar-test-email-btn" title="Send test digest email now" style="font-size:12px;gap:5px">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+        Test Email
+      </button>
     </div>
   </div>
 
@@ -3347,6 +3351,7 @@ body {
     <span class="radar-status-stage" id="radar-status-stage"></span>
     <div class="radar-progress-bar"><div class="radar-progress-fill" id="radar-progress-fill" style="width:0%"></div></div>
     <span style="font-size:11px;color:var(--muted);white-space:nowrap" id="radar-next-run">Next run: —</span>
+    <span style="font-size:11px;white-space:nowrap" id="radar-email-status"></span>
   </div>
 
   <!-- Stats -->
@@ -6654,6 +6659,16 @@ function loadRadarStatus() {
     if (schedHour && s.schedule_hour != null) schedHour.value = s.schedule_hour;
     if (schedBtn) schedBtn.textContent = s.paused ? 'Resume Schedule' : 'Pause Schedule';
 
+    // Email status
+    var emailEl = document.getElementById('radar-email-status');
+    if (emailEl && s.last_email) {
+      if (s.last_email.ok) {
+        emailEl.innerHTML = '✉ <span style="color:#4ade80">Email sent</span>';
+      } else {
+        emailEl.innerHTML = '✉ <span style="color:#f87171" title="'+escHtml(s.last_email.error||'')+'">Email failed</span>';
+      }
+    }
+
     var lr = d.last_run;
     if (lr && statLast) {
       var lrd = new Date(lr.created_at||lr.started_at);
@@ -6938,6 +6953,25 @@ function downloadRadarPrompt() {
 }
 
 function savePromptRecord() { alert('Prompt recorded (future: save to Supabase/GitHub).'); }
+
+function radarSendTestEmail() {
+  var btn = document.getElementById('radar-test-email-btn');
+  if (btn) { btn.disabled = true; btn.textContent = 'Sending…'; }
+  fetch('/api/radar/test-email', {method:'POST', headers:{'Content-Type':'application/json'}, body:'{}'})
+    .then(r=>r.json()).then(function(d) {
+      if (btn) { btn.disabled = false; btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg> Test Email'; }
+      if (d.ok) {
+        var el = document.getElementById('radar-email-status');
+        if (el) el.innerHTML = '✉ <span style="color:#4ade80">Sent to ' + escHtml(d.to||'') + '</span>';
+        alert('✓ Test email sent to ' + (d.to||'service@maximo-seo.com'));
+      } else {
+        alert('Email failed: ' + (d.error||'Unknown error'));
+      }
+    }).catch(function(e) {
+      if (btn) { btn.disabled = false; btn.textContent = 'Test Email'; }
+      alert('Error: ' + e.message);
+    });
+}
 
 function loadRadarHistory() {
   var list = document.getElementById('radar-history-list');
