@@ -102,26 +102,32 @@ details>summary:hover{background:rgba(135,86,46,0.04);border-radius:8px}
 [data-resp="callout-howto"]{background:#FAF8F5;border:1px solid #A0704A;border-radius:8px;padding:clamp(18px,3vw,24px);margin:clamp(20px,3vw,28px) 0;box-shadow:0 2px 12px rgba(135,86,46,0.08)}
 [data-resp="callout-didyouknow"]{background:#DCDAD8;border-radius:8px;padding:clamp(18px,3vw,24px);margin:clamp(20px,3vw,28px) 0;box-shadow:0 2px 12px rgba(135,86,46,0.08)}
 [data-resp="callout-label"]{display:inline-flex;align-items:center;gap:8px;font-family:'Frank Ruhl Libre',serif;font-size:clamp(0.9rem,2vw,1rem);font-weight:700;color:#87562E;letter-spacing:0.5px;margin-bottom:10px}
-[data-resp="top-btn"]{opacity:0;pointer-events:none;transition:opacity 0.3s ease, transform 0.25s ease, background 0.25s ease}
-[data-resp="top-btn"].visible{opacity:1;pointer-events:auto}
+[data-resp="top-btn"]{opacity:1;pointer-events:auto;transition:opacity 0.3s ease, transform 0.25s ease, background 0.25s ease}
+[data-resp="top-btn"].js-hidden{opacity:0;pointer-events:none}
 @media(max-width:1024px){
 [data-resp="container"]{padding:0 8%}
-[data-resp="grid"]{grid-template-columns:repeat(2,1fr)}
-[data-resp="stat-grid"]{grid-template-columns:repeat(2,1fr)}
-[data-resp="footer-grid"]{grid-template-columns:1fr 1fr}
+[data-resp="grid"]{grid-template-columns:repeat(2,1fr) !important}
+[data-resp="stat-grid"]{grid-template-columns:repeat(2,1fr) !important}
+[data-resp="footer-grid"]{grid-template-columns:1fr 1fr !important}
 }
 @media(max-width:768px){
 [data-resp="container"]{padding:0 5%}
 [data-resp="heading"]{font-size:1.8rem}
 [data-resp="table"]{font-size:0.85rem}
 [data-resp="cta-btn"]{padding:14px 24px;font-size:1rem;width:100%;box-sizing:border-box}
-[data-resp="grid"]{grid-template-columns:1fr}
+[data-resp="grid"]{grid-template-columns:1fr !important}
 [data-resp="card"]{padding:16px}
 [data-resp="toc"]{padding:16px}
-[data-resp="author-box"]{flex-direction:column;text-align:center}
-[data-resp="stat-grid"]{grid-template-columns:repeat(2,1fr);gap:12px}
-[data-resp="social-grid"]{justify-content:center}
+[data-resp="author-box"]{flex-direction:column !important;text-align:center !important;align-items:center !important;gap:20px !important}
+[data-resp="author-box"] > div{width:100% !important;text-align:center !important}
+[data-resp="author-box"] > div > div{justify-content:center !important;flex-wrap:wrap !important}
+[data-resp="author-box"] p{text-align:center !important}
+[data-resp="author-section"] .author-section-h3{text-align:center !important}
+[data-resp="stat-grid"]{grid-template-columns:repeat(2,1fr) !important;gap:12px}
+[data-resp="social-grid"]{justify-content:center !important}
+[data-resp="footer-grid"]{grid-template-columns:1fr 1fr !important;gap:20px !important;text-align:right}
 [data-resp="sticky-header"]{padding:10px 5% !important}
+footer{padding-inline:5% !important}
 }
 @media(max-width:480px){
 [data-resp="container"]{padding:0 4%}
@@ -129,10 +135,15 @@ details>summary:hover{background:rgba(135,86,46,0.04);border-radius:8px}
 [data-resp="table"]{font-size:0.75rem;min-width:500px}
 [data-resp="cta-btn"]{padding:12px 20px;font-size:0.95rem}
 [data-resp="faq-item"]{padding:12px}
-[data-resp="stat-grid"]{grid-template-columns:1fr 1fr;gap:8px}
-[data-resp="footer-grid"]{grid-template-columns:1fr}
-[data-resp="float-btn"]{padding:12px 18px;font-size:0.9rem;bottom:16px;left:16px}
-[data-resp="top-btn"]{bottom:76px;left:16px;width:42px;height:42px}
+[data-resp="stat-grid"]{grid-template-columns:1fr 1fr !important;gap:8px}
+[data-resp="footer-grid"]{grid-template-columns:1fr !important;gap:16px !important}
+[data-resp="footer-grid"] > div{text-align:right}
+[data-resp="float-btn"]{padding:10px 16px !important;font-size:0.85rem !important;bottom:16px !important;left:16px !important}
+[data-resp="top-btn"]{bottom:72px !important;left:16px !important;width:42px !important;height:42px !important}
+[data-resp="author-box"]{gap:16px !important}
+[data-resp="author-box"] img{max-width:160px !important}
+footer{padding:clamp(24px,5vw,32px) 4% !important}
+footer h4{font-size:0.95rem !important}
 }
 @media(max-width:480px){
 [data-resp="simple-table"] tr{display:block;margin-bottom:16px;border:1px solid #C8C1B8;border-radius:8px}
@@ -157,20 +168,23 @@ Structure:
 - End side (RTL: left): Contact CTA button linking to https://www.caesarstone.co.il/contact-us/ — icon AFTER text on same baseline (RTL rule)
 - Responsive: On mobile (max-width 480px) padding adjusts to 10px 5%
 
-BACK TO TOP BUTTON (MANDATORY — HIDDEN UNTIL SCROLL > 300px):
+BACK TO TOP BUTTON (MANDATORY — WORDPRESS-SAFE DEFAULT-VISIBLE WITH JS ENHANCEMENT):
 Add a back-to-top button near the end of the article, after the footer.
 Structure:
 - Position:fixed, bottom:88px, left:24px, z-index:9998
-- Use data-resp="top-btn" attribute (CSS rule controls default opacity:0 and .visible opacity:1)
+- Use data-resp="top-btn" attribute
+- Default CSS: opacity:1, pointer-events:auto (ALWAYS VISIBLE — this is WordPress-safe because if inline scripts are stripped by WP security, the button still works)
+- When JS runs: adds .js-hidden class at scroll ≤ 300px (opacity:0, pointer-events:none); removes at scroll > 300px. This is PROGRESSIVE ENHANCEMENT — the button is always available without JS.
 - Circular button: width:44px, height:44px, border-radius:50%, background:#B2A99A
 - SVG chevron-up icon inside (~20px), stroke:#fff
 - box-shadow:0 4px 16px rgba(135,86,46,0.2)
 - transition:opacity 0.3s ease, transform 0.25s ease, background 0.25s ease
 - Uses href="#article-top" and onclick="window.scrollTo({top:0,behavior:'smooth'});return false;"
 - Hover: background changes to #87562E, transform:translateY(-3px)
-- Mobile (max-width 480px): bottom:76px, left:16px, width:42px, height:42px (never overlaps floating contact button)
-- A SMALL inline <script> at the very end of the article toggles the .visible class on scroll > 300px. Script MUST be tiny, IIFE-scoped, passive-listener, and work inside WordPress post body. Example:
-  <script>(function(){var b=document.querySelector('[data-resp="top-btn"]');if(!b)return;var t=function(){if(window.pageYOffset>300){b.classList.add('visible')}else{b.classList.remove('visible')}};window.addEventListener('scroll',t,{passive:true});t();})();</script>
+- Mobile (max-width 480px): bottom:72px, left:16px, width:42px, height:42px (never overlaps floating contact button which sits at bottom:16px)
+- Inline <script> at the very end of the article toggles the .js-hidden class at scroll ≤ 300px. Script MUST be tiny, IIFE-scoped, passive-listener, and work inside WordPress post body:
+  <script>(function(){var b=document.querySelector('[data-resp="top-btn"]');if(!b)return;var t=function(){if(window.pageYOffset<=300){b.classList.add('js-hidden')}else{b.classList.remove('js-hidden')}};window.addEventListener('scroll',t,{passive:true});t();})();</script>
+- NEVER make the default CSS opacity:0 — that causes the button to disappear forever in WordPress installations that strip inline scripts (common with security plugins like Wordfence, Sucuri, or content editors that filter script tags). Default-visible + JS-hidden is the correct pattern.
 
 FLOATING CONTACT BUTTON (MANDATORY):
 <a data-resp="float-btn" href="https://www.caesarstone.co.il/contact-us/" style="position:fixed;bottom:24px;left:24px;z-index:9999;display:inline-flex;align-items:center;gap:8px;background:#87562E;color:#fff;padding:14px 24px;border-radius:50px;text-decoration:none;font-size:clamp(0.9rem,2vw,1rem);font-weight:700;box-shadow:0 4px 20px rgba(135,86,46,0.25);transition:all 0.25s ease;cursor:pointer;white-space:nowrap;min-height:48px" aria-label="צור קשר עם אבן קיסר">
