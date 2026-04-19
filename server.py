@@ -1224,6 +1224,7 @@ class DashboardHandler(BaseHTTPRequestHandler):
                     {'id': 'gemini-2.0-flash',                  'label': 'Gemini 2.0 Flash',               'provider': 'gemini'},
                     {'id': 'gemini-2.0-flash-lite',             'label': 'Gemini 2.0 Flash Lite',          'provider': 'gemini'},
                     # --- Kimi Code (Moonshot AI) ---
+                    {'id': 'kimi-k2.6-code-preview',            'label': 'K2.6 Code Preview (Flagship)',    'provider': 'kimi'},
                     {'id': 'kimi-latest',                       'label': 'Kimi Latest',                     'provider': 'kimi'},
                     {'id': 'kimi-k2',                           'label': 'Kimi K2',                         'provider': 'kimi'},
                     {'id': 'kimi-k1.5',                         'label': 'Kimi K1.5',                       'provider': 'kimi'},
