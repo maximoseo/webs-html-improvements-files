@@ -292,7 +292,9 @@ a:hover{color:var(--gold-light)}
 .deploy-job-name{font-size:12px;font-weight:700;color:var(--text)}
 .deploy-job-meta{font-size:11px;color:var(--muted)}
 .deploy-job-badge{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.6px;padding:4px 8px;border-radius:999px;border:1px solid var(--border)}
-.deploy-job.running .deploy-job-badge{color:var(--gold);border-color:rgba(201,149,42,0.35);background:var(--gold-bg)}
+.deploy-job.running .deploy-job-badge{color:var(--gold);border-color:rgba(201,149,42,0.35);background:var(--gold-bg);display:inline-flex;align-items:center;gap:5px}
+.deploy-spinner{width:9px;height:9px;border:1.5px solid rgba(201,149,42,0.3);border-top-color:#C9952A;border-radius:50%;animation:deploy-spin .7s linear infinite;flex-shrink:0}
+@keyframes deploy-spin{to{transform:rotate(360deg)}}
 .deploy-job.success .deploy-job-badge{color:var(--green);border-color:rgba(34,197,94,0.35);background:var(--green-bg)}
 .deploy-job.error .deploy-job-badge{color:var(--red);border-color:rgba(239,68,68,0.35);background:var(--red-bg)}
 .deploy-job-step{font-size:12px;color:var(--text-secondary)}
@@ -3976,7 +3978,24 @@ function renderDeployJobs(){
     body.innerHTML='<div class="deploy-status-empty">No deploy jobs yet.</div>';
     return;
   }
-  body.innerHTML=deployJobs.map(job=>`<div class="deploy-job ${job.state}"><div class="deploy-job-top"><div><div class="deploy-job-name">${job.fileName}</div><div class="deploy-job-meta">${job.domain} • ${job.versionName}</div></div><div class="deploy-job-badge">${job.state}</div></div><div class="deploy-job-step">${job.step}</div><div class="deploy-progress"><div class="deploy-progress-bar" style="width:${job.progress}%"></div></div><div class="deploy-job-details">${job.details||''}</div></div>`).join('');
+  body.innerHTML=deployJobs.map(job=>{
+    const isRunning=job.state==='running';
+    const badge=isRunning
+      ? `<span class="deploy-job-badge"><span class="deploy-spinner"></span>In Progress</span>`
+      : job.state==='success'
+        ? `<span class="deploy-job-badge">✓ Done</span>`
+        : `<span class="deploy-job-badge">✗ Failed</span>`;
+    const ts=job.ts?`<span style="font-size:10px;color:var(--muted);margin-top:2px;display:block">${job.ts}</span>`:'';
+    return `<div class="deploy-job ${job.state}">
+      <div class="deploy-job-top">
+        <div><div class="deploy-job-name">${job.fileName}</div><div class="deploy-job-meta">${job.domain} • ${job.versionName}</div>${ts}</div>
+        ${badge}
+      </div>
+      <div class="deploy-job-step">${job.step}</div>
+      <div class="deploy-progress"><div class="deploy-progress-bar" style="width:${job.progress}%"></div></div>
+      ${job.details?`<div class="deploy-job-details">${job.details}</div>`:''}
+    </div>`;
+  }).join('');
 }
 function upsertDeployJob(jobId, patch){
   const idx=deployJobs.findIndex(job=>job.id===jobId);
@@ -3989,31 +4008,37 @@ async function deployToN8n(domain, versionName, filePath, fileName, btn){
   versionName=decodeURIComponent(versionName||'');
   filePath=decodeURIComponent(filePath||'');
   fileName=decodeURIComponent(fileName||'');
-  if(!confirm(`Deploy ${fileName} to the live n8n workflow for ${domain}?`)) return;
-  const original=btn.textContent;
+  if(!confirm(`Deploy ${fileName} to the live n8n workflow for ${domain}?\n\nThis will update the workflow in n8n with the latest JSON from GitHub.`)) return;
+  const original=btn.innerHTML;
   const jobId=`${Date.now()}-${Math.random().toString(16).slice(2)}`;
-  deployJobs.unshift({id:jobId,domain,versionName,fileName,state:'running',step:'Queued deploy request…',progress:8,details:`Preparing ${fileName} for ${domain}.`});
+  const ts=new Date().toLocaleTimeString();
+  deployJobs.unshift({id:jobId,domain,versionName,fileName,state:'running',step:'Starting deploy…',progress:5,details:'',ts});
   deployJobs=deployJobs.slice(0,8);
   renderDeployJobs();
   toggleDeployStatusPanel(true);
   btn.disabled=true;
-  btn.textContent='Deploying...';
+  btn.innerHTML='<span class="btn-spinner" aria-hidden="true"></span>Deploying…';
   try{
-    upsertDeployJob(jobId,{step:'Sending workflow JSON to secure deploy endpoint…',progress:42,details:`Source file: ${filePath}`});
+    upsertDeployJob(jobId,{step:'Step 1 / 3 — Resolving workflow ID for '+domain+'…',progress:20,details:'Checking n8n-workflow-map.json and live n8n API.'});
+    await new Promise(r=>setTimeout(r,300));
+    upsertDeployJob(jobId,{step:'Step 2 / 3 — Fetching latest JSON from GitHub…',progress:45,details:'Source: '+filePath});
     const res=await fetch('/api/n8n/deploy',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({domain,versionName,filePath,fileName})});
+    upsertDeployJob(jobId,{step:'Step 3 / 3 — Pushing to n8n cloud…',progress:80,details:'Waiting for n8n to confirm update.'});
     const data=await res.json();
     if(!res.ok||!data.ok){
       const errorText=typeof data.error==='string'?data.error:JSON.stringify(data.error||{});
       throw new Error(errorText);
     }
-    upsertDeployJob(jobId,{state:'success',step:'Deploy finished successfully.',progress:100,details:`Updated workflow: ${data.workflowName||data.workflowId}`});
-    showToast(`Deployed: ${data.workflowName||fileName}`,'success');
+    const wfName=data.workflowName||data.workflowId||fileName;
+    upsertDeployJob(jobId,{state:'success',step:'Deploy complete — workflow updated in n8n.',progress:100,details:`Workflow: ${wfName}\nID: ${data.workflowId}\nActive: ${data.active?'Yes':'No (workflow is paused)'}`});
+    showToast(`Deployed: ${wfName}`,'success');
   }catch(err){
-    upsertDeployJob(jobId,{state:'error',step:'Deploy failed.',progress:100,details:err.message||'Unknown error'});
-    showToast('Deploy failed: '+(err.message||'Unknown error').substring(0,40),'error');
+    const msg=err.message||'Unknown error';
+    upsertDeployJob(jobId,{state:'error',step:'Deploy failed.',progress:100,details:msg});
+    showToast('Deploy failed: '+msg.substring(0,60),'error');
   }finally{
     btn.disabled=false;
-    btn.textContent=original;
+    btn.innerHTML=original;
   }
 }
 async function deployVersionToN8n(domainEnc, agentEnc, versionEnc, workflowFilesEnc, btn, panelId){
