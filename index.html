@@ -24,9 +24,12 @@
 @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:0.01ms!important;animation-iteration-count:1!important;transition-duration:0.01ms!important;scroll-behavior:auto!important}}
 
 /* Phase-2 reserve space to prevent CLS while stats hydrate (LH found 0.26 shift) */
-.stats{min-height:130px}
+.stats{min-height:140px}
 @media (max-width:900px){.stats{min-height:280px}}
 @media (max-width:600px){.stats{min-height:520px}}
+.stat-card{min-height:110px}
+#projects-grid{min-height:60vh}
+#page-fixer,#page-radar{min-height:60vh}
 
 /* Phase-1.5 reusable page primitives (additive — opt-in by class) */
 .page-header{display:flex;flex-direction:column;gap:var(--space-2);margin-bottom:var(--space-6)}
@@ -3049,10 +3052,10 @@ body {
   </div>
 
   <div class="section-head">
-    <div class="section-title">
+    <h2 class="section-title">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
       Projects <span class="section-count">—</span>
-    </div>
+    </h2>
     <div class="view-toggle">
       <button class="view-btn active" onclick="setView('grid',this)">Grid</button>
       <button class="view-btn" onclick="setView('list',this)">List</button>
