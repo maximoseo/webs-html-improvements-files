@@ -2643,6 +2643,22 @@ header.header,
 /* ===================================================================== */
 
 
+
+/* ── Auto-Import Modal ── */
+.auto-import-chip{padding:5px 12px;border-radius:999px;border:1px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.03);color:var(--muted);font-size:11px;font-weight:700;cursor:pointer;transition:all 0.15s}
+.auto-import-chip:hover{border-color:rgba(113,112,255,0.35);color:var(--text)}
+.auto-import-chip.active{background:rgba(113,112,255,0.14);border-color:rgba(113,112,255,0.4);color:var(--gold-light)}
+.auto-import-wf-card{padding:12px 14px;border:1px solid rgba(255,255,255,0.07);border-radius:12px;background:rgba(255,255,255,0.02);cursor:pointer;transition:all 0.15s;display:flex;align-items:center;justify-content:space-between;gap:12px}
+.auto-import-wf-card:hover{border-color:rgba(113,112,255,0.4);background:rgba(113,112,255,0.07);transform:translateX(-2px)}
+.auto-import-wf-name{font-size:13px;font-weight:700;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.auto-import-wf-meta{font-size:11px;color:var(--muted);margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.auto-import-wf-badge{font-size:10px;font-weight:800;padding:3px 8px;border-radius:999px;white-space:nowrap;flex-shrink:0}
+.auto-import-wf-badge.active{background:rgba(39,166,68,0.14);color:#4ade80;border:1px solid rgba(39,166,68,0.3)}
+.auto-import-wf-badge.inactive{background:rgba(255,255,255,0.06);color:var(--muted);border:1px solid rgba(255,255,255,0.08)}
+/* ── Improved analyze btn label ── */
+.fixer-analyze-btn .analyze-icon{transition:transform 0.2s}
+.fixer-analyze-btn:not(:disabled):hover .analyze-icon{transform:rotate(-15deg)}
+
 /* ===== FIXED HEADER — position:fixed, works on ALL browsers/devices ===== */
 header.header,
 .header {
@@ -2915,9 +2931,13 @@ body {
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:13px;height:13px"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg>
         Check Live Executions
       </button>
-      <button class="action-btn primary" onclick="loadFromN8NAccount()">
+      <button class="action-btn" onclick="loadFromN8NAccount()" title="Browse workflows and pre-fill fields">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:13px;height:13px"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-        Load from N8N Account
+        Load from N8N
+      </button>
+      <button class="action-btn accent" id="auto-import-btn" onclick="openAutoImportModal()" title="Auto-import workflow JSON + fields from your N8N account">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:13px;height:13px"><path d="M4 16v1a3 3 0 0 0 3 3h10a3 3 0 0 0 3-3v-1"/><polyline points="4 12 12 8 20 12"/><line x1="12" y1="2" x2="12" y2="15"/></svg>
+        Auto-Import from N8N
       </button>
     </div>
   </div>
@@ -3116,31 +3136,50 @@ body {
 
     <!-- Fixed JSON Viewer -->
     <div class="fixer-result-card">
-      <div class="fixer-result-label">🔧 Fixed Workflow JSON</div>
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;flex-wrap:wrap;gap:8px">
+        <div class="fixer-result-label" style="margin-bottom:0">Fixed Workflow JSON</div>
+        <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+          <span id="fixed-json-stats" style="font-size:11px;color:var(--muted)"></span>
+          <span id="fixed-json-valid-badge" style="display:none;font-size:10px;font-weight:800;padding:3px 9px;border-radius:999px;background:rgba(39,166,68,0.16);color:#4ade80;border:1px solid rgba(39,166,68,0.3)">✓ Valid JSON</span>
+        </div>
+      </div>
       <div class="fixer-json-viewer" id="fixer-json-viewer">// Fixed workflow JSON will appear here</div>
-      <div class="fixer-json-actions">
+      <div class="fixer-json-actions" style="margin-top:12px">
         <button class="action-btn" onclick="copyFixedJson()">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:12px;height:12px"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
           Copy JSON
         </button>
-        <button class="action-btn" onclick="downloadFixedJson()">
+        <button class="action-btn success" onclick="downloadFixedJson()" title="Download complete fixed workflow as .json file">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:12px;height:12px"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-          Download .json
+          Download Fixed .json
         </button>
-        <button class="action-btn success" onclick="saveFixRecord(null)" title="Save to Supabase + Obsidian">
+        <button class="action-btn" onclick="saveFixRecord(null)" title="Save record to Supabase + Obsidian">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:12px;height:12px"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
           Save Record
         </button>
       </div>
     </div>
 
-    <!-- Deploy Button -->
-    <div style="margin-top:20px;display:flex;align-items:center;gap:14px;flex-wrap:wrap">
-      <button class="fixer-deploy-btn" id="fixer-deploy-btn" onclick="deployFixed()" disabled>
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 2L11 13"/><path d="M22 2L15 22 11 13 2 9l20-7z"/></svg>
-        Deploy Fixed Workflow to N8N
-      </button>
-      <span style="font-size:12px;color:var(--muted)">Will overwrite the selected workflow in N8N</span>
+    <!-- Deploy Section — visually distinct from Analyze -->
+    <div id="fixer-deploy-section" style="margin-top:24px;background:linear-gradient(135deg,rgba(39,166,68,0.06),rgba(28,130,54,0.03));border:1.5px solid rgba(39,166,68,0.25);border-radius:18px;padding:22px 24px">
+      <div style="display:flex;align-items:flex-start;gap:16px;flex-wrap:wrap">
+        <div style="flex:1;min-width:200px">
+          <div style="font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:0.08em;color:rgba(39,166,68,0.9);margin-bottom:6px;display:flex;align-items:center;gap:6px">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:13px;height:13px"><path d="M22 2L11 13"/><path d="M22 2L15 22 11 13 2 9l20-7z"/></svg>
+            Ready to Deploy
+          </div>
+          <div style="font-size:13px;color:var(--text-secondary);line-height:1.55" id="deploy-summary-text">
+            Review the fixed JSON above, then deploy to your N8N account.
+          </div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:10px;align-items:flex-end;flex-shrink:0">
+          <button class="fixer-deploy-btn" id="fixer-deploy-btn" onclick="deployFixed()" disabled>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 2L11 13"/><path d="M22 2L15 22 11 13 2 9l20-7z"/></svg>
+            Deploy to N8N
+          </button>
+          <span style="font-size:11px;color:var(--muted);text-align:right">Overwrites the selected workflow</span>
+        </div>
+      </div>
     </div>
 
     <!-- Deploy Result -->
@@ -3166,6 +3205,52 @@ body {
   </div>
 
 </div><!-- end #page-fixer -->
+
+
+<!-- Auto-Import from N8N Modal -->
+<div class="modal-overlay" id="auto-import-modal" role="dialog" aria-modal="true" onclick="if(event.target===this)closeAutoImportModal()" style="display:none;align-items:center;justify-content:center">
+  <div class="modal-panel" style="max-width:580px;width:100%;background:var(--bg-elevated);border:1px solid rgba(255,255,255,0.1);border-radius:20px;padding:28px;max-height:85vh;overflow:auto">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px">
+      <div style="display:flex;align-items:center;gap:10px">
+        <div style="width:32px;height:32px;border-radius:10px;background:linear-gradient(135deg,var(--gold),var(--gold-dim));display:flex;align-items:center;justify-content:center;flex-shrink:0">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" style="width:15px;height:15px"><path d="M4 16v1a3 3 0 0 0 3 3h10a3 3 0 0 0 3-3v-1"/><polyline points="4 12 12 8 20 12"/><line x1="12" y1="2" x2="12" y2="15"/></svg>
+        </div>
+        <div>
+          <div style="font-size:15px;font-weight:700;color:var(--text)">Auto-Import from N8N</div>
+          <div style="font-size:11px;color:var(--muted)">Select a workflow to auto-fill all fields</div>
+        </div>
+      </div>
+      <button class="modal-close" onclick="closeAutoImportModal()" style="flex-shrink:0">&times;</button>
+    </div>
+
+    <!-- Search -->
+    <div style="position:relative;margin-bottom:14px">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="position:absolute;left:11px;top:50%;transform:translateY(-50%);width:14px;height:14px;color:var(--muted);pointer-events:none"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+      <input id="auto-import-search" type="text" placeholder="Search workflows…"
+        style="width:100%;padding:9px 12px 9px 34px;border:1px solid rgba(255,255,255,0.1);border-radius:10px;background:rgba(255,255,255,0.04);color:var(--text);font-size:13px;outline:none;box-sizing:border-box"
+        oninput="filterAutoImportList(this.value)">
+    </div>
+
+    <!-- Status filter chips -->
+    <div style="display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap">
+      <button class="auto-import-chip active" data-filter="all" onclick="setAutoImportFilter('all',this)">All</button>
+      <button class="auto-import-chip" data-filter="active" onclick="setAutoImportFilter('active',this)">Active ✓</button>
+      <button class="auto-import-chip" data-filter="inactive" onclick="setAutoImportFilter('inactive',this)">Inactive</button>
+    </div>
+
+    <!-- Workflow list -->
+    <div id="auto-import-list" style="display:flex;flex-direction:column;gap:8px;max-height:340px;overflow-y:auto;padding-right:4px">
+      <div style="text-align:center;padding:28px;color:var(--muted);font-size:13px" id="auto-import-loading">
+        <div class="btn-spinner" style="display:inline-block;margin-right:8px"></div>
+        Loading workflows from N8N…
+      </div>
+    </div>
+
+    <div style="margin-top:16px;padding-top:14px;border-top:1px solid rgba(255,255,255,0.06);font-size:11px;color:var(--muted);line-height:1.5">
+      Selecting a workflow will auto-fill: workflow name, target ID, JSON content, and any detectable site URL. You can edit anything after import.
+    </div>
+  </div>
+</div>
 
 <div class="modal-overlay" id="preview-modal" role="dialog" aria-modal="true" onclick="if(event.target===this)closePreview()">
 <div class="modal">
@@ -5569,6 +5654,34 @@ document.addEventListener('click', function(ev){
       viewer.textContent = data.fixedWorkflowJson || '';
     }
 
+    // JSON stats badge
+    const statsEl = document.getElementById('fixed-json-stats');
+    const validBadge = document.getElementById('fixed-json-valid-badge');
+    if (data.fixedWorkflowJson) {
+      try {
+        const parsed = typeof data.fixedWorkflowJson === 'string'
+          ? JSON.parse(data.fixedWorkflowJson) : data.fixedWorkflowJson;
+        const nodeCount = (parsed.nodes || []).length;
+        const connCount = Object.keys(parsed.connections || {}).length;
+        if (statsEl) statsEl.textContent = nodeCount + ' nodes · ' + connCount + ' connections';
+        if (validBadge) validBadge.style.display = 'inline-flex';
+      } catch(e) {
+        if (statsEl) statsEl.textContent = 'Warning: invalid JSON';
+        if (validBadge) validBadge.style.display = 'none';
+      }
+    }
+
+    // Update deploy section summary text
+    const deploySum = document.getElementById('deploy-summary-text');
+    if (deploySum && data.changesMade && data.changesMade.length) {
+      const conf = Math.round((parseFloat(data.confidence)||0)*100);
+      const wfName = (document.getElementById('fixer-wf-name')||{}).value || 'this workflow';
+      deploySum.innerHTML =
+        '<strong style="color:var(--text)">' + data.changesMade.length + ' fix' + (data.changesMade.length!==1?'es':'') + ' applied</strong> to <em>' + escapeHtml(wfName) + '</em>. ' +
+        'Confidence: <strong style="color:' + (conf>=75?'#4ade80':conf>=50?'#facc15':'#f87171') + '">' + conf + '%</strong>. ' +
+        'Review the JSON above, then click Deploy.';
+    }
+
     // Enable deploy button if JSON is valid
     updateDeployBtnState();
 
@@ -5595,20 +5708,38 @@ document.addEventListener('click', function(ev){
   }
 
   // ---- Deploy ----
-  window.deployFixed = function() {
+window.deployFixed = function() {
     if (!_fixerResultData || !_fixerResultData.fixedWorkflowJson) {
       showToast('No fixed workflow to deploy', 'error');
       return;
     }
     const targetSel = document.getElementById('fixer-target-wf-id');
     const targetId = (targetSel && targetSel.value) || '';
-
+    const targetName = (targetSel && targetSel.selectedOptions[0]) ? targetSel.selectedOptions[0].text : (targetId || 'auto-detect');
     const wfNameForConfirm = (document.getElementById('fixer-wf-name') || {}).value
       || (_fixerJsonObj && _fixerJsonObj.name) || 'this workflow';
+    const issueSummary = _fixerResultData.issueSummary || '';
+    const rootCause    = _fixerResultData.rootCause    || '';
+    const changes      = _fixerResultData.changesMade  || [];
+    const conf         = Math.round((parseFloat(_fixerResultData.confidence)||0)*100);
 
-    if (!confirm('Deploy fixed workflow to N8N?\n\nThis will OVERWRITE "' + wfNameForConfirm + '" (ID: ' + (targetId || 'auto-detect') + ') in your live N8N account.\n\nThis cannot be undone. Continue?')) {
-      return;
+    // Build rich explanation
+    let msg = '⚠️  DEPLOY CONFIRMATION\n';
+    msg += '─────────────────────────────\n';
+    msg += 'Workflow: ' + wfNameForConfirm + '\n';
+    msg += 'Target in N8N: ' + targetName + '\n\n';
+    if (issueSummary) { msg += '🔍 Issue found:\n' + issueSummary + '\n\n'; }
+    if (rootCause)    { msg += '🎯 Root cause:\n' + rootCause + '\n\n'; }
+    if (changes.length) {
+      msg += '✅ Fixes applied (' + changes.length + '):\n';
+      changes.slice(0,8).forEach((c,i) => { msg += '  ' + (i+1) + '. ' + c + '\n'; });
+      if (changes.length > 8) msg += '  … and ' + (changes.length-8) + ' more\n';
+      msg += '\n';
     }
+    msg += '📊 Confidence: ' + conf + '%\n\n';
+    msg += 'This will OVERWRITE the existing workflow in your live N8N account.\nThis cannot be undone.\n\nProceed?';
+
+    if (!confirm(msg)) { return; }
 
     const btn = document.getElementById('fixer-deploy-btn');
     const deployResult = document.getElementById('fixer-deploy-result');
@@ -5720,18 +5851,35 @@ document.addEventListener('click', function(ev){
   };
 
   window.downloadFixedJson = function() {
-    const json = _fixerResultData && _fixerResultData.fixedWorkflowJson;
-    if (!json) { showToast('No fixed JSON to download', 'error'); return; }
-    const wfName = (document.getElementById('fixer-wf-name') || {}).value || 'fixed-workflow';
-    const safeName = wfName.replace(/[^a-zA-Z0-9_-]/g, '-').toLowerCase();
-    const blob = new Blob([json], {type: 'application/json'});
+    const rawJson = _fixerResultData && _fixerResultData.fixedWorkflowJson;
+    if (!rawJson) { showToast('No fixed JSON to download', 'error'); return; }
+    // Validate and pretty-print the full JSON
+    let parsed;
+    try {
+      parsed = (typeof rawJson === 'string') ? JSON.parse(rawJson) : rawJson;
+    } catch(e) {
+      showToast('Cannot download — fixed JSON is not valid: ' + e.message, 'error');
+      return;
+    }
+    // Ensure required top-level fields are present
+    if (!parsed.nodes || !parsed.connections) {
+      showToast('Cannot download — JSON is missing required workflow fields (nodes, connections)', 'error');
+      return;
+    }
+    const prettyJson = JSON.stringify(parsed, null, 2);
+    const wfName = parsed.name || (document.getElementById('fixer-wf-name') || {}).value || 'fixed-workflow';
+    const dateStr = new Date().toISOString().slice(0,10);
+    const safeName = wfName.replace(/[^a-zA-Z0-9_\-.]/g, '-').replace(/-+/g, '-').toLowerCase();
+    const filename = safeName + '-fixed-' + dateStr + '.json';
+    const blob = new Blob([prettyJson], {type: 'application/json;charset=utf-8'});
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = safeName + '-fixed.json';
+    a.download = filename;
+    document.body.appendChild(a);
     a.click();
-    URL.revokeObjectURL(url);
-    showToast('Downloaded ' + a.download, 'success');
+    setTimeout(() => { document.body.removeChild(a); URL.revokeObjectURL(url); }, 500);
+    showToast('Downloaded ' + filename + ' (' + parsed.nodes.length + ' nodes)', 'success');
   };
 
   // ---- Load Stuck Workflows ----
@@ -5847,6 +5995,208 @@ document.addEventListener('click', function(ev){
   };
 
   // ---- Fix History ----
+
+  // ──────────────────────────────────────────────────────────────
+  // AUTO-IMPORT FROM N8N MODAL
+  // ──────────────────────────────────────────────────────────────
+  var _autoImportWorkflows = [];
+  var _autoImportFilter = 'all';
+
+  window.openAutoImportModal = function() {
+    const modal = document.getElementById('auto-import-modal');
+    if (!modal) return;
+    modal.style.display = 'flex';
+    document.documentElement.style.overflowY = 'hidden';
+    _loadAutoImportWorkflows();
+  };
+
+  window.closeAutoImportModal = function() {
+    const modal = document.getElementById('auto-import-modal');
+    if (modal) modal.style.display = 'none';
+    document.documentElement.style.overflowY = '';
+  };
+
+  function _loadAutoImportWorkflows() {
+    const list = document.getElementById('auto-import-list');
+    const loading = document.getElementById('auto-import-loading');
+    if (loading) loading.style.display = 'block';
+
+    fetch('/api/n8n/workflows')
+    .then(r => r.json())
+    .then(data => {
+      _autoImportWorkflows = data.workflows || [];
+      if (loading) loading.style.display = 'none';
+      _renderAutoImportList(_autoImportWorkflows);
+    })
+    .catch(err => {
+      if (loading) loading.textContent = 'Error loading workflows: ' + err.message;
+    });
+  }
+
+  function _renderAutoImportList(workflows) {
+    const list = document.getElementById('auto-import-list');
+    const loading = document.getElementById('auto-import-loading');
+    if (!list) return;
+
+    // Filter
+    let filtered = workflows;
+    if (_autoImportFilter === 'active')   filtered = workflows.filter(w => w.active);
+    if (_autoImportFilter === 'inactive') filtered = workflows.filter(w => !w.active);
+
+    // Search
+    const q = ((document.getElementById('auto-import-search') || {}).value || '').toLowerCase().trim();
+    if (q) filtered = filtered.filter(w => (w.name||'').toLowerCase().includes(q) || (w.id||'').toLowerCase().includes(q));
+
+    if (!filtered.length) {
+      list.innerHTML = '<div style="text-align:center;padding:28px;color:var(--muted);font-size:13px">No workflows found</div>';
+      return;
+    }
+
+    list.innerHTML = '';
+    filtered.forEach(wf => {
+      const card = document.createElement('div');
+      card.className = 'auto-import-wf-card';
+      const updatedDate = wf.updatedAt ? new Date(wf.updatedAt).toLocaleDateString('en-GB') : '';
+      const tags = (wf.tags || []).map(t => typeof t === 'string' ? t : (t.name||'')).filter(Boolean);
+      const nodeCount = wf.nodeCount || '';
+      card.innerHTML =
+        '<div style="min-width:0;flex:1">' +
+          '<div class="auto-import-wf-name">' + escapeHtml(wf.name || wf.id) + '</div>' +
+          '<div class="auto-import-wf-meta">' +
+            'ID: ' + (wf.id||'') +
+            (nodeCount ? ' · ' + nodeCount + ' nodes' : '') +
+            (updatedDate ? ' · Updated ' + updatedDate : '') +
+            (tags.length ? ' · ' + tags.join(', ') : '') +
+          '</div>' +
+        '</div>' +
+        '<span class="auto-import-wf-badge ' + (wf.active ? 'active' : 'inactive') + '">' +
+          (wf.active ? '● Active' : '○ Inactive') +
+        '</span>';
+
+      card.addEventListener('click', () => _autoImportWorkflow(wf));
+      list.appendChild(card);
+    });
+  }
+
+  window.filterAutoImportList = function(q) {
+    _renderAutoImportList(_autoImportWorkflows);
+  };
+
+  window.setAutoImportFilter = function(filter, btn) {
+    _autoImportFilter = filter;
+    document.querySelectorAll('.auto-import-chip').forEach(c => c.classList.remove('active'));
+    if (btn) btn.classList.add('active');
+    _renderAutoImportList(_autoImportWorkflows);
+  };
+
+  function _autoImportWorkflow(wf) {
+    closeAutoImportModal();
+    const loadingToast = 'Importing ' + (wf.name || wf.id) + '…';
+    showToast(loadingToast, 'info');
+
+    // Fetch the full workflow JSON from N8N
+    fetch('/api/n8n/workflow-json?id=' + encodeURIComponent(wf.id))
+    .then(r => r.json())
+    .then(data => {
+      if (!data.ok || !data.workflowJson) {
+        showToast('Could not load workflow JSON: ' + (data.error || 'unknown error'), 'error');
+        return;
+      }
+
+      const wfJson = data.workflowJson;
+
+      // 1. Pre-fill workflow name
+      const nameInput = document.getElementById('fixer-wf-name');
+      if (nameInput) nameInput.value = wfJson.name || wf.name || '';
+
+      // 2. Set target workflow ID in dropdown
+      const sel = document.getElementById('fixer-target-wf-id');
+      if (sel) {
+        // Check if option exists
+        let found = false;
+        for (let i = 0; i < sel.options.length; i++) {
+          if (sel.options[i].value === String(wf.id)) { sel.selectedIndex = i; found = true; break; }
+        }
+        if (!found) {
+          const opt = document.createElement('option');
+          opt.value = wf.id;
+          opt.textContent = (wf.name || wf.id) + (wf.active ? ' ✓' : '');
+          opt.selected = true;
+          sel.appendChild(opt);
+        }
+      }
+
+      // 3. Auto-detect site URL from workflow nodes
+      const siteUrl = _extractSiteUrlFromWorkflow(wfJson);
+      const siteInput = document.getElementById('fixer-site-url');
+      if (siteInput && !siteInput.value && siteUrl) siteInput.value = siteUrl;
+
+      // 4. Set the JSON in the drop zone as if user uploaded it
+      _fixerJsonObj = wfJson;
+      _fixerJsonStr = JSON.stringify(wfJson, null, 2);
+      const dropZone = document.getElementById('fixer-drop-zone');
+      const fileInfo = document.getElementById('fixer-file-info');
+      const fileSize = JSON.stringify(wfJson).length;
+      const sizeKb = (fileSize / 1024).toFixed(1);
+      if (dropZone) dropZone.classList.add('has-file');
+      if (fileInfo) {
+        fileInfo.style.display = 'block';
+        const nameEl = fileInfo.querySelector('.fixer-file-name');
+        const sizeEl = fileInfo.querySelector('.fixer-file-size');
+        const validEl = fileInfo.querySelector('.fixer-file-valid');
+        if (nameEl) nameEl.textContent = (wfJson.name || wf.name || wf.id) + '.json';
+        if (sizeEl) sizeEl.textContent = sizeKb + ' KB';
+        if (validEl) { validEl.textContent = '✓ Valid N8N workflow (' + (wfJson.nodes||[]).length + ' nodes)'; validEl.style.color = '#4ade80'; }
+      }
+
+      // 5. Enable analyze button
+      const analyzeBtn = document.getElementById('fixer-analyze-btn');
+      if (analyzeBtn) analyzeBtn.disabled = false;
+
+      // 6. Update metadata strip
+      updateFixerMeta();
+
+      showToast(
+        'Imported "' + (wfJson.name || wf.name) + '" — ' + (wfJson.nodes||[]).length + ' nodes' +
+        (siteUrl ? ' · Site: ' + siteUrl : ''),
+        'success'
+      );
+
+      // Scroll to JSON section
+      const dropEl = document.getElementById('fixer-drop-zone');
+      if (dropEl) dropEl.scrollIntoView({behavior:'smooth', block:'center'});
+    })
+    .catch(err => {
+      showToast('Import error: ' + err.message, 'error');
+    });
+  }
+
+  function _extractSiteUrlFromWorkflow(wfJson) {
+    // Extract the most likely site URL from node parameters
+    const nodesStr = JSON.stringify(wfJson.nodes || []);
+    // Look for WordPress API URLs (most reliable indicator)
+    const wpMatch = nodesStr.match(/https?:\/\/([a-z0-9\-\.]+)\/wp-json/i);
+    if (wpMatch) return 'https://' + wpMatch[1].replace(/\/wp-json.*/, '');
+    // Look for httpRequest URLs that are not API services
+    const urlMatches = nodesStr.match(/https?:\/\/[a-z0-9\-\.]+\.[a-z]{2,}(?:\/[^\s"'\]*)?/gi) || [];
+    const siteUrls = urlMatches.filter(u =>
+      !u.includes('googleapis') && !u.includes('openai') && !u.includes('openrouter') &&
+      !u.includes('anthropic') && !u.includes('firecrawl') && !u.includes('n8n.cloud') &&
+      !u.includes('supabase') && !u.includes('googlesheets') && !u.includes('api.kie') &&
+      !u.includes('whatsapp') && !u.includes('linkedin') && !u.includes('facebook') &&
+      !u.includes('twitter') && !u.includes('youtube') && !u.includes('instagram')
+    );
+    if (siteUrls.length) {
+      // Return the domain only
+      const m = siteUrls[0].match(/https?:\/\/[a-z0-9\-\.]+\.[a-z]{2,}/i);
+      return m ? m[0] : '';
+    }
+    // Fallback: use workflow name if it looks like a domain
+    const name = (wfJson.name || '');
+    if (/^[a-z0-9\-]+\.[a-z]{2,}/i.test(name)) return 'https://' + name;
+    return '';
+  }
+
   window.loadFixHistory = function() {
     const grid = document.getElementById('fixer-history-grid');
     if (!grid) return;

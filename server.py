@@ -1020,11 +1020,39 @@ class DashboardHandler(BaseHTTPRequestHandler):
                         'name': wf.get('name'),
                         'active': wf.get('active'),
                         'updatedAt': wf.get('updatedAt'),
+                        'nodeCount': len(wf.get('nodes') or []),
                         'tags': [t.get('name') for t in (wf.get('tags') or []) if isinstance(t, dict)],
                     })
                 return json_response(self, 200, {'ok': True, 'workflows': workflows})
             except urllib.error.HTTPError as exc:
                 body_bytes = exc.read().decode('utf-8', 'replace')[:800]
+                return json_response(self, 502, {'ok': False, 'error': f'n8n API error {exc.code}', 'details': body_bytes})
+            except Exception as exc:
+                return json_response(self, 500, {'ok': False, 'error': str(exc)})
+
+        # GET /api/n8n/workflow-json?id=xxx — fetch full workflow JSON for auto-import
+        if parsed.path == '/api/n8n/workflow-json':
+            if not os.getenv('N8N_API_KEY'):
+                return json_response(self, 503, {'ok': False, 'error': 'N8N_API_KEY is not configured'})
+            qs = urllib.parse.parse_qs(parsed.query)
+            workflow_id = (qs.get('id') or [''])[0].strip()
+            if not workflow_id:
+                return json_response(self, 400, {'ok': False, 'error': 'id parameter is required'})
+            try:
+                base = os.getenv('N8N_BASE_URL', DEFAULT_N8N_BASE).rstrip('/')
+                headers = n8n_headers()
+                wf = fetch_json(f'{base}/api/v1/workflows/{urllib.parse.quote(workflow_id)}', headers=headers, timeout=20)
+                # Return full workflow JSON exactly as received from N8N (valid for re-import)
+                return json_response(self, 200, {
+                    'ok': True,
+                    'workflowId': wf.get('id'),
+                    'workflowName': wf.get('name'),
+                    'nodeCount': len(wf.get('nodes') or []),
+                    'active': wf.get('active'),
+                    'workflowJson': wf,  # complete JSON
+                })
+            except urllib.error.HTTPError as exc:
+                body_bytes = exc.read().decode('utf-8', 'replace')[:400]
                 return json_response(self, 502, {'ok': False, 'error': f'n8n API error {exc.code}', 'details': body_bytes})
             except Exception as exc:
                 return json_response(self, 500, {'ok': False, 'error': str(exc)})
