@@ -31,6 +31,30 @@
 #projects-grid{min-height:60vh}
 #page-fixer,#page-radar{min-height:60vh}
 
+/* Phase-2.3 compact mobile sticky header — keeps logo + tabs + sync only, hides nice-to-haves */
+@media (max-width:768px){
+  .header-inner{padding:8px 12px !important;gap:6px !important;align-items:center !important;flex-wrap:nowrap !important}
+  .header-actions{width:auto !important;flex-wrap:nowrap !important;justify-content:flex-end !important;gap:6px !important;flex:1 1 auto;min-width:0}
+  .status-stack{display:none !important}
+  .search-wrap{display:none !important}
+  .last-sync-meta{display:none !important}
+  .header-menu-btn{min-height:32px !important;padding:6px 10px !important;font-size:11px !important;border-radius:9px !important}
+  .hdr-sync-btn{min-height:32px !important;padding:6px 10px !important;font-size:11px !important}
+  .fixer-tab-btn{min-height:32px !important;padding:6px 8px !important;font-size:11px !important}
+  .fixer-tab-btn svg{width:13px !important;height:13px !important}
+  .logo-icon{width:30px !important;height:30px !important;border-radius:9px !important}
+  .logo-icon svg{width:16px !important;height:16px !important}
+  .logo h1{font-size:15px !important}
+  #bulk-toggle-projects{display:none !important}
+}
+@media (max-width:480px){
+  .header-inner{padding:7px 10px !important;gap:5px !important}
+  .logo h1{font-size:0 !important}  /* keep icon, drop text label on tiny screens */
+  .logo h1 span{display:none}
+  .fixer-tab-btn .tab-label{display:none}
+  .fixer-tab-btn{padding:6px 7px !important}
+}
+
 /* Phase-1.5 reusable page primitives (additive — opt-in by class) */
 .page-header{display:flex;flex-direction:column;gap:var(--space-2);margin-bottom:var(--space-6)}
 .page-header__breadcrumb{display:flex;align-items:center;gap:var(--space-2);font-size:var(--text-xs);color:var(--muted);text-transform:uppercase;letter-spacing:0.08em;font-weight:600}
@@ -2720,10 +2744,10 @@ body {
   padding-top: var(--header-h, 80px);
 }
 @media (max-width: 900px) {
-  body { padding-top: var(--header-h, 140px); }
+  body { padding-top: var(--header-h, 56px); }
 }
 @media (max-width: 480px) {
-  body { padding-top: var(--header-h, 200px); }
+  body { padding-top: var(--header-h, 50px); }
 }
 @media print {
   header.header, .header { position: static !important; }
