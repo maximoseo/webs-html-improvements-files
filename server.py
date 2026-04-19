@@ -22,6 +22,46 @@ REPO = 'maximoseo/webs-html-improvements-files'
 RAW_BASE = f'https://raw.githubusercontent.com/{REPO}/main'
 DEFAULT_N8N_BASE = 'https://websiseo.app.n8n.cloud'
 
+# ===== DAILY SKILLS RADAR — global state & sources =====
+_radar_state = {
+    'status': 'idle',
+    'run_id': None,
+    'stage': '',
+    'progress': 0,
+    'sources_total': 0,
+    'sources_done': 0,
+    'skills_found': 0,
+    'started_at': None,
+    'finished_at': None,
+    'last_error': None,
+    'paused': False,
+    'schedule_hour': 2,
+    'schedule_enabled': True,
+}
+
+RADAR_SOURCES = [
+    {'url': 'https://raw.githubusercontent.com/sindresorhus/awesome/main/readme.md', 'title': 'Awesome - Sindre Sorhus', 'type': 'awesome_list', 'quality': 0.95},
+    {'url': 'https://raw.githubusercontent.com/e2b-dev/awesome-ai-agents/main/README.md', 'title': 'Awesome AI Agents', 'type': 'awesome_list', 'quality': 0.95},
+    {'url': 'https://raw.githubusercontent.com/kyrolabs/awesome-langchain/main/README.md', 'title': 'Awesome LangChain', 'type': 'awesome_list', 'quality': 0.9},
+    {'url': 'https://raw.githubusercontent.com/n8n-io/n8n/master/README.md', 'title': 'N8N Official', 'type': 'github_repo', 'quality': 0.95},
+    {'url': 'https://raw.githubusercontent.com/jxnl/instructor/main/README.md', 'title': 'Instructor - Structured LLM Outputs', 'type': 'github_repo', 'quality': 0.9},
+    {'url': 'https://raw.githubusercontent.com/microsoft/autogen/main/README.md', 'title': 'AutoGen - Multi-Agent Framework', 'type': 'github_repo', 'quality': 0.9},
+    {'url': 'https://raw.githubusercontent.com/BerriAI/litellm/main/README.md', 'title': 'LiteLLM - LLM Gateway', 'type': 'github_repo', 'quality': 0.9},
+    {'url': 'https://raw.githubusercontent.com/pydantic/pydantic-ai/main/README.md', 'title': 'PydanticAI - Agent Framework', 'type': 'github_repo', 'quality': 0.9},
+    {'url': 'https://raw.githubusercontent.com/assafelovic/gpt-researcher/master/README.md', 'title': 'GPT Researcher', 'type': 'github_repo', 'quality': 0.88},
+    {'url': 'https://raw.githubusercontent.com/mendableai/firecrawl/main/README.md', 'title': 'Firecrawl - Web Scraping', 'type': 'github_repo', 'quality': 0.9},
+    {'url': 'https://raw.githubusercontent.com/duckdb/duckdb/main/README.md', 'title': 'DuckDB - In-process SQL', 'type': 'github_repo', 'quality': 0.85},
+    {'url': 'https://raw.githubusercontent.com/openai/openai-python/main/README.md', 'title': 'OpenAI Python SDK', 'type': 'github_repo', 'quality': 0.95},
+    {'url': 'https://raw.githubusercontent.com/anthropics/anthropic-sdk-python/main/README.md', 'title': 'Anthropic Python SDK', 'type': 'github_repo', 'quality': 0.95},
+    {'url': 'https://raw.githubusercontent.com/huggingface/transformers/main/README.md', 'title': 'HuggingFace Transformers', 'type': 'github_repo', 'quality': 0.9},
+    {'url': 'https://raw.githubusercontent.com/dspy-ai/dspy/main/README.md', 'title': 'DSPy - Programming LMs', 'type': 'github_repo', 'quality': 0.88},
+    {'url': 'https://raw.githubusercontent.com/unclecode/crawl4ai/main/README.md', 'title': 'Crawl4AI - LLM-Friendly Scraping', 'type': 'github_repo', 'quality': 0.88},
+    {'url': 'https://raw.githubusercontent.com/browser-use/browser-use/main/README.md', 'title': 'Browser Use - AI Browser Automation', 'type': 'github_repo', 'quality': 0.9},
+    {'url': 'https://raw.githubusercontent.com/All-Hands-AI/OpenHands/main/README.md', 'title': 'OpenHands - AI Software Development', 'type': 'github_repo', 'quality': 0.88},
+    {'url': 'https://raw.githubusercontent.com/agno-agi/agno/main/README.md', 'title': 'Agno - Agent Framework', 'type': 'github_repo', 'quality': 0.85},
+    {'url': 'https://raw.githubusercontent.com/meta-llama/llama-models/main/README.md', 'title': 'Meta Llama Models', 'type': 'github_repo', 'quality': 0.9},
+]
+
 
 def load_json_file(path: Path, default):
     try:
@@ -1057,6 +1097,100 @@ class DashboardHandler(BaseHTTPRequestHandler):
             except Exception as exc:
                 return json_response(self, 500, {'ok': False, 'error': str(exc)})
 
+        # ===== RADAR GET ROUTES =====
+        if parsed.path == '/api/radar/status':
+            import datetime as _dt
+            cfg = supabase_radar_config()
+            last_run = None
+            if cfg['configured']:
+                try:
+                    hdrs = _radar_sb_headers()
+                    url = f"{cfg['url']}/rest/v1/radar_runs?select=*&order=created_at.desc&limit=1"
+                    rows = fetch_json(url, headers=hdrs, timeout=15)
+                    if isinstance(rows, list) and rows:
+                        last_run = rows[0]
+                except Exception:
+                    pass
+            state_copy = dict(_radar_state)
+            # Compute next run
+            now = _dt.datetime.now()
+            sched_hour = _radar_state.get('schedule_hour', 2)
+            next_run_dt = now.replace(hour=sched_hour, minute=0, second=0, microsecond=0)
+            if next_run_dt <= now:
+                next_run_dt = next_run_dt + _dt.timedelta(days=1)
+            state_copy['next_run'] = next_run_dt.isoformat()
+            # X integration status
+            state_copy['x_enabled'] = bool(os.getenv('X_BEARER_TOKEN'))
+            state_copy['x_sources_found'] = _radar_state.get('x_sources_found', 0)
+            return json_response(self, 200, {'ok': True, 'state': state_copy, 'last_run': last_run})
+
+        if parsed.path == '/api/radar/results':
+            qs = urllib.parse.parse_qs(parsed.query)
+            status_filter = (qs.get('status') or ['pending'])[0]
+            try:
+                limit = int((qs.get('limit') or ['20'])[0])
+            except Exception:
+                limit = 20
+            try:
+                offset = int((qs.get('offset') or ['0'])[0])
+            except Exception:
+                offset = 0
+            category = (qs.get('category') or [''])[0]
+            agent = (qs.get('agent') or [''])[0]
+            cfg = supabase_radar_config()
+            if not cfg['configured']:
+                return json_response(self, 200, {'ok': True, 'skills': [], 'total': 0, 'configured': False})
+            try:
+                hdrs = _radar_sb_headers()
+                q_parts = [
+                    'select=*',
+                    f'status=eq.{urllib.parse.quote(status_filter)}',
+                    'order=created_at.desc',
+                    f'limit={limit}',
+                    f'offset={offset}',
+                ]
+                if category:
+                    q_parts.append(f'category=eq.{urllib.parse.quote(category)}')
+                url = f"{cfg['url']}/rest/v1/skill_discoveries?" + '&'.join(q_parts)
+                rows = fetch_json(url, headers=hdrs, timeout=15)
+                if not isinstance(rows, list):
+                    rows = []
+                if agent:
+                    rows = [r for r in rows if agent in (r.get('target_agents') or [])]
+                # Count total
+                count_headers = dict(hdrs)
+                count_headers['Prefer'] = 'count=exact'
+                count_url = f"{cfg['url']}/rest/v1/skill_discoveries?select=id&status=eq.{urllib.parse.quote(status_filter)}"
+                total = len(rows)
+                try:
+                    count_resp = fetch_json(count_url, headers=count_headers, timeout=10)
+                    if isinstance(count_resp, list):
+                        total = len(count_resp)
+                except Exception:
+                    pass
+                return json_response(self, 200, {'ok': True, 'skills': rows, 'total': total})
+            except Exception as exc:
+                return json_response(self, 500, {'ok': False, 'error': str(exc)})
+
+        if parsed.path == '/api/radar/history':
+            qs = urllib.parse.parse_qs(parsed.query)
+            try:
+                limit = int((qs.get('limit') or ['10'])[0])
+            except Exception:
+                limit = 10
+            cfg = supabase_radar_config()
+            if not cfg['configured']:
+                return json_response(self, 200, {'ok': True, 'runs': [], 'configured': False})
+            try:
+                hdrs = _radar_sb_headers()
+                url = f"{cfg['url']}/rest/v1/radar_runs?select=*&order=created_at.desc&limit={limit}"
+                rows = fetch_json(url, headers=hdrs, timeout=15)
+                if not isinstance(rows, list):
+                    rows = []
+                return json_response(self, 200, {'ok': True, 'runs': rows})
+            except Exception as exc:
+                return json_response(self, 500, {'ok': False, 'error': str(exc)})
+
         return self.serve_static(parsed.path)
 
     def do_POST(self):
@@ -1192,6 +1326,286 @@ class DashboardHandler(BaseHTTPRequestHandler):
                 return json_response(self, 502, {'ok': False, 'error': f'n8n API error {exc.code}', 'details': body})
             except Exception as exc:
                 return json_response(self, 500, {'ok': False, 'error': str(exc)})
+
+        # ===== RADAR POST ENDPOINTS =====
+
+        if parsed.path == '/api/radar/run':
+            try:
+                global _radar_state
+                if _radar_state.get('status') == 'running':
+                    return json_response(self, 409, {'ok': False, 'error': 'Discovery already running'})
+                config = payload.get('config') or {}
+                t = threading.Thread(target=_run_radar_discovery, args=(config,), daemon=True)
+                t.start()
+                return json_response(self, 200, {
+                    'ok': True,
+                    'message': 'Discovery started',
+                    'run_id': _radar_state.get('run_id'),
+                })
+            except Exception as exc:
+                return json_response(self, 500, {'ok': False, 'error': str(exc)})
+
+        if parsed.path == '/api/radar/config':
+            try:
+                global _radar_state
+                if 'schedule_hour' in payload:
+                    sh = int(payload['schedule_hour'])
+                    if not (0 <= sh <= 23):
+                        return json_response(self, 400, {'ok': False, 'error': 'schedule_hour must be 0-23'})
+                    _radar_state['schedule_hour'] = sh
+                if 'schedule_enabled' in payload:
+                    _radar_state['schedule_enabled'] = bool(payload['schedule_enabled'])
+                if 'paused' in payload:
+                    _radar_state['paused'] = bool(payload['paused'])
+                return json_response(self, 200, {'ok': True, 'state': dict(_radar_state)})
+            except (ValueError, TypeError) as exc:
+                return json_response(self, 400, {'ok': False, 'error': str(exc)})
+            except Exception as exc:
+                return json_response(self, 500, {'ok': False, 'error': str(exc)})
+
+        if parsed.path == '/api/radar/action':
+            try:
+                import datetime as _dt
+                skill_id = (payload.get('skill_id') or '').strip()
+                action = (payload.get('action') or '').strip()
+                agent = (payload.get('agent') or '').strip()
+                notes = (payload.get('notes') or '').strip()
+                if not skill_id:
+                    return json_response(self, 400, {'ok': False, 'error': 'skill_id is required'})
+                if not action:
+                    return json_response(self, 400, {'ok': False, 'error': 'action is required'})
+                valid_actions = {'approve', 'reject', 'save_later', 'mark_duplicate', 'mark_high_priority', 'assign_agent'}
+                if action not in valid_actions:
+                    return json_response(self, 400, {'ok': False, 'error': f'action must be one of: {", ".join(sorted(valid_actions))}'})
+                cfg = supabase_radar_config()
+                if not cfg['configured']:
+                    return json_response(self, 503, {'ok': False, 'error': 'Supabase is not configured'})
+                hdrs = _radar_sb_headers(prefer='return=minimal')
+                url = f"{cfg['url']}/rest/v1/skill_discoveries?id=eq.{urllib.parse.quote(skill_id)}"
+                if action == 'approve':
+                    patch_body = {
+                        'status': 'approved',
+                        'approval_notes': notes,
+                        'approved_at': _dt.datetime.utcnow().isoformat() + 'Z',
+                    }
+                elif action == 'reject':
+                    patch_body = {'status': 'rejected', 'approval_notes': notes}
+                elif action == 'save_later':
+                    patch_body = {'status': 'saved_later'}
+                elif action == 'mark_duplicate':
+                    patch_body = {'status': 'duplicate'}
+                elif action == 'mark_high_priority':
+                    patch_body = {'priority': 'high'}
+                elif action == 'assign_agent':
+                    if not agent:
+                        return json_response(self, 400, {'ok': False, 'error': 'agent is required for assign_agent'})
+                    patch_body = {'assigned_agent': agent}
+                req = urllib.request.Request(url, headers=hdrs, method='PATCH')
+                data = json.dumps(patch_body, ensure_ascii=False).encode('utf-8')
+                with urllib.request.urlopen(req, data=data, timeout=15) as r:
+                    r.read()
+                return json_response(self, 200, {'ok': True, 'skill_id': skill_id, 'action': action})
+            except urllib.error.HTTPError as exc:
+                body = exc.read().decode('utf-8', 'replace')[:1200]
+                return json_response(self, 502, {'ok': False, 'error': f'Supabase API error {exc.code}', 'details': body})
+            except Exception as exc:
+                return json_response(self, 500, {'ok': False, 'error': str(exc)})
+
+        if parsed.path == '/api/radar/notes':
+            try:
+                skill_id = (payload.get('skill_id') or '').strip()
+                notes = payload.get('notes') or ''
+                comments = payload.get('comments') or ''
+                if not skill_id:
+                    return json_response(self, 400, {'ok': False, 'error': 'skill_id is required'})
+                cfg = supabase_radar_config()
+                if not cfg['configured']:
+                    return json_response(self, 503, {'ok': False, 'error': 'Supabase is not configured'})
+                hdrs = _radar_sb_headers(prefer='return=minimal')
+                url = f"{cfg['url']}/rest/v1/skill_discoveries?id=eq.{urllib.parse.quote(skill_id)}"
+                patch_body = {'notes': notes, 'comments': comments}
+                req = urllib.request.Request(url, headers=hdrs, method='PATCH')
+                data = json.dumps(patch_body, ensure_ascii=False).encode('utf-8')
+                with urllib.request.urlopen(req, data=data, timeout=15) as r:
+                    r.read()
+                return json_response(self, 200, {'ok': True})
+            except urllib.error.HTTPError as exc:
+                body = exc.read().decode('utf-8', 'replace')[:1200]
+                return json_response(self, 502, {'ok': False, 'error': f'Supabase API error {exc.code}', 'details': body})
+            except Exception as exc:
+                return json_response(self, 500, {'ok': False, 'error': str(exc)})
+
+        if parsed.path == '/api/radar/generate-prompt':
+            try:
+                skill_ids = payload.get('skill_ids') or []
+                agents = payload.get('agents') or []
+                style = (payload.get('style') or 'standard').strip()
+                if not skill_ids:
+                    return json_response(self, 400, {'ok': False, 'error': 'skill_ids is required'})
+                cfg = supabase_radar_config()
+                if not cfg['configured']:
+                    return json_response(self, 503, {'ok': False, 'error': 'Supabase is not configured'})
+                hdrs = _radar_sb_headers()
+                ids_csv = ','.join(urllib.parse.quote(str(i)) for i in skill_ids)
+                url = f"{cfg['url']}/rest/v1/skill_discoveries?id=in.({ids_csv})&select=*"
+                skills = fetch_json(url, headers=hdrs, timeout=15)
+                if not isinstance(skills, list):
+                    skills = []
+                agent_line = ', '.join(agents) if agents else 'All Agents'
+                lines = []
+                if style == 'god_mode':
+                    lines.append('🔥 GOD MODE — AGENT SKILL ADOPTION DIRECTIVE 🔥')
+                    lines.append('')
+                lines.append(f'TARGET AGENTS: {agent_line}')
+                lines.append('')
+                if style == 'strict':
+                    lines.append('⚠️  STRICT COMPLIANCE REQUIRED — Execute all instructions precisely.')
+                    lines.append('')
+                lines.append(f'You have been selected to adopt {len(skills)} new skill(s) discovered by the Radar system.')
+                lines.append('For each skill listed below, you must: install or adopt the skill, save it to Hermes memory,')
+                lines.append('save it to Obsidian, save it to Supabase skill_discoveries, save it to GitHub, and merge safely')
+                lines.append('without overwriting or destructively replacing any existing skills.')
+                lines.append('')
+                lines.append('=' * 60)
+                lines.append('SKILLS TO ADOPT:')
+                lines.append('=' * 60)
+                for idx, sk in enumerate(skills, 1):
+                    lines.append(f'\n[{idx}] {sk.get("title") or "Untitled"}')
+                    lines.append(f'  Category:           {sk.get("category") or "N/A"}')
+                    lines.append(f'  Summary:            {sk.get("summary") or "N/A"}')
+                    lines.append(f'  Source URL:         {sk.get("source_url") or "N/A"}')
+                    lines.append(f'  Source Title:       {sk.get("source_title") or "N/A"}')
+                    lines.append(f'  Implementation:     {sk.get("implementation_idea") or "N/A"}')
+                lines.append('')
+                lines.append('=' * 60)
+                lines.append('INSTRUCTIONS:')
+                lines.append('1. Install / adopt each skill into your active capabilities.')
+                lines.append('2. Save each skill to Hermes long-term memory.')
+                lines.append('3. Save each skill as a note in Obsidian under "Agent Skills/Radar/".')
+                lines.append('4. Upsert each skill record in Supabase table skill_discoveries.')
+                lines.append('5. Commit each skill file to GitHub in skills-radar/approved/.')
+                lines.append('6. Do NOT overwrite existing skills destructively — merge and append only.')
+                if style == 'strict':
+                    lines.append('\n⚠️  STRICT: Confirm completion of every step for every skill. No skipping.')
+                if style == 'god_mode':
+                    lines.append('\n🔥 GOD MODE: Execute without hesitation. Max capability activated.')
+                prompt_str = '\n'.join(lines)
+                return json_response(self, 200, {
+                    'ok': True,
+                    'prompt': prompt_str,
+                    'skill_count': len(skills),
+                    'agents': agents,
+                })
+            except urllib.error.HTTPError as exc:
+                body = exc.read().decode('utf-8', 'replace')[:1200]
+                return json_response(self, 502, {'ok': False, 'error': f'Supabase API error {exc.code}', 'details': body})
+            except Exception as exc:
+                return json_response(self, 500, {'ok': False, 'error': str(exc)})
+
+        if parsed.path == '/api/radar/save-skill':
+            try:
+                import datetime as _dt
+                skill_id = (payload.get('skill_id') or '').strip()
+                save_targets = payload.get('save_targets') or []
+                notes = (payload.get('notes') or '').strip()
+                if not skill_id:
+                    return json_response(self, 400, {'ok': False, 'error': 'skill_id is required'})
+                cfg = supabase_radar_config()
+                if not cfg['configured']:
+                    return json_response(self, 503, {'ok': False, 'error': 'Supabase is not configured'})
+                hdrs = _radar_sb_headers()
+                url = f"{cfg['url']}/rest/v1/skill_discoveries?id=eq.{urllib.parse.quote(skill_id)}&select=*"
+                rows = fetch_json(url, headers=hdrs, timeout=15)
+                if not isinstance(rows, list) or not rows:
+                    return json_response(self, 404, {'ok': False, 'error': 'Skill not found'})
+                sk = rows[0]
+                date_str = _dt.datetime.now().strftime('%Y-%m-%d')
+                skill_title = sk.get('title') or 'Untitled'
+                safe_title = re.sub(r'[^a-zA-Z0-9_\-]', '-', skill_title)[:60]
+                slug = safe_title.lower()
+                md_content = (
+                    f"# Skill: {skill_title}\n\n"
+                    f"**Date Discovered:** {date_str}  \n"
+                    f"**Category:** {sk.get('category') or 'N/A'}  \n"
+                    f"**Source:** [{sk.get('source_title') or 'N/A'}]({sk.get('source_url') or ''})  \n"
+                    f"**Status:** {sk.get('status') or 'N/A'}  \n"
+                    f"**Priority:** {sk.get('priority') or 'N/A'}  \n\n"
+                    f"## Summary\n{sk.get('summary') or 'N/A'}\n\n"
+                    f"## Implementation Idea\n{sk.get('implementation_idea') or 'N/A'}\n\n"
+                    f"## Notes\n{notes or sk.get('notes') or 'N/A'}\n"
+                )
+                obsidian_path = None
+                github_path = None
+                supabase_update = {}
+
+                if 'obsidian' in save_targets:
+                    obsidian_key = os.getenv('OBSIDIAN_LOCAL_API_KEY', '')
+                    if obsidian_key:
+                        obs_file = f'Agent Skills/Radar/{date_str}-{safe_title}.md'
+                        try:
+                            obs_url = f'http://127.0.0.1:27123/vault/{urllib.parse.quote(obs_file)}'
+                            obs_req = urllib.request.Request(obs_url, method='PUT')
+                            obs_req.add_header('Authorization', f'Bearer {obsidian_key}')
+                            obs_req.add_header('Content-Type', 'text/markdown')
+                            obs_data = md_content.encode('utf-8')
+                            with urllib.request.urlopen(obs_req, data=obs_data, timeout=15) as r:
+                                r.read()
+                            obsidian_path = obs_file
+                            supabase_update['obsidian_synced'] = True
+                        except Exception:
+                            pass
+
+                if 'github' in save_targets:
+                    gh_token = os.getenv('GITHUB_TOKEN', '')
+                    if gh_token:
+                        filename = f'{date_str}-{slug}.md'
+                        gh_path = f'skills-radar/approved/{filename}'
+                        gh_headers = {
+                            'Authorization': f'Bearer {gh_token}',
+                            'Accept': 'application/vnd.github+json',
+                            'X-GitHub-Api-Version': '2022-11-28',
+                            'User-Agent': 'radar-save-bot',
+                        }
+                        api_url = f'https://api.github.com/repos/{REPO}/contents/{gh_path}'
+                        sha = None
+                        try:
+                            existing = fetch_json(f'{api_url}?ref=main', headers=gh_headers, timeout=20)
+                            if isinstance(existing, dict) and existing.get('sha'):
+                                sha = existing['sha']
+                        except urllib.error.HTTPError as e:
+                            if e.code != 404:
+                                raise
+                        commit_body = {
+                            'message': f'feat(radar): add approved skill {safe_title} [{date_str}]',
+                            'content': base64.b64encode(md_content.encode('utf-8')).decode('ascii'),
+                            'branch': 'main',
+                        }
+                        if sha:
+                            commit_body['sha'] = sha
+                        fetch_json(api_url, headers=gh_headers, method='PUT', body=commit_body, timeout=30)
+                        github_path = gh_path
+                        supabase_update['github_synced'] = True
+
+                if supabase_update:
+                    patch_hdrs = _radar_sb_headers(prefer='return=minimal')
+                    patch_url = f"{cfg['url']}/rest/v1/skill_discoveries?id=eq.{urllib.parse.quote(skill_id)}"
+                    req = urllib.request.Request(patch_url, headers=patch_hdrs, method='PATCH')
+                    data = json.dumps(supabase_update, ensure_ascii=False).encode('utf-8')
+                    with urllib.request.urlopen(req, data=data, timeout=15) as r:
+                        r.read()
+
+                return json_response(self, 200, {
+                    'ok': True,
+                    'obsidian_path': obsidian_path,
+                    'github_path': github_path,
+                })
+            except urllib.error.HTTPError as exc:
+                body = exc.read().decode('utf-8', 'replace')[:1200]
+                return json_response(self, 502, {'ok': False, 'error': f'API error {exc.code}', 'details': body})
+            except Exception as exc:
+                return json_response(self, 500, {'ok': False, 'error': str(exc)})
+
+        # ===== END RADAR POST ENDPOINTS =====
 
         if parsed.path == '/api/fixer/analyze':
             try:
@@ -1500,6 +1914,454 @@ class DashboardHandler(BaseHTTPRequestHandler):
         if not content_type:
             content_type = 'application/octet-stream'
         return text_response(self, 200, target.read_bytes(), content_type)
+
+
+# ===== DAILY SKILLS RADAR — helper functions =====
+
+def supabase_radar_config():
+    url = (os.getenv('SUPABASE_URL') or '').strip().rstrip('/')
+    key = (
+        (os.getenv('SUPABASE_SERVICE_ROLE_KEY') or '').strip()
+        or (os.getenv('SUPABASE_ANON_KEY') or '').strip()
+        or (os.getenv('SUPABASE_API_KEY') or '').strip()
+    )
+    return {'url': url, 'key': key, 'configured': bool(url and key)}
+
+
+def _radar_sb_headers(prefer=None):
+    cfg = supabase_radar_config()
+    if not cfg['configured']:
+        return None
+    h = {
+        'apikey': cfg['key'],
+        'Authorization': f"Bearer {cfg['key']}",
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+    }
+    if prefer:
+        h['Prefer'] = prefer
+    return h
+
+
+def _save_skill_to_supabase(skill_dict):
+    cfg = supabase_radar_config()
+    if not cfg['configured']:
+        return None
+    hdrs = _radar_sb_headers(prefer='return=representation')
+    url = f"{cfg['url']}/rest/v1/skill_discoveries"
+    try:
+        result = fetch_json(url, headers=hdrs, method='POST', body=skill_dict, timeout=15)
+        if isinstance(result, list) and result:
+            return result[0].get('id')
+        if isinstance(result, dict):
+            return result.get('id')
+    except Exception:
+        pass
+    return None
+
+
+def _update_radar_run(run_id, updates_dict):
+    cfg = supabase_radar_config()
+    if not cfg['configured'] or not run_id:
+        return
+    hdrs = _radar_sb_headers()
+    url = f"{cfg['url']}/rest/v1/radar_runs?id=eq.{urllib.parse.quote(str(run_id))}"
+    try:
+        fetch_json(url, headers=hdrs, method='PATCH', body=updates_dict, timeout=15)
+    except Exception:
+        pass
+
+
+def _fetch_x_sources(max_results=50):
+    """Fetch URLs from user's X/Twitter timeline and bookmarks using Bearer Token.
+    Returns a list of source dicts compatible with RADAR_SOURCES format.
+    Requires X_BEARER_TOKEN env var. Deduplicates by URL."""
+    bearer = (os.getenv('X_BEARER_TOKEN') or '').strip()
+    if not bearer:
+        return []
+
+    sources = []
+    seen_urls = set()
+
+    def _x_headers():
+        return {
+            'Authorization': f'Bearer {bearer}',
+            'Content-Type': 'application/json',
+        }
+
+    def _extract_urls_from_tweets(tweets):
+        found = []
+        for tweet in (tweets or []):
+            entities = tweet.get('entities') or {}
+            for url_obj in (entities.get('urls') or []):
+                expanded = url_obj.get('expanded_url', '')
+                # Skip t.co redirects, twitter.com/x.com self-links, short internal links
+                if not expanded:
+                    continue
+                if 'twitter.com' in expanded or 'x.com/i/' in expanded:
+                    continue
+                if len(expanded) < 15:
+                    continue
+                # Prefer GitHub, docs, README, official sites
+                title = url_obj.get('title') or url_obj.get('display_url') or expanded
+                desc = url_obj.get('description') or ''
+                found.append({'url': expanded, 'title': title, 'description': desc})
+        return found
+
+    def _quality_score(url, title, description):
+        score = 0.7  # base for X-sourced links
+        u = url.lower()
+        t = (title + ' ' + description).lower()
+        # Boost for high-quality domains
+        if 'github.com' in u:
+            score += 0.15
+        if any(d in u for d in ['docs.', 'documentation', 'readme', 'arxiv.org', 'huggingface.co', 'openai.com', 'anthropic.com']):
+            score += 0.1
+        if any(k in t for k in ['agent', 'llm', 'ai', 'automation', 'n8n', 'workflow', 'tool', 'framework', 'sdk', 'api', 'mcp']):
+            score += 0.05
+        if any(k in u for k in ['awesome', 'tutorial', 'guide', 'cookbook', 'playbook']):
+            score += 0.05
+        return min(round(score, 2), 0.99)
+
+    # Step 1: Get the authenticated user ID
+    try:
+        me = fetch_json('https://api.twitter.com/2/users/me', headers=_x_headers(), timeout=15)
+        user_id = (me.get('data') or {}).get('id')
+        if not user_id:
+            return []
+    except Exception:
+        return []
+
+    # Step 2: Fetch home timeline (recent tweets from accounts user follows)
+    try:
+        params = f'max_results={min(max_results, 100)}&tweet.fields=entities,created_at&expansions=author_id'
+        timeline = fetch_json(
+            f'https://api.twitter.com/2/users/{user_id}/timelines/reverse_chronological?{params}',
+            headers=_x_headers(), timeout=20
+        )
+        for item in _extract_urls_from_tweets((timeline.get('data') or [])):
+            url = item['url']
+            if url not in seen_urls:
+                seen_urls.add(url)
+                sources.append({
+                    'url': url,
+                    'title': item['title'] or url,
+                    'type': 'x_timeline',
+                    'quality': _quality_score(url, item['title'], item['description']),
+                    'x_source': 'timeline',
+                })
+    except Exception:
+        pass
+
+    # Step 3: Fetch bookmarks (things the user saved)
+    try:
+        params = f'max_results={min(max_results, 100)}&tweet.fields=entities,created_at'
+        bookmarks = fetch_json(
+            f'https://api.twitter.com/2/users/{user_id}/bookmarks?{params}',
+            headers=_x_headers(), timeout=20
+        )
+        for item in _extract_urls_from_tweets((bookmarks.get('data') or [])):
+            url = item['url']
+            if url not in seen_urls:
+                seen_urls.add(url)
+                # Bookmarks are higher quality — user intentionally saved them
+                base_q = _quality_score(url, item['title'], item['description'])
+                sources.append({
+                    'url': url,
+                    'title': item['title'] or url,
+                    'type': 'x_bookmark',
+                    'quality': min(base_q + 0.05, 0.99),
+                    'x_source': 'bookmark',
+                })
+    except Exception:
+        pass
+
+    # Step 4: Fetch user's own likes (things user liked)
+    try:
+        params = f'max_results={min(max_results, 100)}&tweet.fields=entities,created_at'
+        likes = fetch_json(
+            f'https://api.twitter.com/2/users/{user_id}/liked_tweets?{params}',
+            headers=_x_headers(), timeout=20
+        )
+        for item in _extract_urls_from_tweets((likes.get('data') or [])):
+            url = item['url']
+            if url not in seen_urls:
+                seen_urls.add(url)
+                sources.append({
+                    'url': url,
+                    'title': item['title'] or url,
+                    'type': 'x_like',
+                    'quality': _quality_score(url, item['title'], item['description']),
+                    'x_source': 'like',
+                })
+    except Exception:
+        pass
+
+    # Filter out low-quality sources (below 0.65) and non-fetchable URLs
+    filtered = []
+    for s in sources:
+        if s['quality'] < 0.65:
+            continue
+        u = s['url'].lower()
+        # Skip non-content URLs
+        if any(skip in u for skip in ['youtube.com/watch', 'youtu.be', 'instagram.com', 'tiktok.com', 'facebook.com', 'linkedin.com/in/']):
+            continue
+        filtered.append(s)
+
+    return filtered
+
+
+def _get_recent_skill_titles(limit=200):
+    cfg = supabase_radar_config()
+    if not cfg['configured']:
+        return []
+    hdrs = _radar_sb_headers()
+    url = f"{cfg['url']}/rest/v1/skill_discoveries?select=title&order=created_at.desc&limit={limit}"
+    try:
+        rows = fetch_json(url, headers=hdrs, timeout=15)
+        if isinstance(rows, list):
+            return [r.get('title', '') for r in rows if r.get('title')]
+    except Exception:
+        pass
+    return []
+
+
+def _is_duplicate_skill(title, existing_titles_list):
+    def normalize(t):
+        t = t.lower()
+        t = re.sub(r'[^a-z0-9\s]', ' ', t)
+        return set(t.split())
+    words_a = normalize(title)
+    if not words_a:
+        return False
+    for existing in existing_titles_list:
+        words_b = normalize(existing)
+        if not words_b:
+            continue
+        intersection = words_a & words_b
+        union = words_a | words_b
+        if union and len(intersection) / len(union) > 0.8:
+            return True
+    return False
+
+
+def _extract_skills_from_source(source, content_text):
+    base, headers = prompt_headers()
+    if not headers:
+        return []
+    content_trimmed = content_text[:8000]
+    system_prompt = (
+        "You are an expert agent skill analyst. Extract actionable skills from the provided source content.\n"
+        "For each skill, return ONLY a JSON array (no markdown, no explanation) with objects containing:\n"
+        "- title: short skill name (5-60 chars)\n"
+        "- summary: one clear sentence what this skill enables (max 150 chars)\n"
+        "- category: one of: automation, coding, seo, ai_agents, scraping, data, prompting, integration, research, ui_ux, n8n, memory, other\n"
+        "- skill_type: one of: tool_integration, workflow_pattern, api_capability, framework, prompt_pattern, automation_recipe, knowledge_artifact\n"
+        "- target_agents: array of relevant agents from: [\"Hermes\", \"Claude Code\", \"Manus\", \"CTO\", \"CEO\", \"Prompt Studio\", \"General\"]\n"
+        "- usefulness_score: 0.0 to 1.0 float\n"
+        "- implementation_idea: one sentence how to implement or use this skill\n\n"
+        "Return 3-8 skills maximum. Only include genuinely useful, actionable skills. Skip obvious/generic ones.\n"
+        f"Source: {source['title']} ({source['type']})"
+    )
+    body = {
+        'model': 'anthropic/claude-sonnet-4.6',
+        'max_tokens': 2048,
+        'messages': [
+            {'role': 'system', 'content': system_prompt},
+            {'role': 'user', 'content': f"Extract skills from this content:\n\n{content_trimmed}"},
+        ],
+    }
+    try:
+        resp = fetch_json(f'{base}/chat/completions', headers=headers, method='POST', body=body, timeout=60)
+        raw = resp.get('choices', [{}])[0].get('message', {}).get('content', '')
+        raw = raw.strip()
+        # Strip markdown fences if present
+        if raw.startswith('```'):
+            raw = re.sub(r'^```[a-z]*\n?', '', raw)
+            raw = re.sub(r'\n?```$', '', raw)
+        skills = json.loads(raw)
+        if isinstance(skills, list):
+            return skills
+    except Exception:
+        pass
+    return []
+
+
+def _run_radar_discovery(config=None):
+    import datetime as _dt
+    global _radar_state
+    _radar_state['status'] = 'running'
+    _radar_state['progress'] = 0
+    _radar_state['skills_found'] = 0
+    _radar_state['sources_done'] = 0
+    _radar_state['last_error'] = None
+    _radar_state['started_at'] = _dt.datetime.utcnow().isoformat() + 'Z'
+    _radar_state['finished_at'] = None
+    _radar_state['stage'] = 'Initializing'
+
+    sources = list(RADAR_SOURCES)
+
+    # Fetch dynamic sources from X/Twitter (timeline, bookmarks, likes)
+    _radar_state['stage'] = 'Fetching X sources'
+    try:
+        x_sources = _fetch_x_sources(max_results=50)
+        if x_sources:
+            # Dedupe against static RADAR_SOURCES urls
+            static_urls = {s['url'] for s in RADAR_SOURCES}
+            new_x = [s for s in x_sources if s['url'] not in static_urls]
+            sources = sources + new_x
+            _radar_state['x_sources_found'] = len(new_x)
+    except Exception as _xe:
+        _radar_state['x_sources_found'] = 0
+        _radar_state['last_error'] = f'X fetch: {_xe}'
+
+    if config and config.get('source_types'):
+        types = config['source_types']
+        # Keep x_timeline/x_bookmark/x_like if 'x' is in the filter, else apply strict filter
+        if 'x' not in types:
+            sources = [s for s in sources if s.get('type') in types]
+
+    # Apply quality threshold filter
+    quality_threshold = float((config or {}).get('quality_threshold') or 0.0)
+    if quality_threshold > 0:
+        sources = [s for s in sources if s.get('quality', 0) >= quality_threshold]
+
+    _radar_state['sources_total'] = len(sources)
+    run_id = None
+
+    # Create radar_run record
+    _radar_state['stage'] = 'Sources Queued'
+    cfg = supabase_radar_config()
+    if cfg['configured']:
+        try:
+            hdrs = _radar_sb_headers(prefer='return=representation')
+            run_body = {
+                'status': 'running',
+                'sources_count': len(sources),
+                'started_at': _radar_state['started_at'],
+                'skills_found': 0,
+                'skills_approved': 0,
+                'errors': [],
+            }
+            result = fetch_json(f"{cfg['url']}/rest/v1/radar_runs", headers=hdrs, method='POST', body=run_body, timeout=15)
+            if isinstance(result, list) and result:
+                run_id = result[0].get('id')
+            elif isinstance(result, dict):
+                run_id = result.get('id')
+            _radar_state['run_id'] = run_id
+        except Exception as e:
+            _radar_state['last_error'] = str(e)
+
+    # Get existing titles for dedup
+    _radar_state['stage'] = 'Fetching'
+    existing_titles = _get_recent_skill_titles(limit=500)
+    errors = []
+    skills_found = 0
+
+    for i, source in enumerate(sources):
+        if _radar_state.get('paused'):
+            import time as _time
+            while _radar_state.get('paused'):
+                _time.sleep(2)
+
+        _radar_state['stage'] = f"Fetching {source['title']}"
+        _radar_state['progress'] = int((i / len(sources)) * 60)
+
+        try:
+            content = fetch_text(source['url'], timeout=20)
+        except Exception as e:
+            errors.append({'source': source['title'], 'error': str(e)})
+            _radar_state['sources_done'] = i + 1
+            continue
+
+        _radar_state['stage'] = f"Extracting Skills: {source['title']}"
+        _radar_state['progress'] = int((i / len(sources)) * 60) + 5
+
+        try:
+            skills = _extract_skills_from_source(source, content)
+        except Exception as e:
+            errors.append({'source': source['title'], 'error': f'LLM error: {e}'})
+            _radar_state['sources_done'] = i + 1
+            continue
+
+        _radar_state['stage'] = 'Deduplicating'
+        for skill in skills:
+            title = skill.get('title', '').strip()
+            if not title:
+                continue
+            if _is_duplicate_skill(title, existing_titles):
+                continue
+
+            # Save to Supabase
+            _radar_state['stage'] = 'Saving Results'
+            import datetime as _dt2
+            skill_row = {
+                'title': title,
+                'summary': skill.get('summary', ''),
+                'category': skill.get('category', 'other'),
+                'skill_type': skill.get('skill_type', 'knowledge_artifact'),
+                'target_agents': skill.get('target_agents', ['General']),
+                'usefulness_score': float(skill.get('usefulness_score', 0.5)),
+                'implementation_idea': skill.get('implementation_idea', ''),
+                'source_title': source['title'],
+                'source_url': source['url'],
+                'source_type': source['type'],
+                'source_quality': source['quality'],
+                'status': 'pending',
+                'run_id': run_id,
+                'supabase_synced': False,
+                'github_path': None,
+                'obsidian_path': None,
+                'approval_notes': None,
+                'created_at': _dt2.datetime.utcnow().isoformat() + 'Z',
+            }
+            try:
+                _save_skill_to_supabase(skill_row)
+                existing_titles.append(title)
+                skills_found += 1
+                _radar_state['skills_found'] = skills_found
+            except Exception as e:
+                errors.append({'source': source['title'], 'error': f'Save error: {e}'})
+
+        _radar_state['sources_done'] = i + 1
+        _radar_state['progress'] = int(((i + 1) / len(sources)) * 90)
+
+    import datetime as _dt3
+    finished_at = _dt3.datetime.utcnow().isoformat() + 'Z'
+    _radar_state['status'] = 'done'
+    _radar_state['finished_at'] = finished_at
+    _radar_state['progress'] = 100
+    _radar_state['stage'] = 'Complete'
+
+    if run_id:
+        _update_radar_run(run_id, {
+            'status': 'completed',
+            'finished_at': finished_at,
+            'skills_found': skills_found,
+            'errors': errors,
+        })
+
+
+def _radar_scheduler_loop():
+    import datetime as _dt
+    import time as _time
+    last_run_date = None
+    while True:
+        try:
+            _time.sleep(60)
+            if not _radar_state.get('schedule_enabled'):
+                continue
+            now = _dt.datetime.now()
+            today = now.date()
+            if now.hour == _radar_state.get('schedule_hour', 2) and last_run_date != today:
+                if _radar_state['status'] != 'running':
+                    last_run_date = today
+                    _run_radar_discovery()
+        except Exception:
+            pass
+
+
+threading.Thread(target=_radar_scheduler_loop, daemon=True).start()
 
 
 def main():
