@@ -190,7 +190,22 @@ def _get_provider_chain():
             'anthropic_native': True,  # uses /messages endpoint, not /chat/completions
         })
 
-    # 4. OpenAI fallback
+    # 4. Google Gemini (native REST API — uses X-goog-api-key header)
+    gemini_key = os.getenv('GEMINI_API_KEY')
+    if gemini_key:
+        chain.append({
+            'name': 'gemini',
+            'base': 'https://generativelanguage.googleapis.com/v1beta',
+            'headers': {
+                'Content-Type': 'application/json',
+                'X-goog-api-key': gemini_key,
+            },
+            # Default model — env var lets you pin a specific version
+            'model_override': os.getenv('GEMINI_MODEL', 'gemini-2.5-pro'),
+            'gemini_native': True,  # Uses /models/{model}:generateContent endpoint
+        })
+
+    # 5. OpenAI fallback
     oai_key = os.getenv('OPENAI_API_KEY')
     if oai_key:
         base = os.getenv('OPENAI_BASE_URL', 'https://api.openai.com/v1')
@@ -224,9 +239,32 @@ def call_with_fallback(messages, model, timeout=120):
         hdrs = dict(provider['headers'])
         m = provider.get('model_override') or model
         is_anthropic_native = provider.get('anthropic_native', False)
+        is_gemini_native = provider.get('gemini_native', False)
 
         try:
-            if is_anthropic_native:
+            if is_gemini_native:
+                # Gemini native REST: POST /v1beta/models/{model}:generateContent
+                # Convert OpenAI-style messages to Gemini contents format
+                system_text = ' '.join(msg['content'] for msg in messages if msg['role'] == 'system')
+                gemini_contents = []
+                for msg in messages:
+                    if msg['role'] == 'system':
+                        continue
+                    role = 'user' if msg['role'] == 'user' else 'model'
+                    gemini_contents.append({'role': role, 'parts': [{'text': msg['content']}]})
+                body = {'contents': gemini_contents}
+                if system_text:
+                    body['systemInstruction'] = {'parts': [{'text': system_text}]}
+                resp = fetch_json(
+                    f'{base}/models/{m}:generateContent',
+                    headers=hdrs, method='POST', body=body, timeout=timeout
+                )
+                candidates = resp.get('candidates') or []
+                content = ''
+                if candidates:
+                    parts = candidates[0].get('content', {}).get('parts') or []
+                    content = ''.join(p.get('text', '') for p in parts)
+            elif is_anthropic_native:
                 # Anthropic /messages format
                 hdrs['Content-Type'] = 'application/json'
                 system_msgs = [msg['content'] for msg in messages if msg['role'] == 'system']
@@ -499,7 +537,9 @@ def _normalize_checklist(raw):
 
 
 BRAINSTORM_MODELS = [
-    {"id": "google/gemini-3.1-pro-preview",   "label": "Gemini 3 Pro"},
+    {"id": "google/gemini-3.1-pro-preview",   "label": "Gemini 3.1 Pro (OpenRouter)"},
+    {"id": "gemini-3.1-pro-preview",          "label": "Gemini 3.1 Pro (Direct)", "provider": "gemini"},
+    {"id": "gemini-2.5-pro",                  "label": "Gemini 2.5 Pro (Direct)",  "provider": "gemini"},
     {"id": "anthropic/claude-opus-4.7",       "label": "Claude Opus 4.7"},
     {"id": "openai/gpt-5.4",                  "label": "GPT-5.4"},
     {"id": "minimax/minimax-m2.7",            "label": "MiniMax M2.7"},
@@ -1080,8 +1120,8 @@ class DashboardHandler(BaseHTTPRequestHandler):
             return json_response(self, 200, {
                 'ok': True,
                 'n8nConfigured': bool(os.getenv('N8N_API_KEY')),
-                'promptConfigured': bool(os.getenv('OPENAI_API_KEY') or os.getenv('OPENROUTER_API_KEY')),
-                'brainstormConfigured': bool(os.getenv('OPENROUTER_API_KEY') or os.getenv('OPENAI_API_KEY')),
+                'promptConfigured': bool(os.getenv('OPENAI_API_KEY') or os.getenv('OPENROUTER_API_KEY') or os.getenv('COPILOT_API_KEY') or os.getenv('ANTHROPIC_API_KEY') or os.getenv('GEMINI_API_KEY')),
+                'brainstormConfigured': bool(os.getenv('OPENROUTER_API_KEY') or os.getenv('OPENAI_API_KEY') or os.getenv('GEMINI_API_KEY')),
                 'githubCommitConfigured': bool(os.getenv('GITHUB_TOKEN')),
                 'brainstormModels': [{'id': m['id'], 'label': m['label']} for m in BRAINSTORM_MODELS],
                 'synthModel': SYNTH_MODEL,
@@ -1089,9 +1129,34 @@ class DashboardHandler(BaseHTTPRequestHandler):
                 'promptTweakDefaultModel': os.getenv('PROMPT_TWEAK_MODEL', 'anthropic/claude-sonnet-4.6'),
                 'promptSynthDefaultModel': SYNTH_MODEL,
                 'paletteExtractorConfigured': True,
-                'tweakConfigured': bool(os.getenv('OPENAI_API_KEY') or os.getenv('OPENROUTER_API_KEY')),
+                'tweakConfigured': bool(os.getenv('OPENAI_API_KEY') or os.getenv('OPENROUTER_API_KEY') or os.getenv('COPILOT_API_KEY') or os.getenv('ANTHROPIC_API_KEY') or os.getenv('GEMINI_API_KEY')),
                 'commentsConfigured': supabase_comments_config()['configured'],
                 'commentsTable': supabase_comments_config()['table'],
+                # Active provider chain — shows which providers are available
+                'activeProviders': [p['name'] for p in _get_provider_chain()],
+                # All selectable models for the Prompt Studio model picker
+                'improverModels': [
+                    # --- OpenRouter (routes to any model) ---
+                    {'id': 'anthropic/claude-sonnet-4.6',       'label': 'Claude Sonnet 4.6 (OpenRouter)',  'provider': 'openrouter'},
+                    {'id': 'anthropic/claude-opus-4.7',         'label': 'Claude Opus 4.7 (OpenRouter)',    'provider': 'openrouter'},
+                    {'id': 'openai/gpt-5.4',                    'label': 'GPT-5.4 (OpenRouter)',            'provider': 'openrouter'},
+                    {'id': 'openai/gpt-4o',                     'label': 'GPT-4o (OpenRouter)',             'provider': 'openrouter'},
+                    {'id': 'google/gemini-3.1-pro-preview',     'label': 'Gemini 3.1 Pro (OpenRouter)',     'provider': 'openrouter'},
+                    {'id': 'google/gemini-2.5-pro',             'label': 'Gemini 2.5 Pro (OpenRouter)',     'provider': 'openrouter'},
+                    # --- GitHub Copilot (direct) ---
+                    {'id': 'claude-sonnet-4.6',                 'label': 'Claude Sonnet 4.6 (Copilot)',     'provider': 'copilot'},
+                    {'id': 'gpt-4o',                            'label': 'GPT-4o (Copilot)',                'provider': 'copilot'},
+                    {'id': 'o3',                                 'label': 'o3 (Copilot)',                    'provider': 'copilot'},
+                    # --- Google Gemini (direct API) ---
+                    {'id': 'gemini-2.5-pro',                    'label': 'Gemini 2.5 Pro (Direct)',         'provider': 'gemini'},
+                    {'id': 'gemini-3.1-pro-preview',            'label': 'Gemini 3.1 Pro (Direct)',         'provider': 'gemini'},
+                    {'id': 'gemini-3-pro-preview',              'label': 'Gemini 3 Pro (Direct)',           'provider': 'gemini'},
+                    {'id': 'gemini-2.5-flash',                  'label': 'Gemini 2.5 Flash (Direct)',       'provider': 'gemini'},
+                    {'id': 'gemini-2.0-flash',                  'label': 'Gemini 2.0 Flash (Direct)',       'provider': 'gemini'},
+                    # --- Anthropic direct (Claude Code Max plan) ---
+                    {'id': 'claude-sonnet-4-5',                 'label': 'Claude Sonnet 4.5 (Anthropic)',   'provider': 'anthropic'},
+                    {'id': 'claude-opus-4',                     'label': 'Claude Opus 4 (Anthropic)',       'provider': 'anthropic'},
+                ],
             })
         if parsed.path == '/api/comments':
             query = urllib.parse.parse_qs(parsed.query)
