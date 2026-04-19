@@ -6665,7 +6665,7 @@ window.deployFixed = function() {
     const wpMatch = nodesStr.match(/https?:\/\/([a-z0-9\-\.]+)\/wp-json/i);
     if (wpMatch) return 'https://' + wpMatch[1].replace(/\/wp-json.*/, '');
     // Look for httpRequest URLs that are not API services
-    const urlMatches = nodesStr.match(/https?:\/\/[a-z0-9\-\.]+\.[a-z]{2,}(?:\/[^\s"'\]*)?/gi) || [];
+    const urlMatches = nodesStr.match(/https?:\/\/[a-z0-9\-\.]+\.[a-z]{2,}(?:\/[^\s"']*)?/gi) || [];
     const siteUrls = urlMatches.filter(u =>
       !u.includes('googleapis') && !u.includes('openai') && !u.includes('openrouter') &&
       !u.includes('anthropic') && !u.includes('firecrawl') && !u.includes('n8n.cloud') &&
