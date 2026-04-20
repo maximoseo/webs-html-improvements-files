@@ -1,419 +1,386 @@
-<!DOCTYPE html>
-<html lang="en" dir="ltr">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<meta name="description" content="A complete guide to PC power management for IT teams — cut energy costs, shrink carbon footprint, and keep remote PCs manageable without disrupting users.">
-<title>PC Power Management: The IT Leader's Guide to Energy Savings</title>
+<article dir="ltr" lang="en" class="sa-article pp-article" style="direction:ltr !important;text-align:left !important;unicode-bidi:isolate !important;font-family:Montserrat,-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;color:#1b2440;line-height:1.78;max-width:960px;margin:0 auto;padding:28px 20px 110px 20px;font-size:18px;box-sizing:border-box;background:linear-gradient(180deg,#f6f9fd 0%,#eef3fa 100%);">
 <style>
-/* ---------- Brand tokens (from live powerplug.ai) ---------- */
-:root{
-  --pp-purple:#7238ce;
-  --pp-purple-soft:#bc55ff;
-  --pp-navy:#131b3b;
-  --pp-ink:#414042;
-  --pp-ink-soft:#6c6c6d;
-  --pp-mist:#f5f4f5;
-  --pp-border:#d8d8d9;
-  --pp-white:#ffffff;
-  --pp-tip-bg:#f4efff;
-  --pp-how-bg:#eef7ff;
-  --pp-did-bg:#fffaec;
-  --pp-success:#19a974;
-  --pp-shadow:0 10px 28px rgba(114,56,206,0.12);
-  --pp-shadow-soft:0 4px 12px rgba(19,27,59,0.06);
-  --pp-radius:14px;
-  --pp-radius-sm:10px;
-  --pp-gap:8px;
+.pp-article, .pp-article *, .pp-article *::before, .pp-article *::after { box-sizing:border-box !important; unicode-bidi:isolate !important; }
+.pp-article .pp-center, .pp-article .pp-center * { text-align:center !important; }
+.pp-article a { transition: color .18s ease, background .18s ease, box-shadow .18s ease, transform .18s ease; }
+.pp-article a:hover { color:#4d8f17 !important; }
+.pp-article .pp-cta-btn:hover { transform: translateY(-2px); box-shadow: 0 14px 28px rgba(19,27,59,.22); filter: brightness(1.04); }
+.pp-article .pp-cta-ghost:hover { background:#ffffff !important; color:#131b3b !important; box-shadow:0 10px 22px rgba(19,27,59,.18); }
+.pp-article .pp-toc a:hover, .pp-article .pp-toc a:focus { background:#eaf4d9 !important; color:#4d8f17 !important; border-color:#b9d988 !important; outline:none; }
+.pp-article details[open] .pp-caret { transform: rotate(45deg); }
+.pp-article details summary:hover { background:#eaf4d9 !important; color:#4d8f17 !important; }
+.pp-article details[open] > summary { background:#eaf4d9 !important; color:#2d5a0c !important; }
+.pp-article .pp-social:hover { transform: translateY(-2px); background:#4d8f17 !important; color:#ffffff !important; border-color:#4d8f17 !important; box-shadow:0 10px 20px rgba(77,143,23,.35); }
+.pp-article .pp-logo-link:hover { filter:brightness(1.05); transform:scale(1.02); }
+.pp-article .pp-proof-card:hover { transform: translateY(-3px); box-shadow:0 14px 30px rgba(19,27,59,.14); }
+.pp-article img { max-width:100% !important; height:auto !important; display:block; border-radius:18px; }
+.pp-article summary br, .pp-article [data-resp="float-group"] br { display:none !important; }
+.pp-article [data-resp="container"] > p:empty { display:none !important; }
+.pp-article .pp-caret { flex-shrink:0; min-width:1.2em; display:inline-block; transition: transform .22s ease; }
+
+/* Floating buttons */
+.pp-float-contact { position:fixed; left:18px; bottom:22px; z-index:9998; display:inline-flex; align-items:center; gap:8px; padding:12px 18px; background:#4d8f17; color:#ffffff !important; font-weight:700; font-size:15px; text-decoration:none; border-radius:50px; box-shadow:0 10px 26px rgba(19,27,59,.28); border:2px solid #ffffff; white-space:nowrap; transition: transform .2s ease, background .2s ease, box-shadow .2s ease; font-family:Montserrat,-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif; }
+.pp-float-contact:hover { background:#3f7612; transform: translateY(-2px); box-shadow:0 14px 32px rgba(19,27,59,.36); color:#ffffff !important; }
+.pp-float-contact .pp-dot { display:inline-block; width:8px; height:8px; border-radius:50%; background:#d6ff85; box-shadow:0 0 0 0 rgba(214,255,133,.7); animation:pp-pulse 1.8s infinite; }
+@keyframes pp-pulse { 0%{box-shadow:0 0 0 0 rgba(214,255,133,.7)} 70%{box-shadow:0 0 0 10px rgba(214,255,133,0)} 100%{box-shadow:0 0 0 0 rgba(214,255,133,0)} }
+
+.pp-float-top { position:fixed; right:18px; bottom:22px; z-index:9998; width:46px; height:46px; border-radius:50%; background:#131b3b; color:#ffffff !important; text-decoration:none; display:inline-flex; align-items:center; justify-content:center; font-size:22px; line-height:1; font-weight:900; box-shadow:0 10px 24px rgba(19,27,59,.34); border:2px solid #ffffff; opacity:0; pointer-events:none; transform: translateY(16px); transition: opacity .3s ease, transform .3s ease, background .2s ease, box-shadow .2s ease; font-family:Montserrat,-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif; }
+.pp-float-top.pp-visible { opacity:1; pointer-events:auto; transform: translateY(0); }
+.pp-float-top:hover { background:#4d8f17; transform: translateY(-3px); box-shadow:0 14px 30px rgba(77,143,23,.44); }
+
+@media (max-width:880px) {
+  .pp-article { padding:14px 12px 110px 12px !important; font-size:16px !important; }
+  .pp-article .pp-hero { padding:22px 18px 26px 18px !important; }
+  .pp-article h1 { font-size:1.75em !important; }
+  .pp-article .pp-proof-strip { grid-template-columns:1fr 1fr !important; }
+  .pp-article .pp-section, .pp-article #faq, .pp-article .pp-cta, .pp-article .pp-author { padding:22px 18px !important; }
+  .pp-article .pp-author { flex-direction:column !important; align-items:flex-start !important; }
+  .pp-article .pp-author-logo { width:100% !important; max-width:200px !important; }
+  .pp-float-contact { padding:10px 14px; font-size:14px; left:10px; bottom:72px; }
+  .pp-float-top { right:10px; bottom:14px; width:42px; height:42px; font-size:20px; }
 }
-html,body{margin:0;padding:0;-webkit-text-size-adjust:100%;overflow-x:hidden}
-*{box-sizing:border-box;min-width:0}
-body{font-family:'Inter','Helvetica Neue',Arial,sans-serif;color:var(--pp-ink);background:var(--pp-white);line-height:1.72;font-size:17px}
-img,svg,video{max-width:100%;height:auto}
-a{color:var(--pp-purple);text-decoration:underline;text-underline-offset:3px}
-a:hover{color:var(--pp-purple-soft)}
-a:focus-visible{outline:2px solid var(--pp-purple);outline-offset:2px;border-radius:4px}
-
-.pp-article{max-width:780px;margin:0 auto;padding:28px clamp(16px,4vw,28px) 80px}
-.pp-hero{display:flex;flex-direction:column;gap:18px;margin-bottom:28px}
-.pp-eyebrow{display:inline-flex;align-items:center;gap:8px;font-size:13px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:var(--pp-purple);background:var(--pp-tip-bg);padding:6px 12px;border-radius:999px;width:fit-content}
-h1.pp-h1{font-size:clamp(28px,4vw,38px);line-height:1.2;margin:0;color:var(--pp-navy);letter-spacing:-0.02em;font-weight:800}
-.pp-lead{font-size:18px;color:var(--pp-ink);margin:0}
-.pp-hero-img{width:100%;aspect-ratio:16/9;object-fit:cover;border-radius:var(--pp-radius);box-shadow:var(--pp-shadow-soft)}
-
-/* ---------- Typography ---------- */
-.pp-article h2{font-size:26px;color:var(--pp-navy);margin:44px 0 14px;font-weight:800;letter-spacing:-0.015em;line-height:1.3}
-.pp-article h3{font-size:21px;color:var(--pp-navy);margin:28px 0 10px;font-weight:700;line-height:1.35}
-.pp-article p{margin:0 0 16px}
-.pp-article ul,.pp-article ol{padding-inline-start:22px;margin:0 0 18px}
-.pp-article li{margin:0 0 8px}
-.pp-article strong{color:var(--pp-navy)}
-
-/* ---------- TOC ---------- */
-.pp-toc{background:var(--pp-mist);border:1px solid var(--pp-border);border-radius:var(--pp-radius);padding:0;margin:28px 0;overflow:hidden}
-.pp-toc-summary{list-style:none;cursor:pointer;padding:16px 18px;display:flex;align-items:center;justify-content:space-between;gap:12px;font-weight:700;color:var(--pp-navy);font-size:16px;user-select:none;transition:background .18s ease}
-.pp-toc-summary::-webkit-details-marker{display:none}
-.pp-toc-summary:hover{background:rgba(114,56,206,0.05)}
-.pp-toc-summary:focus-visible{outline:2px solid var(--pp-purple);outline-offset:-2px}
-.pp-toc-title{display:inline-flex;align-items:center;gap:10px}
-.pp-toc-title svg{width:18px;height:18px;color:var(--pp-purple)}
-.pp-chev{width:18px;height:18px;color:var(--pp-ink-soft);transition:transform 0.3s ease;flex-shrink:0}
-.pp-toc[open] .pp-chev,.pp-faq-item[open] .pp-chev{transform:rotate(180deg)}
-.pp-toc-body{padding:6px 18px 18px;border-top:1px solid var(--pp-border)}
-.pp-toc-body ol{list-style:none;padding:0;margin:10px 0 0;counter-reset:none}
-.pp-toc-body li{margin:0}
-.pp-toc-body a{display:block;padding:10px 12px;border-radius:var(--pp-radius-sm);color:var(--pp-navy);text-decoration:none;transition:background .18s ease,color .18s ease;font-weight:500}
-.pp-toc-body a:hover,.pp-toc-body a:focus-visible{background:var(--pp-white);color:var(--pp-purple);outline:none}
-
-/* ---------- Enrichment blocks ---------- */
-.pp-callout{border-radius:var(--pp-radius);padding:18px 20px;margin:26px 0;border-inline-start:4px solid var(--pp-purple);display:flex;gap:14px;align-items:flex-start}
-.pp-callout-icon{flex:0 0 auto;width:32px;height:32px;display:flex;align-items:center;justify-content:center;border-radius:50%;background:var(--pp-white);color:var(--pp-purple)}
-.pp-callout-icon svg{width:18px;height:18px}
-.pp-callout-body{flex:1 1 auto}
-.pp-callout h4{margin:0 0 6px;color:var(--pp-navy);font-size:16px;font-weight:700}
-.pp-callout p{margin:0;font-size:15.5px;color:var(--pp-ink)}
-.pp-callout.tip{background:var(--pp-tip-bg);border-color:var(--pp-purple)}
-.pp-callout.how{background:var(--pp-how-bg);border-color:#0693e3}
-.pp-callout.how .pp-callout-icon{color:#0693e3}
-.pp-callout.did{background:var(--pp-did-bg);border-color:#e0a52e}
-.pp-callout.did .pp-callout-icon{color:#c98712}
-
-/* ---------- CTA ---------- */
-.pp-cta{background:linear-gradient(135deg,var(--pp-tip-bg),#ffffff);border:1px solid var(--pp-border);border-radius:var(--pp-radius);padding:22px 22px;margin:32px 0;display:flex;flex-direction:column;gap:10px}
-.pp-cta h4{margin:0;font-size:19px;color:var(--pp-navy);font-weight:800}
-.pp-cta p{margin:0;color:var(--pp-ink)}
-.pp-btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;background:var(--pp-purple);color:#fff;padding:12px 22px;border-radius:var(--pp-radius-sm);font-weight:700;text-decoration:none;font-size:15px;line-height:1.2;transition:background .2s ease,transform .2s ease,box-shadow .2s ease;min-height:44px;width:fit-content;box-shadow:var(--pp-shadow-soft)}
-.pp-btn:hover,.pp-btn:focus-visible{background:var(--pp-purple-soft);color:#fff;transform:translateY(-1px);box-shadow:var(--pp-shadow);outline:none}
-.pp-btn:active{transform:translateY(0)}
-.pp-btn svg{width:16px;height:16px}
-.pp-cta-end{background:linear-gradient(135deg,var(--pp-purple) 0%,var(--pp-purple-soft) 100%);color:#fff;border:0;padding:32px 26px}
-.pp-cta-end h4,.pp-cta-end p{color:#fff}
-.pp-cta-end h4{font-size:22px}
-.pp-cta-end .pp-btn{background:#fff;color:var(--pp-purple);font-size:17px;padding:16px 28px;min-height:52px}
-.pp-cta-end .pp-btn:hover,.pp-cta-end .pp-btn:focus-visible{background:#f8f3ff;color:var(--pp-purple);box-shadow:0 14px 32px rgba(0,0,0,0.18)}
-
-/* ---------- FAQ ---------- */
-.pp-faq{margin:36px 0}
-.pp-faq-title{font-size:24px;color:var(--pp-navy);font-weight:800;margin:0 0 16px}
-.pp-faq-item{background:var(--pp-white);border:1px solid var(--pp-border);border-radius:var(--pp-radius);margin:0 0 10px;overflow:hidden}
-.pp-faq-summary{list-style:none;cursor:pointer;padding:16px 18px;display:flex;align-items:center;justify-content:space-between;gap:12px;font-weight:600;color:var(--pp-navy);font-size:16px;transition:background .18s ease;user-select:none}
-.pp-faq-summary::-webkit-details-marker{display:none}
-.pp-faq-summary:hover{background:var(--pp-mist)}
-.pp-faq-summary:focus-visible{outline:2px solid var(--pp-purple);outline-offset:-2px}
-.pp-faq-body{padding:0 18px 18px;color:var(--pp-ink);border-top:1px solid var(--pp-border)}
-.pp-faq-body p{margin:14px 0 0}
-
-/* ---------- Author ---------- */
-.pp-author{background:var(--pp-mist);border:1px solid var(--pp-border);border-radius:var(--pp-radius);padding:22px;margin:40px 0;display:flex;gap:18px;flex-wrap:wrap;align-items:center}
-.pp-author-logo{flex:0 0 auto;background:#fff;border-radius:var(--pp-radius-sm);padding:10px 14px;box-shadow:var(--pp-shadow-soft);display:flex;align-items:center;justify-content:center}
-.pp-author-logo img{width:140px;height:auto;display:block;object-fit:contain}
-.pp-author-body{flex:1 1 240px;min-width:220px}
-.pp-author-body h4{margin:0 0 4px;color:var(--pp-navy);font-size:17px;font-weight:800}
-.pp-author-body .pp-author-role{margin:0 0 8px;font-size:13px;color:var(--pp-ink-soft);font-weight:600;letter-spacing:0.04em;text-transform:uppercase}
-.pp-author-body p{margin:0;font-size:15px;color:var(--pp-ink);line-height:1.6}
-.pp-socials{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
-.pp-social{display:inline-flex;align-items:center;justify-content:center;width:40px;height:40px;border-radius:50%;background:#fff;border:1px solid var(--pp-border);color:var(--pp-ink);text-decoration:none;transition:all .2s ease}
-.pp-social svg{width:18px;height:18px}
-.pp-social:focus-visible{outline:2px solid var(--pp-purple);outline-offset:2px}
-.pp-social.li:hover,.pp-social.li:focus-visible{background:#0A66C2;color:#fff;border-color:#0A66C2}
-.pp-social.fb:hover,.pp-social.fb:focus-visible{background:#1877F2;color:#fff;border-color:#1877F2}
-.pp-social.x:hover,.pp-social.x:focus-visible{background:#000000;color:#fff;border-color:#000}
-
-/* ---------- Trust signals ---------- */
-.pp-trust{background:#fff;border:1px solid var(--pp-border);border-radius:var(--pp-radius);padding:20px 22px;margin:28px 0;display:grid;gap:10px}
-.pp-trust h4{margin:0 0 4px;color:var(--pp-navy);font-size:16px;font-weight:700}
-.pp-trust p{margin:0;color:var(--pp-ink);font-size:15.5px}
-.pp-trust .pp-trust-row{display:flex;gap:14px;flex-wrap:wrap;font-size:14px;color:var(--pp-ink-soft)}
-.pp-trust .pp-trust-row a{color:var(--pp-purple);text-decoration:none;font-weight:600}
-
-/* ---------- Floating buttons ---------- */
-.pp-float{position:fixed;inset-inline-end:20px;z-index:9999;display:inline-flex;align-items:center;justify-content:center;gap:8px;border-radius:999px;font-weight:700;text-decoration:none;transition:all .25s ease;box-shadow:var(--pp-shadow);font-size:14px}
-.pp-contact-float{bottom:calc(20px + env(safe-area-inset-bottom));background:var(--pp-purple);color:#fff;padding:14px 20px;min-height:52px;min-width:52px}
-.pp-contact-float:hover,.pp-contact-float:focus-visible{background:var(--pp-purple-soft);color:#fff;transform:translateY(-2px);outline:none}
-.pp-contact-float svg{width:18px;height:18px}
-.pp-scrolltop{bottom:calc(88px + env(safe-area-inset-bottom));background:#fff;color:var(--pp-purple);border:1px solid var(--pp-border);width:48px;height:48px;padding:0;opacity:0;transform:translateY(8px);pointer-events:none;transition:opacity .28s ease,transform .28s ease,background .2s ease,color .2s ease}
-.pp-scrolltop.show{opacity:1;transform:translateY(0);pointer-events:auto}
-.pp-scrolltop:hover,.pp-scrolltop:focus-visible{background:var(--pp-purple);color:#fff;outline:none}
-.pp-scrolltop svg{width:20px;height:20px}
-@media (max-width:480px){
-  .pp-float{inset-inline-end:12px}
-  .pp-contact-float{padding:12px 16px;font-size:13px;min-height:48px}
-  .pp-scrolltop{width:44px;height:44px;bottom:calc(78px + env(safe-area-inset-bottom))}
-}
-
-/* ---------- RTL handling ---------- */
-[dir="rtl"] .pp-chev{transform:rotate(0deg)}
-[dir="rtl"] .pp-toc-summary,[dir="rtl"] .pp-faq-summary{flex-direction:row}
-[dir="rtl"] .pp-btn,[dir="rtl"] .pp-contact-float{flex-direction:row-reverse}
-[dir="rtl"] .pp-callout{border-inline-start:none;border-inline-end:4px solid var(--pp-purple)}
-
-/* ---------- Responsive ---------- */
-@media (max-width:640px){
-  body{font-size:16px}
-  .pp-article{padding:20px 16px 90px}
-  .pp-article h2{font-size:22px;margin-top:36px}
-  .pp-article h3{font-size:19px}
-  .pp-author{padding:18px;gap:14px}
-  .pp-author-logo img{width:120px}
-  .pp-cta-end{padding:26px 20px}
-  .pp-cta-end h4{font-size:20px}
-}
-@media (max-width:380px){
-  h1.pp-h1{font-size:26px}
-  .pp-toc-summary,.pp-faq-summary{font-size:15px;padding:14px 15px}
-  .pp-toc-body a{font-size:15px}
-}
-@media (prefers-reduced-motion:reduce){
-  .pp-chev,.pp-btn,.pp-scrolltop,.pp-social,.pp-contact-float{transition-duration:0.01ms !important}
+@media (max-width:520px) {
+  .pp-article .pp-proof-strip { grid-template-columns:1fr !important; }
+  .pp-article .pp-hero-cta-row { flex-direction:column !important; }
+  .pp-article .pp-hero-cta-row > a { width:100% !important; }
 }
 </style>
-</head>
-<body>
-<article class="pp-article" id="pp-article">
 
-  <header class="pp-hero">
-    <span class="pp-eyebrow">IT Efficiency</span>
-    <h1 class="pp-h1" id="pp-h1">PC Power Management: The IT Leader's Guide to Energy Savings</h1>
-    <p class="pp-lead">Idle desktops quietly drain budgets and carbon targets. A well-designed PC power management strategy cuts endpoint energy consumption without disrupting users, without breaking patch cycles, and without asking IT teams to manually babysit hibernation policies.</p>
-    <img class="pp-hero-img" src="https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=1400&q=72" alt="Rows of powered-on office workstations in a modern workspace" loading="lazy" width="1400" height="788">
-  </header>
-
-  <p>Most IT teams already know that endpoints are one of the biggest drivers of operational electricity use — but the actual amount is usually underestimated. A single workstation left on overnight typically wastes more kilowatt-hours than it consumes during a full productive workday, and for fleets of 500 to 50,000 devices, that translates into very real money, scope-2 emissions, and executive-level energy reporting pressure.</p>
-
-  <details class="pp-toc">
-    <summary class="pp-toc-summary" aria-label="Toggle table of contents">
-      <span class="pp-toc-title">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><circle cx="4" cy="6" r="1.5"/><circle cx="4" cy="12" r="1.5"/><circle cx="4" cy="18" r="1.5"/></svg>
-        On this page
-      </span>
-      <svg class="pp-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
-    </summary>
-    <div class="pp-toc-body">
-      <ol>
-        <li><a href="#why-pc-power">Why PC power management matters now</a></li>
-        <li><a href="#how-it-works">How modern PC power management actually works</a></li>
-        <li><a href="#common-pitfalls">Common pitfalls that kill savings</a></li>
-        <li><a href="#savings">Measuring real savings and ROI</a></li>
-        <li><a href="#rollout">Rolling it out without disrupting users</a></li>
-        <li><a href="#faq">Frequently asked questions</a></li>
-      </ol>
+<!-- HERO -->
+<div class="pp-hero pp-center" data-resp="container" style="background:linear-gradient(135deg,#0f1733 0%,#1c2e54 55%,#26426b 100%);border:1px solid rgba(255,255,255,.08);border-radius:26px;padding:30px 30px 38px 30px;margin:0 0 26px 0;box-shadow:0 20px 48px rgba(19,27,59,.22);overflow:hidden;position:relative;">
+  <div style="position:absolute;inset:0;background:radial-gradient(1000px 240px at 50% -80px,rgba(119,178,54,.22),transparent 60%);pointer-events:none;"></div>
+  <div style="position:relative;z-index:1;">
+    <a href="https://powerplug.ai/" class="pp-logo-link" style="display:inline-flex;align-items:center;gap:10px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.18);border-radius:999px;padding:8px 16px;color:#ffffff;text-decoration:none;font-weight:700;font-size:14px;letter-spacing:.02em;margin:0 0 14px 0;">
+      <img src="https://powerplug.ai/wp-content/uploads/2022/06/powerplug-logo.png" alt="PowerPlug" style="height:22px;width:auto;border-radius:0;" />
+      <span>PowerPlug • Endpoint Power Management</span>
+    </a>
+    <h1 style="font-size:2.35em;line-height:1.2;color:#ffffff;margin:6px auto 14px auto;font-weight:800;letter-spacing:-.01em;max-width:760px;">Enterprise PC Power Management: How IT Leaders Cut Energy Bills Without Disrupting Users</h1>
+    <p style="color:#d8e0f3;font-size:1.08em;line-height:1.65;max-width:720px;margin:0 auto 22px auto;">A practical playbook for IT, finance, and sustainability teams that want measurable savings on endpoint fleets — from a hundred PCs to fifty thousand — using policy-based power management that employees never feel.</p>
+    <div class="pp-hero-cta-row" style="display:flex;justify-content:center;gap:12px;flex-wrap:wrap;">
+      <a href="https://powerplug.ai/contact-us" class="pp-cta-btn" style="display:inline-block;background:#6ead24;color:#ffffff;text-decoration:none;font-weight:800;font-size:16px;padding:14px 26px;border-radius:50px;border:1px solid #5b9b17;box-shadow:0 10px 22px rgba(19,27,59,.24);">Book a Power Savings Assessment →</a>
+      <a href="https://powerplug.ai/contact-us" class="pp-cta-ghost" style="display:inline-block;background:transparent;color:#ffffff;text-decoration:none;font-weight:700;font-size:16px;padding:14px 26px;border-radius:50px;border:1.5px solid rgba(255,255,255,.5);">Talk to a Specialist</a>
     </div>
+  </div>
+</div>
+
+<!-- PROOF STRIP -->
+<div class="pp-proof-strip" style="display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin:0 0 28px 0;">
+  <div class="pp-proof-card" style="background:#ffffff;border:1px solid #e4ecf7;border-radius:16px;padding:18px 16px;text-align:center;box-shadow:0 4px 14px rgba(19,27,59,.06);transition:all .25s ease;">
+    <div style="font-size:1.7em;font-weight:800;color:#131b3b;line-height:1.1;">Up to 60%</div>
+    <div style="font-size:.88em;color:#4a5a7a;margin-top:6px;">reduction in PC energy use</div>
+  </div>
+  <div class="pp-proof-card" style="background:#ffffff;border:1px solid #e4ecf7;border-radius:16px;padding:18px 16px;text-align:center;box-shadow:0 4px 14px rgba(19,27,59,.06);transition:all .25s ease;">
+    <div style="font-size:1.7em;font-weight:800;color:#131b3b;line-height:1.1;">&lt; 4 months</div>
+    <div style="font-size:.88em;color:#4a5a7a;margin-top:6px;">typical payback period</div>
+  </div>
+  <div class="pp-proof-card" style="background:#ffffff;border:1px solid #e4ecf7;border-radius:16px;padding:18px 16px;text-align:center;box-shadow:0 4px 14px rgba(19,27,59,.06);transition:all .25s ease;">
+    <div style="font-size:1.7em;font-weight:800;color:#131b3b;line-height:1.1;">100 – 50,000</div>
+    <div style="font-size:.88em;color:#4a5a7a;margin-top:6px;">PCs per deployment</div>
+  </div>
+  <div class="pp-proof-card" style="background:#ffffff;border:1px solid #e4ecf7;border-radius:16px;padding:18px 16px;text-align:center;box-shadow:0 4px 14px rgba(19,27,59,.06);transition:all .25s ease;">
+    <div style="font-size:1.7em;font-weight:800;color:#131b3b;line-height:1.1;">Zero</div>
+    <div style="font-size:.88em;color:#4a5a7a;margin-top:6px;">user productivity impact</div>
+  </div>
+</div>
+
+<!-- INTRO PARAGRAPH -->
+<p style="font-size:1.08em;color:#2a3757;margin:0 0 22px 0;">Most enterprises know their data centres consume electricity. Far fewer have an accurate picture of how much their <strong>endpoint fleet</strong> — the laptops and desktops sitting on every employee's desk — silently burns through overnight, over weekends, and during long idle stretches. The gap between the two is where the easiest, cleanest, most defensible energy savings in the organisation are hiding.</p>
+
+<!-- TOC (collapsed, positioned after first paragraph — rule 5) -->
+<details class="pp-toc" data-resp="container" style="background:#ffffff;border:1px solid #dfe7f3;border-radius:18px;padding:18px 22px;margin:0 0 28px 0;box-shadow:0 4px 16px rgba(19,27,59,.06);">
+  <summary style="cursor:pointer;list-style:none;display:flex;align-items:center;justify-content:space-between;gap:12px;font-weight:800;font-size:1.05em;color:#131b3b;padding:6px 4px;border-radius:10px;transition:all .2s ease;">
+    <span style="display:inline-flex;align-items:center;gap:10px;"><span style="display:inline-flex;width:28px;height:28px;border-radius:8px;background:#eaf4d9;color:#4d8f17;align-items:center;justify-content:center;font-weight:900;">☰</span> Table of Contents</span>
+    <span class="pp-caret" aria-hidden="true" style="font-size:1.3em;font-weight:900;color:#6ead24;">+</span>
+  </summary>
+  <ul style="list-style:none;padding:14px 0 4px 0;margin:0;border-top:1px dashed #e4ecf7;margin-top:10px;">
+    <li style="margin:4px 0;"><a href="#why-endpoints" style="display:block;padding:10px 14px;border-radius:10px;text-decoration:none;color:#1b2440;background:#f6f9fd;border:1px solid transparent;font-weight:600;">Why endpoint power management matters now</a></li>
+    <li style="margin:4px 0;"><a href="#how-it-works" style="display:block;padding:10px 14px;border-radius:10px;text-decoration:none;color:#1b2440;background:#f6f9fd;border:1px solid transparent;font-weight:600;">How policy-based power management actually works</a></li>
+    <li style="margin:4px 0;"><a href="#real-savings" style="display:block;padding:10px 14px;border-radius:10px;text-decoration:none;color:#1b2440;background:#f6f9fd;border:1px solid transparent;font-weight:600;">Measuring real savings, not theoretical ones</a></li>
+    <li style="margin:4px 0;"><a href="#zero-disruption" style="display:block;padding:10px 14px;border-radius:10px;text-decoration:none;color:#1b2440;background:#f6f9fd;border:1px solid transparent;font-weight:600;">Deploying without disrupting users or IT operations</a></li>
+    <li style="margin:4px 0;"><a href="#case-studies" style="display:block;padding:10px 14px;border-radius:10px;text-decoration:none;color:#1b2440;background:#f6f9fd;border:1px solid transparent;font-weight:600;">Case studies: healthcare, education, and enterprise</a></li>
+    <li style="margin:4px 0;"><a href="#how-to-start" style="display:block;padding:10px 14px;border-radius:10px;text-decoration:none;color:#1b2440;background:#f6f9fd;border:1px solid transparent;font-weight:600;">How to start an endpoint power programme</a></li>
+    <li style="margin:4px 0;"><a href="#faq" style="display:block;padding:10px 14px;border-radius:10px;text-decoration:none;color:#1b2440;background:#f6f9fd;border:1px solid transparent;font-weight:600;">Frequently asked questions</a></li>
+  </ul>
+</details>
+
+<!-- KEY TAKEAWAYS -->
+<div class="pp-section" data-resp="container" style="background:#ffffff;border:1px solid #e4ecf7;border-left:5px solid #6ead24;border-radius:16px;padding:22px 26px;margin:0 0 28px 0;">
+  <h2 style="margin:0 0 10px 0;font-size:1.15em;color:#131b3b;letter-spacing:.02em;text-transform:uppercase;font-weight:800;">Key takeaways</h2>
+  <ul style="margin:0;padding-left:20px;color:#2a3757;">
+    <li style="margin:6px 0;">Idle and after-hours PC states account for a surprisingly large share of total endpoint electricity draw — often 40% or more of fleet consumption.</li>
+    <li style="margin:6px 0;">Policy-based power management delivers measurable savings within weeks, not fiscal years, and typically pays back in under four months.</li>
+    <li style="margin:6px 0;">User productivity stays intact when power policies respect active work, patching windows, and unattended job schedules.</li>
+    <li style="margin:6px 0;">Finance, IT, sustainability, and procurement teams all benefit from a single source of truth: the endpoint energy dashboard.</li>
+  </ul>
+</div>
+
+<!-- EARLY CONTACT CTA (dark, inline) -->
+<div class="pp-cta pp-center" data-resp="container" style="background:#0f1733;border-radius:16px;padding:18px 22px;margin:0 0 30px 0;display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:14px;">
+  <span style="color:#d8e0f3;font-weight:600;font-size:1em;">Ready to see your fleet's savings potential?</span>
+  <a href="https://powerplug.ai/contact-us" class="pp-cta-btn" style="display:inline-block;background:#6ead24;color:#ffffff;text-decoration:none;font-weight:800;font-size:15px;padding:11px 22px;border-radius:50px;border:1px solid #5b9b17;">Request a PowerPlug Demo →</a>
+</div>
+
+<!-- SECTION 1 -->
+<section id="why-endpoints" class="pp-section" data-resp="container" style="background:#ffffff;border:1px solid #e4ecf7;border-radius:18px;padding:28px 30px;margin:0 0 24px 0;box-shadow:0 4px 16px rgba(19,27,59,.05);">
+  <h2 style="color:#131b3b;font-size:1.55em;margin:0 0 14px 0;font-weight:800;">Why endpoint power management matters now</h2>
+  <img src="https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=1200&amp;auto=format&amp;fit=crop&amp;q=75" alt="Rows of office workstations showing typical enterprise endpoint fleet" style="width:100%;margin:0 0 18px 0;border:1px solid #e4ecf7;box-shadow:0 10px 24px rgba(19,27,59,.08);" />
+  <p>Three forces collided in the last few years: electricity prices climbed sharply across Europe, North America, and the Middle East; corporate ESG commitments moved from marketing slides onto regulated disclosures; and hybrid work scattered devices across homes, branch offices, and half-occupied head offices. The result is a fleet that is <em>harder to see</em> and <em>more expensive to run</em> than before.</p>
+  <p>Traditional levers — <a href="https://www.energystar.gov/products/office_equipment" target="_blank" rel="noopener">ENERGY STAR purchasing guidelines</a>, Windows power plans pushed through Group Policy, the occasional "please shut down before you leave" email — are useful but limited. They depend on user behaviour, they are invisible to finance, and they produce no audit trail. Modern <a href="https://powerplug.ai/" style="color:#4d8f17;font-weight:600;">endpoint power management</a> replaces those habits with measurable, centrally governed policy.</p>
+  <h3 style="color:#131b3b;font-size:1.2em;margin:20px 0 8px 0;">What you actually control</h3>
+  <ul style="margin:0;padding-left:22px;color:#2a3757;">
+    <li style="margin:6px 0;"><strong>Active-use states</strong> — display off, disk spin-down, idle CPU throttling while users are present.</li>
+    <li style="margin:6px 0;"><strong>Unattended states</strong> — sleep, hibernate, hybrid sleep, and wake behaviours across multi-user devices.</li>
+    <li style="margin:6px 0;"><strong>Off-hours</strong> — scheduled shutdowns on nights, weekends, and holidays with wake-on-LAN for patching.</li>
+    <li style="margin:6px 0;"><strong>Exceptions</strong> — long-running jobs, imaging, backups, CAD renders, and clinical applications get protected windows.</li>
+  </ul>
+</section>
+
+<!-- DID YOU KNOW block -->
+<div data-resp="container" style="background:#eef5ff;border:1px solid #b9d0ef;border-left:5px solid #1e5fbe;border-radius:14px;padding:18px 22px;margin:0 0 26px 0;display:flex;gap:14px;align-items:flex-start;">
+  <div style="flex-shrink:0;width:38px;height:38px;border-radius:50%;background:#1e5fbe;color:#ffffff;font-weight:900;font-size:18px;display:inline-flex;align-items:center;justify-content:center;">i</div>
+  <div>
+    <div style="font-weight:800;color:#0b3a82;font-size:1.05em;margin-bottom:4px;">Did you know?</div>
+    <p style="margin:0;color:#1b2440;">A single idle desktop left on overnight can consume 40–80 kWh per year — enough, across a 10,000-PC fleet, to match the annual electricity use of several hundred average households.</p>
+  </div>
+</div>
+
+<!-- SECTION 2 -->
+<section id="how-it-works" class="pp-section" data-resp="container" style="background:#ffffff;border:1px solid #e4ecf7;border-radius:18px;padding:28px 30px;margin:0 0 24px 0;box-shadow:0 4px 16px rgba(19,27,59,.05);">
+  <h2 style="color:#131b3b;font-size:1.55em;margin:0 0 14px 0;font-weight:800;">How policy-based power management actually works</h2>
+  <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=1200&amp;auto=format&amp;fit=crop&amp;q=75" alt="Analytics dashboard showing endpoint energy use and savings over time" style="width:100%;margin:0 0 18px 0;border:1px solid #e4ecf7;box-shadow:0 10px 24px rgba(19,27,59,.08);" />
+  <p>At the core sits a lightweight agent on every managed endpoint. It reports real activity — not just the <em>setting</em> of a power plan, but the <em>actual</em> on-battery, active, idle, sleep, and off minutes every device spends. That telemetry flows into a central console where IT defines <strong>policies</strong> and <strong>groups</strong>: sales laptops behave differently from clinical workstations, which behave differently from shared kiosks in a warehouse.</p>
+  <p>Policies are conditional. A workstation is not forced to sleep at 19:00 if its user is still logged in and typing. A scheduled shutdown does not fight with a Windows Update cycle. A wake-on-LAN window opens before patch Tuesday so endpoints can receive their updates, then hands the fleet back to a low-power state.</p>
+  <h3 style="color:#131b3b;font-size:1.2em;margin:20px 0 8px 0;">Three layers that matter</h3>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;margin:10px 0 6px 0;">
+    <div style="background:#f6f9fd;border:1px solid #e4ecf7;border-radius:14px;padding:16px 18px;">
+      <div style="font-weight:800;color:#131b3b;margin-bottom:6px;">1. Telemetry layer</div>
+      <p style="margin:0;font-size:.96em;color:#2a3757;">Measures per-endpoint kWh, CO₂e, and hours by state. Without this layer, every claim is an estimate.</p>
+    </div>
+    <div style="background:#f6f9fd;border:1px solid #e4ecf7;border-radius:14px;padding:16px 18px;">
+      <div style="font-weight:800;color:#131b3b;margin-bottom:6px;">2. Policy engine</div>
+      <p style="margin:0;font-size:.96em;color:#2a3757;">Applies rules per group, per time-of-day, and per exception. Supports gradual rollouts and canary groups.</p>
+    </div>
+    <div style="background:#f6f9fd;border:1px solid #e4ecf7;border-radius:14px;padding:16px 18px;">
+      <div style="font-weight:800;color:#131b3b;margin-bottom:6px;">3. Reporting layer</div>
+      <p style="margin:0;font-size:.96em;color:#2a3757;">Gives finance a £/€/$ figure, gives sustainability a <a href="https://ghgprotocol.org/" target="_blank" rel="noopener">GHG-protocol-aligned</a> CO₂ figure, and gives IT an exception list.</p>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 3 -->
+<section id="real-savings" class="pp-section" data-resp="container" style="background:#ffffff;border:1px solid #e4ecf7;border-radius:18px;padding:28px 30px;margin:0 0 24px 0;box-shadow:0 4px 16px rgba(19,27,59,.05);">
+  <h2 style="color:#131b3b;font-size:1.55em;margin:0 0 14px 0;font-weight:800;">Measuring real savings, not theoretical ones</h2>
+  <p>"Theoretical" savings compare a manufacturer's datasheet with an assumed duty cycle. They look great in procurement PDFs and poor in finance reviews. Real savings come from a simple identity:</p>
+  <div style="background:#0f1733;color:#ffffff;border-radius:14px;padding:20px 24px;margin:12px 0 16px 0;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:1em;line-height:1.6;">
+    savings = (baseline_kWh − measured_kWh) × local_tariff<br/>
+    payback_months = deployment_cost ÷ monthly_savings
+  </div>
+  <p>The baseline is captured in the first two to four weeks after the agent is deployed, before any policy is enforced. After activation, the same metric is re-measured. The delta, multiplied by the local tariff, is the number that goes on the business-case slide.</p>
+  <h3 style="color:#131b3b;font-size:1.2em;margin:20px 0 8px 0;">What finance wants to see</h3>
+  <div style="overflow-x:auto;margin:10px 0 4px 0;">
+    <table style="width:100%;border-collapse:collapse;font-size:.97em;color:#1b2440;background:#ffffff;border:1px solid #e4ecf7;border-radius:12px;overflow:hidden;">
+      <thead>
+        <tr style="background:#eaf4d9;color:#2d5a0c;">
+          <th style="text-align:left;padding:12px 14px;font-weight:800;border-bottom:1px solid #d6e6b8;">Metric</th>
+          <th style="text-align:left;padding:12px 14px;font-weight:800;border-bottom:1px solid #d6e6b8;">Baseline period</th>
+          <th style="text-align:left;padding:12px 14px;font-weight:800;border-bottom:1px solid #d6e6b8;">After policy</th>
+          <th style="text-align:left;padding:12px 14px;font-weight:800;border-bottom:1px solid #d6e6b8;">Why it matters</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td style="padding:11px 14px;border-bottom:1px solid #eef3fa;">Average kWh / PC / month</td><td style="padding:11px 14px;border-bottom:1px solid #eef3fa;">10–16</td><td style="padding:11px 14px;border-bottom:1px solid #eef3fa;">4–7</td><td style="padding:11px 14px;border-bottom:1px solid #eef3fa;">Direct cost driver</td></tr>
+        <tr style="background:#f6f9fd;"><td style="padding:11px 14px;border-bottom:1px solid #eef3fa;">% of fleet on after hours</td><td style="padding:11px 14px;border-bottom:1px solid #eef3fa;">35–55%</td><td style="padding:11px 14px;border-bottom:1px solid #eef3fa;">&lt; 8%</td><td style="padding:11px 14px;border-bottom:1px solid #eef3fa;">Biggest single win</td></tr>
+        <tr><td style="padding:11px 14px;border-bottom:1px solid #eef3fa;">Estimated CO₂e / PC / year</td><td style="padding:11px 14px;border-bottom:1px solid #eef3fa;">40–70 kg</td><td style="padding:11px 14px;border-bottom:1px solid #eef3fa;">15–28 kg</td><td style="padding:11px 14px;border-bottom:1px solid #eef3fa;">Regulated disclosure</td></tr>
+        <tr style="background:#f6f9fd;"><td style="padding:11px 14px;">Help-desk tickets tied to power</td><td style="padding:11px 14px;">n/a</td><td style="padding:11px 14px;">Near zero</td><td style="padding:11px 14px;">Operational proof</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- MID CTA — stronger -->
+<div class="pp-cta pp-center" data-resp="container" style="background:linear-gradient(135deg,#0f1733 0%,#1c2e54 100%);border-radius:20px;padding:28px 26px;margin:4px 0 30px 0;color:#ffffff;">
+  <h3 style="color:#ffffff;margin:0 0 8px 0;font-size:1.4em;font-weight:800;">See what your fleet is actually costing you</h3>
+  <p style="color:#d8e0f3;margin:0 auto 16px auto;max-width:620px;">A 20-minute assessment turns your endpoint count, location mix, and tariff into a specific savings range — no rip-and-replace, no agent on your production fleet until you say so.</p>
+  <div style="display:flex;justify-content:center;gap:12px;flex-wrap:wrap;">
+    <a href="https://powerplug.ai/contact-us" class="pp-cta-btn" style="display:inline-block;background:#6ead24;color:#ffffff;text-decoration:none;font-weight:800;font-size:15px;padding:12px 24px;border-radius:50px;border:1px solid #5b9b17;">Book a Power Savings Assessment</a>
+    <a href="tel:+16467517797" class="pp-cta-ghost" style="display:inline-block;background:transparent;color:#ffffff;text-decoration:none;font-weight:700;font-size:15px;padding:12px 24px;border-radius:50px;border:1.5px solid rgba(255,255,255,.5);">Call +1-646-751-7797</a>
+  </div>
+</div>
+
+<!-- TIP block -->
+<div data-resp="container" style="background:#f1faea;border:1px solid #c7e29b;border-left:5px solid #4d8f17;border-radius:14px;padding:18px 22px;margin:0 0 26px 0;display:flex;gap:14px;align-items:flex-start;">
+  <div style="flex-shrink:0;width:38px;height:38px;border-radius:50%;background:#4d8f17;color:#ffffff;font-weight:900;font-size:18px;display:inline-flex;align-items:center;justify-content:center;">★</div>
+  <div>
+    <div style="font-weight:800;color:#2d5a0c;font-size:1.05em;margin-bottom:4px;">Tip</div>
+    <p style="margin:0;color:#1b2440;">Run a two-week silent baseline <em>before</em> you enforce any new policies. Finance will trust the savings figure only when it comes from your fleet, your tariff, and your hours — not a vendor's average.</p>
+  </div>
+</div>
+
+<!-- SECTION 4 -->
+<section id="zero-disruption" class="pp-section" data-resp="container" style="background:#ffffff;border:1px solid #e4ecf7;border-radius:18px;padding:28px 30px;margin:0 0 24px 0;box-shadow:0 4px 16px rgba(19,27,59,.05);">
+  <h2 style="color:#131b3b;font-size:1.55em;margin:0 0 14px 0;font-weight:800;">Deploying without disrupting users or IT operations</h2>
+  <img src="https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=1200&amp;auto=format&amp;fit=crop&amp;q=75" alt="IT administrator reviewing endpoint management console" style="width:100%;margin:0 0 18px 0;border:1px solid #e4ecf7;box-shadow:0 10px 24px rgba(19,27,59,.08);" />
+  <p>Every failed rollout has the same root cause: a well-intentioned policy that ignored how people actually use their PCs. A nurse opening imaging software at 02:00, a finance analyst running a quarterly close on a Sunday, a developer leaving a long compile overnight — these exceptions are the programme, not annoyances to push past.</p>
+  <h3 style="color:#131b3b;font-size:1.2em;margin:20px 0 8px 0;">A deployment pattern that works</h3>
+  <ol style="margin:0;padding-left:24px;color:#2a3757;">
+    <li style="margin:8px 0;"><strong>Week 1–2: Silent telemetry.</strong> Agent installs via SCCM, Intune, Jamf, or Workspace ONE. No user-facing change, no policy enforcement.</li>
+    <li style="margin:8px 0;"><strong>Week 3: Canary group.</strong> 2–5% of the fleet, across representative roles and locations, moves to a conservative policy.</li>
+    <li style="margin:8px 0;"><strong>Week 4: Review.</strong> Help-desk tickets, savings, and outliers are reviewed. Exceptions are encoded as policy rules, not as manual exclusions.</li>
+    <li style="margin:8px 0;"><strong>Week 5–8: Fleet rollout.</strong> Groups move in waves. Each wave gets a rollback switch that the IT lead — not the vendor — controls.</li>
+    <li style="margin:8px 0;"><strong>Month 3+: Tuning.</strong> Wake-on-LAN windows, patching coordination, and after-hours schedules are refined with real data.</li>
+  </ol>
+</section>
+
+<!-- HOW-TO block -->
+<div data-resp="container" style="background:#fff6e8;border:1px solid #f4d7a2;border-left:5px solid #d6911b;border-radius:14px;padding:20px 24px;margin:0 0 26px 0;">
+  <div style="display:flex;gap:12px;align-items:center;margin-bottom:10px;">
+    <div style="flex-shrink:0;width:38px;height:38px;border-radius:50%;background:#d6911b;color:#ffffff;font-weight:900;font-size:18px;display:inline-flex;align-items:center;justify-content:center;">»</div>
+    <div style="font-weight:800;color:#7a4b0a;font-size:1.08em;">How-To: Stage a safe canary group</div>
+  </div>
+  <ol style="margin:0;padding-left:22px;color:#1b2440;">
+    <li style="margin:4px 0;">Pick 2–5% of endpoints across at least three departments and two time zones.</li>
+    <li style="margin:4px 0;">Confirm that patching, backup, and imaging jobs running on those devices have protected windows.</li>
+    <li style="margin:4px 0;">Apply a <em>conservative</em> policy first — long idle thresholds, generous wake windows.</li>
+    <li style="margin:4px 0;">Measure ticket volume and savings for ten working days before widening the rollout.</li>
+  </ol>
+</div>
+
+<!-- SECTION 5 -->
+<section id="case-studies" class="pp-section" data-resp="container" style="background:#ffffff;border:1px solid #e4ecf7;border-radius:18px;padding:28px 30px;margin:0 0 24px 0;box-shadow:0 4px 16px rgba(19,27,59,.05);">
+  <h2 style="color:#131b3b;font-size:1.55em;margin:0 0 14px 0;font-weight:800;">Case studies: healthcare, education, and enterprise</h2>
+  <p>The patterns below are drawn from real <a href="https://powerplug.ai/" style="color:#4d8f17;font-weight:600;">PowerPlug deployments</a> across hospitals, universities, and large enterprises. The numbers vary by tariff and fleet composition, but the shape is consistent: a short baseline, a controlled rollout, and a clean payback curve.</p>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px;margin:14px 0 6px 0;">
+    <div style="background:#f6f9fd;border:1px solid #e4ecf7;border-radius:14px;padding:18px 20px;">
+      <div style="font-weight:800;color:#131b3b;margin-bottom:6px;">Clalit Health Services</div>
+      <p style="margin:0 0 8px 0;font-size:.96em;color:#2a3757;">45,000 PCs across a national healthcare network. Measured savings around <strong>$1.2M annually</strong>, while protecting clinical applications that cannot tolerate unplanned sleep states.</p>
+      <div style="font-size:.82em;color:#4d8f17;font-weight:700;">Healthcare · Multi-site</div>
+    </div>
+    <div style="background:#f6f9fd;border:1px solid #e4ecf7;border-radius:14px;padding:18px 20px;">
+      <div style="font-weight:800;color:#131b3b;margin-bottom:6px;">Rambam Healthcare Campus</div>
+      <p style="margin:0 0 8px 0;font-size:.96em;color:#2a3757;">Large academic medical centre. Full payback in <strong>under four months</strong>, with an exception model built around imaging, labs, and 24/7 nursing stations.</p>
+      <div style="font-size:.82em;color:#4d8f17;font-weight:700;">Healthcare · Research</div>
+    </div>
+    <div style="background:#f6f9fd;border:1px solid #e4ecf7;border-radius:14px;padding:18px 20px;">
+      <div style="font-weight:800;color:#131b3b;margin-bottom:6px;">Ben-Gurion University</div>
+      <p style="margin:0 0 8px 0;font-size:.96em;color:#2a3757;">Academic computing fleet. Semester-aware policies respect lab schedules, exam periods, and overnight research jobs while still cutting baseline draw significantly.</p>
+      <div style="font-size:.82em;color:#4d8f17;font-weight:700;">Higher Education</div>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 6 -->
+<section id="how-to-start" class="pp-section" data-resp="container" style="background:#ffffff;border:1px solid #e4ecf7;border-radius:18px;padding:28px 30px;margin:0 0 28px 0;box-shadow:0 4px 16px rgba(19,27,59,.05);">
+  <h2 style="color:#131b3b;font-size:1.55em;margin:0 0 14px 0;font-weight:800;">How to start an endpoint power programme</h2>
+  <p>There is no need to treat this as a twelve-month project. A two-person team — an IT lead and an energy or sustainability partner — can move a fleet from unmanaged to measurably efficient in a single quarter.</p>
+  <ol style="margin:0;padding-left:22px;color:#2a3757;">
+    <li style="margin:8px 0;"><strong>Inventory honestly.</strong> How many PCs, where, on what tariff, with what patching schedule. Spreadsheets are fine; opinions are not.</li>
+    <li style="margin:8px 0;"><strong>Define "success".</strong> Savings in currency, savings in kWh, CO₂e avoided, and number of exceptions encoded. Pick the two that your executives will read.</li>
+    <li style="margin:8px 0;"><strong>Run a silent baseline.</strong> Two to four weeks of measurement before any enforcement.</li>
+    <li style="margin:8px 0;"><strong>Pick a canary.</strong> Representative, small, reversible.</li>
+    <li style="margin:8px 0;"><strong>Publish one dashboard.</strong> Finance, IT, and sustainability look at the same numbers, updated on the same cadence.</li>
+    <li style="margin:8px 0;"><strong>Review quarterly.</strong> Tariffs move, fleets grow, policies drift. Treat it as an operational programme, not a one-time project.</li>
+  </ol>
+</section>
+
+<!-- BOTTOM STRONG CTA -->
+<div class="pp-cta pp-center" data-resp="container" style="background:linear-gradient(135deg,#6ead24 0%,#4d8f17 100%);border-radius:22px;padding:34px 28px;margin:0 0 32px 0;color:#ffffff;box-shadow:0 18px 40px rgba(77,143,23,.28);">
+  <h3 style="color:#ffffff;margin:0 0 8px 0;font-size:1.6em;font-weight:800;">Turn your endpoint fleet into a measurable line on the P&amp;L</h3>
+  <p style="color:#eef7dc;margin:0 auto 18px auto;max-width:680px;font-size:1.05em;">Share your fleet size, region, and tariff. Our team will return a tailored savings estimate, a deployment plan that fits your change-management window, and a clear payback timeline — usually on the same call.</p>
+  <div style="display:flex;justify-content:center;gap:12px;flex-wrap:wrap;margin-bottom:14px;">
+    <a href="https://powerplug.ai/contact-us" class="pp-cta-btn" style="display:inline-block;background:#ffffff;color:#2d5a0c;text-decoration:none;font-weight:800;font-size:16px;padding:14px 28px;border-radius:50px;border:1px solid rgba(0,0,0,.05);">Talk to a PowerPlug Specialist →</a>
+    <a href="mailto:info@powerplug.ai" class="pp-cta-ghost" style="display:inline-block;background:transparent;color:#ffffff;text-decoration:none;font-weight:700;font-size:16px;padding:14px 28px;border-radius:50px;border:1.5px solid rgba(255,255,255,.7);">Email info@powerplug.ai</a>
+  </div>
+  <div style="font-size:.9em;color:#eef7dc;opacity:.9;">No credit card · No agent on your production fleet until you approve · Enterprise references on request</div>
+</div>
+
+<!-- FAQ (collapsed) -->
+<section id="faq" data-resp="container" style="background:#ffffff;border:1px solid #e4ecf7;border-radius:18px;padding:28px 30px;margin:0 0 30px 0;box-shadow:0 4px 16px rgba(19,27,59,.05);">
+  <h2 style="color:#131b3b;font-size:1.55em;margin:0 0 16px 0;font-weight:800;">Frequently asked questions</h2>
+
+  <details style="border:1px solid #e4ecf7;border-radius:12px;margin:0 0 10px 0;background:#f6f9fd;">
+    <summary style="cursor:pointer;list-style:none;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 18px;font-weight:700;color:#131b3b;border-radius:12px;transition:all .2s ease;">
+      <span>Will users notice any change on their PCs?</span>
+      <span class="pp-caret" aria-hidden="true" style="font-size:1.2em;font-weight:900;color:#6ead24;">+</span>
+    </summary>
+    <div style="padding:0 18px 16px 18px;color:#2a3757;">When policies are sized around real activity, users generally notice nothing except slightly darker monitors during long idle periods. A quick wake-from-sleep on keyboard press or mouse movement is standard, and no documents, sessions, or applications are lost.</div>
   </details>
 
-  <section id="why-pc-power">
-    <h2>Why PC power management matters now</h2>
-    <p>Endpoint fleets have never been more distributed. Hybrid work patterns, contractor devices, and shared workstations mean that "turn it off before you leave" is no longer a reliable behavior to rely on. Without centralized PC power management, a fleet of even modest size will spend a substantial fraction of its runtime idle but fully awake — lit screens, spinning fans, high-wattage CPUs, and discrete GPUs all burning kilowatt-hours that produce zero business value.</p>
-    <p>Beyond the electricity bill, there is now direct regulatory and reporting pressure. Mid-market and enterprise organizations across North America, the EU, and Israel are increasingly required to report scope-2 emissions, energy intensity per employee, and carbon-reduction progress to boards, insurers, and customers. PC power management is one of the few programs that delivers immediate, measurable reductions across the entire workforce — with no hardware refresh, no behavior change, and no user-visible friction when it's implemented well.</p>
+  <details style="border:1px solid #e4ecf7;border-radius:12px;margin:0 0 10px 0;background:#f6f9fd;">
+    <summary style="cursor:pointer;list-style:none;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 18px;font-weight:700;color:#131b3b;border-radius:12px;transition:all .2s ease;">
+      <span>How does this coexist with Windows Update and patching?</span>
+      <span class="pp-caret" aria-hidden="true" style="font-size:1.2em;font-weight:900;color:#6ead24;">+</span>
+    </summary>
+    <div style="padding:0 18px 16px 18px;color:#2a3757;">The policy engine opens explicit wake-on-LAN and no-shutdown windows aligned with your existing SCCM, Intune, or WSUS patch schedule. Endpoints wake, update, and return to a low-power state without a human in the loop.</div>
+  </details>
 
-    <div class="pp-callout tip">
-      <div class="pp-callout-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18h6"/><path d="M10 22h4"/><path d="M2 9a10 10 0 0 1 20 0c0 4-3 6-4 8H6c-1-2-4-4-4-8z"/></svg></div>
-      <div class="pp-callout-body">
-        <h4>Tip: Think baseline-before-policy</h4>
-        <p>Before rolling out any sleep or shutdown policy, measure at least two weeks of baseline endpoint runtime. You cannot defend savings you cannot measure — and executives will always ask for the before number.</p>
-      </div>
+  <details style="border:1px solid #e4ecf7;border-radius:12px;margin:0 0 10px 0;background:#f6f9fd;">
+    <summary style="cursor:pointer;list-style:none;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 18px;font-weight:700;color:#131b3b;border-radius:12px;transition:all .2s ease;">
+      <span>What is the payback period on a typical deployment?</span>
+      <span class="pp-caret" aria-hidden="true" style="font-size:1.2em;font-weight:900;color:#6ead24;">+</span>
+    </summary>
+    <div style="padding:0 18px 16px 18px;color:#2a3757;">Most enterprise customers see payback in under four months. High-tariff regions and fleets with heavy after-hours idle time often see it in two to three. The baseline measurement phase gives you a specific number before you commit.</div>
+  </details>
+
+  <details style="border:1px solid #e4ecf7;border-radius:12px;margin:0 0 10px 0;background:#f6f9fd;">
+    <summary style="cursor:pointer;list-style:none;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 18px;font-weight:700;color:#131b3b;border-radius:12px;transition:all .2s ease;">
+      <span>Is this only for Windows fleets?</span>
+      <span class="pp-caret" aria-hidden="true" style="font-size:1.2em;font-weight:900;color:#6ead24;">+</span>
+    </summary>
+    <div style="padding:0 18px 16px 18px;color:#2a3757;">Windows is the largest enterprise fleet and gets the deepest policy set, but macOS endpoints are supported with an equivalent telemetry and policy model. Linux desktops and virtual endpoints (VDI) are handled by specific deployment patterns — ask during your assessment.</div>
+  </details>
+
+  <details style="border:1px solid #e4ecf7;border-radius:12px;margin:0;background:#f6f9fd;">
+    <summary style="cursor:pointer;list-style:none;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 18px;font-weight:700;color:#131b3b;border-radius:12px;transition:all .2s ease;">
+      <span>How are savings and CO₂e figures verified?</span>
+      <span class="pp-caret" aria-hidden="true" style="font-size:1.2em;font-weight:900;color:#6ead24;">+</span>
+    </summary>
+    <div style="padding:0 18px 16px 18px;color:#2a3757;">Every reported figure is derived from measured per-state minutes and device-specific power profiles, multiplied by your tariff and regional grid emission factor. The methodology is consistent with <a href="https://ghgprotocol.org/" target="_blank" rel="noopener">GHG Protocol</a> Scope 2 accounting and is auditable.</div>
+  </details>
+</section>
+
+<!-- AUTHOR / PUBLISHER BLOCK -->
+<div class="pp-author" data-resp="container" style="background:#ffffff;border:1px solid #e4ecf7;border-radius:20px;padding:26px 28px;margin:0 0 8px 0;display:flex;gap:22px;align-items:center;box-shadow:0 6px 20px rgba(19,27,59,.06);">
+  <a href="https://powerplug.ai/" class="pp-logo-link" aria-label="PowerPlug homepage" style="flex-shrink:0;display:inline-block;transition:all .2s ease;">
+    <div class="pp-author-logo" style="width:160px;height:160px;background:#f6f9fd;border:1px solid #e4ecf7;border-radius:16px;display:flex;align-items:center;justify-content:center;padding:18px;">
+      <img src="https://powerplug.ai/wp-content/uploads/2022/06/powerplug-logo.png" alt="PowerPlug" style="max-width:100%;max-height:100%;width:auto;height:auto;object-fit:contain;border-radius:0;" />
     </div>
-  </section>
-
-  <section id="how-it-works">
-    <h2>How modern PC power management actually works</h2>
-    <p>A proper PC power management platform layers three capabilities that operating-system power plans alone cannot provide reliably at fleet scale. First, centralized policy enforcement. Second, intelligent wake-up so IT operations — patching, antivirus scans, OS upgrades, inventory — can continue uninterrupted after hours. Third, granular reporting that proves energy reductions per device, per site, per business unit.</p>
-    <p>On the enforcement side, policies are pushed from a central console. Devices can be grouped by OU, site, department, or tag, and each group can receive different sleep, shutdown, and wake schedules. Critically, policies account for user state — keyboard activity, presentation mode, remote sessions, long-running builds — so that no one is ever logged out of active work.</p>
-    <p>Wake-up is where most policy projects succeed or fail. If you simply shut PCs down at 7 PM, your patch windows break and your help desk fills with calls the next morning. Modern power management platforms offer a wake-up portal and scheduled wake windows that turn devices on <em>just before</em> IT maintenance jobs run, then return them to a low-power state afterward. This is the difference between an energy program and a disruption.</p>
-
-    <h3>The five core policy primitives</h3>
-    <ul>
-      <li><strong>Idle sleep:</strong> sleep the device after N minutes of real user inactivity.</li>
-      <li><strong>Scheduled shutdown:</strong> gracefully shut down unused endpoints at known off-hours.</li>
-      <li><strong>Wake windows:</strong> wake devices on demand or on schedule for patching, AV scans, and updates.</li>
-      <li><strong>Exceptions:</strong> exclude specific OUs, labs, production lines, or named users whose devices must stay on.</li>
-      <li><strong>Reporting:</strong> per-device, per-group, per-site kWh and CO₂ savings with historical trends.</li>
-    </ul>
-
-    <div class="pp-callout how">
-      <div class="pp-callout-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg></div>
-      <div class="pp-callout-body">
-        <h4>How-To: Phase your policy, don't ship it everywhere at once</h4>
-        <p>Pilot first on a single site or department. Validate the wake-up schedule against your patch window and antivirus scan windows. Only after a full maintenance cycle runs cleanly should you expand the policy fleet-wide.</p>
-      </div>
+  </a>
+  <div style="flex:1;min-width:0;">
+    <div style="font-size:.85em;color:#4d8f17;font-weight:800;letter-spacing:.08em;text-transform:uppercase;margin-bottom:4px;">About the publisher</div>
+    <h3 style="margin:0 0 8px 0;font-size:1.35em;color:#131b3b;font-weight:800;">PowerPlug Editorial Team</h3>
+    <p style="margin:0 0 12px 0;color:#2a3757;font-size:.98em;line-height:1.7;">PowerPlug helps enterprise IT, finance, and sustainability teams turn endpoint power into a measurable, governed programme — saving up to 60% of PC energy use across fleets ranging from 100 to 50,000 devices, with typical payback in under four months.</p>
+    <div data-resp="float-group" style="display:flex;flex-wrap:wrap;gap:10px;align-items:center;">
+      <a href="https://www.linkedin.com/company/powerplug-ltd" target="_blank" rel="noopener" class="pp-social" aria-label="PowerPlug on LinkedIn" style="display:inline-flex;align-items:center;gap:6px;padding:8px 14px;background:#ffffff;color:#131b3b;text-decoration:none;font-weight:700;font-size:.88em;border:1.5px solid #dfe7f3;border-radius:50px;transition:all .2s ease;">in · LinkedIn</a>
+      <a href="https://www.facebook.com/PowerPlugLtd/" target="_blank" rel="noopener" class="pp-social" aria-label="PowerPlug on Facebook" style="display:inline-flex;align-items:center;gap:6px;padding:8px 14px;background:#ffffff;color:#131b3b;text-decoration:none;font-weight:700;font-size:.88em;border:1.5px solid #dfe7f3;border-radius:50px;transition:all .2s ease;">f · Facebook</a>
+      <a href="https://twitter.com/PowerPlugLtd" target="_blank" rel="noopener" class="pp-social" aria-label="PowerPlug on X / Twitter" style="display:inline-flex;align-items:center;gap:6px;padding:8px 14px;background:#ffffff;color:#131b3b;text-decoration:none;font-weight:700;font-size:.88em;border:1.5px solid #dfe7f3;border-radius:50px;transition:all .2s ease;">X · @PowerPlugLtd</a>
+      <a href="mailto:info@powerplug.ai" class="pp-social" aria-label="Email PowerPlug" style="display:inline-flex;align-items:center;gap:6px;padding:8px 14px;background:#ffffff;color:#131b3b;text-decoration:none;font-weight:700;font-size:.88em;border:1.5px solid #dfe7f3;border-radius:50px;transition:all .2s ease;">@ · info@powerplug.ai</a>
+      <a href="https://powerplug.ai/contact-us" class="pp-social" aria-label="Contact PowerPlug" style="display:inline-flex;align-items:center;gap:6px;padding:8px 14px;background:#4d8f17;color:#ffffff;text-decoration:none;font-weight:700;font-size:.88em;border:1.5px solid #4d8f17;border-radius:50px;transition:all .2s ease;">→ Contact us</a>
     </div>
-  </section>
-
-  <div class="pp-cta" id="cta-midway">
-    <h4>Want a tailored savings estimate for your fleet?</h4>
-    <p>Share a rough device count and working hours and our team will send a conservative model of your expected kWh and cost reduction.</p>
-    <a class="pp-btn" href="https://powerplug.ai/contact-us" aria-label="Contact PowerPlug for a savings estimate">Request an estimate
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
-    </a>
+    <div style="margin-top:12px;font-size:.85em;color:#6b7894;">7 HaArad Street, Tel Aviv 6971060, Israel · +1-646-751-7797</div>
   </div>
+</div>
 
-  <section id="common-pitfalls">
-    <h2>Common pitfalls that kill savings</h2>
-    <img src="https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=1400&q=72" alt="Close-up of a PC motherboard showing CPU and cooling components" loading="lazy" width="1400" height="788" style="width:100%;aspect-ratio:16/9;object-fit:cover;border-radius:var(--pp-radius);margin:8px 0 20px;box-shadow:var(--pp-shadow-soft)">
-    <p>Most PC power management programs underperform not because the policies are wrong, but because edge cases weren't accounted for. Four pitfalls show up in almost every unsuccessful rollout.</p>
-    <p><strong>Pitfall 1: Shutting down during patch windows.</strong> Teams push a 7 PM shutdown policy, then discover that their Windows Update and SCCM jobs run at 11 PM. Patches fail, compliance drops, and the policy gets rolled back. Solution: integrate patch-window awareness into the shutdown policy.</p>
-    <p><strong>Pitfall 2: One-size-fits-all policies.</strong> Finance PCs can hibernate freely; lab PCs running simulations cannot. A single fleet-wide policy will either miss savings or interrupt critical work. Solution: segment aggressively.</p>
-    <p><strong>Pitfall 3: Ignoring monitors.</strong> Monitors account for 20–35% of endpoint power, depending on size. Sleep policies that put the PC to sleep but leave monitors awake leave significant savings on the table. See the <a href="https://www.energystar.gov/products/computers" target="_blank" rel="noopener">ENERGY STAR computer product guidance</a> for display-side recommendations.</p>
-    <p><strong>Pitfall 4: No reporting loop.</strong> If you cannot show the CFO a quarterly trend of kWh saved, the program has no political backing and will lose budget to the next priority. Solution: reporting is not optional; pick a platform that produces board-ready charts out of the box.</p>
+<!-- Floating Contact Us (always visible) -->
+<a href="https://powerplug.ai/contact-us" class="pp-float-contact" aria-label="Contact PowerPlug"><span class="pp-dot" aria-hidden="true"></span><span>Contact Us</span></a>
 
-    <div class="pp-callout did">
-      <div class="pp-callout-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg></div>
-      <div class="pp-callout-body">
-        <h4>Did you know?</h4>
-        <p>An average desktop left on overnight consumes more electricity between 6 PM and 8 AM than during the full nine-hour workday that preceded it. The International Energy Agency's <a href="https://www.iea.org/reports/energy-efficiency-2023" target="_blank" rel="noopener">Energy Efficiency 2023</a> report reinforces that always-on office endpoints remain a leading avoidable-load category globally.</p>
-      </div>
-    </div>
-  </section>
-
-  <section id="savings">
-    <h2>Measuring real savings and ROI</h2>
-    <p>Savings come from three buckets. Direct electricity cost reduction is the headline number — typically 30–60% of endpoint-attributable energy for a fleet moving from no policy to an enforced one. HVAC indirect savings come second; every watt you do not turn into heat at the endpoint is a watt your cooling system does not need to remove. Thermal wear reduction is the third bucket, smaller but real: fewer thermal cycles extend component life, especially for spinning drives and fans.</p>
-    <p>A defensible ROI model stays conservative. Use utility-billed kWh rates, not retail-average rates. Use measured device wattage, not vendor data-sheet maximums. Apply a utilization factor to reflect already-partial sleep behavior. And always report in kWh and currency side by side so that finance can verify both dimensions.</p>
-    <p>For deeper methodology, see our internal walkthrough on <a href="https://powerplug.ai/">the PowerPlug platform</a>, and review how our <a href="https://powerplug.ai/contact-us">customer success team</a> validates measurement accuracy during onboarding.</p>
-  </section>
-
-  <div class="pp-cta" id="cta-mid-2">
-    <h4>Not sure which devices to pilot first?</h4>
-    <p>A short call with our team usually surfaces the right pilot group in under thirty minutes — typically a single department with predictable hours and a stable patch window.</p>
-    <a class="pp-btn" href="https://powerplug.ai/contact-us" aria-label="Book a short call with PowerPlug">Book a short call
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
-    </a>
-  </div>
-
-  <section id="rollout">
-    <h2>Rolling it out without disrupting users</h2>
-    <img src="https://images.unsplash.com/photo-1573164713714-d95e436ab8d6?auto=format&fit=crop&w=1400&q=72" alt="IT operations team collaborating on rollout planning with laptops and whiteboard" loading="lazy" width="1400" height="788" style="width:100%;aspect-ratio:16/9;object-fit:cover;border-radius:var(--pp-radius);margin:8px 0 20px;box-shadow:var(--pp-shadow-soft)">
-    <p>The single biggest predictor of a successful rollout is communication, not technology. Users tolerate sleep and shutdown policies when they understand the why, know how to wake their machine, and can override the policy cleanly during late-night work. Publish a one-page explainer. Send a short email. Put a tooltip on the wake portal. Do not silently shut people's machines off; you will pay for it in trust and help desk volume for months.</p>
-    <p>Technical rollout follows four phases. First, pilot on 5–10% of devices in one group. Second, run a full maintenance cycle — patch window, AV scan, OS upgrade — with the policy active and verify nothing broke. Third, expand to a single full site. Fourth, fleet-wide, with a monitored 4-week stability window before declaring success.</p>
-
-    <div class="pp-trust">
-      <h4>About PowerPlug</h4>
-      <p>PowerPlug provides PC power management software and a wake-up portal used by enterprise IT teams to cut endpoint energy costs by up to 60%. Trusted by healthcare, financial services, manufacturing, and education customers including Clalit Health Services and other large institutions.</p>
-      <div class="pp-trust-row">
-        <span>Based on publicly available information from powerplug.ai.</span>
-        <a href="mailto:info@powerplugltd.com">info@powerplugltd.com</a>
-        <a href="tel:+16467517797">+1&nbsp;646&nbsp;751&nbsp;7797</a>
-      </div>
-    </div>
-  </section>
-
-  <div class="pp-cta pp-cta-end" id="cta-end">
-    <h4>Ready to put your fleet's idle hours to work?</h4>
-    <p>Talk to a PowerPlug specialist. We'll map your current baseline, model a safe policy for your patch windows, and hand you a defensible savings estimate — no commitment, no fluff.</p>
-    <p>Most fleets see the first measurable reduction within the first billing cycle.</p>
-    <a class="pp-btn" href="https://powerplug.ai/contact-us" aria-label="Talk to a PowerPlug specialist now">Talk to a specialist
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
-    </a>
-  </div>
-
-  <section class="pp-faq" id="faq">
-    <h2 class="pp-faq-title">Frequently asked questions</h2>
-
-    <details class="pp-faq-item">
-      <summary class="pp-faq-summary">
-        <span>Will PC power management interrupt patching and antivirus scans?</span>
-        <svg class="pp-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
-      </summary>
-      <div class="pp-faq-body">
-        <p>No, if wake-up is configured correctly. A proper platform wakes devices before maintenance windows and returns them to a low-power state afterward. The common failure pattern is rolling out shutdown policies without syncing the wake schedule to patch and AV windows.</p>
-      </div>
-    </details>
-
-    <details class="pp-faq-item">
-      <summary class="pp-faq-summary">
-        <span>How much energy can a typical enterprise actually save?</span>
-        <svg class="pp-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
-      </summary>
-      <div class="pp-faq-body">
-        <p>Organizations moving from no policy to an enforced platform typically see 30–60% reductions in endpoint-attributable electricity use. The exact number depends on baseline behavior, fleet age, and how aggressively monitor and discrete-GPU power is managed.</p>
-      </div>
-    </details>
-
-    <details class="pp-faq-item">
-      <summary class="pp-faq-summary">
-        <span>Does PC power management work for remote and hybrid employees?</span>
-        <svg class="pp-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
-      </summary>
-      <div class="pp-faq-body">
-        <p>Yes. Modern platforms apply policies via the endpoint agent regardless of network location, and wake-up can be triggered through a cloud portal so remote users can bring their machine up from anywhere before a work session.</p>
-      </div>
-    </details>
-
-    <details class="pp-faq-item">
-      <summary class="pp-faq-summary">
-        <span>What reporting does leadership typically need?</span>
-        <svg class="pp-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
-      </summary>
-      <div class="pp-faq-body">
-        <p>At minimum: kWh saved, CO₂ avoided, cost saved, and trend-over-time per business unit. Executive reporting increasingly requires scope-2 breakdowns for ESG disclosures, which a fit-for-purpose platform should provide directly.</p>
-      </div>
-    </details>
-
-    <details class="pp-faq-item">
-      <summary class="pp-faq-summary">
-        <span>How long does a rollout usually take?</span>
-        <svg class="pp-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
-      </summary>
-      <div class="pp-faq-body">
-        <p>A standard four-phase rollout — pilot, maintenance-cycle validation, single site, fleet-wide — typically takes four to eight weeks, depending on how many device groups need distinct policies and how complex the patch schedule is.</p>
-      </div>
-    </details>
-  </section>
-
-  <aside class="pp-author" aria-label="About the publisher">
-    <a class="pp-author-logo" href="https://powerplug.ai/" aria-label="Visit powerplug.ai homepage">
-      <img src="https://powerplug.ai/wp-content/uploads/2022/06/powerplug-logo.png" alt="PowerPlug company logo" width="300" height="100" loading="lazy">
-    </a>
-    <div class="pp-author-body">
-      <p class="pp-author-role">Published by</p>
-      <h4>PowerPlug Editorial Team</h4>
-      <p>PowerPlug delivers PC power management software and an IT wake-up portal to enterprises worldwide. Our editorial team writes plainly about endpoint efficiency, patch-safe shutdown design, and the operational patterns that make energy programs stick.</p>
-      <div class="pp-socials" role="list">
-        <a class="pp-social li" role="listitem" href="https://www.linkedin.com/company/494877/admin/" target="_blank" rel="noopener" aria-label="PowerPlug on LinkedIn">
-          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.45 20.45h-3.56v-5.57c0-1.33-.02-3.04-1.85-3.04-1.86 0-2.14 1.45-2.14 2.94v5.67H9.34V9h3.42v1.56h.05a3.75 3.75 0 0 1 3.37-1.85c3.6 0 4.27 2.37 4.27 5.46v6.28zM5.34 7.43a2.07 2.07 0 1 1 0-4.13 2.07 2.07 0 0 1 0 4.13zm1.78 13.02H3.56V9h3.56v11.45zM22.22 0H1.78C.79 0 0 .77 0 1.72v20.56C0 23.23.79 24 1.78 24h20.44c.98 0 1.78-.77 1.78-1.72V1.72C24 .77 23.2 0 22.22 0z"/></svg>
-        </a>
-        <a class="pp-social fb" role="listitem" href="https://www.facebook.com/PowerPlugLtd/" target="_blank" rel="noopener" aria-label="PowerPlug on Facebook">
-          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M13.4 21.5v-8.3h2.8l.4-3.2h-3.2V7.9c0-.9.3-1.6 1.6-1.6h1.7V3.4c-.3 0-1.3-.1-2.4-.1-2.4 0-4 1.5-4 4.1v2.5H7.5v3.2h2.7v8.3h3.2z"/></svg>
-        </a>
-        <a class="pp-social x" role="listitem" href="https://twitter.com/PowerPlugLtd" target="_blank" rel="noopener" aria-label="PowerPlug on X (Twitter)">
-          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
-        </a>
-      </div>
-    </div>
-  </aside>
-
-</article>
-
-<a class="pp-float pp-contact-float" href="https://powerplug.ai/contact-us" aria-label="Contact PowerPlug" rel="noopener">
-  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.8 19.8 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.12 4.18 2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.12.9.32 1.77.6 2.6a2 2 0 0 1-.45 2.11L8 9.91a16 16 0 0 0 6 6l1.48-1.26a2 2 0 0 1 2.11-.45c.83.28 1.7.48 2.6.6A2 2 0 0 1 22 16.92z"/></svg>
-  <span>Contact us</span>
-</a>
-
-<button class="pp-float pp-scrolltop" id="pp-scrolltop" type="button" aria-label="Scroll to top of page">
-  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="18 15 12 9 6 15"/></svg>
-</button>
+<!-- Floating Scroll-to-Top (appears after scroll) -->
+<a href="#" class="pp-float-top" id="pp-scroll-top" aria-label="Scroll to top">↑</a>
 
 <script>
 (function(){
-  "use strict";
-  var btn = document.getElementById('pp-scrolltop');
+  var btn = document.getElementById('pp-scroll-top');
   if(!btn) return;
-  var threshold = 300;
-  var ticking = false;
-  function update(){
-    if(window.pageYOffset > threshold){ btn.classList.add('show'); }
-    else{ btn.classList.remove('show'); }
-    ticking = false;
-  }
-  window.addEventListener('scroll', function(){
-    if(!ticking){ window.requestAnimationFrame(update); ticking = true; }
-  }, {passive:true});
-  btn.addEventListener('click', function(){
-    try{ window.scrollTo({top:0, behavior:'smooth'}); }
-    catch(e){ window.scrollTo(0,0); }
+  var toggle = function(){
+    if (window.pageYOffset > 320) { btn.classList.add('pp-visible'); }
+    else { btn.classList.remove('pp-visible'); }
+  };
+  window.addEventListener('scroll', toggle, { passive: true });
+  btn.addEventListener('click', function(e){
+    e.preventDefault();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   });
-  update();
+  toggle();
 })();
 </script>
 
-</body>
-</html>
+</article>
