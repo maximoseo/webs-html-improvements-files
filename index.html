@@ -3885,6 +3885,67 @@ main, main.container{
 }
 /* END POLISH PASS v2.1 */
 
+/* ================================================================
+   POLISH PASS v2.2 (2026-04-20) — Fix broken layout issues:
+   1. radar-drawer phantom space → visibility hidden when closed
+   2. #projects-grid min-height:60vh blank gap → 200px
+   3. preview-modal header overflow on smaller screens → flex-wrap
+   4. K8 card heading overflow → word-break
+   ================================================================ */
+
+/* 1. Radar drawer — use visibility:hidden so it truly has no viewport effect when closed */
+.radar-drawer:not(.open){
+  visibility:hidden !important;
+  pointer-events:none !important;
+  overflow:hidden !important;
+}
+.radar-drawer.open{
+  visibility:visible !important;
+}
+
+/* 2. Projects grid min-height — remove the 60vh blank gap */
+#projects-grid{
+  min-height:200px !important;
+}
+
+/* 3. Preview modal header — prevent wrapping chaos, allow orderly flex */
+#preview-modal .modal-header,
+#compare-modal .modal-header,
+#focus-modal .modal-header,
+#prompt-modal .modal-header {
+  flex-wrap:wrap !important;
+  gap:8px !important;
+  row-gap:6px !important;
+  padding:10px 16px !important;
+  align-items:center !important;
+}
+#preview-modal .modal-header .modal-title{
+  flex:1 1 auto;
+  min-width:0;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+#preview-modal .modal-header .device-tabs{
+  flex-shrink:0;
+}
+#preview-modal .modal-header .modal-close{
+  flex-shrink:0;
+  margin-left:auto;
+}
+
+/* 4. Card headings — prevent title text overflow on narrow cards */
+.project-card h3,
+.project-card .project-title,
+.project-card [class*="project-name"]{
+  overflow:hidden !important;
+  text-overflow:ellipsis !important;
+  white-space:normal !important;
+  word-break:break-word !important;
+}
+
+/* END POLISH PASS v2.2 */
+
 </style>
 </head>
 <body>
