@@ -3974,7 +3974,10 @@ main, main.container{
 }
 .card-body-inner {
   min-height: 0 !important;           /* Required for 0fr to work */
-  overflow: visible !important;
+  overflow: hidden !important;        /* Clip sticky children in collapsed state */
+}
+.project-card.expanded .card-body-inner {
+  overflow: visible !important;       /* Allow sticky footer when expanded */
 }
 
 /* ── 2. PROJECT CARD: Only expanded cards get overflow:visible ──────────
