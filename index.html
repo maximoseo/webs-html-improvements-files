@@ -4856,6 +4856,24 @@ body {
 
 /* END POLISH PASS v3.2 */
 
+/* ================================================================
+   POLISH PASS v3.2c (2026-04-20) — TAB LABEL ELLIPSIS FIX
+   Root cause: .tab-label has overflow:hidden + text-overflow:ellipsis
+   with scrollWidth > clientWidth → shows "..."
+   Fix: disable ellipsis on tab labels, let button flex stay intact
+   ================================================================ */
+.fixer-tab-btn .tab-label {
+  overflow: visible !important;
+  text-overflow: clip !important;
+  white-space: nowrap !important;
+  max-width: none !important;
+}
+.fixer-tab-btn {
+  overflow: visible !important;
+  flex-shrink: 0 !important;
+}
+/* END POLISH PASS v3.2c */
+
 </style>
 </head>
 <body>
