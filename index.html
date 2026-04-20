@@ -29,7 +29,73 @@
 @media (max-width:600px){.stats{min-height:520px}}
 .stat-card{min-height:110px}
 #projects-grid{min-height:60vh}
-#page-fixer,#page-radar{min-height:60vh}
+#page-fixer,#page-radar,#page-kwr{min-height:60vh}
+/* ── Keyword Research tab ─────────────────────────────────────────── */
+.kwr-page{padding:0 0 60px}
+.kwr-hero{margin-bottom:28px}
+.kwr-title{font-size:24px;font-weight:700;letter-spacing:-0.04em;display:flex;align-items:center;gap:12px;color:var(--text)}
+.kwr-title svg{width:26px;height:26px;color:#7c3aed;flex-shrink:0}
+.kwr-desc{font-size:13px;color:var(--muted);margin-top:6px;line-height:1.5;max-width:64ch}
+.kwr-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px}
+@media(max-width:768px){.kwr-grid{grid-template-columns:1fr}}
+.kwr-field{display:flex;flex-direction:column;gap:6px}
+.kwr-field.full{grid-column:1/-1}
+.kwr-label{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em}
+.kwr-label span.req{color:#f87171;margin-left:2px}
+.kwr-input,.kwr-textarea,.kwr-select{width:100%;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);border-radius:8px;color:var(--text);font-size:13px;padding:9px 12px;font-family:inherit;transition:border-color 0.15s;box-sizing:border-box}
+.kwr-input:focus,.kwr-textarea:focus,.kwr-select:focus{outline:none;border-color:rgba(124,58,237,0.6)}
+.kwr-textarea{resize:vertical;min-height:70px}
+.kwr-select option{background:#1a1a2e}
+.kwr-section-title{font-size:12px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:0.1em;margin:20px 0 12px;border-top:1px solid rgba(255,255,255,0.06);padding-top:16px}
+.kwr-actions{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:16px}
+.kwr-btn{display:inline-flex;align-items:center;gap:7px;padding:9px 18px;border-radius:9px;border:none;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;transition:all 0.15s;white-space:nowrap}
+.kwr-btn:disabled{opacity:0.45;cursor:not-allowed}
+.kwr-btn-primary{background:linear-gradient(135deg,#7c3aed,#6d28d9);color:#fff}
+.kwr-btn-primary:hover:not(:disabled){background:linear-gradient(135deg,#8b5cf6,#7c3aed)}
+.kwr-btn-success{background:linear-gradient(135deg,#059669,#047857);color:#fff}
+.kwr-btn-success:hover:not(:disabled){background:linear-gradient(135deg,#10b981,#059669)}
+.kwr-btn-danger{background:linear-gradient(135deg,#dc2626,#b91c1c);color:#fff}
+.kwr-btn-danger:hover:not(:disabled){background:linear-gradient(135deg,#ef4444,#dc2626)}
+.kwr-btn-ghost{background:rgba(255,255,255,0.06);color:var(--text);border:1px solid rgba(255,255,255,0.1)}
+.kwr-btn-ghost:hover:not(:disabled){background:rgba(255,255,255,0.1)}
+.kwr-stage-list{display:flex;flex-direction:column;gap:6px;margin:16px 0}
+.kwr-stage{display:flex;align-items:center;gap:10px;padding:8px 12px;border-radius:8px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);font-size:13px;color:var(--muted);transition:all 0.2s}
+.kwr-stage.active{border-color:rgba(124,58,237,0.4);background:rgba(124,58,237,0.07);color:var(--text)}
+.kwr-stage.done{border-color:rgba(5,150,105,0.3);background:rgba(5,150,105,0.05);color:#6ee7b7}
+.kwr-stage.error{border-color:rgba(239,68,68,0.4);background:rgba(239,68,68,0.06);color:#fca5a5}
+.kwr-stage-icon{width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:11px}
+.kwr-stage.active .kwr-stage-icon{background:rgba(124,58,237,0.3);animation:kwr-pulse 1.2s ease-in-out infinite}
+.kwr-stage.done .kwr-stage-icon{background:rgba(5,150,105,0.3)}
+.kwr-stage.error .kwr-stage-icon{background:rgba(239,68,68,0.3)}
+@keyframes kwr-pulse{0%,100%{opacity:1}50%{opacity:0.4}}
+.kwr-progress-bar{height:4px;border-radius:2px;background:rgba(255,255,255,0.07);margin:12px 0;overflow:hidden}
+.kwr-progress-fill{height:100%;border-radius:2px;background:linear-gradient(90deg,#7c3aed,#8b5cf6);transition:width 0.4s ease}
+.kwr-log-box{background:rgba(0,0,0,0.25);border:1px solid rgba(255,255,255,0.07);border-radius:8px;padding:10px 14px;font-size:11px;font-family:monospace;color:#a0a0b8;max-height:140px;overflow-y:auto;margin-top:10px;white-space:pre-wrap;word-break:break-all}
+.kwr-preview-wrap{margin-top:20px}
+.kwr-preview-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;gap:10px;flex-wrap:wrap}
+.kwr-preview-title{font-size:14px;font-weight:700;color:var(--text)}
+.kwr-preview-meta{font-size:12px;color:var(--muted)}
+.kwr-table-wrap{overflow-x:auto;border:1px solid rgba(255,255,255,0.08);border-radius:10px}
+.kwr-table{width:100%;border-collapse:collapse;font-size:12px}
+.kwr-table th{background:rgba(255,255,255,0.05);color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:0.07em;padding:8px 12px;text-align:left;white-space:nowrap;position:sticky;top:0}
+.kwr-table td{padding:7px 12px;border-top:1px solid rgba(255,255,255,0.05);color:var(--text-secondary);vertical-align:top;max-width:200px}
+.kwr-table td[contenteditable="true"]:focus{outline:none;background:rgba(124,58,237,0.08);color:var(--text)}
+.kwr-table tr:hover td{background:rgba(255,255,255,0.02)}
+.kwr-table tr.pillar-row td{color:#c4b5fd;font-weight:600;background:rgba(124,58,237,0.06)}
+.kwr-intent-badge{display:inline-block;padding:2px 7px;border-radius:4px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.06em}
+.kwr-intent-info{background:rgba(59,130,246,0.15);color:#93c5fd}
+.kwr-intent-trans{background:rgba(16,185,129,0.15);color:#6ee7b7}
+.kwr-intent-comm{background:rgba(245,158,11,0.15);color:#fcd34d}
+.kwr-intent-nav{background:rgba(156,163,175,0.15);color:#d1d5db}
+.kwr-intent-pillar{background:rgba(124,58,237,0.2);color:#c4b5fd}
+.kwr-status-bar{display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:8px;border:1px solid rgba(255,255,255,0.07);background:rgba(255,255,255,0.02);font-size:12px;color:var(--muted);margin-top:12px;flex-wrap:wrap}
+.kwr-status-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.kwr-dot-idle{background:#6b7280}
+.kwr-dot-running{background:#7c3aed;animation:kwr-pulse 1s ease-in-out infinite}
+.kwr-dot-ready{background:#10b981}
+.kwr-dot-error{background:#ef4444}
+.kwr-dot-complete{background:#6ee7b7}
+.kwr-note-box{padding:10px 14px;border-radius:8px;border:1px solid rgba(245,158,11,0.3);background:rgba(245,158,11,0.06);font-size:12px;color:#fcd34d;margin-top:10px;line-height:1.5}
 
 /* Phase-2.3 compact mobile sticky header — keeps logo + tabs + sync only, hides nice-to-haves */
 @media (max-width:768px){
@@ -3043,8 +3109,12 @@ body {
         <span class="tab-label">N8N Fixer</span>
       </button>
       <button class="fixer-tab-btn" id="tab-radar" onclick="showPage('radar')" aria-label="Skills Radar" role="tab" aria-selected="false">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="2"/><path d="M16.24 7.76a6 6 0 0 1 0 8.49m-8.48-.01a6 6 0 0 1 0-8.49m11.31-2.82a10 10 0 0 1 0 14.14m-14.14 0a10 10 0 0 1 0-14.14"/></svg>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
         <span class="tab-label">Skills Radar</span>
+      </button>
+      <button class="fixer-tab-btn" id="tab-kwr" onclick="showPage('kwr')" aria-label="Keyword Research" role="tab" aria-selected="false">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/><path d="M11 8v6M8 11h6"/></svg>
+        <span class="tab-label">KW Research</span>
       </button>
     </div>
     <button class="header-menu-btn accent" id="bulk-toggle-projects" onclick="toggleAllProjects(this)">Expand all</button>
@@ -4029,6 +4099,157 @@ body {
     <button class="shortcuts-close" onclick="closeShortcuts()">Close</button>
   </div>
 </div>
+<!-- ============================================================
+     KEYWORD RESEARCH AUTOMATION PAGE
+     ============================================================ -->
+<div id="page-kwr" style="display:none">
+<div class="kwr-page">
+
+  <div class="kwr-hero">
+    <div class="kwr-title">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/><path d="M11 8v6M8 11h6"/></svg>
+      Keyword Research Automation
+    </div>
+    <div class="kwr-desc">Generate a structured keyword research plan for any website. Fill in the site details below, run the analysis, review and edit the preview, then approve to deploy to Google Sheets.</div>
+  </div>
+
+  <!-- Last run status bar -->
+  <div class="kwr-status-bar" id="kwr-status-bar">
+    <span class="kwr-status-dot kwr-dot-idle" id="kwr-status-dot"></span>
+    <span id="kwr-status-text">Idle — fill in the form below and click Run</span>
+    <span style="margin-left:auto;font-size:11px;color:var(--muted)" id="kwr-run-id-label"></span>
+  </div>
+
+  <!-- SECTION: Required inputs -->
+  <div class="kwr-section-title">Required Information</div>
+  <div class="kwr-grid">
+    <div class="kwr-field">
+      <label class="kwr-label" for="kwr-website-url">Website URL <span class="req">*</span></label>
+      <input class="kwr-input" id="kwr-website-url" type="url" placeholder="https://example.com" autocomplete="off">
+    </div>
+    <div class="kwr-field">
+      <label class="kwr-label" for="kwr-brand-name">Brand Name <span class="req">*</span></label>
+      <input class="kwr-input" id="kwr-brand-name" type="text" placeholder="Acme Corp" autocomplete="off">
+    </div>
+    <div class="kwr-field">
+      <label class="kwr-label" for="kwr-sitemap-url">Sitemap URL <span class="req">*</span></label>
+      <input class="kwr-input" id="kwr-sitemap-url" type="url" placeholder="https://example.com/sitemap.xml" autocomplete="off">
+    </div>
+    <div class="kwr-field">
+      <label class="kwr-label" for="kwr-about-url">About Page URL <span class="req">*</span></label>
+      <input class="kwr-input" id="kwr-about-url" type="url" placeholder="https://example.com/about" autocomplete="off">
+    </div>
+    <div class="kwr-field">
+      <label class="kwr-label" for="kwr-target-language">Target Language <span class="req">*</span></label>
+      <select class="kwr-select" id="kwr-target-language">
+        <option value="">Select language…</option>
+        <option value="en">English</option>
+        <option value="he">Hebrew</option>
+        <option value="es">Spanish</option>
+        <option value="fr">French</option>
+        <option value="de">German</option>
+        <option value="pt">Portuguese</option>
+        <option value="it">Italian</option>
+        <option value="nl">Dutch</option>
+        <option value="ar">Arabic</option>
+        <option value="ru">Russian</option>
+        <option value="zh">Chinese</option>
+        <option value="ja">Japanese</option>
+        <option value="ko">Korean</option>
+        <option value="other">Other (specify in notes)</option>
+      </select>
+    </div>
+    <div class="kwr-field">
+      <label class="kwr-label" for="kwr-target-market">Target Market <span class="req">*</span></label>
+      <input class="kwr-input" id="kwr-target-market" type="text" placeholder="e.g. US, Israel, UK…" autocomplete="off">
+    </div>
+    <div class="kwr-field full">
+      <label class="kwr-label" for="kwr-sheet-target">Google Sheet ID or URL <span class="req">*</span></label>
+      <input class="kwr-input" id="kwr-sheet-target" type="text" placeholder="Sheet ID or full URL" autocomplete="off">
+    </div>
+  </div>
+
+  <!-- SECTION: Optional inputs -->
+  <div class="kwr-section-title">Optional</div>
+  <div class="kwr-grid">
+    <div class="kwr-field">
+      <label class="kwr-label" for="kwr-worksheet-prefix">Worksheet Name Prefix</label>
+      <input class="kwr-input" id="kwr-worksheet-prefix" type="text" placeholder="KWR" autocomplete="off">
+    </div>
+    <div class="kwr-field">
+      <label class="kwr-label" for="kwr-competitor-urls">Competitor URLs</label>
+      <input class="kwr-input" id="kwr-competitor-urls" type="text" placeholder="https://comp1.com, https://comp2.com" autocomplete="off">
+    </div>
+    <div class="kwr-field full">
+      <label class="kwr-label" for="kwr-exclusions">Exclusions / Notes</label>
+      <textarea class="kwr-textarea" id="kwr-exclusions" placeholder="Topics to exclude, brand constraints, tone notes, language mix rules…"></textarea>
+    </div>
+  </div>
+
+  <!-- Actions -->
+  <div class="kwr-actions">
+    <button class="kwr-btn kwr-btn-primary" id="kwr-run-btn" onclick="kwrRun()">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+      Run Research
+    </button>
+    <button class="kwr-btn kwr-btn-ghost" id="kwr-cancel-btn" onclick="kwrCancel()" style="display:none">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      Cancel
+    </button>
+  </div>
+
+  <!-- Progress / stage list (hidden until running) -->
+  <div id="kwr-progress-section" style="display:none">
+    <div class="kwr-progress-bar"><div class="kwr-progress-fill" id="kwr-progress-fill" style="width:0%"></div></div>
+    <div class="kwr-stage-list" id="kwr-stage-list"></div>
+    <div class="kwr-log-box" id="kwr-log-box"></div>
+  </div>
+
+  <!-- Preview table (hidden until ready) -->
+  <div id="kwr-preview-section" style="display:none" class="kwr-preview-wrap">
+    <div class="kwr-preview-header">
+      <div>
+        <div class="kwr-preview-title">Preview — Review &amp; Edit Before Deploying</div>
+        <div class="kwr-preview-meta" id="kwr-preview-meta"></div>
+      </div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <button class="kwr-btn kwr-btn-ghost" onclick="kwrRegenerate()">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.54"/></svg>
+          Regenerate
+        </button>
+        <button class="kwr-btn kwr-btn-success" id="kwr-approve-btn" onclick="kwrApprove()">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+          Approve &amp; Deploy to Sheet
+        </button>
+      </div>
+    </div>
+    <div class="kwr-note-box" id="kwr-note-box" style="display:none"></div>
+    <div class="kwr-table-wrap" style="max-height:420px;overflow-y:auto">
+      <table class="kwr-table" id="kwr-preview-table">
+        <thead><tr>
+          <th>Existing Parent Page</th>
+          <th>Pillar</th>
+          <th>Cluster</th>
+          <th>Intent</th>
+          <th>Primary Keyword</th>
+          <th>Keywords</th>
+        </tr></thead>
+        <tbody id="kwr-preview-body"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Deploy result -->
+  <div id="kwr-deploy-result" style="display:none" class="kwr-status-bar">
+    <span class="kwr-status-dot kwr-dot-complete"></span>
+    <span id="kwr-deploy-msg"></span>
+    <a id="kwr-sheet-link" href="#" target="_blank" rel="noopener" style="margin-left:auto;font-size:12px;color:#8b5cf6;text-decoration:none;font-weight:700">Open Sheet →</a>
+  </div>
+
+</div>
+</div>
+<!-- /page-kwr -->
+
 <div class="action-toast" id="action-toast">
   <svg id="action-toast-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
   <span id="action-toast-msg">Done</span>
@@ -5891,9 +6112,11 @@ document.addEventListener('click', function(ev){
     const isProjects = (name === 'projects');
     const isFixer = (name === 'fixer');
     const isRadar = (name === 'radar');
+    const isKwr = (name === 'kwr');
     const container = document.querySelector('.container');
     const fixerPage = document.getElementById('page-fixer');
     const radarPage = document.getElementById('page-radar');
+    const kwrPage   = document.getElementById('page-kwr');
     const statsGrid = document.getElementById('stats-grid');
     const sectionHeads = document.querySelectorAll('.section-head');
     const projectsGrid = document.getElementById('projects-grid');
@@ -5910,13 +6133,19 @@ document.addEventListener('click', function(ev){
       radarPage.style.display = isRadar ? 'block' : 'none';
       radarPage.classList.toggle('active', isRadar);
     }
+    if (kwrPage) {
+      kwrPage.style.display = isKwr ? 'block' : 'none';
+      kwrPage.classList.toggle('active', isKwr);
+    }
     // Update tab buttons
-    const tabProj = document.getElementById('tab-projects');
+    const tabProj  = document.getElementById('tab-projects');
     const tabFixer = document.getElementById('tab-fixer');
     const tabRadar = document.getElementById('tab-radar');
-    if (tabProj) { tabProj.classList.toggle('active', isProjects); tabProj.setAttribute('aria-selected', isProjects ? 'true' : 'false'); }
-    if (tabFixer) { tabFixer.classList.toggle('active', isFixer); tabFixer.setAttribute('aria-selected', isFixer ? 'true' : 'false'); }
-    if (tabRadar) { tabRadar.classList.toggle('active', isRadar); tabRadar.setAttribute('aria-selected', isRadar ? 'true' : 'false'); }
+    const tabKwr   = document.getElementById('tab-kwr');
+    if (tabProj)  { tabProj.classList.toggle('active', isProjects); tabProj.setAttribute('aria-selected', isProjects ? 'true' : 'false'); }
+    if (tabFixer) { tabFixer.classList.toggle('active', isFixer);   tabFixer.setAttribute('aria-selected', isFixer ? 'true' : 'false'); }
+    if (tabRadar) { tabRadar.classList.toggle('active', isRadar);   tabRadar.setAttribute('aria-selected', isRadar ? 'true' : 'false'); }
+    if (tabKwr)   { tabKwr.classList.toggle('active', isKwr);       tabKwr.setAttribute('aria-selected', isKwr ? 'true' : 'false'); }
 
     if (isFixer) initFixerPage();
     if (isRadar) initRadarPage();
@@ -7319,6 +7548,328 @@ function loadTopicsFromStatus(state) {
   if (state.custom_topics) _radarCustomTopics = state.custom_topics;
   renderTopicChips();
 }
+
+// ============================================================
+// KEYWORD RESEARCH AUTOMATION — JavaScript
+// ============================================================
+(function() {
+  'use strict';
+
+  const STAGES = [
+    { id: 'validating',        label: 'Validating inputs' },
+    { id: 'analyzing_site',    label: 'Analyzing about page & home page' },
+    { id: 'parsing_sitemap',   label: 'Parsing sitemap — building existing pages index' },
+    { id: 'researching',       label: 'Researching competitors & market demand' },
+    { id: 'generating',        label: 'Generating keyword clusters' },
+    { id: 'deduplicating',     label: 'Deduplication & cannibalization checks' },
+    { id: 'ready_for_review',  label: 'Preview ready' },
+    { id: 'deploying',         label: 'Deploying to Google Sheets' },
+    { id: 'complete',          label: 'Complete' },
+    { id: 'failed',            label: 'Failed' },
+    { id: 'cancelled',         label: 'Cancelled' },
+  ];
+
+  let _kwrRunId    = null;
+  let _kwrPoller   = null;
+  let _kwrRows     = [];
+  let _kwrLastStage = null;
+
+  // ---- Helpers ----
+  function $id(id) { return document.getElementById(id); }
+
+  function kwrSetStatus(dotClass, text, runId) {
+    const dot = $id('kwr-status-dot');
+    const txt = $id('kwr-status-text');
+    const lbl = $id('kwr-run-id-label');
+    if (dot) { dot.className = 'kwr-status-dot ' + dotClass; }
+    if (txt) txt.textContent = text;
+    if (lbl) lbl.textContent = runId ? ('Run: ' + runId) : '';
+  }
+
+  function kwrShowProgress(show) {
+    const el = $id('kwr-progress-section');
+    if (el) el.style.display = show ? '' : 'none';
+  }
+
+  function kwrShowPreview(show) {
+    const el = $id('kwr-preview-section');
+    if (el) el.style.display = show ? '' : 'none';
+  }
+
+  function kwrSetButtons(running) {
+    const runBtn    = $id('kwr-run-btn');
+    const cancelBtn = $id('kwr-cancel-btn');
+    const approveBtn = $id('kwr-approve-btn');
+    if (runBtn)    { runBtn.disabled = running;   runBtn.style.display = running ? 'none' : ''; }
+    if (cancelBtn) { cancelBtn.style.display = running ? '' : 'none'; }
+    if (approveBtn) approveBtn.disabled = running;
+  }
+
+  function kwrLog(msg) {
+    const box = $id('kwr-log-box');
+    if (!box) return;
+    const ts = new Date().toLocaleTimeString('en-US', {hour12: false});
+    box.textContent += '[' + ts + '] ' + msg + '\n';
+    box.scrollTop = box.scrollHeight;
+  }
+
+  function kwrRenderStages(currentStage, stageProgress) {
+    const list = $id('kwr-stage-list');
+    if (!list) return;
+    const terminalStages = ['ready_for_review','complete','failed','cancelled'];
+    const displayStages = STAGES.filter(s => !['deploying','complete','failed','cancelled'].includes(s.id));
+    let html = '';
+    let hitCurrent = false;
+    for (const s of displayStages) {
+      let cls = '';
+      let icon = '·';
+      if (s.id === currentStage) {
+        cls = 'active'; icon = '●'; hitCurrent = true;
+      } else if (!hitCurrent) {
+        cls = 'done'; icon = '✓';
+      }
+      html += `<div class="kwr-stage ${cls}">
+        <span class="kwr-stage-icon">${icon}</span>
+        <span>${s.label}</span>
+        ${s.id === currentStage && stageProgress ? `<span style="margin-left:auto;font-size:11px;color:var(--muted)">${stageProgress}</span>` : ''}
+      </div>`;
+    }
+    list.innerHTML = html;
+    // progress bar
+    const idx = displayStages.findIndex(s => s.id === currentStage);
+    const pct = idx < 0 ? 100 : Math.round(((idx + 0.5) / displayStages.length) * 100);
+    const fill = $id('kwr-progress-fill');
+    if (fill) fill.style.width = pct + '%';
+  }
+
+  function kwrIntentBadge(intent) {
+    const map = {informational:'info', transactional:'trans', commercial:'comm', navigational:'nav', pillar:'pillar'};
+    const cls = map[(intent||'').toLowerCase()] || 'info';
+    return `<span class="kwr-intent-badge kwr-intent-${cls}">${intent || ''}</span>`;
+  }
+
+  function kwrRenderTable(rows) {
+    _kwrRows = rows || [];
+    const tbody = $id('kwr-preview-body');
+    if (!tbody) return;
+    let html = '';
+    for (let i = 0; i < _kwrRows.length; i++) {
+      const r = _kwrRows[i];
+      const isPillar = (r.existing_parent_page === '-' || r.row_type === 'pillar');
+      const trClass = isPillar ? 'pillar-row' : '';
+      html += `<tr class="${trClass}" data-idx="${i}">
+        <td contenteditable="true" data-col="existing_parent_page" onblur="kwrCellEdit(${i},'existing_parent_page',this)">${kwrEsc(r.existing_parent_page||'')}</td>
+        <td contenteditable="true" data-col="pillar" onblur="kwrCellEdit(${i},'pillar',this)">${kwrEsc(r.pillar||'')}</td>
+        <td contenteditable="true" data-col="cluster" onblur="kwrCellEdit(${i},'cluster',this)">${kwrEsc(r.cluster||'')}</td>
+        <td>${kwrIntentBadge(r.intent)}</td>
+        <td contenteditable="true" data-col="primary_keyword" onblur="kwrCellEdit(${i},'primary_keyword',this)">${kwrEsc(r.primary_keyword||'')}</td>
+        <td contenteditable="true" data-col="keywords" onblur="kwrCellEdit(${i},'keywords',this)">${kwrEsc(Array.isArray(r.keywords) ? r.keywords.join(', ') : (r.keywords||''))}</td>
+      </tr>`;
+    }
+    tbody.innerHTML = html;
+  }
+
+  function kwrEsc(s) {
+    return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+
+  window.kwrCellEdit = function(idx, col, el) {
+    if (!_kwrRows[idx]) return;
+    _kwrRows[idx][col] = el.textContent.trim();
+  };
+
+  // ---- Validate inputs ----
+  function kwrCollectInputs() {
+    const required = {
+      website_url:     ($id('kwr-website-url')      || {}).value || '',
+      sitemap_url:     ($id('kwr-sitemap-url')       || {}).value || '',
+      about_url:       ($id('kwr-about-url')         || {}).value || '',
+      brand_name:      ($id('kwr-brand-name')        || {}).value || '',
+      target_language: ($id('kwr-target-language')   || {}).value || '',
+      target_market:   ($id('kwr-target-market')     || {}).value || '',
+      sheet_target:    ($id('kwr-sheet-target')      || {}).value || '',
+    };
+    const optional = {
+      worksheet_prefix:  ($id('kwr-worksheet-prefix')  || {}).value || '',
+      competitor_urls:   ($id('kwr-competitor-urls')    || {}).value || '',
+      notes_exclusions:  ($id('kwr-exclusions')         || {}).value || '',
+    };
+    const missing = Object.entries(required).filter(([k,v]) => !v.trim()).map(([k]) => k);
+    return { inputs: Object.assign({}, required, optional), missing };
+  }
+
+  // ---- Run ----
+  window.kwrRun = function(regenFeedback) {
+    const { inputs, missing } = kwrCollectInputs();
+    if (missing.length > 0) {
+      const labels = missing.map(k => k.replace(/_/g,' ')).join(', ');
+      alert('Please fill in the required fields: ' + labels);
+      return;
+    }
+    if (regenFeedback) inputs.regenerate_feedback = regenFeedback;
+
+    kwrShowPreview(false);
+    kwrShowProgress(true);
+    kwrSetButtons(true);
+    $id('kwr-deploy-result').style.display = 'none';
+    $id('kwr-log-box').textContent = '';
+    kwrSetStatus('kwr-dot-running', 'Starting research pipeline…', '');
+    kwrLog('Submitting run request…');
+
+    fetch('/api/kwr/start', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify(inputs)
+    })
+    .then(r => r.json())
+    .then(data => {
+      if (!data.ok) throw new Error(data.error || 'Start failed');
+      _kwrRunId = data.run_id;
+      kwrSetStatus('kwr-dot-running', 'Running…', _kwrRunId);
+      kwrLog('Run started: ' + _kwrRunId);
+      kwrStartPoller();
+    })
+    .catch(err => {
+      kwrSetStatus('kwr-dot-error', 'Error: ' + err.message, '');
+      kwrLog('ERROR: ' + err.message);
+      kwrSetButtons(false);
+    });
+  };
+
+  // ---- Poller ----
+  function kwrStartPoller() {
+    if (_kwrPoller) clearInterval(_kwrPoller);
+    _kwrPoller = setInterval(kwrPoll, 2500);
+  }
+
+  function kwrStopPoller() {
+    if (_kwrPoller) { clearInterval(_kwrPoller); _kwrPoller = null; }
+  }
+
+  function kwrPoll() {
+    if (!_kwrRunId) return;
+    fetch('/api/kwr/status?run_id=' + encodeURIComponent(_kwrRunId))
+    .then(r => r.json())
+    .then(data => {
+      if (!data.ok) return;
+      const stage = data.stage || '';
+      const msg   = data.message || '';
+      if (stage !== _kwrLastStage) {
+        _kwrLastStage = stage;
+        kwrLog('Stage: ' + stage + (msg ? ' — ' + msg : ''));
+      }
+      kwrRenderStages(stage, msg);
+
+      if (stage === 'ready_for_review' || stage === 'complete') {
+        kwrStopPoller();
+        kwrSetButtons(false);
+        if (data.rows && data.rows.length > 0) {
+          _kwrRows = data.rows;
+          kwrRenderTable(_kwrRows);
+          kwrShowPreview(true);
+          const meta = $id('kwr-preview-meta');
+          if (meta) meta.textContent = `${_kwrRows.length} rows  •  ${data.pillar_count || 0} pillars  •  editable before deploy`;
+          if (data.note) {
+            const nb = $id('kwr-note-box');
+            if (nb) { nb.textContent = data.note; nb.style.display = ''; }
+          }
+          kwrSetStatus('kwr-dot-ready', 'Preview ready — review, edit, then Approve & Deploy', _kwrRunId);
+          kwrLog('Preview ready: ' + _kwrRows.length + ' rows');
+        }
+        if (stage === 'complete' && data.sheet_url) {
+          kwrShowDeployResult('Deployed successfully to new worksheet.', data.sheet_url);
+          kwrShowProgress(false);
+          kwrSetStatus('kwr-dot-complete', 'Deployed successfully', _kwrRunId);
+        }
+      } else if (stage === 'failed') {
+        kwrStopPoller();
+        kwrSetButtons(false);
+        kwrSetStatus('kwr-dot-error', 'Failed: ' + (data.error || msg), _kwrRunId);
+        kwrLog('FAILED: ' + (data.error || msg));
+      } else if (stage === 'cancelled') {
+        kwrStopPoller();
+        kwrSetButtons(false);
+        kwrSetStatus('kwr-dot-idle', 'Cancelled', _kwrRunId);
+        kwrLog('Run cancelled');
+      } else {
+        kwrSetStatus('kwr-dot-running', stage.replace(/_/g,' ') + (msg ? ' — ' + msg : ''), _kwrRunId);
+      }
+    })
+    .catch(err => kwrLog('Poll error: ' + err.message));
+  }
+
+  // ---- Cancel ----
+  window.kwrCancel = function() {
+    if (!_kwrRunId) return;
+    kwrStopPoller();
+    fetch('/api/kwr/cancel', {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({run_id: _kwrRunId})
+    }).then(() => {
+      kwrSetStatus('kwr-dot-idle', 'Cancelling…', _kwrRunId);
+      kwrLog('Cancel requested');
+      kwrSetButtons(false);
+    });
+  };
+
+  // ---- Regenerate ----
+  window.kwrRegenerate = function() {
+    const fb = prompt('Optional: tell the agent what to change (leave blank to regenerate with same inputs)');
+    if (fb === null) return; // user pressed Cancel
+    kwrRun(fb || '');
+  };
+
+  // ---- Approve & Deploy ----
+  window.kwrApprove = function() {
+    if (!_kwrRunId) { alert('No active run to deploy.'); return; }
+    if (!_kwrRows.length) { alert('Preview is empty — run research first.'); return; }
+    if (!confirm('Deploy ' + _kwrRows.length + ' rows to a new worksheet in the configured Google Sheet? This cannot be undone.')) return;
+
+    const sheetTarget = ($id('kwr-sheet-target') || {}).value || '';
+    const sheetPrefix = ($id('kwr-worksheet-prefix') || {}).value || 'KWR';
+    const approveBtn = $id('kwr-approve-btn');
+    if (approveBtn) approveBtn.disabled = true;
+    kwrSetStatus('kwr-dot-running', 'Deploying to Google Sheets…', _kwrRunId);
+    kwrLog('Deploying…');
+
+    fetch('/api/kwr/approve', {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({
+        run_id: _kwrRunId,
+        rows: _kwrRows,
+        sheet_target: sheetTarget,
+        sheet_prefix: sheetPrefix
+      })
+    })
+    .then(r => r.json())
+    .then(data => {
+      if (!data.ok) throw new Error(data.error || 'Deploy failed');
+      kwrShowDeployResult('Deployed successfully to new worksheet.', data.sheet_url);
+      kwrSetStatus('kwr-dot-complete', 'Deployed successfully', _kwrRunId);
+      kwrLog('Deploy complete. Sheet: ' + (data.sheet_url || '(no URL returned)'));
+      kwrShowProgress(false);
+    })
+    .catch(err => {
+      if (approveBtn) approveBtn.disabled = false;
+      kwrSetStatus('kwr-dot-error', 'Deploy failed: ' + err.message, _kwrRunId);
+      kwrLog('DEPLOY ERROR: ' + err.message + ' — preview preserved, no worksheet created');
+    });
+  };
+
+  function kwrShowDeployResult(msg, url) {
+    const wrap = $id('kwr-deploy-result');
+    const msgEl = $id('kwr-deploy-msg');
+    const link  = $id('kwr-sheet-link');
+    if (!wrap) return;
+    if (msgEl) msgEl.textContent = msg;
+    if (link && url) { link.href = url; link.style.display = ''; }
+    else if (link)   { link.style.display = 'none'; }
+    wrap.style.display = '';
+  }
+
+})();
 </script>
 </body>
 </html>

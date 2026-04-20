@@ -13,6 +13,7 @@ import urllib.parse
 import urllib.request
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
+import kwr_backend
 
 ROOT = Path(__file__).resolve().parent
 INDEX = ROOT / 'index.html'
@@ -1495,6 +1496,25 @@ class DashboardHandler(BaseHTTPRequestHandler):
             except Exception as exc:
                 return json_response(self, 200, {'ok': True, 'records': [], 'warning': str(exc)[:200]})
 
+        # ── KWR GET routes ──────────────────────────────────────────────────
+        if parsed.path == '/api/kwr/status':
+            qs = urllib.parse.parse_qs(parsed.query)
+            run_id = (qs.get('run_id') or [''])[0].strip()
+            if not run_id:
+                return json_response(self, 400, {'ok': False, 'error': 'run_id required'})
+            job = kwr_backend.get_status(run_id)
+            if job is None:
+                return json_response(self, 404, {'ok': False, 'error': f'run {run_id} not found'})
+            return json_response(self, 200, {'ok': True, **job})
+
+        if parsed.path == '/api/kwr/list':
+            try:
+                limit = int((urllib.parse.parse_qs(parsed.query).get('limit') or ['20'])[0])
+            except Exception:
+                limit = 20
+            jobs = kwr_backend.list_recent(limit)
+            return json_response(self, 200, {'ok': True, 'runs': jobs})
+
         return self.serve_static(parsed.path)
 
     def do_POST(self):
@@ -2203,6 +2223,60 @@ class DashboardHandler(BaseHTTPRequestHandler):
                 return json_response(self, 502, {'ok': False, 'error': f'n8n API error {exc.code}', 'details': body_bytes})
             except Exception as exc:
                 return json_response(self, 500, {'ok': False, 'error': str(exc)})
+
+        # ── KWR POST routes ─────────────────────────────────────────────────
+        if parsed.path == '/api/kwr/start':
+            try:
+                body = json.loads(raw_body.decode('utf-8', 'replace'))
+            except Exception:
+                return json_response(self, 400, {'ok': False, 'error': 'Invalid JSON'})
+            run_id, err = kwr_backend.start_run(body, call_with_fallback)
+            if err:
+                return json_response(self, 400, {'ok': False, 'error': err})
+            return json_response(self, 200, {'ok': True, 'run_id': run_id})
+
+        if parsed.path == '/api/kwr/cancel':
+            try:
+                body = json.loads(raw_body.decode('utf-8', 'replace'))
+            except Exception:
+                return json_response(self, 400, {'ok': False, 'error': 'Invalid JSON'})
+            run_id = (body.get('run_id') or '').strip()
+            if not run_id:
+                return json_response(self, 400, {'ok': False, 'error': 'run_id required'})
+            ok = kwr_backend.cancel_run(run_id)
+            return json_response(self, 200, {'ok': ok})
+
+        if parsed.path == '/api/kwr/update-rows':
+            try:
+                body = json.loads(raw_body.decode('utf-8', 'replace'))
+            except Exception:
+                return json_response(self, 400, {'ok': False, 'error': 'Invalid JSON'})
+            run_id = (body.get('run_id') or '').strip()
+            rows = body.get('rows', [])
+            if not run_id:
+                return json_response(self, 400, {'ok': False, 'error': 'run_id required'})
+            ok = kwr_backend.update_rows(run_id, rows)
+            if not ok:
+                return json_response(self, 404, {'ok': False, 'error': f'run {run_id} not found'})
+            return json_response(self, 200, {'ok': True})
+
+        if parsed.path == '/api/kwr/approve':
+            try:
+                body = json.loads(raw_body.decode('utf-8', 'replace'))
+            except Exception:
+                return json_response(self, 400, {'ok': False, 'error': 'Invalid JSON'})
+            run_id      = (body.get('run_id') or '').strip()
+            rows        = body.get('rows', [])
+            sheet_target = (body.get('sheet_target') or '').strip()
+            sheet_prefix = (body.get('sheet_prefix') or '').strip()
+            if not run_id:
+                return json_response(self, 400, {'ok': False, 'error': 'run_id required'})
+            sheet_url, err = kwr_backend.approve_and_deploy(
+                run_id, rows, sheet_target, sheet_prefix, call_with_fallback
+            )
+            if err:
+                return json_response(self, 500, {'ok': False, 'error': err})
+            return json_response(self, 200, {'ok': True, 'sheet_url': sheet_url})
 
         return json_response(self, 404, {'ok': False, 'error': 'Not found'})
 
