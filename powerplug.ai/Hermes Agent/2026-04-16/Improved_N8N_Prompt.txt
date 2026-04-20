@@ -147,13 +147,13 @@ When the body has `dir="rtl"`:
 
 ## DELIVERY RULES (applied by N8N after LLM output)
 
-1. Replace these six files IN PLACE on GitHub at `maximoseo/webs-html-improvements-files` under `powerplug.ai/Hermes Agent/2026-04-16/`:
+1. Replace these six files IN PLACE on GitHub at `maximoseo/webs-html-improvements-files` under `powerplug.ai/Hermes Agent/2026-04-20/`:
    - Improved_HTML_Template.html
    - Improved_N8N_Prompt.txt
    - Improved_N8N_Workflow.json
-   - SOURCE-MAP-2026-04-15.md
-   - SUMMARY-2026-04-15.md
-   - VALIDATION-NOTE-2026-04-15.md
+   - SOURCE-MAP-2026-04-20.md
+   - SUMMARY-2026-04-20.md
+   - VALIDATION-NOTE-2026-04-20.md
    Do NOT create a new version folder. Do NOT rename. Do NOT duplicate.
 
 2. Commit message: `feat(powerplug.ai): article regen — 34-rule compliance — <YYYY-MM-DD>`
