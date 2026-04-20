@@ -3959,7 +3959,7 @@ main, main.container{
    Prior rules set overflow:visible!important on .card-body which breaks
    the CSS grid row animation (grid-template-rows:0fr needs overflow:hidden
    so collapsed content doesn't bleed into layout).
-   Solution: collapsed = overflow:hidden, expanded = overflow:visible
+   Solution: collapsed = overflow:hidden + height:0, expanded = overflow:visible
    ──────────────────────────────────────────────────────────────────── */
 .card-body {
   display: grid !important;
@@ -3978,6 +3978,10 @@ main, main.container{
 }
 .project-card.expanded .card-body-inner {
   overflow: visible !important;       /* Allow sticky footer when expanded */
+}
+/* Force padding=0 on inner when collapsed so 0fr gives true 0px height */
+.project-card:not(.expanded) .card-body-inner {
+  padding: 0 !important;
 }
 
 /* ── 2. PROJECT CARD: Only expanded cards get overflow:visible ──────────
