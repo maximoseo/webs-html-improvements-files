@@ -1,57 +1,52 @@
 {
-  "sha": "pending-commit",
+  "sha": "latest",
   "url": "",
   "tree": [
+    {
+      "path": ".dockerignore",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "d58e8ed5571ebd23107f39f121da90aa8f1c1986",
+      "size": 155,
+      "url": ""
+    },
+    {
+      "path": "AGENTS.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "094530da240115e3597f5c397604ce4c4764fe06",
+      "size": 6491,
+      "url": ""
+    },
     {
       "path": "Dockerfile",
       "mode": "100644",
       "type": "blob",
-      "sha": "0000000000000000000000000000000000000000",
-      "size": 236,
+      "sha": "9819593cfbb6e0b695c0c9e0538ea211f36c2d09",
+      "size": 338,
       "url": ""
     },
     {
       "path": "GALOZ-REDESIGN-SUMMARY.md",
       "mode": "100644",
       "type": "blob",
-      "sha": "0000000000000000000000000000000000000000",
+      "sha": "2d614b4c9c0c93fbcdf303809a697a82853eaa5b",
       "size": 5900,
-      "url": ""
-    },
-    {
-      "path": "Reports",
-      "mode": "040000",
-      "type": "tree",
-      "sha": "0000000000000000000000000000000000000000",
       "url": ""
     },
     {
       "path": "Reports/locksmithsanantonio-247-SEO-Growth-Blueprint.pdf",
       "mode": "100644",
       "type": "blob",
-      "sha": "0000000000000000000000000000000000000000",
+      "sha": "058464bdc56f62a07363449d404dba0f364508a9",
       "size": 198242,
-      "url": ""
-    },
-    {
-      "path": "Tim_Claw_Max",
-      "mode": "040000",
-      "type": "tree",
-      "sha": "0000000000000000000000000000000000000000",
-      "url": ""
-    },
-    {
-      "path": "Tim_Claw_Max/NTN",
-      "mode": "040000",
-      "type": "tree",
-      "sha": "0000000000000000000000000000000000000000",
       "url": ""
     },
     {
       "path": "Tim_Claw_Max/NTN/N8N-Workflow-NTN.md",
       "mode": "100644",
       "type": "blob",
-      "sha": "0000000000000000000000000000000000000000",
+      "sha": "8e3a5c252c647bb62f2f8063aecdfa951cd180c3",
       "size": 8007,
       "url": ""
     },
@@ -59,36 +54,15 @@
       "path": "Tim_Claw_Max/NTN/NTN-Landing-Page.html",
       "mode": "100644",
       "type": "blob",
-      "sha": "0000000000000000000000000000000000000000",
+      "sha": "3115599b6a98f10b8003d0ecf7d5619a7a36db36",
       "size": 28052,
-      "url": ""
-    },
-    {
-      "path": "caesarstone.co.il",
-      "mode": "040000",
-      "type": "tree",
-      "sha": "0000000000000000000000000000000000000000",
-      "url": ""
-    },
-    {
-      "path": "caesarstone.co.il/Claude Code",
-      "mode": "040000",
-      "type": "tree",
-      "sha": "0000000000000000000000000000000000000000",
-      "url": ""
-    },
-    {
-      "path": "caesarstone.co.il/Claude Code/2026-04-13",
-      "mode": "040000",
-      "type": "tree",
-      "sha": "0000000000000000000000000000000000000000",
       "url": ""
     },
     {
       "path": "caesarstone.co.il/Claude Code/2026-04-13/Improved_HTML_Template.html",
       "mode": "100644",
       "type": "blob",
-      "sha": "0000000000000000000000000000000000000000",
+      "sha": "6549b600174f935f572751e6155339ca1021cee8",
       "size": 89076,
       "url": ""
     },
@@ -96,7 +70,7 @@
       "path": "caesarstone.co.il/Claude Code/2026-04-13/Improved_N8N_Prompt.txt",
       "mode": "100644",
       "type": "blob",
-      "sha": "0000000000000000000000000000000000000000",
+      "sha": "c1dc651b72c8e159b7b51b5565dc1634414b36b6",
       "size": 41020,
       "url": ""
     },
@@ -104,36 +78,23 @@
       "path": "caesarstone.co.il/Claude Code/2026-04-13/Improved_N8N_Workflow.json",
       "mode": "100644",
       "type": "blob",
-      "sha": "0000000000000000000000000000000000000000",
+      "sha": "09052a8cbbaecfa296470057de653bcf1df5bed4",
       "size": 177839,
       "url": ""
     },
     {
-      "path": "dtapet-project",
-      "mode": "040000",
-      "type": "tree",
-      "sha": "0000000000000000000000000000000000000000",
-      "url": ""
-    },
-    {
-      "path": "dtapet-project/improved",
-      "mode": "040000",
-      "type": "tree",
-      "sha": "0000000000000000000000000000000000000000",
-      "url": ""
-    },
-    {
-      "path": "dtapet-project/improved/FINAL",
-      "mode": "040000",
-      "type": "tree",
-      "sha": "0000000000000000000000000000000000000000",
+      "path": "data.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "909b92939421f0d7734712fe7064227e2963e1cc",
+      "size": 30501,
       "url": ""
     },
     {
       "path": "dtapet-project/improved/FINAL/DTAPET_WORDPRESS_FIXED_V4.html",
       "mode": "100644",
       "type": "blob",
-      "sha": "0000000000000000000000000000000000000000",
+      "sha": "991aadb75b0306c081cf71971fade25a935312fc",
       "size": 10569,
       "url": ""
     },
@@ -141,7 +102,7 @@
       "path": "dtapet-project/improved/FINAL/HTML_Template_V2_Sample.html",
       "mode": "100644",
       "type": "blob",
-      "sha": "0000000000000000000000000000000000000000",
+      "sha": "56a0b566878319bff0c961e21795889cbc20e0ea",
       "size": 13614,
       "url": ""
     },
@@ -149,7 +110,7 @@
       "path": "dtapet-project/improved/FINAL/HTML_Template_V2_With_Products.html",
       "mode": "100644",
       "type": "blob",
-      "sha": "0000000000000000000000000000000000000000",
+      "sha": "9416c9cab6d69f4ea63a47ca065c1bae3a635bdc",
       "size": 15680,
       "url": ""
     },
@@ -157,7 +118,7 @@
       "path": "dtapet-project/improved/FINAL/HTML_Template_V3_WP_SAFE.html",
       "mode": "100644",
       "type": "blob",
-      "sha": "0000000000000000000000000000000000000000",
+      "sha": "9416c9cab6d69f4ea63a47ca065c1bae3a635bdc",
       "size": 15680,
       "url": ""
     },
@@ -165,7 +126,7 @@
       "path": "dtapet-project/improved/FINAL/IMPROVEMENTS_SUMMARY.md",
       "mode": "100644",
       "type": "blob",
-      "sha": "0000000000000000000000000000000000000000",
+      "sha": "c516cfcc9ea73fa49164af0fd2862cc82f18ebcf",
       "size": 2598,
       "url": ""
     },
@@ -173,7 +134,7 @@
       "path": "dtapet-project/improved/FINAL/N8N_Generate_Product_HTML.js",
       "mode": "100644",
       "type": "blob",
-      "sha": "0000000000000000000000000000000000000000",
+      "sha": "6100641fd28180e8d6b5f3a9f384b7f9c45c05d3",
       "size": 6368,
       "url": ""
     },
@@ -181,7 +142,7 @@
       "path": "dtapet-project/improved/FINAL/N8N_Product_Grid_Fix.md",
       "mode": "100644",
       "type": "blob",
-      "sha": "0000000000000000000000000000000000000000",
+      "sha": "78d16ad4578d1c927270f70c72ceef112d0a1f69",
       "size": 6808,
       "url": ""
     },
@@ -189,7 +150,7 @@
       "path": "dtapet-project/improved/FINAL/N8N_Prompt_v2.md",
       "mode": "100644",
       "type": "blob",
-      "sha": "0000000000000000000000000000000000000000",
+      "sha": "6f3b842c9aeac126540c52e06e9702d39bc4df54",
       "size": 47766,
       "url": ""
     },
@@ -197,7 +158,7 @@
       "path": "dtapet-project/improved/FINAL/N8N_Prompt_v3_FIXED.txt",
       "mode": "100644",
       "type": "blob",
-      "sha": "0000000000000000000000000000000000000000",
+      "sha": "a7196bd7419be5b9717b8a67f514270c0bdf25c6",
       "size": 12394,
       "url": ""
     },
@@ -205,7 +166,7 @@
       "path": "dtapet-project/improved/FINAL/PRODUCT_CARD_HTML_Reference.html",
       "mode": "100644",
       "type": "blob",
-      "sha": "0000000000000000000000000000000000000000",
+      "sha": "0044bb83a6e5345a7997d98984422c684f570d92",
       "size": 9741,
       "url": ""
     },
@@ -213,7 +174,7 @@
       "path": "dtapet-project/improved/FINAL/ROOT_CAUSE_REPORT.md",
       "mode": "100644",
       "type": "blob",
-      "sha": "0000000000000000000000000000000000000000",
+      "sha": "54553d5a5d65287e81a81178b537cec6da9f3f6e",
       "size": 7665,
       "url": ""
     },
@@ -221,7 +182,7 @@
       "path": "dtapet-project/improved/FINAL/WORKFLOW_IMPROVEMENTS.md",
       "mode": "100644",
       "type": "blob",
-      "sha": "0000000000000000000000000000000000000000",
+      "sha": "cb0b17f2086a37ef0ecedc9aac8e14e9b8d69da2",
       "size": 2951,
       "url": ""
     },
@@ -229,22 +190,15 @@
       "path": "dtapet-project/improved/FINAL/dtapet_improved_v2.tar.gz",
       "mode": "100644",
       "type": "blob",
-      "sha": "0000000000000000000000000000000000000000",
+      "sha": "f66d646eaf9dbac5948dd98b0022925594c66051",
       "size": 18519,
-      "url": ""
-    },
-    {
-      "path": "dtapet-project/original",
-      "mode": "040000",
-      "type": "tree",
-      "sha": "0000000000000000000000000000000000000000",
       "url": ""
     },
     {
       "path": "dtapet-project/original/html_template.txt",
       "mode": "100644",
       "type": "blob",
-      "sha": "0000000000000000000000000000000000000000",
+      "sha": "9a35783d6a6e0ba7653d3442e8d3881a3c4b3e7c",
       "size": 80919,
       "url": ""
     },
@@ -252,7 +206,7 @@
       "path": "dtapet-project/original/n8n_prompt.txt",
       "mode": "100644",
       "type": "blob",
-      "sha": "0000000000000000000000000000000000000000",
+      "sha": "e5e0546f9d0a50806478e1bf9f6e30a55975a530",
       "size": 42127,
       "url": ""
     },
@@ -260,53 +214,39 @@
       "path": "dtapet-project/original/n8n_workflow.json",
       "mode": "100644",
       "type": "blob",
-      "sha": "0000000000000000000000000000000000000000",
+      "sha": "768042df126be71d30d072754899c937838c9e16",
       "size": 191417,
       "url": ""
     },
     {
-      "path": "dtapet.com",
-      "mode": "040000",
-      "type": "tree",
-      "sha": "0000000000000000000000000000000000000000",
-      "url": ""
-    },
-    {
-      "path": "dtapet.com/Improved Files (6.4.26) ✦ Latest",
-      "mode": "040000",
-      "type": "tree",
-      "sha": "0000000000000000000000000000000000000000",
-      "url": ""
-    },
-    {
-      "path": "dtapet.com/Improved Files (6.4.26) ✦ Latest/Improved_HTML_Template.html",
+      "path": "\"dtapet.com/Improved Files (6.4.26) \\342\\234\\246 Latest/Improved_HTML_Template.html\"",
       "mode": "100644",
       "type": "blob",
-      "sha": "0000000000000000000000000000000000000000",
-      "size": 61162,
+      "sha": "72683e0f0df6bb720924a4bed8ae4d5bb2c20368",
+      "size": 60885,
       "url": ""
     },
     {
-      "path": "dtapet.com/Improved Files (6.4.26) ✦ Latest/Improved_N8N_Prompt.txt",
+      "path": "\"dtapet.com/Improved Files (6.4.26) \\342\\234\\246 Latest/Improved_N8N_Prompt.txt\"",
       "mode": "100644",
       "type": "blob",
-      "sha": "0000000000000000000000000000000000000000",
-      "size": 51890,
+      "sha": "1408aafe34ce2250a5dc1d8018120a7ddbe6509c",
+      "size": 51034,
       "url": ""
     },
     {
-      "path": "dtapet.com/Improved Files (6.4.26) ✦ Latest/N8N_Workflow.json",
+      "path": "\"dtapet.com/Improved Files (6.4.26) \\342\\234\\246 Latest/N8N_Workflow.json\"",
       "mode": "100644",
       "type": "blob",
-      "sha": "0000000000000000000000000000000000000000",
-      "size": 194750,
+      "sha": "feebb7bdffff0a7d2f77706ffc56379b9c9ff5c0",
+      "size": 191804,
       "url": ""
     },
     {
       "path": "galoz-article-template-2026-04-15.html",
       "mode": "100644",
       "type": "blob",
-      "sha": "0000000000000000000000000000000000000000",
+      "sha": "e3f765d6a21524cb58399589fc04cf7b234aecde",
       "size": 12570,
       "url": ""
     },
@@ -314,7 +254,7 @@
       "path": "galoz-article-template-qwen-code-2026-04-15.html",
       "mode": "100644",
       "type": "blob",
-      "sha": "0000000000000000000000000000000000000000",
+      "sha": "0bd9ab2815abd075899997996ab1604fac4432fc",
       "size": 12816,
       "url": ""
     },
@@ -322,7 +262,7 @@
       "path": "galoz-redesign-summary-qwen-code-2026-04-15.md",
       "mode": "100644",
       "type": "blob",
-      "sha": "0000000000000000000000000000000000000000",
+      "sha": "af771bd2a97c857e41bac7686a366f50d98ccac8",
       "size": 5955,
       "url": ""
     },
@@ -330,7 +270,7 @@
       "path": "galoz-source-mapping-2026-04-15.md",
       "mode": "100644",
       "type": "blob",
-      "sha": "0000000000000000000000000000000000000000",
+      "sha": "6c7cfeb4290be8f6b80bdaeb6f2ec91f71bb7d34",
       "size": 2803,
       "url": ""
     },
@@ -338,7 +278,7 @@
       "path": "galoz-source-mapping-qwen-code-2026-04-15.md",
       "mode": "100644",
       "type": "blob",
-      "sha": "0000000000000000000000000000000000000000",
+      "sha": "85951136d79d1f948a68eeab76e40189ff4fa656",
       "size": 2872,
       "url": ""
     },
@@ -346,7 +286,7 @@
       "path": "galoz-validation-report-2026-04-15.md",
       "mode": "100644",
       "type": "blob",
-      "sha": "0000000000000000000000000000000000000000",
+      "sha": "6b3190c90873c7b172f30d84c344857e129c5bc8",
       "size": 6955,
       "url": ""
     },
@@ -354,36 +294,15 @@
       "path": "galoz-validation-report-qwen-code-2026-04-15.md",
       "mode": "100644",
       "type": "blob",
-      "sha": "0000000000000000000000000000000000000000",
+      "sha": "a7f4e7f82a5bae2cddb48d8dca7dbc39d41a4f50",
       "size": 6989,
-      "url": ""
-    },
-    {
-      "path": "galoz.co.il",
-      "mode": "040000",
-      "type": "tree",
-      "sha": "0000000000000000000000000000000000000000",
-      "url": ""
-    },
-    {
-      "path": "galoz.co.il/Codex",
-      "mode": "040000",
-      "type": "tree",
-      "sha": "0000000000000000000000000000000000000000",
-      "url": ""
-    },
-    {
-      "path": "galoz.co.il/Codex/2026-04-15",
-      "mode": "040000",
-      "type": "tree",
-      "sha": "0000000000000000000000000000000000000000",
       "url": ""
     },
     {
       "path": "galoz.co.il/Codex/2026-04-15/Improved_HTML_Template.html",
       "mode": "100644",
       "type": "blob",
-      "sha": "0000000000000000000000000000000000000000",
+      "sha": "dc3a02e5299c1aa037e617a7af264a4413670e03",
       "size": 47853,
       "url": ""
     },
@@ -391,7 +310,7 @@
       "path": "galoz.co.il/Codex/2026-04-15/Improved_N8N_Prompt.txt",
       "mode": "100644",
       "type": "blob",
-      "sha": "0000000000000000000000000000000000000000",
+      "sha": "27cfe401ebee4b6583c210ed61ff9c37911a83dc",
       "size": 15266,
       "url": ""
     },
@@ -399,29 +318,15 @@
       "path": "galoz.co.il/Codex/2026-04-15/Improved_N8N_Workflow.json",
       "mode": "100644",
       "type": "blob",
-      "sha": "0000000000000000000000000000000000000000",
+      "sha": "2869f2ac22a67a3635723ee92ef1d64da7b9996b",
       "size": 137932,
-      "url": ""
-    },
-    {
-      "path": "galoz.co.il/Copilot",
-      "mode": "040000",
-      "type": "tree",
-      "sha": "0000000000000000000000000000000000000000",
-      "url": ""
-    },
-    {
-      "path": "galoz.co.il/Copilot/2026-04-15",
-      "mode": "040000",
-      "type": "tree",
-      "sha": "0000000000000000000000000000000000000000",
       "url": ""
     },
     {
       "path": "galoz.co.il/Copilot/2026-04-15/Improved_HTML_Template.html",
       "mode": "100644",
       "type": "blob",
-      "sha": "0000000000000000000000000000000000000000",
+      "sha": "40ba930e931e480fdae8687110e38977626d9c0b",
       "size": 64023,
       "url": ""
     },
@@ -429,7 +334,7 @@
       "path": "galoz.co.il/Copilot/2026-04-15/Improved_N8N_Prompt.txt",
       "mode": "100644",
       "type": "blob",
-      "sha": "0000000000000000000000000000000000000000",
+      "sha": "84a1de2f4d906b603e1636b8c972cc514d4672e8",
       "size": 56427,
       "url": ""
     },
@@ -437,67 +342,39 @@
       "path": "galoz.co.il/Copilot/2026-04-15/Improved_N8N_Workflow.json",
       "mode": "100644",
       "type": "blob",
-      "sha": "0000000000000000000000000000000000000000",
+      "sha": "b26aad877fefb0f312e226382825a1eaaf68ffdc",
       "size": 181974,
-      "url": ""
-    },
-    {
-      "path": "galoz.co.il/Gemini",
-      "mode": "040000",
-      "type": "tree",
-      "sha": "0000000000000000000000000000000000000000",
-      "url": ""
-    },
-    {
-      "path": "galoz.co.il/Gemini/2026-04-15",
-      "mode": "040000",
-      "type": "tree",
-      "sha": "0000000000000000000000000000000000000000",
       "url": ""
     },
     {
       "path": "galoz.co.il/Gemini/2026-04-15/Improved_HTML_Template_Gemini.html",
       "mode": "100644",
       "type": "blob",
-      "sha": "0000000000000000000000000000000000000000",
-      "size": 37689,
+      "sha": "cd85ed0e576db39a4e8ad480665bf48217a82713",
+      "size": 59879,
       "url": ""
     },
     {
       "path": "galoz.co.il/Gemini/2026-04-15/Improved_N8N_Prompt_Gemini.txt",
       "mode": "100644",
       "type": "blob",
-      "sha": "0000000000000000000000000000000000000000",
-      "size": 56539,
+      "sha": "5cdb5f51b7276b24c5b8f6e51f586ee0dfff0b5d",
+      "size": 56426,
       "url": ""
     },
     {
       "path": "galoz.co.il/Gemini/2026-04-15/Improved_N8N_Workflow_Gemini.json",
       "mode": "100644",
       "type": "blob",
-      "sha": "0000000000000000000000000000000000000000",
-      "size": 182163,
-      "url": ""
-    },
-    {
-      "path": "galoz.co.il/Hermes Agent",
-      "mode": "040000",
-      "type": "tree",
-      "sha": "0000000000000000000000000000000000000000",
-      "url": ""
-    },
-    {
-      "path": "galoz.co.il/Hermes Agent/2026-04-15",
-      "mode": "040000",
-      "type": "tree",
-      "sha": "0000000000000000000000000000000000000000",
+      "sha": "fdaa863c63040118362938beff805d7d15075ae2",
+      "size": 182018,
       "url": ""
     },
     {
       "path": "galoz.co.il/Hermes Agent/2026-04-15/Improved_HTML_Template.html",
       "mode": "100644",
       "type": "blob",
-      "sha": "0000000000000000000000000000000000000000",
+      "sha": "e4a161d0d727440c15f5d872aa059b1bb0aa8a0c",
       "size": 44594,
       "url": ""
     },
@@ -505,7 +382,7 @@
       "path": "galoz.co.il/Hermes Agent/2026-04-15/Improved_N8N_Prompt.txt",
       "mode": "100644",
       "type": "blob",
-      "sha": "0000000000000000000000000000000000000000",
+      "sha": "7b6419b4275749f6a0d3456c3bce90df0741dec6",
       "size": 15998,
       "url": ""
     },
@@ -513,22 +390,15 @@
       "path": "galoz.co.il/Hermes Agent/2026-04-15/Improved_N8N_Workflow.json",
       "mode": "100644",
       "type": "blob",
-      "sha": "0000000000000000000000000000000000000000",
+      "sha": "a504edd02104fcb444791630368dd43031a68db9",
       "size": 137865,
-      "url": ""
-    },
-    {
-      "path": "galoz.co.il/claude-code-15.4.26",
-      "mode": "040000",
-      "type": "tree",
-      "sha": "0000000000000000000000000000000000000000",
       "url": ""
     },
     {
       "path": "galoz.co.il/claude-code-15.4.26/Improved_HTML_Template-claude-code-15.4.26.html",
       "mode": "100644",
       "type": "blob",
-      "sha": "0000000000000000000000000000000000000000",
+      "sha": "1c697a4a1996a0998df87c6cba9702e04c0d54d6",
       "size": 51687,
       "url": ""
     },
@@ -536,7 +406,7 @@
       "path": "galoz.co.il/claude-code-15.4.26/Improved_N8N_Prompt-claude-code-15.4.26.txt",
       "mode": "100644",
       "type": "blob",
-      "sha": "0000000000000000000000000000000000000000",
+      "sha": "2db6c5a686c76f1a21ab508fd342d5db68cc20ae",
       "size": 56972,
       "url": ""
     },
@@ -544,29 +414,15 @@
       "path": "galoz.co.il/claude-code-15.4.26/Improved_N8N_Workflow-claude-code-15.4.26.json",
       "mode": "100644",
       "type": "blob",
-      "sha": "0000000000000000000000000000000000000000",
+      "sha": "b5910b3f45b8bbd842641eddbca8a00e4f7e9311",
       "size": 181886,
-      "url": ""
-    },
-    {
-      "path": "galoz.co.il/myclaw",
-      "mode": "040000",
-      "type": "tree",
-      "sha": "0000000000000000000000000000000000000000",
-      "url": ""
-    },
-    {
-      "path": "galoz.co.il/myclaw/Updated Files 15.4.26",
-      "mode": "040000",
-      "type": "tree",
-      "sha": "0000000000000000000000000000000000000000",
       "url": ""
     },
     {
       "path": "galoz.co.il/myclaw/Updated Files 15.4.26/galoz.co.il_Improved_HTML_Template-myclaw-15.4.26.html",
       "mode": "100644",
       "type": "blob",
-      "sha": "0000000000000000000000000000000000000000",
+      "sha": "4fdb7bd856c0cb58453a8fcba3ebddef80643dcd",
       "size": 57963,
       "url": ""
     },
@@ -574,7 +430,7 @@
       "path": "galoz.co.il/myclaw/Updated Files 15.4.26/galoz.co.il_Improved_N8N_Prompt-myclaw-15.4.26.txt",
       "mode": "100644",
       "type": "blob",
-      "sha": "0000000000000000000000000000000000000000",
+      "sha": "c03f47ba476440220c977b14ebeedd5f5417161b",
       "size": 3016,
       "url": ""
     },
@@ -582,121 +438,87 @@
       "path": "galoz.co.il/myclaw/Updated Files 15.4.26/galoz.co.il_Improved_N8N_Workflow-myclaw-15.4.26.json",
       "mode": "100644",
       "type": "blob",
-      "sha": "0000000000000000000000000000000000000000",
+      "sha": "5f821f56521110c63e7c0e0befaf24fd190d6930",
       "size": 12169,
       "url": ""
     },
     {
-      "path": "hondabike.co.il",
-      "mode": "040000",
-      "type": "tree",
-      "sha": "0000000000000000000000000000000000000000",
-      "url": ""
-    },
-    {
-      "path": "hondabike.co.il/Improved Files (12.4.26) ✦ Latest",
-      "mode": "040000",
-      "type": "tree",
-      "sha": "0000000000000000000000000000000000000000",
-      "url": ""
-    },
-    {
-      "path": "hondabike.co.il/Improved Files (12.4.26) ✦ Latest/Improved_HTML_Template.html",
+      "path": "\"hondabike.co.il/Improved Files (12.4.26) \\342\\234\\246 Latest/Improved_HTML_Template.html\"",
       "mode": "100644",
       "type": "blob",
-      "sha": "0000000000000000000000000000000000000000",
-      "size": 73162,
+      "sha": "cd02695cc357bca785d93e4bda961ab807e330fc",
+      "size": 72389,
       "url": ""
     },
     {
-      "path": "hondabike.co.il/Improved Files (12.4.26) ✦ Latest/Improved_N8N_Prompt.txt",
+      "path": "\"hondabike.co.il/Improved Files (12.4.26) \\342\\234\\246 Latest/Improved_N8N_Prompt.txt\"",
       "mode": "100644",
       "type": "blob",
-      "sha": "0000000000000000000000000000000000000000",
-      "size": 31441,
+      "sha": "0a5f261a57cac261701b72f1ada06b52fb79993a",
+      "size": 31069,
       "url": ""
     },
     {
-      "path": "hondabike.co.il/Improved Files (12.4.26) ✦ Latest/Improved_N8N_Workflow.json",
+      "path": "\"hondabike.co.il/Improved Files (12.4.26) \\342\\234\\246 Latest/Improved_N8N_Workflow.json\"",
       "mode": "100644",
       "type": "blob",
-      "sha": "0000000000000000000000000000000000000000",
-      "size": 167553,
+      "sha": "77ee427f3e8476755b2e4fb756cdc2d9dd7ed4bc",
+      "size": 164749,
       "url": ""
     },
     {
       "path": "index.html",
       "mode": "100644",
       "type": "blob",
-      "sha": "0000000000000000000000000000000000000000",
-      "size": 420840,
+      "sha": "79078c4899c1295f5e12b1177449561c1d14b18d",
+      "size": 454060,
       "url": ""
     },
     {
-      "path": "jacknows.ai",
-      "mode": "040000",
-      "type": "tree",
-      "sha": "0000000000000000000000000000000000000000",
-      "url": ""
-    },
-    {
-      "path": "jacknows.ai/Improved Files (31.3.26) ✦ Latest",
-      "mode": "040000",
-      "type": "tree",
-      "sha": "0000000000000000000000000000000000000000",
-      "url": ""
-    },
-    {
-      "path": "jacknows.ai/Improved Files (31.3.26) ✦ Latest/Improved_HTML_Template.html",
+      "path": "\"jacknows.ai/Improved Files (31.3.26) \\342\\234\\246 Latest/Improved_HTML_Template.html\"",
       "mode": "100644",
       "type": "blob",
-      "sha": "0000000000000000000000000000000000000000",
-      "size": 49725,
+      "sha": "3ba552f818dc571b3340014a3310aae36973b92b",
+      "size": 49584,
       "url": ""
     },
     {
-      "path": "jacknows.ai/Improved Files (31.3.26) ✦ Latest/Improved_N8N_Prompt.txt",
+      "path": "\"jacknows.ai/Improved Files (31.3.26) \\342\\234\\246 Latest/Improved_N8N_Prompt.txt\"",
       "mode": "100644",
       "type": "blob",
-      "sha": "0000000000000000000000000000000000000000",
-      "size": 20369,
+      "sha": "76c6b40dc40ac9f50196ee1bcc6a702f6cef6825",
+      "size": 20037,
       "url": ""
     },
     {
-      "path": "jacknows.ai/Improved Files (31.3.26) ✦ Latest/Improved_N8N_Workflow.json",
+      "path": "\"jacknows.ai/Improved Files (31.3.26) \\342\\234\\246 Latest/Improved_N8N_Workflow.json\"",
       "mode": "100644",
       "type": "blob",
-      "sha": "0000000000000000000000000000000000000000",
-      "size": 145453,
+      "sha": "2b3d695777d48097e9863e8b83ed150ec7e8891b",
+      "size": 142686,
+      "url": ""
+    },
+    {
+      "path": "kwr_backend.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "cb9037c9c0ff9165a081e8568f99888f597ba709",
+      "size": 28593,
       "url": ""
     },
     {
       "path": "n8n-workflow-map.json",
       "mode": "100644",
       "type": "blob",
-      "sha": "0000000000000000000000000000000000000000",
+      "sha": "4096f6befcd69211ab517b2d1163664788973516",
       "size": 420,
-      "url": ""
-    },
-    {
-      "path": "netanya.ac.il",
-      "mode": "040000",
-      "type": "tree",
-      "sha": "0000000000000000000000000000000000000000",
-      "url": ""
-    },
-    {
-      "path": "netanya.ac.il/Improved Files (5.4.26)",
-      "mode": "040000",
-      "type": "tree",
-      "sha": "0000000000000000000000000000000000000000",
       "url": ""
     },
     {
       "path": "netanya.ac.il/Improved Files (5.4.26)/Improved_HTML_Template.html",
       "mode": "100644",
       "type": "blob",
-      "sha": "0000000000000000000000000000000000000000",
+      "sha": "5108fe0df9340d06345b3ed4fec7d2bac24c7028",
       "size": 76053,
       "url": ""
     },
@@ -704,7 +526,7 @@
       "path": "netanya.ac.il/Improved Files (5.4.26)/Improved_N8N_Prompt.txt",
       "mode": "100644",
       "type": "blob",
-      "sha": "0000000000000000000000000000000000000000",
+      "sha": "02cb2b137986e91247b2509bd7d1526f2381476a",
       "size": 18177,
       "url": ""
     },
@@ -712,22 +534,15 @@
       "path": "netanya.ac.il/Improved Files (5.4.26)/Improved_N8N_Workflow.json",
       "mode": "100644",
       "type": "blob",
-      "sha": "0000000000000000000000000000000000000000",
+      "sha": "e157e257f641e96139769221beff6a0658730c2a",
       "size": 16969,
-      "url": ""
-    },
-    {
-      "path": "netanya.ac.il/Improved Files (6.4.26)",
-      "mode": "040000",
-      "type": "tree",
-      "sha": "0000000000000000000000000000000000000000",
       "url": ""
     },
     {
       "path": "netanya.ac.il/Improved Files (6.4.26)/Improved_HTML_Template.html",
       "mode": "100644",
       "type": "blob",
-      "sha": "0000000000000000000000000000000000000000",
+      "sha": "7a715deed550d09539a0920c9518f47b224bd1e5",
       "size": 81268,
       "url": ""
     },
@@ -735,7 +550,7 @@
       "path": "netanya.ac.il/Improved Files (6.4.26)/Improved_N8N_Prompt.txt",
       "mode": "100644",
       "type": "blob",
-      "sha": "0000000000000000000000000000000000000000",
+      "sha": "d626c8a4244a3ae5cd9f5b0083ea6f67cc46b104",
       "size": 26618,
       "url": ""
     },
@@ -743,29 +558,15 @@
       "path": "netanya.ac.il/Improved Files (6.4.26)/Improved_N8N_Workflow.json",
       "mode": "100644",
       "type": "blob",
-      "sha": "0000000000000000000000000000000000000000",
+      "sha": "0d322ae77cbfbd4c21b56362874071f036d5646d",
       "size": 156902,
-      "url": ""
-    },
-    {
-      "path": "netanya.ac.il/claude-code",
-      "mode": "040000",
-      "type": "tree",
-      "sha": "0000000000000000000000000000000000000000",
-      "url": ""
-    },
-    {
-      "path": "netanya.ac.il/claude-code/06.04.26",
-      "mode": "040000",
-      "type": "tree",
-      "sha": "0000000000000000000000000000000000000000",
       "url": ""
     },
     {
       "path": "netanya.ac.il/claude-code/06.04.26/Improved_HTML_Template.html",
       "mode": "100644",
       "type": "blob",
-      "sha": "0000000000000000000000000000000000000000",
+      "sha": "7a715deed550d09539a0920c9518f47b224bd1e5",
       "size": 81268,
       "url": ""
     },
@@ -773,7 +574,7 @@
       "path": "netanya.ac.il/claude-code/06.04.26/Improved_N8N_Prompt.txt",
       "mode": "100644",
       "type": "blob",
-      "sha": "0000000000000000000000000000000000000000",
+      "sha": "d626c8a4244a3ae5cd9f5b0083ea6f67cc46b104",
       "size": 26618,
       "url": ""
     },
@@ -781,36 +582,15 @@
       "path": "netanya.ac.il/claude-code/06.04.26/Improved_N8N_Workflow.json",
       "mode": "100644",
       "type": "blob",
-      "sha": "0000000000000000000000000000000000000000",
+      "sha": "0d322ae77cbfbd4c21b56362874071f036d5646d",
       "size": 156902,
-      "url": ""
-    },
-    {
-      "path": "powerplug.ai",
-      "mode": "040000",
-      "type": "tree",
-      "sha": "0000000000000000000000000000000000000000",
-      "url": ""
-    },
-    {
-      "path": "powerplug.ai/CLAUDE CODE (Tim Claw Max)",
-      "mode": "040000",
-      "type": "tree",
-      "sha": "0000000000000000000000000000000000000000",
-      "url": ""
-    },
-    {
-      "path": "powerplug.ai/CLAUDE CODE (Tim Claw Max)/2026-04-16",
-      "mode": "040000",
-      "type": "tree",
-      "sha": "0000000000000000000000000000000000000000",
       "url": ""
     },
     {
       "path": "powerplug.ai/CLAUDE CODE (Tim Claw Max)/2026-04-16/Improved_HTML_Template.html",
       "mode": "100644",
       "type": "blob",
-      "sha": "0000000000000000000000000000000000000000",
+      "sha": "b44c84c0686a5d8234f8eff66d81408488d2b8a0",
       "size": 57689,
       "url": ""
     },
@@ -818,7 +598,7 @@
       "path": "powerplug.ai/CLAUDE CODE (Tim Claw Max)/2026-04-16/Improved_N8N_Prompt.txt",
       "mode": "100644",
       "type": "blob",
-      "sha": "0000000000000000000000000000000000000000",
+      "sha": "f051f8a375375da4ebc2ef0b4af8f160f9b32696",
       "size": 13831,
       "url": ""
     },
@@ -826,29 +606,15 @@
       "path": "powerplug.ai/CLAUDE CODE (Tim Claw Max)/2026-04-16/Improved_N8N_Workflow.json",
       "mode": "100644",
       "type": "blob",
-      "sha": "0000000000000000000000000000000000000000",
+      "sha": "3f5a2d2a1441c10e7c4e6b065ab0510229765d44",
       "size": 16521,
-      "url": ""
-    },
-    {
-      "path": "powerplug.ai/Claude Code",
-      "mode": "040000",
-      "type": "tree",
-      "sha": "0000000000000000000000000000000000000000",
-      "url": ""
-    },
-    {
-      "path": "powerplug.ai/Claude Code/2026-04-16",
-      "mode": "040000",
-      "type": "tree",
-      "sha": "0000000000000000000000000000000000000000",
       "url": ""
     },
     {
       "path": "powerplug.ai/Claude Code/2026-04-16/Improved_HTML_Template.html",
       "mode": "100644",
       "type": "blob",
-      "sha": "0000000000000000000000000000000000000000",
+      "sha": "881a58c98e8bb2264e1ae751ca5848d805a040c1",
       "size": 49687,
       "url": ""
     },
@@ -856,7 +622,7 @@
       "path": "powerplug.ai/Claude Code/2026-04-16/Improved_N8N_Prompt.txt",
       "mode": "100644",
       "type": "blob",
-      "sha": "0000000000000000000000000000000000000000",
+      "sha": "280184596f1960c898e255250d081022ea3cca64",
       "size": 19052,
       "url": ""
     },
@@ -864,29 +630,15 @@
       "path": "powerplug.ai/Claude Code/2026-04-16/Improved_N8N_Workflow.json",
       "mode": "100644",
       "type": "blob",
-      "sha": "0000000000000000000000000000000000000000",
+      "sha": "d8b48e131cda39e93a5eb4ce3cd7c245de6c82b8",
       "size": 20956,
-      "url": ""
-    },
-    {
-      "path": "powerplug.ai/Copilot",
-      "mode": "040000",
-      "type": "tree",
-      "sha": "0000000000000000000000000000000000000000",
-      "url": ""
-    },
-    {
-      "path": "powerplug.ai/Copilot/2026-04-17",
-      "mode": "040000",
-      "type": "tree",
-      "sha": "0000000000000000000000000000000000000000",
       "url": ""
     },
     {
       "path": "powerplug.ai/Copilot/2026-04-17/Improved_HTML_Template-copilot-2026-04-17.html",
       "mode": "100644",
       "type": "blob",
-      "sha": "0000000000000000000000000000000000000000",
+      "sha": "5eb5a34ebdac41e360cb188ad5398d3c70e54659",
       "size": 44483,
       "url": ""
     },
@@ -894,7 +646,7 @@
       "path": "powerplug.ai/Copilot/2026-04-17/Improved_N8N_Prompt-copilot-2026-04-17.txt",
       "mode": "100644",
       "type": "blob",
-      "sha": "0000000000000000000000000000000000000000",
+      "sha": "2f32ab6a71b5be47a29a9c1d3c70b72ea60a077f",
       "size": 17748,
       "url": ""
     },
@@ -902,105 +654,87 @@
       "path": "powerplug.ai/Copilot/2026-04-17/Improved_N8N_Workflow-copilot-2026-04-17.json",
       "mode": "100644",
       "type": "blob",
-      "sha": "0000000000000000000000000000000000000000",
+      "sha": "805df97b14e8dd4a8b8cc26b83a4087a25fdc477",
       "size": 131829,
-      "url": ""
-    },
-    {
-      "path": "powerplug.ai/Hermes Agent",
-      "mode": "040000",
-      "type": "tree",
-      "sha": "0000000000000000000000000000000000000000",
-      "url": ""
-    },
-    {
-      "path": "powerplug.ai/Hermes Agent/2026-04-16",
-      "mode": "040000",
-      "type": "tree",
-      "sha": "0000000000000000000000000000000000000000",
       "url": ""
     },
     {
       "path": "powerplug.ai/Hermes Agent/2026-04-16/Improved_HTML_Template.html",
       "mode": "100644",
       "type": "blob",
-      "sha": "0000000000000000000000000000000000000000",
-      "size": 43988,
+      "sha": "a32e0cb550fdd5ef93a5ac4d62e76eb387575e44",
+      "size": 44374,
       "url": ""
     },
     {
       "path": "powerplug.ai/Hermes Agent/2026-04-16/Improved_N8N_Prompt.txt",
       "mode": "100644",
       "type": "blob",
-      "sha": "0000000000000000000000000000000000000000",
-      "size": 13385,
+      "sha": "6f37fb3b1a7ffc2267d08abd9d0a0ed369f259cc",
+      "size": 13564,
       "url": ""
     },
     {
       "path": "powerplug.ai/Hermes Agent/2026-04-16/Improved_N8N_Workflow.json",
       "mode": "100644",
       "type": "blob",
-      "sha": "0000000000000000000000000000000000000000",
-      "size": 126202,
+      "sha": "e025000ccf7cc0052864905a376aaa47f6a84c9f",
+      "size": 128917,
       "url": ""
     },
     {
-      "path": "powerplug.ai/agent-zero",
-      "mode": "040000",
-      "type": "tree",
-      "sha": "0000000000000000000000000000000000000000",
+      "path": "powerplug.ai/OpenClaw/2026-04-20/Improved_HTML_Template.html",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "a32e0cb550fdd5ef93a5ac4d62e76eb387575e44",
+      "size": 44374,
       "url": ""
     },
     {
-      "path": "powerplug.ai/agent-zero/2026-04-16",
-      "mode": "040000",
-      "type": "tree",
-      "sha": "0000000000000000000000000000000000000000",
+      "path": "powerplug.ai/OpenClaw/2026-04-20/Improved_N8N_Prompt.txt",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "6f37fb3b1a7ffc2267d08abd9d0a0ed369f259cc",
+      "size": 13564,
+      "url": ""
+    },
+    {
+      "path": "powerplug.ai/OpenClaw/2026-04-20/Improved_N8N_Workflow.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "e025000ccf7cc0052864905a376aaa47f6a84c9f",
+      "size": 128917,
       "url": ""
     },
     {
       "path": "powerplug.ai/agent-zero/2026-04-16/Improved_HTML_Template.html",
       "mode": "100644",
       "type": "blob",
-      "sha": "0000000000000000000000000000000000000000",
-      "size": 60288,
+      "sha": "934c07d189c817acf5ba9dc1fc2a1f892206ec6a",
+      "size": 69174,
       "url": ""
     },
     {
       "path": "powerplug.ai/agent-zero/2026-04-16/Improved_N8N_Prompt.txt",
       "mode": "100644",
       "type": "blob",
-      "sha": "0000000000000000000000000000000000000000",
-      "size": 8323,
+      "sha": "9e210fa38464a5efa7c33a116bdcf005961c4218",
+      "size": 26056,
       "url": ""
     },
     {
       "path": "powerplug.ai/agent-zero/2026-04-16/Improved_N8N_Workflow.json",
       "mode": "100644",
       "type": "blob",
-      "sha": "0000000000000000000000000000000000000000",
-      "size": 9430,
-      "url": ""
-    },
-    {
-      "path": "powerplug.ai/gemini",
-      "mode": "040000",
-      "type": "tree",
-      "sha": "0000000000000000000000000000000000000000",
-      "url": ""
-    },
-    {
-      "path": "powerplug.ai/gemini/2026-04-17",
-      "mode": "040000",
-      "type": "tree",
-      "sha": "0000000000000000000000000000000000000000",
+      "sha": "e0feef67bdea2d156d4438089b825d657dfec6ef",
+      "size": 42990,
       "url": ""
     },
     {
       "path": "powerplug.ai/gemini/2026-04-17/Improved_HTML_Template-gemini-2026-04-17.html",
       "mode": "100644",
       "type": "blob",
-      "sha": "0000000000000000000000000000000000000000",
+      "sha": "e5e5add7fd78bb6394b9fc325fb2069b8fdd5b07",
       "size": 13780,
       "url": ""
     },
@@ -1008,7 +742,7 @@
       "path": "powerplug.ai/gemini/2026-04-17/Improved_N8N_Prompt-gemini-2026-04-17.txt",
       "mode": "100644",
       "type": "blob",
-      "sha": "0000000000000000000000000000000000000000",
+      "sha": "7d4ebf23a57a2949aae3c66763bbdce9e2f3ee97",
       "size": 17746,
       "url": ""
     },
@@ -1016,45 +750,47 @@
       "path": "powerplug.ai/gemini/2026-04-17/Improved_N8N_Workflow-gemini-2026-04-17.json",
       "mode": "100644",
       "type": "blob",
-      "sha": "0000000000000000000000000000000000000000",
+      "sha": "75f76e9283cfe7b9b8181c42f3ae4129286fe977",
       "size": 131826,
-      "url": ""
-    },
-    {
-      "path": "prompts",
-      "mode": "040000",
-      "type": "tree",
-      "sha": "0000000000000000000000000000000000000000",
-      "url": ""
-    },
-    {
-      "path": "prompts/claude-code-15.4.26",
-      "mode": "040000",
-      "type": "tree",
-      "sha": "0000000000000000000000000000000000000000",
       "url": ""
     },
     {
       "path": "prompts/claude-code-15.4.26/deploy-to-n8n-button-request-claude-code-15.4.26.md",
       "mode": "100644",
       "type": "blob",
-      "sha": "0000000000000000000000000000000000000000",
+      "sha": "8bbed3f61e1282850a254480d8c6c1a001841cc1",
       "size": 1137,
+      "url": ""
+    },
+    {
+      "path": "prompts/kwr/KWR-AGENT-PROMPT.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "1504e22c35a5d7f0dced88f4a4b20401f2098bfd",
+      "size": 3960,
+      "url": ""
+    },
+    {
+      "path": "prompts/kwr/KWR-OPEN-QUESTIONS.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "b1bf47ada3998ef4eeb2a2d1284013679fe3abfb",
+      "size": 1992,
       "url": ""
     },
     {
       "path": "server.py",
       "mode": "100644",
       "type": "blob",
-      "sha": "0000000000000000000000000000000000000000",
-      "size": 154133,
+      "sha": "69da3b5aa5a562661865ef20d2fd45069ab73873",
+      "size": 161448,
       "url": ""
     },
     {
       "path": "test-article-2026-04-15.html",
       "mode": "100644",
       "type": "blob",
-      "sha": "0000000000000000000000000000000000000000",
+      "sha": "a479fd529a019ad3aa283aa81dfe4dc361fc719c",
       "size": 9620,
       "url": ""
     },
@@ -1062,10 +798,9 @@
       "path": "validation-report-2026-04-15.md",
       "mode": "100644",
       "type": "blob",
-      "sha": "0000000000000000000000000000000000000000",
+      "sha": "6c51731875d1788eacb1c7b51f51b463bd0b84d4",
       "size": 4264,
       "url": ""
     }
-  ],
-  "truncated": false
+  ]
 }
