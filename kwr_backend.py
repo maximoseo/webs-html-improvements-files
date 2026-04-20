@@ -298,20 +298,18 @@ def push_to_sheets(run_id: str, sheet_target: str) -> tuple:
         return None, str(exc)[:500]
 
 
-def save_to_obsidian(run_id: str) -> tuple:
+def get_note_content(run_id: str) -> tuple:
     """
-    Save the keyword research result as a Markdown note to Obsidian via local REST API.
-    Returns (note_path, None) or (None, error_str).
+    Build the Obsidian markdown note content and note path for a run.
+    Returns (note_content_str, note_path_str, None) or (None, None, error_str).
+    The caller (browser JS) is responsible for PUT-ing to the Obsidian local REST API
+    at http://127.0.0.1:27123 — the server never calls Obsidian directly because
+    Obsidian runs on the user's local machine, not on Render.
     """
-    obsidian_url = os.getenv('OBSIDIAN_LOCAL_HTTP_URL', 'http://127.0.0.1:27123').rstrip('/')
-    obsidian_key = os.getenv('OBSIDIAN_LOCAL_API_KEY', '').strip()
-    if not obsidian_key:
-        return None, "OBSIDIAN_LOCAL_API_KEY env var not set"
-
     with _lock:
         job = _state.get(run_id)
         if job is None:
-            return None, f"Run {run_id} not found"
+            return None, None, f"Run {run_id} not found"
         rows = list(job.get('rows') or [])
         inputs = job.get('inputs') or {}
         ws_name = job.get('worksheet_name', run_id)
@@ -321,8 +319,8 @@ def save_to_obsidian(run_id: str) -> tuple:
     website = inputs.get('website_url', '')
     market = inputs.get('target_market', '')
     language = inputs.get('target_language', '')
+    note_path = f"html-redesign-dashboard/kwr-results/{ws_name}.md"
 
-    # Build markdown table
     lines = [
         f"# KWR: {brand}",
         f"",
@@ -349,28 +347,37 @@ def save_to_obsidian(run_id: str) -> tuple:
         )
 
     note_content = '\n'.join(lines)
-    note_path = f"html-redesign-dashboard/kwr-results/{ws_name}.md"
-    url = f"{obsidian_url}/vault/{urllib.parse.quote(note_path)}"
+    return note_content, note_path, None
 
-    try:
-        body = note_content.encode('utf-8')
-        req = urllib.request.Request(
-            url,
-            data=body,
-            headers={
-                'Authorization': f'Bearer {obsidian_key}',
-                'Content-Type': 'text/markdown',
-            },
-            method='PUT'
-        )
-        with urllib.request.urlopen(req, timeout=15) as resp:
-            resp.read()
-        return note_path, None
-    except urllib.error.HTTPError as exc:
-        return None, f"Obsidian API error {exc.code}: {exc.read().decode('utf-8','replace')[:200]}"
-    except Exception as exc:
-        return None, str(exc)[:300]
 
+def save_to_obsidian(run_id: str) -> tuple:
+    """
+    DEPRECATED: called save_to_obsidian from server-side, which doesn't work on Render
+    because Obsidian runs on the user's local machine.
+    Kept for backwards compat — delegates to get_note_content and returns the path.
+    The browser JS should use /api/kwr/note-content/<run_id> instead.
+    """
+    note_content, note_path, err = get_note_content(run_id)
+    if err:
+        return None, err
+    # Server-side Obsidian write only works in local dev (not on Render).
+    # Return path so the caller knows the intended vault path.
+    return note_path, None
+
+
+# --- Internal helper preserved for save_to_obsidian legacy signature ---
+def _save_to_obsidian_local(run_id: str) -> tuple:
+    """
+    Actually attempts the server-side Obsidian PUT (only works in local dev).
+    """
+    obsidian_url = os.getenv('OBSIDIAN_LOCAL_HTTP_URL', 'http://127.0.0.1:27123').rstrip('/')
+    obsidian_key = os.getenv('OBSIDIAN_LOCAL_API_KEY', '').strip()
+    if not obsidian_key:
+        return None, "OBSIDIAN_LOCAL_API_KEY env var not set"
+
+    note_content, note_path, err = get_note_content(run_id)
+    if err:
+        return None, err
 
 def update_rows(run_id: str, rows: list) -> bool:
     """Allow user to save edits to the preview without deploying."""

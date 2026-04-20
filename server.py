@@ -1532,6 +1532,19 @@ class DashboardHandler(BaseHTTPRequestHandler):
             self.wfile.write(excel_bytes)
             return
 
+        if parsed.path.startswith('/api/kwr/note-content/'):
+            run_id = parsed.path.split('/')[-1].strip()
+            if not run_id:
+                return json_response(self, 400, {'ok': False, 'error': 'run_id required'})
+            note_content, note_path, err = kwr_backend.get_note_content(run_id)
+            if err:
+                return json_response(self, 404, {'ok': False, 'error': err})
+            return json_response(self, 200, {
+                'ok': True,
+                'note_content': note_content,
+                'note_path': note_path,
+            })
+
         return self.serve_static(parsed.path)
 
     def do_POST(self):
