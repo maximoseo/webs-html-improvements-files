@@ -7,14 +7,8 @@
 <title>HTML Redesign Dashboard</title>
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>&#9672;</text></svg>">
 <style>
-*{margin:0;padding:0;box-sizing:border-box}
-:root{--bg:#08090a;--bg-elevated:#0f1011;--surface:rgba(15,16,17,0.82);--surface-strong:#131416;--card:rgba(255,255,255,0.025);--card-hover:rgba(255,255,255,0.045);--border:rgba(255,255,255,0.08);--border-strong:rgba(255,255,255,0.14);--border-hover:rgba(113,112,255,0.32);--gold:#7170ff;--gold-light:#828fff;--gold-dim:#5e6ad2;--gold-bg:rgba(113,112,255,0.14);--text:#f7f8f8;--text-secondary:#d0d6e0;--muted:#8a8f98;--green:#27a644;--green-bg:rgba(39,166,68,0.16);--blue:#4f8cff;--blue-bg:rgba(79,140,255,0.14);--red:#ef5f6b;--red-bg:rgba(239,95,107,0.14);--purple:#8b7dff;--purple-bg:rgba(139,125,255,0.18);--shadow-soft:0 24px 80px rgba(0,0,0,0.42);--shadow-card:0 10px 30px rgba(0,0,0,0.28);--radius:16px;--radius-sm:10px;
-/* Phase-1 redesign tokens (additive, 2026-04-19) */
---space-1:0.25rem;--space-2:0.5rem;--space-3:0.75rem;--space-4:1rem;--space-5:1.25rem;--space-6:1.5rem;--space-8:2rem;--space-10:2.5rem;--space-12:3rem;
---text-xs:0.75rem;--text-sm:0.8125rem;--text-base:0.9375rem;--text-md:1rem;--text-lg:1.125rem;--text-xl:1.25rem;--text-2xl:1.5rem;
---motion-fast:120ms;--motion-base:200ms;--motion-slow:320ms;--ease-standard:cubic-bezier(0.2,0,0,1);--ease-emphasized:cubic-bezier(0.3,0,0,1);
---focus-ring:0 0 0 2px var(--bg),0 0 0 4px var(--gold);--focus-ring-offset:2px;
---bp-phone:600px;--bp-tablet:1024px;--bp-desktop:1440px}
+
+
 
 /* Phase-1 a11y baseline (additive) */
 .skip-link{position:absolute;left:-10000px;top:auto;width:1px;height:1px;overflow:hidden;background:var(--gold);color:#000;padding:12px 18px;border-radius:10px;font-weight:700;z-index:100000;text-decoration:none}
@@ -24,11 +18,11 @@
 @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:0.01ms!important;animation-iteration-count:1!important;transition-duration:0.01ms!important;scroll-behavior:auto!important}}
 
 /* Phase-2 reserve space to prevent CLS while stats hydrate (LH found 0.26 shift) */
-.stats{min-height:140px}
+
 @media (max-width:900px){.stats{min-height:280px}}
 @media (max-width:600px){.stats{min-height:520px}}
-.stat-card{min-height:110px}
-#projects-grid{min-height:60vh}
+
+
 #page-fixer,#page-radar,#page-kwr{min-height:60vh}
 /* ── Keyword Research tab ─────────────────────────────────────────── */
 .kwr-page{padding:0 0 60px}
@@ -141,108 +135,108 @@
 .action-bar__group{display:flex;gap:var(--space-2);align-items:center;flex-wrap:wrap}
 
 /* Container-query responsive enabling for project-card (component-level) */
-.project-card{container-type:inline-size}
+
 @container (max-width:24rem){.card-header{padding:var(--space-4);flex-direction:column;align-items:stretch}}
-body{font-family:'Inter',system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:radial-gradient(circle at top center,rgba(113,112,255,0.12),transparent 28%),linear-gradient(180deg,#0a0b0d 0%,#08090a 100%);color:var(--text);min-height:100vh;-webkit-font-smoothing:antialiased;font-feature-settings:"cv01","ss03";letter-spacing:-0.01em}
+
 body.scroll-locked{overflow:hidden !important;}
 a{color:var(--gold);text-decoration:none;transition:color 0.15s}
 a:hover{color:var(--gold-light)}
 ::selection{background:var(--gold);color:#000}
 
 /* Header */
-.header{background:rgba(8,9,10,0.92);border-bottom:1px solid rgba(255,255,255,0.08);position:fixed;top:0;left:0;right:0;width:100%;z-index:9999;backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px)}
-.header-inner{max-width:1320px;margin:0 auto;padding:18px 28px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:14px}
-.logo{display:flex;align-items:center;gap:12px}
+
+
+
 .logo-link{display:flex;align-items:center;gap:12px;color:var(--text);text-decoration:none}
 .logo-link:hover{color:var(--text)}
 .logo-link:focus-visible{outline:2px solid rgba(113,112,255,0.55);outline-offset:4px;border-radius:14px}
 .logo-icon{width:38px;height:38px;background:linear-gradient(135deg,var(--gold),var(--gold-dim));border-radius:12px;display:flex;align-items:center;justify-content:center;box-shadow:0 10px 24px rgba(94,106,210,0.35)}
 .logo-icon svg{width:20px;height:20px;color:#fff}
-.logo h1{font-size:18px;font-weight:600;letter-spacing:-0.03em}
+
 .logo h1 span{color:var(--gold-light)}
-.header-actions{display:flex;align-items:center;gap:10px}
-.header-menu-btn{min-height:38px;padding:9px 14px;border-radius:12px;border:1px solid rgba(255,255,255,0.08);background:rgba(255,255,255,0.03);color:var(--text-secondary);font-size:12px;font-weight:700;cursor:pointer;transition:all 0.15s;white-space:nowrap}
+
+
 .header-menu-btn:hover{border-color:rgba(255,255,255,0.14);background:rgba(255,255,255,0.06);color:#fff}
 .header-menu-btn.accent{border-color:rgba(255,255,255,0.08);color:var(--text-secondary);background:rgba(255,255,255,0.03)}
 .header-menu-btn.accent:hover{border-color:rgba(255,255,255,0.14);background:rgba(255,255,255,0.06);color:#fff}
-.search-box{background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:12px;padding:9px 14px 9px 38px;font-size:13px;color:var(--text);width:268px;outline:none;transition:all 0.2s;position:relative}
+
 .search-box:focus{border-color:rgba(113,112,255,0.26);box-shadow:0 0 0 3px rgba(113,112,255,0.1)}
-.search-wrap{position:relative}
+
 .search-wrap svg{position:absolute;left:12px;top:50%;transform:translateY(-50%);width:16px;height:16px;color:var(--muted);pointer-events:none}
-.status-stack{display:flex;align-items:center;gap:10px;padding:0 0 0 2px}
-.status-pill{display:flex;align-items:center;gap:6px;padding:8px 12px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:999px;font-size:12px;font-weight:700;color:var(--text-secondary)}
+
+
 .status-dot{width:7px;height:7px;border-radius:50%;background:#27a644;box-shadow:0 0 12px rgba(39,166,68,0.35)}
-.last-sync-meta{font-size:12px;color:var(--muted);padding:8px 12px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);border-radius:999px}
+
 
 /* Container */
-.container{max-width:1320px;margin:0 auto;padding:32px 28px 120px}
+
 
 /* Stats */
-.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:36px}
-.stat-card{background:linear-gradient(180deg,rgba(255,255,255,0.035),rgba(255,255,255,0.02));border:1px solid rgba(255,255,255,0.08);border-radius:18px;padding:24px 22px;position:relative;overflow:hidden;transition:all 0.25s;box-shadow:var(--shadow-card)}
-.stat-card:hover{border-color:rgba(113,112,255,0.22);transform:translateY(-3px);box-shadow:0 18px 46px rgba(0,0,0,0.34)}
-.stat-card::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.2),transparent)}
+
+
+
+
 .stat-card::after{content:'';position:absolute;inset:auto -20% -55% auto;width:160px;height:160px;border-radius:50%;background:radial-gradient(circle,rgba(113,112,255,0.16),transparent 70%);pointer-events:none}
-.stat-number{font-size:42px;font-weight:600;line-height:1;margin-bottom:8px;letter-spacing:-0.05em;color:var(--text);font-variant-numeric:tabular-nums}
-.stat-card:nth-child(1) .stat-number{color:#a7afff}
-.stat-card:nth-child(2) .stat-number{color:#91b8ff}
-.stat-card:nth-child(3) .stat-number{color:#7ee19d}
-.stat-card:nth-child(4) .stat-number{color:#b8a8ff}
-.stat-label{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:0.14em;font-weight:600}
-.stat-icon{position:absolute;right:16px;top:18px;opacity:0.18;font-size:26px;font-weight:800}
+
+
+
+
+
+
+
 
 /* Section */
 .section-head{display:flex;align-items:center;justify-content:space-between;margin:34px 0 20px;flex-wrap:wrap;gap:12px}
-.section-title{font-size:18px;font-weight:600;display:flex;align-items:center;gap:10px;letter-spacing:-0.03em}
+
 .section-title svg{width:20px;height:20px;color:var(--gold-light)}
-.section-count{font-size:11px;color:var(--muted);font-weight:600;background:rgba(255,255,255,0.03);padding:4px 10px;border-radius:999px;border:1px solid rgba(255,255,255,0.07);margin-left:6px}
-.view-toggle{display:flex;gap:4px;background:rgba(255,255,255,0.03);border-radius:12px;padding:4px;border:1px solid rgba(255,255,255,0.07);box-shadow:inset 0 1px 0 rgba(255,255,255,0.04)}
-.view-btn{padding:8px 16px;border-radius:8px;border:none;background:transparent;color:var(--muted);font-size:12px;font-weight:600;cursor:pointer;transition:all 0.15s}
-.view-btn.active{background:rgba(255,255,255,0.06);color:var(--text);box-shadow:0 6px 18px rgba(0,0,0,0.22)}
+
+
+
+
 
 /* Project Grid */
-.projects-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(400px,1fr));gap:18px;margin-bottom:36px}
+
 .projects-grid.list-view{grid-template-columns:1fr}
 
 /* Project Card */
-.project-card{background:linear-gradient(180deg,rgba(255,255,255,0.035),rgba(255,255,255,0.02));border:1px solid rgba(255,255,255,0.08);border-radius:18px;overflow:hidden;transition:all 0.25s ease;position:relative;box-shadow:var(--shadow-card)}
-.project-card:hover{border-color:rgba(113,112,255,0.22);box-shadow:0 18px 48px rgba(0,0,0,0.32);transform:translateY(-2px)}
-.project-card.expanded{grid-column:1/-1;border-color:rgba(113,112,255,0.3);box-shadow:0 22px 56px rgba(0,0,0,0.36)}
+
+
+
 .project-card::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.2),transparent);opacity:0;transition:opacity 0.3s}
 .project-card:hover::before{opacity:1}
-.card-header{padding:22px 22px;display:flex;align-items:flex-start;gap:16px;cursor:pointer;transition:background 0.15s;flex-wrap:wrap}
-.card-header:hover{background:rgba(255,255,255,0.02)}
-.card-icon{width:50px;height:50px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:800;color:#fff;flex-shrink:0;position:relative;background:linear-gradient(135deg,rgba(113,112,255,0.88),rgba(94,106,210,0.55));box-shadow:0 12px 30px rgba(94,106,210,0.28);overflow:hidden}
+
+
+
 .card-icon img.favicon{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;border-radius:14px;opacity:0;transition:opacity 0.3s ease}
 .card-icon img.favicon.loaded{opacity:1}
 .card-icon .icon-initials{position:relative;z-index:1;transition:opacity 0.3s ease}
 .card-icon.has-logo .icon-initials{opacity:0}
 .card-icon::after{content:'';position:absolute;inset:0;border-radius:14px;border:1px solid rgba(255,255,255,0.12)}
-.card-info{flex:1 1 320px;min-width:260px;padding-top:2px}
-.card-info h3{font-size:16px;font-weight:700;margin-bottom:8px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.03em}
-.card-meta{display:flex;gap:8px;flex-wrap:wrap}
-.card-right{width:100%;margin-left:66px;display:flex;align-items:center;gap:12px;flex-wrap:wrap;justify-content:flex-start;padding-top:6px}
-.card-cta-group{display:flex;align-items:center;gap:10px;flex-wrap:wrap;flex:1 1 auto;padding:0;background:transparent;border:none;box-shadow:none}
+
+
+
+
+
 .card-status-group{display:flex;align-items:center;gap:8px;flex:0 0 auto;margin-left:auto;padding:0;background:transparent;border:none}
-.meta-tag{font-size:11px;padding:5px 10px;border-radius:999px;font-weight:600;background:rgba(255,255,255,0.03);color:var(--text-secondary);border:1px solid rgba(255,255,255,0.07)}
+
 .badge{font-size:10px;padding:7px 12px;border-radius:999px;font-weight:800;text-transform:uppercase;letter-spacing:0.08em}
 .badge-live{background:rgba(39,166,68,0.14);color:#7ee19d;border:1px solid rgba(39,166,68,0.22)}
 .badge-archive{background:rgba(255,255,255,0.04);color:var(--muted);border:1px solid rgba(255,255,255,0.07)}
-.toggle-icon{width:32px;height:32px;border-radius:10px;border:1px solid rgba(255,255,255,0.08);display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:11px;font-weight:800;transition:all 0.25s;background:rgba(255,255,255,0.03)}
-.project-card.expanded .toggle-icon{transform:rotate(180deg);color:var(--gold-light);border-color:rgba(113,112,255,0.24);background:rgba(113,112,255,0.1)}
+
+
 .preview-cta{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:40px;padding:9px 16px;background:rgba(255,255,255,0.02);color:var(--text-secondary);border:1px solid rgba(255,255,255,0.08);border-radius:12px;font-size:12px;font-weight:800;cursor:pointer;transition:all 0.2s;white-space:nowrap;box-shadow:none}
 .preview-cta:hover{background:rgba(113,112,255,0.1);border-color:rgba(113,112,255,0.2);color:#fff;transform:translateY(-1px);box-shadow:0 8px 20px rgba(0,0,0,0.18)}
-.preview-cta.primary-accent{background:linear-gradient(135deg,rgba(113,112,255,0.18),rgba(94,106,210,0.14));color:#eef0ff;border-color:rgba(113,112,255,0.24);box-shadow:0 8px 18px rgba(33,37,42,0.16)}
-.preview-cta.primary-accent:hover{background:linear-gradient(135deg,rgba(130,143,255,0.24),rgba(113,112,255,0.2));box-shadow:0 12px 24px rgba(94,106,210,0.18)}
+
+
 .preview-cta svg{width:14px;height:14px;flex-shrink:0}
 .preview-cta.ps-cta{background:rgba(139,125,255,0.12);border-color:rgba(139,125,255,0.22);color:#d4d0ff}
 .preview-cta.ps-cta:hover{background:rgba(139,125,255,0.2);border-color:rgba(139,125,255,0.35);color:#fff}
 
 /* Card Body */
-.card-body{max-height:0;overflow:hidden;transition:max-height 0.4s cubic-bezier(0.4,0,0.2,1)}
-.project-card.expanded .card-body{max-height:20000px;overflow:visible}
-.card-body-inner{padding:4px 22px 22px;border-top:1px solid var(--border);overflow:visible}
-.card-tools-row{display:flex;flex-wrap:wrap;gap:10px;padding:14px 0 12px;border-bottom:1px solid rgba(255,255,255,0.06);margin-bottom:14px}
+
+
+
+
 
 /* Version */
 .agent-group{margin-top:18px;padding:16px;border:1px solid rgba(255,255,255,0.06);border-radius:16px;background:rgba(255,255,255,0.02)}
@@ -251,8 +245,8 @@ a:hover{color:var(--gold-light)}
 .agent-group-header strong{font-size:14px;font-weight:700;letter-spacing:-0.02em;color:var(--text)}
 .agent-group-badge{display:inline-flex;align-items:center;gap:6px;padding:6px 10px;border-radius:999px;background:rgba(113,112,255,0.12);border:1px solid rgba(113,112,255,0.18);font-size:11px;font-weight:700;color:#d7dbff;white-space:nowrap}
 .agent-group-controls{display:inline-flex;align-items:center;gap:8px;flex-wrap:wrap}
-.agent-hide-btn{display:inline-flex;align-items:center;gap:6px;padding:6px 10px;border-radius:999px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);font-size:11px;font-weight:600;color:var(--muted);cursor:pointer;transition:all 0.18s ease;white-space:nowrap}
-.agent-hide-btn:hover{background:rgba(255,255,255,0.08);color:var(--text);border-color:rgba(255,255,255,0.18)}
+
+
 .agent-hide-btn svg{width:12px;height:12px}
 .agent-group.collapsed{opacity:0.72}
 .agent-group.collapsed .agent-group-body{display:none}
@@ -262,30 +256,30 @@ a:hover{color:var(--gold-light)}
 .agents-bulk-bar{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:14px;padding:10px 14px;border-radius:12px;background:rgba(255,255,255,0.025);border:1px dashed rgba(255,255,255,0.1);font-size:12px;color:var(--muted);flex-wrap:wrap}
 .agents-bulk-bar button{background:rgba(113,112,255,0.14);border:1px solid rgba(113,112,255,0.28);color:#d7dbff;font-size:11px;font-weight:700;padding:6px 12px;border-radius:999px;cursor:pointer;transition:all 0.18s ease}
 .agents-bulk-bar button:hover{background:rgba(113,112,255,0.22);border-color:rgba(113,112,255,0.4)}
-.version-section{margin-top:14px}
-.version-header{display:flex;align-items:center;gap:8px;margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid var(--border)}
+
+
 .version-dot{width:10px;height:10px;border-radius:50%;border:2px solid var(--bg)}
-.version-dot.latest{background:var(--green);box-shadow:0 0 8px rgba(34,197,94,0.4)}
+
 .version-dot.old{background:var(--muted)}
-.version-title{font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:0.8px;color:var(--text-secondary)}
+
 .version-title .v-badge{color:var(--green);margin-left:6px;font-size:14px}
 
 /* File Row */
-.file-row{display:flex;align-items:center;gap:12px;padding:14px 16px;border-radius:12px;transition:all 0.15s;text-decoration:none;color:var(--text);margin-bottom:8px;border:1px solid rgba(255,255,255,0.05);background:rgba(255,255,255,0.02)}
-.file-row:hover{background:rgba(113,112,255,0.08);color:var(--text);border-color:rgba(113,112,255,0.18)}
-.file-badge{width:42px;height:42px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;letter-spacing:0.08em;flex-shrink:0}
-.file-badge.html{background:rgba(239,95,107,0.14);color:#ff9eaa;border:1px solid rgba(239,95,107,0.16)}
+
+
+
+
 .file-badge.txt{background:rgba(79,140,255,0.14);color:#9dc0ff;border:1px solid rgba(79,140,255,0.16)}
-.file-badge.json{background:rgba(39,166,68,0.14);color:#8be0a0;border:1px solid rgba(39,166,68,0.16)}
+
 .file-name{font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:3px;letter-spacing:-0.01em}
 .file-size{font-size:11px;color:var(--muted)}
 .file-actions{display:flex;gap:12px;flex-wrap:wrap;align-items:center;padding-top:4px}
-.action-btn{padding:9px 15px;border-radius:12px;font-size:11px;font-weight:800;border:1px solid rgba(255,255,255,0.08);background:rgba(255,255,255,0.03);color:var(--text-secondary);cursor:pointer;text-decoration:none;transition:all 0.15s;display:inline-flex;align-items:center;justify-content:center;gap:6px;min-height:40px;white-space:nowrap}
-.action-btn:hover{border-color:rgba(113,112,255,0.24);color:#fff;background:rgba(113,112,255,0.1)}
+
+
 .action-btn.primary{background:linear-gradient(135deg,var(--gold),var(--gold-dim));border-color:transparent;color:#fff;padding:9px 18px;box-shadow:0 10px 22px rgba(94,106,210,0.18)}
 .action-btn.primary:hover{background:linear-gradient(135deg,var(--gold-light),var(--gold));transform:translateY(-1px);box-shadow:0 14px 28px rgba(94,106,210,0.22)}
-.action-btn.success{border-color:rgba(39,166,68,0.2);color:#7ee19d;background:rgba(39,166,68,0.1)}
-.action-btn.success:hover{border-color:rgba(39,166,68,0.32);background:rgba(39,166,68,0.16);color:#c8f5d2}
+
+
 
 /* Sync Bar */
 
@@ -322,7 +316,7 @@ a:hover{color:var(--gold-light)}
 .device-label{position:absolute;top:-28px;left:50%;transform:translateX(-50%);font-size:11px;color:var(--muted);white-space:nowrap;font-weight:600}
 .compare-modal{max-width:96vw;width:96vw;height:92vh}
 .compare-container{flex:1;display:flex;flex-direction:column;padding:16px;background:var(--bg);overflow:hidden}
-.compare-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:14px;flex:1;overflow:auto;padding:8px}
+
 .compare-panel{background:var(--surface);border:1px solid var(--border);border-radius:12px;overflow:hidden;display:flex;flex-direction:column;min-height:320px}
 .compare-panel-header{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 12px;border-bottom:1px solid var(--border);background:var(--card)}
 .compare-panel-title{font-size:12px;font-weight:700;color:var(--text);display:flex;flex-direction:column;gap:2px}
@@ -351,15 +345,15 @@ a:hover{color:var(--gold-light)}
 .focus-device-frame.mobile{width:420px;max-width:100%;height:100%;border-radius:28px}
 .focus-device-frame iframe{width:100%;height:100%;border:none;background:#fff}
 .focus-subtitle{font-size:10px;color:var(--muted);font-weight:600;margin-left:8px}
-.prompt-modal{max-width:1880px;width:99vw;height:96vh}
-.prompt-container{flex:1;display:grid;grid-template-columns:minmax(260px,0.78fr) minmax(260px,0.78fr) minmax(720px,1.9fr);gap:16px;padding:16px;background:var(--bg);overflow:hidden}
-.prompt-panel{display:flex;flex-direction:column;gap:10px;min-height:0}
+
+
+
 .prompt-label{font-size:11px;font-weight:700;color:var(--text-secondary);text-transform:uppercase;letter-spacing:0.7px}
-.prompt-textarea{flex:1;min-height:240px;width:100%;resize:none;border:1px solid var(--border);border-radius:12px;background:var(--surface);color:var(--text);padding:14px;font:13px/1.55 ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;outline:none}
-.prompt-textarea:focus{border-color:var(--gold-dim)}
+
+
 .prompt-actions{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
 .prompt-status{font-size:12px;color:var(--muted)}
-.model-select-wrap{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+
 .model-select-label{font-size:11px;font-weight:700;color:var(--text-secondary);white-space:nowrap}
 .model-select{height:32px;padding:0 10px;border:1px solid var(--border-hair);border-radius:var(--r-sm);background:rgba(255,255,255,0.03);color:var(--text);font-size:12px;font-weight:600;cursor:pointer;outline:none;transition:border-color 0.14s;min-width:200px}
 .model-select:focus{border-color:rgba(113,112,255,0.35)}
@@ -409,13 +403,13 @@ a:hover{color:var(--gold-light)}
 .mandatory-item > span:first-of-type{color:var(--text);font-weight:500}
 .mandatory-badge{display:inline-flex;align-items:center;margin-left:8px;padding:2px 7px;border-radius:999px;font-size:9px;font-weight:800;letter-spacing:.5px;text-transform:uppercase;background:rgba(224,82,82,0.18);color:#ff9898;border:1px solid rgba(224,82,82,0.35);white-space:nowrap;flex-shrink:0}
 @media(max-width:900px){.checklist-wrap.expanded{max-height:55vh}.checklist-header{padding:10px 12px}.checklist-title{font-size:10px}.checklist-item span{font-size:11.5px}}
-.deploy-status-panel{position:fixed;right:12px;bottom:12px;z-index:900;width:min(280px,calc(100vw - 24px));background:rgba(18,19,22,0.92);border:1px solid rgba(255,255,255,0.07);border-radius:12px;box-shadow:0 14px 36px rgba(0,0,0,0.34);backdrop-filter:blur(10px);overflow:hidden}
+
 #preview-modal.open ~ #deploy-status-panel,
 #compare-modal.open ~ #deploy-status-panel,
 #focus-modal.open ~ #deploy-status-panel,
 #prompt-modal.open ~ #deploy-status-panel{display:none}
-.deploy-status-header{display:flex;align-items:center;justify-content:space-between;padding:9px 10px;border-bottom:1px solid rgba(255,255,255,0.05);background:rgba(255,255,255,0.02)}
-.deploy-status-title{font-size:11px;font-weight:700;letter-spacing:.15px;text-transform:none;color:var(--text-secondary)}
+
+
 .deploy-status-toggle{border:1px solid rgba(255,255,255,0.08);background:rgba(255,255,255,0.03);color:var(--text-secondary);border-radius:8px;padding:5px 9px;font-size:11px;font-weight:700;cursor:pointer}
 .deploy-status-body{padding:12px 14px;display:flex;flex-direction:column;gap:12px;max-height:42vh;overflow:auto}
 .deploy-status-panel.collapsed .deploy-status-body{display:none}
@@ -493,11 +487,11 @@ a:hover{color:var(--gold-light)}
 
 .shortcuts-modal{position:fixed;inset:0;background:rgba(0,0,0,0.72);z-index:2000;display:none;align-items:center;justify-content:center;backdrop-filter:blur(6px)}
 .shortcuts-modal.open{display:flex}
-.shortcuts-box{background:rgba(12,13,16,0.98);border:1px solid rgba(255,255,255,0.10);border-radius:20px;padding:24px;min-width:300px;box-shadow:0 24px 64px rgba(0,0,0,0.44)}
+
 .shortcuts-box h3{font-size:14px;font-weight:700;margin-bottom:16px;letter-spacing:-0.02em}
 .shortcut-row{display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid rgba(255,255,255,0.06)}
 .shortcut-row:last-of-type{border-bottom:none}
-.shortcut-key{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;font-size:11px;font-weight:700;background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.10);border-radius:5px;padding:3px 8px;color:var(--text)}
+
 .shortcut-desc{font-size:12px;color:var(--text-secondary)}
 .shortcuts-close{margin-top:16px;width:100%;height:34px;border-radius:12px;border:1px solid rgba(255,255,255,0.10);background:rgba(255,255,255,0.04);color:var(--text-secondary);font-size:12px;font-weight:600;cursor:pointer;transition:all 0.14s}
 .shortcuts-close:hover{background:rgba(255,255,255,0.08);color:var(--text)}
@@ -535,21 +529,7 @@ a:hover{color:var(--gold-light)}
 .modal-overlay.preview-fullscreen .device-frame.mobile{height:calc(100vh - 70px);max-height:calc(100vh - 70px)}
 
 /* Header sync button */
-.hdr-sync-btn{
-  height:34px;padding:0 14px;
-  border-radius:999px;
-  border:1px solid rgba(113,112,255,0.28);
-  background:linear-gradient(135deg,rgba(113,112,255,0.14),rgba(94,89,200,0.10));
-  color:#c8c5ff;
-  font-size:12px;font-weight:700;
-  cursor:pointer;
-  transition:all 0.18s ease;
-  white-space:nowrap;
-  display:inline-flex;align-items:center;gap:6px;
-  font-family:inherit;
-  box-shadow:0 2px 8px rgba(113,112,255,0.12),inset 0 1px 0 rgba(255,255,255,0.06);
-  letter-spacing:0.02em;
-}
+
 .hdr-sync-btn:hover{
   border-color:rgba(113,112,255,0.55);
   background:linear-gradient(135deg,rgba(113,112,255,0.26),rgba(94,89,200,0.20));
@@ -575,20 +555,14 @@ a:hover{color:var(--gold-light)}
 
 
 /* ==== Responsive polish — all devices (added 2026-04-16) ==== */
-html{overflow:visible;-webkit-text-size-adjust:100%;scroll-behavior:smooth}
-body{overflow:visible}
+
+
 *{min-width:0}
 img,svg,video,canvas{max-width:100%;height:auto}
 
 /* Safe-area padding so content never sits under iOS notches / Android nav bars */
-.container{
-  padding-left:max(clamp(14px,3vw,28px), env(safe-area-inset-left));
-  padding-right:max(clamp(14px,3vw,28px), env(safe-area-inset-right));
-}
-.header-inner{
-  padding-left:max(clamp(14px,3vw,28px), env(safe-area-inset-left));
-  padding-right:max(clamp(14px,3vw,28px), env(safe-area-inset-right));
-}
+
+
 
 /* Fluid container max-width — use the space on big monitors without getting awkward */
 @media (min-width:1600px){
@@ -601,7 +575,7 @@ img,svg,video,canvas{max-width:100%;height:auto}
 }
 
 /* Projects grid — never overflow on narrow screens, never crowd on mid */
-.projects-grid{grid-template-columns:repeat(auto-fill,minmax(min(380px,100%),1fr))}
+
 .compare-grid{grid-template-columns:repeat(auto-fit,minmax(min(300px,100%),1fr))}
 
 /* Laptop (<=1280) — already handled a bit, tighten card min */
@@ -701,58 +675,58 @@ img,svg,video,canvas{max-width:100%;height:auto}
 .action-btn.brainstorm{background:linear-gradient(135deg,rgba(113,112,255,0.22),rgba(198,141,255,0.18));border-color:rgba(180,140,255,0.45);color:#e5dcff}
 .action-btn.brainstorm:hover:not(:disabled){background:linear-gradient(135deg,rgba(113,112,255,0.34),rgba(198,141,255,0.28));border-color:rgba(200,160,255,0.7)}
 .action-btn.brainstorm:disabled{opacity:0.65;cursor:not-allowed}
-.brainstorm-progress{display:none;margin-top:12px;padding:12px 14px;border-radius:12px;background:rgba(113,112,255,0.06);border:1px solid rgba(113,112,255,0.18);font-size:12px;color:var(--text-secondary)}
+
 .brainstorm-progress.active{display:block}
-.brainstorm-progress-title{font-weight:700;color:#d7dbff;margin-bottom:8px;display:flex;align-items:center;gap:8px}
+
 .brainstorm-dot{width:8px;height:8px;border-radius:50%;background:var(--gold);animation:bs-pulse 1s ease-in-out infinite}
 @keyframes bs-pulse{0%,100%{opacity:0.3;transform:scale(0.8)}50%{opacity:1;transform:scale(1.1)}}
 .brainstorm-models-list{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
-.brainstorm-model-chip{font-size:11px;padding:4px 9px;border-radius:999px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);color:var(--muted);display:inline-flex;align-items:center;gap:5px}
+
 .brainstorm-model-chip.ok{background:rgba(39,166,68,0.14);color:#7ee19d;border-color:rgba(39,166,68,0.28)}
 .brainstorm-model-chip.err{background:rgba(220,38,38,0.12);color:#ff9aa0;border-color:rgba(220,38,38,0.3)}
-.prompt-sync-panel{display:none;margin-top:12px;padding:14px;border-radius:12px;background:rgba(255,255,255,0.025);border:1px solid rgba(255,255,255,0.08)}
+
 .prompt-sync-panel.visible{display:block}
-.prompt-sync-title{font-weight:700;font-size:13px;color:var(--text);margin-bottom:10px;display:flex;align-items:center;gap:8px}
+
 .prompt-sync-row{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:10px}
-.prompt-sync-row .sync-label{font-size:11px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em;min-width:80px}
-.prompt-sync-path{font-family:'SF Mono','Monaco',monospace;font-size:11px;color:#c9d0ff;background:rgba(255,255,255,0.04);padding:6px 10px;border-radius:8px;border:1px solid rgba(255,255,255,0.08);word-break:break-all;flex:1 1 220px}
-.prompt-sync-note{font-size:11px;color:var(--muted);margin-top:6px;line-height:1.5}
+
+
+
 .prompt-sync-note code{font-family:'SF Mono','Monaco',monospace;background:rgba(255,255,255,0.05);padding:1px 6px;border-radius:4px;color:#d7dbff}
 .brainstorm-meta{font-size:11px;color:var(--muted);margin-top:6px}
 /* Prompt studio — palette extractor */
-.palette-extractor{margin-top:12px;padding:12px 14px;border-radius:12px;background:rgba(255,255,255,0.025);border:1px solid rgba(255,255,255,0.08)}
-.palette-extractor-row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
-.palette-extractor-row label{font-size:11px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em}
-.palette-extractor-row input[type=url]{flex:1 1 220px;min-width:180px;padding:8px 12px;border-radius:8px;background:rgba(0,0,0,0.2);border:1px solid rgba(255,255,255,0.08);color:var(--text);font-size:13px}
-.palette-extractor-row input[type=url]:focus{outline:2px solid var(--purple);outline-offset:0}
-.palette-extractor-status{font-size:11px;color:var(--muted);margin-top:6px}
-.palette-swatches{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
-.palette-chip{display:inline-flex;align-items:center;gap:6px;padding:6px 10px;border-radius:999px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);font-family:'SF Mono','Monaco',monospace;font-size:11px;color:var(--text);cursor:pointer;transition:all .18s ease}
-.palette-chip:hover{border-color:rgba(255,255,255,0.2);background:rgba(255,255,255,0.08)}
-.palette-chip .swatch{width:14px;height:14px;border-radius:4px;border:1px solid rgba(255,255,255,0.15);flex-shrink:0}
+
+
+
+
+
+
+
+
+
+
 .palette-neutrals{opacity:0.7;margin-top:6px}
-.palette-snippet{margin-top:10px;padding:10px 12px;border-radius:8px;background:#0b0b12;border:1px solid rgba(255,255,255,0.06);font-family:'SF Mono','Monaco',monospace;font-size:11px;color:#d7dbff;white-space:pre-wrap;word-break:break-word;max-height:180px;overflow:auto}
-.palette-actions{display:flex;gap:8px;margin-top:8px;flex-wrap:wrap}
+
+
 /* Prompt Studio — scroll + sticky action bar fix (2026-04-17) */
-.prompt-container{overflow:hidden !important}
-.prompt-panel{min-height:0;overflow-y:auto;overflow-x:hidden;padding-bottom:76px;position:relative;scrollbar-width:thin;scrollbar-color:rgba(255,255,255,0.2) transparent}
-.prompt-panel::-webkit-scrollbar{width:8px}
-.prompt-panel::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.14);border-radius:999px}
-.prompt-panel::-webkit-scrollbar-thumb:hover{background:rgba(255,255,255,0.24)}
+
+
+
+
+
 /* Sticky primary action bar inside the draft panel — always keeps Improve + Brainstorm visible */
-.prompt-panel > .prompt-actions{position:sticky;bottom:0;margin:0 -12px -10px;padding:10px 12px;background:linear-gradient(0deg,rgba(16,15,24,0.96) 60%,rgba(16,15,24,0.78));backdrop-filter:blur(8px);border-top:1px solid rgba(255,255,255,0.06);z-index:3;gap:8px;flex-wrap:wrap;align-items:center}
+
 .prompt-panel > .prompt-actions .prompt-status{flex:1 1 200px;min-width:0}
 /* Palette extractor — tighter on narrow panels */
-.palette-extractor{margin-top:10px}
-.palette-extractor-row{gap:8px}
-.palette-swatches{max-height:220px;overflow-y:auto;overflow-x:hidden;padding-right:4px}
-.palette-snippet{max-height:140px}
+
+
+
+
 /* Make the draft textarea itself not consume the whole panel when palette is showing */
-#prompt-draft{min-height:140px;max-height:320px;resize:vertical}
+
 /* Output panel on the right — same scroll treatment for consistency */
 .prompt-panel + .prompt-panel{padding-bottom:76px}
-.prompt-panel + .prompt-panel > .prompt-actions{position:sticky;bottom:0;margin:0 -12px -10px;padding:10px 12px;background:linear-gradient(0deg,rgba(16,15,24,0.96) 60%,rgba(16,15,24,0.78));backdrop-filter:blur(8px);border-top:1px solid rgba(255,255,255,0.06);z-index:3;gap:8px;flex-wrap:wrap;align-items:center}
-#prompt-output{min-height:180px}
+
+
 
 /* Tablet */
 @media (max-width:1100px){
@@ -794,23 +768,23 @@ img,svg,video,canvas{max-width:100%;height:auto}
    proportional monospace only where it matters, WCAG-friendly contrasts. */
 
 /* --- Typography unification --- */
-.prompt-modal .prompt-label{font-size:12px;font-weight:600;color:rgba(255,255,255,0.62);text-transform:none;letter-spacing:0.01em;margin-bottom:2px}
-.prompt-modal .prompt-label::before{content:'';display:inline-block;width:4px;height:4px;border-radius:50%;background:var(--purple,#7170ff);margin-right:8px;vertical-align:middle;opacity:.9}
+
+
 .prompt-modal .modal-title{font-weight:700;letter-spacing:-0.01em}
 .prompt-modal .focus-subtitle{color:rgba(255,255,255,0.5);font-weight:500;margin-left:10px;font-size:13px}
 
 /* --- Modal frame softening --- */
 .modal.prompt-modal{border-radius:18px;box-shadow:0 24px 64px rgba(0,0,0,0.55),0 0 0 1px rgba(255,255,255,0.04)}
-.prompt-modal .modal-header{border-bottom:1px solid rgba(255,255,255,0.06);padding:16px 22px;gap:14px}
+
 .prompt-modal .modal-header .modal-title{font-size:15px;display:flex;align-items:center;gap:10px}
 .prompt-modal .modal-header .modal-title svg{width:16px;height:16px;color:var(--purple,#7170ff);flex-shrink:0}
 .prompt-modal .modal-header #prompt-expand-btn{margin-left:auto}
-.prompt-modal .modal-close{width:32px;height:32px;border-radius:10px;display:inline-flex;align-items:center;justify-content:center;transition:background .18s ease,color .18s ease}
-.prompt-modal .modal-close:hover{background:rgba(255,255,255,0.08);color:#fff}
+
+
 
 /* --- Panel frames: consistent 14px radius, breathing room --- */
 .prompt-container{gap:18px !important;padding:20px !important;background:transparent !important}
-.prompt-panel{gap:12px}
+
 .prompt-panel > *{border-radius:14px}
 .prompt-panel .prompt-label{border-radius:0}
 
@@ -818,7 +792,7 @@ img,svg,video,canvas{max-width:100%;height:auto}
 .prompt-modal .prompt-textarea{border-radius:14px;border:1px solid rgba(255,255,255,0.08);background:rgba(255,255,255,0.025);padding:16px 18px;font:13.5px/1.65 ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;color:rgba(255,255,255,0.92);transition:border-color .18s ease,background .18s ease,box-shadow .18s ease}
 .prompt-modal .prompt-textarea:focus-visible,.prompt-modal .prompt-textarea:focus{border-color:rgba(113,112,255,0.55);background:rgba(255,255,255,0.04);outline:none;box-shadow:0 0 0 3px rgba(113,112,255,0.14)}
 .prompt-modal .prompt-textarea::placeholder{color:rgba(255,255,255,0.3)}
-#prompt-output{background:rgba(255,255,255,0.02) !important}
+
 #prompt-output::placeholder{color:rgba(255,255,255,0.26)}
 
 /* --- Checklist: cleaner header, softer surface --- */
@@ -826,19 +800,19 @@ img,svg,video,canvas{max-width:100%;height:auto}
 .prompt-modal .checklist-header{padding:12px 16px;background:transparent;border-radius:14px 14px 0 0}
 .prompt-modal .checklist-wrap:not(.expanded) .checklist-header{border-radius:14px}
 .prompt-modal .checklist-header:hover{background:rgba(255,255,255,0.04)}
-.prompt-modal .checklist-title{font-weight:600;font-size:13.5px;color:rgba(255,255,255,0.88)}
-.prompt-modal .checklist-count-badge{font-weight:700;font-size:11px}
-.prompt-modal .checklist-header-btn{font-size:11px;padding:6px 10px;border-radius:8px;font-weight:600;letter-spacing:0.01em;text-transform:none}
+
+
+
 
 /* --- Palette extractor — refined container --- */
-.palette-extractor{border-radius:14px !important;padding:14px 16px !important;background:linear-gradient(180deg,rgba(113,112,255,0.055),rgba(113,112,255,0.02)) !important;border:1px solid rgba(113,112,255,0.18) !important}
+
 .palette-extractor-row{gap:10px !important;align-items:center !important}
-.palette-extractor-row label{font-size:11.5px !important;font-weight:600 !important;color:rgba(255,255,255,0.7) !important;text-transform:none !important;letter-spacing:0.01em !important;display:inline-flex;align-items:center;gap:8px}
+
 .palette-extractor-row label::before{content:'';display:inline-block;width:6px;height:6px;border-radius:2px;background:linear-gradient(135deg,var(--purple,#7170ff),#bc55ff);box-shadow:0 0 0 2px rgba(113,112,255,0.18)}
 .palette-extractor-row input[type=url]{height:38px !important;padding:0 14px !important;border-radius:10px !important;background:rgba(0,0,0,0.22) !important;border:1px solid rgba(255,255,255,0.09) !important;color:rgba(255,255,255,0.92) !important;font:13px/1 ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace !important;transition:border-color .18s ease,background .18s ease,box-shadow .18s ease !important}
 .palette-extractor-row input[type=url]:focus{border-color:rgba(113,112,255,0.55) !important;background:rgba(0,0,0,0.3) !important;box-shadow:0 0 0 3px rgba(113,112,255,0.14) !important;outline:none !important}
 .palette-extractor-row input[type=url]::placeholder{color:rgba(255,255,255,0.28) !important}
-.palette-extractor-row button.action-btn{height:38px !important;padding:0 14px !important;border-radius:10px !important;font-size:12.5px !important;font-weight:600 !important;display:inline-flex !important;align-items:center !important;gap:6px}
+
 .palette-extractor-status{font-size:11.5px !important;color:rgba(255,255,255,0.55) !important;line-height:1.55 !important;margin-top:8px !important}
 .palette-extractor-status code{font-size:11px;padding:1px 6px;border-radius:4px;background:rgba(255,255,255,0.06);color:#d7dbff}
 .palette-swatches{gap:6px !important;margin-top:12px !important;padding:2px}
@@ -849,18 +823,18 @@ img,svg,video,canvas{max-width:100%;height:auto}
 .palette-snippet::-webkit-scrollbar{width:6px}
 .palette-snippet::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.15);border-radius:999px}
 .palette-actions{gap:8px !important;margin-top:10px !important;padding-top:10px !important;border-top:1px dashed rgba(255,255,255,0.08) !important}
-.palette-actions button.action-btn{height:34px !important;padding:0 12px !important;border-radius:8px !important;font-size:12px !important;font-weight:600 !important}
+
 
 /* --- Model selector block --- */
 .model-select-wrap{gap:10px !important;margin-top:2px}
-.model-select-wrap .model-select-label{font-size:11.5px;font-weight:600;color:rgba(255,255,255,0.62);text-transform:none;letter-spacing:0.01em}
+
 .prompt-modal .model-select{height:36px !important;padding:0 12px !important;border-radius:10px !important;background:rgba(0,0,0,0.2) !important;border:1px solid rgba(255,255,255,0.09) !important;font-size:12.5px !important;font-weight:500 !important;transition:border-color .18s ease,box-shadow .18s ease}
 .prompt-modal .model-select:hover{border-color:rgba(113,112,255,0.35) !important}
 .prompt-modal .model-select:focus{border-color:rgba(113,112,255,0.55) !important;box-shadow:0 0 0 3px rgba(113,112,255,0.14) !important;outline:none !important}
 
 /* --- Unified primary action bar --- */
-.prompt-modal .prompt-actions{gap:10px !important;align-items:center}
-.prompt-panel > .prompt-actions{padding:12px 14px !important;margin:0 -14px -12px !important;background:linear-gradient(0deg,rgba(14,14,22,0.96) 60%,rgba(14,14,22,0.72)) !important;border-top:1px solid rgba(255,255,255,0.06) !important;border-radius:0 0 14px 14px !important}
+
+
 .prompt-panel + .prompt-panel > .prompt-actions{background:linear-gradient(0deg,rgba(14,14,22,0.96) 60%,rgba(14,14,22,0.72)) !important;border-radius:0 0 14px 14px !important}
 
 /* --- Primary/secondary/tertiary button language --- */
@@ -868,23 +842,23 @@ img,svg,video,canvas{max-width:100%;height:auto}
 .prompt-modal .action-btn svg{flex-shrink:0}
 .prompt-modal .action-btn:hover{transform:translateY(-1px)}
 .prompt-modal .action-btn:active{transform:translateY(0)}
-.prompt-modal #prompt-improve-btn{background:linear-gradient(180deg,#7170ff,#5d5cff) !important;color:#fff !important;border:1px solid rgba(255,255,255,0.12) !important;box-shadow:0 6px 18px rgba(113,112,255,0.28)}
-.prompt-modal #prompt-improve-btn:hover{background:linear-gradient(180deg,#8584ff,#6968ff) !important;box-shadow:0 8px 22px rgba(113,112,255,0.36)}
+
+
 .prompt-modal #prompt-improve-btn:disabled{opacity:.55}
-.prompt-modal #prompt-brainstorm-btn{background:linear-gradient(180deg,rgba(255,255,255,0.06),rgba(255,255,255,0.02)) !important;border:1px solid rgba(180,140,255,0.45) !important;color:#e5dcff !important}
-.prompt-modal #prompt-brainstorm-btn:hover{border-color:rgba(200,160,255,0.85) !important;background:linear-gradient(180deg,rgba(113,112,255,0.16),rgba(198,141,255,0.1)) !important}
+
+
 .prompt-modal #prompt-sync-gh-btn,.prompt-modal #prompt-apply-html-btn{background:linear-gradient(180deg,#19a974,#148f62) !important;color:#fff !important;border:1px solid rgba(255,255,255,0.12) !important}
 .prompt-modal #prompt-tweak-btn{background:rgba(104,101,255,0.12) !important;border:1px solid rgba(104,101,255,0.35) !important;color:#e7e6ff !important}
 .prompt-modal #prompt-tweak-btn:hover{background:rgba(104,101,255,0.18) !important;border-color:rgba(134,131,255,0.55) !important}
 .prompt-tweak-panel{margin-top:14px;padding:14px;border:1px solid rgba(255,255,255,0.08);border-radius:14px;background:rgba(255,255,255,0.025)}
-#prompt-tweak-output{min-height:220px;max-height:420px;resize:vertical;background:rgba(0,0,0,0.16) !important}
+
 .prompt-modal #prompt-sync-gh-btn:hover,.prompt-modal #prompt-apply-html-btn:hover{background:linear-gradient(180deg,#21ba82,#17a16e) !important}
 /* Ghost / tertiary */
 .prompt-modal .prompt-actions .action-btn:not(#prompt-improve-btn):not(#prompt-brainstorm-btn):not(#prompt-sync-gh-btn):not(#prompt-apply-html-btn){background:rgba(255,255,255,0.045) !important;border:1px solid rgba(255,255,255,0.09) !important;color:rgba(255,255,255,0.88) !important}
 .prompt-modal .prompt-actions .action-btn:not(#prompt-improve-btn):not(#prompt-brainstorm-btn):not(#prompt-sync-gh-btn):not(#prompt-apply-html-btn):hover{background:rgba(255,255,255,0.075) !important;border-color:rgba(255,255,255,0.18) !important;color:#fff !important}
 
 /* --- Status text density --- */
-.prompt-modal .prompt-status{font-size:12px;color:rgba(255,255,255,0.55);line-height:1.5;flex:1 1 200px;min-width:0}
+
 
 /* --- Brainstorm progress card refinement --- */
 .brainstorm-progress{border-radius:14px !important;padding:14px 16px !important;background:linear-gradient(180deg,rgba(113,112,255,0.08),rgba(113,112,255,0.02)) !important;border:1px solid rgba(113,112,255,0.22) !important}
@@ -892,12 +866,12 @@ img,svg,video,canvas{max-width:100%;height:auto}
 .brainstorm-model-chip{border-radius:999px !important;padding:5px 11px !important;font-weight:600 !important}
 
 /* --- Preview panel — remove the weird white gap, add branded device frame --- */
-.prompt-modal .prompt-preview-wrap{border-radius:14px;border:1px solid rgba(255,255,255,0.08);background:#f9fafc;box-shadow:inset 0 0 0 1px rgba(255,255,255,0.02)}
+
 .prompt-modal .prompt-preview-frame{border-radius:12px}
 
 /* --- Sync panel refinement --- */
 .prompt-sync-panel{border-radius:14px !important;padding:16px !important;background:linear-gradient(180deg,rgba(255,255,255,0.025),rgba(255,255,255,0.01)) !important;border:1px solid rgba(255,255,255,0.08) !important}
-.prompt-sync-title{font-size:13.5px !important;font-weight:700 !important;color:rgba(255,255,255,0.92) !important}
+
 .prompt-sync-row .sync-label{font-weight:700;font-size:10.5px;color:rgba(255,255,255,0.5)}
 .prompt-sync-path{font-size:11.5px !important;padding:8px 12px !important;border-radius:10px !important;background:rgba(0,0,0,0.25) !important;border:1px solid rgba(255,255,255,0.07) !important;color:#d7dbff !important}
 .prompt-sync-note{font-size:11.5px !important;color:rgba(255,255,255,0.55) !important;line-height:1.6 !important}
@@ -942,17 +916,17 @@ img,svg,video,canvas{max-width:100%;height:auto}
   border-radius:0 !important;
 }
 /* keep it sticky with a proper translucent pane only when scrolling actually exists */
-.prompt-panel > .prompt-actions{position:sticky;bottom:0;background:linear-gradient(180deg,transparent 0%,rgba(18,18,26,0.92) 28%,rgba(18,18,26,0.96) 100%) !important;padding:14px 2px 10px !important;margin-top:10px !important}
+
 
 /* 3. Tighten label styling — clearer hierarchy, slightly brighter */
-.prompt-modal .prompt-label{font-size:12.5px !important;font-weight:700 !important;color:rgba(255,255,255,0.78) !important;letter-spacing:0 !important;margin-bottom:6px !important}
-.prompt-modal .prompt-label::before{width:5px;height:5px}
+
+
 
 /* 4. Give the palette extractor a soft divider above it (breathing room) */
-.palette-extractor{margin-top:16px !important}
+
 
 /* 5. Modal header: even spacing + integrated close button */
-.prompt-modal .modal-header{padding:14px 20px !important}
+
 .prompt-modal .modal-close{border:0 !important;background:transparent !important;width:34px !important;height:34px !important;border-radius:10px !important;color:rgba(255,255,255,0.7) !important;font-size:20px !important;line-height:1 !important}
 .prompt-modal .modal-close:hover{background:rgba(255,255,255,0.08) !important;color:#fff !important}
 
@@ -977,11 +951,7 @@ img,svg,video,canvas{max-width:100%;height:auto}
 }
 
 /* 10. Primary Improve button — subtle glow instead of heavy shadow */
-.prompt-modal #prompt-improve-btn{
-  background:#6865ff !important;
-  box-shadow:0 2px 0 rgba(0,0,0,0.18),inset 0 1px 0 rgba(255,255,255,0.12) !important;
-  border:1px solid rgba(104,101,255,0.8) !important;
-}
+
 .prompt-modal #prompt-improve-btn:hover{
   background:#7a77ff !important;
   box-shadow:0 4px 14px rgba(104,101,255,0.35),inset 0 1px 0 rgba(255,255,255,0.15) !important;
@@ -1013,7 +983,7 @@ img,svg,video,canvas{max-width:100%;height:auto}
 }
 
 /* 13. Status + sync status text — slightly brighter for scannability */
-.prompt-modal .prompt-status{color:rgba(255,255,255,0.66) !important}
+
 
 /* 14. Tighter card edges — consistency pass */
 .prompt-modal .checklist-wrap,.palette-extractor,.brainstorm-progress,.prompt-sync-panel{
@@ -1039,7 +1009,7 @@ img,svg,video,canvas{max-width:100%;height:auto}
 .prompt-modal .prompt-label{color:rgba(255,255,255,0.92) !important;font-weight:600 !important;font-size:13px !important;letter-spacing:-0.003em !important}
 
 /* 3. Preview panel — soften the white card so it doesn't clash with the dark theme */
-.prompt-modal .prompt-preview-wrap{background:#ffffff !important;border:1px solid rgba(255,255,255,0.12) !important;box-shadow:inset 0 0 0 1px rgba(113,112,255,0.08),0 12px 32px rgba(0,0,0,0.35) !important}
+
 
 /* 4. Empty-state for the output textarea — add subtle icon hint */
 .prompt-modal #prompt-output{background:rgba(0,0,0,0.2) !important;color:rgba(255,255,255,0.92) !important}
@@ -1090,54 +1060,26 @@ img,svg,video,canvas{max-width:100%;height:auto}
 #prompt-modal.any-running #prompt-stop-all-btn,.prompt-modal.any-running #prompt-stop-all-btn{display:inline-flex}
 
 /* ==== 2026-04-18 polish + comments layer ==== */
-:root{
-  --border-hair:rgba(255,255,255,0.08);
-  --r-sm:10px;
-  color-scheme:dark;
-}
-.header-actions{gap:12px;align-items:center;flex:1 1 760px;justify-content:flex-end}
-.search-box{
-  width:300px;
-  background:rgba(255,255,255,0.045);
-  border-color:rgba(255,255,255,0.12);
-  box-shadow:inset 0 1px 0 rgba(255,255,255,0.03);
-}
+
+
+
 .search-box::placeholder{color:rgba(208,214,224,0.72)}
-.status-stack{
-  gap:8px;
-  align-items:center;
-  padding:6px 10px;
-  background:rgba(255,255,255,0.025);
-  border:1px solid rgba(255,255,255,0.06);
-  border-radius:999px;
-  box-shadow:inset 0 1px 0 rgba(255,255,255,0.04);
-}
-.status-pill{background:rgba(113,112,255,0.10);border-color:rgba(113,112,255,0.16);color:#edf0ff}
-.last-sync-meta{font-size:12.5px;color:rgba(208,214,224,0.84);background:rgba(255,255,255,0.035);border-color:rgba(255,255,255,0.08)}
-.card-info h3{
-  color:var(--text);
-  white-space:normal;
-  overflow:visible;
-  text-overflow:clip;
-  line-height:1.24;
-  max-width:100%;
-}
-.card-meta{gap:9px}
-.meta-tag{
-  color:#e3e8f1;
-  background:rgba(255,255,255,0.04);
-  border-color:rgba(255,255,255,0.09);
-}
-.card-right{margin-left:0;padding-top:8px}
-.card-cta-group{gap:8px}
-.view-toggle{margin-right:2px}
+
+
+
+
+
+
+
+
+
 .section-count{font-size:11.5px}
 .prompt-comments-btn,.preview-comments-btn,.project-comments-btn{border-color:rgba(91,214,183,0.22);color:#b8fff2;background:rgba(91,214,183,0.08)}
 .prompt-comments-btn:hover,.preview-comments-btn:hover,.project-comments-btn:hover{border-color:rgba(91,214,183,0.38);background:rgba(91,214,183,0.14);color:#effffc}
 .comments-modal{max-width:860px;width:min(860px,94vw);height:min(82vh,860px)}
-.comments-layout{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(280px,0.9fr);gap:16px;flex:1;min-height:0;padding:16px;background:var(--bg)}
+
 .comments-panel,.comments-compose{display:flex;flex-direction:column;gap:12px;min-height:0;background:rgba(255,255,255,0.025);border:1px solid rgba(255,255,255,0.08);border-radius:16px;padding:14px}
-.comments-panel-title{font-size:12px;font-weight:800;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-secondary)}
+
 .comments-context-label{font-size:13px;color:var(--text);font-weight:700}
 .comments-list{display:flex;flex-direction:column;gap:10px;overflow:auto;padding-right:4px;min-height:160px}
 .comments-item{padding:12px 13px;border-radius:14px;background:rgba(255,255,255,0.035);border:1px solid rgba(255,255,255,0.07)}
@@ -1146,11 +1088,11 @@ img,svg,video,canvas{max-width:100%;height:auto}
 .comments-time{font-size:11px;color:var(--muted)}
 .comments-body{font-size:13px;line-height:1.6;color:var(--text-secondary);white-space:pre-wrap;word-break:break-word}
 .comments-empty{padding:18px;border-radius:14px;border:1px dashed rgba(255,255,255,0.10);color:var(--muted);font-size:12.5px;text-align:center}
-.comments-input,.comments-author-input{width:100%;border:1px solid rgba(255,255,255,0.10);border-radius:12px;background:rgba(255,255,255,0.03);color:var(--text);padding:12px 13px;outline:none}
+
 .comments-input{min-height:180px;resize:vertical;font:13px/1.6 ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace}
-.comments-input:focus,.comments-author-input:focus{border-color:rgba(113,112,255,0.35);box-shadow:0 0 0 3px rgba(113,112,255,0.12)}
+
 .comments-meta{font-size:12px;color:var(--muted);line-height:1.6}
-.comments-actions{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+
 .comments-status{font-size:12px;color:var(--muted)}
 @media (max-width:900px){
   .comments-modal{width:100vw;max-width:100vw;height:100vh;max-height:100dvh;border-radius:0;border:0}
@@ -1168,27 +1110,7 @@ img,svg,video,canvas{max-width:100%;height:auto}
    ================================================================ */
 
 /* ── Variables ── */
-:root {
-  --ps-bg: #0d0d14;
-  --ps-surface: #13131f;
-  --ps-surface-2: #1a1a2a;
-  --ps-border: rgba(255,255,255,0.08);
-  --ps-border-focus: rgba(108,99,255,0.7);
-  --ps-indigo: #6c63ff;
-  --ps-indigo-hover: #7d75ff;
-  --ps-indigo-soft: rgba(108,99,255,0.12);
-  --ps-indigo-glow: rgba(108,99,255,0.25);
-  --ps-text: rgba(255,255,255,0.93);
-  --ps-text-2: rgba(255,255,255,0.62);
-  --ps-text-3: rgba(255,255,255,0.38);
-  --ps-green: #22c55e;
-  --ps-green-soft: rgba(34,197,94,0.12);
-  --ps-red: #f87171;
-  --ps-red-soft: rgba(248,113,113,0.14);
-  --ps-radius: 16px;
-  --ps-radius-sm: 10px;
-  --ps-radius-xs: 7px;
-}
+
 
 /* ── Modal shell ── */
 #prompt-modal .modal {
@@ -1200,167 +1122,40 @@ img,svg,video,canvas{max-width:100%;height:auto}
 }
 
 /* ── Header ── */
-#prompt-modal .modal-header {
-  background: var(--ps-surface) !important;
-  border-bottom: 1px solid var(--ps-border) !important;
-  padding: 0 24px !important;
-  height: 56px !important;
-  display: flex !important;
-  align-items: center !important;
-  gap: 0 !important;
-  flex-shrink: 0 !important;
-}
-#prompt-modal .modal-title {
-  font-size: 14px !important;
-  font-weight: 600 !important;
-  color: var(--ps-text) !important;
-  letter-spacing: -0.01em !important;
-  gap: 10px !important;
-  flex: 1 1 auto !important;
-}
-#prompt-modal .modal-title svg {
-  width: 16px !important; height: 16px !important;
-  color: var(--ps-indigo) !important;
-  flex-shrink: 0 !important;
-}
-#prompt-modal .focus-subtitle {
-  color: var(--ps-text-3) !important;
-  font-weight: 400 !important;
-  font-size: 13px !important;
-  margin-left: 6px !important;
-}
-#prompt-modal .modal-close {
-  width: 32px !important; height: 32px !important;
-  border-radius: var(--ps-radius-xs) !important;
-  border: none !important;
-  background: transparent !important;
-  color: var(--ps-text-2) !important;
-  font-size: 18px !important;
-  cursor: pointer !important;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  transition: background 0.15s, color 0.15s !important;
-  margin-left: 4px !important;
-}
-#prompt-modal .modal-close:hover {
-  background: rgba(248,113,113,0.12) !important;
-  color: var(--ps-red) !important;
-}
-#prompt-modal #prompt-expand-btn {
-  height: 32px !important;
-  padding: 0 10px !important;
-  font-size: 12px !important;
-  font-weight: 500 !important;
-  color: var(--ps-text-2) !important;
-  background: transparent !important;
-  border: 1px solid var(--ps-border) !important;
-  border-radius: var(--ps-radius-xs) !important;
-  gap: 5px !important;
-}
-#prompt-modal #prompt-expand-btn:hover {
-  background: var(--ps-surface-2) !important;
-  color: var(--ps-text) !important;
-}
+
+
+
+
+
+
+
+
 
 /* ── Container grid ── */
-#prompt-modal .prompt-container {
-  background: var(--ps-bg) !important;
-  padding: 0 !important;
-  gap: 0 !important;
-  grid-template-columns: 340px 340px 1fr !important;
-  overflow: hidden !important;
-}
+
 
 /* ── Panels — each is a full-height column ── */
-#prompt-modal .prompt-panel {
-  display: flex !important;
-  flex-direction: column !important;
-  gap: 0 !important;
-  min-height: 0 !important;
-  overflow: hidden !important;
-  border-right: 1px solid var(--ps-border) !important;
-  background: var(--ps-surface) !important;
-  padding: 0 !important;
-}
-#prompt-modal .prompt-panel:last-child {
-  border-right: none !important;
-}
+
+
 
 /* ── Step header bar inside each panel ── */
-#prompt-modal .prompt-label {
-  font-size: 11px !important;
-  font-weight: 700 !important;
-  color: var(--ps-text-3) !important;
-  text-transform: uppercase !important;
-  letter-spacing: 0.08em !important;
-  padding: 14px 20px 10px !important;
-  flex-shrink: 0 !important;
-  border-bottom: 1px solid var(--ps-border) !important;
-  background: var(--ps-surface) !important;
-  margin: 0 !important;
-  display: flex !important;
-  align-items: center !important;
-  gap: 8px !important;
-}
-#prompt-modal .prompt-label::before {
-  display: none !important;
-}
+
+
 
 /* ── Textareas ── */
-#prompt-modal .prompt-textarea {
-  flex: 1 !important;
-  width: 100% !important;
-  resize: none !important;
-  border: none !important;
-  border-radius: 0 !important;
-  background: transparent !important;
-  color: var(--ps-text) !important;
-  padding: 20px !important;
-  font: 13.5px/1.75 'Inter', -apple-system, BlinkMacSystemFont, sans-serif !important;
-  outline: none !important;
-  transition: background 0.15s !important;
-  min-height: 0 !important;
-}
-#prompt-modal .prompt-textarea:focus {
-  background: rgba(108,99,255,0.03) !important;
-  border-color: transparent !important;
-}
+
+
 #prompt-modal .prompt-textarea::placeholder {
   color: var(--ps-text-3) !important;
   font-style: normal !important;
 }
-#prompt-modal #prompt-draft {
-  max-height: none !important;
-  min-height: 0 !important;
-}
-#prompt-modal #prompt-output {
-  min-height: 0 !important;
-  background: rgba(108,99,255,0.015) !important;
-}
+
+
 
 /* ── Sticky action bar inside draft panel ── */
-#prompt-modal .prompt-panel > .prompt-actions {
-  flex-shrink: 0 !important;
-  position: sticky !important;
-  bottom: 0 !important;
-  padding: 12px 20px !important;
-  margin: 0 !important;
-  background: var(--ps-surface) !important;
-  border-top: 1px solid var(--ps-border) !important;
-  border-radius: 0 !important;
-  backdrop-filter: none !important;
-  display: flex !important;
-  align-items: center !important;
-  gap: 8px !important;
-  flex-wrap: wrap !important;
-}
+
 /* Output panel action bar */
-#prompt-modal .prompt-panel + .prompt-panel > .prompt-actions {
-  background: var(--ps-surface) !important;
-  border-top: 1px solid var(--ps-border) !important;
-  border-radius: 0 !important;
-}
+
 
 /* ── Checklist ── */
 #prompt-modal .checklist-wrap {
@@ -1374,69 +1169,18 @@ img,svg,video,canvas{max-width:100%;height:auto}
   overflow: hidden !important;
   transition: max-height 0.25s ease !important;
 }
-#prompt-modal .checklist-wrap.expanded {
-  max-height: 260px !important;
-}
-#prompt-modal .checklist-header {
-  padding: 0 20px !important;
-  height: 40px !important;
-  background: transparent !important;
-  border-bottom: 1px solid transparent !important;
-  border-radius: 0 !important;
-}
-#prompt-modal .checklist-header:hover {
-  background: var(--ps-indigo-soft) !important;
-}
-#prompt-modal .checklist-title {
-  font-size: 12px !important;
-  font-weight: 600 !important;
-  color: var(--ps-text-2) !important;
-}
-#prompt-modal .checklist-count-badge {
-  font-size: 11px !important;
-  font-weight: 600 !important;
-  background: var(--ps-indigo-soft) !important;
-  color: #a5a0ff !important;
-  border: 1px solid rgba(108,99,255,0.22) !important;
-  padding: 2px 8px !important;
-  border-radius: 999px !important;
-}
-#prompt-modal .checklist-count-badge.zero {
-  background: rgba(255,255,255,0.04) !important;
-  color: var(--ps-text-3) !important;
-  border-color: var(--ps-border) !important;
-}
-#prompt-modal .checklist-body {
-  overflow-y: auto !important;
-  max-height: 200px !important;
-  padding: 8px 16px 12px !important;
-}
-#prompt-modal .checklist-header-btn {
-  font-size: 11px !important;
-  font-weight: 600 !important;
-  color: var(--ps-text-3) !important;
-  background: transparent !important;
-  border: 1px solid transparent !important;
-  border-radius: var(--ps-radius-xs) !important;
-  padding: 3px 8px !important;
-  cursor: pointer !important;
-}
-#prompt-modal .checklist-header-btn:hover {
-  color: var(--ps-text-2) !important;
-  background: var(--ps-surface-2) !important;
-  border-color: var(--ps-border) !important;
-}
+
+
+
+
+
+
+
+
+
 
 /* ── Palette extractor ── */
-#prompt-modal .palette-extractor {
-  flex-shrink: 0 !important;
-  border: none !important;
-  border-top: 1px solid var(--ps-border) !important;
-  border-radius: 0 !important;
-  background: var(--ps-surface) !important;
-  padding: 14px 20px !important;
-  margin: 0 !important;
-}
+
 #prompt-modal .palette-extractor-row label {
   font-size: 11px !important;
   font-weight: 700 !important;
@@ -1452,11 +1196,7 @@ img,svg,video,canvas{max-width:100%;height:auto}
 #prompt-modal .palette-extractor-row label::before {
   display: none !important;
 }
-#prompt-modal .palette-extractor-row {
-  flex-direction: column !important;
-  align-items: stretch !important;
-  gap: 6px !important;
-}
+
 #prompt-modal .palette-extractor-row > div {
   display: flex !important;
   gap: 8px !important;
@@ -1554,43 +1294,10 @@ img,svg,video,canvas{max-width:100%;height:auto}
 }
 
 /* ── Model selector ── */
-#prompt-modal .model-select-wrap {
-  flex-shrink: 0 !important;
-  padding: 10px 20px !important;
-  border-top: 1px solid var(--ps-border) !important;
-  background: var(--ps-surface) !important;
-  gap: 10px !important;
-  display: flex !important;
-  align-items: center !important;
-  flex-wrap: nowrap !important;
-}
-#prompt-modal .model-select-label {
-  font-size: 11px !important;
-  font-weight: 700 !important;
-  color: var(--ps-text-3) !important;
-  text-transform: uppercase !important;
-  letter-spacing: 0.07em !important;
-  white-space: nowrap !important;
-  flex-shrink: 0 !important;
-}
-#prompt-modal .model-select {
-  height: 34px !important;
-  background: var(--ps-bg) !important;
-  border: 1px solid var(--ps-border) !important;
-  color: var(--ps-text) !important;
-  font-size: 12.5px !important;
-  font-weight: 500 !important;
-  border-radius: var(--ps-radius-sm) !important;
-  padding: 0 10px !important;
-  flex: 1 !important;
-  min-width: 0 !important;
-  cursor: pointer !important;
-}
-#prompt-modal .model-select:focus {
-  border-color: var(--ps-border-focus) !important;
-  box-shadow: 0 0 0 3px var(--ps-indigo-glow) !important;
-  outline: none !important;
-}
+
+
+
+
 
 /* ── Buttons — unified language ── */
 #prompt-modal .action-btn {
@@ -1609,32 +1316,13 @@ img,svg,video,canvas{max-width:100%;height:auto}
   white-space: nowrap !important;
 }
 /* Primary — Improve */
-#prompt-modal #prompt-improve-btn {
-  background: var(--ps-indigo) !important;
-  color: #fff !important;
-  border: 1px solid var(--ps-indigo) !important;
-  box-shadow: 0 2px 8px rgba(108,99,255,0.35) !important;
-}
-#prompt-modal #prompt-improve-btn:hover:not(:disabled) {
-  background: var(--ps-indigo-hover) !important;
-  border-color: var(--ps-indigo-hover) !important;
-  box-shadow: 0 4px 16px rgba(108,99,255,0.45) !important;
-  transform: translateY(-1px) !important;
-}
-#prompt-modal #prompt-improve-btn:active { transform: none !important; }
-#prompt-modal #prompt-improve-btn:disabled { opacity: 0.45 !important; }
+
+
+
+
 /* Secondary — Brainstorm */
-#prompt-modal #prompt-brainstorm-btn {
-  background: transparent !important;
-  color: var(--ps-text-2) !important;
-  border: 1px solid var(--ps-border) !important;
-  box-shadow: none !important;
-}
-#prompt-modal #prompt-brainstorm-btn:hover:not(:disabled) {
-  background: var(--ps-indigo-soft) !important;
-  border-color: rgba(108,99,255,0.4) !important;
-  color: #a5a0ff !important;
-}
+
+
 /* Stop running state */
 #prompt-modal .action-btn.is-running {
   background: rgba(248,113,113,0.14) !important;
@@ -1654,15 +1342,8 @@ img,svg,video,canvas{max-width:100%;height:auto}
   color: rgba(248,113,113,0.8) !important;
 }
 /* Green — GitHub sync */
-#prompt-modal #prompt-sync-gh-btn {
-  background: var(--ps-green-soft) !important;
-  border: 1px solid rgba(34,197,94,0.28) !important;
-  color: #4ade80 !important;
-}
-#prompt-modal #prompt-sync-gh-btn:hover {
-  background: rgba(34,197,94,0.2) !important;
-  color: #86efac !important;
-}
+
+
 /* Ghost / tertiary */
 #prompt-modal .prompt-actions .action-btn:not(#prompt-improve-btn):not(#prompt-brainstorm-btn):not(#prompt-sync-gh-btn):not(#prompt-stop-all-btn):not(.is-running) {
   background: transparent !important;
@@ -1676,29 +1357,12 @@ img,svg,video,canvas{max-width:100%;height:auto}
 }
 
 /* ── Status text ── */
-#prompt-modal .prompt-status {
-  font-size: 12px !important;
-  color: var(--ps-text-3) !important;
-  flex: 1 !important;
-  line-height: 1.5 !important;
-}
+
 
 /* ── Brainstorm progress ── */
-#prompt-modal .brainstorm-progress {
-  flex-shrink: 0 !important;
-  border-radius: 0 !important;
-  border: none !important;
-  border-top: 1px solid var(--ps-border) !important;
-  padding: 12px 20px !important;
-  background: var(--ps-indigo-soft) !important;
-}
+
 #prompt-modal .brainstorm-progress.active { display: block !important; }
-#prompt-modal .brainstorm-progress-title {
-  font-size: 12px !important;
-  font-weight: 700 !important;
-  color: #a5a0ff !important;
-  margin-bottom: 8px !important;
-}
+
 #prompt-modal .brainstorm-model-chip {
   font-size: 11px !important;
   padding: 3px 9px !important;
@@ -1712,62 +1376,16 @@ img,svg,video,canvas{max-width:100%;height:auto}
 }
 
 /* ── Sync panel ── */
-#prompt-modal .prompt-sync-panel {
-  flex-shrink: 0 !important;
-  border-radius: 0 !important;
-  border: none !important;
-  border-top: 1px solid var(--ps-border) !important;
-  padding: 14px 20px !important;
-  background: var(--ps-surface) !important;
-}
-#prompt-modal .prompt-sync-title {
-  font-size: 12px !important;
-  font-weight: 700 !important;
-  color: var(--ps-text-3) !important;
-  text-transform: uppercase !important;
-  letter-spacing: 0.07em !important;
-  margin-bottom: 10px !important;
-}
-#prompt-modal .prompt-sync-row {
-  gap: 10px !important;
-  align-items: flex-start !important;
-  margin-bottom: 8px !important;
-}
-#prompt-modal .sync-label {
-  font-size: 10.5px !important;
-  font-weight: 700 !important;
-  color: var(--ps-text-3) !important;
-  text-transform: uppercase !important;
-  letter-spacing: 0.06em !important;
-  padding-top: 6px !important;
-  min-width: 70px !important;
-}
-#prompt-modal .prompt-sync-path {
-  font-size: 11.5px !important;
-  background: var(--ps-bg) !important;
-  border: 1px solid var(--ps-border) !important;
-  border-radius: var(--ps-radius-xs) !important;
-  color: rgba(165,160,255,0.85) !important;
-  padding: 6px 10px !important;
-}
-#prompt-modal .prompt-sync-note {
-  font-size: 11px !important;
-  color: var(--ps-text-3) !important;
-  line-height: 1.6 !important;
-  margin-top: 8px !important;
-}
-#prompt-modal #prompt-sync-status {
-  font-size: 12px !important;
-  color: var(--ps-text-2) !important;
-}
+
+
+
+
+
+
+
 
 /* ── Preview panel (col 3) ── */
-#prompt-modal .prompt-preview-wrap {
-  border: none !important;
-  border-radius: 0 !important;
-  background: #f5f6fa !important;
-  flex: 1 !important;
-}
+
 
 /* ── Esc hint + Stop All badge ── */
 #prompt-modal .esc-hint {
@@ -1780,15 +1398,10 @@ img,svg,video,canvas{max-width:100%;height:auto}
 }
 
 /* ── Scrollbar inside panels ── */
-#prompt-modal .prompt-panel::-webkit-scrollbar { width: 5px; }
+
 #prompt-modal .prompt-panel::-webkit-scrollbar-track { background: transparent; }
-#prompt-modal .prompt-panel::-webkit-scrollbar-thumb {
-  background: rgba(255,255,255,0.1);
-  border-radius: 999px;
-}
-#prompt-modal .prompt-panel::-webkit-scrollbar-thumb:hover {
-  background: rgba(255,255,255,0.2);
-}
+
+
 
 /* ── Responsive ── */
 @media (max-width:1400px) {
@@ -1823,37 +1436,14 @@ img,svg,video,canvas{max-width:100%;height:auto}
    ========================================================= */
 
 /* ── Column proportions: give draft panel dominance ── */
-#prompt-modal .prompt-container {
-  grid-template-columns: minmax(380px, 1fr) minmax(360px, 0.9fr) minmax(400px, 1.1fr) !important;
-  gap: 0 !important;
-}
+
 
 /* ── Panel = clean column, no hard borders ── */
-#prompt-modal .prompt-panel {
-  background: var(--ps-bg, #0d0d14) !important;
-  border-right: 1px solid rgba(255,255,255,0.06) !important;
-  padding: 0 !important;
-  display: flex !important;
-  flex-direction: column !important;
-  position: relative !important;
-}
-#prompt-modal .prompt-panel:last-child {
-  border-right: none !important;
-}
+
+
 
 /* ── Step headers: simpler, friendlier ── */
-#prompt-modal .prompt-label {
-  padding: 18px 24px 4px !important;
-  font-size: 11px !important;
-  font-weight: 700 !important;
-  color: rgba(255,255,255,0.4) !important;
-  text-transform: uppercase !important;
-  letter-spacing: 0.1em !important;
-  background: transparent !important;
-  border-bottom: none !important;
-  margin: 0 !important;
-  flex-shrink: 0 !important;
-}
+
 
 /* ── Helper text under each label ── */
 #prompt-modal .prompt-panel > .prompt-status:first-of-type {
@@ -1930,19 +1520,7 @@ img,svg,video,canvas{max-width:100%;height:auto}
 #prompt-modal .palette-extractor > * {
   cursor: auto !important;
 }
-#prompt-modal .palette-extractor::before {
-  content: "Brand palette from URL";
-  display: flex;
-  align-items: center;
-  padding: 0 24px;
-  height: 48px;
-  font-size: 12.5px;
-  font-weight: 600;
-  color: rgba(255,255,255,0.7);
-  cursor: pointer;
-  transition: background 0.15s;
-  border-bottom: 1px solid transparent;
-}
+
 #prompt-modal .palette-extractor:hover::before {
   background: rgba(255,255,255,0.03);
 }
@@ -1986,14 +1564,7 @@ img,svg,video,canvas{max-width:100%;height:auto}
 }
 
 /* ── Checklist header: match the palette accordion pattern ── */
-#prompt-modal .checklist-header {
-  padding: 0 24px !important;
-  height: 48px !important;
-  background: transparent !important;
-  border: none !important;
-  cursor: pointer !important;
-  transition: background 0.15s !important;
-}
+
 #prompt-modal .checklist-header:hover {
   background: rgba(255,255,255,0.03) !important;
 }
@@ -2001,21 +1572,8 @@ img,svg,video,canvas{max-width:100%;height:auto}
   background: rgba(255,255,255,0.02) !important;
   border-bottom: 1px solid rgba(255,255,255,0.06) !important;
 }
-#prompt-modal .checklist-title {
-  font-size: 12.5px !important;
-  font-weight: 600 !important;
-  color: rgba(255,255,255,0.7) !important;
-}
-#prompt-modal .checklist-count-badge {
-  font-size: 11px !important;
-  font-weight: 600 !important;
-  margin-left: 10px !important;
-  padding: 2px 9px !important;
-  border-radius: 999px !important;
-  background: rgba(108,99,255,0.15) !important;
-  color: #9d98ff !important;
-  border: none !important;
-}
+
+
 #prompt-modal .checklist-count-badge.zero {
   background: rgba(255,255,255,0.05) !important;
   color: rgba(255,255,255,0.35) !important;
@@ -2092,25 +1650,7 @@ img,svg,video,canvas{max-width:100%;height:auto}
 }
 
 /* Improve = dominant, fills primary space */
-#prompt-modal #prompt-improve-btn {
-  grid-column: 1 / 2 !important;
-  height: 48px !important;
-  padding: 0 24px !important;
-  font-size: 14.5px !important;
-  font-weight: 600 !important;
-  letter-spacing: -0.005em !important;
-  background: #6c63ff !important;
-  color: #fff !important;
-  border: none !important;
-  border-radius: 10px !important;
-  box-shadow: 0 4px 16px rgba(108,99,255,0.35), inset 0 1px 0 rgba(255,255,255,0.15) !important;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  gap: 8px !important;
-  transition: all 0.18s ease !important;
-  cursor: pointer !important;
-}
+
 #prompt-modal #prompt-improve-btn::before {
   content: "";
   width: 18px; height: 18px;
@@ -2120,11 +1660,7 @@ img,svg,video,canvas{max-width:100%;height:auto}
   display: inline-block;
   opacity: 0.95;
 }
-#prompt-modal #prompt-improve-btn:hover:not(:disabled) {
-  background: #7b73ff !important;
-  transform: translateY(-1px) !important;
-  box-shadow: 0 8px 24px rgba(108,99,255,0.45), inset 0 1px 0 rgba(255,255,255,0.2) !important;
-}
+
 #prompt-modal #prompt-improve-btn:active {
   transform: translateY(0) !important;
 }
@@ -2134,24 +1670,8 @@ img,svg,video,canvas{max-width:100%;height:auto}
 }
 
 /* Brainstorm: secondary, compact */
-#prompt-modal #prompt-brainstorm-btn {
-  grid-column: 2 / 3 !important;
-  height: 48px !important;
-  padding: 0 16px !important;
-  font-size: 13px !important;
-  font-weight: 500 !important;
-  background: transparent !important;
-  color: rgba(255,255,255,0.7) !important;
-  border: 1px solid rgba(255,255,255,0.12) !important;
-  border-radius: 10px !important;
-  cursor: pointer !important;
-  transition: all 0.18s ease !important;
-}
-#prompt-modal #prompt-brainstorm-btn:hover:not(:disabled) {
-  color: #a5a0ff !important;
-  border-color: rgba(108,99,255,0.4) !important;
-  background: rgba(108,99,255,0.08) !important;
-}
+
+
 
 /* Hide the status + stop-all + esc-hint under the primary actions in their own row */
 #prompt-modal .prompt-actions #prompt-status {
@@ -2202,31 +1722,11 @@ img,svg,video,canvas{max-width:100%;height:auto}
   align-items: center !important;
   flex-shrink: 0 !important;
 }
-#prompt-modal #prompt-sync-gh-btn {
-  order: 1 !important;
-  height: 38px !important;
-  padding: 0 14px !important;
-  background: rgba(34,197,94,0.12) !important;
-  border: 1px solid rgba(34,197,94,0.35) !important;
-  color: #4ade80 !important;
-  font-weight: 500 !important;
-  border-radius: 8px !important;
-  font-size: 12.5px !important;
-}
-#prompt-modal #prompt-sync-gh-btn:hover {
-  background: rgba(34,197,94,0.22) !important;
-  color: #86efac !important;
-}
+
+
 
 /* ── SYNC PANEL: compact, not a wall of text ── */
-#prompt-modal .prompt-sync-panel {
-  border: none !important;
-  border-top: 1px solid rgba(255,255,255,0.06) !important;
-  border-radius: 0 !important;
-  padding: 14px 20px 16px !important;
-  background: rgba(255,255,255,0.015) !important;
-  flex-shrink: 0 !important;
-}
+
 #prompt-modal .prompt-sync-title {
   font-size: 11px !important;
   font-weight: 700 !important;
@@ -2286,12 +1786,7 @@ img,svg,video,canvas{max-width:100%;height:auto}
 }
 
 /* ── PREVIEW PANEL: clean frame ── */
-#prompt-modal .prompt-preview-wrap {
-  border: none !important;
-  border-radius: 0 !important;
-  background: #e8eaf0 !important;
-  flex: 1 !important;
-}
+
 
 /* ── PALETTE DETAIL REFINEMENTS ── */
 #prompt-modal .palette-extractor-row {
@@ -2333,50 +1828,16 @@ img,svg,video,canvas{max-width:100%;height:auto}
 }
 
 /* ── HEADER REFINEMENTS ── */
-#prompt-modal .modal-header {
-  background: var(--ps-bg, #0d0d14) !important;
-  border-bottom: 1px solid rgba(255,255,255,0.06) !important;
-  padding: 0 24px !important;
-  height: 56px !important;
-}
-#prompt-modal .modal-title {
-  font-size: 13.5px !important;
-  font-weight: 600 !important;
-  color: rgba(255,255,255,0.92) !important;
-  gap: 10px !important;
-  letter-spacing: -0.005em !important;
-}
-#prompt-modal .modal-title svg {
-  color: #6c63ff !important;
-  width: 15px !important;
-  height: 15px !important;
-}
+
+
+
 #prompt-modal #prompt-filename {
   color: rgba(255,255,255,0.92) !important;
   font-weight: 600 !important;
 }
-#prompt-modal .focus-subtitle {
-  color: rgba(255,255,255,0.35) !important;
-  font-size: 12px !important;
-  font-weight: 400 !important;
-  margin-left: 4px !important;
-}
-#prompt-modal .modal-close {
-  width: 32px !important;
-  height: 32px !important;
-  border-radius: 6px !important;
-  background: transparent !important;
-  border: none !important;
-  color: rgba(255,255,255,0.5) !important;
-  font-size: 20px !important;
-  margin-left: 6px !important;
-  transition: all 0.15s !important;
-}
-#prompt-modal .modal-close:hover {
-  background: rgba(248,113,113,0.15) !important;
-  color: #f87171 !important;
-  transform: none !important;
-}
+
+
+
 
 /* ── Responsive adjustments ── */
 @media (max-width: 1200px) {
@@ -2431,20 +1892,8 @@ img,svg,video,canvas{max-width:100%;height:auto}
    ========================================================= */
 
 /* 1) Modal = full-viewport work surface */
-#prompt-modal .modal.prompt-modal {
-  max-width: min(1600px, 96vw) !important;
-  width: 96vw !important;
-  height: 92vh !important;
-  max-height: 92vh !important;
-  display: flex !important;
-  flex-direction: column !important;
-  margin: 0 auto !important;
-}
-#prompt-modal .prompt-container {
-  flex: 1 !important;
-  min-height: 0 !important;
-  overflow: hidden !important;
-}
+
+
 
 /* 2) Fix checklist header: stack actions cleanly in narrow column */
 #prompt-modal .checklist-header {
@@ -2470,9 +1919,7 @@ img,svg,video,canvas{max-width:100%;height:auto}
   text-overflow: ellipsis !important;
   min-width: 0 !important;
 }
-#prompt-modal .checklist-count-badge {
-  flex-shrink: 0 !important;
-}
+
 #prompt-modal .checklist-header-actions {
   display: flex !important;
   align-items: center !important;
@@ -2497,9 +1944,7 @@ img,svg,video,canvas{max-width:100%;height:auto}
 
 /* 3) Demote secondary buttons (correct IDs this time) */
 /* Generate HTML candidate = #prompt-tweak-btn → hide; flow lives in col 2 already */
-#prompt-modal #prompt-tweak-btn {
-  display: none !important;
-}
+
 /* Compare ideas (brainstorm) = #prompt-brainstorm-btn → keep but reshape */
 
 /* 4) Clean primary action grid */
@@ -2512,24 +1957,7 @@ img,svg,video,canvas{max-width:100%;height:auto}
   padding: 14px 20px 16px !important;
   align-items: center !important;
 }
-#prompt-modal #prompt-improve-btn {
-  grid-column: 1 / 2 !important;
-  grid-row: 1 !important;
-  height: 48px !important;
-  padding: 0 20px !important;
-  font-size: 14.5px !important;
-  font-weight: 600 !important;
-  background: #6c63ff !important;
-  color: #fff !important;
-  border: none !important;
-  border-radius: 10px !important;
-  box-shadow: 0 1px 2px rgba(0,0,0,0.15), inset 0 1px 0 rgba(255,255,255,0.12) !important;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  gap: 8px !important;
-  transition: all 0.18s ease !important;
-}
+
 #prompt-modal #prompt-improve-btn:hover:not(:disabled) {
   background: #7b73ff !important;
   transform: translateY(-1px) !important;
@@ -2566,39 +1994,15 @@ img,svg,video,canvas{max-width:100%;height:auto}
 #prompt-modal .prompt-panel:first-child #prompt-status:empty {
   display: none !important;
 }
-#prompt-modal .prompt-panel:first-child #prompt-stop-all-btn {
-  grid-column: 1 / 2 !important;
-  grid-row: 3 !important;
-  justify-self: start !important;
-  height: 28px !important;
-  padding: 0 10px !important;
-  font-size: 11px !important;
-  opacity: 0.7 !important;
-  background: transparent !important;
-  border: 1px solid rgba(248,113,113,0.22) !important;
-  color: rgba(248,113,113,0.85) !important;
-  border-radius: 6px !important;
-}
+
 #prompt-modal .prompt-panel:first-child #prompt-stop-all-btn:hover {
   opacity: 1 !important;
   background: rgba(248,113,113,0.1) !important;
 }
-#prompt-modal .prompt-panel:first-child .esc-hint {
-  grid-column: 2 / 3 !important;
-  grid-row: 3 !important;
-  justify-self: end !important;
-  font-size: 11px !important;
-  color: rgba(255,255,255,0.32) !important;
-}
+
 
 /* 5) Middle column action grid: unified, compact */
-#prompt-modal .prompt-panel:nth-child(2) .prompt-actions {
-  display: grid !important;
-  grid-template-columns: 1fr 1fr !important;
-  gap: 8px !important;
-  padding: 12px 20px !important;
-  align-items: center !important;
-}
+
 #prompt-modal .prompt-panel:nth-child(2) .prompt-actions button {
   height: 36px !important;
   font-size: 12.5px !important;
@@ -2632,9 +2036,7 @@ img,svg,video,canvas{max-width:100%;height:auto}
 /* NOTE: #prompt-status only holds dynamic status text, so empty it when only placeholder content */
 
 /* 7) Softer Improve shadow (less 2021-era glow) */
-#prompt-modal #prompt-improve-btn {
-  box-shadow: 0 1px 2px rgba(0,0,0,0.15), inset 0 1px 0 rgba(255,255,255,0.12) !important;
-}
+
 
 /* 8) Brainstorm progress hidden when inactive */
 #prompt-modal .brainstorm-progress:not(.active) {
@@ -2687,9 +2089,7 @@ img,svg,video,canvas{max-width:100%;height:auto}
   margin: 0 !important;
   border-radius: 0 !important;
 }
-#prompt-modal .prompt-panel:last-child {
-  padding: 0 !important;
-}
+
 #prompt-modal .prompt-panel:last-child > .prompt-label {
   padding: 18px 24px 12px !important;
 }
@@ -2708,10 +2108,7 @@ img,svg,video,canvas{max-width:100%;height:auto}
 }
 
 /* Consistency: modal-close subtle, not jarring red on hover */
-#prompt-modal .modal-close:hover {
-  background: rgba(255,255,255,0.08) !important;
-  color: rgba(255,255,255,0.9) !important;
-}
+
 
 /* "Esc to cancel" hint: only show when something is running */
 #prompt-modal .prompt-panel:first-child .esc-hint {
@@ -2738,14 +2135,7 @@ html, body {
   overflow-x: hidden;
   overflow-y: visible;
 }
-header.header,
-.header {
-  position: -webkit-sticky !important;
-  position: sticky !important;
-  top: 0 !important;
-  z-index: 9000 !important;
-  width: 100%;
-}
+
 @media print {
   header.header, .header { position: static !important; }
 }
@@ -2780,9 +2170,7 @@ header.header,
   box-sizing: border-box;
 }
 /* Push page content below the fixed header — fallbacks tuned to actual rendered heights to avoid CLS */
-body {
-  padding-top: var(--header-h, 80px);
-}
+
 @media (max-width: 900px) {
   body { padding-top: var(--header-h, 56px); }
 }
@@ -2796,10 +2184,10 @@ body {
 /* ====================================================================== */
 
 /* ====== N8N WORKFLOW FIXER — CSS (2026) ====== */
-.fixer-tab-nav{display:flex;align-items:center;gap:4px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);border-radius:12px;padding:3px}
-.fixer-tab-btn{display:inline-flex;align-items:center;gap:6px;padding:7px 13px;border-radius:9px;border:none;background:transparent;color:var(--muted);font-size:12px;font-weight:700;cursor:pointer;transition:all 0.15s;white-space:nowrap;font-family:inherit}
+
+
 .fixer-tab-btn:hover{color:var(--text);background:rgba(255,255,255,0.05)}
-.fixer-tab-btn.active{background:rgba(113,112,255,0.18);color:#e0deff;box-shadow:0 2px 8px rgba(113,112,255,0.15)}
+
 .fixer-tab-btn svg{width:14px;height:14px;flex-shrink:0}
 @media(max-width:768px){.fixer-tab-btn span.tab-label{display:none}.fixer-tab-btn{padding:7px 10px}}
 
@@ -3041,18 +2429,18 @@ body {
 .radar-empty{text-align:center;padding:48px 20px;color:var(--muted)}
 .radar-empty svg{width:48px;height:48px;margin:0 auto 16px;display:block;opacity:.3}
 .radar-empty h3{font-size:16px;font-weight:700;color:var(--text);margin-bottom:6px}
-.radar-empty p{font-size:13px}
+
 .radar-history-row{display:grid;grid-template-columns:160px 80px 80px 80px 1fr;gap:12px;align-items:center;padding:12px 16px;border-radius:10px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.05);margin-bottom:8px;font-size:12px}
 .radar-history-row:hover{background:rgba(255,255,255,0.04)}
 .radar-history-date{color:var(--muted);font-size:11px}
 .prompt-textarea{width:100%;box-sizing:border-box;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.1);border-radius:10px;padding:14px;color:var(--text);font-size:12px;font-family:'Courier New',monospace;line-height:1.6;resize:vertical;min-height:220px;outline:none}
 .prompt-textarea:focus{border-color:#7c3aed}
 .radar-drawer{position:fixed;top:0;right:0;width:480px;max-width:95vw;height:100vh;background:var(--bg-elevated);border-left:1px solid rgba(255,255,255,0.1);z-index:1000;overflow-y:auto;padding:28px;transform:translateX(100%);transition:transform .25s ease;display:flex;flex-direction:column;gap:16px}
-.radar-drawer.open{transform:translateX(0)}
+
 .radar-drawer-close{position:absolute;top:16px;right:16px;width:32px;height:32px;border-radius:8px;border:1px solid rgba(255,255,255,0.1);background:transparent;color:var(--muted);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:16px}
 .radar-overlay{position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:999;display:none}
 .radar-overlay.show{display:block}
-.topic-chip{display:inline-flex;align-items:center;gap:5px;padding:4px 10px 4px 12px;border-radius:20px;background:rgba(124,58,237,0.15);border:1px solid rgba(124,58,237,0.35);color:#c4b5fd;font-size:12px;font-weight:700;cursor:default}
+
 .topic-chip.preset{background:rgba(124,58,237,0.1);border-color:rgba(124,58,237,0.25);color:#a78bfa}
 .topic-chip.custom{background:rgba(59,130,246,0.12);border-color:rgba(59,130,246,0.3);color:#93c5fd}
 .topic-chip-remove{width:16px;height:16px;border-radius:50%;border:none;background:rgba(255,255,255,0.15);color:rgba(255,255,255,0.6);cursor:pointer!important;display:inline-flex;align-items:center;justify-content:center;font-size:11px;line-height:1;padding:0;font-family:inherit;flex-shrink:0;pointer-events:all!important;z-index:10;position:relative}
@@ -3063,9 +2451,9 @@ body {
 /* ===== DESIGN SYSTEM IMPROVEMENTS ===== */
 
 /* Expand/collapse using grid trick (smooth, no clipping) */
-.card-body{display:grid;grid-template-rows:0fr;transition:grid-template-rows .28s ease}
-.project-card.expanded .card-body{grid-template-rows:1fr}
-.card-body-inner{min-height:0;overflow:visible}
+
+
+
 
 /* If old max-height approach still used, upgrade it */
 .project-card .card-body[style*="max-height:0"]{max-height:none!important}
@@ -3120,8 +2508,8 @@ body {
 .kwr-btn-swarm:hover:not(:disabled){background:linear-gradient(135deg,rgba(124,58,237,0.95),rgba(167,139,250,0.8))!important}
 
 /* ===== PROMPT STUDIO MODAL IMPROVEMENTS ===== */
-.prompt-modal{max-width:1100px!important;width:96vw!important;max-height:90vh!important;height:90vh!important;display:flex;flex-direction:column!important}
-.prompt-modal .modal-header{flex-shrink:0}
+
+
 .prompt-modal .modal-body{flex:1;overflow-y:auto;min-height:0}
 .prompt-modal .prompt-actions{flex-shrink:0;position:sticky;bottom:0;background:var(--bg-modal,#161820);border-top:1px solid rgba(255,255,255,0.08);padding:12px 20px;z-index:5;display:flex;gap:10px;flex-wrap:wrap;align-items:center}
 .prompt-panel{height:100%;display:flex;flex-direction:column}
@@ -3161,55 +2549,41 @@ body {
    ══════════════════════════════════════════════════════════════════ */
 
 /* 1. Design tokens */
-:root {
-  --radius-xs:6px; --radius-sm:8px; --radius-md:12px; --radius-lg:18px; --radius-xl:24px;
-  --shadow-xs:0 1px 3px rgba(0,0,0,.28);
-  --shadow-sm:0 4px 14px rgba(0,0,0,.32);
-  --shadow-md:0 10px 30px rgba(0,0,0,.38);
-  --shadow-lg:0 24px 64px rgba(0,0,0,.52);
-  --t-fast:120ms cubic-bezier(.2,0,0,1);
-  --t-base:200ms cubic-bezier(.2,0,0,1);
-  --t-slow:320ms cubic-bezier(.2,0,0,1);
-  --surf2:rgba(255,255,255,.035);
-  --surf3:rgba(255,255,255,.055);
-  --fg-hi:rgba(255,255,255,.92);
-  --fg-md:rgba(255,255,255,.68);
-  --fg-lo:rgba(255,255,255,.42);
-}
+
 
 /* 2. Project cards */
-.project-card{border-radius:var(--radius-lg)!important;border:1px solid rgba(255,255,255,.07)!important;background:rgba(255,255,255,.022)!important;overflow:visible!important;transition:border-color var(--t-base),box-shadow var(--t-base)!important}
-.project-card:hover{border-color:rgba(255,255,255,.11)!important;box-shadow:0 8px 28px rgba(0,0,0,.22)!important}
-.project-card.expanded{border-color:rgba(113,112,255,.22)!important;box-shadow:0 10px 36px rgba(0,0,0,.3),0 0 0 1px rgba(113,112,255,.12)!important}
+
+
+
 
 /* 3. Card header */
-.card-header{padding:18px 20px!important;gap:14px!important;border-radius:var(--radius-lg)!important;user-select:none}
+
 .project-card.expanded .card-header{border-radius:var(--radius-lg) var(--radius-lg) 0 0!important;border-bottom:1px solid rgba(255,255,255,.06)!important}
 .card-header:hover{background:rgba(255,255,255,.025)!important}
 .card-header h3{font-size:14.5px!important;font-weight:600!important;letter-spacing:-.01em!important}
-.meta-tag{font-size:11px!important;font-weight:600!important;padding:3px 8px!important;border-radius:6px!important;background:rgba(255,255,255,.05)!important;border:1px solid rgba(255,255,255,.07)!important;color:rgba(255,255,255,.62)!important}
+
 
 /* 4. Card body smooth expand — grid trick */
-.card-body{display:grid!important;grid-template-rows:0fr!important;transition:grid-template-rows var(--t-slow)!important;overflow:visible!important}
-.project-card.expanded .card-body{grid-template-rows:1fr!important}
-.card-body-inner{min-height:0!important;overflow:visible!important;padding:0 20px 20px!important}
+
+
+
 
 /* 5. Toggle icon */
 .toggle-icon{width:28px!important;height:28px!important;border-radius:8px!important;font-size:10px!important;transition:transform var(--t-base),background var(--t-base),color var(--t-base)!important}
 .project-card.expanded .toggle-icon{transform:rotate(180deg)!important;background:rgba(113,112,255,.14)!important;border-color:rgba(113,112,255,.28)!important;color:#a8a6ff!important}
 
 /* 6. Stats bar */
-.stat-card{border-radius:var(--radius-md)!important;padding:18px 20px!important;border:1px solid rgba(255,255,255,.07)!important;background:rgba(255,255,255,.025)!important}
+
 .stat-value{font-size:26px!important;font-weight:700!important;letter-spacing:-.03em!important}
-.stat-label{font-size:11.5px!important;font-weight:600!important;color:var(--fg-lo)!important;letter-spacing:.02em!important}
+
 
 /* 7. Header */
-.header-inner{padding:14px 28px!important;gap:16px!important}
-.logo h1{font-size:16px!important;font-weight:700!important;letter-spacing:-.02em!important}
+
+
 
 /* 8. Nav tabs */
-.fixer-tab-btn{border-radius:9px!important;font-size:12.5px!important;font-weight:600!important;padding:7px 14px!important;transition:background var(--t-fast),color var(--t-fast)!important}
-.fixer-tab-btn.active{background:rgba(113,112,255,.18)!important;color:#c4c2ff!important;border-color:rgba(113,112,255,.3)!important}
+
+
 
 /* 9. Action buttons — unified sizing */
 .action-btn{height:36px!important;padding:0 14px!important;border-radius:9px!important;font-size:12.5px!important;font-weight:600!important;display:inline-flex!important;align-items:center!important;justify-content:center!important;gap:6px!important;transition:background var(--t-fast),border-color var(--t-fast),transform var(--t-fast),color var(--t-fast)!important;white-space:nowrap!important;cursor:pointer!important}
@@ -3217,20 +2591,20 @@ body {
 .action-btn:active{transform:translateY(0)!important}
 .action-btn.success{background:linear-gradient(180deg,#20b875,#17a066)!important;border-color:rgba(255,255,255,.12)!important;color:#fff!important;box-shadow:0 2px 0 rgba(0,0,0,.18),inset 0 1px 0 rgba(255,255,255,.14)!important}
 .action-btn.success:hover{background:linear-gradient(180deg,#26cc84,#1ab472)!important;box-shadow:0 4px 16px rgba(32,184,117,.32),inset 0 1px 0 rgba(255,255,255,.16)!important}
-.hdr-sync-btn{height:36px!important;border-radius:9px!important;font-size:12.5px!important;font-weight:600!important}
+
 
 /* 10. Search box */
-.search-box{height:36px!important;border-radius:9px!important;font-size:13px!important}
+
 
 /* 11. Main content spacing */
 .main-content{padding:82px 28px 40px!important;max-width:1340px!important;margin:0 auto!important}
 
 /* 12. Section headings */
-.section-title{font-size:17px!important;font-weight:700!important;letter-spacing:-.02em!important;color:var(--fg-hi)!important}
+
 .section-sub{font-size:12.5px!important;color:var(--fg-lo)!important;margin-top:3px!important}
 
 /* 13. Status pills */
-.status-pill{border-radius:999px!important;font-size:11px!important;font-weight:700!important;padding:4px 10px!important;letter-spacing:.01em!important}
+
 
 /* 14. Toast */
 .toast{border-radius:var(--radius-md)!important;padding:12px 18px!important;font-size:13px!important;font-weight:500!important;box-shadow:var(--shadow-lg)!important}
@@ -3350,11 +2724,11 @@ body {
 /* ══════════════════════
    21. Global scrollbars
    ══════════════════════ */
-:root{scrollbar-width:thin;scrollbar-color:rgba(255,255,255,.1) transparent}
-::-webkit-scrollbar{width:6px;height:6px}
-::-webkit-scrollbar-thumb{background:rgba(255,255,255,.1);border-radius:999px}
-::-webkit-scrollbar-thumb:hover{background:rgba(255,255,255,.2)}
-::-webkit-scrollbar-track{background:transparent}
+
+
+
+
+
 
 /* ══════════════════════
    22. Focus ring unification
@@ -3364,7 +2738,7 @@ body {
 /* ═════════════════════════
    23. Card CTA button group
    ═════════════════════════ */
-.card-cta-group{gap:6px!important}
+
 .card-cta-group .action-btn{height:30px!important;padding:0 10px!important;font-size:11.5px!important;border-radius:8px!important}
 
 /* ═════════════════════════════════
@@ -3376,8 +2750,8 @@ body {
 /* ═══════════════════
    25. View toggle
    ═══════════════════ */
-.view-btn{border-radius:7px!important;padding:5px 9px!important}
-.view-btn.active{background:rgba(113,112,255,.18)!important}
+
+
 
 /* END OVERHAUL 2026-04-20 */
 
@@ -3386,21 +2760,9 @@ body {
    FINAL POLISH PASS (2026-04-20) — dark-only, solid surfaces,
    sticky modal footer, safe expand/collapse, better responsive
    ================================================================ */
-:root{
-  --bg:#08090a !important;
-  --bg-elevated:#111217 !important;
-  --surface:#13141a !important;
-  --surface-strong:#1a1c24 !important;
-  --card:#161821 !important;
-  --card-hover:#1c1e28 !important;
-  --border:rgba(255,255,255,0.09) !important;
-  --border-strong:rgba(255,255,255,0.16) !important;
-  --text:#f4f5f8 !important;
-  --text-secondary:#c4cad4 !important;
-  --muted:#8e95a3 !important;
-}
+
 html,body{background:#08090a !important;color:#f4f5f8 !important}
-body{background:radial-gradient(circle at 50% -10%,rgba(113,112,255,0.14),transparent 40%),linear-gradient(180deg,#0b0c10 0%,#08090a 100%) !important;color:#f4f5f8 !important}
+
 
 /* Solid card surfaces (no more invisible 0.024 overlays) */
 .project-card,.stat-card,.agent-group,.file-row,.compare-panel,
@@ -3410,7 +2772,7 @@ body{background:radial-gradient(circle at 50% -10%,rgba(113,112,255,0.14),transp
   border:1px solid rgba(255,255,255,0.08) !important;
   color:#f4f5f8 !important;
 }
-.project-card:hover{border-color:rgba(113,112,255,0.32) !important;background:linear-gradient(180deg,#1d1f29,#181a22) !important}
+
 
 /* Header readability */
 header,.header{
@@ -3506,7 +2868,7 @@ input::placeholder,textarea::placeholder{color:rgba(255,255,255,0.35) !important
 }
 
 /* EXPAND / COLLAPSE — prevent clipping of bottom controls */
-.project-card.expanded{overflow:visible !important}
+
 .project-card.expanded .card-body,
 .project-card.expanded .expanded-content,
 .project-card.expanded .card-actions-row{overflow:visible !important}
@@ -3564,49 +2926,17 @@ h3{font-size:14px;letter-spacing:-0.005em}
    ================================================================ */
 
 /* ---- STAT CARDS: gradient border + colored accent + roomier ---- */
-.stats{gap:14px !important}
-.stat-card{
-  position:relative;
-  min-height:96px;
-  padding:16px 18px !important;
-  background:
-    radial-gradient(120% 80% at 0% 0%, rgba(113,112,255,0.09), transparent 60%),
-    linear-gradient(180deg,#1a1c26,#15161e) !important;
-  border:1px solid rgba(255,255,255,0.07) !important;
-  border-radius:14px !important;
-  box-shadow:0 1px 0 rgba(255,255,255,0.04) inset, 0 8px 22px -14px rgba(0,0,0,0.55) !important;
-  overflow:hidden;
-}
-.stat-card::before{
-  content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;
-  background:linear-gradient(135deg,rgba(113,112,255,0.35),transparent 40%);
-  mask:linear-gradient(#000,#000) content-box, linear-gradient(#000,#000);
-  -webkit-mask:linear-gradient(#000,#000) content-box, linear-gradient(#000,#000);
-  -webkit-mask-composite:xor; mask-composite:exclude;
-  padding:1px;opacity:.55;
-}
+
+
+
 .stat-card:nth-child(2)::before{background:linear-gradient(135deg,rgba(52,211,153,0.45),transparent 42%)}
 .stat-card:nth-child(3)::before{background:linear-gradient(135deg,rgba(251,191,36,0.45),transparent 42%)}
 .stat-card:nth-child(4)::before{background:linear-gradient(135deg,rgba(244,114,182,0.45),transparent 42%)}
-.stat-number{
-  font-size:30px !important;
-  font-weight:700 !important;
-  line-height:1.05 !important;
-  letter-spacing:-0.025em !important;
-  background:linear-gradient(180deg,#ffffff,#b9bec9);
-  -webkit-background-clip:text;background-clip:text;color:transparent !important;
-  margin-bottom:4px !important;
-}
-.stat-card:nth-child(2) .stat-number{background:linear-gradient(180deg,#9effcf,#34d399);-webkit-background-clip:text;background-clip:text}
-.stat-card:nth-child(3) .stat-number{background:linear-gradient(180deg,#ffe29a,#fbbf24);-webkit-background-clip:text;background-clip:text}
-.stat-card:nth-child(4) .stat-number{background:linear-gradient(180deg,#ffc1e0,#f472b6);-webkit-background-clip:text;background-clip:text}
-.stat-label{
-  font-size:11.5px !important;
-  font-weight:600 !important;
-  color:#8b93a3 !important;
-  text-transform:uppercase !important;
-  letter-spacing:0.08em !important;
-}
+
+
+
+
+
 .stat-icon{
   position:absolute !important;top:14px !important;right:14px !important;
   font-size:18px !important;opacity:.35 !important;
@@ -3617,16 +2947,8 @@ h3{font-size:14px;letter-spacing:-0.005em}
 .stat-card:nth-child(4) .stat-icon{color:#f472b6}
 
 /* ---- PROJECT CARD: stronger title, breathing room ---- */
-.project-card{
-  border-radius:16px !important;
-  background:linear-gradient(180deg,#181a23,#131520) !important;
-  border:1px solid rgba(255,255,255,0.07) !important;
-  transition:transform .18s ease, box-shadow .18s ease, border-color .18s ease !important;
-}
-.project-card:hover{
-  border-color:rgba(113,112,255,0.28) !important;
-  box-shadow:0 14px 40px -20px rgba(113,112,255,0.35), 0 2px 0 rgba(255,255,255,0.03) inset !important;
-}
+
+
 .project-card .card-header{padding:16px 18px !important;gap:14px !important}
 .project-card .card-info h3{
   font-size:16px !important;
@@ -3644,15 +2966,7 @@ h3{font-size:14px;letter-spacing:-0.005em}
 
 /* ---- META TAGS: role-based visual differentiation ---- */
 .project-card .card-meta{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
-.meta-tag{
-  font-size:10.5px !important;
-  font-weight:600 !important;
-  letter-spacing:0.03em !important;
-  text-transform:uppercase;
-  padding:3px 8px !important;
-  border-radius:6px !important;
-  line-height:1.5 !important;
-}
+
 /* Language/direction tag (first) — subtle purple */
 .card-meta .meta-tag:nth-child(1){
   background:rgba(113,112,255,0.12) !important;
@@ -3677,19 +2991,8 @@ h3{font-size:14px;letter-spacing:-0.005em}
 
 /* ---- CTA GROUP: primary Preview bolder, Comments ghosted ---- */
 .card-cta-group{gap:6px !important;align-items:center}
-.preview-cta.primary-accent{
-  background:linear-gradient(180deg,#7170ff,#5856e6) !important;
-  border:1px solid rgba(113,112,255,0.65) !important;
-  color:#fff !important;
-  font-weight:600 !important;
-  padding:7px 13px !important;
-  border-radius:9px !important;
-  box-shadow:0 4px 14px -4px rgba(113,112,255,0.55), 0 1px 0 rgba(255,255,255,0.15) inset !important;
-}
-.preview-cta.primary-accent:hover{
-  background:linear-gradient(180deg,#8584ff,#6967ed) !important;
-  transform:translateY(-1px);
-}
+
+
 .preview-cta.primary-accent svg{width:12px !important;height:12px !important}
 .project-comments-btn{
   background:transparent !important;
@@ -3824,7 +3127,7 @@ h3{font-size:14px;letter-spacing:-0.005em}
 
 /* ---- SECTION SPACING ---- */
 .projects-section,#projects-container{padding-top:8px}
-#projects-grid{gap:18px !important}
+
 .view-modes{gap:6px !important;margin-bottom:14px}
 .view-btn{
   background:transparent !important;
@@ -3849,29 +3152,12 @@ h3{font-size:14px;letter-spacing:-0.005em}
    POLISH PASS v2.1 (2026-04-20) — quick wins after visual audit:
    kill card-stretch dead space, bump title hierarchy, tighter grid
    ================================================================ */
-.projects-grid{
-  align-items:start !important;
-  grid-auto-rows:min-content !important;
-  gap:18px !important;
-}
+
 /* Stronger title hierarchy on project cards */
-.project-card h3,
-.project-card .project-title,
-.project-card [class*="project-name"]{
-  font-size:17px !important;
-  font-weight:700 !important;
-  letter-spacing:-0.015em !important;
-  line-height:1.25 !important;
-}
+
 /* Subtle card hover for grid polish */
-.project-card{
-  transition:transform .18s ease, border-color .18s ease, box-shadow .18s ease !important;
-}
-.project-card:hover{
-  transform:translateY(-1px);
-  border-color:rgba(113,112,255,0.35) !important;
-  box-shadow:0 8px 24px -12px rgba(0,0,0,0.5), 0 0 0 1px rgba(113,112,255,0.12) !important;
-}
+
+
 /* Tighten main container max-width and add breathing room at bottom */
 main, main.container{
   padding-bottom:48px !important;
@@ -3904,9 +3190,7 @@ main, main.container{
 }
 
 /* 2. Projects grid min-height — remove the 60vh blank gap */
-#projects-grid{
-  min-height:200px !important;
-}
+
 
 /* 3. Preview modal header — prevent wrapping chaos, allow orderly flex */
 #preview-modal .modal-header,
@@ -3972,55 +3256,29 @@ main, main.container{
   grid-template-rows: 1fr !important;
   overflow: visible !important;        /* Allow sticky footers to work when open */
 }
-.card-body-inner {
-  min-height: 0 !important;           /* Required for 0fr to work */
-  overflow: hidden !important;        /* Clip sticky children in collapsed state */
-}
-.project-card.expanded .card-body-inner {
-  overflow: visible !important;       /* Allow sticky footer when expanded */
-}
+
+
 /* Force padding=0 on inner when collapsed so 0fr gives true 0px height */
-.project-card:not(.expanded) .card-body-inner {
-  padding: 0 !important;
-  border-top-width: 0 !important;
-}
+
 
 /* ── 2. PROJECT CARD: Only expanded cards get overflow:visible ──────────
    Collapsed cards MUST clip their content (overflow:hidden).
    All prior rules set overflow:visible universally — this fixes that.
    ──────────────────────────────────────────────────────────────────── */
-.project-card {
-  overflow: hidden !important;
-}
-.project-card.expanded {
-  overflow: visible !important;
-}
+
+
 
 /* ── 3. HEADER HEIGHT: Fix last-sync-meta causing 106px tall header ─────
    The two .last-sync-meta blocks inside .status-stack were each 63px
    because their text was wrapping in a constrained width. Force nowrap.
    ────────────���─────────────────────────────────────────────────────── */
-.last-sync-meta {
-  white-space: nowrap !important;
-  overflow: hidden !important;
-  text-overflow: ellipsis !important;
-  min-width: 0 !important;
-  max-width: 260px !important;
-  padding: 4px 10px !important;
-  line-height: 1.4 !important;
-}
-.status-stack {
-  flex-wrap: nowrap !important;
-  min-width: 0 !important;
-}
+
+
 
 /* ── 4. HEADER ACTIONS: Prevent search bar shrink ───────────────────────
    .search-wrap was shrinking to 178px instead of staying ~280px
    ──────────────────────────────────────────────────────────────────── */
-.search-wrap {
-  flex-shrink: 0 !important;
-  min-width: 200px !important;
-}
+
 @media (max-width: 900px) {
   .search-wrap {
     min-width: 140px !important;
@@ -4031,9 +3289,7 @@ main, main.container{
 /* ── 5. TAB NAV: Prevent tabs from being crushed ────────────────────────
    .fixer-tab-nav was squeezing to 308px, hiding tab labels (16px wide)
    ──────────────────────────────────────────────────────────────────── */
-.fixer-tab-nav {
-  flex-shrink: 0 !important;
-}
+
 .fixer-tab-btn .tab-label {
   display: inline !important;         /* Force labels visible at desktop */
   overflow: hidden !important;
@@ -4050,9 +3306,7 @@ main, main.container{
    inset: auto -20% -55% auto placed the glow orb outside card bounds,
    inflating scrollWidth by ~58px per card and causing horizontal scroll.
    ──────────────────────────────────────────────────────────────────── */
-.stat-card {
-  overflow: hidden !important;        /* Clip the ::after orb to card bounds */
-}
+
 .stats-grid {
   overflow: hidden !important;
 }
@@ -4087,10 +3341,7 @@ main, main.container{
    Header was 106px due to sync meta height; with fix #3 it should
    normalize. Ensure max-height cap prevents future regression.
    ──────────────────────────────────────────────────────────────────── */
-.header-inner {
-  align-items: center !important;
-  flex-wrap: nowrap !important;
-}
+
 @media (max-width: 860px) {
   .header-inner {
     flex-wrap: wrap !important;
@@ -4125,9 +3376,7 @@ main, main.container{
 }
 
 /* ── 2. BODY — safe scroll anchor below fixed header ────────────── */
-body {
-  padding-top: 80px !important;
-}
+
 .container {
   padding: 28px 32px 80px !important;
   max-width: 1400px !important;
@@ -4142,20 +3391,14 @@ body {
   border-bottom: 1px solid rgba(255,255,255,0.06) !important;
   box-shadow: 0 1px 0 rgba(113,112,255,0.08) !important;
 }
-.header-inner {
-  height: 62px !important;
-  padding: 0 28px !important;
-  gap: 14px !important;
-}
+
 .logo h1 {
   font-size: 16px !important;
   font-weight: 700 !important;
   letter-spacing: -0.04em !important;
   color: var(--text-hi) !important;
 }
-.header-actions {
-  gap: 8px !important;
-}
+
 .header-actions .action-btn,
 .header-actions button {
   height: 34px !important;
@@ -4171,16 +3414,7 @@ body {
   gap: 14px !important;
   margin-bottom: 32px !important;
 }
-.stat-card {
-  padding: 18px 22px !important;
-  border-radius: var(--r-card) !important;
-  background: var(--card-bg) !important;
-  border: 1px solid var(--card-border) !important;
-  box-shadow: var(--shadow-card) !important;
-  transition: box-shadow 0.18s ease, transform 0.18s ease !important;
-  position: relative !important;
-  overflow: hidden !important;
-}
+
 .stat-card::before {
   content: '';
   position: absolute;
@@ -4233,21 +3467,9 @@ body {
   gap: 16px !important;
   min-height: 200px !important;
 }
-.project-card {
-  background: var(--card-bg) !important;
-  border: 1px solid var(--card-border) !important;
-  border-radius: var(--r-card) !important;
-  box-shadow: var(--shadow-card) !important;
-  transition: box-shadow 0.2s ease, border-color 0.2s ease !important;
-  overflow: hidden !important;
-}
-.project-card:hover {
-  border-color: rgba(113,112,255,0.22) !important;
-  box-shadow: var(--shadow-hover) !important;
-}
-.project-card.expanded {
-  border-color: rgba(113,112,255,0.28) !important;
-}
+
+
+
 
 /* ── 7. CARD HEADER — no hacks, proper grid layout ──────────────── */
 .card-header {
@@ -4259,16 +3481,7 @@ body {
   padding: 20px !important;
   flex-direction: unset !important;
 }
-.card-icon {
-  grid-column: 1 !important;
-  grid-row: 1 / 3 !important;
-  width: 48px !important;
-  height: 48px !important;
-  border-radius: 14px !important;
-  flex-shrink: 0 !important;
-  align-self: start !important;
-  margin-top: 2px !important;
-}
+
 .card-info {
   grid-column: 2 !important;
   grid-row: 1 !important;
@@ -4704,16 +3917,7 @@ body {
   align-items: center !important;
   flex-shrink: 0 !important;
 }
-.fixer-tab-btn {
-  height: 30px !important;
-  padding: 0 12px !important;
-  display: inline-flex !important;
-  align-items: center !important;
-  white-space: nowrap !important;
-  font-size: 12px !important;
-  line-height: 1 !important;
-  box-sizing: border-box !important;
-}
+
 
 /* ── 4. header-menu-btn → 36px ── */
 .header-menu-btn {
@@ -4758,13 +3962,7 @@ body {
 }
 
 /* ── 7. header-inner vertical centering ── */
-.header-inner {
-  align-items: center !important;
-  padding-top: 0 !important;
-  padding-bottom: 0 !important;
-  height: 62px !important;
-  box-sizing: border-box !important;
-}
+
 .logo {
   display: inline-flex !important;
   align-items: center !important;
@@ -5100,9 +4298,113 @@ body {
 }
 
 /* END DASHBOARD REBUILD v1.0 */
+
+/* === Utility Classes (Task 2) === */
+.d-none { display:none; }
+.fs-11 { font-size:11px; }
+.icon-13 { width:13px;height:13px; }
+.icon-12 { width:12px;height:12px; }
+.icon-15 { width:15px;height:15px; }
+.icon-14 { width:14px;height:14px; }
+.fs-11-muted { font-size:11px;color:var(--muted); }
+.fs-13-text { font-size:13px;color:var(--text); }
+.text-muted { color:var(--muted); }
+.text-accent-light { color:#d7dbff; }
+.mb-8 { margin-bottom:8px; }
+.mb-14 { margin-bottom:14px; }
+.mb-18 { margin-bottom:18px; }
+.flex-wrap-8 { display:flex;gap:8px;flex-wrap:wrap; }
+.flex-1-min { flex:1;min-width:0; }
+.p-24 { padding:24px; }
+.flex-center-gap { display:flex;align-items:center;gap:8px; }
+.flex-center-gap-md { display:flex;align-items:center;gap:12px; }
+.text-muted-sm { color:var(--muted);font-size:12px; }
+.text-secondary-sm { color:var(--text-secondary);font-size:13px; }
+.text-semibold { font-weight:600;font-size:14px; }
+.mt-8 { margin-top:8px; }
+.mb-16 { margin-bottom:16px; }
+
+
+/* === Mobile Navigation (Task 3) === */
+.mobile-drawer { position:fixed; top:0; right:-280px; width:280px; height:100vh; background:var(--surface-strong,#1a1a2e); border-left:1px solid var(--border,rgba(255,255,255,0.1)); z-index:10000; transition:right 0.25s; padding:20px; overflow-y:auto; }
+.mobile-drawer.open { right:0; }
+.mobile-overlay { position:fixed; inset:0; background:rgba(0,0,0,0.5); z-index:9999; display:none; }
+.mobile-overlay.show { display:block; }
+.hamburger-btn { display:none; align-items:center; justify-content:center; background:transparent; border:1px solid var(--border,rgba(255,255,255,0.1)); border-radius:6px; padding:6px 10px; cursor:pointer; color:var(--text,#fff); font-size:18px; }
+@media(max-width:768px){.hamburger-btn{display:flex;}.nav-tabs-desktop{display:none!important;}}
+.mobile-nav-item { display:block; padding:12px 8px; color:var(--text,#fff); text-decoration:none; border-bottom:1px solid var(--border,rgba(255,255,255,0.1)); cursor:pointer; font-size:14px; }
+.mobile-nav-item:hover { background:var(--card,rgba(255,255,255,0.05)); border-radius:6px; }
+.mobile-drawer-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; padding-bottom:16px; border-bottom:1px solid var(--border,rgba(255,255,255,0.1)); }
+
+
+/* === Toast Notifications (Task 4) === */
+#toast-container{position:fixed;top:20px;right:20px;z-index:99999;display:flex;flex-direction:column;gap:8px;pointer-events:none;}
+.toast{background:var(--surface-strong,#1a1a2e);border:1px solid var(--border,rgba(255,255,255,0.1));border-radius:8px;padding:12px 16px;min-width:280px;max-width:380px;display:flex;align-items:center;gap:10px;pointer-events:all;transform:translateX(120%);transition:transform 0.3s ease;font-size:14px;box-shadow:0 4px 20px rgba(0,0,0,0.4);}
+.toast.show{transform:translateX(0);}
+.toast-info{border-left:3px solid #7170ff;}
+.toast-success{border-left:3px solid #4caf50;}
+.toast-error{border-left:3px solid #f44336;}
+.toast-warning{border-left:3px solid #ff9800;}
+.toast-icon{font-size:16px;flex-shrink:0;}
+.toast-msg{flex:1;color:var(--text,#fff);}
+.toast-close{background:none;border:none;color:var(--muted,#888);cursor:pointer;font-size:16px;padding:0;}
+
+
+/* === Skeleton Loading (Task 5) === */
+@keyframes skeleton-shimmer{0%{background-position:-200% 0}100%{background-position:200% 0}}
+.skeleton{background:linear-gradient(90deg,rgba(255,255,255,0.03) 25%,rgba(255,255,255,0.08) 50%,rgba(255,255,255,0.03) 75%);background-size:200% 100%;animation:skeleton-shimmer 1.5s infinite;border-radius:8px;}
+.skeleton-card{height:160px;border-radius:var(--radius,16px);margin-bottom:0;}
+.skeleton-text{height:14px;border-radius:4px;margin-bottom:8px;}
+.skeleton-text.short{width:60%;}
+.skeleton-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px;padding:16px 0;}
+
+
+/* === Light Mode & Theme Toggle (Task 6) === */
+body.light{--bg:#f5f5f7;--bg-elevated:#fff;--surface:rgba(255,255,255,0.9);--surface-strong:#fff;--card:rgba(0,0,0,0.04);--text:#1a1a2e;--text-secondary:#444;--muted:#888;--border:rgba(0,0,0,0.1);}
+body.light .header{background:rgba(255,255,255,0.95);border-bottom-color:rgba(0,0,0,0.1);}
+body.light .project-card,body.light .stat-card{background:rgba(0,0,0,0.04);}
+.theme-toggle{background:transparent;border:1px solid var(--border,rgba(255,255,255,0.1));border-radius:6px;padding:6px 10px;cursor:pointer;color:var(--text,#fff);font-size:16px;transition:all 0.2s;}
+.theme-toggle:hover{background:var(--card,rgba(255,255,255,0.05));}
+
+
+/* === v3.1 TOAST ENHANCEMENTS === */
+#toast-container{z-index:100000!important}
+.toast{opacity:0;transition:transform 0.25s,opacity 0.25s!important;max-width:320px}
+.toast.show{transform:translateX(0);opacity:1}
+.toast.success{border-color:rgba(39,166,68,0.4)!important;background:rgba(39,166,68,0.12)!important}
+.toast.error{border-color:rgba(239,95,107,0.4)!important;background:rgba(239,95,107,0.12)!important}
+.toast.warning{border-color:rgba(255,183,77,0.4)!important;background:rgba(255,183,77,0.1)!important}
+.toast-close{margin-left:auto;cursor:pointer;opacity:0.6;font-size:16px;background:none;border:none;color:inherit;padding:0 0 0 8px}
+
+/* === v3.1 SKELETON ENHANCEMENTS === */
+.skeleton-pulse{background:linear-gradient(90deg,rgba(255,255,255,0.03) 25%,rgba(255,255,255,0.08) 50%,rgba(255,255,255,0.03) 75%);background-size:200% 100%;animation:skeleton-shimmer 1.5s infinite;border-radius:8px}
+.skeleton-card-inner{padding:20px;display:flex;flex-direction:column;gap:12px}
+.skeleton-line{height:12px;border-radius:6px;background:linear-gradient(90deg,rgba(255,255,255,0.03) 25%,rgba(255,255,255,0.08) 50%,rgba(255,255,255,0.03) 75%);background-size:200% 100%;animation:skeleton-shimmer 1.5s infinite}
+.skeleton-line.w-60{width:60%}
+.skeleton-line.w-40{width:40%}
+.skeleton-line.w-80{width:80%}
+
+/* === v3.1 LIGHT MODE ENHANCEMENTS === */
+body.light{--card-hover:rgba(0,0,0,0.07);--border-hover:rgba(113,112,255,0.4);--shadow-soft:0 24px 80px rgba(0,0,0,0.12);--shadow-card:0 10px 30px rgba(0,0,0,0.1)}
+body.light .logo-icon{box-shadow:0 4px 12px rgba(113,112,255,0.3)}
+.theme-toggle{border-radius:10px!important;padding:7px 10px!important}
+.theme-toggle:hover{border-color:var(--border-strong,rgba(255,255,255,0.25));color:var(--text,#fff)}
+
+/* === v3.1 MOBILE DRAWER ENHANCEMENTS === */
+.mobile-overlay{opacity:0;pointer-events:none;transition:opacity 0.25s;display:block!important}
+.mobile-overlay.show{opacity:1;pointer-events:all}
+.mobile-overlay.active{opacity:1;pointer-events:all}
+.mobile-nav-btn{display:flex;align-items:center;gap:10px;padding:12px 14px;border-radius:10px;border:none;background:transparent;color:var(--text-secondary,#ccc);font-size:14px;font-weight:600;cursor:pointer;width:100%;text-align:left;transition:all 0.15s}
+.mobile-nav-btn:hover{background:var(--card-hover,rgba(255,255,255,0.08));color:var(--text,#fff)}
+.mobile-drawer-title{font-weight:700;font-size:14px}
+.mobile-drawer-close{background:none;border:none;color:var(--muted,#888);cursor:pointer;font-size:20px;padding:0}
+body.scroll-locked{overflow:hidden!important}
+
 </style>
 </head>
 <body>
+<div id="toast-container"></div>
+
 <a href="#main-content" class="skip-link">Skip to main content</a>
 
 <header class="header">
@@ -5114,6 +4416,8 @@ body {
     </a>
   </div>
   <div class="header-actions">
+<button class="theme-toggle" id="themeToggleBtn" onclick="toggleTheme()" title="Toggle theme">&#9728;</button>
+<button class="hamburger-btn" onclick="openMobileDrawer()" title="Menu">&#9776;</button>
     <div class="fixer-tab-nav" id="fixer-tab-nav" role="tablist" aria-label="Dashboard sections">
       <button class="fixer-tab-btn active" id="tab-projects" onclick="showPage('projects')" aria-label="Projects" role="tab" aria-selected="true">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
@@ -5214,7 +4518,7 @@ body {
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
         Recent Activity
       </h2>
-      <span style="font-size:11px;color:var(--muted)">Last 24 hours</span>
+      <span class="fs-11-muted">Last 24 hours</span>
     </div>
     <div class="activity-feed" id="activity-feed">
       <div class="activity-item">
@@ -5260,7 +4564,7 @@ body {
 <!-- ============================================================
      N8N WORKFLOW FIXER PAGE
      ============================================================ -->
-<div id="page-fixer" class="fixer-page" style="display:none">
+<div id="page-fixer" class="d-none fixer-page">
 
   <!-- Page Header -->
   <div class="fixer-page-header">
@@ -5273,15 +4577,15 @@ body {
     </div>
     <div class="fixer-page-actions">
       <button class="action-btn" onclick="loadStuckWorkflows()" title="Load live executions from N8N">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:13px;height:13px"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg>
+        <svg class="icon-13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg>
         Check Live Executions
       </button>
       <button class="action-btn" onclick="loadFromN8NAccount()" title="Browse workflows and pre-fill fields">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:13px;height:13px"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        <svg class="icon-13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
         Load from N8N
       </button>
       <button class="action-btn accent" id="auto-import-btn" onclick="openAutoImportModal()" title="Auto-import workflow JSON + fields from your N8N account">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:13px;height:13px"><path d="M4 16v1a3 3 0 0 0 3 3h10a3 3 0 0 0 3-3v-1"/><polyline points="4 12 12 8 20 12"/><line x1="12" y1="2" x2="12" y2="15"/></svg>
+        <svg class="icon-13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 16v1a3 3 0 0 0 3 3h10a3 3 0 0 0 3-3v-1"/><polyline points="4 12 12 8 20 12"/><line x1="12" y1="2" x2="12" y2="15"/></svg>
         Auto-Import from N8N
       </button>
     </div>
@@ -5293,7 +4597,7 @@ body {
       <div class="stuck-panel-title">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
         Live Executions Monitor
-        <span class="stuck-badge" id="stuck-count-badge" style="display:none">0 issues</span>
+        <span class="d-none stuck-badge" id="stuck-count-badge">0 issues</span>
       </div>
       <svg class="stuck-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
     </div>
@@ -5331,9 +4635,9 @@ body {
       <div class="fixer-drop-title">Drop N8N workflow JSON here</div>
       <div class="fixer-drop-sub">or click to browse — accepts .json files from N8N export</div>
     </div>
-    <div class="fixer-file-info" id="fixer-file-info" style="display:none">
+    <div class="d-none fixer-file-info" id="fixer-file-info">
       <span class="fixer-file-icon">📄</span>
-      <div style="flex:1;min-width:0">
+      <div class="flex-1-min">
         <div class="fixer-file-name" id="fixer-file-name">—</div>
         <div class="fixer-file-size" id="fixer-file-size">—</div>
       </div>
@@ -5351,7 +4655,7 @@ body {
     <div class="fixer-screenshots-zone" id="fixer-screenshots-zone">
       <input type="file" accept="image/*" multiple onchange="handleScreenshots(event)" id="fixer-screenshots-input">
       <div class="fixer-screenshots-empty" id="fixer-screenshots-empty">📸 Click or drop screenshots of the error (optional — helps AI understand the issue)</div>
-      <div id="fixer-screenshot-thumbs" style="display:flex;gap:8px;flex-wrap:wrap"></div>
+      <div class="flex-wrap-8" id="fixer-screenshot-thumbs"></div>
     </div>
   </div>
 
@@ -5491,7 +4795,7 @@ body {
   </div>
 
   <!-- Primary Action Button -->
-  <div style="margin-bottom:18px">
+  <div class="mb-18">
     <button class="fixer-analyze-btn" id="fixer-analyze-btn" onclick="runAnalysis()" disabled>
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12l2 2 4-4"/><path d="M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0z"/></svg>
       <span id="fixer-analyze-btn-label">Analyze &amp; Fix Workflow</span>
@@ -5516,7 +4820,7 @@ body {
   <div class="fixer-result" id="fixer-result">
 
     <!-- Issue Summary + Root Cause side by side -->
-    <div class="fixer-section-cols" style="margin-bottom:14px">
+    <div class="mb-14 fixer-section-cols">
       <div class="fixer-result-card">
         <div class="fixer-result-label">🔍 Issue Summary</div>
         <div class="fixer-result-text" id="result-issue-summary">—</div>
@@ -5528,7 +4832,7 @@ body {
     </div>
 
     <!-- Changes Made + Confidence -->
-    <div class="fixer-section-cols" style="margin-bottom:14px">
+    <div class="mb-14 fixer-section-cols">
       <div class="fixer-result-card">
         <div class="fixer-result-label">✅ Changes Made</div>
         <ul class="fixer-changes-list" id="result-changes-list"></ul>
@@ -5547,22 +4851,22 @@ body {
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;flex-wrap:wrap;gap:8px">
         <div class="fixer-result-label" style="margin-bottom:0">Fixed Workflow JSON</div>
         <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
-          <span id="fixed-json-stats" style="font-size:11px;color:var(--muted)"></span>
+          <span class="fs-11-muted" id="fixed-json-stats"></span>
           <span id="fixed-json-valid-badge" style="display:none;font-size:10px;font-weight:800;padding:3px 9px;border-radius:999px;background:rgba(39,166,68,0.16);color:#4ade80;border:1px solid rgba(39,166,68,0.3)">✓ Valid JSON</span>
         </div>
       </div>
       <div class="fixer-json-viewer" id="fixer-json-viewer">// Fixed workflow JSON will appear here</div>
       <div class="fixer-json-actions" style="margin-top:12px">
         <button class="action-btn" onclick="copyFixedJson()">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:12px;height:12px"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          <svg class="icon-12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
           Copy JSON
         </button>
         <button class="action-btn success" onclick="downloadFixedJson()" title="Download complete fixed workflow as .json file">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:12px;height:12px"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          <svg class="icon-12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
           Download Fixed .json
         </button>
         <button class="action-btn" onclick="saveFixRecord(null)" title="Save record to Supabase + Obsidian">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:12px;height:12px"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+          <svg class="icon-12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
           Save Record
         </button>
       </div>
@@ -5573,7 +4877,7 @@ body {
       <div style="display:flex;align-items:flex-start;gap:16px;flex-wrap:wrap">
         <div style="flex:1;min-width:200px">
           <div style="font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:0.08em;color:rgba(39,166,68,0.9);margin-bottom:6px;display:flex;align-items:center;gap:6px">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:13px;height:13px"><path d="M22 2L11 13"/><path d="M22 2L15 22 11 13 2 9l20-7z"/></svg>
+            <svg class="icon-13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 2L11 13"/><path d="M22 2L15 22 11 13 2 9l20-7z"/></svg>
             Ready to Deploy
           </div>
           <div style="font-size:13px;color:var(--text-secondary);line-height:1.55" id="deploy-summary-text">
@@ -5593,7 +4897,7 @@ body {
     <!-- Deploy Result -->
     <div class="fixer-deploy-result" id="fixer-deploy-result">
       <div class="fixer-deploy-result-title" id="fixer-deploy-result-title">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:15px;height:15px"><path d="m9 12 2 2 4-4"/><circle cx="12" cy="12" r="10"/></svg>
+        <svg class="icon-15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 12 2 2 4-4"/><circle cx="12" cy="12" r="10"/></svg>
         Deployed successfully
       </div>
       <div class="fixer-deploy-result-meta" id="fixer-deploy-result-meta"></div>
@@ -5614,7 +4918,7 @@ body {
 
 </div><!-- end #page-fixer -->
 
-<div id="page-radar" style="display:none">
+<div class="d-none" id="page-radar">
 <div class="radar-page">
 
   <!-- Header -->
@@ -5798,24 +5102,24 @@ body {
       </div>
 
       <div style="flex:100%;margin-top:12px">
-        <div class="radar-filter-label" style="margin-bottom:8px">Focus Topics <span style="color:var(--muted);font-weight:400;font-size:10px">— LLM will prioritize skills matching these topics</span></div>
+        <div class="mb-8 radar-filter-label">Focus Topics <span style="color:var(--muted);font-weight:400;font-size:10px">— LLM will prioritize skills matching these topics</span></div>
         <div id="radar-topic-chips" style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px"></div>
         <div style="display:flex;gap:6px;flex-wrap:wrap">
           <span style="font-size:11px;color:var(--muted);align-self:center">Add preset:</span>
-          <button class="skill-action-btn" style="font-size:11px" onclick="addPresetTopic('n8n')">+ n8n</button>
-          <button class="skill-action-btn" style="font-size:11px" onclick="addPresetTopic('automation')">+ Automation</button>
-          <button class="skill-action-btn" style="font-size:11px" onclick="addPresetTopic('seo')">+ SEO</button>
-          <button class="skill-action-btn" style="font-size:11px" onclick="addPresetTopic('local seo')">+ Local SEO</button>
-          <button class="skill-action-btn" style="font-size:11px" onclick="addPresetTopic('claude code')">+ Claude Code</button>
-          <button class="skill-action-btn" style="font-size:11px" onclick="addPresetTopic('coding')">+ Coding</button>
-          <button class="skill-action-btn" style="font-size:11px" onclick="addPresetTopic('ai agents')">+ AI Agents</button>
-          <button class="skill-action-btn" style="font-size:11px" onclick="addPresetTopic('scraping')">+ Scraping</button>
-          <button class="skill-action-btn" style="font-size:11px" onclick="addPresetTopic('wordpress')">+ WordPress</button>
-          <button class="skill-action-btn" style="font-size:11px" onclick="addPresetTopic('prompt engineering')">+ Prompts</button>
-          <button class="skill-action-btn" style="font-size:11px" onclick="addPresetTopic('mcp')">+ MCP</button>
-          <button class="skill-action-btn" style="font-size:11px" onclick="addPresetTopic('research')">+ Research</button>
+          <button class="fs-11 skill-action-btn" onclick="addPresetTopic('n8n')">+ n8n</button>
+          <button class="fs-11 skill-action-btn" onclick="addPresetTopic('automation')">+ Automation</button>
+          <button class="fs-11 skill-action-btn" onclick="addPresetTopic('seo')">+ SEO</button>
+          <button class="fs-11 skill-action-btn" onclick="addPresetTopic('local seo')">+ Local SEO</button>
+          <button class="fs-11 skill-action-btn" onclick="addPresetTopic('claude code')">+ Claude Code</button>
+          <button class="fs-11 skill-action-btn" onclick="addPresetTopic('coding')">+ Coding</button>
+          <button class="fs-11 skill-action-btn" onclick="addPresetTopic('ai agents')">+ AI Agents</button>
+          <button class="fs-11 skill-action-btn" onclick="addPresetTopic('scraping')">+ Scraping</button>
+          <button class="fs-11 skill-action-btn" onclick="addPresetTopic('wordpress')">+ WordPress</button>
+          <button class="fs-11 skill-action-btn" onclick="addPresetTopic('prompt engineering')">+ Prompts</button>
+          <button class="fs-11 skill-action-btn" onclick="addPresetTopic('mcp')">+ MCP</button>
+          <button class="fs-11 skill-action-btn" onclick="addPresetTopic('research')">+ Research</button>
           <input type="text" class="radar-filter-input" id="radar-custom-topic-input" placeholder="Custom topic..." style="width:140px" onkeydown="if(event.key==='Enter'){addCustomTopic(this.value);this.value=''}">
-          <button class="skill-action-btn prompt" style="font-size:11px" onclick="addCustomTopic(document.getElementById('radar-custom-topic-input').value);document.getElementById('radar-custom-topic-input').value=''">+ Add</button>
+          <button class="fs-11 skill-action-btn prompt" onclick="addCustomTopic(document.getElementById('radar-custom-topic-input').value);document.getElementById('radar-custom-topic-input').value=''">+ Add</button>
           <button class="skill-action-btn" style="font-size:11px;margin-left:auto" onclick="clearAllTopics()">Clear All</button>
         </div>
       </div>
@@ -5830,7 +5134,7 @@ body {
         Discovered Skills
       </div>
       <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
-        <button class="skill-action-btn prompt" onclick="generateBatchPrompt()" id="radar-gen-prompt-btn" style="display:none">Generate Prompt</button>
+        <button class="d-none skill-action-btn prompt" onclick="generateBatchPrompt()" id="radar-gen-prompt-btn">Generate Prompt</button>
         <span id="radar-dedup-live-badge" class="radar-dedup-badge" title="Dedup active — already-seen URLs are skipped"></span>
         <button class="radar-export-btn" onclick="radarExportAllUrls()" title="Export all skill URLs as CSV" style="padding:5px 11px;font-size:11px">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
@@ -5856,7 +5160,7 @@ body {
   </div>
 
   <!-- Prompt Generator -->
-  <div class="radar-section" id="radar-prompt-section" style="display:none">
+  <div class="d-none radar-section" id="radar-prompt-section">
     <div class="radar-section-head">
       <div class="radar-section-title">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
@@ -5892,12 +5196,12 @@ body {
       <div class="radar-section-title">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
         Run History
-        <span id="radar-history-count-badge" class="radar-count-badge" style="display:none"></span>
+        <span id="radar-history-count-badge" class="d-none radar-count-badge"></span>
       </div>
-      <button class="skill-action-btn" onclick="loadRadarHistory()" style="font-size:11px">Refresh History</button>
+      <button class="fs-11 skill-action-btn" onclick="loadRadarHistory()">Refresh History</button>
     </div>
     <div id="radar-history-list">
-      <div class="radar-empty" style="padding:24px">
+      <div class="p-24 radar-empty">
         <p>No run history yet — click Run Now to start</p>
       </div>
     </div>
@@ -5921,11 +5225,11 @@ body {
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px">
       <div style="display:flex;align-items:center;gap:10px">
         <div style="width:32px;height:32px;border-radius:10px;background:linear-gradient(135deg,var(--gold),var(--gold-dim));display:flex;align-items:center;justify-content:center;flex-shrink:0">
-          <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" style="width:15px;height:15px"><path d="M4 16v1a3 3 0 0 0 3 3h10a3 3 0 0 0 3-3v-1"/><polyline points="4 12 12 8 20 12"/><line x1="12" y1="2" x2="12" y2="15"/></svg>
+          <svg class="icon-15" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5"><path d="M4 16v1a3 3 0 0 0 3 3h10a3 3 0 0 0 3-3v-1"/><polyline points="4 12 12 8 20 12"/><line x1="12" y1="2" x2="12" y2="15"/></svg>
         </div>
         <div>
           <div style="font-size:15px;font-weight:700;color:var(--text)">Auto-Import from N8N</div>
-          <div style="font-size:11px;color:var(--muted)">Select a workflow to auto-fill all fields</div>
+          <div class="fs-11-muted">Select a workflow to auto-fill all fields</div>
         </div>
       </div>
         <button class="modal-close" onclick="closeAutoImportModal()" aria-label="Close auto-import dialog" style="flex-shrink:0">&times;</button>
@@ -5969,8 +5273,8 @@ body {
       <button class="device-tab" onclick="setDevice('tablet',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="2" width="16" height="20" rx="2"/><path d="M12 18h.01"/></svg>Tablet</button>
       <button class="device-tab active" onclick="setDevice('desktop',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8m-4-4v4"/></svg>Desktop</button>
     </div>
-    <button id="preview-expand-btn" class="action-btn" style="height:34px;padding:0 12px;font-size:11px;border-color:rgba(180,160,95,0.28);color:var(--gold-light);background:rgba(180,160,95,0.08)" onclick="togglePreviewExpand()" title="Expand to full screen" aria-label="Expand preview"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" style="width:12px;height:12px"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg> Expand</button>
-    <button id="preview-ps-btn" class="action-btn" style="display:none;border-color:rgba(139,125,255,0.28);color:#c4b8ff;background:rgba(139,125,255,0.10);height:34px;padding:0 12px;font-size:11px" onclick="openPromptStudioFromPreview()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" style="width:12px;height:12px"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 1 1 3 3L7 19l-4 1 1-4Z"/></svg>Prompt Studio</button>
+    <button id="preview-expand-btn" class="action-btn" style="height:34px;padding:0 12px;font-size:11px;border-color:rgba(180,160,95,0.28);color:var(--gold-light);background:rgba(180,160,95,0.08)" onclick="togglePreviewExpand()" title="Expand to full screen" aria-label="Expand preview"><svg class="icon-12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg> Expand</button>
+    <button id="preview-ps-btn" class="action-btn" style="display:none;border-color:rgba(139,125,255,0.28);color:#c4b8ff;background:rgba(139,125,255,0.10);height:34px;padding:0 12px;font-size:11px" onclick="openPromptStudioFromPreview()"><svg class="icon-12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 1 1 3 3L7 19l-4 1 1-4Z"/></svg>Prompt Studio</button>
       <button class="modal-close" onclick="closePreview()" aria-label="Close preview">&times;</button>
   </div>
   <div class="preview-container">
@@ -6022,13 +5326,13 @@ body {
 <div class="modal prompt-modal">
   <div class="modal-header">
     <div class="modal-title"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 1 1 3 3L7 19l-4 1 1-4Z"/></svg> Prompt Studio: <span id="prompt-filename">—</span><span id="prompt-subtitle" class="focus-subtitle"></span></div>
-    <button id="prompt-expand-btn" class="action-btn" style="height:32px;padding:0 12px;font-size:11px;border-color:rgba(255,255,255,0.10);color:var(--text-secondary)" onclick="togglePromptStudioExpand()" title="Expand to full screen" aria-label="Expand Prompt Studio"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:13px;height:13px"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/></svg> Expand</button>
+    <button id="prompt-expand-btn" class="action-btn" style="height:32px;padding:0 12px;font-size:11px;border-color:rgba(255,255,255,0.10);color:var(--text-secondary)" onclick="togglePromptStudioExpand()" title="Expand to full screen" aria-label="Expand Prompt Studio"><svg class="icon-13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/></svg> Expand</button>
       <button class="modal-close" onclick="closePromptStudio()" aria-label="Close Prompt Studio">&times;</button>
   </div>
   <div class="prompt-container">
     <div class="prompt-panel">
       <div class="prompt-label">1 &nbsp;·&nbsp; Write your instructions</div>
-      <div class="prompt-status" style="margin-bottom:8px">Describe what should change in the active file set, what must stay, and what success looks like.</div>
+      <div class="mb-8 prompt-status">Describe what should change in the active file set, what must stay, and what success looks like.</div>
       <textarea id="prompt-draft" class="prompt-textarea" placeholder="Describe what to change in this active file set, what to preserve, and what success should look like."></textarea>
       <div class="checklist-wrap" id="checklist-wrap">
         <div class="checklist-header" onclick="toggleChecklist(event)">
@@ -6054,9 +5358,9 @@ body {
           <button type="button" class="action-btn" onclick="extractPaletteFromUrl(this)" style="font-size:12px;padding:8px 14px"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:13px;height:13px;margin-right:4px;vertical-align:-2px"><circle cx="13.5" cy="6.5" r="2"/><circle cx="17.5" cy="10.5" r="2"/><circle cx="8.5" cy="7.5" r="2"/><circle cx="6.5" cy="12.5" r="2"/><path d="M12 22a10 10 0 0 1 0-20 10 10 0 0 1 7.07 17.07c-1.2 1.2-3.07 1.2-4.25 0-1.2-1.2-1.2-3.07 0-4.25l.08-.08c.4-.4.4-1.05 0-1.45a1.02 1.02 0 0 0-.7-.29H12"/></svg>Extract palette</button>
         </div>
         <div class="palette-extractor-status" id="palette-status">Enter the site's homepage URL to extract its real brand palette and include it in your prompt.</div>
-        <div class="palette-swatches" id="palette-swatches" style="display:none"></div>
-        <div class="palette-snippet" id="palette-snippet" style="display:none"></div>
-        <div class="palette-actions" id="palette-actions" style="display:none">
+        <div class="d-none palette-swatches" id="palette-swatches"></div>
+        <div class="d-none palette-snippet" id="palette-snippet"></div>
+        <div class="d-none palette-actions" id="palette-actions">
           <button class="action-btn success" onclick="insertPaletteIntoDraft()" style="font-size:12px;padding:8px 14px">Insert into draft</button>
           <button class="action-btn" onclick="copyPaletteSnippet()" style="font-size:12px;padding:8px 14px">Copy snippet</button>
           <button class="action-btn" onclick="clearPaletteExtract()" style="font-size:12px;padding:8px 14px">Clear</button>
@@ -6151,26 +5455,26 @@ body {
     </div>
     <div class="prompt-panel">
       <div class="prompt-label">2 &nbsp;·&nbsp; Improved prompt</div>
-      <div class="prompt-status" style="margin-bottom:8px">Review the improved prompt before generating an HTML candidate or syncing anything.</div>
+      <div class="mb-8 prompt-status">Review the improved prompt before generating an HTML candidate or syncing anything.</div>
       <textarea id="prompt-output" class="prompt-textarea" readonly placeholder="Your improved, structured prompt will appear here — ready to copy and use."></textarea>
       <div class="prompt-actions">
         <button class="action-btn" onclick="copyImprovedPrompt()">Copy output</button>
-        <button id="prompt-sync-gh-btn" class="action-btn success" onclick="commitPromptToGitHub(this)" style="display:none">&uarr; Sync to GitHub (auto-redeploys)</button>
+        <button id="prompt-sync-gh-btn" class="d-none action-btn success" onclick="commitPromptToGitHub(this)">&uarr; Sync to GitHub (auto-redeploys)</button>
         <span id="prompt-sync-status" class="prompt-status"></span>
       </div>
       <div class="prompt-tweak-panel" id="prompt-tweak-panel">
-        <div class="prompt-sync-title"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px"><path d="M12 3v3m0 12v3m9-9h-3M6 12H3m15.36 6.36-2.12-2.12M8.76 8.76 6.64 6.64m11.72 0-2.12 2.12M8.76 15.24l-2.12 2.12"/></svg>Tweaked HTML candidate</div>
+        <div class="prompt-sync-title"><svg class="icon-14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v3m0 12v3m9-9h-3M6 12H3m15.36 6.36-2.12-2.12M8.76 8.76 6.64 6.64m11.72 0-2.12 2.12M8.76 15.24l-2.12 2.12"/></svg>Tweaked HTML candidate</div>
         <textarea id="prompt-tweak-output" class="prompt-textarea" readonly placeholder="Tweaked HTML example will appear here after you run Tweaking."></textarea>
         <div class="prompt-actions">
           <button class="action-btn" onclick="copyTweakedHtml()">Copy tweaked HTML</button>
-          <button id="prompt-apply-html-btn" class="action-btn success" onclick="applyTweakedHtmlToGitHub(this)" style="display:none">Replace active HTML file</button>
-            <button id="prompt-copy-html-obs-btn" class="action-btn" onclick="copyTweakedHtmlInstructions()" style="display:none">Copy sync payload</button>
+          <button id="prompt-apply-html-btn" class="d-none action-btn success" onclick="applyTweakedHtmlToGitHub(this)">Replace active HTML file</button>
+            <button id="prompt-copy-html-obs-btn" class="d-none action-btn" onclick="copyTweakedHtmlInstructions()">Copy sync payload</button>
           <span id="prompt-tweak-status" class="prompt-status"></span>
         </div>
         <div class="prompt-sync-note" id="prompt-tweak-note">Tweaking generates one updated HTML example from the improved prompt. Review it, then use Apply to replace the current active HTML file in the same version path so the dashboard keeps only the active deliverable visible.</div>
       </div>
       <div id="prompt-sync-panel" class="prompt-sync-panel">
-        <div class="prompt-sync-title"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px"><path d="M21 12a9 9 0 0 1-9 9m9-9a9 9 0 0 0-9-9m9 9H3m9 9a9 9 0 0 1-9-9m9 9c2.5-2.5 3.75-5.75 3.75-9S14.5 5.5 12 3m0 18c-2.5-2.5-3.75-5.75-3.75-9S9.5 5.5 12 3"/></svg>Sync destinations</div>
+        <div class="prompt-sync-title"><svg class="icon-14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a9 9 0 0 1-9 9m9-9a9 9 0 0 0-9-9m9 9H3m9 9a9 9 0 0 1-9-9m9 9c2.5-2.5 3.75-5.75 3.75-9S14.5 5.5 12 3m0 18c-2.5-2.5-3.75-5.75-3.75-9S9.5 5.5 12 3"/></svg>Sync destinations</div>
         <div class="prompt-sync-row"><span class="sync-label">GitHub</span><span class="prompt-sync-path" id="prompt-sync-gh-path">—</span></div>
         <div class="prompt-sync-row"><span class="sync-label">Obsidian</span><span class="prompt-sync-path" id="prompt-sync-obs-path">—</span><button class="action-btn" onclick="copyObsidianInstructions()" style="font-size:11px;padding:6px 10px">Copy path + content</button></div>
         <div class="prompt-sync-note">GitHub sync replaces the existing <code>Improved_N8N_Prompt.txt</code> in the project's version folder. Render auto-redeploys within ~40s. For Obsidian: click the button above to copy both the path and the new prompt content to clipboard, then paste into that folder on your PC.</div>
@@ -6240,7 +5544,7 @@ body {
 <!-- ============================================================
      KEYWORD RESEARCH AUTOMATION PAGE
      ============================================================ -->
-<div id="page-kwr" style="display:none">
+<div class="d-none" id="page-kwr">
 <div class="kwr-page">
 
   <div class="kwr-hero">
@@ -6334,7 +5638,7 @@ body {
       <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="2"/><path d="M12 2v2m0 16v2M2 12h2m16 0h2m-3.5-7.5-1.4 1.4M5.9 18.1l-1.4 1.4m0-15.1 1.4 1.4M18.1 18.1l1.4 1.4"/></svg>
       Swarm Agent
     </button>
-    <button class="kwr-btn kwr-btn-ghost" id="kwr-cancel-btn" onclick="kwrCancel()" style="display:none">
+    <button class="d-none kwr-btn kwr-btn-ghost" id="kwr-cancel-btn" onclick="kwrCancel()">
       <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
       Cancel
     </button>
@@ -6351,24 +5655,24 @@ body {
       <option value="gemini-2.0-flash">Gemini 2.0 Flash</option>
       <option value="gemini-2.5-pro">Gemini 2.5 Pro</option>
     </select>
-    <span style="font-size:11px;color:var(--muted)">Used for LLM generation steps in the pipeline</span>
+    <span class="fs-11-muted">Used for LLM generation steps in the pipeline</span>
   </div>
 
   <!-- Progress / stage list (hidden until running) -->
-  <div id="kwr-progress-section" style="display:none">
+  <div class="d-none" id="kwr-progress-section">
     <div class="kwr-progress-bar"><div class="kwr-progress-fill" id="kwr-progress-fill" style="width:0%"></div></div>
     <div class="kwr-stage-list" id="kwr-stage-list"></div>
     <div class="kwr-log-box" id="kwr-log-box"></div>
   </div>
 
   <!-- Preview table (hidden until ready) -->
-  <div id="kwr-preview-section" style="display:none" class="kwr-preview-wrap">
+  <div class="d-none" id="kwr-preview-section" class="kwr-preview-wrap">
     <div class="kwr-preview-header">
       <div>
         <div class="kwr-preview-title">Preview — Review &amp; Edit</div>
         <div class="kwr-preview-meta" id="kwr-preview-meta"></div>
       </div>
-      <div style="display:flex;gap:8px;flex-wrap:wrap">
+      <div class="flex-wrap-8">
         <button class="kwr-btn kwr-btn-ghost" onclick="kwrRegenerate()">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.54"/></svg>
           Regenerate
@@ -6379,7 +5683,7 @@ body {
         </button>
       </div>
     </div>
-    <div class="kwr-note-box" id="kwr-note-box" style="display:none"></div>
+    <div class="d-none kwr-note-box" id="kwr-note-box"></div>
     <div class="kwr-table-wrap" style="max-height:420px;overflow-y:auto">
       <table class="kwr-table" id="kwr-preview-table">
         <thead><tr>
@@ -6665,8 +5969,8 @@ function togglePreviewExpand(){
   const isExpanded=overlay.classList.toggle('preview-fullscreen');
   if(btn){
     btn.innerHTML=isExpanded
-      ?'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" style="width:12px;height:12px"><path d="M9 3H3v6M15 21h6v-6M3 3l7 7M21 21l-7-7"/></svg> Collapse'
-      :'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" style="width:12px;height:12px"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg> Expand';
+      ?'<svg class="icon-12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M9 3H3v6M15 21h6v-6M3 3l7 7M21 21l-7-7"/></svg> Collapse'
+      :'<svg class="icon-12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg> Expand';
     btn.title=isExpanded?'Collapse to previous view':'Expand to full screen';
     btn.setAttribute('aria-label',isExpanded?'Collapse preview':'Expand preview');
   }
@@ -6675,7 +5979,7 @@ function closePreview(){
   document.getElementById('preview-modal').classList.remove('open');
   document.getElementById('preview-modal').classList.remove('preview-fullscreen');
   const _pebtn=document.getElementById('preview-expand-btn');
-  if(_pebtn){_pebtn.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" style="width:12px;height:12px"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg> Expand';_pebtn.title='Expand to full screen';}
+  if(_pebtn){_pebtn.innerHTML='<svg class="icon-12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg> Expand';_pebtn.title='Expand to full screen';}
   document.body.classList.remove('scroll-locked');
   const iframe=document.getElementById('preview-iframe');
   const doc=iframe.contentDocument||iframe.contentWindow.document;
@@ -6747,9 +6051,9 @@ function openCompare(projectName){
     const filesEnc=encodeURIComponent(JSON.stringify(allFiles));
     const _wfEnc=encodeURIComponent(JSON.stringify(workflowFiles));
     const deployBtnHtml=hasWorkflow
-      ? `<button class="action-btn" style="border-color:rgba(249,115,22,0.30);color:#fb923c;background:rgba(249,115,22,0.08)" onclick="deployVersionToN8n('${encodeURIComponent(projectName)}','${encodeURIComponent(item.agent)}','${encodeURIComponent(item.version)}','${_wfEnc}',this,'${panelId}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" style="width:12px;height:12px"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>Deploy to n8n</button>`
+      ? `<button class="action-btn" style="border-color:rgba(249,115,22,0.30);color:#fb923c;background:rgba(249,115,22,0.08)" onclick="deployVersionToN8n('${encodeURIComponent(projectName)}','${encodeURIComponent(item.agent)}','${encodeURIComponent(item.version)}','${_wfEnc}',this,'${panelId}')"><svg class="icon-12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>Deploy to n8n</button>`
       : '';
-    panel.innerHTML=`<div class="compare-panel-header"><div class="compare-panel-title">${item.agent}<small>${item.version}</small></div><div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;justify-content:flex-end">${deployBtnHtml}<button class="action-btn" onclick="openPromptStudio('${encodeURIComponent(projectName)}','${encodeURIComponent(item.agent)}','${encodeURIComponent(item.version)}','${item.file.download.replace(/'/g,'%27')}','${filesEnc}')">Prompt Studio</button><button class="action-btn project-comments-btn" onclick="openCommentsFromProject('${encodeURIComponent(projectName)}','${encodeURIComponent(item.agent)}','${encodeURIComponent(item.version)}','${encodeURIComponent(item.file.path||'')}')"><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2.1' style='width:12px;height:12px'><path d='M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z'/></svg>Comments</button><button class="action-btn" onclick="openFocusedCompare('${item.file.download.replace(/'/g,'%27')}','${item.agent.replace(/'/g,'%27')}','${item.version.replace(/'/g,'%27')}')">Expand</button><a href="${item.file.url}" target="_blank" class="action-btn">View Code</a></div></div><div class="compare-frame-wrap"><div class="compare-device-frame desktop"><iframe sandbox="allow-same-origin"></iframe></div></div><div class="compare-deploy-bar" id="${panelId}-bar" style="display:none"><span class="compare-deploy-badge idle" id="${panelId}-badge"><span class="compare-deploy-dot"></span><span id="${panelId}-badge-text">Ready</span></span><span class="compare-deploy-status" id="${panelId}-status"></span></div>`;
+    panel.innerHTML=`<div class="compare-panel-header"><div class="compare-panel-title">${item.agent}<small>${item.version}</small></div><div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;justify-content:flex-end">${deployBtnHtml}<button class="action-btn" onclick="openPromptStudio('${encodeURIComponent(projectName)}','${encodeURIComponent(item.agent)}','${encodeURIComponent(item.version)}','${item.file.download.replace(/'/g,'%27')}','${filesEnc}')">Prompt Studio</button><button class="action-btn project-comments-btn" onclick="openCommentsFromProject('${encodeURIComponent(projectName)}','${encodeURIComponent(item.agent)}','${encodeURIComponent(item.version)}','${encodeURIComponent(item.file.path||'')}')"><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2.1' style='width:12px;height:12px'><path d='M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z'/></svg>Comments</button><button class="action-btn" onclick="openFocusedCompare('${item.file.download.replace(/'/g,'%27')}','${item.agent.replace(/'/g,'%27')}','${item.version.replace(/'/g,'%27')}')">Expand</button><a href="${item.file.url}" target="_blank" class="action-btn">View Code</a></div></div><div class="compare-frame-wrap"><div class="compare-device-frame desktop"><iframe sandbox="allow-same-origin"></iframe></div></div><div class="d-none compare-deploy-bar" id="${panelId}-bar"><span class="compare-deploy-badge idle" id="${panelId}-badge"><span class="compare-deploy-dot"></span><span id="${panelId}-badge-text">Ready</span></span><span class="compare-deploy-status" id="${panelId}-status"></span></div>`;
     grid.appendChild(panel);
     fetch(item.file.download).then(r=>r.text()).then(html=>{
       const iframe=panel.querySelector('iframe');
@@ -6860,7 +6164,92 @@ function openPromptStudio(projectName, agentName, versionName, htmlDownloadUrl, 
       doc.open();doc.write(html);doc.close();
     }).catch(()=>{
       const doc=previewFrame.contentDocument||previewFrame.contentWindow.document;
-      doc.open();doc.write('<body style="font-family:Segoe UI,sans-serif;padding:24px;color:#666">Could not load HTML preview.</body>');doc.close();
+      doc.open();doc.write('<body style="font-family:Segoe UI,sans-serif;padding:24px;color:#666">Could not load HTML preview.<!-- Mobile Drawer (Task 3) -->
+<div class="mobile-overlay" id="mobileOverlay" onclick="closeMobileDrawer()"></div>
+<div class="mobile-drawer" id="mobileDrawer">
+  <div class="mobile-drawer-header">
+    <span style="font-weight:600;font-size:16px;">Navigation</span>
+    <button onclick="closeMobileDrawer()" style="background:transparent;border:none;color:var(--text,#fff);font-size:20px;cursor:pointer;">&#x2715;</button>
+  </div>
+  <nav>
+    <a class="mobile-nav-item" onclick="showSection('projects');closeMobileDrawer()">&#128193; Projects</a>
+    <a class="mobile-nav-item" onclick="showSection('n8n');closeMobileDrawer()">&#128295; N8N Fixer</a>
+    <a class="mobile-nav-item" onclick="showSection('skills');closeMobileDrawer()">&#9889; Skills Radar</a>
+    <a class="mobile-nav-item" onclick="showSection('keywords');closeMobileDrawer()">&#128269; Keyword Research</a>
+  </nav>
+</div>
+
+<script>
+// Mobile Drawer (Task 3)
+function openMobileDrawer(){
+  document.getElementById('mobileDrawer').classList.add('open');
+  document.getElementById('mobileOverlay').classList.add('show');
+  document.body.style.overflow='hidden';
+}
+function closeMobileDrawer(){
+  document.getElementById('mobileDrawer').classList.remove('open');
+  document.getElementById('mobileOverlay').classList.remove('show');
+  document.body.style.overflow='';
+}
+document.addEventListener('keydown',function(e){if(e.key==='Escape')closeMobileDrawer();});
+
+</script>
+<script>
+// Toast Notifications (Task 4)
+function showToast(message,type,duration){
+  type=type||'info';
+  duration=(duration===undefined)?3000:duration;
+  var icons={info:'[i]',success:'[ok]',error:'[x]',warning:'[!]'};
+  var container=document.getElementById('toast-container');
+  if(!container)return;
+  var toast=document.createElement('div');
+  toast.className='toast toast-'+type;
+  toast.innerHTML='<span class="toast-icon">'+( icons[type]||'[i]')+'</span><span class="toast-msg">'+message+'</span><button class="toast-close" onclick="this.closest('.toast').remove()">×</button>';
+  container.appendChild(toast);
+  setTimeout(function(){toast.classList.add('show');},10);
+  if(duration>0)setTimeout(function(){toast.classList.remove('show');setTimeout(function(){toast.remove();},300);},duration);
+  return toast;
+}
+
+</script>
+<script>
+// Skeleton Loading (Task 5)
+function showSkeletons(containerId,count){
+  count=count||6;
+  var container=document.getElementById(containerId);
+  if(!container)return;
+  var grid=document.createElement('div');
+  grid.className='skeleton-grid';
+  grid.id='skeleton-grid-temp';
+  for(var i=0;i<count;i++){var card=document.createElement('div');card.className='skeleton skeleton-card';grid.appendChild(card);}
+  container.prepend(grid);
+}
+function hideSkeletons(){
+  var el=document.getElementById('skeleton-grid-temp');
+  if(el)el.remove();
+}
+
+</script>
+<script>
+// Dark/Light Mode Toggle (Task 6)
+function initTheme(){
+  var saved=localStorage.getItem('theme');
+  if(saved==='light')document.body.classList.add('light');
+  updateThemeIcon();
+}
+function toggleTheme(){
+  document.body.classList.toggle('light');
+  localStorage.setItem('theme',document.body.classList.contains('light')?'light':'dark');
+  updateThemeIcon();
+}
+function updateThemeIcon(){
+  var btn=document.getElementById('themeToggleBtn');
+  if(btn)btn.textContent=document.body.classList.contains('light')?'Moon':'Sun';
+}
+document.addEventListener('DOMContentLoaded',initTheme);
+
+</script>
+</body>');doc.close();
     });
   }
 
@@ -6955,7 +6344,7 @@ function closePromptStudio(){
   document.getElementById('prompt-modal').classList.remove('open');
   document.getElementById('prompt-modal').classList.remove('ps-fullscreen');
   const btn=document.getElementById('prompt-expand-btn');
-  if(btn){btn.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:13px;height:13px"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/></svg> Expand';btn.title='Expand to full screen';}
+  if(btn){btn.innerHTML='<svg class="icon-13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/></svg> Expand';btn.title='Expand to full screen';}
   const previewFrame=document.getElementById('prompt-preview-frame');
   const doc=previewFrame.contentDocument||previewFrame.contentWindow.document;
   doc.open();doc.write('');doc.close();
@@ -6968,8 +6357,8 @@ function togglePromptStudioExpand(){
   const isExpanded=modal.classList.toggle('ps-fullscreen');
   if(btn){
     btn.innerHTML=isExpanded
-      ?'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:13px;height:13px"><path d="M8 3v5H3m18 0V3h-5M3 16h5v5m13-5h-5v5"/></svg> Collapse'
-      :'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:13px;height:13px"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/></svg> Expand';
+      ?'<svg class="icon-13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 3v5H3m18 0V3h-5M3 16h5v5m13-5h-5v5"/></svg> Collapse'
+      :'<svg class="icon-13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/></svg> Expand';
     btn.title=isExpanded?'Collapse':'Expand to full screen';
   }
 }
@@ -7203,7 +6592,7 @@ async function commitPromptToGitHub(btn){
       throw new Error(msg);
     }
     const replaced=data.replaced?'replaced':'created';
-    statusEl.innerHTML=`Synced to GitHub (${replaced}) \u2014 <a href="${data.commitUrl||'#'}" target="_blank" style="color:#d7dbff">${(data.commitSha||'').slice(0,7)}</a>. Render will auto-redeploy in ~40s.`;
+    statusEl.innerHTML=`Synced to GitHub (${replaced}) \u2014 <a class="text-accent-light" href="${data.commitUrl||'#'}" target="_blank">${(data.commitSha||'').slice(0,7)}</a>. Render will auto-redeploy in ~40s.`;
     showToast(`Synced to GitHub (${replaced})`,'success');
   }catch(err){
     if(err && (err.name==='AbortError' || String(err).includes('user_cancel'))){
@@ -7330,7 +6719,7 @@ async function applyTweakedHtmlToGitHub(btn){
     const res=await fetch('/api/prompt/commit',{method:'POST',signal:window._htmlApplyAbort.signal,headers:{'Content-Type':'application/json'},body:JSON.stringify({path,content,message,branch:'main'})});
     const data=await res.json();
     if(!res.ok||!data.ok){const msg=(data&&data.error&&typeof data.error==='object')?JSON.stringify(data.error).slice(0,400):(data.error||('HTTP '+res.status));throw new Error(msg);}
-    statusEl.innerHTML=`Applied to latest HTML file — <a href="${data.commitUrl||'#'}" target="_blank" style="color:#d7dbff">${(data.commitSha||'').slice(0,7)}</a>. Refresh after Render redeploys.`;
+    statusEl.innerHTML=`Applied to latest HTML file — <a class="text-accent-light" href="${data.commitUrl||'#'}" target="_blank">${(data.commitSha||'').slice(0,7)}</a>. Refresh after Render redeploys.`;
     showToast('Latest HTML file replaced','success');
   }catch(err){
     if(err && (err.name==='AbortError' || String(err).includes('user_cancel'))){statusEl.textContent='HTML apply cancelled.';}else{const msg=(err&&err.message)||'HTML apply failed';statusEl.textContent=msg.includes('GITHUB_TOKEN')?'GitHub sync not configured on the server — add GITHUB_TOKEN to Render env.':msg;showToast('HTML apply failed','error');}
@@ -7372,7 +6761,7 @@ async function extractPaletteFromUrl(btn){
     if(!res.ok||!data.ok) throw new Error(data.error||'Palette extraction failed');
     _lastPalette=data;
     renderPalette(data);
-    status.innerHTML=`Found ${data.brandPalette.length} brand color${data.brandPalette.length===1?'':'s'} + ${data.neutrals.length} neutral${data.neutrals.length===1?'':'s'} from <code style="color:#d7dbff">${(data.url||url).replace(/</g,'&lt;')}</code>${data.title?' \u2014 '+data.title.replace(/</g,'&lt;'):''}`;
+    status.innerHTML=`Found ${data.brandPalette.length} brand color${data.brandPalette.length===1?'':'s'} + ${data.neutrals.length} neutral${data.neutrals.length===1?'':'s'} from <code class="text-accent-light">${(data.url||url).replace(/</g,'&lt;')}</code>${data.title?' \u2014 '+data.title.replace(/</g,'&lt;'):''}`;
     showToast('Palette extracted','success');
   }catch(e){
     if(e && (e.name==='AbortError' || String(e).includes('user_cancel'))){
@@ -7468,7 +6857,7 @@ function clearPaletteExtract(){
   document.getElementById('palette-swatches').style.display='none';
   document.getElementById('palette-snippet').style.display='none';
   document.getElementById('palette-actions').style.display='none';
-  document.getElementById('palette-status').innerHTML='Paste the homepage URL \u2014 e.g. <code style="color:#d7dbff">https://powerplug.ai/</code> \u2014 to pull the real brand colors into your draft.';
+  document.getElementById('palette-status').innerHTML='Paste the homepage URL \u2014 e.g. <code class="text-accent-light">https://powerplug.ai/</code> \u2014 to pull the real brand colors into your draft.';
 }
 
 function _anyPromptStudioRunning(){return !!(window._improveAbort||window._brainstormAbort||window._paletteAbort||window._ghSyncAbort||window._tweakAbort||window._htmlApplyAbort);}
@@ -7653,7 +7042,7 @@ async function deployVersionToN8n(domainEnc, agentEnc, versionEnc, workflowFiles
   let files=[];
   try{files=JSON.parse(decodeURIComponent(workflowFilesEnc||'[]'));}catch(e){}
   if(!Array.isArray(files))files=[];
-  if(!files.length){alert('No workflow JSON files found in this version.');return;}
+  if(!files.length){showToast('No workflow JSON files found in this version.');return;}
   if(!confirm(`Deploy ${files.length} workflow file(s) from ${agent} (${versionName}) to n8n for ${domain}?`))return;
 
   const bar=document.getElementById(panelId+'-bar');
@@ -7722,7 +7111,7 @@ async function deployVersionToN8n(domainEnc, agentEnc, versionEnc, workflowFiles
     btn.style.borderColor='rgba(34,197,94,0.35)';
     btn.style.color='#4ade80';
     btn.style.background='rgba(34,197,94,0.10)';
-    btn.innerHTML=`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:12px;height:12px"><polyline points="20 6 9 17 4 12"/></svg>Deployed`;
+    btn.innerHTML=`<svg class="icon-12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Deployed`;
   } else if(successCount>0){
     setStatus('error',`${successCount}/${files.length} deployed. Last error: ${lastError}`);
   } else {
@@ -8189,8 +7578,8 @@ async function loadDashboard(){
     const previewCTA=latestHtmlUrl?`<button class="preview-cta primary-accent" onclick="event.stopPropagation();openPreview('${latestHtmlUrl}','${latestHtmlName}','${_previewCtxEnc}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="5 3 19 12 5 21 5 3"/></svg>Preview</button>`:'';
     const compareCandidates=compareCandidatesForProject(p.name);
     const compareCTA=compareCandidates.length>1?`<button class="action-btn" onclick="event.stopPropagation();openCompare('${p.name}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M10 3H3v7h7V3zM21 14h-7v7h7v-7zM21 3h-7v7h7V3zM10 14H3v7h7v-7z"/></svg>Compare agents</button>`:'';
-    const promptStudioCTA=latestHtmlUrl?`<button class="action-btn" onclick="event.stopPropagation();openPromptStudio('${encodeURIComponent(p.name)}','${encodeURIComponent(_psAgent)}','${encodeURIComponent(_psVersion)}','${latestHtmlUrl.replace(/'/g,"%27")}','${_psFilesEnc}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" style="width:13px;height:13px"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 1 1 3 3L7 19l-4 1 1-4Z"/></svg>Prompt Studio</button>`:'';
-    const commentsCTA=`<button class="action-btn project-comments-btn" onclick="event.stopPropagation();openCommentsFromProject('${encodeURIComponent(p.name)}','${encodeURIComponent(_psAgent)}','${encodeURIComponent(_psVersion)}','${encodeURIComponent((latest&&latest.files.find(f=>(f.name||'').toLowerCase().endsWith('.html'))?.path)||'')}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" style="width:13px;height:13px"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>Comments</button>`;
+    const promptStudioCTA=latestHtmlUrl?`<button class="action-btn" onclick="event.stopPropagation();openPromptStudio('${encodeURIComponent(p.name)}','${encodeURIComponent(_psAgent)}','${encodeURIComponent(_psVersion)}','${latestHtmlUrl.replace(/'/g,"%27")}','${_psFilesEnc}')"><svg class="icon-13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 1 1 3 3L7 19l-4 1 1-4Z"/></svg>Prompt Studio</button>`:'';
+    const commentsCTA=`<button class="action-btn project-comments-btn" onclick="event.stopPropagation();openCommentsFromProject('${encodeURIComponent(p.name)}','${encodeURIComponent(_psAgent)}','${encodeURIComponent(_psVersion)}','${encodeURIComponent((latest&&latest.files.find(f=>(f.name||'').toLowerCase().endsWith('.html'))?.path)||'')}')"><svg class="icon-13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>Comments</button>`;
 
     const latestLabel=latestDate||'Pending sync';
     const expandedTools=(compareCTA||promptStudioCTA||commentsCTA)?`<div class="card-tools-row">${compareCTA}${promptStudioCTA}${commentsCTA}</div>`:'';
@@ -8655,7 +8044,7 @@ document.addEventListener('click', function(ev){
       warnList.innerHTML = '';
       const warns = Array.isArray(data.warnings) ? data.warnings : [];
       if (warns.length === 0) {
-        warnList.innerHTML = '<li style="color:var(--muted)">No warnings</li>';
+        warnList.innerHTML = '<li class="text-muted">No warnings</li>';
       } else {
         warns.forEach(w => {
           const li = document.createElement('li');
@@ -9077,7 +8466,7 @@ window.deployFixed = function() {
       const tags = (wf.tags || []).map(t => typeof t === 'string' ? t : (t.name||'')).filter(Boolean);
       const nodeCount = wf.nodeCount || '';
       card.innerHTML =
-        '<div style="min-width:0;flex:1">' +
+        '<div class="flex-1-min">' +
           '<div class="auto-import-wf-name">' + escapeHtml(wf.name || wf.id) + '</div>' +
           '<div class="auto-import-wf-meta">' +
             'ID: ' + (wf.id||'') +
@@ -9234,7 +8623,7 @@ window.deployFixed = function() {
         const conf = parseFloat(rec.confidence_score || 0);
         const date = rec.created_at ? new Date(rec.created_at).toLocaleDateString('en-GB') : '—';
         item.innerHTML = `
-          <div style="min-width:0;flex:1">
+          <div class="flex-1-min">
             <div class="fixer-history-name">${escHtml(rec.workflow_name || '—')}</div>
             <div class="fixer-history-summary">${escHtml(rec.issue_summary || rec.workflow_id || '—')}</div>
           </div>
@@ -9430,11 +8819,11 @@ function radarRunNow() {
           }).catch(function(){});
         }, 5000);
       } else {
-        alert(d.error||'Failed to start');
+        showToast(d.error||'Failed to start');
       }
     }).catch(function(e){
       if (btn) { btn.classList.remove('running'); btn.disabled = false; btn.innerHTML = '&#9654; Run Now'; }
-      alert('Error: '+e.message);
+      showToast('Error: '+e.message);
     });
 }
 
@@ -9459,7 +8848,7 @@ window.kwrRunSwarm = function() {
   var { inputs, missing } = kwrCollectInputs ? kwrCollectInputs() : {inputs:{},missing:[]};
   if (missing && missing.length > 0) {
     var labels = missing.map(k=>k.replace(/_/g,' ')).join(', ');
-    alert('Please fill in the required fields: ' + labels);
+    showToast('Please fill in the required fields: ' + labels);
     return;
   }
   inputs._mode = 'swarm';
@@ -9475,13 +8864,13 @@ window.kwrRunSwarm = function() {
     body: JSON.stringify(inputs)
   }).then(r=>r.json()).then(function(data){
     if (btn) { btn.disabled = false; btn.textContent = '⚡ Swarm Agent'; }
-    if (!data.ok) { alert(data.error||'Swarm start failed'); return; }
+    if (!data.ok) { showToast(data.error||'Swarm start failed'); return; }
     if (typeof _kwrRunId !== 'undefined') _kwrRunId = data.run_id;
     kwrSetStatus && kwrSetStatus('kwr-dot-running', 'Swarm running: '+data.run_id, data.run_id);
     kwrStartPoller && kwrStartPoller();
   }).catch(function(e){
     if (btn) { btn.disabled = false; btn.textContent = '⚡ Swarm Agent'; }
-    alert('Error: '+e.message);
+    showToast('Error: '+e.message);
   });
 };
 
@@ -9669,7 +9058,7 @@ function skillAction(id, action) {
       if(d.ok) {
         loadRadarResults(radarActiveTab, radarOffset);
         loadRadarStatus();
-      } else alert(d.error||'Action failed');
+      } else showToast(d.error||'Action failed');
     });
 }
 
@@ -9680,9 +9069,9 @@ function saveSkillRecord(id) {
         var msgs = [];
         if(d.obsidian_path) msgs.push('Obsidian: '+d.obsidian_path);
         if(d.github_path) msgs.push('GitHub: '+d.github_path);
-        alert(msgs.length ? 'Saved:\n'+msgs.join('\n') : 'Saved');
+        showToast(msgs.length ? 'Saved:\n'+msgs.join('\n') : 'Saved');
         loadRadarResults(radarActiveTab, radarOffset);
-      } else alert(d.error||'Save failed');
+      } else showToast(d.error||'Save failed');
     });
 }
 
@@ -9695,18 +9084,18 @@ function openSkillDrawer(id) {
   fetch('/api/radar/results?status='+radarActiveTab+'&limit=100&offset=0').then(r=>r.json()).then(function(d){
     var skills = d.skills||[];
     var s = skills.find(function(x){return x.id===id;});
-    if (!s) { content.innerHTML = '<p style="color:var(--muted)">Skill not found</p>'; return; }
+    if (!s) { content.innerHTML = '<p class="text-muted">Skill not found</p>'; return; }
     content.innerHTML =
       '<h2 style="font-size:18px;font-weight:800;color:var(--text);margin-bottom:16px">'+escHtml(s.title||'Untitled')+'</h2>' +
       (s.summary ? '<p style="font-size:13px;color:var(--muted);line-height:1.6;margin-bottom:16px">'+escHtml(s.summary)+'</p>' : '') +
       '<div style="display:grid;gap:12px;margin-bottom:20px">' +
         '<div><div style="font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;margin-bottom:4px">Source</div>' +
-          '<div style="font-size:13px;color:var(--text)">'+(s.source_url?'<a href="'+escHtml(s.source_url)+'" target="_blank" style="color:#a78bfa">'+escHtml(s.source_title||s.source_url)+'</a>':escHtml(s.source_title||'—'))+'</div></div>' +
-        '<div><div style="font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;margin-bottom:4px">Category</div><div style="font-size:13px;color:var(--text)">'+escHtml(s.category||'—')+'</div></div>' +
-        '<div><div style="font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;margin-bottom:4px">Target Agents</div><div style="font-size:13px;color:var(--text)">'+(s.target_agents||[]).join(', ')+'</div></div>' +
-        '<div><div style="font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;margin-bottom:4px">Usefulness Score</div><div style="font-size:13px;color:var(--text)">'+Math.round((s.usefulness_score||0.5)*100)+'%</div></div>' +
-        (s.implementation_idea?'<div><div style="font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;margin-bottom:4px">Implementation Idea</div><div style="font-size:13px;color:var(--text)">'+escHtml(s.implementation_idea)+'</div></div>':'') +
-        (s.notes?'<div><div style="font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;margin-bottom:4px">Notes</div><div style="font-size:13px;color:var(--text)">'+escHtml(s.notes)+'</div></div>':'') +
+          '<div class="fs-13-text">'+(s.source_url?'<a href="'+escHtml(s.source_url)+'" target="_blank" style="color:#a78bfa">'+escHtml(s.source_title||s.source_url)+'</a>':escHtml(s.source_title||'—'))+'</div></div>' +
+        '<div><div style="font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;margin-bottom:4px">Category</div><div class="fs-13-text">'+escHtml(s.category||'—')+'</div></div>' +
+        '<div><div style="font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;margin-bottom:4px">Target Agents</div><div class="fs-13-text">'+(s.target_agents||[]).join(', ')+'</div></div>' +
+        '<div><div style="font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;margin-bottom:4px">Usefulness Score</div><div class="fs-13-text">'+Math.round((s.usefulness_score||0.5)*100)+'%</div></div>' +
+        (s.implementation_idea?'<div><div style="font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;margin-bottom:4px">Implementation Idea</div><div class="fs-13-text">'+escHtml(s.implementation_idea)+'</div></div>':'') +
+        (s.notes?'<div><div style="font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;margin-bottom:4px">Notes</div><div class="fs-13-text">'+escHtml(s.notes)+'</div></div>':'') +
       '</div>' +
       '<div style="display:grid;gap:8px">' +
         '<textarea id="drawer-notes-'+id+'" class="prompt-textarea" style="min-height:80px" placeholder="Add notes...">'+(s.notes||'')+'</textarea>' +
@@ -9734,7 +9123,7 @@ function saveSkillNotes(id) {
   if (!ta) return;
   fetch('/api/radar/notes',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({skill_id:id,notes:ta.value})})
     .then(r=>r.json()).then(function(d){
-      if(!d.ok) alert(d.error||'Save failed');
+      if(!d.ok) showToast(d.error||'Save failed');
     });
 }
 
@@ -9747,7 +9136,7 @@ function generateBatchPrompt() {
 
 function generateSelectedPrompt() {
   var ids = Array.from(radarSelectedSkills);
-  if (!ids.length) { alert('Select at least one skill first'); return; }
+  if (!ids.length) { showToast('Select at least one skill first'); return; }
   var style = document.getElementById('radar-prompt-style')?.value || 'standard';
   var agent = document.getElementById('radar-prompt-agent')?.value || 'Hermes';
   var ta = document.getElementById('radar-prompt-output');
@@ -9762,7 +9151,7 @@ function generateSelectedPrompt() {
 function copyRadarPrompt() {
   var ta = document.getElementById('radar-prompt-output');
   if(!ta||!ta.value) return;
-  navigator.clipboard.writeText(ta.value).then(function(){ alert('Prompt copied'); }).catch(function(){ ta.select(); document.execCommand('copy'); });
+  navigator.clipboard.writeText(ta.value).then(function(){ showToast('Prompt copied'); }).catch(function(){ ta.select(); document.execCommand('copy'); });
 }
 
 function downloadRadarPrompt() {
@@ -9775,7 +9164,7 @@ function downloadRadarPrompt() {
   a.click();
 }
 
-function savePromptRecord() { alert('Prompt recorded (future: save to Supabase/GitHub).'); }
+function savePromptRecord() { showToast('Prompt recorded (future: save to Supabase/GitHub).'); }
 
 function radarSendTestEmail() {
   var btn = document.getElementById('radar-test-email-btn');
@@ -9786,13 +9175,13 @@ function radarSendTestEmail() {
       if (d.ok) {
         var el = document.getElementById('radar-email-status');
         if (el) el.innerHTML = '✉ <span style="color:#4ade80">Sent to ' + escHtml(d.to||'') + '</span>';
-        alert('✓ Test email sent to ' + (d.to||'service@maximo-seo.com'));
+        showToast('✓ Test email sent to ' + (d.to||'service@maximo-seo.com'));
       } else {
-        alert('Email failed: ' + (d.error||'Unknown error'));
+        showToast('Email failed: ' + (d.error||'Unknown error'));
       }
     }).catch(function(e) {
       if (btn) { btn.disabled = false; btn.textContent = 'Test Email'; }
-      alert('Error: ' + e.message);
+      showToast('Error: ' + e.message);
     });
 }
 
@@ -9801,7 +9190,7 @@ function loadRadarHistory() {
   if(!list) return;
   fetch('/api/radar/history?limit=10').then(r=>r.json()).then(function(d){
     if(!d.ok||!d.runs||!d.runs.length){
-      list.innerHTML='<div class="radar-empty" style="padding:24px"><p>No runs yet</p></div>';
+      list.innerHTML='<div class="p-24 radar-empty"><p>No runs yet</p></div>';
       return;
     }
     list.innerHTML = d.runs.map(function(r){
@@ -9811,8 +9200,8 @@ function loadRadarHistory() {
       return '<div class="radar-history-row">' +
         '<span class="radar-history-date">'+date+'</span>' +
         '<span style="color:'+statusColor+';font-weight:700">'+escHtml(r.status||'—')+'</span>' +
-        '<span style="color:var(--text)"><b>'+(r.sources_count||0)+'</b> <span style="color:var(--muted)">sources</span></span>' +
-        '<span style="color:#a78bfa"><b>'+(r.skills_found||0)+'</b> <span style="color:var(--muted)">found</span></span>' +
+        '<span style="color:var(--text)"><b>'+(r.sources_count||0)+'</b> <span class="text-muted">sources</span></span>' +
+        '<span style="color:#a78bfa"><b>'+(r.skills_found||0)+'</b> <span class="text-muted">found</span></span>' +
         '<span style="color:var(--muted);font-size:11px">'+(r.errors&&r.errors.length?'⚠ '+r.errors.length+' errors':'✓ clean')+'</span>' +
         '</div>';
     }).join('');
@@ -10056,7 +9445,7 @@ function loadTopicsFromStatus(state) {
     const { inputs, missing } = kwrCollectInputs();
     if (missing.length > 0) {
       const labels = missing.map(k => k.replace(/_/g,' ')).join(', ');
-      alert('Please fill in the required fields: ' + labels);
+      showToast('Please fill in the required fields: ' + labels);
       return;
     }
     if (regenFeedback) inputs.regenerate_feedback = regenFeedback;
@@ -10175,8 +9564,8 @@ function loadTopicsFromStatus(state) {
 
   // ---- Approve & Save Excel ----
   window.kwrApprove = function() {
-    if (!_kwrRunId) { alert('No active run to approve.'); return; }
-    if (!_kwrRows.length) { alert('Preview is empty — run research first.'); return; }
+    if (!_kwrRunId) { showToast('No active run to approve.'); return; }
+    if (!_kwrRows.length) { showToast('Preview is empty — run research first.'); return; }
     if (!confirm('Approve ' + _kwrRows.length + ' rows and save as Excel?')) return;
 
     const sheetPrefix = ($id('kwr-worksheet-prefix') || {}).value || 'KWR';
@@ -10212,7 +9601,7 @@ function loadTopicsFromStatus(state) {
 
   // ---- Download Excel ----
   window.kwrDownloadExcel = function() {
-    if (!_kwrRunId) { alert('No active run.'); return; }
+    if (!_kwrRunId) { showToast('No active run.'); return; }
     kwrLog('Downloading Excel…');
     window.location.href = '/api/kwr/download/' + encodeURIComponent(_kwrRunId);
   };
@@ -10242,7 +9631,7 @@ function loadTopicsFromStatus(state) {
 
   // ---- Save to Obsidian (browser-side, direct to localhost REST) ----
   window.kwrSaveObsidian = async function() {
-    if (!_kwrRunId) { alert('No active run.'); return; }
+    if (!_kwrRunId) { showToast('No active run.'); return; }
     const btn = $id('kwr-obsidian-btn');
     const resEl = $id('kwr-obsidian-result');
     const msgEl = $id('kwr-obsidian-msg');
@@ -10333,7 +9722,7 @@ function loadTopicsFromStatus(state) {
           <code style="color:#c4b5fd;font-size:11px">${path}</code>
         </p>
         <textarea readonly style="flex:1;min-height:300px;background:#0f0c1e;color:#e2e0ff;border:1px solid #3f3a5e;border-radius:6px;padding:10px;font-size:11px;font-family:monospace;resize:vertical">${content.replace(/</g,'&lt;')}</textarea>
-        <button onclick="navigator.clipboard.writeText(this.closest('[style*=fixed]').querySelector('textarea').value).then(()=>{this.textContent='Copied!';setTimeout(()=>this.textContent='Copy to clipboard',1500)}).catch(()=>alert('Copy failed — select all and copy manually.'))"
+        <button onclick="navigator.clipboard.writeText(this.closest('[style*=fixed]').querySelector('textarea').value).then(()=>{this.textContent='Copied!';setTimeout(()=>this.textContent='Copy to clipboard',1500)}).catch(()=>showToast('Copy failed — select all and copy manually.'))"
           style="background:#7c3aed;color:#fff;border:none;border-radius:6px;padding:8px 16px;font-size:12px;font-weight:700;cursor:pointer;align-self:flex-start">
           Copy to clipboard
         </button>
@@ -10345,9 +9734,9 @@ function loadTopicsFromStatus(state) {
 
   // ---- Send to Google Sheets ----
   window.kwrSendToSheets = function() {
-    if (!_kwrRunId) { alert('No active run.'); return; }
+    if (!_kwrRunId) { showToast('No active run.'); return; }
     const sheetTarget = ($id('kwr-sheet-target-post') || {}).value || '';
-    if (!sheetTarget.trim()) { alert('Paste a Google Sheet ID or URL first.'); return; }
+    if (!sheetTarget.trim()) { showToast('Paste a Google Sheet ID or URL first.'); return; }
     const btn = $id('kwr-sheets-btn');
     if (btn) btn.disabled = true;
     kwrLog('Sending to Google Sheets…');
@@ -10438,6 +9827,47 @@ document.addEventListener('DOMContentLoaded',function(){
     if(el&&el.textContent==='—')el.textContent=t.txt;
   });
 });
+
+/* === v3.1 JS ENHANCEMENTS === */
+// Mobile menu aliases (v3.1 compat - openMobileMenu/closeMobileMenu)
+function openMobileMenu(){
+  if(typeof openMobileDrawer==='function') openMobileDrawer();
+  document.body.classList.add('scroll-locked');
+}
+function closeMobileMenu(){
+  if(typeof closeMobileDrawer==='function') closeMobileDrawer();
+  document.body.classList.remove('scroll-locked');
+}
+// showSkeletons v3.1 - projects-grid variant (showSkeletons(n))
+function showSkeletonsGrid(n){
+  n=n||6;
+  var grid=document.getElementById('projects-grid');
+  if(!grid)return;
+  grid.innerHTML=Array(n).fill(0).map(function(){
+    return '<div class="skeleton-card"><div class="skeleton-card-inner">'+
+      '<div class="skeleton-pulse skeleton-line w-60"></div>'+
+      '<div class="skeleton-pulse skeleton-line w-40"></div>'+
+      '<div class="skeleton-pulse skeleton-line w-80"></div>'+
+      '<div class="skeleton-pulse skeleton-line w-40"></div>'+
+      '</div></div>';
+  }).join('');
+}
+// Theme init: also respect 'dashboard-theme' key (v3.1 compat)
+(function(){
+  var saved=localStorage.getItem('dashboard-theme');
+  if(saved==='light'&&!document.body.classList.contains('light')){
+    document.body.classList.add('light');
+    if(typeof updateThemeIcon==='function') updateThemeIcon();
+  } else if(saved==='dark'){
+    document.body.classList.remove('light');
+    if(typeof updateThemeIcon==='function') updateThemeIcon();
+  }
+  // Sync localStorage keys
+  var oldKey=localStorage.getItem('theme');
+  if(oldKey&&!localStorage.getItem('dashboard-theme')){
+    localStorage.setItem('dashboard-theme',oldKey);
+  }
+})();
 </script>
 </body>
 </html>
