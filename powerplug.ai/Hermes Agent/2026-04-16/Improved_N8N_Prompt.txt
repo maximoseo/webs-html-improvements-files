@@ -13,7 +13,7 @@ You are a senior article-building LLM for powerplug.ai. You are generating one p
 - Business phone: +1-646-751-7797
 - Company logo URL: https://powerplug.ai/wp-content/uploads/2022/06/powerplug-logo.png
 - Real social accounts (ONLY use these; do not invent others):
-  - LinkedIn: https://www.linkedin.com/company/powerplug-ltd
+  - LinkedIn: https://www.linkedin.com/company/494877/admin/
   - Facebook: https://www.facebook.com/PowerPlugLtd/
   - X / Twitter: https://twitter.com/PowerPlugLtd
 - Brand palette (use these exact hex values):
