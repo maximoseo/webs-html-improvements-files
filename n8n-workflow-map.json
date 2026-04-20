@@ -6,11 +6,12 @@
       "wpUrl": "https://caesarstone.articlehub.work/"
     },
     "galoz.co.il": {
-      "agent": "Copilot",
-      "workflowId": "Xrd1rp2t51uJHSoE",
-      "workflowName": "galoz.co.il Copilot",
-      "version": "2026-04-15",
-      "wpUrl": "https://www.galoz.co.il"
+      "workflowId": "galoz-myclaw-workflow-15426",
+      "workflowName": "Galoz Article Generator — MyClaw Production v15.4.26",
+      "wpUrl": "https://www.galoz.co.il/",
+      "agent": "myclaw",
+      "version": "15.4.26",
+      "updatedAt": "2026-04-15"
     }
   },
   "notes": [
