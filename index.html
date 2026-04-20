@@ -4430,6 +4430,217 @@ body {
 
 /* END POLISH PASS v3.0 */
 
+/* ╔══════════════════════════════════════════════════════════════════╗
+   ║  POLISH PASS v3.1 (2026-04-20) — MOBILE HEADER OVERHAUL         ║
+   ║  2-row sticky header on mobile: row1=logo+actions, row2=tabs     ║
+   ║  Smooth tab underline, swipeable scroll, no text truncation      ║
+   ╚══════════════════════════════════════════════════════════════════╝ */
+
+/* ── MOBILE HEADER: two-row layout ≤768px ───────────────────────── */
+/*
+   DOM: .header-inner > .logo + .header-actions > [fixer-tab-nav, btns, search, status]
+   Strategy: .header fixed at 52px, tab-nav gets its own position:fixed at top:52px
+   → cleanest approach since tab-nav is nested inside header-actions
+*/
+@media (max-width: 768px) {
+
+  /* ── Row 1: Main header bar — 52px ──────────────────────────── */
+  .header {
+    height: 52px !important;
+    padding: 0 !important;
+    overflow: visible !important;
+  }
+  .header-inner {
+    height: 52px !important;
+    max-width: 100% !important;
+    padding: 0 12px !important;
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    flex-wrap: nowrap !important;
+    gap: 8px !important;
+  }
+
+  /* Logo — left side */
+  .logo {
+    flex: 1 1 auto !important;
+    min-width: 0 !important;
+    display: flex !important;
+    align-items: center !important;
+    height: 100% !important;
+    order: 1 !important;
+  }
+  .logo-link {
+    display: flex !important;
+    align-items: center !important;
+    gap: 7px !important;
+    text-decoration: none !important;
+    min-width: 0 !important;
+  }
+  .logo-icon {
+    width: 28px !important;
+    height: 28px !important;
+    border-radius: 8px !important;
+    flex-shrink: 0 !important;
+  }
+  .logo-icon svg {
+    width: 14px !important;
+    height: 14px !important;
+  }
+  .logo h1 {
+    font-size: 14.5px !important;
+    font-weight: 700 !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    max-width: 130px !important;
+  }
+
+  /* Actions — right side (hide noise, show only ? and Sync) */
+  .header-actions {
+    flex: 0 0 auto !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 6px !important;
+    height: 100% !important;
+    padding: 0 !important;
+    flex-wrap: nowrap !important;
+    order: 2 !important;
+  }
+  .status-stack,
+  .last-sync-meta,
+  .search-wrap,
+  #bulk-toggle-projects {
+    display: none !important;
+  }
+  .header-menu-btn,
+  .hdr-sync-btn {
+    height: 32px !important;
+    min-height: 32px !important;
+    padding: 0 10px !important;
+    font-size: 11.5px !important;
+    font-weight: 600 !important;
+    border-radius: 9px !important;
+    white-space: nowrap !important;
+  }
+
+  /* ── Row 2: Tab nav — FIXED below header bar at top:52px ─────── */
+  .fixer-tab-nav {
+    position: fixed !important;
+    top: 52px !important;
+    left: 0 !important;
+    right: 0 !important;
+    z-index: 9998 !important;
+    height: 40px !important;
+    width: 100% !important;
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: stretch !important;
+    gap: 0 !important;
+    overflow-x: auto !important;
+    overflow-y: hidden !important;
+    -webkit-overflow-scrolling: touch !important;
+    scrollbar-width: none !important;
+    padding: 0 4px !important;
+    background: rgba(7,8,16,0.97) !important;
+    backdrop-filter: blur(16px) !important;
+    -webkit-backdrop-filter: blur(16px) !important;
+    border-bottom: 1px solid rgba(255,255,255,0.07) !important;
+    scroll-snap-type: x proximity !important;
+  }
+  .fixer-tab-nav::-webkit-scrollbar {
+    display: none !important;
+  }
+
+  /* Tab buttons */
+  .fixer-tab-btn {
+    flex: 0 0 auto !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 5px !important;
+    height: 40px !important;
+    min-height: 40px !important;
+    padding: 0 15px !important;
+    font-size: 12.5px !important;
+    font-weight: 600 !important;
+    white-space: nowrap !important;
+    border: none !important;
+    border-radius: 0 !important;
+    background: transparent !important;
+    color: rgba(255,255,255,0.48) !important;
+    position: relative !important;
+    scroll-snap-align: start !important;
+    transition: color 0.15s ease, background 0.15s ease !important;
+    letter-spacing: 0.01em !important;
+  }
+  .fixer-tab-btn svg {
+    width: 13px !important;
+    height: 13px !important;
+    flex-shrink: 0 !important;
+    opacity: 0.7 !important;
+  }
+  /* Always show tab label text on mobile */
+  .fixer-tab-btn .tab-label {
+    display: inline !important;
+  }
+
+  /* Active tab: full-color text + underline accent */
+  .fixer-tab-btn.active {
+    color: #fff !important;
+    background: transparent !important;
+  }
+  .fixer-tab-btn.active svg {
+    opacity: 1 !important;
+  }
+  .fixer-tab-btn.active::after {
+    content: '' !important;
+    position: absolute !important;
+    bottom: 0 !important;
+    left: 12px !important;
+    right: 12px !important;
+    height: 2px !important;
+    background: linear-gradient(90deg, #7170ff, #a79fff) !important;
+    border-radius: 2px 2px 0 0 !important;
+  }
+  .fixer-tab-btn:not(.active):hover {
+    color: rgba(255,255,255,0.80) !important;
+    background: rgba(255,255,255,0.04) !important;
+  }
+
+  /* Body offset: 52px header + 40px tab bar = 92px */
+  body {
+    padding-top: 92px !important;
+  }
+  .container {
+    padding-top: 16px !important;
+  }
+}
+
+/* ── VERY SMALL MOBILE (≤400px) ─────────────────────────────────── */
+@media (max-width: 400px) {
+  .logo h1 {
+    font-size: 13px !important;
+    max-width: 100px !important;
+  }
+  .fixer-tab-btn {
+    padding: 0 11px !important;
+    font-size: 12px !important;
+    gap: 4px !important;
+  }
+  .fixer-tab-btn svg {
+    width: 12px !important;
+    height: 12px !important;
+  }
+  .header-menu-btn,
+  .hdr-sync-btn {
+    padding: 0 8px !important;
+    font-size: 11px !important;
+  }
+}
+
+/* END POLISH PASS v3.1 */
+
 </style>
 </head>
 <body>
