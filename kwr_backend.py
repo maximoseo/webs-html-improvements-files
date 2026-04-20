@@ -12,7 +12,9 @@ No imports from server.py - call_llm injected as argument.
 """
 
 import datetime
+import io
 import json
+import os
 import re
 import threading
 import time
@@ -20,7 +22,6 @@ import urllib.error
 import urllib.parse
 import urllib.request
 import uuid
-import os
 
 _state = {}          # run_id -> job dict
 _lock = threading.RLock()
@@ -96,89 +97,279 @@ def cancel_run(run_id: str) -> bool:
         return True
 
 
-def approve_and_deploy(run_id: str, edited_rows: list, sheet_target: str,
-                       sheet_prefix: str, call_llm) -> tuple:
-    """
-    Validate approval inputs, then fire n8n webhook with approved rows.
-    Returns (sheet_url, None) or (None, error_str).
-    Never writes directly to Google Sheets - goes through n8n webhook.
-    """
-    with _lock:
-        job = _state.get(run_id)
-        if job is None:
-            return None, f"Run {run_id} not found"
-        if job['status'] != 'ready':
-            return None, f"Run is in state '{job['status']}' - can only approve 'ready' runs"
+COLUMNS = ['Existing Parent Page', 'Pillar', 'Cluster', 'Intent', 'Primary Keyword', 'Keywords']
 
-    if not edited_rows:
-        return None, "No rows to deploy"
-    if not sheet_target or not sheet_target.strip():
-        return None, "sheet_target is required"
 
-    # Build worksheet name
+def _worksheet_name(job: dict, sheet_prefix: str) -> str:
     brand = (job.get('inputs') or {}).get('brand_name', 'kwr')
     safe_brand = _slugify(brand)[:30]
     date_str = datetime.datetime.utcnow().strftime('%Y-%m-%d')
     prefix = _slugify(sheet_prefix)[:20] if sheet_prefix else ''
-    worksheet_name = f"{prefix}-{safe_brand}-{date_str}".strip('-') if prefix else f"kwr-{safe_brand}-{date_str}"
+    return (f"{prefix}-{safe_brand}-{date_str}".strip('-')
+            if prefix else f"kwr-{safe_brand}-{date_str}")
 
-    webhook_url = os.getenv('N8N_KWR_WEBHOOK_URL', '').strip()
-    if not webhook_url:
-        return None, "N8N_KWR_WEBHOOK_URL env var not set - cannot deploy"
 
-    payload_out = {
-        'run_id': run_id,
-        'worksheet_name': worksheet_name,
-        'sheet_target': sheet_target,
-        'rows': edited_rows,
-        'meta': {
-            'brand_name': (job.get('inputs') or {}).get('brand_name', ''),
-            'website_url': (job.get('inputs') or {}).get('website_url', ''),
-            'target_language': (job.get('inputs') or {}).get('target_language', ''),
-            'target_market': (job.get('inputs') or {}).get('target_market', ''),
-            'deployed_at': datetime.datetime.utcnow().isoformat() + 'Z',
-            'row_count': len(edited_rows),
-        }
-    }
+def build_excel(run_id: str) -> tuple:
+    """
+    Build an .xlsx file in memory from the current rows.
+    Returns (bytes, worksheet_name, None) or (None, None, error_str).
+    """
+    try:
+        import openpyxl
+        from openpyxl.styles import Font, PatternFill, Alignment, Border, Side
+        from openpyxl.utils import get_column_letter
+    except ImportError:
+        return None, None, "openpyxl not installed - cannot build Excel file"
+
+    with _lock:
+        job = _state.get(run_id)
+        if job is None:
+            return None, None, f"Run {run_id} not found"
+        rows = list(job.get('rows') or [])
+        ws_name = _worksheet_name(job, '')
+
+    wb = openpyxl.Workbook()
+    ws = wb.active
+    ws.title = ws_name[:31]  # Excel tab name limit
+
+    # Header style
+    header_fill = PatternFill('solid', fgColor='1F3864')
+    header_font = Font(bold=True, color='FFFFFF', size=11)
+    thin = Side(style='thin', color='CCCCCC')
+    border = Border(left=thin, right=thin, top=thin, bottom=thin)
+
+    for col_idx, col_name in enumerate(COLUMNS, 1):
+        cell = ws.cell(row=1, column=col_idx, value=col_name)
+        cell.fill = header_fill
+        cell.font = header_font
+        cell.alignment = Alignment(horizontal='center', vertical='center', wrap_text=True)
+        cell.border = border
+
+    ws.row_dimensions[1].height = 30
+
+    # Pillar / cluster row styles
+    pillar_fill = PatternFill('solid', fgColor='D9E1F2')
+    pillar_font = Font(bold=True, size=10)
+    cluster_font = Font(size=10)
+    cluster_fill = PatternFill('solid', fgColor='FFFFFF')
+
+    for r_idx, row in enumerate(rows, 2):
+        is_pillar = (str(row.get('col_a', '')).strip() == '-' or
+                     not str(row.get('col_a', '')).strip())
+        fill = pillar_fill if is_pillar else cluster_fill
+        font = pillar_font if is_pillar else cluster_font
+
+        values = [
+            row.get('col_a', ''),
+            row.get('col_b', ''),
+            row.get('col_c', ''),
+            row.get('col_d', ''),
+            row.get('col_e', ''),
+            row.get('col_f', ''),
+        ]
+        for c_idx, val in enumerate(values, 1):
+            cell = ws.cell(row=r_idx, column=c_idx, value=val)
+            cell.fill = fill
+            cell.font = font
+            cell.alignment = Alignment(vertical='top', wrap_text=True)
+            cell.border = border
+
+    # Column widths
+    col_widths = [30, 25, 30, 15, 35, 50]
+    for i, w in enumerate(col_widths, 1):
+        ws.column_dimensions[get_column_letter(i)].width = w
+
+    ws.freeze_panes = 'A2'
+
+    buf = io.BytesIO()
+    wb.save(buf)
+    return buf.getvalue(), ws_name, None
+
+
+def approve_and_save(run_id: str, edited_rows: list, sheet_prefix: str) -> tuple:
+    """
+    Mark run as approved, save edited rows, build Excel bytes.
+    Returns (excel_bytes, worksheet_name, None) or (None, None, error_str).
+    Does NOT write anywhere externally — caller decides where to save.
+    """
+    with _lock:
+        job = _state.get(run_id)
+        if job is None:
+            return None, None, f"Run {run_id} not found"
+        if job['status'] not in ('ready', 'complete'):
+            return None, None, f"Run is in state '{job['status']}' — can only approve 'ready' runs"
+        if not edited_rows:
+            return None, None, "No rows to save"
+        job['rows'] = edited_rows
+        job['row_count'] = len(edited_rows)
+
+    excel_bytes, ws_name, err = build_excel(run_id)
+    if err:
+        return None, None, err
+
+    deployed_at = datetime.datetime.utcnow().isoformat() + 'Z'
+    with _lock:
+        _state[run_id]['status'] = 'complete'
+        _state[run_id]['deployed_at'] = deployed_at
+        _state[run_id]['worksheet_name'] = ws_name
+        _state[run_id]['deploy_error'] = None
+
+    return excel_bytes, ws_name, None
+
+
+def push_to_sheets(run_id: str, sheet_target: str) -> tuple:
+    """
+    Push approved rows to Google Sheets using gspread + service account.
+    Requires GOOGLE_SERVICE_ACCOUNT_JSON env var (JSON string of the SA key).
+    Returns (sheet_url, None) or (None, error_str).
+    """
+    try:
+        import gspread
+        from google.oauth2.service_account import Credentials
+    except ImportError:
+        return None, "gspread / google-auth not installed"
+
+    sa_json = os.getenv('GOOGLE_SERVICE_ACCOUNT_JSON', '').strip()
+    if not sa_json:
+        return None, "GOOGLE_SERVICE_ACCOUNT_JSON env var not set"
+
+    with _lock:
+        job = _state.get(run_id)
+        if job is None:
+            return None, f"Run {run_id} not found"
+        rows = list(job.get('rows') or [])
+        ws_name = job.get('worksheet_name') or _worksheet_name(job, '')
+
+    if not rows:
+        return None, "No rows to push — approve first"
+    if not sheet_target or not sheet_target.strip():
+        return None, "sheet_target (Google Sheet URL or ID) is required"
 
     try:
-        body = json.dumps(payload_out).encode('utf-8')
-        req = urllib.request.Request(
-            webhook_url,
-            data=body,
-            headers={'Content-Type': 'application/json'},
-            method='POST'
-        )
-        with urllib.request.urlopen(req, timeout=60) as resp:
-            resp_body = resp.read().decode('utf-8', 'replace')
-            try:
-                resp_json = json.loads(resp_body)
-            except Exception:
-                resp_json = {}
-            sheet_url = resp_json.get('sheet_url') or resp_json.get('sheetUrl') or ''
+        sa_info = json.loads(sa_json)
+        scopes = [
+            'https://www.googleapis.com/auth/spreadsheets',
+            'https://www.googleapis.com/auth/drive',
+        ]
+        creds = Credentials.from_service_account_info(sa_info, scopes=scopes)
+        gc = gspread.authorize(creds)
 
-        deployed_at = datetime.datetime.utcnow().isoformat() + 'Z'
+        # Open by URL or ID
+        if 'docs.google.com' in sheet_target:
+            sh = gc.open_by_url(sheet_target)
+        else:
+            sh = gc.open_by_key(sheet_target)
+
+        # Always create a NEW worksheet — never overwrite
+        try:
+            ws = sh.add_worksheet(title=ws_name, rows=len(rows) + 5, cols=6)
+        except Exception:
+            # If name collision, append timestamp
+            ws_name = ws_name + '-' + datetime.datetime.utcnow().strftime('%H%M%S')
+            ws = sh.add_worksheet(title=ws_name, rows=len(rows) + 5, cols=6)
+
+        # Write header + rows
+        data = [COLUMNS]
+        for row in rows:
+            data.append([
+                row.get('col_a', ''),
+                row.get('col_b', ''),
+                row.get('col_c', ''),
+                row.get('col_d', ''),
+                row.get('col_e', ''),
+                row.get('col_f', ''),
+            ])
+        ws.update(data, value_input_option='RAW')
+
+        # Bold header
+        ws.format('A1:F1', {'textFormat': {'bold': True},
+                             'backgroundColor': {'red': 0.12, 'green': 0.22, 'blue': 0.39}})
+
+        sheet_url = sh.url
         with _lock:
-            _state[run_id]['status'] = 'complete'
             _state[run_id]['sheet_url'] = sheet_url
-            _state[run_id]['deployed_at'] = deployed_at
-            _state[run_id]['rows'] = edited_rows
-            _state[run_id]['deploy_error'] = None
+            _state[run_id]['worksheet_name'] = ws_name
 
-        return sheet_url or f"Deployed to worksheet: {worksheet_name}", None
+        return sheet_url, None
 
-    except urllib.error.HTTPError as exc:
-        err = f"Webhook HTTP {exc.code}: {exc.read().decode('utf-8','replace')[:500]}"
-        with _lock:
-            _state[run_id]['deploy_error'] = err
-            # Do NOT mark as complete or change status - preserve preview
-        return None, err
-
+    except json.JSONDecodeError:
+        return None, "GOOGLE_SERVICE_ACCOUNT_JSON is not valid JSON"
     except Exception as exc:
-        err = str(exc)[:500]
-        with _lock:
-            _state[run_id]['deploy_error'] = err
-        return None, err
+        return None, str(exc)[:500]
+
+
+def save_to_obsidian(run_id: str) -> tuple:
+    """
+    Save the keyword research result as a Markdown note to Obsidian via local REST API.
+    Returns (note_path, None) or (None, error_str).
+    """
+    obsidian_url = os.getenv('OBSIDIAN_LOCAL_HTTP_URL', 'http://127.0.0.1:27123').rstrip('/')
+    obsidian_key = os.getenv('OBSIDIAN_LOCAL_API_KEY', '').strip()
+    if not obsidian_key:
+        return None, "OBSIDIAN_LOCAL_API_KEY env var not set"
+
+    with _lock:
+        job = _state.get(run_id)
+        if job is None:
+            return None, f"Run {run_id} not found"
+        rows = list(job.get('rows') or [])
+        inputs = job.get('inputs') or {}
+        ws_name = job.get('worksheet_name', run_id)
+        created_at = job.get('created_at', '')
+
+    brand = inputs.get('brand_name', 'unknown')
+    website = inputs.get('website_url', '')
+    market = inputs.get('target_market', '')
+    language = inputs.get('target_language', '')
+
+    # Build markdown table
+    lines = [
+        f"# KWR: {brand}",
+        f"",
+        f"- **Site:** {website}",
+        f"- **Market:** {market}",
+        f"- **Language:** {language}",
+        f"- **Run date:** {created_at[:10] if created_at else 'unknown'}",
+        f"- **Rows:** {len(rows)}",
+        f"- **Worksheet:** {ws_name}",
+        f"",
+        f"| Existing Parent Page | Pillar | Cluster | Intent | Primary Keyword | Keywords |",
+        f"|---|---|---|---|---|---|",
+    ]
+    for row in rows:
+        def esc(v):
+            return str(v or '').replace('|', '\\|')
+        lines.append(
+            f"| {esc(row.get('col_a',''))} "
+            f"| {esc(row.get('col_b',''))} "
+            f"| {esc(row.get('col_c',''))} "
+            f"| {esc(row.get('col_d',''))} "
+            f"| {esc(row.get('col_e',''))} "
+            f"| {esc(row.get('col_f',''))} |"
+        )
+
+    note_content = '\n'.join(lines)
+    note_path = f"html-redesign-dashboard/kwr-results/{ws_name}.md"
+    url = f"{obsidian_url}/vault/{urllib.parse.quote(note_path)}"
+
+    try:
+        body = note_content.encode('utf-8')
+        req = urllib.request.Request(
+            url,
+            data=body,
+            headers={
+                'Authorization': f'Bearer {obsidian_key}',
+                'Content-Type': 'text/markdown',
+            },
+            method='PUT'
+        )
+        with urllib.request.urlopen(req, timeout=15) as resp:
+            resp.read()
+        return note_path, None
+    except urllib.error.HTTPError as exc:
+        return None, f"Obsidian API error {exc.code}: {exc.read().decode('utf-8','replace')[:200]}"
+    except Exception as exc:
+        return None, str(exc)[:300]
 
 
 def update_rows(run_id: str, rows: list) -> bool:

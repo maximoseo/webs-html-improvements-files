@@ -1515,6 +1515,23 @@ class DashboardHandler(BaseHTTPRequestHandler):
             jobs = kwr_backend.list_recent(limit)
             return json_response(self, 200, {'ok': True, 'runs': jobs})
 
+        if parsed.path.startswith('/api/kwr/download/'):
+            run_id = parsed.path.split('/')[-1].strip()
+            if not run_id:
+                return json_response(self, 400, {'ok': False, 'error': 'run_id required'})
+            excel_bytes, ws_name, err = kwr_backend.build_excel(run_id)
+            if err:
+                return json_response(self, 500, {'ok': False, 'error': err})
+            filename = f"{ws_name}.xlsx"
+            self.send_response(200)
+            self.send_header('Content-Type',
+                             'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+            self.send_header('Content-Disposition', f'attachment; filename="{filename}"')
+            self.send_header('Content-Length', str(len(excel_bytes)))
+            self.end_headers()
+            self.wfile.write(excel_bytes)
+            return
+
         return self.serve_static(parsed.path)
 
     def do_POST(self):
@@ -2265,18 +2282,62 @@ class DashboardHandler(BaseHTTPRequestHandler):
                 body = json.loads(raw_body.decode('utf-8', 'replace'))
             except Exception:
                 return json_response(self, 400, {'ok': False, 'error': 'Invalid JSON'})
-            run_id      = (body.get('run_id') or '').strip()
-            rows        = body.get('rows', [])
-            sheet_target = (body.get('sheet_target') or '').strip()
+            run_id       = (body.get('run_id') or '').strip()
+            rows         = body.get('rows', [])
             sheet_prefix = (body.get('sheet_prefix') or '').strip()
             if not run_id:
                 return json_response(self, 400, {'ok': False, 'error': 'run_id required'})
-            sheet_url, err = kwr_backend.approve_and_deploy(
-                run_id, rows, sheet_target, sheet_prefix, call_with_fallback
-            )
+            excel_bytes, ws_name, err = kwr_backend.approve_and_save(run_id, rows, sheet_prefix)
+            if err:
+                return json_response(self, 500, {'ok': False, 'error': err})
+            return json_response(self, 200, {'ok': True, 'worksheet_name': ws_name,
+                                             'row_count': len(rows)})
+
+        if parsed.path.startswith('/api/kwr/download/'):
+            run_id = parsed.path.split('/')[-1].strip()
+            if not run_id:
+                return json_response(self, 400, {'ok': False, 'error': 'run_id required'})
+            excel_bytes, ws_name, err = kwr_backend.build_excel(run_id)
+            if err:
+                return json_response(self, 500, {'ok': False, 'error': err})
+            filename = f"{ws_name}.xlsx"
+            self.send_response(200)
+            self.send_header('Content-Type',
+                             'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+            self.send_header('Content-Disposition', f'attachment; filename="{filename}"')
+            self.send_header('Content-Length', str(len(excel_bytes)))
+            self.end_headers()
+            self.wfile.write(excel_bytes)
+            return
+
+        if parsed.path == '/api/kwr/push-sheets':
+            try:
+                body = json.loads(raw_body.decode('utf-8', 'replace'))
+            except Exception:
+                return json_response(self, 400, {'ok': False, 'error': 'Invalid JSON'})
+            run_id       = (body.get('run_id') or '').strip()
+            sheet_target = (body.get('sheet_target') or '').strip()
+            if not run_id:
+                return json_response(self, 400, {'ok': False, 'error': 'run_id required'})
+            if not sheet_target:
+                return json_response(self, 400, {'ok': False, 'error': 'sheet_target required'})
+            sheet_url, err = kwr_backend.push_to_sheets(run_id, sheet_target)
             if err:
                 return json_response(self, 500, {'ok': False, 'error': err})
             return json_response(self, 200, {'ok': True, 'sheet_url': sheet_url})
+
+        if parsed.path == '/api/kwr/save-obsidian':
+            try:
+                body = json.loads(raw_body.decode('utf-8', 'replace'))
+            except Exception:
+                return json_response(self, 400, {'ok': False, 'error': 'Invalid JSON'})
+            run_id = (body.get('run_id') or '').strip()
+            if not run_id:
+                return json_response(self, 400, {'ok': False, 'error': 'run_id required'})
+            note_path, err = kwr_backend.save_to_obsidian(run_id)
+            if err:
+                return json_response(self, 500, {'ok': False, 'error': err})
+            return json_response(self, 200, {'ok': True, 'note_path': note_path})
 
         return json_response(self, 404, {'ok': False, 'error': 'Not found'})
 

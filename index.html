@@ -4164,8 +4164,8 @@ body {
       <input class="kwr-input" id="kwr-target-market" type="text" placeholder="e.g. US, Israel, UK…" autocomplete="off">
     </div>
     <div class="kwr-field full">
-      <label class="kwr-label" for="kwr-sheet-target">Google Sheet ID or URL <span class="req">*</span></label>
-      <input class="kwr-input" id="kwr-sheet-target" type="text" placeholder="Sheet ID or full URL" autocomplete="off">
+      <label class="kwr-label" for="kwr-worksheet-prefix">Worksheet Name Prefix (optional)</label>
+      <input class="kwr-input" id="kwr-worksheet-prefix" type="text" placeholder="KWR" autocomplete="off">
     </div>
   </div>
 
@@ -4209,7 +4209,7 @@ body {
   <div id="kwr-preview-section" style="display:none" class="kwr-preview-wrap">
     <div class="kwr-preview-header">
       <div>
-        <div class="kwr-preview-title">Preview — Review &amp; Edit Before Deploying</div>
+        <div class="kwr-preview-title">Preview — Review &amp; Edit</div>
         <div class="kwr-preview-meta" id="kwr-preview-meta"></div>
       </div>
       <div style="display:flex;gap:8px;flex-wrap:wrap">
@@ -4219,7 +4219,7 @@ body {
         </button>
         <button class="kwr-btn kwr-btn-success" id="kwr-approve-btn" onclick="kwrApprove()">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
-          Approve &amp; Deploy to Sheet
+          Approve &amp; Save Excel
         </button>
       </div>
     </div>
@@ -4239,11 +4239,44 @@ body {
     </div>
   </div>
 
-  <!-- Deploy result -->
-  <div id="kwr-deploy-result" style="display:none" class="kwr-status-bar">
-    <span class="kwr-status-dot kwr-dot-complete"></span>
-    <span id="kwr-deploy-msg"></span>
-    <a id="kwr-sheet-link" href="#" target="_blank" rel="noopener" style="margin-left:auto;font-size:12px;color:#8b5cf6;text-decoration:none;font-weight:700">Open Sheet →</a>
+  <!-- Post-approve action bar — shown after approval -->
+  <div id="kwr-action-bar" style="display:none;margin-top:12px">
+    <div class="kwr-status-bar" style="margin-bottom:10px">
+      <span class="kwr-status-dot kwr-dot-complete"></span>
+      <span id="kwr-approve-msg">Approved — choose an export option below.</span>
+    </div>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end">
+      <!-- Download Excel -->
+      <button class="kwr-btn kwr-btn-primary" id="kwr-download-btn" onclick="kwrDownloadExcel()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        Download Excel
+      </button>
+      <!-- Save to Obsidian -->
+      <button class="kwr-btn kwr-btn-ghost" id="kwr-obsidian-btn" onclick="kwrSaveObsidian()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+        Save to Obsidian
+      </button>
+      <!-- Send to Google Sheets -->
+      <div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap">
+        <input class="kwr-input" id="kwr-sheet-target-post" type="text"
+          placeholder="Google Sheet ID or URL" autocomplete="off"
+          style="width:260px;font-size:12px;padding:8px 10px">
+        <button class="kwr-btn kwr-btn-success" id="kwr-sheets-btn" onclick="kwrSendToSheets()">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/><line x1="9" y1="3" x2="9" y2="21"/></svg>
+          Send to Google Sheets
+        </button>
+      </div>
+    </div>
+    <!-- Result messages -->
+    <div id="kwr-obsidian-result" style="display:none;margin-top:8px" class="kwr-status-bar">
+      <span class="kwr-status-dot kwr-dot-complete"></span>
+      <span id="kwr-obsidian-msg"></span>
+    </div>
+    <div id="kwr-sheets-result" style="display:none;margin-top:8px" class="kwr-status-bar">
+      <span class="kwr-status-dot kwr-dot-complete"></span>
+      <span id="kwr-sheets-msg"></span>
+      <a id="kwr-sheet-link" href="#" target="_blank" rel="noopener" style="margin-left:auto;font-size:12px;color:#8b5cf6;text-decoration:none;font-weight:700;display:none">Open Sheet →</a>
+    </div>
   </div>
 
 </div>
@@ -7820,53 +7853,126 @@ function loadTopicsFromStatus(state) {
     kwrRun(fb || '');
   };
 
-  // ---- Approve & Deploy ----
+  // ---- Approve & Save Excel ----
   window.kwrApprove = function() {
-    if (!_kwrRunId) { alert('No active run to deploy.'); return; }
+    if (!_kwrRunId) { alert('No active run to approve.'); return; }
     if (!_kwrRows.length) { alert('Preview is empty — run research first.'); return; }
-    if (!confirm('Deploy ' + _kwrRows.length + ' rows to a new worksheet in the configured Google Sheet? This cannot be undone.')) return;
+    if (!confirm('Approve ' + _kwrRows.length + ' rows and save as Excel?')) return;
 
-    const sheetTarget = ($id('kwr-sheet-target') || {}).value || '';
     const sheetPrefix = ($id('kwr-worksheet-prefix') || {}).value || 'KWR';
-    const approveBtn = $id('kwr-approve-btn');
+    const approveBtn  = $id('kwr-approve-btn');
     if (approveBtn) approveBtn.disabled = true;
-    kwrSetStatus('kwr-dot-running', 'Deploying to Google Sheets…', _kwrRunId);
-    kwrLog('Deploying…');
+    kwrSetStatus('kwr-dot-running', 'Saving…', _kwrRunId);
 
     fetch('/api/kwr/approve', {
       method:'POST',
       headers:{'Content-Type':'application/json'},
-      body: JSON.stringify({
-        run_id: _kwrRunId,
-        rows: _kwrRows,
-        sheet_target: sheetTarget,
-        sheet_prefix: sheetPrefix
-      })
+      body: JSON.stringify({ run_id: _kwrRunId, rows: _kwrRows, sheet_prefix: sheetPrefix })
     })
     .then(r => r.json())
     .then(data => {
-      if (!data.ok) throw new Error(data.error || 'Deploy failed');
-      kwrShowDeployResult('Deployed successfully to new worksheet.', data.sheet_url);
-      kwrSetStatus('kwr-dot-complete', 'Deployed successfully', _kwrRunId);
-      kwrLog('Deploy complete. Sheet: ' + (data.sheet_url || '(no URL returned)'));
-      kwrShowProgress(false);
+      if (!data.ok) throw new Error(data.error || 'Approve failed');
+      kwrSetStatus('kwr-dot-complete', 'Approved — ' + data.row_count + ' rows ready to export.', _kwrRunId);
+      kwrLog('Approved. Worksheet name: ' + data.worksheet_name);
+      const bar = $id('kwr-action-bar');
+      const msg = $id('kwr-approve-msg');
+      if (msg) msg.textContent = 'Approved — ' + data.row_count + ' rows. Choose an export option:';
+      if (bar) bar.style.display = '';
+      // Pre-fill sheet target from the form field if user had typed one
+      const sheetInput = $id('kwr-sheet-target-post');
+      const formSheet  = ($id('kwr-sheet-target') || {}).value || '';
+      if (sheetInput && !sheetInput.value && formSheet) sheetInput.value = formSheet;
     })
     .catch(err => {
       if (approveBtn) approveBtn.disabled = false;
-      kwrSetStatus('kwr-dot-error', 'Deploy failed: ' + err.message, _kwrRunId);
-      kwrLog('DEPLOY ERROR: ' + err.message + ' — preview preserved, no worksheet created');
+      kwrSetStatus('kwr-dot-error', 'Approve failed: ' + err.message, _kwrRunId);
+      kwrLog('APPROVE ERROR: ' + err.message);
+    });
+  };
+
+  // ---- Download Excel ----
+  window.kwrDownloadExcel = function() {
+    if (!_kwrRunId) { alert('No active run.'); return; }
+    kwrLog('Downloading Excel…');
+    window.location.href = '/api/kwr/download/' + encodeURIComponent(_kwrRunId);
+  };
+
+  // ---- Save to Obsidian ----
+  window.kwrSaveObsidian = function() {
+    if (!_kwrRunId) { alert('No active run.'); return; }
+    const btn = $id('kwr-obsidian-btn');
+    if (btn) btn.disabled = true;
+    kwrLog('Saving to Obsidian…');
+
+    fetch('/api/kwr/save-obsidian', {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ run_id: _kwrRunId })
+    })
+    .then(r => r.json())
+    .then(data => {
+      if (btn) btn.disabled = false;
+      const res = $id('kwr-obsidian-result');
+      const msg = $id('kwr-obsidian-msg');
+      if (!data.ok) {
+        if (msg) msg.textContent = 'Obsidian error: ' + (data.error || 'unknown');
+        if (res) { res.style.display=''; res.querySelector('.kwr-status-dot').className='kwr-status-dot kwr-dot-error'; }
+        kwrLog('OBSIDIAN ERROR: ' + data.error);
+        return;
+      }
+      if (msg) msg.textContent = 'Saved to Obsidian: ' + data.note_path;
+      if (res) res.style.display = '';
+      kwrLog('Saved to Obsidian: ' + data.note_path);
+    })
+    .catch(err => {
+      if (btn) btn.disabled = false;
+      kwrLog('OBSIDIAN ERROR: ' + err.message);
+    });
+  };
+
+  // ---- Send to Google Sheets ----
+  window.kwrSendToSheets = function() {
+    if (!_kwrRunId) { alert('No active run.'); return; }
+    const sheetTarget = ($id('kwr-sheet-target-post') || {}).value || '';
+    if (!sheetTarget.trim()) { alert('Paste a Google Sheet ID or URL first.'); return; }
+    const btn = $id('kwr-sheets-btn');
+    if (btn) btn.disabled = true;
+    kwrLog('Sending to Google Sheets…');
+
+    fetch('/api/kwr/push-sheets', {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ run_id: _kwrRunId, sheet_target: sheetTarget })
+    })
+    .then(r => r.json())
+    .then(data => {
+      if (btn) btn.disabled = false;
+      const res  = $id('kwr-sheets-result');
+      const msg  = $id('kwr-sheets-msg');
+      const link = $id('kwr-sheet-link');
+      if (!data.ok) {
+        if (msg) msg.textContent = 'Sheets error: ' + (data.error || 'unknown');
+        if (res) { res.style.display=''; res.querySelector('.kwr-status-dot').className='kwr-status-dot kwr-dot-error'; }
+        kwrLog('SHEETS ERROR: ' + data.error);
+        return;
+      }
+      if (msg) msg.textContent = 'Written to new worksheet in Google Sheet.';
+      if (link && data.sheet_url) { link.href = data.sheet_url; link.style.display = ''; }
+      if (res) res.style.display = '';
+      kwrLog('Sheets done. URL: ' + (data.sheet_url || '(no URL)'));
+    })
+    .catch(err => {
+      if (btn) btn.disabled = false;
+      kwrLog('SHEETS ERROR: ' + err.message);
     });
   };
 
   function kwrShowDeployResult(msg, url) {
-    const wrap = $id('kwr-deploy-result');
-    const msgEl = $id('kwr-deploy-msg');
-    const link  = $id('kwr-sheet-link');
-    if (!wrap) return;
+    // kept for legacy callers — maps to new action bar
+    const bar = $id('kwr-action-bar');
+    const msgEl = $id('kwr-approve-msg');
     if (msgEl) msgEl.textContent = msg;
-    if (link && url) { link.href = url; link.style.display = ''; }
-    else if (link)   { link.style.display = 'none'; }
-    wrap.style.display = '';
+    if (bar) bar.style.display = '';
   }
 
 })();

@@ -1,5 +1,6 @@
 FROM python:3.11-alpine
 WORKDIR /app
+RUN pip install --no-cache-dir openpyxl gspread google-auth
 COPY index.html /app/index.html
 COPY data.json /app/data.json
 COPY server.py /app/server.py
