@@ -3845,7 +3845,45 @@ h3{font-size:14px;letter-spacing:-0.005em}
   .project-card .card-info h3{font-size:15px !important}
 }
 
-/* END POLISH PASS v2 */
+/* ================================================================
+   POLISH PASS v2.1 (2026-04-20) — quick wins after visual audit:
+   kill card-stretch dead space, bump title hierarchy, tighter grid
+   ================================================================ */
+.projects-grid{
+  align-items:start !important;
+  grid-auto-rows:min-content !important;
+  gap:18px !important;
+}
+/* Stronger title hierarchy on project cards */
+.project-card h3,
+.project-card .project-title,
+.project-card [class*="project-name"]{
+  font-size:17px !important;
+  font-weight:700 !important;
+  letter-spacing:-0.015em !important;
+  line-height:1.25 !important;
+}
+/* Subtle card hover for grid polish */
+.project-card{
+  transition:transform .18s ease, border-color .18s ease, box-shadow .18s ease !important;
+}
+.project-card:hover{
+  transform:translateY(-1px);
+  border-color:rgba(113,112,255,0.35) !important;
+  box-shadow:0 8px 24px -12px rgba(0,0,0,0.5), 0 0 0 1px rgba(113,112,255,0.12) !important;
+}
+/* Tighten main container max-width and add breathing room at bottom */
+main, main.container{
+  padding-bottom:48px !important;
+}
+/* Ensure the radar/drawer/modal layer doesn't create a phantom full-viewport box when empty */
+.radar-drawer:not(.open):empty,
+.radar-drawer[aria-hidden="true"]:not(.open){
+  min-height:0 !important;
+  height:0 !important;
+  pointer-events:none;
+}
+/* END POLISH PASS v2.1 */
 
 </style>
 </head>
