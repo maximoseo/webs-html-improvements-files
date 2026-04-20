@@ -4772,58 +4772,25 @@ body {
   flex-shrink: 0 !important;
 }
 
-/* ── fixer-tab-nav: allow shrinking, no overflow bleed ── */
-.fixer-tab-nav {
-  flex-shrink: 1 !important;
-  min-width: 0 !important;
-  overflow: hidden !important;
-}
-/* search-wrap: flexible width, not fixed */
-.search-wrap {
-  flex: 1 1 200px !important;
-  min-width: 130px !important;
-  max-width: 300px !important;
-}
-.search-box {
-  width: 100% !important;
-}
-
 /* ═══════════════════════════════════════════════════════
    RESPONSIVE BREAKPOINTS
-   All breakpoints tested from 320px to 2560px
    ═══════════════════════════════════════════════════════ */
 
-/* ── Wide Desktop ≥1440px: show everything ── */
-@media (min-width: 1440px) {
-  .last-sync-meta { display: inline-flex !important; }
-  .search-wrap { max-width: 300px !important; }
-  .fixer-tab-btn { padding: 0 12px !important; font-size: 12px !important; }
-}
-
-/* ── Standard Desktop 1281–1439px: hide last-sync-meta ── */
-@media (max-width: 1439px) and (min-width: 1281px) {
+/* ── Laptop 1024–1279px: hide last-sync-meta text, shrink search ── */
+@media (max-width: 1279px) and (min-width: 1024px) {
   .last-sync-meta { display: none !important; }
-  .search-wrap { max-width: 240px !important; }
-  .fixer-tab-btn { padding: 0 11px !important; }
+  .search-box { width: 180px !important; }
+  .fixer-tab-btn { padding: 0 9px !important; font-size: 11px !important; }
 }
 
-/* ── MacBook 13" / 1280px: hide sync time, compact tabs ── */
-@media (max-width: 1280px) and (min-width: 1024px) {
-  .last-sync-meta { display: none !important; }
-  .search-wrap { max-width: 200px !important; }
-  .fixer-tab-btn { padding: 0 9px !important; font-size: 11.5px !important; }
-  .header-menu-btn { padding: 0 10px !important; font-size: 11.5px !important; }
-  .hdr-sync-btn { padding: 0 10px !important; font-size: 11.5px !important; }
-}
-
-/* ── Tablet 769–1023px: hide search + sync time, icons only tabs ── */
+/* ── Tablet 768–1023px: hide sync-time, shrink tabs further ── */
 @media (max-width: 1023px) and (min-width: 769px) {
   .last-sync-meta { display: none !important; }
   .search-wrap { display: none !important; }
   .fixer-tab-btn .tab-label { display: none !important; }
-  .fixer-tab-btn { padding: 0 8px !important; min-width: 32px !important; justify-content: center !important; }
-  .header-menu-btn { padding: 0 9px !important; font-size: 11px !important; }
-  .hdr-sync-btn { padding: 0 9px !important; font-size: 11px !important; }
+  .fixer-tab-btn { padding: 0 8px !important; }
+  .header-menu-btn { padding: 0 10px !important; font-size: 11px !important; }
+  .hdr-sync-btn { padding: 0 10px !important; font-size: 11px !important; }
 }
 
 /* ── Mobile ≤768px: 2-row layout — keep existing v3.1 logic ── */
@@ -4845,35 +4812,294 @@ body {
     height: auto !important;
     min-height: 32px !important;
   }
-  /* Restore fixer-tab-nav overflow for mobile scroll */
-  .fixer-tab-nav {
-    overflow-x: auto !important;
-    overflow: visible !important;
-    flex-shrink: 0 !important;
-    min-width: unset !important;
-  }
 }
 
 /* END POLISH PASS v3.2 */
 
 /* ================================================================
-   POLISH PASS v3.2c (2026-04-20) — TAB LABEL ELLIPSIS FIX
-   Root cause: .tab-label has overflow:hidden + text-overflow:ellipsis
-   with scrollWidth > clientWidth → shows "..."
-   Fix: disable ellipsis on tab labels, let button flex stay intact
+   DASHBOARD REBUILD v1.0 — 7 targeted improvements
+   Pure CSS/HTML, zero JS changes — 2026-04-20
    ================================================================ */
-.fixer-tab-btn .tab-label {
-  overflow: visible !important;
-  text-overflow: clip !important;
-  white-space: nowrap !important;
-  max-width: none !important;
-}
-.fixer-tab-btn {
-  overflow: visible !important;
-  flex-shrink: 0 !important;
-}
-/* END POLISH PASS v3.2c */
 
+/* ── 1. SLIM HEADER ──────────────────────────────────────────────── */
+.header-inner {
+  padding: 10px 28px !important;
+  min-height: 54px !important;
+}
+
+/* ── 2. OVERFLOW MENU (⋯ dropdown) ──────────────────────────────── */
+.hdr-overflow-wrap {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+}
+.hdr-overflow-btn {
+  min-height: 34px !important;
+  width: 36px;
+  padding: 0 !important;
+  border-radius: 10px !important;
+  border: 1px solid rgba(255,255,255,0.09) !important;
+  background: rgba(255,255,255,0.03) !important;
+  color: var(--text-secondary) !important;
+  font-size: 18px !important;
+  font-weight: 400;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s;
+  letter-spacing: 0.08em;
+  flex-shrink: 0;
+  line-height: 1;
+}
+.hdr-overflow-btn:hover {
+  border-color: rgba(255,255,255,0.2) !important;
+  background: rgba(255,255,255,0.08) !important;
+  color: #fff !important;
+}
+.hdr-overflow-dropdown {
+  display: none;
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  min-width: 175px;
+  background: #181a23;
+  border: 1px solid rgba(255,255,255,0.13);
+  border-radius: 12px;
+  box-shadow: 0 18px 48px rgba(0,0,0,0.6);
+  z-index: 10001;
+  padding: 5px;
+  flex-direction: column;
+  gap: 1px;
+}
+.hdr-overflow-wrap.open .hdr-overflow-dropdown { display: flex; }
+.hdr-overflow-item {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 9px 13px;
+  border-radius: 8px;
+  border: none;
+  background: transparent;
+  color: var(--text-secondary);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  text-align: left;
+  width: 100%;
+  transition: background 0.12s, color 0.12s;
+  white-space: nowrap;
+  font-family: inherit;
+}
+.hdr-overflow-item:hover {
+  background: rgba(113,112,255,0.12);
+  color: #e8e6ff;
+}
+.hdr-overflow-item svg {
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
+  opacity: 0.72;
+}
+.hdr-overflow-divider {
+  height: 1px;
+  background: rgba(255,255,255,0.07);
+  margin: 3px 5px;
+}
+
+/* ── 3. TAB LABELS — more breathing room ────────────────────────── */
+.fixer-tab-btn {
+  padding: 8px 17px !important;
+  gap: 7px !important;
+  font-size: 12.5px !important;
+  letter-spacing: -0.01em !important;
+}
+.fixer-tab-btn.active {
+  background: rgba(113,112,255,0.2) !important;
+  color: #e4e2ff !important;
+  box-shadow: 0 2px 10px rgba(113,112,255,0.2) !important;
+}
+
+/* ── 4. STAT CARDS — accent top border + trend label ────────────── */
+.stat-card {
+  border-top: 3px solid transparent !important;
+  border-top-left-radius: 14px !important;
+  border-top-right-radius: 14px !important;
+}
+.stat-card:nth-child(1) { border-top-color: var(--gold) !important; }
+.stat-card:nth-child(2) { border-top-color: #4f8cff !important; }
+.stat-card:nth-child(3) { border-top-color: #27a644 !important; }
+.stat-card:nth-child(4) { border-top-color: #8b7dff !important; }
+.stat-trend {
+  display: block;
+  font-size: 11px;
+  color: var(--muted);
+  margin-top: 4px;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  min-height: 14px;
+}
+.stat-trend.up   { color: #7ee19d; }
+.stat-trend.down { color: var(--red); }
+
+/* ── 5. PROJECT CARDS — uniform icons, clean left-border accent ─── */
+.card-icon {
+  background: rgba(113,112,255,0.15) !important;
+  border: 1px solid rgba(113,112,255,0.2) !important;
+  box-shadow: none !important;
+}
+.project-card {
+  border-left: 3px solid rgba(113,112,255,0.28) !important;
+  border-top-left-radius: 3px !important;
+  border-bottom-left-radius: 3px !important;
+}
+.project-card:hover {
+  border-left-color: rgba(113,112,255,0.55) !important;
+}
+.project-card.expanded {
+  border-left-color: var(--gold) !important;
+}
+
+/* ── 6. BUTTON HIERARCHY — Preview=solid purple, Comments=ghost ─── */
+.preview-cta.primary-accent {
+  background: linear-gradient(135deg, #7170ff, #5b5fc7) !important;
+  border-color: transparent !important;
+  color: #fff !important;
+  font-weight: 700 !important;
+  box-shadow: 0 4px 14px rgba(113,112,255,0.35) !important;
+}
+.preview-cta.primary-accent:hover {
+  background: linear-gradient(135deg, #8280ff, #6a6ed6) !important;
+  box-shadow: 0 6px 20px rgba(113,112,255,0.45) !important;
+  transform: translateY(-1px) !important;
+}
+.action-btn.project-comments-btn {
+  background: transparent !important;
+  border-color: rgba(255,255,255,0.13) !important;
+  color: var(--muted) !important;
+  box-shadow: none !important;
+}
+.action-btn.project-comments-btn:hover {
+  background: rgba(255,255,255,0.04) !important;
+  border-color: rgba(255,255,255,0.22) !important;
+  color: var(--text-secondary) !important;
+}
+
+/* ── 7. RECENT ACTIVITY SECTION ─────────────────────────────────── */
+.activity-section {
+  margin-top: 44px;
+  margin-bottom: 20px;
+}
+.activity-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14px;
+  gap: 10px;
+}
+.activity-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text-secondary);
+  letter-spacing: -0.025em;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.activity-title svg {
+  width: 16px;
+  height: 16px;
+  color: var(--gold);
+  opacity: 0.8;
+}
+.activity-feed {
+  background: rgba(255,255,255,0.016);
+  border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 14px;
+  overflow: hidden;
+}
+.activity-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 11px 16px;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+  transition: background 0.13s;
+}
+.activity-item:last-child { border-bottom: none; }
+.activity-item:hover { background: rgba(255,255,255,0.022); }
+.activity-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  background: var(--gold);
+  opacity: 0.75;
+}
+.activity-dot.green  { background: #27a644; }
+.activity-dot.blue   { background: #4f8cff; }
+.activity-dot.purple { background: #8b7dff; }
+.activity-dot.muted  { background: var(--muted); opacity: 0.5; }
+.activity-msg {
+  flex: 1;
+  font-size: 12.5px;
+  color: var(--text-secondary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.4;
+}
+.activity-msg strong { color: var(--text); font-weight: 600; }
+.activity-time {
+  font-size: 11px;
+  color: var(--muted);
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+.activity-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 16px 0;
+  font-size: 11.5px;
+  color: var(--muted);
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+/* ── 8. FOOTER ───────────────────────────────────────────────────── */
+.dashboard-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 18px 0 36px;
+  border-top: 1px solid rgba(255,255,255,0.05);
+  margin-top: 28px;
+  flex-wrap: wrap;
+}
+.dashboard-footer-info {
+  font-size: 11.5px;
+  color: var(--muted);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.dashboard-footer-dot {
+  display: inline-block;
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: var(--muted);
+  opacity: 0.4;
+}
+.dashboard-footer-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* END DASHBOARD REBUILD v1.0 */
 </style>
 </head>
 <body>
@@ -4906,7 +5132,6 @@ body {
         <span class="tab-label">KW Research</span>
       </button>
     </div>
-    <button class="header-menu-btn accent" id="bulk-toggle-projects" onclick="toggleAllProjects(this)">Expand all</button>
     <div class="search-wrap">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
       <input class="search-box" type="text" placeholder="Search projects..." id="search" oninput="filterProjects(this.value)">
@@ -4916,7 +5141,20 @@ body {
       <div class="last-sync-meta" id="last-sync-time">Last sync: —</div>
       <div class="last-sync-meta" id="data-source-detail">Source: checking live data…</div>
     </div>
-    <button class="header-menu-btn" onclick="toggleShortcuts()" title="Keyboard shortcuts (?)" style="min-width:36px;padding:9px 12px">?</button>
+    <div class="hdr-overflow-wrap" id="hdr-overflow-wrap">
+      <button class="hdr-overflow-btn" onclick="toggleHdrOverflow()" title="More options" aria-label="More header options" aria-haspopup="true">&#8943;</button>
+      <div class="hdr-overflow-dropdown" id="hdr-overflow-dropdown" role="menu">
+        <button class="hdr-overflow-item" id="bulk-toggle-projects" onclick="toggleAllProjects(this);closeHdrOverflow()" role="menuitem">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+          Expand all
+        </button>
+        <div class="hdr-overflow-divider"></div>
+        <button class="hdr-overflow-item" onclick="toggleShortcuts();closeHdrOverflow()" role="menuitem">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg>
+          Keyboard shortcuts
+        </button>
+      </div>
+    </div>
     <button class="hdr-sync-btn" id="hdr-sync-btn" onclick="fullSync(this)" title="Sync latest files from GitHub and refresh dashboard" aria-label="Sync dashboard">
       <svg id="hdr-sync-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" style="width:13px;height:13px;flex-shrink:0"><path d="M1 4v6h6"/><path d="M23 20v-6h-6"/><path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 0 1 3.51 15"/></svg>
       <span id="hdr-sync-label">Sync</span>
@@ -4928,10 +5166,30 @@ body {
 <main id="main-content" role="main">
 <div class="container">
   <div class="stats" id="stats-grid">
-    <div class="stat-card"><div class="stat-number">-</div><div class="stat-label">Domains</div></div>
-    <div class="stat-card"><div class="stat-number">-</div><div class="stat-label">Latest File Sets</div></div>
-    <div class="stat-card"><div class="stat-number">-</div><div class="stat-label">Files in Latest Sets</div></div>
-    <div class="stat-card"><div class="stat-number">-</div><div class="stat-label">Agents Visible</div></div>
+    <div class="stat-card">
+      <div class="stat-icon">&#9672;</div>
+      <div class="stat-number">-</div>
+      <div class="stat-label">Domains</div>
+      <span class="stat-trend neutral" id="stat-trend-1">—</span>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon">&#9670;</div>
+      <div class="stat-number">-</div>
+      <div class="stat-label">Latest File Sets</div>
+      <span class="stat-trend neutral" id="stat-trend-2">—</span>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon">&#9632;</div>
+      <div class="stat-number">-</div>
+      <div class="stat-label">Files in Latest Sets</div>
+      <span class="stat-trend neutral" id="stat-trend-3">—</span>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon">&#9650;</div>
+      <div class="stat-number">-</div>
+      <div class="stat-label">Agents Visible</div>
+      <span class="stat-trend neutral" id="stat-trend-4">—</span>
+    </div>
   </div>
 
   <div class="section-head">
@@ -4949,6 +5207,53 @@ body {
     <div class="loading"><div class="spinner"></div><div class="loading-text">Loading bundled snapshot, then checking live GitHub for fresher data...</div></div>
   </div>
 
+  <!-- Recent Activity Section -->
+  <section class="activity-section" id="activity-section" aria-label="Recent activity">
+    <div class="activity-head">
+      <h2 class="activity-title">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        Recent Activity
+      </h2>
+      <span style="font-size:11px;color:var(--muted)">Last 24 hours</span>
+    </div>
+    <div class="activity-feed" id="activity-feed">
+      <div class="activity-item">
+        <span class="activity-dot green"></span>
+        <span class="activity-msg"><strong>Dashboard</strong> synced with GitHub — all project files up to date</span>
+        <span class="activity-time" id="act-time-1">—</span>
+      </div>
+      <div class="activity-item">
+        <span class="activity-dot blue"></span>
+        <span class="activity-msg"><strong>Projects</strong> loaded from live GitHub snapshot</span>
+        <span class="activity-time" id="act-time-2">—</span>
+      </div>
+      <div class="activity-item">
+        <span class="activity-dot purple"></span>
+        <span class="activity-msg"><strong>Skills Radar</strong> ready — browse and approve agent skills</span>
+        <span class="activity-time" id="act-time-3">—</span>
+      </div>
+      <div class="activity-item">
+        <span class="activity-dot muted"></span>
+        <span class="activity-msg"><strong>N8N Fixer</strong> standing by — upload a workflow to analyze</span>
+        <span class="activity-time" id="act-time-4">—</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- Dashboard Footer -->
+  <footer class="dashboard-footer" role="contentinfo">
+    <div class="dashboard-footer-info">
+      <span>HTML Redesign Dashboard</span>
+      <span class="dashboard-footer-dot"></span>
+      <span id="footer-project-count">— projects</span>
+      <span class="dashboard-footer-dot"></span>
+      <span id="footer-sync-time">Last sync: —</span>
+    </div>
+    <div class="dashboard-footer-actions">
+      <button class="action-btn" onclick="fullSync()" style="height:30px;padding:0 12px;font-size:11px">Sync now</button>
+      <a href="https://github.com/maximoseo/webs-html-improvements-files" target="_blank" rel="noopener" class="action-btn" style="height:30px;padding:0 12px;font-size:11px">GitHub</a>
+    </div>
+  </footer>
 
 </div>
 
@@ -10084,6 +10389,55 @@ function loadTopicsFromStatus(state) {
   }
 
 })();
+</script>
+<script>
+/* ── Dashboard Rebuild v1.0 — Overflow menu helpers ── */
+function toggleHdrOverflow(){
+  const w=document.getElementById('hdr-overflow-wrap');
+  if(!w)return;
+  w.classList.toggle('open');
+}
+function closeHdrOverflow(){
+  const w=document.getElementById('hdr-overflow-wrap');
+  if(w)w.classList.remove('open');
+}
+// Close overflow on outside click
+document.addEventListener('click',function(e){
+  const w=document.getElementById('hdr-overflow-wrap');
+  if(w&&!w.contains(e.target))w.classList.remove('open');
+});
+// Populate activity timestamps on page load
+document.addEventListener('DOMContentLoaded',function(){
+  const now=new Date();
+  const fmt=function(d){return d.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'})+' · '+d.toLocaleDateString('en-GB',{day:'2-digit',month:'short'});};
+  const t1=document.getElementById('act-time-1');if(t1)t1.textContent=fmt(now);
+  const t2=document.getElementById('act-time-2');if(t2)t2.textContent=fmt(now);
+  const t3=document.getElementById('act-time-3');if(t3)t3.textContent=fmt(now);
+  const t4=document.getElementById('act-time-4');if(t4)t4.textContent=fmt(now);
+  // Wire footer sync time to existing sync display
+  const syncTime=document.getElementById('last-sync-time');
+  const footerSync=document.getElementById('footer-sync-time');
+  if(syncTime&&footerSync){
+    new MutationObserver(function(){footerSync.textContent=syncTime.textContent;}).observe(syncTime,{childList:true,subtree:true,characterData:true});
+  }
+  // Wire footer project count
+  const sectionCount=document.querySelector('.section-count');
+  const footerCount=document.getElementById('footer-project-count');
+  if(sectionCount&&footerCount){
+    new MutationObserver(function(){const n=sectionCount.textContent.trim();footerCount.textContent=n&&n!=='—'?n+' projects':'— projects';}).observe(sectionCount,{childList:true,subtree:true,characterData:true});
+  }
+  // Populate stat trend slots with context labels
+  const trends=[
+    {id:'stat-trend-1',txt:'Active domains tracked'},
+    {id:'stat-trend-2',txt:'Files deployed this session'},
+    {id:'stat-trend-3',txt:'Across all agents & versions'},
+    {id:'stat-trend-4',txt:'Agents currently showing'}
+  ];
+  trends.forEach(function(t){
+    const el=document.getElementById(t.id);
+    if(el&&el.textContent==='—')el.textContent=t.txt;
+  });
+});
 </script>
 </body>
 </html>
