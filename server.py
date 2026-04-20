@@ -217,7 +217,22 @@ def _get_provider_chain():
             'model_override': os.getenv('KIMI_MODEL', 'kimi-latest'),
         })
 
-    # 7. OpenRouter — last resort (pay-per-token, rate-limited)
+    # 7. Anthropic (native API — direct, no proxy)
+    anthropic_key = os.getenv('ANTHROPIC_API_KEY')
+    if anthropic_key:
+        chain.append({
+            'name': 'anthropic',
+            'base': 'https://api.anthropic.com/v1',
+            'headers': {
+                'x-api-key': anthropic_key,
+                'anthropic-version': '2023-06-01',
+                'Accept': 'application/json',
+            },
+            'model_override': os.getenv('ANTHROPIC_MODEL', 'claude-opus-4-7'),
+            'anthropic_native': True,
+        })
+
+    # 8. OpenRouter — broad model access (pay-per-token)
     or_key = os.getenv('OPENROUTER_API_KEY')
     if or_key:
         chain.append({
@@ -259,8 +274,10 @@ def _detect_preferred_provider(model: str) -> str | None:
     # Copilot short IDs have dots (version numbers like 4.6, 5.4, 4.1)
     if '.' in model:
         return 'copilot'
-    # Anthropic native IDs: claude-* with hyphens only (no dots) — still route via copilot fallback
+    # claude-* IDs: prefer Anthropic native direct if key is set, else Copilot
     if model.startswith('claude-'):
+        if os.getenv('ANTHROPIC_API_KEY'):
+            return 'anthropic'
         return 'copilot'
     return None
 
@@ -275,7 +292,7 @@ def call_with_fallback(messages, model, timeout=120):
     """
     chain = _get_provider_chain()
     if not chain:
-        raise RuntimeError('No LLM provider configured. Set COPILOT_API_KEY, GEMINI_API_KEY, VENICE_API_KEY, FIREWORKS_API_KEY, KIMI_API_KEY, or OPENROUTER_API_KEY.')
+        raise RuntimeError('No LLM provider configured. Set COPILOT_API_KEY, GEMINI_API_KEY, VENICE_API_KEY, FIREWORKS_API_KEY, KIMI_API_KEY, ANTHROPIC_API_KEY, or OPENROUTER_API_KEY.')
 
     # Reorder chain so the best-matched provider is tried first
     preferred = _detect_preferred_provider(model)
