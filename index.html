@@ -3557,6 +3557,296 @@ h1{font-size:clamp(18px,1.4vw + 10px,22px);letter-spacing:-0.015em}
 h2{font-size:clamp(15px,1vw + 9px,17px);letter-spacing:-0.01em}
 h3{font-size:14px;letter-spacing:-0.005em}
 
+/* ================================================================
+   POLISH PASS v2 (2026-04-20) — visible premium upgrade:
+   stats, card titles, meta chips, file rows, latest badge,
+   deploy popover, expand-all, quiet comments button
+   ================================================================ */
+
+/* ---- STAT CARDS: gradient border + colored accent + roomier ---- */
+.stats{gap:14px !important}
+.stat-card{
+  position:relative;
+  min-height:96px;
+  padding:16px 18px !important;
+  background:
+    radial-gradient(120% 80% at 0% 0%, rgba(113,112,255,0.09), transparent 60%),
+    linear-gradient(180deg,#1a1c26,#15161e) !important;
+  border:1px solid rgba(255,255,255,0.07) !important;
+  border-radius:14px !important;
+  box-shadow:0 1px 0 rgba(255,255,255,0.04) inset, 0 8px 22px -14px rgba(0,0,0,0.55) !important;
+  overflow:hidden;
+}
+.stat-card::before{
+  content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;
+  background:linear-gradient(135deg,rgba(113,112,255,0.35),transparent 40%);
+  mask:linear-gradient(#000,#000) content-box, linear-gradient(#000,#000);
+  -webkit-mask:linear-gradient(#000,#000) content-box, linear-gradient(#000,#000);
+  -webkit-mask-composite:xor; mask-composite:exclude;
+  padding:1px;opacity:.55;
+}
+.stat-card:nth-child(2)::before{background:linear-gradient(135deg,rgba(52,211,153,0.45),transparent 42%)}
+.stat-card:nth-child(3)::before{background:linear-gradient(135deg,rgba(251,191,36,0.45),transparent 42%)}
+.stat-card:nth-child(4)::before{background:linear-gradient(135deg,rgba(244,114,182,0.45),transparent 42%)}
+.stat-number{
+  font-size:30px !important;
+  font-weight:700 !important;
+  line-height:1.05 !important;
+  letter-spacing:-0.025em !important;
+  background:linear-gradient(180deg,#ffffff,#b9bec9);
+  -webkit-background-clip:text;background-clip:text;color:transparent !important;
+  margin-bottom:4px !important;
+}
+.stat-card:nth-child(2) .stat-number{background:linear-gradient(180deg,#9effcf,#34d399);-webkit-background-clip:text;background-clip:text}
+.stat-card:nth-child(3) .stat-number{background:linear-gradient(180deg,#ffe29a,#fbbf24);-webkit-background-clip:text;background-clip:text}
+.stat-card:nth-child(4) .stat-number{background:linear-gradient(180deg,#ffc1e0,#f472b6);-webkit-background-clip:text;background-clip:text}
+.stat-label{
+  font-size:11.5px !important;
+  font-weight:600 !important;
+  color:#8b93a3 !important;
+  text-transform:uppercase !important;
+  letter-spacing:0.08em !important;
+}
+.stat-icon{
+  position:absolute !important;top:14px !important;right:14px !important;
+  font-size:18px !important;opacity:.35 !important;
+  color:#7170ff;
+}
+.stat-card:nth-child(2) .stat-icon{color:#34d399}
+.stat-card:nth-child(3) .stat-icon{color:#fbbf24}
+.stat-card:nth-child(4) .stat-icon{color:#f472b6}
+
+/* ---- PROJECT CARD: stronger title, breathing room ---- */
+.project-card{
+  border-radius:16px !important;
+  background:linear-gradient(180deg,#181a23,#131520) !important;
+  border:1px solid rgba(255,255,255,0.07) !important;
+  transition:transform .18s ease, box-shadow .18s ease, border-color .18s ease !important;
+}
+.project-card:hover{
+  border-color:rgba(113,112,255,0.28) !important;
+  box-shadow:0 14px 40px -20px rgba(113,112,255,0.35), 0 2px 0 rgba(255,255,255,0.03) inset !important;
+}
+.project-card .card-header{padding:16px 18px !important;gap:14px !important}
+.project-card .card-info h3{
+  font-size:16px !important;
+  font-weight:650 !important;
+  letter-spacing:-0.012em !important;
+  color:#f4f5f8 !important;
+  margin:0 0 6px 0 !important;
+  line-height:1.25 !important;
+}
+.project-card .card-icon{
+  width:40px !important;height:40px !important;border-radius:10px !important;
+  box-shadow:0 4px 12px -6px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.06) inset !important;
+}
+.project-card .card-icon .icon-initials{font-size:14px !important;font-weight:700 !important;letter-spacing:0.02em !important}
+
+/* ---- META TAGS: role-based visual differentiation ---- */
+.project-card .card-meta{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+.meta-tag{
+  font-size:10.5px !important;
+  font-weight:600 !important;
+  letter-spacing:0.03em !important;
+  text-transform:uppercase;
+  padding:3px 8px !important;
+  border-radius:6px !important;
+  line-height:1.5 !important;
+}
+/* Language/direction tag (first) — subtle purple */
+.card-meta .meta-tag:nth-child(1){
+  background:rgba(113,112,255,0.12) !important;
+  border:1px solid rgba(113,112,255,0.22) !important;
+  color:#b5b4ff !important;
+}
+/* Count tag (second) — neutral */
+.card-meta .meta-tag:nth-child(2){
+  background:rgba(255,255,255,0.04) !important;
+  border:1px solid rgba(255,255,255,0.08) !important;
+  color:#9aa1af !important;
+  text-transform:none !important;
+}
+/* Updated tag (third) — muted, smaller weight */
+.card-meta .meta-tag:nth-child(3){
+  background:transparent !important;
+  border:1px solid rgba(255,255,255,0.07) !important;
+  color:#7d8593 !important;
+  text-transform:none !important;
+  font-weight:500 !important;
+}
+
+/* ---- CTA GROUP: primary Preview bolder, Comments ghosted ---- */
+.card-cta-group{gap:6px !important;align-items:center}
+.preview-cta.primary-accent{
+  background:linear-gradient(180deg,#7170ff,#5856e6) !important;
+  border:1px solid rgba(113,112,255,0.65) !important;
+  color:#fff !important;
+  font-weight:600 !important;
+  padding:7px 13px !important;
+  border-radius:9px !important;
+  box-shadow:0 4px 14px -4px rgba(113,112,255,0.55), 0 1px 0 rgba(255,255,255,0.15) inset !important;
+}
+.preview-cta.primary-accent:hover{
+  background:linear-gradient(180deg,#8584ff,#6967ed) !important;
+  transform:translateY(-1px);
+}
+.preview-cta.primary-accent svg{width:12px !important;height:12px !important}
+.project-comments-btn{
+  background:transparent !important;
+  border:1px solid rgba(255,255,255,0.09) !important;
+  color:#a8adb8 !important;
+  padding:7px 11px !important;
+  border-radius:9px !important;
+  font-weight:500 !important;
+}
+.project-comments-btn:hover{
+  background:rgba(255,255,255,0.04) !important;
+  color:#e4e6ec !important;
+  border-color:rgba(255,255,255,0.14) !important;
+}
+
+/* ---- CARD BODY TOOLS ROW — quieter ---- */
+.card-tools-row{
+  padding:10px 18px !important;
+  gap:8px !important;
+  border-top:1px solid rgba(255,255,255,0.05);
+  background:rgba(255,255,255,0.015);
+}
+.card-tools-row .action-btn{
+  font-size:12px !important;
+  padding:6px 11px !important;
+  border-radius:8px !important;
+  background:transparent !important;
+  border:1px solid rgba(255,255,255,0.08) !important;
+  color:#c1c6d0 !important;
+  font-weight:500 !important;
+}
+.card-tools-row .action-btn:hover{
+  background:rgba(113,112,255,0.08) !important;
+  border-color:rgba(113,112,255,0.3) !important;
+  color:#fff !important;
+}
+
+/* ---- VERSION / LATEST badges — proper green pill ---- */
+.version-section{padding:12px 18px !important}
+.version-header{gap:8px !important;margin-bottom:10px !important;display:flex;align-items:center}
+.version-title{
+  font-size:12.5px !important;
+  font-weight:600 !important;
+  color:#e4e6ec !important;
+  letter-spacing:0.01em !important;
+  text-transform:none !important;
+  display:inline-flex;align-items:center;gap:8px;
+}
+.version-dot.latest{
+  width:7px !important;height:7px !important;border-radius:50% !important;
+  background:#34d399 !important;
+  box-shadow:0 0 0 3px rgba(52,211,153,0.15), 0 0 10px rgba(52,211,153,0.5) !important;
+}
+.v-badge{
+  background:linear-gradient(180deg,rgba(52,211,153,0.2),rgba(52,211,153,0.08)) !important;
+  border:1px solid rgba(52,211,153,0.35) !important;
+  color:#6ee7b7 !important;
+  font-size:10px !important;
+  font-weight:700 !important;
+  padding:2px 7px !important;
+  border-radius:5px !important;
+  text-transform:uppercase !important;
+  letter-spacing:0.06em !important;
+}
+
+/* ---- FILE ROWS: cleaner, less cheap-blue ---- */
+.file-row{
+  padding:10px 12px !important;
+  background:rgba(255,255,255,0.02) !important;
+  border:1px solid rgba(255,255,255,0.06) !important;
+  border-radius:10px !important;
+  gap:10px !important;
+  margin-bottom:6px !important;
+}
+.file-row:hover{background:rgba(255,255,255,0.035) !important;border-color:rgba(255,255,255,0.1) !important}
+.file-badge{
+  font-size:10px !important;
+  font-weight:700 !important;
+  padding:3px 7px !important;
+  border-radius:5px !important;
+  letter-spacing:0.05em !important;
+  text-transform:uppercase !important;
+}
+.file-badge.html{background:rgba(251,146,60,0.15) !important;border:1px solid rgba(251,146,60,0.3) !important;color:#fdba74 !important}
+.file-badge.txt,.file-badge.prompt{background:rgba(96,165,250,0.15) !important;border:1px solid rgba(96,165,250,0.3) !important;color:#93c5fd !important}
+.file-badge.json{background:rgba(168,85,247,0.15) !important;border:1px solid rgba(168,85,247,0.3) !important;color:#c4b5fd !important}
+.file-row .file-name,.file-row .file-details{font-size:12px !important;color:#c1c6d0 !important}
+.file-row .file-size{color:#8b93a3 !important;font-size:11px !important;font-variant-numeric:tabular-nums}
+.file-row .action-btn{
+  font-size:11.5px !important;
+  padding:5px 10px !important;
+  border-radius:7px !important;
+  font-weight:500 !important;
+  background:transparent !important;
+  border:1px solid rgba(255,255,255,0.1) !important;
+  color:#c1c6d0 !important;
+}
+.file-row .action-btn:hover{background:rgba(113,112,255,0.1) !important;border-color:rgba(113,112,255,0.35) !important;color:#fff !important}
+.file-row .action-btn.success{
+  background:linear-gradient(180deg,rgba(52,211,153,0.18),rgba(52,211,153,0.08)) !important;
+  border-color:rgba(52,211,153,0.35) !important;
+  color:#6ee7b7 !important;
+}
+.file-row .action-btn.success:hover{
+  background:linear-gradient(180deg,rgba(52,211,153,0.25),rgba(52,211,153,0.12)) !important;
+  color:#a7f3d0 !important;
+}
+.agent-hide-btn{
+  background:transparent !important;border:1px solid rgba(255,255,255,0.08) !important;
+  color:#8b93a3 !important;font-size:11.5px !important;padding:4px 9px !important;border-radius:7px !important;
+}
+.agent-hide-btn:hover{color:#e4e6ec !important;border-color:rgba(255,255,255,0.15) !important}
+
+/* ---- HEADER: Expand-all pill, Sync refined ---- */
+#bulk-expand-toggle,button[onclick*="bulkExpand"]{
+  background:rgba(255,255,255,0.04) !important;
+  border:1px solid rgba(255,255,255,0.09) !important;
+  color:#c1c6d0 !important;
+  font-size:12px !important;font-weight:500 !important;
+  padding:7px 12px !important;border-radius:9px !important;
+}
+#bulk-expand-toggle:hover{background:rgba(113,112,255,0.12) !important;border-color:rgba(113,112,255,0.35) !important;color:#fff !important}
+
+/* ---- DEPLOYMENT STATUS CORNER POPOVER — quieter ---- */
+#fixer-deploy-panel,.deploy-status-panel,[class*="deployment-status"]{
+  background:linear-gradient(180deg,#1a1c26,#15161e) !important;
+  border:1px solid rgba(255,255,255,0.08) !important;
+  border-radius:12px !important;
+  box-shadow:0 10px 30px -10px rgba(0,0,0,0.6), 0 1px 0 rgba(255,255,255,0.04) inset !important;
+  backdrop-filter:blur(12px);
+}
+
+/* ---- SECTION SPACING ---- */
+.projects-section,#projects-container{padding-top:8px}
+#projects-grid{gap:18px !important}
+.view-modes{gap:6px !important;margin-bottom:14px}
+.view-btn{
+  background:transparent !important;
+  border:1px solid rgba(255,255,255,0.09) !important;
+  color:#9aa1af !important;
+  font-size:12px !important;padding:6px 12px !important;border-radius:8px !important;font-weight:500 !important;
+}
+.view-btn.active{background:rgba(113,112,255,0.18) !important;border-color:rgba(113,112,255,0.4) !important;color:#fff !important}
+
+/* ---- RESPONSIVE TIGHTENING ---- */
+@media (max-width:1200px){
+  .stats{grid-template-columns:repeat(2,minmax(0,1fr)) !important}
+}
+@media (max-width:680px){
+  .stats{grid-template-columns:1fr !important}
+  .stat-card{min-height:72px}
+  .stat-number{font-size:26px !important}
+  .project-card .card-info h3{font-size:15px !important}
+}
+
+/* END POLISH PASS v2 */
+
 </style>
 </head>
 <body>
