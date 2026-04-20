@@ -4641,6 +4641,181 @@ body {
 
 /* END POLISH PASS v3.1 */
 
+/* ================================================================
+   POLISH PASS v3.2 (2026-04-20) — HEADER FULL SYMMETRY & RESPONSIVE
+   Goal: All header elements exactly 36px tall on every screen size.
+   - status-stack: single inline row (pill + sync-time only)
+   - fixer-tab-nav: 36px height, compact tabs
+   - all header-menu-btn / hdr-sync-btn: 36px unified
+   - search-box: 36px height
+   - Full responsive: desktop 1280+, laptop 1024, tablet 768, mobile 480
+   ================================================================ */
+
+/* ── 1. RESET: unified 36px row-height token for all header controls ── */
+.header-actions {
+  align-items: center !important;
+  gap: 8px !important;
+  flex-wrap: nowrap !important;
+  height: auto !important;
+}
+
+/* ── 2. status-stack → single inline row, 36px ── */
+.status-stack {
+  display: inline-flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  gap: 6px !important;
+  height: 36px !important;
+  padding: 0 !important;
+  flex-shrink: 0 !important;
+  white-space: nowrap !important;
+}
+.status-pill {
+  display: inline-flex !important;
+  align-items: center !important;
+  height: 36px !important;
+  padding: 0 12px !important;
+  font-size: 12px !important;
+  white-space: nowrap !important;
+  line-height: 1 !important;
+  box-sizing: border-box !important;
+}
+/* hide the 3rd "Source:" meta item — too verbose for header */
+#data-source-detail {
+  display: none !important;
+}
+.last-sync-meta {
+  display: inline-flex !important;
+  align-items: center !important;
+  height: 36px !important;
+  padding: 0 10px !important;
+  font-size: 11px !important;
+  white-space: nowrap !important;
+  line-height: 1 !important;
+  box-sizing: border-box !important;
+}
+
+/* ── 3. fixer-tab-nav → 36px container, tabs 30px inner ── */
+.fixer-tab-nav {
+  height: 36px !important;
+  padding: 3px !important;
+  box-sizing: border-box !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  flex-shrink: 0 !important;
+}
+.fixer-tab-btn {
+  height: 30px !important;
+  padding: 0 12px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  white-space: nowrap !important;
+  font-size: 12px !important;
+  line-height: 1 !important;
+  box-sizing: border-box !important;
+}
+
+/* ── 4. header-menu-btn → 36px ── */
+.header-menu-btn {
+  height: 36px !important;
+  min-height: 36px !important;
+  padding: 0 13px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  white-space: nowrap !important;
+  font-size: 12px !important;
+  line-height: 1 !important;
+  box-sizing: border-box !important;
+}
+
+/* ── 5. hdr-sync-btn → 36px ── */
+.hdr-sync-btn {
+  height: 36px !important;
+  min-height: 36px !important;
+  padding: 0 13px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 6px !important;
+  white-space: nowrap !important;
+  font-size: 12px !important;
+  line-height: 1 !important;
+  box-sizing: border-box !important;
+}
+
+/* ── 6. search-box → 36px ── */
+.search-wrap {
+  height: 36px !important;
+  box-sizing: border-box !important;
+}
+.search-box {
+  height: 36px !important;
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+  line-height: 36px !important;
+  box-sizing: border-box !important;
+}
+
+/* ── 7. header-inner vertical centering ── */
+.header-inner {
+  align-items: center !important;
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+  height: 62px !important;
+  box-sizing: border-box !important;
+}
+.logo {
+  display: inline-flex !important;
+  align-items: center !important;
+  height: 36px !important;
+  flex-shrink: 0 !important;
+}
+
+/* ═══════════════════════════════════════════════════════
+   RESPONSIVE BREAKPOINTS
+   ═══════════════════════════════════════════════════════ */
+
+/* ── Laptop 1024–1279px: hide last-sync-meta text, shrink search ── */
+@media (max-width: 1279px) and (min-width: 1024px) {
+  .last-sync-meta { display: none !important; }
+  .search-box { width: 180px !important; }
+  .fixer-tab-btn { padding: 0 9px !important; font-size: 11px !important; }
+}
+
+/* ── Tablet 768–1023px: hide sync-time, shrink tabs further ── */
+@media (max-width: 1023px) and (min-width: 769px) {
+  .last-sync-meta { display: none !important; }
+  .search-wrap { display: none !important; }
+  .fixer-tab-btn .tab-label { display: none !important; }
+  .fixer-tab-btn { padding: 0 8px !important; }
+  .header-menu-btn { padding: 0 10px !important; font-size: 11px !important; }
+  .hdr-sync-btn { padding: 0 10px !important; font-size: 11px !important; }
+}
+
+/* ── Mobile ≤768px: 2-row layout — keep existing v3.1 logic ── */
+@media (max-width: 768px) {
+  /* Override v3.2 heights for mobile — allow natural sizing */
+  .header-actions {
+    flex-wrap: wrap !important;
+    height: auto !important;
+  }
+  .status-stack,
+  .status-pill,
+  .last-sync-meta,
+  .fixer-tab-nav,
+  .fixer-tab-btn,
+  .header-menu-btn,
+  .hdr-sync-btn,
+  .search-wrap,
+  .search-box {
+    height: auto !important;
+    min-height: 32px !important;
+  }
+}
+
+/* END POLISH PASS v3.2 */
+
 </style>
 </head>
 <body>
