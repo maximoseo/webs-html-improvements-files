@@ -86,8 +86,8 @@
       "path": "data.json",
       "mode": "100644",
       "type": "blob",
-      "sha": "909b92939421f0d7734712fe7064227e2963e1cc",
-      "size": 30501,
+      "sha": "832ab81e88f03605b5aa9348bd69f7a2456ccd20",
+      "size": 23724,
       "url": ""
     },
     {
@@ -350,15 +350,15 @@
       "path": "galoz.co.il/Gemini/2026-04-15/Improved_HTML_Template_Gemini.html",
       "mode": "100644",
       "type": "blob",
-      "sha": "cd85ed0e576db39a4e8ad480665bf48217a82713",
-      "size": 59879,
+      "sha": "ee55bd93d8cd00dd729a6fe0b41bc41905a91f81",
+      "size": 70502,
       "url": ""
     },
     {
       "path": "galoz.co.il/Gemini/2026-04-15/Improved_N8N_Prompt_Gemini.txt",
       "mode": "100644",
       "type": "blob",
-      "sha": "5cdb5f51b7276b24c5b8f6e51f586ee0dfff0b5d",
+      "sha": "056e754e9496882c72f6f0a9596895ce7e9b2c7e",
       "size": 56426,
       "url": ""
     },
@@ -366,7 +366,7 @@
       "path": "galoz.co.il/Gemini/2026-04-15/Improved_N8N_Workflow_Gemini.json",
       "mode": "100644",
       "type": "blob",
-      "sha": "fdaa863c63040118362938beff805d7d15075ae2",
+      "sha": "1ec4c2a46814b82445677ce62f67dfd8c28917c9",
       "size": 182018,
       "url": ""
     },
