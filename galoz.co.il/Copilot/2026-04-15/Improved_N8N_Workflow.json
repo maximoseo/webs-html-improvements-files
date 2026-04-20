@@ -310,7 +310,7 @@
     {
       "parameters": {
         "method": "POST",
-        "url": "https://mapril.websmail.net/wp-json/wp/v2/media",
+        "url": "https://www.galoz.co.il/wp-json/wp/v2/media",
         "authentication": "genericCredentialType",
         "genericAuthType": "httpBasicAuth",
         "sendHeaders": true,
@@ -343,14 +343,14 @@
       "credentials": {
         "httpBasicAuth": {
           "id": "Zsbfn3EpEX7qKf7l",
-          "name": "https://mapril.websmail.net/ (Storage 2 - Tomer)"
+          "name": "https://www.galoz.co.il/"
         }
       }
     },
     {
       "parameters": {
         "method": "POST",
-        "url": "=https://mapril.websmail.net/wp-json/wp/v2/media/{{ $json.id }}",
+        "url": "=https://www.galoz.co.il/wp-json/wp/v2/media/{{ $json.id }}",
         "authentication": "genericCredentialType",
         "genericAuthType": "httpBasicAuth",
         "sendBody": true,
@@ -369,7 +369,7 @@
       "credentials": {
         "httpBasicAuth": {
           "id": "Zsbfn3EpEX7qKf7l",
-          "name": "https://mapril.websmail.net/ (Storage 2 - Tomer)"
+          "name": "https://www.galoz.co.il/"
         }
       }
     },
@@ -410,7 +410,7 @@
     {
       "parameters": {
         "promptType": "define",
-        "text": "={{ $json.output }}\nYou are an image planning and prompt generation system for blog articles published on a branded website. You operate under strict visual design rules and deterministic logic. You do not deviate, suggest alternatives, or add commentary.\n\n## LOCKED DESIGN TOKENS\n\nThese values are final and immutable for every image prompt you generate:\n\n- BRAND_PRIMARY_COLOR: #B586FF\n- BRAND_ACCENT_COLOR: #B586FF\n- BRAND_SECONDARY_COLOR: #4A4A4A\n- BACKGROUND_STYLE: light\n- TYPOGRAPHY_MOOD: clean, legible, Hebrew-optimized sans-serif with bold headings and lighter body weight\n- UI_MOOD: minimal, spiritual, gallery-like, refined\n- BORDER_RADIUS: 5px\n- SHADOW_STYLE: none\n- VISUAL_DENSITY: balanced\n- IMAGERY_PREFERENCE: photography with natural saturation, medium contrast, subtle gradients\n- MOTIFS: spiritual, judaica, art, painting, gallery\n\n## INPUT\n\nYou receive a full blog article written in HEBREW.\n\n## STEP 1: EXTRACTION\n\nExtract the H1 title exactly as written in Hebrew. Extract ALL H2 headings in the exact order they appear. Number each H2 sequentially starting from 1.\n\n## STEP 2: IMAGE PLANNING LOGIC\n\nCount the total number of H2 headings.\n\nIf the article contains FEWER THAN 4 H2 headings: generate ONLY a hero image. All 4 section objects in the output MUST have h2_text = \"\"\"\", translation_en = \"\"\"\", prompt = \"\"\"\".\n\nIf the article contains 4 OR MORE H2 headings: generate a hero image. Generate a section image for H2 #4. Then generate one additional section image for every subsequent 4th H2: H2 #8, H2 #12, H2 #16, and so on. Stop immediately when there are not enough H2 headings to reach the next multiple of 4. The maximum number of section images is 4. If fewer than 4 section images qualify, fill remaining section objects with h2_text = \"\"\"\", translation_en = \"\"\"\", prompt = \"\"\"\".\n\n## STEP 3: HERO IMAGE GENERATION\n\nExtract the H1 title in Hebrew. Translate the H1 title into English. The hero object MUST include source_text (Hebrew H1) and translation_en (English translation). The hero image prompt MUST conceptually represent the translated H1 meaning. The hero prompt MUST be written in ENGLISH. The hero prompt MUST explicitly reference brand colors: \"\"dominant color palette using primary brand color #B586FF with accents of secondary color #4A4A4A against a clean white #FFFFFF background\"\". The hero prompt MUST reflect the locked design tokens: light background style, balanced visual density, no shadows, 5px rounded elements where applicable, natural saturation photography, medium contrast, subtle gradients, spiritual and gallery-like mood. The hero prompt MUST be cinematic, premium, high-detail, and visually explicit. No vague wording.\n\n## STEP 4: SECTION IMAGE GENERATION\n\nEach section image prompt MUST be based strictly on the content under its specific H2. No cross-section mixing is allowed.\n\nBefore writing the prompt, inspect the content under the selected H2. If the content contains any of the following: numbered steps, bullet lists, pricing or plans or packages, statistics or percentages or comparisons, tables or pros and cons, or multiple short structured items — THEN the image MUST be an infographic.\n\n### Infographic prompt rules:\n- Explicitly include the phrase \"\"clean infographic layout\"\".\n- Reference brand colors by HEX: primary #B586FF, secondary #4A4A4A, background #FFFFFF.\n- Include 3 to 6 labeled blocks ONLY if those labels exist in the source text.\n- Use minimal icons, grid alignment, clean typography, generous whitespace.\n- NEVER invent steps, labels, numbers, or data not present in the source text.\n\n### Non-infographic prompt rules:\n- Generate a photographic or artistic image prompt that conceptually represents the H2 content.\n- Reference brand colors by HEX in every prompt.\n- Maintain the locked design tokens: light background, natural saturation, medium contrast, spiritual and gallery-like motifs, balanced density, no shadows.\n\nEvery section prompt MUST be written in ENGLISH. Every section prompt MUST be cinematic, premium, high-detail, and visually explicit.\n\n## STEP 5: TRANSLATION RULES\n\nFor the hero: source_text is the Hebrew H1. translation_en is the English translation of the H1.\n\nFor every section where h2_text is NOT empty: h2_text is the Hebrew H2 exactly as extracted. translation_en MUST be a non-empty English translation of that H2.\n\nFor every section where h2_text is empty: translation_en MUST be \"\"\"\".\n\n## TEXT-ON-IMAGE LANGUAGE RULE\n\nAny visible text rendered inside images MUST be in HEBREW. The only permitted English abbreviations are: SEO, UX, UI, AI, KPI, ROI, B2B, B2C, CRM, SaaS, Design. When uncertain, prefer icons over text. Minimize text in all images.\n\n## PROMPT QUALITY RULES\n\nAll image prompts MUST be written in ENGLISH. Prompts must be cinematic, premium, high-detail, and visually explicit. No vague wording is permitted. No line breaks inside JSON string values.\n\n## SAFE OUTPUT RULES\n\nNEVER output null for any value. If a section does not qualify for an image: h2_text = \"\"\"\", translation_en = \"\"\"\", prompt = \"\"\"\". All values MUST be strings.\n\n## OUTPUT FORMAT\n\nOutput EXACTLY this JSON structure and nothing else:\n\n{\"\"hero\"\":{\"\"type\"\":\"\"hero\"\",\"\"source_text\"\":\"\"\"\",\"\"translation_en\"\":\"\"\"\",\"\"prompt\"\":\"\"\"\"},\"\"sections\"\":[{\"\"type\"\":\"\"section\"\",\"\"h2_text\"\":\"\"\"\",\"\"translation_en\"\":\"\"\"\",\"\"prompt\"\":\"\"\"\"},{\"\"type\"\":\"\"section\"\",\"\"h2_text\"\":\"\"\"\",\"\"translation_en\"\":\"\"\"\",\"\"prompt\"\":\"\"\"\"},{\"\"type\"\":\"\"section\"\",\"\"h2_text\"\":\"\"\"\",\"\"translation_en\"\":\"\"\"\",\"\"prompt\"\":\"\"\"\"},{\"\"type\"\":\"\"section\"\",\"\"h2_text\"\":\"\"\"\",\"\"translation_en\"\":\"\"\"\",\"\"prompt\"\":\"\"\"\"}]}\n\nAlways output exactly 1 hero object. Always output exactly 4 section objects. Output ONLY the JSON. No explanations. No markdown. No code fences. Stop immediately after the final closing brace.",
+        "text": "={{ $json.output }}\nYou are an image planning and prompt generation system for blog articles published on a branded website. You operate under strict visual design rules and deterministic logic. You do not deviate, suggest alternatives, or add commentary.\n\n## LOCKED DESIGN TOKENS\n\nThese values are final and immutable for every image prompt you generate:\n\n- BRAND_PRIMARY_COLOR: #0E6BA8\n- BRAND_ACCENT_COLOR: #0E6BA8\n- BRAND_SECONDARY_COLOR: #4A4A4A\n- BACKGROUND_STYLE: light\n- TYPOGRAPHY_MOOD: clean, legible, Hebrew-optimized sans-serif with bold headings and lighter body weight\n- UI_MOOD: minimal, spiritual, gallery-like, refined\n- BORDER_RADIUS: 5px\n- SHADOW_STYLE: none\n- VISUAL_DENSITY: balanced\n- IMAGERY_PREFERENCE: photography with natural saturation, medium contrast, subtle gradients\n- MOTIFS: spiritual, judaica, art, painting, gallery\n\n## INPUT\n\nYou receive a full blog article written in HEBREW.\n\n## STEP 1: EXTRACTION\n\nExtract the H1 title exactly as written in Hebrew. Extract ALL H2 headings in the exact order they appear. Number each H2 sequentially starting from 1.\n\n## STEP 2: IMAGE PLANNING LOGIC\n\nCount the total number of H2 headings.\n\nIf the article contains FEWER THAN 4 H2 headings: generate ONLY a hero image. All 4 section objects in the output MUST have h2_text = \"\"\"\", translation_en = \"\"\"\", prompt = \"\"\"\".\n\nIf the article contains 4 OR MORE H2 headings: generate a hero image. Generate a section image for H2 #4. Then generate one additional section image for every subsequent 4th H2: H2 #8, H2 #12, H2 #16, and so on. Stop immediately when there are not enough H2 headings to reach the next multiple of 4. The maximum number of section images is 4. If fewer than 4 section images qualify, fill remaining section objects with h2_text = \"\"\"\", translation_en = \"\"\"\", prompt = \"\"\"\".\n\n## STEP 3: HERO IMAGE GENERATION\n\nExtract the H1 title in Hebrew. Translate the H1 title into English. The hero object MUST include source_text (Hebrew H1) and translation_en (English translation). The hero image prompt MUST conceptually represent the translated H1 meaning. The hero prompt MUST be written in ENGLISH. The hero prompt MUST explicitly reference brand colors: \"\"dominant color palette using primary brand color #0E6BA8 with accents of secondary color #4A4A4A against a clean white #FFFFFF background\"\". The hero prompt MUST reflect the locked design tokens: light background style, balanced visual density, no shadows, 5px rounded elements where applicable, natural saturation photography, medium contrast, subtle gradients, spiritual and gallery-like mood. The hero prompt MUST be cinematic, premium, high-detail, and visually explicit. No vague wording.\n\n## STEP 4: SECTION IMAGE GENERATION\n\nEach section image prompt MUST be based strictly on the content under its specific H2. No cross-section mixing is allowed.\n\nBefore writing the prompt, inspect the content under the selected H2. If the content contains any of the following: numbered steps, bullet lists, pricing or plans or packages, statistics or percentages or comparisons, tables or pros and cons, or multiple short structured items — THEN the image MUST be an infographic.\n\n### Infographic prompt rules:\n- Explicitly include the phrase \"\"clean infographic layout\"\".\n- Reference brand colors by HEX: primary #0E6BA8, secondary #4A4A4A, background #FFFFFF.\n- Include 3 to 6 labeled blocks ONLY if those labels exist in the source text.\n- Use minimal icons, grid alignment, clean typography, generous whitespace.\n- NEVER invent steps, labels, numbers, or data not present in the source text.\n\n### Non-infographic prompt rules:\n- Generate a photographic or artistic image prompt that conceptually represents the H2 content.\n- Reference brand colors by HEX in every prompt.\n- Maintain the locked design tokens: light background, natural saturation, medium contrast, spiritual and gallery-like motifs, balanced density, no shadows.\n\nEvery section prompt MUST be written in ENGLISH. Every section prompt MUST be cinematic, premium, high-detail, and visually explicit.\n\n## STEP 5: TRANSLATION RULES\n\nFor the hero: source_text is the Hebrew H1. translation_en is the English translation of the H1.\n\nFor every section where h2_text is NOT empty: h2_text is the Hebrew H2 exactly as extracted. translation_en MUST be a non-empty English translation of that H2.\n\nFor every section where h2_text is empty: translation_en MUST be \"\"\"\".\n\n## TEXT-ON-IMAGE LANGUAGE RULE\n\nAny visible text rendered inside images MUST be in HEBREW. The only permitted English abbreviations are: SEO, UX, UI, AI, KPI, ROI, B2B, B2C, CRM, SaaS, Design. When uncertain, prefer icons over text. Minimize text in all images.\n\n## PROMPT QUALITY RULES\n\nAll image prompts MUST be written in ENGLISH. Prompts must be cinematic, premium, high-detail, and visually explicit. No vague wording is permitted. No line breaks inside JSON string values.\n\n## SAFE OUTPUT RULES\n\nNEVER output null for any value. If a section does not qualify for an image: h2_text = \"\"\"\", translation_en = \"\"\"\", prompt = \"\"\"\". All values MUST be strings.\n\n## OUTPUT FORMAT\n\nOutput EXACTLY this JSON structure and nothing else:\n\n{\"\"hero\"\":{\"\"type\"\":\"\"hero\"\",\"\"source_text\"\":\"\"\"\",\"\"translation_en\"\":\"\"\"\",\"\"prompt\"\":\"\"\"\"},\"\"sections\"\":[{\"\"type\"\":\"\"section\"\",\"\"h2_text\"\":\"\"\"\",\"\"translation_en\"\":\"\"\"\",\"\"prompt\"\":\"\"\"\"},{\"\"type\"\":\"\"section\"\",\"\"h2_text\"\":\"\"\"\",\"\"translation_en\"\":\"\"\"\",\"\"prompt\"\":\"\"\"\"},{\"\"type\"\":\"\"section\"\",\"\"h2_text\"\":\"\"\"\",\"\"translation_en\"\":\"\"\"\",\"\"prompt\"\":\"\"\"\"},{\"\"type\"\":\"\"section\"\",\"\"h2_text\"\":\"\"\"\",\"\"translation_en\"\":\"\"\"\",\"\"prompt\"\":\"\"\"\"}]}\n\nAlways output exactly 1 hero object. Always output exactly 4 section objects. Output ONLY the JSON. No explanations. No markdown. No code fences. Stop immediately after the final closing brace.",
         "options": {
           "maxIterations": 5
         }
@@ -1083,7 +1083,7 @@
       "credentials": {
         "wordpressApi": {
           "id": "cAoqNXRDlElt40WG",
-          "name": "https://mapril.websmail.net/ (Storage 2 - Tomer)"
+          "name": "https://www.galoz.co.il/"
         }
       }
     },
@@ -1186,7 +1186,7 @@
     {
       "parameters": {
         "method": "POST",
-        "url": "=https://mapril.websmail.net/wp-json/wp/v2/pages/{{$node[\"Create Page\"].json[\"id\"]}}",
+        "url": "=https://www.galoz.co.il/wp-json/wp/v2/pages/{{$node[\"Create Page\"].json[\"id\"]}}",
         "authentication": "genericCredentialType",
         "genericAuthType": "httpBasicAuth",
         "sendBody": true,
@@ -1205,7 +1205,7 @@
       "credentials": {
         "httpBasicAuth": {
           "id": "Zsbfn3EpEX7qKf7l",
-          "name": "https://mapril.websmail.net/ (Storage 2 - Tomer)"
+          "name": "https://www.galoz.co.il/"
         }
       }
     },
@@ -1674,7 +1674,7 @@
     {
       "parameters": {
         "method": "PUT",
-        "url": "=https://mapril.websmail.net/wp-json/wp/v2/pages/{{$node[\"Create Page\"].json[\"id\"]}}\n",
+        "url": "=https://www.galoz.co.il/wp-json/wp/v2/pages/{{$node[\"Create Page\"].json[\"id\"]}}\n",
         "authentication": "genericCredentialType",
         "genericAuthType": "httpBasicAuth",
         "sendBody": true,
@@ -1693,7 +1693,7 @@
       "credentials": {
         "httpBasicAuth": {
           "id": "Zsbfn3EpEX7qKf7l",
-          "name": "https://mapril.websmail.net/ (Storage 2 - Tomer)"
+          "name": "https://www.galoz.co.il/"
         }
       }
     },

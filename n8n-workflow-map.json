@@ -1,4 +1,4 @@
-﻿{
+{
   "domains": {
     "caesarstone.co.il": {
       "workflowId": "Yu5MZZaxrHFLivgR",
@@ -6,9 +6,11 @@
       "wpUrl": "https://caesarstone.articlehub.work/"
     },
     "galoz.co.il": {
+      "agent": "Copilot",
       "workflowId": "Xrd1rp2t51uJHSoE",
-      "workflowName": "https://www.galoz.co.il/",
-      "wpUrl": "https://www.galoz.co.il/"
+      "workflowName": "galoz.co.il Copilot",
+      "version": "2026-04-15",
+      "wpUrl": "https://www.galoz.co.il"
     }
   },
   "notes": [
