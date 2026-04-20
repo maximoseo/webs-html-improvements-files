@@ -3946,6 +3946,151 @@ main, main.container{
 
 /* END POLISH PASS v2.2 */
 
+/*
+ ╔══════════════════════════════════════════════════════════════════════╗
+ ║  POLISH PASS v2.3 (2026-04-20) — COMPREHENSIVE STRUCTURAL FIX       ║
+ ║  Fixes: accordion overflow leak, phantom scrollHeight,               ║
+ ║  header height, last-sync-meta wrapping, tab nav compression,        ║
+ ║  stat-card scrollWidth inflation, conflicting card CSS rules         ║
+ ╚══════════════════════════════════════════════════════════════════════╝
+*/
+
+/* ── 1. ACCORDION: Fix the core conflict ────────────────────────────────
+   Prior rules set overflow:visible!important on .card-body which breaks
+   the CSS grid row animation (grid-template-rows:0fr needs overflow:hidden
+   so collapsed content doesn't bleed into layout).
+   Solution: collapsed = overflow:hidden, expanded = overflow:visible
+   ──────────────────────────────────────────────────────────────────── */
+.card-body {
+  display: grid !important;
+  grid-template-rows: 0fr !important;
+  overflow: hidden !important;         /* MUST be hidden when collapsed */
+  transition: grid-template-rows 0.3s ease !important;
+  max-height: none !important;         /* Neutralize old max-height accordion */
+}
+.project-card.expanded .card-body {
+  grid-template-rows: 1fr !important;
+  overflow: visible !important;        /* Allow sticky footers to work when open */
+}
+.card-body-inner {
+  min-height: 0 !important;           /* Required for 0fr to work */
+  overflow: visible !important;
+}
+
+/* ── 2. PROJECT CARD: Only expanded cards get overflow:visible ──────────
+   Collapsed cards MUST clip their content (overflow:hidden).
+   All prior rules set overflow:visible universally — this fixes that.
+   ──────────────────────────────────────────────────────────────────── */
+.project-card {
+  overflow: hidden !important;
+}
+.project-card.expanded {
+  overflow: visible !important;
+}
+
+/* ── 3. HEADER HEIGHT: Fix last-sync-meta causing 106px tall header ─────
+   The two .last-sync-meta blocks inside .status-stack were each 63px
+   because their text was wrapping in a constrained width. Force nowrap.
+   ────────────���─────────────────────────────────────────────────────── */
+.last-sync-meta {
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  min-width: 0 !important;
+  max-width: 260px !important;
+  padding: 4px 10px !important;
+  line-height: 1.4 !important;
+}
+.status-stack {
+  flex-wrap: nowrap !important;
+  min-width: 0 !important;
+}
+
+/* ── 4. HEADER ACTIONS: Prevent search bar shrink ───────────────────────
+   .search-wrap was shrinking to 178px instead of staying ~280px
+   ──────────────────────────────────────────────────────────────────── */
+.search-wrap {
+  flex-shrink: 0 !important;
+  min-width: 200px !important;
+}
+@media (max-width: 900px) {
+  .search-wrap {
+    min-width: 140px !important;
+    flex-shrink: 1 !important;
+  }
+}
+
+/* ── 5. TAB NAV: Prevent tabs from being crushed ────────────────────────
+   .fixer-tab-nav was squeezing to 308px, hiding tab labels (16px wide)
+   ──────────────────────────────────────────────────────────────────── */
+.fixer-tab-nav {
+  flex-shrink: 0 !important;
+}
+.fixer-tab-btn .tab-label {
+  display: inline !important;         /* Force labels visible at desktop */
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
+}
+@media (max-width: 860px) {
+  .fixer-tab-btn .tab-label {
+    display: none !important;
+  }
+}
+
+/* ── 6. STAT CARD: Fix ::after pseudo-element scrollWidth inflation ──────
+   inset: auto -20% -55% auto placed the glow orb outside card bounds,
+   inflating scrollWidth by ~58px per card and causing horizontal scroll.
+   ──────────────────────────────────────────────────────────────────── */
+.stat-card {
+  overflow: hidden !important;        /* Clip the ::after orb to card bounds */
+}
+.stats-grid {
+  overflow: hidden !important;
+}
+
+/* ── 7. STAT NUMBER: Resolve font-size conflict ─────────────────────────
+   Line 186 sets 42px, line 3203 sets 26px (stat-value not stat-number),
+   line 484 sets 28px at tablet. Normalize to single definition.
+   ──────────────────────────────────────────────────────────────────── */
+.stat-number {
+  font-size: 36px !important;
+  font-weight: 700 !important;
+  line-height: 1 !important;
+  letter-spacing: -0.04em !important;
+}
+@media (max-width: 900px) {
+  .stat-number { font-size: 28px !important; }
+}
+@media (max-width: 600px) {
+  .stat-number { font-size: 24px !important; }
+}
+
+/* ── 8. MAIN CONTENT: Clip phantom scroll height ────────────────────────
+   The main element was 5107px scrollHeight due to collapsed card overflow.
+   Clip the projects-grid and let normal content drive height.
+   ──────────────────────────────────────────────────────────────────── */
+#projects-grid {
+  overflow: hidden !important;        /* Clip phantom card overflow */
+  min-height: 120px !important;       /* Reduce from 200px — less dead space */
+}
+
+/* ── 9. HEADER INNER: Tighten vertical alignment ────────────────────────
+   Header was 106px due to sync meta height; with fix #3 it should
+   normalize. Ensure max-height cap prevents future regression.
+   ──────────────────────────────────────────────────────────────────── */
+.header-inner {
+  align-items: center !important;
+  flex-wrap: nowrap !important;
+}
+@media (max-width: 860px) {
+  .header-inner {
+    flex-wrap: wrap !important;
+  }
+}
+
+/* END POLISH PASS v2.3 */
+
 </style>
 </head>
 <body>
