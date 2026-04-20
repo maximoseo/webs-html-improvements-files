@@ -1,4 +1,4 @@
-{
+﻿{
   "domains": {
     "caesarstone.co.il": {
       "workflowId": "Yu5MZZaxrHFLivgR",
@@ -8,7 +8,7 @@
     "galoz.co.il": {
       "workflowId": "Xrd1rp2t51uJHSoE",
       "workflowName": "https://www.galoz.co.il/",
-      "wpUrl": "https://mapril.websmail.net/"
+      "wpUrl": "https://www.galoz.co.il/"
     }
   },
   "notes": [
