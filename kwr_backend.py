@@ -26,6 +26,71 @@ import uuid
 _state = {}          # run_id -> job dict
 _lock = threading.RLock()
 
+# Disk persistence for KWR runs (survives Render restarts).
+OUTPUTS_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'outputs')
+try:
+    os.makedirs(OUTPUTS_DIR, exist_ok=True)
+except Exception:
+    pass
+
+
+def _run_dir(run_id: str) -> str:
+    return os.path.join(OUTPUTS_DIR, run_id)
+
+
+def _persist_job(run_id: str) -> None:
+    """Write job JSON + xlsx to outputs/{run_id}/ for cross-restart access."""
+    try:
+        with _lock:
+            job = _state.get(run_id)
+            if job is None:
+                return
+            job_copy = dict(job)
+        rd = _run_dir(run_id)
+        os.makedirs(rd, exist_ok=True)
+        with open(os.path.join(rd, 'job.json'), 'w', encoding='utf-8') as f:
+            json.dump(job_copy, f, ensure_ascii=False, indent=2, default=str)
+    except Exception:
+        pass
+
+
+def _load_job_from_disk(run_id: str) -> dict | None:
+    try:
+        path = os.path.join(_run_dir(run_id), 'job.json')
+        if not os.path.exists(path):
+            return None
+        with open(path, 'r', encoding='utf-8') as f:
+            return json.load(f)
+    except Exception:
+        return None
+
+
+def clean_keywords(cell: str, brand: str = '') -> str:
+    """
+    Split a comma-separated keyword cell, strip whitespace, dedup case-insensitively
+    while preserving order, and (if brand given) ensure brand is the first entry.
+    Returns a clean comma-joined string.
+    """
+    if not cell:
+        return (brand or '').strip()
+    parts = [p.strip() for p in str(cell).replace('\n', ',').split(',')]
+    parts = [p for p in parts if p]
+    seen = set()
+    out = []
+    for p in parts:
+        k = p.casefold()
+        if k in seen:
+            continue
+        seen.add(k)
+        out.append(p)
+    brand = (brand or '').strip()
+    if brand:
+        bk = brand.casefold()
+        # Remove any existing brand occurrence (any case) then put clean brand first.
+        out = [p for p in out if p.casefold() != bk]
+        out.insert(0, brand)
+    return ', '.join(out)
+
 # ---------------------------------------------------------------------------
 # Public API (called by server.py route handlers)
 # ---------------------------------------------------------------------------
@@ -81,9 +146,13 @@ def start_run(payload: dict, call_llm) -> tuple:
 def get_status(run_id: str) -> dict | None:
     with _lock:
         job = _state.get(run_id)
-        if job is None:
-            return None
-        return dict(job)   # shallow copy is fine for JSON serialization
+        if job is not None:
+            return dict(job)   # shallow copy is fine for JSON serialization
+    # Fallback: read from disk (survives server restarts)
+    disk = _load_job_from_disk(run_id)
+    if disk is not None:
+        return disk
+    return None
 
 
 def cancel_run(run_id: str) -> bool:
@@ -123,10 +192,34 @@ def build_excel(run_id: str) -> tuple:
 
     with _lock:
         job = _state.get(run_id)
-        if job is None:
+        if job is not None:
+            rows = list(job.get('rows') or [])
+            ws_name = _worksheet_name(job, '')
+        else:
+            job = None
+            rows = None
+            ws_name = None
+
+    if job is None:
+        # Try disk fallback (in-memory state gone after restart).
+        # First try cached xlsx.
+        rd = _run_dir(run_id)
+        xlsx_path = os.path.join(rd, 'file.xlsx')
+        if os.path.exists(xlsx_path):
+            try:
+                with open(xlsx_path, 'rb') as f:
+                    data = f.read()
+                # Recover worksheet name from job.json if present
+                disk = _load_job_from_disk(run_id) or {}
+                ws_name = disk.get('worksheet_name') or _worksheet_name(disk or {'inputs': {}}, '')
+                return data, ws_name, None
+            except Exception as exc:
+                return None, None, f"Disk cache read failed: {exc}"
+        disk = _load_job_from_disk(run_id)
+        if disk is None:
             return None, None, f"Run {run_id} not found"
-        rows = list(job.get('rows') or [])
-        ws_name = _worksheet_name(job, '')
+        rows = list(disk.get('rows') or [])
+        ws_name = disk.get('worksheet_name') or _worksheet_name(disk, '')
 
     wb = openpyxl.Workbook()
     ws = wb.active
@@ -249,7 +342,16 @@ def build_excel(run_id: str) -> tuple:
 
     buf = io.BytesIO()
     wb.save(buf)
-    return buf.getvalue(), ws_name, None
+    data = buf.getvalue()
+    # Cache xlsx to disk so /api/kwr/download survives Render restarts.
+    try:
+        rd = _run_dir(run_id)
+        os.makedirs(rd, exist_ok=True)
+        with open(os.path.join(rd, 'file.xlsx'), 'wb') as f:
+            f.write(data)
+    except Exception:
+        pass
+    return data, ws_name, None
 
 
 def approve_and_save(run_id: str, edited_rows: list, sheet_prefix: str) -> tuple:
@@ -279,6 +381,9 @@ def approve_and_save(run_id: str, edited_rows: list, sheet_prefix: str) -> tuple
         _state[run_id]['deployed_at'] = deployed_at
         _state[run_id]['worksheet_name'] = ws_name
         _state[run_id]['deploy_error'] = None
+
+    # Persist approved state so downloads survive restarts.
+    _persist_job(run_id)
 
     return excel_bytes, ws_name, None
 
@@ -712,6 +817,7 @@ No explanation, no markdown, no preamble — just the raw JSON array."""
         seen_kw = set()
         seen_pages = set(p.lower() for p in existing_pages)
         clean_rows = []
+        brand_name = (_state.get(run_id, {}).get('inputs', {}) or {}).get('brand_name', '') if run_id in _state else ''
         for row in raw_rows:
             check_cancel()
             pk = (row.get('primary_keyword') or '').strip().lower()
@@ -720,13 +826,15 @@ No explanation, no markdown, no preamble — just the raw JSON array."""
             if pk in seen_kw:
                 continue
             seen_kw.add(pk)
+            raw_kw = (row.get('keywords') or '').strip()
+            cleaned_kw = clean_keywords(raw_kw, brand_name)
             clean_rows.append({
                 'existing_parent_page': (row.get('existing_parent_page') or '-').strip(),
                 'pillar':               (row.get('pillar') or '').strip(),
                 'cluster':              (row.get('cluster') or '').strip(),
                 'intent':               (row.get('intent') or 'informational').strip(),
                 'primary_keyword':      (row.get('primary_keyword') or '').strip(),
-                'keywords':             (row.get('keywords') or '').strip(),
+                'keywords':             cleaned_kw,
             })
 
         log(f"After deduplication: {len(clean_rows)} rows (from {len(raw_rows)} raw)")
@@ -751,6 +859,13 @@ No explanation, no markdown, no preamble — just the raw JSON array."""
             _state[run_id]['updated_at'] = datetime.datetime.utcnow().isoformat() + 'Z'
 
         log(f"Pipeline complete. {len(clean_rows)} rows ready for review.")
+
+        # Persist to disk so /api/kwr/download survives Render restarts.
+        _persist_job(run_id)
+        try:
+            build_excel(run_id)  # caches outputs/{run_id}/file.xlsx
+        except Exception:
+            pass
 
     except _Cancelled:
         with _lock:
