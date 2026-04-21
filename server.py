@@ -2334,6 +2334,23 @@ class DashboardHandler(BaseHTTPRequestHandler):
                 return json_response(self, 500, {'ok': False, 'error': err})
             return json_response(self, 200, {'ok': True, 'note_path': note_path})
 
+        if parsed.path == '/api/kwr/save-supabase':
+            body = payload
+            run_id = (body.get('run_id') or '').strip()
+            if not run_id:
+                return json_response(self, 400, {'ok': False, 'error': 'run_id required'})
+            count, err = kwr_backend.save_to_supabase(run_id)
+            if err:
+                return json_response(self, 500, {'ok': False, 'error': err})
+            return json_response(self, 200, {'ok': True, 'saved_rows': count})
+
+        if parsed.path == '/api/kwr/ensemble':
+            body = payload
+            run_id, err = kwr_backend.start_ensemble(body, call_with_fallback)
+            if err:
+                return json_response(self, 400, {'ok': False, 'error': err})
+            return json_response(self, 200, {'ok': True, 'run_id': run_id})
+
         return json_response(self, 404, {'ok': False, 'error': 'Not found'})
 
     def serve_static(self, path):

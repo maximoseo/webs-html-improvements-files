@@ -448,6 +448,8 @@ def _runner(run_id: str, call_llm):
         sheet_target  = inputs.get('spreadsheet_target', '')
         competitor_urls = [u.strip() for u in (inputs.get('competitor_urls') or '').split('\n') if u.strip()]
         exclusions    = inputs.get('notes_exclusions', '')
+        # Model override from UI (optional — defaults to claude-opus-4)
+        llm_model     = (inputs.get('model') or inputs.get('_model') or 'anthropic/claude-opus-4').strip()
 
         # ── Stage 1: validating ─────────────────────────────────────────────
         set_stage('validating', 5)
@@ -494,7 +496,7 @@ Only include real services/products visible in the content. Do not invent offeri
             {'role': 'system', 'content': 'You are an SEO analyst. Return only valid JSON.'},
             {'role': 'user', 'content': site_summary_prompt}
         ]
-        site_summary_raw, _ = call_llm(site_msgs, 'anthropic/claude-opus-4')
+        site_summary_raw, _ = call_llm(site_msgs, llm_model)
         try:
             site_summary = json.loads(_extract_json(site_summary_raw))
         except Exception:
@@ -568,8 +570,8 @@ Return only the JSON array, no explanation."""
             {'role': 'system', 'content': 'You are an expert SEO strategist. Return only valid JSON arrays.'},
             {'role': 'user', 'content': kwr_prompt}
         ]
-        kwr_raw, provider = call_llm(kwr_msgs, 'anthropic/claude-opus-4')
-        log(f"LLM response received via {provider} ({len(kwr_raw)} chars)")
+        kwr_raw, provider = call_llm(kwr_msgs, llm_model)
+        log(f"LLM response received via {provider} (model={llm_model}, {len(kwr_raw)} chars)")
 
         # ── Stage 6: deduplicating ────────────────────────────────────────────
         set_stage('deduplicating', 80)
@@ -656,6 +658,282 @@ def _log_safe(run_id, msg):
     with _lock:
         if run_id in _state:
             _state[run_id]['logs'].append(f"[{ts}] {msg}")
+
+
+# ---------------------------------------------------------------------------
+# Supabase KWR save
+# ---------------------------------------------------------------------------
+
+def _supabase_kwr_config():
+    url = (os.getenv('SUPABASE_URL') or '').strip().rstrip('/')
+    key = (
+        (os.getenv('SUPABASE_SERVICE_ROLE_KEY') or '').strip()
+        or (os.getenv('SUPABASE_ANON_KEY') or '').strip()
+        or (os.getenv('SUPABASE_API_KEY') or '').strip()
+    )
+    table = (os.getenv('SUPABASE_KWR_TABLE') or 'kwr_results').strip()
+    schema = (os.getenv('SUPABASE_SCHEMA') or 'public').strip()
+    return {'url': url, 'key': key, 'table': table, 'schema': schema, 'configured': bool(url and key)}
+
+
+def save_to_supabase(run_id: str) -> tuple:
+    """
+    Save approved KWR rows to Supabase table `kwr_results`.
+    Each row becomes one record with the full job metadata.
+    Returns (record_count, None) or (None, error_str).
+    Table schema (auto-created via insert):\n      id, run_id, domain, brand_name, run_date,
+      existing_parent_page, pillar, cluster, intent,
+      primary_keyword, keywords, model_used
+    """
+    cfg = _supabase_kwr_config()
+    if not cfg['configured']:
+        return None, 'SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY/SUPABASE_ANON_KEY are not configured'
+
+    with _lock:
+        job = _state.get(run_id)
+        if job is None:
+            return None, f'Run {run_id} not found'
+        rows = list(job.get('rows') or [])
+        inputs = dict(job.get('inputs') or {})
+        created_at = job.get('created_at', '')
+        status = job.get('status', '')
+
+    if not rows:
+        return None, 'No rows to save — approve first'
+    if status not in ('ready', 'complete'):
+        return None, f"Run is in state '{status}' — approve first"
+
+    brand = inputs.get('brand_name', '')
+    website = inputs.get('website_url', '')
+    # Extract domain from URL
+    domain = website.replace('https://', '').replace('http://', '').split('/')[0]
+    model_used = inputs.get('model', '') or inputs.get('_model', '') or 'default'
+    run_date = created_at[:10] if created_at else datetime.datetime.utcnow().strftime('%Y-%m-%d')
+
+    url = cfg['url']
+    key = cfg['key']
+    table = cfg['table']
+    schema = cfg['schema']
+
+    headers = {
+        'apikey': key,
+        'Authorization': f'Bearer {key}',
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        'Accept-Profile': schema,
+        'Content-Profile': schema,
+        'Prefer': 'return=minimal',
+    }
+
+    records = []
+    for row in rows:
+        records.append({
+            'run_id': run_id,
+            'domain': domain,
+            'brand_name': brand,
+            'run_date': run_date,
+            'existing_parent_page': row.get('col_a', '') or row.get('existing_parent_page', ''),
+            'pillar': row.get('col_b', '') or row.get('pillar', ''),
+            'cluster': row.get('col_c', '') or row.get('cluster', ''),
+            'intent': row.get('col_d', '') or row.get('intent', ''),
+            'primary_keyword': row.get('col_e', '') or row.get('primary_keyword', ''),
+            'keywords': row.get('col_f', '') or row.get('keywords', ''),
+            'model_used': model_used,
+        })
+
+    # Insert in batches of 100
+    batch_size = 100
+    total_saved = 0
+    for i in range(0, len(records), batch_size):
+        batch = records[i:i + batch_size]
+        body_bytes = json.dumps(batch).encode('utf-8')
+        req = urllib.request.Request(
+            f'{url}/rest/v1/{table}',
+            data=body_bytes,
+            headers=headers,
+            method='POST'
+        )
+        try:
+            with urllib.request.urlopen(req, timeout=30) as resp:
+                _ = resp.read()
+                total_saved += len(batch)
+        except urllib.error.HTTPError as exc:
+            err_body = exc.read().decode('utf-8', 'replace')[:400]
+            return None, f'Supabase HTTP {exc.code}: {err_body}'
+        except Exception as exc:
+            return None, f'Supabase error: {exc}'
+
+    return total_saved, None
+
+
+
+
+# ---------------------------------------------------------------------------
+# Ensemble mode — run multiple models, merge + deduplicate results
+# ---------------------------------------------------------------------------
+
+ENSEMBLE_MODELS = [
+    'anthropic/claude-opus-4',
+    'openai/gpt-4o',
+    'google/gemini-2.5-pro',
+]
+
+
+def start_ensemble(payload: dict, call_llm) -> tuple:
+    """
+    Launch ensemble run: fire N single-model runs, then merge + deduplicate.
+    Returns (ensemble_run_id, None) or (None, error_str).
+    """
+    models = payload.get('ensemble_models') or ENSEMBLE_MODELS
+    if not isinstance(models, list) or not models:
+        models = ENSEMBLE_MODELS
+
+    # Create a coordinator run_id
+    ensemble_id = 'ensemble-' + str(uuid.uuid4())
+    now = datetime.datetime.utcnow().isoformat() + 'Z'
+    child_run_ids = []
+
+    with _lock:
+        _state[ensemble_id] = {
+            'run_id': ensemble_id,
+            'status': 'running',
+            'current_stage': 'launching',
+            'finished_stages': [],
+            'error_stages': [],
+            'progress': 0,
+            'logs': [f'[{datetime.datetime.utcnow().strftime("%H:%M:%S")}] Ensemble: launching {len(models)} models'],
+            'rows': [],
+            'existing_pages': [],
+            'row_count': 0,
+            'honest_count_note': '',
+            'preview_edited': False,
+            'created_at': now,
+            'updated_at': now,
+            'inputs': payload,
+            'cancel_requested': False,
+            'sheet_url': None,
+            'deploy_error': None,
+            'deployed_at': None,
+            'ensemble_models': models,
+            'child_run_ids': child_run_ids,
+        }
+
+    # Launch one child run per model in parallel threads
+    for model in models:
+        child_payload = dict(payload)
+        child_payload['model'] = model
+        child_payload.pop('ensemble_models', None)
+        child_id, err = start_run(child_payload, call_llm)
+        if err:
+            _log_safe(ensemble_id, f'WARN: failed to start model {model}: {err}')
+            continue
+        child_run_ids.append(child_id)
+        with _lock:
+            _state[ensemble_id]['child_run_ids'] = list(child_run_ids)
+
+    if not child_run_ids:
+        with _lock:
+            _state[ensemble_id]['status'] = 'error'
+            _state[ensemble_id]['logs'].append('[ERROR] All child runs failed to start')
+        return ensemble_id, None  # return ID so UI can poll
+
+    # Launch merger thread
+    t = threading.Thread(target=_ensemble_merger, args=(ensemble_id, child_run_ids), daemon=True)
+    t.start()
+    return ensemble_id, None
+
+
+def _ensemble_merger(ensemble_id: str, child_run_ids: list):
+    """Wait for all child runs to finish, then merge + deduplicate rows."""
+    def log(msg):
+        ts = datetime.datetime.utcnow().strftime('%H:%M:%S')
+        with _lock:
+            if ensemble_id in _state:
+                _state[ensemble_id]['logs'].append(f'[{ts}] {msg}')
+                _state[ensemble_id]['updated_at'] = datetime.datetime.utcnow().isoformat() + 'Z'
+
+    max_wait = 900  # 15 minutes
+    poll_interval = 5
+    elapsed = 0
+
+    while elapsed < max_wait:
+        time.sleep(poll_interval)
+        elapsed += poll_interval
+
+        with _lock:
+            if _state[ensemble_id].get('cancel_requested'):
+                _state[ensemble_id]['status'] = 'cancelled'
+                _state[ensemble_id]['current_stage'] = 'cancelled'
+                return
+
+        # Check if all children are done
+        all_done = True
+        ready_ids = []
+        with _lock:
+            for cid in child_run_ids:
+                job = _state.get(cid)
+                if job is None:
+                    continue
+                s = job.get('status', '')
+                if s in ('ready', 'complete'):
+                    ready_ids.append(cid)
+                elif s in ('error', 'cancelled'):
+                    log(f'Child {cid} ended with status={s}')
+                else:
+                    all_done = False
+
+        total = len(child_run_ids)
+        done_count = len([c for c in child_run_ids if _state.get(c, {}).get('status') in ('ready','complete','error','cancelled')])
+        pct = int(10 + (done_count / max(total, 1)) * 70)
+        with _lock:
+            _state[ensemble_id]['progress'] = pct
+            _state[ensemble_id]['current_stage'] = f'waiting ({done_count}/{total} models done)'
+
+        if all_done or done_count == total:
+            break
+
+    # Merge rows from all ready children — deduplicate by primary_keyword (lowercase)
+    log('All child runs complete — merging results…')
+    with _lock:
+        _state[ensemble_id]['current_stage'] = 'merging'
+        _state[ensemble_id]['progress'] = 85
+
+    all_rows = []
+    seen_kw = set()
+    with _lock:
+        existing_pages_union = []
+        ep_seen = set()
+        for cid in ready_ids:
+            job = _state.get(cid)
+            if not job:
+                continue
+            for row in (job.get('rows') or []):
+                pk = (row.get('col_e') or row.get('primary_keyword') or '').strip().lower()
+                if pk and pk not in seen_kw:
+                    seen_kw.add(pk)
+                    all_rows.append(row)
+            for ep in (job.get('existing_pages') or []):
+                if ep not in ep_seen:
+                    ep_seen.add(ep)
+                    existing_pages_union.append(ep)
+
+    log(f'Merged {len(all_rows)} unique rows from {len(ready_ids)} models (deduplication applied)')
+
+    with _lock:
+        _state[ensemble_id]['rows'] = all_rows
+        _state[ensemble_id]['row_count'] = len(all_rows)
+        _state[ensemble_id]['existing_pages'] = existing_pages_union[:200]
+        _state[ensemble_id]['status'] = 'ready'
+        _state[ensemble_id]['current_stage'] = 'ready'
+        _state[ensemble_id]['progress'] = 100
+        _state[ensemble_id]['finished_stages'].append('merging')
+        _state[ensemble_id]['honest_count_note'] = (
+            f'Ensemble of {len(ready_ids)} models. '
+            f'{len(all_rows)} unique rows after deduplication.'
+        )
+        _state[ensemble_id]['updated_at'] = datetime.datetime.utcnow().isoformat() + 'Z'
+
+    log('Ensemble complete.')
 
 
 def _fetch_page_text(url: str, timeout: int = 15) -> str:

@@ -5239,6 +5239,23 @@ body {
 #kwr-autofill-btn:disabled { opacity: 0.55; cursor: default; }
 /* END POLISH PASS v3.6 */
 
+/* ── POLISH PASS v3.7 — Domain result box + Supabase btn + Ensemble CSS ── */
+.kwr-domain-result-box{display:flex;align-items:center;justify-content:space-between;
+  background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);
+  border-radius:12px;padding:12px 16px;margin-bottom:14px;gap:12px;flex-wrap:wrap}
+.kwr-domain-result-label{display:flex;align-items:center;gap:7px;
+  font-size:14px;font-weight:700;color:var(--text);letter-spacing:.01em}
+.kwr-domain-result-label svg{opacity:.7;flex-shrink:0}
+.kwr-download-big-btn{font-size:13px !important;padding:9px 20px !important;font-weight:700 !important}
+.kwr-supabase-btn{border-color:rgba(80,200,120,0.35) !important;color:#4ade80 !important}
+.kwr-supabase-btn:hover{background:rgba(74,222,128,0.1) !important}
+.kwr-ensemble-check{display:flex;align-items:center;gap:6px;font-size:12px;
+  color:var(--text);cursor:pointer;padding:4px 10px;border-radius:8px;
+  background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.09)}
+.kwr-ensemble-check:hover{background:rgba(139,92,246,0.12);border-color:rgba(139,92,246,0.3)}
+.kwr-ensemble-check input[type=checkbox]{accent-color:#8b5cf6;cursor:pointer}
+/* END POLISH PASS v3.7 */
+
 /* === DARK/LIGHT MODE TOGGLE === */
 body.light{--bg:#f0f2f5;--bg-elevated:#fff;--surface:rgba(255,255,255,0.95);--surface-strong:#fff;--card:rgba(0,0,0,0.04);--card-hover:rgba(0,0,0,0.07);--border:rgba(0,0,0,0.1);--border-strong:rgba(0,0,0,0.18);--text:#1a1a2e;--text-secondary:#3a3a5c;--muted:#666;--shadow-soft:0 24px 80px rgba(0,0,0,0.12);--shadow-card:0 10px 30px rgba(0,0,0,0.08)}
 body.light .header{background:rgba(240,242,245,0.95)}
@@ -6855,18 +6872,42 @@ body.light .stat-card{background:rgba(0,0,0,0.03)}
     </button>
   </div>
   <!-- Model picker -->
-  <div class="kwr-model-row">
+   <div class="kwr-model-row">
     <span class="kwr-model-label">Model</span>
     <select class="kwr-model-select" id="kwr-model-select">
-      <option value="">Default (server config)</option>
-      <option value="gpt-4o">GPT-4o</option>
-      <option value="gpt-4o-mini">GPT-4o Mini</option>
-      <option value="claude-sonnet-4-6">Claude Sonnet 4.6</option>
-      <option value="claude-opus-4">Claude Opus 4</option>
-      <option value="gemini-2.0-flash">Gemini 2.0 Flash</option>
-      <option value="gemini-2.5-pro">Gemini 2.5 Pro</option>
+      <option value="">Default (claude-opus-4)</option>
+      <option value="anthropic/claude-opus-4">Claude Opus 4 (Anthropic)</option>
+      <option value="anthropic/claude-sonnet-4-5">Claude Sonnet 4.5 (Anthropic)</option>
+      <option value="openai/gpt-4o">GPT-4o (OpenAI)</option>
+      <option value="openai/gpt-4o-mini">GPT-4o Mini (OpenAI)</option>
+      <option value="openai/o3">o3 (OpenAI)</option>
+      <option value="google/gemini-2.5-pro">Gemini 2.5 Pro (Google)</option>
+      <option value="google/gemini-2.0-flash">Gemini 2.0 Flash (Google)</option>
+      <option value="meta-llama/llama-4-maverick">Llama 4 Maverick (Meta)</option>
+      <option value="deepseek/deepseek-chat">DeepSeek Chat</option>
+      <option value="x-ai/grok-3">Grok 3 (xAI)</option>
+      <option value="__ensemble__">🔀 Best-of-N Ensemble (multi-model, deduplicated)</option>
     </select>
     <span style="font-size:11px;color:var(--muted)">Used for LLM generation steps in the pipeline</span>
+  </div>
+
+  <!-- Ensemble sub-options (shown only when __ensemble__ selected) -->
+  <div id="kwr-ensemble-options" style="display:none;margin-top:10px;padding:10px 14px;background:rgba(139,92,246,0.07);border:1px solid rgba(139,92,246,0.2);border-radius:10px">
+    <div style="font-size:11px;font-weight:700;color:#a78bfa;margin-bottom:8px;text-transform:uppercase;letter-spacing:.06em">
+      Ensemble Models — select which models to run in parallel
+    </div>
+    <div style="display:flex;flex-wrap:wrap;gap:10px">
+      <label class="kwr-ensemble-check"><input type="checkbox" value="anthropic/claude-opus-4" checked> Claude Opus 4</label>
+      <label class="kwr-ensemble-check"><input type="checkbox" value="openai/gpt-4o" checked> GPT-4o</label>
+      <label class="kwr-ensemble-check"><input type="checkbox" value="google/gemini-2.5-pro" checked> Gemini 2.5 Pro</label>
+      <label class="kwr-ensemble-check"><input type="checkbox" value="openai/o3"> o3</label>
+      <label class="kwr-ensemble-check"><input type="checkbox" value="anthropic/claude-sonnet-4-5"> Claude Sonnet 4.5</label>
+      <label class="kwr-ensemble-check"><input type="checkbox" value="x-ai/grok-3"> Grok 3</label>
+      <label class="kwr-ensemble-check"><input type="checkbox" value="deepseek/deepseek-chat"> DeepSeek Chat</label>
+    </div>
+    <div style="font-size:11px;color:var(--muted);margin-top:8px">
+      Each model runs independently, then results are merged and deduplicated by primary keyword — no duplicates guaranteed.
+    </div>
   </div>
   </div><!-- /kwr-section-card actions -->
 
@@ -6913,12 +6954,23 @@ body.light .stat-card{background:rgba(0,0,0,0.03)}
 
   <!-- Post-approve action bar — shown after approval -->
   <div id="kwr-action-bar" style="display:none;margin-top:12px">
+    <!-- Domain box + Download Excel at top of action bar -->
+    <div class="kwr-domain-result-box" id="kwr-domain-result-box">
+      <div class="kwr-domain-result-label">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+        <span id="kwr-result-domain-name">Domain</span>
+      </div>
+      <button class="kwr-btn kwr-btn-primary kwr-download-big-btn" onclick="kwrDownloadExcel()">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        Download Excel
+      </button>
+    </div>
     <div class="kwr-status-bar" style="margin-bottom:10px">
       <span class="kwr-status-dot kwr-dot-complete"></span>
       <span id="kwr-approve-msg">Approved — choose an export option below.</span>
     </div>
     <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end">
-      <!-- Download Excel -->
+      <!-- Download Excel (duplicate small btn for quick access) -->
       <button class="kwr-btn kwr-btn-primary" id="kwr-download-btn" onclick="kwrDownloadExcel()">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
         Download Excel
@@ -6942,6 +6994,11 @@ body.light .stat-card{background:rgba(0,0,0,0.03)}
           </span>
         </div>
       </div>
+      <!-- Save to Supabase -->
+      <button class="kwr-btn kwr-btn-ghost kwr-supabase-btn" id="kwr-supabase-btn" onclick="kwrSaveSupabase()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg>
+        Save to Supabase
+      </button>
       <!-- Send to Google Sheets -->
       <div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap">
         <input class="kwr-input" id="kwr-sheet-target-post" type="text"
@@ -6957,6 +7014,10 @@ body.light .stat-card{background:rgba(0,0,0,0.03)}
     <div id="kwr-obsidian-result" style="display:none;margin-top:8px" class="kwr-status-bar">
       <span class="kwr-status-dot kwr-dot-complete"></span>
       <span id="kwr-obsidian-msg"></span>
+    </div>
+    <div id="kwr-supabase-result" style="display:none;margin-top:8px" class="kwr-status-bar">
+      <span class="kwr-status-dot kwr-dot-complete"></span>
+      <span id="kwr-supabase-msg"></span>
     </div>
     <div id="kwr-sheets-result" style="display:none;margin-top:8px" class="kwr-status-bar">
       <span class="kwr-status-dot kwr-dot-complete"></span>
@@ -10723,17 +10784,33 @@ function loadTopicsFromStatus(state) {
     kwrSetStatus('kwr-dot-running', 'Starting research pipeline…', '');
     kwrLog('Submitting run request…');
 
-    fetch('/api/kwr/start', {
+    // Determine if ensemble mode
+    const modelSel = $id('kwr-model-select');
+    const modelVal = modelSel ? modelSel.value : '';
+    const isEnsemble = (modelVal === '__ensemble__');
+
+    let endpoint = '/api/kwr/start';
+    let body = Object.assign({}, inputs);
+
+    if (isEnsemble) {
+      endpoint = '/api/kwr/ensemble';
+      // Collect selected ensemble models
+      const checks = document.querySelectorAll('#kwr-ensemble-options input[type=checkbox]:checked');
+      const selectedModels = Array.from(checks).map(c => c.value);
+      body.ensemble_models = selectedModels.length > 0 ? selectedModels : undefined;
+    }
+
+    fetch(endpoint, {
       method: 'POST',
       headers: {'Content-Type':'application/json'},
-      body: JSON.stringify(inputs)
+      body: JSON.stringify(body)
     })
     .then(r => r.json())
     .then(data => {
       if (!data.ok) throw new Error(data.error || 'Start failed');
       _kwrRunId = data.run_id;
-      kwrSetStatus('kwr-dot-running', 'Running…', _kwrRunId);
-      kwrLog('Run started: ' + _kwrRunId);
+      kwrSetStatus('kwr-dot-running', isEnsemble ? 'Ensemble running…' : 'Running…', _kwrRunId);
+      kwrLog('Run started: ' + _kwrRunId + (isEnsemble ? ' (ensemble)' : ''));
       kwrStartPoller();
     })
     .catch(err => {
@@ -10856,6 +10933,16 @@ function loadTopicsFromStatus(state) {
       const sheetInput = $id('kwr-sheet-target-post');
       const formSheet  = ($id('kwr-sheet-target') || {}).value || '';
       if (sheetInput && !sheetInput.value && formSheet) sheetInput.value = formSheet;
+      // Update domain label in result box
+      const domainLabel = $id('kwr-result-domain-name');
+      if (domainLabel) {
+        const websiteInput = $id('kwr-website-url') || $id('kwr_website_url');
+        let domain = '';
+        if (websiteInput && websiteInput.value) {
+          try { domain = new URL(websiteInput.value).hostname.replace(/^www\./,''); } catch(e) { domain = websiteInput.value; }
+        }
+        domainLabel.textContent = domain || 'Report';
+      }
     })
     .catch(err => {
       if (approveBtn) approveBtn.disabled = false;
@@ -10895,7 +10982,7 @@ function loadTopicsFromStatus(state) {
   };
 
   // ---- Save to Obsidian (browser-side, direct to localhost REST) ----
-  window.kwrSaveObsidian = async function() {
+   window.kwrSaveObsidian = async function() {
     if (!_kwrRunId) { alert('No active run.'); return; }
     const btn = $id('kwr-obsidian-btn');
     const resEl = $id('kwr-obsidian-result');
@@ -10997,13 +11084,63 @@ function loadTopicsFromStatus(state) {
     kwrLog('Note content shown in copy-fallback modal (path: ' + path + ')');
   }
 
+  // ---- Save to Supabase ----
+  window.kwrSaveSupabase = function() {
+    if (!_kwrRunId) { alert('No active run.'); return; }
+    const btn = $id('kwr-supabase-btn');
+    const res = $id('kwr-supabase-result');
+    const msg = $id('kwr-supabase-msg');
+    const dot = res ? res.querySelector('.kwr-status-dot') : null;
+    if (btn) btn.disabled = true;
+    if (msg) msg.textContent = 'Saving approved rows to Supabase…';
+    if (dot) dot.className = 'kwr-status-dot kwr-dot-running';
+    if (res) res.style.display = '';
+    kwrLog('Sending approved rows to Supabase…');
+
+    fetch('/api/kwr/save-supabase', {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ run_id: _kwrRunId })
+    })
+    .then(r => r.json())
+    .then(data => {
+      if (btn) btn.disabled = false;
+      if (!data.ok) {
+        if (msg) msg.textContent = 'Supabase error: ' + (data.error || 'unknown');
+        if (dot) dot.className = 'kwr-status-dot kwr-dot-error';
+        if (res) res.style.display = '';
+        kwrLog('SUPABASE ERROR: ' + (data.error || 'unknown'));
+        return;
+      }
+      if (msg) msg.textContent = 'Saved to Supabase: ' + (data.saved_rows || 0) + ' rows';
+      if (dot) dot.className = 'kwr-status-dot kwr-dot-complete';
+      if (res) res.style.display = '';
+      kwrLog('Supabase save complete: ' + (data.saved_rows || 0) + ' rows');
+    })
+    .catch(err => {
+      if (btn) btn.disabled = false;
+      if (msg) msg.textContent = 'Supabase save failed: ' + err.message;
+      if (dot) dot.className = 'kwr-status-dot kwr-dot-error';
+      if (res) res.style.display = '';
+      kwrLog('SUPABASE ERROR: ' + err.message);
+    });
+  };
+
   // ---- Send to Google Sheets ----
   window.kwrSendToSheets = function() {
     if (!_kwrRunId) { alert('No active run.'); return; }
     const sheetTarget = ($id('kwr-sheet-target-post') || {}).value || '';
     if (!sheetTarget.trim()) { alert('Paste a Google Sheet ID or URL first.'); return; }
     const btn = $id('kwr-sheets-btn');
+    const res  = $id('kwr-sheets-result');
+    const msg  = $id('kwr-sheets-msg');
+    const link = $id('kwr-sheet-link');
+    const dot  = res ? res.querySelector('.kwr-status-dot') : null;
     if (btn) btn.disabled = true;
+    if (msg) msg.textContent = 'Sending approved rows to Google Sheets…';
+    if (dot) dot.className = 'kwr-status-dot kwr-dot-running';
+    if (res) res.style.display = '';
+    if (link) { link.style.display = 'none'; link.href = '#'; }
     kwrLog('Sending to Google Sheets…');
 
     fetch('/api/kwr/push-sheets', {
@@ -11014,22 +11151,24 @@ function loadTopicsFromStatus(state) {
     .then(r => r.json())
     .then(data => {
       if (btn) btn.disabled = false;
-      const res  = $id('kwr-sheets-result');
-      const msg  = $id('kwr-sheets-msg');
-      const link = $id('kwr-sheet-link');
       if (!data.ok) {
         if (msg) msg.textContent = 'Sheets error: ' + (data.error || 'unknown');
-        if (res) { res.style.display=''; res.querySelector('.kwr-status-dot').className='kwr-status-dot kwr-dot-error'; }
-        kwrLog('SHEETS ERROR: ' + data.error);
+        if (dot) dot.className = 'kwr-status-dot kwr-dot-error';
+        if (res) res.style.display='';
+        kwrLog('SHEETS ERROR: ' + (data.error || 'unknown'));
         return;
       }
       if (msg) msg.textContent = 'Written to new worksheet in Google Sheet.';
+      if (dot) dot.className = 'kwr-status-dot kwr-dot-complete';
       if (link && data.sheet_url) { link.href = data.sheet_url; link.style.display = ''; }
       if (res) res.style.display = '';
       kwrLog('Sheets done. URL: ' + (data.sheet_url || '(no URL)'));
     })
     .catch(err => {
       if (btn) btn.disabled = false;
+      if (msg) msg.textContent = 'Google Sheets export failed: ' + err.message;
+      if (dot) dot.className = 'kwr-status-dot kwr-dot-error';
+      if (res) res.style.display = '';
       kwrLog('SHEETS ERROR: ' + err.message);
     });
   };
@@ -11091,6 +11230,18 @@ document.addEventListener('DOMContentLoaded',function(){
     const el=document.getElementById(t.id);
     if(el&&el.textContent==='—')el.textContent=t.txt;
   });
+
+  // KWR ensemble mode toggle
+  const kwrModelSelect = document.getElementById('kwr-model-select');
+  const kwrEnsembleBox = document.getElementById('kwr-ensemble-options');
+  function syncKwrEnsembleUi(){
+    if(!kwrModelSelect || !kwrEnsembleBox) return;
+    kwrEnsembleBox.style.display = kwrModelSelect.value === '__ensemble__' ? '' : 'none';
+  }
+  if(kwrModelSelect && kwrEnsembleBox){
+    kwrModelSelect.addEventListener('change', syncKwrEnsembleUi);
+    syncKwrEnsembleUi();
+  }
 });
 
 // === DARK/LIGHT MODE ===
