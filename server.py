@@ -144,8 +144,8 @@ def prompt_headers():
 def _get_provider_chain():
     """
     Return list of providers in priority order.
-    Priority: Copilot -> Gemini -> Venice -> Fireworks -> Kimi -> OpenRouter (last resort).
-    OpenRouter is tried last because it has rate limits and costs per token.
+    Priority: Copilot -> Gemini -> Venice -> Fireworks -> Kimi -> xAI -> MiniMax -> GLM -> Anthropic -> OpenRouter.
+    OpenRouter remains the broad fallback because it can route to many frontier models.
     """
     chain = []
 
@@ -179,7 +179,7 @@ def _get_provider_chain():
             'gemini_native': True,
         })
 
-    # 3. Venice AI (privacy-focused, uncensored models)
+    # 3. Venice AI
     venice_key = os.getenv('VENICE_API_KEY')
     if venice_key:
         chain.append({
@@ -192,7 +192,7 @@ def _get_provider_chain():
             'model_override': os.getenv('VENICE_MODEL', 'llama-3.3-70b'),
         })
 
-    # 5. Fireworks AI (fast inference)
+    # 4. Fireworks AI
     fireworks_key = os.getenv('FIREWORKS_API_KEY')
     if fireworks_key:
         chain.append({
@@ -205,7 +205,7 @@ def _get_provider_chain():
             'model_override': os.getenv('FIREWORKS_MODEL', 'accounts/fireworks/models/llama-v3p3-70b-instruct'),
         })
 
-    # 6. Kimi Code (Moonshot AI — code-optimized models)
+    # 5. Kimi / Moonshot
     kimi_key = os.getenv('KIMI_API_KEY')
     if kimi_key:
         chain.append({
@@ -215,10 +215,51 @@ def _get_provider_chain():
                 'Authorization': f'Bearer {kimi_key}',
                 'Accept': 'application/json',
             },
-            'model_override': os.getenv('KIMI_MODEL', 'kimi-latest'),
+            'model_override': os.getenv('KIMI_MODEL', 'kimi-k2.6'),
         })
 
-    # 7. Anthropic (native API — direct, no proxy)
+    # 6. xAI / Grok
+    xai_key = os.getenv('XAI_API_KEY')
+    if xai_key:
+        chain.append({
+            'name': 'xai',
+            'base': 'https://api.x.ai/v1',
+            'headers': {
+                'Authorization': f'Bearer {xai_key}',
+                'Accept': 'application/json',
+            },
+            'model_override': os.getenv('XAI_MODEL', 'grok-4.20-multi-agent'),
+        })
+
+    # 7. MiniMax
+    minimax_key = os.getenv('MINIMAX_API_KEY')
+    if minimax_key:
+        chain.append({
+            'name': 'minimax',
+            'base': 'https://api.minimax.io/v1',
+            'headers': {
+                'Authorization': f'Bearer {minimax_key}',
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+            },
+            'model_override': os.getenv('MINIMAX_MODEL', 'minimax-m2.7'),
+        })
+
+    # 8. Z.AI / GLM
+    glm_key = os.getenv('GLM_API_KEY')
+    if glm_key:
+        chain.append({
+            'name': 'glm',
+            'base': 'https://open.bigmodel.cn/api/paas/v4',
+            'headers': {
+                'Authorization': f'Bearer {glm_key}',
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+            },
+            'model_override': os.getenv('GLM_MODEL', 'glm-5.1'),
+        })
+
+    # 9. Anthropic (native API — direct)
     anthropic_key = os.getenv('ANTHROPIC_API_KEY')
     if anthropic_key:
         chain.append({
@@ -229,11 +270,11 @@ def _get_provider_chain():
                 'anthropic-version': '2023-06-01',
                 'Accept': 'application/json',
             },
-            'model_override': os.getenv('ANTHROPIC_MODEL', 'claude-opus-4-7'),
+            'model_override': os.getenv('ANTHROPIC_MODEL', 'claude-opus-4.6'),
             'anthropic_native': True,
         })
 
-    # 8. OpenRouter — broad model access (pay-per-token)
+    # 10. OpenRouter — broad model access
     or_key = os.getenv('OPENROUTER_API_KEY')
     if or_key:
         chain.append({
@@ -254,17 +295,30 @@ def _get_provider_chain():
 def _detect_preferred_provider(model: str) -> str | None:
     """
     Detect which provider to try first based on model ID format.
-    OpenRouter:  contains '/'  (e.g. 'anthropic/claude-sonnet-4.6')
-    Gemini:      starts with 'gemini-'
-    Copilot:     short IDs with dots (e.g. 'claude-sonnet-4.6', 'gpt-4.1', 'o4-mini')
-    Venice:      starts with 'venice-' or known venice model slugs
-    Fireworks:   starts with 'accounts/fireworks/'
+    OpenRouter-style frontier model IDs generally contain '/'.
+    Native/direct provider slugs are still routed when they are obvious.
     """
     if not model:
         return None
     if '/' in model:
         if model.startswith('accounts/fireworks/'):
             return 'fireworks'
+        if model.startswith('google/gemini-'):
+            return 'openrouter'
+        if model.startswith('moonshotai/'):
+            return 'openrouter'
+        if model.startswith('x-ai/'):
+            return 'openrouter'
+        if model.startswith('minimax/'):
+            return 'openrouter'
+        if model.startswith('z-ai/'):
+            return 'openrouter'
+        if model.startswith('qwen/'):
+            return 'openrouter'
+        if model.startswith('openai/'):
+            return 'openrouter'
+        if model.startswith('anthropic/'):
+            return 'openrouter'
         return 'openrouter'
     if model.startswith('gemini-'):
         return 'gemini'
@@ -272,6 +326,12 @@ def _detect_preferred_provider(model: str) -> str | None:
         return 'venice'
     if model.startswith('kimi') or model.startswith('moonshot-'):
         return 'kimi'
+    if model.startswith('grok-'):
+        return 'xai'
+    if model.startswith('minimax-'):
+        return 'minimax'
+    if model.startswith('glm-'):
+        return 'glm'
     # Copilot short IDs have dots (version numbers like 4.6, 5.4, 4.1)
     if '.' in model:
         return 'copilot'
