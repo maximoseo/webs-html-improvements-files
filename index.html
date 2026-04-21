@@ -7478,6 +7478,108 @@ header.header > .header-inner,
   </div>
   </div><!-- /kwr-section-card actions -->
 
+  <!-- Recent Reports (Task C) -->
+  <div class="kwr-section-card kwr-reports-card" id="kwr-reports-section" style="margin-top:18px">
+    <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:10px">
+      <div>
+        <div style="font-weight:700;font-size:15px;color:#fff">📚 Recent Reports</div>
+        <div style="color:var(--muted);font-size:12px;margin-top:2px">Persisted to <code>outputs/</code> &amp; synced to GitHub · Obsidian · Supabase</div>
+      </div>
+      <button class="kwr-btn" id="kwr-reports-refresh" onclick="kwrFetchReports()" style="padding:6px 12px;font-size:12px">↻ Refresh</button>
+    </div>
+    <div id="kwr-reports-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px">
+      <div style="grid-column:1/-1;text-align:center;padding:24px;color:var(--muted);font-size:13px">Loading reports…</div>
+    </div>
+  </div>
+  <style>
+    .kwr-report-card{background:linear-gradient(180deg,rgba(124,58,237,0.06),rgba(255,255,255,0.02));border:1px solid rgba(124,58,237,0.18);border-radius:12px;padding:12px 14px;display:flex;flex-direction:column;gap:8px;transition:all .15s}
+    .kwr-report-card:hover{border-color:rgba(124,58,237,0.45);transform:translateY(-1px)}
+    .kwr-report-head{display:flex;align-items:center;gap:8px}
+    .kwr-report-head img{width:20px;height:20px;border-radius:4px;flex-shrink:0}
+    .kwr-report-head .domain{font-weight:700;color:#fff;font-size:14px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+    .kwr-report-meta{font-size:11.5px;color:var(--muted);line-height:1.5}
+    .kwr-report-meta .fname{color:#c4b5fd;word-break:break-all}
+    .kwr-report-badges{display:flex;gap:5px;flex-wrap:wrap;margin-top:2px}
+    .kwr-badge{font-size:10.5px;padding:2px 7px;border-radius:10px;border:1px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.03);color:var(--muted)}
+    .kwr-badge.ok{background:rgba(34,197,94,0.12);border-color:rgba(34,197,94,0.35);color:#86efac}
+    .kwr-report-actions{display:flex;gap:6px;margin-top:6px}
+    .kwr-report-actions button{flex:1;padding:6px 8px;font-size:12px;border-radius:8px;border:1px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.04);color:#fff;cursor:pointer;transition:background .12s}
+    .kwr-report-actions button:hover{background:rgba(255,255,255,0.10)}
+    .kwr-report-actions .btn-del:hover{background:rgba(239,68,68,0.18);border-color:rgba(239,68,68,0.4)}
+    @media(max-width:480px){#kwr-reports-grid{grid-template-columns:1fr}}
+  </style>
+  <script>
+  (function(){
+    function fmtDate(iso){
+      if(!iso) return '—';
+      try{
+        const d=new Date(iso);
+        if(isNaN(d)) return iso;
+        return d.toLocaleString('en-GB',{day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'});
+      }catch(e){return iso;}
+    }
+    function escapeHtml(s){return String(s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+    window.kwrFetchReports = async function(){
+      const grid = document.getElementById('kwr-reports-grid');
+      if(!grid) return;
+      try{
+        const r = await fetch('/api/kwr/reports');
+        const j = await r.json();
+        const list = (j && j.reports) || [];
+        if(!list.length){
+          grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:28px;color:var(--muted);font-size:13px">No reports yet — run a research above to create one.</div>';
+          return;
+        }
+        grid.innerHTML = list.map(r=>{
+          const host = r.domain || (r.website_url||'').replace(/^https?:\/\//,'').split('/')[0] || 'unknown';
+          const fav = host && host!=='unknown' ? `https://www.google.com/s2/favicons?domain=${encodeURIComponent(host)}&sz=32` : '';
+          const ss = r.sync_status || {};
+          const badge = (label, ok)=>`<span class="kwr-badge${ok?' ok':''}">${ok?'✓ ':'— '}${label}</span>`;
+          return `
+            <div class="kwr-report-card" data-rid="${escapeHtml(r.run_id)}">
+              <div class="kwr-report-head">
+                ${fav?`<img src="${fav}" alt="" onerror="this.style.display='none'">`:''}
+                <div class="domain" title="${escapeHtml(host)}">${escapeHtml(host)}</div>
+              </div>
+              <div class="kwr-report-meta">
+                <div class="fname">${escapeHtml(r.worksheet_name||'kwr')}.xlsx</div>
+                <div>${fmtDate(r.created_at)}</div>
+                <div>${r.row_count||0} rows · ${r.file_size_kb||0} KB</div>
+              </div>
+              <div class="kwr-report-badges">
+                ${badge('GitHub', ss.github)}
+                ${badge('Obsidian', ss.obsidian)}
+                ${badge('Supabase', ss.supabase)}
+              </div>
+              <div class="kwr-report-actions">
+                <button onclick="window.open('/api/kwr/download/${encodeURIComponent(r.run_id)}','_blank')">⬇ Download</button>
+                <button class="btn-del" onclick="kwrDeleteReport('${encodeURIComponent(r.run_id)}', this)">🗑 Delete</button>
+              </div>
+            </div>`;
+        }).join('');
+      }catch(e){
+        grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:20px;color:#ef4444;font-size:12px">Failed to load reports: ${escapeHtml(e.message)}</div>`;
+      }
+    };
+    window.kwrDeleteReport = async function(rid, btn){
+      if(!confirm('Delete this report? This removes the local copy (not GitHub/Obsidian).')) return;
+      if(btn){ btn.disabled=true; btn.textContent='Deleting…'; }
+      try{
+        const r = await fetch('/api/kwr/reports/'+rid, {method:'DELETE'});
+        const j = await r.json().catch(()=>({}));
+        if(!r.ok || !j.ok) throw new Error(j.error||('HTTP '+r.status));
+        kwrFetchReports();
+      }catch(e){
+        alert('Delete failed: '+e.message);
+        if(btn){ btn.disabled=false; btn.textContent='🗑 Delete'; }
+      }
+    };
+    // Auto-load on first render of KWR page
+    document.addEventListener('DOMContentLoaded', ()=>setTimeout(kwrFetchReports, 300));
+  })();
+  </script>
+
+
   <!-- Progress / stage list (hidden until running) -->
   <div id="kwr-progress-section" style="display:none">
     <div class="kwr-progress-bar"><div class="kwr-progress-fill" id="kwr-progress-fill" style="width:0%"></div></div>
@@ -11313,42 +11415,54 @@ function loadTopicsFromStatus(state) {
       if (quickInput) quickInput.focus();
       return;
     }
-    if (hint) { hint.style.color = 'var(--muted)'; hint.textContent = 'Filling fields…'; }
-    if (btn) { btn.disabled = true; btn.textContent = 'Filling…'; }
+    if (hint) { hint.style.color = 'var(--muted)'; hint.textContent = 'Probing site (robots.txt, about, language)…'; }
+    if (btn) { btn.disabled = true; btn.textContent = 'Probing…'; }
 
-    // Derive fields from domain
-    const origin = d.origin;           // https://galoz.co.il
-    const host   = d.host;             // galoz.co.il
-    // Brand name: first segment of hostname without TLD
-    const brandRaw = host.split('.')[0] || host;
-    const brand = brandRaw.charAt(0).toUpperCase() + brandRaw.slice(1);
-
-    // Try to detect language from TLD
-    const tld = host.split('.').pop().toLowerCase();
-    const hebrewTLDs = ['co.il', 'org.il', 'net.il', 'il'];
-    const isHebrew = hebrewTLDs.some(t => host.endsWith(t));
-    const lang = isHebrew ? 'Hebrew' : '';
-    const market = isHebrew ? 'Israel' : '';
-
-    // Fill website_url
     const setVal = (id, val) => {
       const el = document.getElementById(id);
       if (el && val) { el.value = val; el.dispatchEvent(new Event('input')); }
     };
-    setVal('kwr-website-url',    origin);
-    setVal('kwr-sitemap-url',    origin + '/sitemap.xml');
-    setVal('kwr-about-url',      origin + '/about');
-    setVal('kwr-brand-name',     brand);
-    if (lang)   setVal('kwr-target-language', lang);
-    if (market) setVal('kwr-target-market',   market);
 
-    // Scroll to required section
+    // Fallback derivations (used if /api/kwr/probe fails)
+    const origin = d.origin;
+    const host   = d.host;
+    const brandRaw = host.replace(/^www\./,'').split('.')[0] || host;
+    const brandFb = brandRaw.charAt(0).toUpperCase() + brandRaw.slice(1);
+    const isHebrew = ['co.il','org.il','net.il','il'].some(t => host.endsWith(t));
+    const langFb   = isHebrew ? 'Hebrew' : 'English';
+    const marketFb = isHebrew ? 'Israel' : 'United States';
+
+    let probe = null;
+    try {
+      const resp = await fetch('/api/kwr/probe', {
+        method: 'POST',
+        headers: {'Content-Type':'application/json'},
+        body: JSON.stringify({ domain: raw }),
+      });
+      if (resp.ok) probe = await resp.json();
+    } catch(e) { probe = null; }
+
+    const website  = (probe && probe.website_url) || origin;
+    const sitemap  = (probe && probe.sitemap_url) || (origin + '/sitemap.xml');
+    const about    = (probe && probe.about_url)   || (origin + '/about');
+    const brand    = (probe && probe.brand_name)  || brandFb;
+    const language = (probe && probe.language)    || langFb;
+    const market   = (probe && probe.market)      || marketFb;
+
+    setVal('kwr-website-url',    website);
+    setVal('kwr-sitemap-url',    sitemap);
+    setVal('kwr-about-url',      about);
+    setVal('kwr-brand-name',     brand);
+    if (language) setVal('kwr-target-language', language);
+    if (market)   setVal('kwr-target-market',   market);
+
     const req = document.querySelector('.kwr-section-card:nth-child(3)');
     if (req) req.scrollIntoView({ behavior: 'smooth', block: 'start' });
 
     if (hint) {
       hint.style.color = '#22c55e';
-      hint.innerHTML = `✓ Fields filled for <strong>${host}</strong>. Review &amp; complete the remaining fields, then click <strong>Run KW Research</strong>.`;
+      const verified = probe ? '<strong>verified</strong> ' : '';
+      hint.innerHTML = `✓ ${verified}fields filled for <strong>${host}</strong>. Review &amp; click <strong>Run KW Research</strong>.`;
     }
     if (btn) {
       btn.disabled = false;
@@ -11585,6 +11699,11 @@ function loadTopicsFromStatus(state) {
           try { domain = new URL(websiteInput.value).hostname.replace(/^www\./,''); } catch(e) { domain = websiteInput.value; }
         }
         domainLabel.textContent = domain || 'Report';
+      }
+      // Refresh reports grid — sync runs in background, so also re-poll after a delay
+      if (window.kwrFetchReports) {
+        try { kwrFetchReports(); } catch(e){}
+        setTimeout(() => { try { kwrFetchReports(); } catch(e){} }, 8000);
       }
     })
     .catch(err => {

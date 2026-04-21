@@ -1628,6 +1628,13 @@ class DashboardHandler(BaseHTTPRequestHandler):
                 'note_path': note_path,
             })
 
+        if parsed.path == '/api/kwr/reports':
+            try:
+                reports = kwr_backend.list_reports()
+            except Exception as exc:
+                return json_response(self, 500, {'ok': False, 'error': str(exc)})
+            return json_response(self, 200, {'ok': True, 'reports': reports})
+
         return self.serve_static(parsed.path)
 
     def do_POST(self):
@@ -2439,6 +2446,38 @@ class DashboardHandler(BaseHTTPRequestHandler):
                 return json_response(self, 400, {'ok': False, 'error': err})
             return json_response(self, 200, {'ok': True, 'run_id': run_id})
 
+        if parsed.path == '/api/kwr/probe':
+            domain = (payload.get('domain') or payload.get('url') or '').strip()
+            if not domain:
+                return json_response(self, 400, {'ok': False, 'error': 'domain required'})
+            try:
+                data = kwr_backend.probe_domain(domain)
+                return json_response(self, 200, {'ok': True, **data})
+            except Exception as exc:
+                return json_response(self, 500, {'ok': False, 'error': str(exc)})
+
+        if parsed.path.startswith('/api/kwr/sync/'):
+            run_id = parsed.path.split('/')[-1].strip()
+            if not run_id:
+                return json_response(self, 400, {'ok': False, 'error': 'run_id required'})
+            try:
+                result = kwr_backend.sync_report(run_id)
+                return json_response(self, 200, {'ok': True, 'sync': result})
+            except Exception as exc:
+                return json_response(self, 500, {'ok': False, 'error': str(exc)})
+
+        return json_response(self, 404, {'ok': False, 'error': 'Not found'})
+
+    def do_DELETE(self):
+        parsed = urllib.parse.urlparse(self.path)
+        if parsed.path.startswith('/api/kwr/reports/'):
+            run_id = parsed.path.split('/')[-1].strip()
+            if not run_id:
+                return json_response(self, 400, {'ok': False, 'error': 'run_id required'})
+            ok, err = kwr_backend.delete_report(run_id)
+            if not ok:
+                return json_response(self, 404, {'ok': False, 'error': err or 'not found'})
+            return json_response(self, 200, {'ok': True})
         return json_response(self, 404, {'ok': False, 'error': 'Not found'})
 
     def serve_static(self, path):

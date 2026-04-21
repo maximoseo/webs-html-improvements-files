@@ -39,7 +39,7 @@ def _run_dir(run_id: str) -> str:
 
 
 def _persist_job(run_id: str) -> None:
-    """Write job JSON + xlsx to outputs/{run_id}/ for cross-restart access."""
+    """Write job JSON + meta.json to outputs/{run_id}/ for cross-restart access."""
     try:
         with _lock:
             job = _state.get(run_id)
@@ -50,6 +50,26 @@ def _persist_job(run_id: str) -> None:
         os.makedirs(rd, exist_ok=True)
         with open(os.path.join(rd, 'job.json'), 'w', encoding='utf-8') as f:
             json.dump(job_copy, f, ensure_ascii=False, indent=2, default=str)
+        # Write a small meta.json for the reports listing
+        try:
+            inputs = job_copy.get('inputs') or {}
+            website = (inputs.get('website_url') or '').strip()
+            domain = website.replace('https://', '').replace('http://', '').split('/')[0]
+            meta = {
+                'run_id': run_id,
+                'domain': domain,
+                'website_url': website,
+                'brand': inputs.get('brand_name', ''),
+                'worksheet_name': job_copy.get('worksheet_name') or _worksheet_name(job_copy, ''),
+                'created_at': job_copy.get('created_at', ''),
+                'updated_at': job_copy.get('updated_at', ''),
+                'status': job_copy.get('status', ''),
+                'row_count': int(job_copy.get('row_count') or len(job_copy.get('rows') or [])),
+            }
+            with open(os.path.join(rd, 'meta.json'), 'w', encoding='utf-8') as f:
+                json.dump(meta, f, ensure_ascii=False, indent=2)
+        except Exception:
+            pass
     except Exception:
         pass
 
@@ -384,6 +404,11 @@ def approve_and_save(run_id: str, edited_rows: list, sheet_prefix: str) -> tuple
 
     # Persist approved state so downloads survive restarts.
     _persist_job(run_id)
+    # Best-effort multi-destination sync (GitHub + Obsidian + Supabase)
+    try:
+        threading.Thread(target=sync_report, args=(run_id,), daemon=True).start()
+    except Exception:
+        pass
 
     return excel_bytes, ws_name, None
 
@@ -1283,3 +1308,461 @@ def _job_summary(job: dict) -> dict:
         'deploy_error': job.get('deploy_error'),
         'honest_count_note': job.get('honest_count_note', ''),
     }
+
+
+# ===========================================================================
+# TASK A — Auto-fill probe (real verified URLs)
+# ===========================================================================
+
+def _http_request(url, method='GET', timeout=6, max_bytes=None):
+    """Tiny urllib helper. Returns (status, body_bytes, final_url) or raises."""
+    req = urllib.request.Request(
+        url, method=method,
+        headers={
+            'User-Agent': 'Mozilla/5.0 (KWR-Probe/1.0)',
+            'Accept': '*/*',
+        },
+    )
+    with urllib.request.urlopen(req, timeout=timeout) as resp:
+        body = b''
+        if method != 'HEAD':
+            if max_bytes:
+                body = resp.read(max_bytes)
+            else:
+                body = resp.read()
+        return resp.status, body, resp.geturl()
+
+
+def _head_ok(url, timeout=5):
+    """True if HEAD or GET returns 2xx on the URL."""
+    try:
+        st, _, _ = _http_request(url, method='HEAD', timeout=timeout)
+        if 200 <= st < 300:
+            return True
+    except Exception:
+        pass
+    # Fallback to small GET (some servers reject HEAD)
+    try:
+        st, _, _ = _http_request(url, method='GET', timeout=timeout, max_bytes=512)
+        return 200 <= st < 300
+    except Exception:
+        return False
+
+
+def probe_domain(domain: str) -> dict:
+    """
+    Real-verified auto-fill data for a domain.
+    Returns {website_url, sitemap_url, about_url, language, market, brand_name}.
+    Never throws; falls back to empty strings on failure.
+    """
+    raw = (domain or '').strip()
+    if not raw:
+        return {'website_url': '', 'sitemap_url': '', 'about_url': '',
+                'language': '', 'market': '', 'brand_name': ''}
+    if not raw.startswith(('http://', 'https://')):
+        raw = 'https://' + raw
+
+    out = {'website_url': '', 'sitemap_url': '', 'about_url': '',
+           'language': '', 'market': '', 'brand_name': ''}
+
+    try:
+        parsed = urllib.parse.urlparse(raw)
+        host = parsed.netloc or parsed.path.split('/')[0]
+        origin = f"{parsed.scheme}://{host}"
+    except Exception:
+        return out
+
+    # Verify website reachable; prefer https, fall back to http.
+    website_url = ''
+    for candidate in (origin, origin.replace('https://', 'http://')):
+        try:
+            st, _, final = _http_request(candidate, method='GET', timeout=6, max_bytes=4096)
+            if 200 <= st < 400:
+                # Use final URL (handles redirects to www.)
+                fu = urllib.parse.urlparse(final)
+                website_url = f"{fu.scheme}://{fu.netloc}"
+                origin = website_url
+                host = fu.netloc or host
+                break
+        except Exception:
+            continue
+    if not website_url:
+        website_url = origin
+    out['website_url'] = website_url
+
+    # Brand from hostname's first label
+    brand_label = host.replace('www.', '').split('.')[0] or host
+    out['brand_name'] = brand_label[:1].upper() + brand_label[1:]
+
+    # 1. Sitemap from robots.txt (canonical)
+    sitemap_candidates = []
+    try:
+        st, body, _ = _http_request(origin + '/robots.txt', method='GET', timeout=5, max_bytes=200_000)
+        if 200 <= st < 300 and body:
+            text = body.decode('utf-8', 'replace')
+            for line in text.splitlines():
+                line = line.strip()
+                if line.lower().startswith('sitemap:'):
+                    sm = line.split(':', 1)[1].strip()
+                    if sm:
+                        sitemap_candidates.append(sm)
+    except Exception:
+        pass
+    sitemap_candidates += [
+        origin + '/sitemap.xml',
+        origin + '/sitemap_index.xml',
+        origin + '/wp-sitemap.xml',
+        origin + '/sitemap-index.xml',
+    ]
+    for sm in sitemap_candidates:
+        if _head_ok(sm, timeout=5):
+            out['sitemap_url'] = sm
+            break
+
+    # 2. About page — HEAD-check candidates
+    about_candidates = ['/about', '/about-us', '/about/', '/about-us/',
+                        '/%D7%90%D7%95%D7%93%D7%95%D7%AA',  # אודות
+                        '/he/about', '/en/about', '/about.html']
+    for path in about_candidates:
+        url = origin + path
+        if _head_ok(url, timeout=4):
+            out['about_url'] = url
+            break
+
+    # 3. Language from <html lang="..."> + brand from og:site_name
+    homepage_html = ''
+    try:
+        st, body, _ = _http_request(origin, method='GET', timeout=8, max_bytes=200_000)
+        if 200 <= st < 400 and body:
+            try:
+                homepage_html = body.decode('utf-8', 'replace')
+            except Exception:
+                homepage_html = body.decode('latin-1', 'replace')
+    except Exception:
+        pass
+
+    language = ''
+    if homepage_html:
+        m = re.search(r'<html[^>]*\blang\s*=\s*["\']?([A-Za-z-]{2,10})', homepage_html, re.IGNORECASE)
+        if m:
+            code = m.group(1).lower()
+            if code.startswith('he') or code == 'iw':
+                language = 'Hebrew'
+            elif code.startswith('en'):
+                language = 'English'
+            elif code.startswith('ar'):
+                language = 'Arabic'
+            elif code.startswith('ru'):
+                language = 'Russian'
+            elif code.startswith('es'):
+                language = 'Spanish'
+            elif code.startswith('fr'):
+                language = 'French'
+            else:
+                language = code.upper()
+        if not language:
+            head = homepage_html[:4000]
+            if re.search(r'[\u0590-\u05FF]', head):
+                language = 'Hebrew'
+            elif re.search(r'[\u0600-\u06FF]', head):
+                language = 'Arabic'
+            else:
+                language = 'English'
+
+        # og:site_name → brand override
+        m = re.search(
+            r'<meta[^>]+property\s*=\s*["\']og:site_name["\'][^>]*content\s*=\s*["\']([^"\']+)["\']',
+            homepage_html, re.IGNORECASE)
+        if not m:
+            m = re.search(
+                r'<meta[^>]+content\s*=\s*["\']([^"\']+)["\'][^>]*property\s*=\s*["\']og:site_name["\']',
+                homepage_html, re.IGNORECASE)
+        if m:
+            site_name = m.group(1).strip()
+            if site_name and len(site_name) <= 80:
+                out['brand_name'] = site_name
+
+    if not language:
+        # TLD heuristic fallback
+        tld = host.lower()
+        if tld.endswith('.il') or '.co.il' in tld:
+            language = 'Hebrew'
+        else:
+            language = 'English'
+    out['language'] = language
+
+    # Market guess
+    if language == 'Hebrew':
+        out['market'] = 'Israel'
+    elif host.endswith('.uk') or host.endswith('.co.uk'):
+        out['market'] = 'United Kingdom'
+    elif host.endswith('.au') or host.endswith('.com.au'):
+        out['market'] = 'Australia'
+    elif host.endswith('.ca'):
+        out['market'] = 'Canada'
+    elif host.endswith('.de'):
+        out['market'] = 'Germany'
+    elif language == 'English':
+        out['market'] = 'United States'
+    else:
+        out['market'] = ''
+
+    return out
+
+
+# ===========================================================================
+# TASK B — Multi-destination sync (GitHub + Obsidian + Supabase storage)
+# ===========================================================================
+
+def _domain_slug_for_run(run_id: str) -> str:
+    """Build domain slug from job state (or disk)."""
+    job = None
+    with _lock:
+        job = _state.get(run_id)
+    if job is None:
+        job = _load_job_from_disk(run_id) or {}
+    inputs = job.get('inputs') or {}
+    website = (inputs.get('website_url') or '').strip()
+    domain = website.replace('https://', '').replace('http://', '').split('/')[0]
+    return _slugify(domain) or 'site'
+
+
+def _read_run_xlsx(run_id: str) -> bytes | None:
+    rd = _run_dir(run_id)
+    p = os.path.join(rd, 'file.xlsx')
+    if os.path.exists(p):
+        try:
+            with open(p, 'rb') as f:
+                return f.read()
+        except Exception:
+            return None
+    # Build it on demand
+    data, _, err = build_excel(run_id)
+    if err:
+        return None
+    return data
+
+
+def _sync_github(run_id: str, xlsx_bytes: bytes, domain_slug: str) -> dict:
+    """Commit outputs/kwr_{slug}.xlsx into the repo via git CLI. Best-effort."""
+    import subprocess
+    repo_dir = os.path.dirname(os.path.abspath(__file__))
+    # On Render the workdir is read-only-ish; skip silently.
+    if not os.path.isdir(os.path.join(repo_dir, '.git')):
+        return {'ok': False, 'skipped': True, 'reason': 'not a git repo (Render env)'}
+    pat = (os.getenv('GITHUB_PAT') or os.getenv('GH_TOKEN') or '').strip()
+    target_rel = f'outputs/kwr_{domain_slug}.xlsx'
+    target_abs = os.path.join(repo_dir, target_rel)
+    try:
+        os.makedirs(os.path.dirname(target_abs), exist_ok=True)
+        with open(target_abs, 'wb') as f:
+            f.write(xlsx_bytes)
+        env = os.environ.copy()
+        env.setdefault('GIT_AUTHOR_NAME', 'KWR Bot')
+        env.setdefault('GIT_AUTHOR_EMAIL', 'kwr-bot@maximo-seo.ai')
+        env.setdefault('GIT_COMMITTER_NAME', 'KWR Bot')
+        env.setdefault('GIT_COMMITTER_EMAIL', 'kwr-bot@maximo-seo.ai')
+        subprocess.run(['git', 'add', target_rel], cwd=repo_dir, env=env,
+                       check=False, capture_output=True, timeout=30)
+        r = subprocess.run(
+            ['git', 'commit', '-m', f'kwr: report for {domain_slug}'],
+            cwd=repo_dir, env=env, check=False, capture_output=True, timeout=30,
+        )
+        if r.returncode != 0 and b'nothing to commit' not in (r.stdout + r.stderr):
+            return {'ok': False, 'error': (r.stderr or r.stdout).decode('utf-8', 'replace')[:200]}
+        if pat:
+            push_url = f'https://maximoseo:{pat}@github.com/maximoseo/webs-html-improvements-files.git'
+            r2 = subprocess.run(['git', 'push', push_url, 'HEAD:main'],
+                                cwd=repo_dir, env=env, check=False,
+                                capture_output=True, timeout=60)
+            if r2.returncode != 0:
+                return {'ok': False, 'error': (r2.stderr or r2.stdout).decode('utf-8', 'replace')[:200]}
+            return {'ok': True, 'path': target_rel, 'pushed': True}
+        return {'ok': True, 'path': target_rel, 'pushed': False, 'note': 'no PAT'}
+    except Exception as exc:
+        return {'ok': False, 'error': str(exc)[:200]}
+
+
+def _sync_obsidian(run_id: str, xlsx_bytes: bytes, domain_slug: str) -> dict:
+    """Copy xlsx to <vault>/SEO/KWR/{slug}__{date}.xlsx + maintain index.md."""
+    vault = (os.getenv('OBSIDIAN_VAULT_PATH') or '').strip()
+    if not vault:
+        # Default to known Windows vault if mounted (works only on the dev box)
+        guess = '/mnt/c/Obsidian/HTML REDESIGN/HTML REDESIGN'
+        if os.path.isdir(guess):
+            vault = guess
+    if not vault or not os.path.isdir(vault):
+        return {'ok': False, 'skipped': True, 'reason': 'OBSIDIAN_VAULT_PATH not set / not mounted'}
+    try:
+        seo_dir = os.path.join(vault, 'SEO', 'KWR')
+        os.makedirs(seo_dir, exist_ok=True)
+        date_str = datetime.datetime.utcnow().strftime('%Y-%m-%d')
+        fname = f'{domain_slug}__{date_str}.xlsx'
+        fpath = os.path.join(seo_dir, fname)
+        with open(fpath, 'wb') as f:
+            f.write(xlsx_bytes)
+        # Maintain index.md
+        index_path = os.path.join(seo_dir, 'index.md')
+        try:
+            files = sorted(
+                [f for f in os.listdir(seo_dir) if f.endswith('.xlsx')],
+                reverse=True,
+            )
+            lines = ['# KWR Reports', '', f'_Last updated: {datetime.datetime.utcnow().isoformat()}Z_', '']
+            for ff in files:
+                lines.append(f'- [[{ff}]]')
+            with open(index_path, 'w', encoding='utf-8') as f:
+                f.write('\n'.join(lines))
+        except Exception:
+            pass
+        return {'ok': True, 'path': fpath}
+    except Exception as exc:
+        return {'ok': False, 'error': str(exc)[:200]}
+
+
+def _sync_supabase_storage(run_id: str, xlsx_bytes: bytes, domain_slug: str) -> dict:
+    """Upload to Supabase storage bucket 'kwr-reports' via REST."""
+    cfg_url = (os.getenv('SUPABASE_URL') or '').strip().rstrip('/')
+    key = (os.getenv('SUPABASE_SERVICE_ROLE_KEY') or os.getenv('SUPABASE_ANON_KEY') or '').strip()
+    if not (cfg_url and key):
+        return {'ok': False, 'skipped': True, 'reason': 'SUPABASE creds not set'}
+    bucket = (os.getenv('SUPABASE_KWR_BUCKET') or 'kwr-reports').strip()
+    object_path = f'{domain_slug}/{run_id}.xlsx'
+    upload_url = f'{cfg_url}/storage/v1/object/{bucket}/{object_path}'
+    headers = {
+        'Authorization': f'Bearer {key}',
+        'apikey': key,
+        'Content-Type': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        'x-upsert': 'true',
+        'Cache-Control': '3600',
+    }
+    try:
+        req = urllib.request.Request(upload_url, data=xlsx_bytes, headers=headers, method='POST')
+        with urllib.request.urlopen(req, timeout=30) as resp:
+            _ = resp.read()
+        public_url = f'{cfg_url}/storage/v1/object/public/{bucket}/{object_path}'
+        return {'ok': True, 'path': object_path, 'public_url': public_url}
+    except urllib.error.HTTPError as exc:
+        body = exc.read().decode('utf-8', 'replace')[:400]
+        # If bucket missing, try creating it then retry once.
+        if exc.code in (400, 404) and 'Bucket not found' in body:
+            try:
+                create_req = urllib.request.Request(
+                    f'{cfg_url}/storage/v1/bucket',
+                    data=json.dumps({'id': bucket, 'name': bucket, 'public': True}).encode('utf-8'),
+                    headers={'Authorization': f'Bearer {key}', 'apikey': key,
+                             'Content-Type': 'application/json'},
+                    method='POST',
+                )
+                urllib.request.urlopen(create_req, timeout=15).read()
+                req2 = urllib.request.Request(upload_url, data=xlsx_bytes, headers=headers, method='POST')
+                urllib.request.urlopen(req2, timeout=30).read()
+                return {'ok': True, 'path': object_path, 'created_bucket': True}
+            except Exception as exc2:
+                return {'ok': False, 'error': f'bucket-create then upload failed: {exc2}'}
+        return {'ok': False, 'error': f'HTTP {exc.code}: {body}'}
+    except Exception as exc:
+        return {'ok': False, 'error': str(exc)[:200]}
+
+
+def sync_report(run_id: str) -> dict:
+    """Sync the run's xlsx to GitHub + Obsidian + Supabase storage. Best-effort."""
+    xlsx = _read_run_xlsx(run_id)
+    if not xlsx:
+        return {'github': {'ok': False, 'error': 'no xlsx'},
+                'obsidian': {'ok': False, 'error': 'no xlsx'},
+                'supabase': {'ok': False, 'error': 'no xlsx'}}
+    slug = _domain_slug_for_run(run_id)
+    result = {
+        'github':   _sync_github(run_id, xlsx, slug),
+        'obsidian': _sync_obsidian(run_id, xlsx, slug),
+        'supabase': _sync_supabase_storage(run_id, xlsx, slug),
+    }
+    # Persist sync result alongside meta.json
+    try:
+        rd = _run_dir(run_id)
+        os.makedirs(rd, exist_ok=True)
+        with open(os.path.join(rd, 'sync.json'), 'w', encoding='utf-8') as f:
+            json.dump({'updated_at': datetime.datetime.utcnow().isoformat() + 'Z',
+                       **result}, f, ensure_ascii=False, indent=2)
+    except Exception:
+        pass
+    return result
+
+
+# ===========================================================================
+# TASK C — Reports listing/delete
+# ===========================================================================
+
+def list_reports() -> list:
+    """Scan outputs/ for persisted reports. Returns newest-first list of dicts."""
+    out = []
+    try:
+        if not os.path.isdir(OUTPUTS_DIR):
+            return out
+        for entry in os.listdir(OUTPUTS_DIR):
+            rd = os.path.join(OUTPUTS_DIR, entry)
+            if not os.path.isdir(rd):
+                continue
+            xlsx = os.path.join(rd, 'file.xlsx')
+            if not os.path.exists(xlsx):
+                continue
+            meta = {}
+            mp = os.path.join(rd, 'meta.json')
+            if os.path.exists(mp):
+                try:
+                    with open(mp, 'r', encoding='utf-8') as f:
+                        meta = json.load(f)
+                except Exception:
+                    meta = {}
+            sync = {}
+            sp = os.path.join(rd, 'sync.json')
+            if os.path.exists(sp):
+                try:
+                    with open(sp, 'r', encoding='utf-8') as f:
+                        sync = json.load(f)
+                except Exception:
+                    sync = {}
+            try:
+                size_kb = round(os.path.getsize(xlsx) / 1024.0, 1)
+            except Exception:
+                size_kb = 0
+            try:
+                mtime = datetime.datetime.utcfromtimestamp(os.path.getmtime(xlsx)).isoformat() + 'Z'
+            except Exception:
+                mtime = ''
+            out.append({
+                'run_id': meta.get('run_id') or entry,
+                'domain': meta.get('domain') or '',
+                'website_url': meta.get('website_url') or '',
+                'brand': meta.get('brand') or '',
+                'worksheet_name': meta.get('worksheet_name') or 'kwr',
+                'created_at': meta.get('created_at') or mtime,
+                'updated_at': meta.get('updated_at') or mtime,
+                'row_count': meta.get('row_count') or 0,
+                'file_size_kb': size_kb,
+                'sync_status': {
+                    'github':   bool((sync.get('github')   or {}).get('ok')),
+                    'obsidian': bool((sync.get('obsidian') or {}).get('ok')),
+                    'supabase': bool((sync.get('supabase') or {}).get('ok')),
+                },
+            })
+        out.sort(key=lambda x: x.get('created_at') or '', reverse=True)
+    except Exception:
+        pass
+    return out
+
+
+def delete_report(run_id: str) -> tuple:
+    """Remove outputs/{run_id}/ directory. Returns (ok, error)."""
+    import shutil
+    rd = _run_dir(run_id)
+    if not os.path.isdir(rd):
+        return False, 'not found'
+    try:
+        shutil.rmtree(rd)
+        with _lock:
+            _state.pop(run_id, None)
+        return True, None
+    except Exception as exc:
+        return False, str(exc)
