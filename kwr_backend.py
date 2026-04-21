@@ -163,6 +163,7 @@ def build_excel(run_id: str) -> tuple:
     LINK_COLOR = '0563C1'
     pillar_idx = -1
     current_pillar_key = None
+    current_pillar_name = ''
 
     for r_idx, row in enumerate(rows, 2):
         # Support both schemas: snake_case (current pipeline) and col_a..col_f (legacy)
@@ -189,13 +190,12 @@ def build_excel(run_id: str) -> tuple:
             if pillar_key != current_pillar_key:
                 pillar_idx = (pillar_idx + 1) % len(PILLAR_PALETTE)
                 current_pillar_key = pillar_key
+                current_pillar_name = str(col_b).strip()
         else:
             # Cluster row — inherit pillar name if empty
-            if not str(col_b).strip() and current_pillar_key:
-                # find original-case pillar name from the most recent pillar row
-                col_b = ws.cell(row=r_idx - 1, column=2).value or col_b
+            if not str(col_b).strip() and current_pillar_name:
+                col_b = current_pillar_name
             if pillar_idx < 0:
-                # Cluster appeared before any pillar — start palette
                 pillar_idx = 0
 
         block_color = PILLAR_PALETTE[pillar_idx if pillar_idx >= 0 else 0]
