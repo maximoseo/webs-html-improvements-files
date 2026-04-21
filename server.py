@@ -1599,11 +1599,17 @@ class DashboardHandler(BaseHTTPRequestHandler):
             excel_bytes, ws_name, err = kwr_backend.build_excel(run_id)
             if err:
                 return json_response(self, 500, {'ok': False, 'error': err})
-            filename = f"{ws_name}.xlsx"
+            # Build ASCII-safe filename + RFC 5987 UTF-8 version (Hebrew would blow up latin-1 headers).
+            safe_ascii = re.sub(r'[^A-Za-z0-9._-]+', '-', ws_name).strip('-') or 'kwr'
+            filename_ascii = f"{safe_ascii}.xlsx"
+            filename_utf8 = urllib.parse.quote(f"{ws_name}.xlsx", safe='')
             self.send_response(200)
             self.send_header('Content-Type',
                              'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
-            self.send_header('Content-Disposition', f'attachment; filename="{filename}"')
+            self.send_header(
+                'Content-Disposition',
+                f"attachment; filename=\"{filename_ascii}\"; filename*=UTF-8''{filename_utf8}"
+            )
             self.send_header('Content-Length', str(len(excel_bytes)))
             self.end_headers()
             self.wfile.write(excel_bytes)
@@ -2378,11 +2384,16 @@ class DashboardHandler(BaseHTTPRequestHandler):
             excel_bytes, ws_name, err = kwr_backend.build_excel(run_id)
             if err:
                 return json_response(self, 500, {'ok': False, 'error': err})
-            filename = f"{ws_name}.xlsx"
+            safe_ascii = re.sub(r'[^A-Za-z0-9._-]+', '-', ws_name).strip('-') or 'kwr'
+            filename_ascii = f"{safe_ascii}.xlsx"
+            filename_utf8 = urllib.parse.quote(f"{ws_name}.xlsx", safe='')
             self.send_response(200)
             self.send_header('Content-Type',
                              'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
-            self.send_header('Content-Disposition', f'attachment; filename="{filename}"')
+            self.send_header(
+                'Content-Disposition',
+                f"attachment; filename=\"{filename_ascii}\"; filename*=UTF-8''{filename_utf8}"
+            )
             self.send_header('Content-Length', str(len(excel_bytes)))
             self.end_headers()
             self.wfile.write(excel_bytes)
