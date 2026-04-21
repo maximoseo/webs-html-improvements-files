@@ -154,19 +154,19 @@ def build_excel(run_id: str) -> tuple:
     cluster_fill = PatternFill('solid', fgColor='FFFFFF')
 
     for r_idx, row in enumerate(rows, 2):
-        is_pillar = (str(row.get('col_a', '')).strip() == '-' or
-                     not str(row.get('col_a', '')).strip())
+        # Support both schemas: snake_case (current pipeline) and col_a..col_f (legacy)
+        col_a = row.get('existing_parent_page', row.get('col_a', '')) or ''
+        col_b = row.get('pillar',               row.get('col_b', '')) or ''
+        col_c = row.get('cluster',              row.get('col_c', '')) or ''
+        col_d = row.get('intent',               row.get('col_d', '')) or ''
+        col_e = row.get('primary_keyword',      row.get('col_e', '')) or ''
+        col_f = row.get('keywords',             row.get('col_f', '')) or ''
+
+        is_pillar = (str(col_a).strip() == '-' or not str(col_a).strip())
         fill = pillar_fill if is_pillar else cluster_fill
         font = pillar_font if is_pillar else cluster_font
 
-        values = [
-            row.get('col_a', ''),
-            row.get('col_b', ''),
-            row.get('col_c', ''),
-            row.get('col_d', ''),
-            row.get('col_e', ''),
-            row.get('col_f', ''),
-        ]
+        values = [col_a, col_b, col_c, col_d, col_e, col_f]
         for c_idx, val in enumerate(values, 1):
             cell = ws.cell(row=r_idx, column=c_idx, value=val)
             cell.fill = fill
