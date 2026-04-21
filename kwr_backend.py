@@ -585,6 +585,33 @@ Only include real services/products visible in the content. Do not invent offeri
         log("Researching competitor topics...")
 
         comp_topics = []
+        # Auto-discover competitors via DuckDuckGo if none provided
+        if not competitor_urls:
+            try:
+                topics_for_search = (site_summary.get('topics') or site_summary.get('services') or [])[:3]
+                seed_domain = urllib.parse.urlparse(website_url).netloc.lower()
+                discovered = []
+                for topic in topics_for_search:
+                    if not topic: continue
+                    q = f"{topic} {target_market}".strip()
+                    try:
+                        search_url = f"https://duckduckgo.com/html/?q={urllib.parse.quote(q)}"
+                        req = urllib.request.Request(search_url, headers={'User-Agent': 'Mozilla/5.0'})
+                        html = urllib.request.urlopen(req, timeout=15).read().decode('utf-8', errors='ignore')
+                        for m in re.finditer(r'href="(https?://[^"?]+)"', html):
+                            url = m.group(1)
+                            dom = urllib.parse.urlparse(url).netloc.lower()
+                            if dom and seed_domain not in dom and 'duckduckgo' not in dom and 'google' not in dom and dom not in [urllib.parse.urlparse(x).netloc.lower() for x in discovered]:
+                                discovered.append(f"https://{dom}")
+                                if len(discovered) >= 3: break
+                        if len(discovered) >= 3: break
+                    except Exception as e:
+                        log(f"Competitor discovery failed for '{topic}': {e}")
+                competitor_urls = discovered
+                log(f"Auto-discovered competitors: {competitor_urls}")
+            except Exception as e:
+                log(f"Competitor auto-discovery error: {e}")
+
         if competitor_urls:
             for cu in competitor_urls[:3]:
                 check_cancel()
@@ -619,8 +646,10 @@ Competitor context:
 Rules:
 - Output ONLY a JSON array of row objects
 - Each row has exactly these keys: existing_parent_page, pillar, cluster, intent, primary_keyword, keywords
-- pillar rows: existing_parent_page MUST be the FULL URL from the existing pages list above that best represents this pillar topic (e.g. https://galoz.co.il/pillar-page). If no matching existing page exists for this pillar, use "-".
-- cluster rows: existing_parent_page MUST be "-" by default. ONLY put a URL here if there is a SPECIFIC page from the existing pages list above that is dedicated to this exact cluster topic (not the pillar page). DO NOT copy the pillar's URL into cluster rows. DO NOT invent slugs or domains. When in doubt, use "-".
+- STRUCTURE: every pillar is a "parent page" topic. Its cluster rows must be NEW supporting pages that DO NOT already exist on the site — they strengthen the pillar via internal linking and topical authority. Never make a cluster equivalent to an existing page.
+- PILLAR URLs: existing_parent_page MUST be the FULL URL from the existing pages list above that best represents this pillar topic. If no existing page matches — still include the pillar (it is a NEW parent page to be created) and set existing_parent_page = "-". DO NOT invent URLs.
+- CLUSTER URLs: existing_parent_page MUST ALWAYS be "-" (clusters are new pages by definition). NEVER copy the pillar's URL. NEVER invent slugs or domains.
+- COMPETITOR RESEARCH: use the competitor context above to identify topic gaps — include pillars/clusters the site is missing but competitors cover. Flag NEW pillars (those with "-") clearly via the pillar name only; do not add separate markers.
 - intent for pillar rows = "pillar"; intent for cluster rows = one of (informational|navigational|transactional|commercial)
 - Do NOT duplicate existing pages, do NOT create cannibalization between rows
 - Do NOT invent services not found on the site
