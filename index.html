@@ -5996,6 +5996,133 @@ header.header > .header-inner,
 }
 /* END HEADER LAYOUT HOTFIX v1 */
 
+/* ============================================================
+   PROMPT STUDIO ACTION BAR — v6 FINAL POLISH (2026-04-21)
+   Enforce uniform pill height, padding, icon size, label truncation.
+   Highest-specificity ID rules so no earlier !important wins.
+   ============================================================ */
+#prompt-modal .prompt-actions{
+  display:flex !important;
+  align-items:center !important;
+  flex-wrap:wrap !important;
+  gap:8px !important;
+  padding:10px 14px !important;
+  min-height:56px !important;
+}
+#prompt-modal .prompt-actions > #prompt-improve-btn,
+#prompt-modal .prompt-actions > #prompt-tweak-btn,
+#prompt-modal .prompt-actions > #prompt-brainstorm-btn,
+#prompt-modal .prompt-actions > #prompt-stop-all-btn{
+  display:inline-flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+  gap:6px !important;
+  height:34px !important;
+  min-height:34px !important;
+  max-height:34px !important;
+  padding:0 14px !important;
+  margin:0 !important;
+  font-size:12.5px !important;
+  font-weight:600 !important;
+  line-height:1 !important;
+  letter-spacing:.1px !important;
+  border-radius:8px !important;
+  white-space:nowrap !important;
+  flex:0 0 auto !important;
+  box-sizing:border-box !important;
+  vertical-align:middle !important;
+}
+#prompt-modal .prompt-actions > #prompt-improve-btn > svg,
+#prompt-modal .prompt-actions > #prompt-tweak-btn > svg,
+#prompt-modal .prompt-actions > #prompt-brainstorm-btn > svg,
+#prompt-modal .prompt-actions > #prompt-stop-all-btn > svg{
+  width:13px !important;
+  height:13px !important;
+  margin:0 !important;
+  flex:0 0 13px !important;
+  vertical-align:middle !important;
+  display:inline-block !important;
+}
+#prompt-modal .prompt-actions .ps-btn-label{
+  display:inline-block !important;
+  line-height:1 !important;
+  vertical-align:middle !important;
+  white-space:nowrap !important;
+  overflow:hidden !important;
+  text-overflow:ellipsis !important;
+  max-width:18ch !important;
+}
+/* Push status text + Esc hint to right side, smaller */
+#prompt-modal .prompt-actions > #prompt-status{
+  flex:1 1 auto !important;
+  font-size:11px !important;
+  color:rgba(255,255,255,0.55) !important;
+  text-align:right !important;
+  margin-left:4px !important;
+  white-space:nowrap !important;
+  overflow:hidden !important;
+  text-overflow:ellipsis !important;
+}
+#prompt-modal .prompt-actions > .esc-hint{
+  font-size:10.5px !important;
+  color:rgba(255,255,255,0.4) !important;
+  margin-left:auto !important;
+}
+/* Stop-all sits at far right, slightly smaller */
+#prompt-modal .prompt-actions > #prompt-stop-all-btn{
+  height:30px !important;
+  min-height:30px !important;
+  max-height:30px !important;
+  padding:0 10px !important;
+  font-size:11.5px !important;
+}
+#prompt-modal .prompt-actions > #prompt-stop-all-btn > svg{
+  width:11px !important;
+  height:11px !important;
+  flex:0 0 11px !important;
+}
+/* Subtle dividers / consistent backgrounds in dark mode */
+#prompt-modal #prompt-improve-btn{
+  background:linear-gradient(180deg,#7a78ff,#5d5cff) !important;
+  border:1px solid rgba(255,255,255,0.14) !important;
+  color:#fff !important;
+  box-shadow:0 2px 8px rgba(104,101,255,0.28) !important;
+}
+#prompt-modal #prompt-improve-btn:hover:not(:disabled){
+  background:linear-gradient(180deg,#8987ff,#6968ff) !important;
+}
+#prompt-modal #prompt-tweak-btn{
+  background:rgba(104,101,255,0.10) !important;
+  border:1px solid rgba(104,101,255,0.32) !important;
+  color:#dcdaff !important;
+}
+#prompt-modal #prompt-tweak-btn:hover:not(:disabled){
+  background:rgba(104,101,255,0.18) !important;
+  border-color:rgba(134,131,255,0.55) !important;
+}
+#prompt-modal #prompt-brainstorm-btn{
+  background:rgba(255,255,255,0.045) !important;
+  border:1px solid rgba(180,140,255,0.35) !important;
+  color:#e7dcff !important;
+}
+#prompt-modal #prompt-brainstorm-btn:hover:not(:disabled){
+  background:rgba(113,112,255,0.12) !important;
+  border-color:rgba(200,160,255,0.7) !important;
+}
+/* Mobile: keep everything readable */
+@media (max-width:640px){
+  #prompt-modal .prompt-actions{padding:8px 10px !important;gap:6px !important}
+  #prompt-modal .prompt-actions > #prompt-improve-btn,
+  #prompt-modal .prompt-actions > #prompt-tweak-btn,
+  #prompt-modal .prompt-actions > #prompt-brainstorm-btn{
+    flex:1 1 0 !important;
+    min-width:0 !important;
+    padding:0 10px !important;
+    font-size:12px !important;
+  }
+  #prompt-modal .prompt-actions > #prompt-status,
+  #prompt-modal .prompt-actions > .esc-hint{display:none !important}
+}
 </style>
 </head>
 <body>
@@ -7266,9 +7393,9 @@ header.header > .header-inner,
         <div id="ps-brainstorm-models" class="ps-model-pills"></div>
       </div>
       <div class="prompt-actions">
-        <button id="prompt-improve-btn" class="action-btn success" onclick="improvePrompt(this)">Build with selected model</button>
-        <button id="prompt-tweak-btn" class="action-btn" onclick="tweakTemplate(this)" title="Use the improved prompt to produce the required HTML fixes via the dashboard itself"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:13px;height:13px;margin-right:4px;vertical-align:-2px"><path d="M4 13.5V20h6.5L20 10.5 13.5 4 4 13.5Z"/><path d="M12 6l6 6"/></svg>Generate HTML candidate</button>
-        <button id="prompt-brainstorm-btn" class="action-btn brainstorm" onclick="brainstormPrompt(this)" title="Run the selected leading models in parallel and synthesize the best possible prompt"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:13px;height:13px;margin-right:4px;vertical-align:-2px"><circle cx="12" cy="12" r="3"/><circle cx="5" cy="5" r="2"/><circle cx="19" cy="5" r="2"/><circle cx="5" cy="19" r="2"/><circle cx="19" cy="19" r="2"/><line x1="7" y1="6" x2="10" y2="10"/><line x1="17" y1="6" x2="14" y2="10"/><line x1="7" y1="18" x2="10" y2="14"/><line x1="17" y1="18" x2="14" y2="14"/></svg>Brainstorm selected leaders</button>
+        <button id="prompt-improve-btn" class="action-btn success" onclick="improvePrompt(this)" title="Build a single high-quality prompt with the selected model"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg><span class="ps-btn-label">Build prompt</span></button>
+        <button id="prompt-tweak-btn" class="action-btn" onclick="tweakTemplate(this)" title="Use the improved prompt to produce the required HTML fixes via the dashboard itself"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 13.5V20h6.5L20 10.5 13.5 4 4 13.5Z"/><path d="M12 6l6 6"/></svg><span class="ps-btn-label">Generate HTML</span></button>
+        <button id="prompt-brainstorm-btn" class="action-btn brainstorm" onclick="brainstormPrompt(this)" title="Run the selected leading models in parallel and synthesize the best possible prompt"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="3"/><circle cx="5" cy="5" r="2"/><circle cx="19" cy="5" r="2"/><circle cx="5" cy="19" r="2"/><circle cx="19" cy="19" r="2"/><line x1="7" y1="6" x2="10" y2="10"/><line x1="17" y1="6" x2="14" y2="10"/><line x1="7" y1="18" x2="10" y2="14"/><line x1="17" y1="18" x2="14" y2="14"/></svg><span class="ps-btn-label">Brainstorm</span></button>
         <span id="prompt-status" class="prompt-status">Step 1: write instructions. Step 2: build with one model or brainstorm with selected leaders. Step 3: generate and live-preview an HTML candidate before replacing the active file.</span>
         <button id="prompt-stop-all-btn" class="action-btn" onclick="stopAllPromptStudio()" title="Cancel any running action" style="background:rgba(217,43,43,0.18);border-color:rgba(217,43,43,0.55);color:#ffb7b7"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:12px;height:12px;margin-right:4px;vertical-align:-1px"><rect x="6" y="6" width="12" height="12" rx="1"/></svg>Stop all</button>
         <span class="esc-hint" aria-hidden="true"><kbd style="font:inherit;background:transparent;border:0;padding:0">Esc</kbd> to cancel</span>
