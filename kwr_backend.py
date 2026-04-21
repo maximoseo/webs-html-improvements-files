@@ -147,11 +147,21 @@ def build_excel(run_id: str) -> tuple:
 
     ws.row_dimensions[1].height = 30
 
-    # Pillar / cluster row styles
-    pillar_fill = PatternFill('solid', fgColor='D9E1F2')
-    pillar_font = Font(bold=True, size=10)
-    cluster_font = Font(size=10)
-    cluster_fill = PatternFill('solid', fgColor='FFFFFF')
+    # Pillar / cluster row styles — distinct color per pillar block
+    PILLAR_PALETTE = [
+        ('1F3864', 'D9E1F2'),  # navy / light blue
+        ('2E7D32', 'E8F5E9'),  # green / mint
+        ('B26A00', 'FFF3E0'),  # amber / cream
+        ('6A1B9A', 'F3E5F5'),  # purple / lavender
+        ('AD1457', 'FCE4EC'),  # pink / light pink
+        ('00838F', 'E0F7FA'),  # teal / aqua
+        ('455A64', 'ECEFF1'),  # slate / light grey
+        ('5D4037', 'EFEBE9'),  # brown / cream brown
+        ('283593', 'E8EAF6'),  # indigo / light indigo
+        ('C62828', 'FFEBEE'),  # red / light red
+    ]
+    pillar_idx = -1
+    current_pillar_key = None
 
     for r_idx, row in enumerate(rows, 2):
         # Support both schemas: snake_case (current pipeline) and col_a..col_f (legacy)
@@ -162,9 +172,27 @@ def build_excel(run_id: str) -> tuple:
         col_e = row.get('primary_keyword',      row.get('col_e', '')) or ''
         col_f = row.get('keywords',             row.get('col_f', '')) or ''
 
-        is_pillar = (str(col_a).strip() == '-' or not str(col_a).strip())
-        fill = pillar_fill if is_pillar else cluster_fill
-        font = pillar_font if is_pillar else cluster_font
+        # Pillar detection: intent=='pillar' OR col_a == '-'
+        is_pillar = (str(col_d).strip().lower() == 'pillar' or str(col_a).strip() == '-')
+
+        # Track the pillar block this row belongs to (by pillar name)
+        pillar_key = str(col_b).strip().lower()
+        if is_pillar or pillar_key != current_pillar_key:
+            if is_pillar:
+                pillar_idx = (pillar_idx + 1) % len(PILLAR_PALETTE)
+                current_pillar_key = pillar_key
+            elif pillar_key != current_pillar_key:
+                # cluster encountered without a preceding pillar — advance palette
+                pillar_idx = (pillar_idx + 1) % len(PILLAR_PALETTE)
+                current_pillar_key = pillar_key
+
+        dark_hex, light_hex = PILLAR_PALETTE[pillar_idx if pillar_idx >= 0 else 0]
+        if is_pillar:
+            fill = PatternFill('solid', fgColor=dark_hex)
+            font = Font(bold=True, size=11, color='FFFFFF')
+        else:
+            fill = PatternFill('solid', fgColor=light_hex)
+            font = Font(size=10, color='000000')
 
         values = [col_a, col_b, col_c, col_d, col_e, col_f]
         for c_idx, val in enumerate(values, 1):
@@ -553,8 +581,9 @@ Competitor context:
 Rules:
 - Output ONLY a JSON array of row objects
 - Each row has exactly these keys: existing_parent_page, pillar, cluster, intent, primary_keyword, keywords
-- pillar rows: existing_parent_page="-", cluster=pillar value, intent="pillar"
-- cluster rows: existing_parent_page=slug of parent pillar page, intent=one of (informational|navigational|transactional|commercial)
+- pillar rows: existing_parent_page MUST be the FULL URL from the existing pages list above that best represents this pillar topic (e.g. https://galoz.co.il/pillar-page). If no matching existing page exists for this pillar, use "-".
+- cluster rows: existing_parent_page MUST be the SAME full URL used in the pillar row above it (so all clusters point back to their pillar's existing parent page URL). If the pillar has no existing URL, use "-".
+- intent for pillar rows = "pillar"; intent for cluster rows = one of (informational|navigational|transactional|commercial)
 - Do NOT duplicate existing pages, do NOT create cannibalization between rows
 - Do NOT invent services not found on the site
 - Do NOT mix languages except where brand/URL requires it
