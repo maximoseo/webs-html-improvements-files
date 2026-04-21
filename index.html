@@ -5392,6 +5392,12 @@ body.light .stat-card{background:rgba(0,0,0,0.03)}
 .ps-template-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
 .ps-template-btn{padding:7px 6px;border-radius:8px;border:1px solid rgba(255,255,255,0.08);background:rgba(255,255,255,0.03);color:var(--text-secondary);font-size:11px;font-weight:600;cursor:pointer;transition:all .15s;text-align:center}
 .ps-template-btn:hover{background:rgba(124,58,237,.15);border-color:rgba(124,58,237,.3);color:#a78bfa}
+.ps-template-btn.active{background:rgba(124,58,237,.22);border-color:rgba(167,139,250,.6);color:#f3edff;box-shadow:0 0 0 1px rgba(167,139,250,.14) inset}
+.ps-template-toolbar,.ps-inline-tools{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;margin-top:10px}
+.ps-selection-note,.ps-mini-note{font-size:11px;color:var(--muted)}
+.ps-mini-actions{display:flex;gap:6px;flex-wrap:wrap}
+.ps-mini-btn{padding:5px 10px;border-radius:999px;border:1px solid rgba(255,255,255,0.09);background:rgba(255,255,255,0.03);color:var(--text-secondary);font-size:11px;font-weight:600;cursor:pointer;transition:all .15s}
+.ps-mini-btn:hover{background:rgba(124,58,237,.14);border-color:rgba(124,58,237,.36);color:#ddd2ff}
 .ps-constraints{display:flex;flex-direction:column;gap:8px}
 .ps-constraint-row{display:flex;align-items:center;gap:10px}
 .ps-constraint-label{font-size:11px;color:var(--muted);min-width:100px;flex-shrink:0}
@@ -5399,6 +5405,22 @@ body.light .stat-card{background:rgba(0,0,0,0.03)}
 .ps-history-list{display:flex;flex-direction:column;gap:4px}
 .ps-history-item{font-size:11px;padding:5px 10px;border-radius:6px;background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.06);color:var(--muted);cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .ps-history-item:hover{background:rgba(255,255,255,.05);color:var(--text)}
+/* POLISH PASS — Prompt Studio multi-select + live preview controls */
+.ps-model-pills{display:flex;gap:6px;flex-wrap:wrap}
+.ps-model-pill{padding:6px 11px;border-radius:999px;border:1px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.03);color:var(--text-secondary);font-size:11px;font-weight:600;cursor:pointer;transition:all .15s;display:inline-flex;align-items:center;gap:6px}
+.ps-model-pill:hover{background:rgba(113,112,255,0.12);border-color:rgba(113,112,255,0.38);color:#e7e6ff}
+.ps-model-pill.active{background:rgba(104,101,255,0.22);border-color:rgba(134,131,255,0.62);color:#fff;box-shadow:0 0 0 1px rgba(134,131,255,0.18) inset}
+.ps-model-pill .ps-pill-dot{width:7px;height:7px;border-radius:50%;background:currentColor;opacity:.8}
+.prompt-preview-toolbar{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:10px}
+.prompt-preview-badge{display:inline-flex;align-items:center;gap:6px;padding:6px 10px;border-radius:999px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.08);font-size:11px;font-weight:700;color:#ecebff}
+.prompt-preview-badge::before{content:'';width:8px;height:8px;border-radius:50%;background:#21ba82;box-shadow:0 0 0 4px rgba(33,186,130,0.12)}
+.prompt-preview-badge.is-original::before{background:#7f8aa3;box-shadow:0 0 0 4px rgba(127,138,163,0.12)}
+.prompt-preview-tools{display:flex;gap:6px;flex-wrap:wrap}
+.prompt-preview-note{margin-top:8px;font-size:11px;color:var(--muted)}
+@media (max-width: 900px){
+  .ps-template-grid{grid-template-columns:repeat(2,1fr)}
+  .prompt-preview-toolbar{align-items:flex-start}
+}
 </style>
 </head>
 <body>
@@ -6542,12 +6564,19 @@ body.light .stat-card{background:rgba(0,0,0,0.03)}
       <div class="ps-section">
         <div class="ps-section-label">Task Template</div>
         <div class="ps-template-grid" id="ps-template-grid">
-          <button class="ps-template-btn" onclick="psApplyTemplate('redesign')" title="Redesign a section">&#x1F3A8; Redesign</button>
-          <button class="ps-template-btn" onclick="psApplyTemplate('fix-bug')" title="Fix a specific bug">&#x1F41B; Fix Bug</button>
-          <button class="ps-template-btn" onclick="psApplyTemplate('add-feature')" title="Add new feature">&#x2795; Add Feature</button>
-          <button class="ps-template-btn" onclick="psApplyTemplate('performance')" title="Performance audit">&#x26A1; Performance</button>
-          <button class="ps-template-btn" onclick="psApplyTemplate('accessibility')" title="Accessibility fix">&#x267F; A11y</button>
-          <button class="ps-template-btn" onclick="psApplyTemplate('responsive')" title="Fix mobile/responsive">&#x1F4F1; Responsive</button>
+          <button type="button" class="ps-template-btn" data-template="redesign" onclick="psToggleTemplate('redesign',this)" title="Redesign a section">Redesign</button>
+          <button type="button" class="ps-template-btn" data-template="fix-bug" onclick="psToggleTemplate('fix-bug',this)" title="Fix a specific bug">Fix Bug</button>
+          <button type="button" class="ps-template-btn" data-template="add-feature" onclick="psToggleTemplate('add-feature',this)" title="Add new feature">Add Feature</button>
+          <button type="button" class="ps-template-btn" data-template="performance" onclick="psToggleTemplate('performance',this)" title="Performance audit">Performance</button>
+          <button type="button" class="ps-template-btn" data-template="accessibility" onclick="psToggleTemplate('accessibility',this)" title="Accessibility fix">A11y</button>
+          <button type="button" class="ps-template-btn" data-template="responsive" onclick="psToggleTemplate('responsive',this)" title="Fix mobile/responsive">Responsive</button>
+        </div>
+        <div class="ps-template-toolbar">
+          <div id="ps-template-selection-note" class="ps-selection-note">Select one or more templates to build a combined task block.</div>
+          <div class="ps-mini-actions">
+            <button type="button" class="ps-mini-btn" onclick="psInsertSelectedTemplates()">Insert selected templates</button>
+            <button type="button" class="ps-mini-btn" onclick="psClearTemplateSelection()">Clear selection</button>
+          </div>
         </div>
       </div>
       <div class="ps-section" id="ps-constraints-section">
@@ -6649,11 +6678,22 @@ body.light .stat-card{background:rgba(0,0,0,0.03)}
           </optgroup>
         </select>
       </div>
+      <div class="ps-section" id="ps-brainstorm-models-section">
+        <div class="ps-section-label">Leading models for brainstorm</div>
+        <div class="ps-inline-tools">
+          <div id="ps-brainstorm-models-note" class="ps-mini-note">Pick the models that should participate in the multi-model brainstorm.</div>
+          <div class="ps-mini-actions">
+            <button type="button" class="ps-mini-btn" onclick="psSelectTopBrainstormModels()">Select top models</button>
+            <button type="button" class="ps-mini-btn" onclick="psClearBrainstormModelSelection()">Clear</button>
+          </div>
+        </div>
+        <div id="ps-brainstorm-models" class="ps-model-pills"></div>
+      </div>
       <div class="prompt-actions">
-        <button id="prompt-improve-btn" class="action-btn success" onclick="improvePrompt(this)">Improve prompt</button>
+        <button id="prompt-improve-btn" class="action-btn success" onclick="improvePrompt(this)">Build with selected model</button>
         <button id="prompt-tweak-btn" class="action-btn" onclick="tweakTemplate(this)" title="Use the improved prompt to produce the required HTML fixes via the dashboard itself"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:13px;height:13px;margin-right:4px;vertical-align:-2px"><path d="M4 13.5V20h6.5L20 10.5 13.5 4 4 13.5Z"/><path d="M12 6l6 6"/></svg>Generate HTML candidate</button>
-        <button id="prompt-brainstorm-btn" class="action-btn brainstorm" onclick="brainstormPrompt(this)" title="Run 6 top LLMs in parallel and synthesize the best possible prompt"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:13px;height:13px;margin-right:4px;vertical-align:-2px"><circle cx="12" cy="12" r="3"/><circle cx="5" cy="5" r="2"/><circle cx="19" cy="5" r="2"/><circle cx="5" cy="19" r="2"/><circle cx="19" cy="19" r="2"/><line x1="7" y1="6" x2="10" y2="10"/><line x1="17" y1="6" x2="14" y2="10"/><line x1="7" y1="18" x2="10" y2="14"/><line x1="17" y1="18" x2="14" y2="14"/></svg>Compare model suggestions</button>
-        <span id="prompt-status" class="prompt-status">Step 1: write instructions. Step 2: improve the prompt with Claude Sonnet 4.6 by default. Step 3: generate and review an HTML candidate before replacing the active file.</span>
+        <button id="prompt-brainstorm-btn" class="action-btn brainstorm" onclick="brainstormPrompt(this)" title="Run the selected leading models in parallel and synthesize the best possible prompt"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:13px;height:13px;margin-right:4px;vertical-align:-2px"><circle cx="12" cy="12" r="3"/><circle cx="5" cy="5" r="2"/><circle cx="19" cy="5" r="2"/><circle cx="5" cy="19" r="2"/><circle cx="19" cy="19" r="2"/><line x1="7" y1="6" x2="10" y2="10"/><line x1="17" y1="6" x2="14" y2="10"/><line x1="7" y1="18" x2="10" y2="14"/><line x1="17" y1="18" x2="14" y2="14"/></svg>Brainstorm selected leaders</button>
+        <span id="prompt-status" class="prompt-status">Step 1: write instructions. Step 2: build with one model or brainstorm with selected leaders. Step 3: generate and live-preview an HTML candidate before replacing the active file.</span>
         <button id="prompt-stop-all-btn" class="action-btn" onclick="stopAllPromptStudio()" title="Cancel any running action" style="background:rgba(217,43,43,0.18);border-color:rgba(217,43,43,0.55);color:#ffb7b7"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:12px;height:12px;margin-right:4px;vertical-align:-1px"><rect x="6" y="6" width="12" height="12" rx="1"/></svg>Stop all</button>
         <span class="esc-hint" aria-hidden="true"><kbd style="font:inherit;background:transparent;border:0;padding:0">Esc</kbd> to cancel</span>
       </div>
@@ -6669,6 +6709,7 @@ body.light .stat-card{background:rgba(0,0,0,0.03)}
       <textarea id="prompt-output" class="prompt-textarea" readonly placeholder="Your improved, structured prompt will appear here — ready to copy and use."></textarea>
       <div class="prompt-actions">
         <button class="action-btn" onclick="copyImprovedPrompt()">Copy output</button>
+        <button class="action-btn" onclick="copyImprovedPromptBundle()">Copy output + preview shot</button>
         <button id="prompt-sync-gh-btn" class="action-btn success" onclick="commitPromptToGitHub(this)" style="display:none">&uarr; Sync to GitHub (auto-redeploys)</button>
         <span id="prompt-sync-status" class="prompt-status"></span>
       </div>
@@ -6677,6 +6718,7 @@ body.light .stat-card{background:rgba(0,0,0,0.03)}
         <textarea id="prompt-tweak-output" class="prompt-textarea" readonly placeholder="Tweaked HTML example will appear here after you run Tweaking."></textarea>
         <div class="prompt-actions">
           <button class="action-btn" onclick="copyTweakedHtml()">Copy tweaked HTML</button>
+          <button class="action-btn" onclick="copyTweakedHtmlBundle()">Copy HTML + preview shot</button>
           <button id="prompt-apply-html-btn" class="action-btn success" onclick="applyTweakedHtmlToGitHub(this)" style="display:none">Replace active HTML file</button>
             <button id="prompt-copy-html-obs-btn" class="action-btn" onclick="copyTweakedHtmlInstructions()" style="display:none">Copy sync payload</button>
           <span id="prompt-tweak-status" class="prompt-status"></span>
@@ -6692,9 +6734,18 @@ body.light .stat-card{background:rgba(0,0,0,0.03)}
     </div>
     <div class="prompt-panel">
       <div class="prompt-label">3 &nbsp;·&nbsp; Live template preview</div>
+      <div class="prompt-preview-toolbar">
+        <span id="prompt-preview-badge" class="prompt-preview-badge is-original">Original template</span>
+        <div class="prompt-preview-tools">
+          <button type="button" class="ps-mini-btn" onclick="resetPromptPreviewToOriginal()">Preview original</button>
+          <button type="button" class="ps-mini-btn" onclick="previewTweakedHtml()">Preview candidate</button>
+          <button type="button" class="ps-mini-btn" onclick="downloadPromptPreviewShot()">Download screenshot</button>
+        </div>
+      </div>
       <div class="prompt-preview-wrap">
         <iframe id="prompt-preview-frame" class="prompt-preview-frame" sandbox="allow-same-origin"></iframe>
       </div>
+      <div class="prompt-preview-note" id="prompt-preview-note">The preview starts with the active HTML file and switches live to the tweaked candidate after generation.</div>
     </div>
   </div>
 </div>
@@ -7412,6 +7463,9 @@ function openPromptStudio(projectName, agentName, versionName, htmlDownloadUrl, 
     lastImprovedPrompt:'',
     lastTweakedHtml:'',
     lastTweakedSummary:'',
+    originalPreviewHtml:'',
+    currentPreviewHtml:'',
+    previewMode:'original',
     latestOnly:true,
   };
 
@@ -7425,6 +7479,14 @@ function openPromptStudio(projectName, agentName, versionName, htmlDownloadUrl, 
   document.getElementById('prompt-apply-html-btn').style.display='none';
   document.getElementById('prompt-copy-html-obs-btn').style.display='none';
   document.getElementById('prompt-status').textContent='Review the pre-filled context below, add your instructions, then click Improve.';
+  const templateNote=document.getElementById('ps-template-selection-note');
+  if(templateNote) templateNote.textContent='Select one or more templates to build a combined task block.';
+  psClearTemplateSelection(true);
+  psLoadHistory();
+  loadPromptStudioBrainstormModels();
+  updatePromptPreviewBadge('Original template', true);
+  const previewNote=document.getElementById('prompt-preview-note');
+  if(previewNote) previewNote.textContent='The preview starts with the active HTML file and switches live to the tweaked candidate after generation.';
 
   // Fetch active providers from health check and show them as a badge
   fetch('/api/health').then(r=>r.json()).then(h=>{
@@ -7444,12 +7506,17 @@ function openPromptStudio(projectName, agentName, versionName, htmlDownloadUrl, 
   const previewFrame=document.getElementById('prompt-preview-frame');
   if(dlUrl){
     fetch(dlUrl).then(r=>r.text()).then(html=>{
-      const doc=previewFrame.contentDocument||previewFrame.contentWindow.document;
-      doc.open();doc.write(html);doc.close();
+      promptStudioContext.originalPreviewHtml=html||'';
+      setPromptPreviewHtml(html||'', 'original');
     }).catch(()=>{
-      const doc=previewFrame.contentDocument||previewFrame.contentWindow.document;
-      doc.open();doc.write('<body style="font-family:Segoe UI,sans-serif;padding:24px;color:#666">Could not load HTML preview.</body>');doc.close();
+      const fallback='<body style="font-family:Segoe UI,sans-serif;padding:24px;color:#666">Could not load HTML preview.</body>';
+      promptStudioContext.originalPreviewHtml=fallback;
+      setPromptPreviewHtml(fallback, 'original');
     });
+  }else{
+    const fallback='<body style="font-family:Segoe UI,sans-serif;padding:24px;color:#666">No HTML template was found for live preview.</body>';
+    promptStudioContext.originalPreviewHtml=fallback;
+    setPromptPreviewHtml(fallback, 'original');
   }
 
   // Build rich pre-filled draft with full context
@@ -7547,6 +7614,44 @@ function closePromptStudio(){
   const previewFrame=document.getElementById('prompt-preview-frame');
   const doc=previewFrame.contentDocument||previewFrame.contentWindow.document;
   doc.open();doc.write('');doc.close();
+}
+function writePromptPreviewDocument(html){
+  const previewFrame=document.getElementById('prompt-preview-frame');
+  if(!previewFrame) return;
+  const doc=previewFrame.contentDocument||previewFrame.contentWindow.document;
+  doc.open();
+  doc.write(html||'<body style="font-family:Segoe UI,sans-serif;padding:24px;color:#666">Preview unavailable.</body>');
+  doc.close();
+}
+function updatePromptPreviewBadge(label,isOriginal){
+  const badge=document.getElementById('prompt-preview-badge');
+  if(!badge) return;
+  badge.textContent=label||'Live preview';
+  badge.classList.toggle('is-original', !!isOriginal);
+}
+function setPromptPreviewHtml(html, mode){
+  const safeHtml=(html||'').trim()||'<body style="font-family:Segoe UI,sans-serif;padding:24px;color:#666">Preview unavailable.</body>';
+  promptStudioContext.currentPreviewHtml=safeHtml;
+  promptStudioContext.previewMode=mode||'original';
+  writePromptPreviewDocument(safeHtml);
+  const isOriginal=(promptStudioContext.previewMode!=='candidate');
+  updatePromptPreviewBadge(isOriginal?'Original template':'Tweaked candidate', isOriginal);
+  const note=document.getElementById('prompt-preview-note');
+  if(note){
+    note.textContent=isOriginal
+      ? 'You are viewing the current active HTML file.'
+      : 'You are viewing the generated HTML candidate from the prompt — review it before replacing the active file.';
+  }
+}
+function resetPromptPreviewToOriginal(){
+  setPromptPreviewHtml(promptStudioContext.originalPreviewHtml||'', 'original');
+  showToast('Preview reset to original template','success');
+}
+function previewTweakedHtml(){
+  const html=(document.getElementById('prompt-tweak-output').value||'').trim();
+  if(!html){showToast('Generate an HTML candidate first','warn');return;}
+  setPromptPreviewHtml(html,'candidate');
+  showToast('Preview switched to tweaked candidate','success');
 }
 function togglePromptStudioExpand(){
   const overlay=document.getElementById('prompt-modal');
@@ -7651,14 +7756,8 @@ async function brainstormPrompt(btn){
     return;
   }
   output.value='';
-  const BSTORM_MODELS=[
-    {id:'google/gemini-3.1-pro-preview', label:'Gemini 3 Pro'},
-    {id:'anthropic/claude-opus-4.7',     label:'Opus 4.7'},
-    {id:'openai/gpt-5.4',                label:'GPT-5.4'},
-    {id:'minimax/minimax-m2.7',          label:'MiniMax 2.7'},
-    {id:'moonshotai/kimi-k2.5',          label:'Kimi 2.5'},
-    {id:'z-ai/glm-5.1',                  label:'GLM 5.1'},
-  ];
+  const BSTORM_MODELS=getSelectedBrainstormModels();
+  if(!BSTORM_MODELS.length){status.textContent='Select at least one brainstorm model first.';return;}
   const orig=btn.innerHTML;
   window._brainstormAbort=new AbortController(); _syncPromptModalRunningState();
   btn.classList.add('is-running');
@@ -7666,13 +7765,13 @@ async function brainstormPrompt(btn){
   btn.title='Click to cancel the running brainstorm';
   document.getElementById('prompt-improve-btn').disabled=true;
   progress.classList.add('active');
-  progressLabel.textContent='Consulting 6 elite LLMs in parallel...';
+  progressLabel.textContent=`Consulting ${BSTORM_MODELS.length} selected model${BSTORM_MODELS.length===1?'':'s'} in parallel...`;
   chipList.innerHTML=BSTORM_MODELS.map(m=>`<span class="brainstorm-model-chip" data-id="${m.id}"><span class="brainstorm-dot" style="width:6px;height:6px"></span>${m.label}</span>`).join('');
-  meta.textContent='This typically takes 45\u201390 seconds. All 6 models run concurrently, then a synthesizer merges the best output.';
+  meta.textContent='This typically takes 45–90 seconds. The selected models run concurrently, then a synthesizer merges the best output.';
   const t0=Date.now();
   const selected=getSelectedChecklistItems();
   const ruleLabels=selected.map(s=>s.label);
-  status.textContent=`Brainstorming with 6 top models${selected.length?' + '+selected.length+' rule'+(selected.length===1?'':'s'):''}...`;
+  status.textContent=`Brainstorming with ${BSTORM_MODELS.length} selected model${BSTORM_MODELS.length===1?'':'s'}${selected.length?' + '+selected.length+' rule'+(selected.length===1?'':'s'):''}...`;
   try{
     const res=await fetch('/api/prompt/brainstorm',{method:'POST',signal:window._brainstormAbort.signal,headers:{'Content-Type':'application/json'},body:JSON.stringify({
       domain:promptStudioContext.domain,
@@ -7685,6 +7784,7 @@ async function brainstormPrompt(btn){
       obsidianBase:promptStudioContext.obsidianBase,
       draftPrompt:draft,
       checklist:ruleLabels,
+      brainstormModels:BSTORM_MODELS.map(m=>m.id),
     })});
     const data=await res.json();
     if(!res.ok||!data.ok){
@@ -7699,14 +7799,14 @@ async function brainstormPrompt(btn){
     document.getElementById('prompt-tweak-status').textContent='';
     document.getElementById('prompt-apply-html-btn').style.display='none';
     document.getElementById('prompt-copy-html-obs-btn').style.display='none';
-    (data.modelsUsed||[]).forEach(m=>{const chip=chipList.querySelector(`[data-id="${m.model}"]`);if(chip){chip.classList.add('ok');chip.innerHTML=`\u2713 ${m.label} <span style="opacity:0.6">\u00b7 ${m.chars}c</span>`}});
-    (data.modelsFailed||[]).forEach(m=>{const chip=chipList.querySelector(`[data-id="${m.model}"]`);if(chip){chip.classList.add('err');chip.innerHTML=`\u2715 ${m.label||m.model}`}});
+    (data.modelsUsed||[]).forEach(m=>{const chip=chipList.querySelector(`[data-id="${m.model}"]`);if(chip){chip.classList.add('ok');chip.innerHTML=`✓ ${m.label} <span style="opacity:0.6">· ${m.chars}c</span>`}});
+    (data.modelsFailed||[]).forEach(m=>{const chip=chipList.querySelector(`[data-id="${m.model}"]`);if(chip){chip.classList.add('err');chip.innerHTML=`✕ ${m.label||m.model}`}});
     const dt=((Date.now()-t0)/1000).toFixed(1);
     const okN=(data.modelsUsed||[]).length;
     const failN=(data.modelsFailed||[]).length;
-    meta.textContent=`Synthesized from ${okN}/${okN+failN} models in ${dt}s \u00b7 synthesizer: ${data.synthModel||'?'}`;
-    progressLabel.textContent='Brainstorm complete \u2014 synthesized final prompt is ready.';
-    status.textContent=`Done \u2014 brainstormed with ${okN} model${okN===1?'':'s'}, synthesized by ${data.synthModel||'synthesizer'}.`;
+    meta.textContent=`Synthesized from ${okN}/${okN+failN} models in ${dt}s · synthesizer: ${data.synthModel||'?'}`;
+    progressLabel.textContent='Brainstorm complete — synthesized final prompt is ready.';
+    status.textContent=`Done — brainstormed with ${okN} model${okN===1?'':'s'}, synthesized by ${data.synthModel||'synthesizer'}.`;
     showPromptSyncPanel();
     showToast(`Brainstorm complete (${okN} models)`,'success');
   }catch(err){
@@ -7716,7 +7816,7 @@ async function brainstormPrompt(btn){
       meta.textContent='Stopped before synthesis completed. Partial results are discarded.';
     }else{
       status.textContent=(err&&err.message)||'Brainstorm failed.';
-      progressLabel.textContent='Brainstorm failed \u2014 see status.';
+      progressLabel.textContent='Brainstorm failed — see status.';
       meta.textContent=(err&&err.message)||'';
       showToast('Brainstorm failed','error');
     }
@@ -7864,6 +7964,7 @@ async function tweakTemplate(btn){
     tweakStatus.textContent=`Tweaked example ready — ${data.model||selectedModel}. If approved, apply it to replace the current active HTML file.`;
     document.getElementById('prompt-apply-html-btn').style.display='';
     document.getElementById('prompt-copy-html-obs-btn').style.display='';
+    setPromptPreviewHtml(tweakOut.value||'', 'candidate');
     showToast('Tweaked HTML example ready','success');
   }catch(err){
     if(err && (err.name==='AbortError' || String(err).includes('user_cancel'))){tweakStatus.textContent='Tweaking cancelled.';}else{tweakStatus.textContent=(err&&err.message)||'Tweaking failed.';showToast('Tweaking failed','error');}
@@ -11618,6 +11719,16 @@ window.openPromptStudioForFile = function(project, agent, filename, fileUrl) {
 
 // Feature D6: Prompt Studio enhancement JS
 const PS_HISTORY_KEY = 'ps-history';
+const PS_DEFAULT_BRAINSTORM_MODEL_IDS = [
+  'anthropic/claude-opus-4.7',
+  'openai/gpt-5.4',
+  'google/gemini-3.1-pro-preview',
+  'minimax/minimax-m2.7',
+  'moonshotai/kimi-k2.5',
+  'z-ai/glm-5.1'
+];
+window._psSelectedTemplates = new Set();
+window._psBrainstormModels = [];
 window.psSelectAgent = function(btn) {
   document.querySelectorAll('.ps-pill').forEach(function(p){ p.classList.remove('active'); });
   btn.classList.add('active');
@@ -11671,18 +11782,137 @@ Instructions:
 - Output: {output_format}`
 };
 
-window.psApplyTemplate = function(type) {
-  var tmpl = PS_TEMPLATES[type] || '';
-  var file = (window._psContext && window._psContext.filename) || '';
+window.psBuildSelectedTemplateBlock = function() {
+  var selected = Array.from(window._psSelectedTemplates || []);
+  if(!selected.length) return '';
+  var file = (window._psContext && window._psContext.filename) || (window.promptStudioContext && window.promptStudioContext.htmlFileName) || '';
   var outFmt = document.getElementById('ps-output-format');
   var fmt = outFmt ? outFmt.value : 'full-file';
-  var filled = tmpl.replace(/{file}/g, file).replace(/{output_format}/g, fmt);
-  var textarea = document.getElementById('prompt-draft') || document.getElementById('ps-prompt-text') || document.querySelector('.ps-textarea, #prompt-text, .prompt-textarea');
-  if(textarea) textarea.value = filled;
-  document.querySelectorAll('.ps-template-btn').forEach(function(b){ b.style.background = ''; });
-  if(event && event.target) event.target.style.background = 'rgba(124,58,237,.2)';
+  var blocks = selected.map(function(type){
+    var tmpl = PS_TEMPLATES[type] || '';
+    return tmpl.replace(/{file}/g, file).replace(/{output_format}/g, fmt).trim();
+  }).filter(Boolean);
+  if(!blocks.length) return '';
+  return ['--- SELECTED TASK TEMPLATES ---'].concat(blocks.map(function(block, idx){
+    return 'Template ' + (idx + 1) + '\n' + block;
+  })).concat(['--- END SELECTED TASK TEMPLATES ---']).join('\n\n');
 };
-
+window.psUpdateTemplateSelectionNote = function() {
+  var note = document.getElementById('ps-template-selection-note');
+  if(!note) return;
+  var selected = Array.from(window._psSelectedTemplates || []);
+  if(!selected.length){
+    note.textContent = 'Select one or more templates to build a combined task block.';
+    return;
+  }
+  note.textContent = selected.length + ' template' + (selected.length === 1 ? '' : 's') + ' selected: ' + selected.join(', ');
+};
+window.psInsertSelectedTemplates = function() {
+  var textarea = document.getElementById('prompt-draft') || document.getElementById('ps-prompt-text') || document.querySelector('.ps-textarea, #prompt-text, .prompt-textarea');
+  if(!textarea) return;
+  var block = window.psBuildSelectedTemplateBlock();
+  if(!block){
+    showToast('Select at least one template first','warn');
+    return;
+  }
+  var current = textarea.value || '';
+  var next = current.replace(/\n*--- SELECTED TASK TEMPLATES ---[\s\S]*?--- END SELECTED TASK TEMPLATES ---\n*/g, '\n\n').trim();
+  textarea.value = (next ? next + '\n\n' : '') + block;
+  textarea.focus();
+  window.psUpdateTemplateSelectionNote();
+  showToast('Selected templates inserted into draft','success');
+};
+window.psToggleTemplate = function(type, btn) {
+  if(!window._psSelectedTemplates) window._psSelectedTemplates = new Set();
+  if(window._psSelectedTemplates.has(type)){
+    window._psSelectedTemplates.delete(type);
+    if(btn) btn.classList.remove('active');
+  }else{
+    window._psSelectedTemplates.add(type);
+    if(btn) btn.classList.add('active');
+  }
+  window.psUpdateTemplateSelectionNote();
+};
+window.psClearTemplateSelection = function(silent) {
+  window._psSelectedTemplates = new Set();
+  document.querySelectorAll('.ps-template-btn').forEach(function(btn){ btn.classList.remove('active'); });
+  var textarea = document.getElementById('prompt-draft') || document.getElementById('ps-prompt-text') || document.querySelector('.ps-textarea, #prompt-text, .prompt-textarea');
+  if(textarea){
+    textarea.value = (textarea.value || '').replace(/\n*--- SELECTED TASK TEMPLATES ---[\s\S]*?--- END SELECTED TASK TEMPLATES ---\n*/g, '\n\n').trim();
+  }
+  window.psUpdateTemplateSelectionNote();
+  if(!silent) showToast('Template selection cleared','success');
+};
+window.renderPromptStudioBrainstormModels = function(models) {
+  window._psBrainstormModels = Array.isArray(models) ? models.slice() : [];
+  var wrap = document.getElementById('ps-brainstorm-models');
+  if(!wrap) return;
+  if(!window._psBrainstormModels.length){
+    wrap.innerHTML = '<div class="ps-mini-note">No brainstorm models available right now.</div>';
+    return;
+  }
+  wrap.innerHTML = window._psBrainstormModels.map(function(model){
+    var selected = PS_DEFAULT_BRAINSTORM_MODEL_IDS.indexOf(model.id) !== -1;
+    return '<button type="button" class="ps-model-pill' + (selected ? ' active' : '') + '" data-model-id="' + model.id + '" onclick="toggleBrainstormModelSelection(this)"><span class="ps-pill-dot"></span>' + model.label + '</button>';
+  }).join('');
+  updateBrainstormModelNote();
+};
+window.toggleBrainstormModelSelection = function(btn) {
+  if(!btn) return;
+  btn.classList.toggle('active');
+  updateBrainstormModelNote();
+};
+window.getSelectedBrainstormModels = function() {
+  var selectedIds = Array.from(document.querySelectorAll('#ps-brainstorm-models .ps-model-pill.active')).map(function(btn){ return btn.dataset.modelId; });
+  return (window._psBrainstormModels || []).filter(function(model){ return selectedIds.indexOf(model.id) !== -1; });
+};
+window.updateBrainstormModelNote = function() {
+  var note = document.getElementById('ps-brainstorm-models-note');
+  if(!note) return;
+  var selected = getSelectedBrainstormModels();
+  if(!selected.length){
+    note.textContent = 'Pick the models that should participate in the multi-model brainstorm.';
+    return;
+  }
+  note.textContent = selected.length + ' model' + (selected.length === 1 ? '' : 's') + ' selected for brainstorm.';
+};
+window.psSelectTopBrainstormModels = function() {
+  document.querySelectorAll('#ps-brainstorm-models .ps-model-pill').forEach(function(btn, idx){
+    btn.classList.toggle('active', idx < 6 || PS_DEFAULT_BRAINSTORM_MODEL_IDS.indexOf(btn.dataset.modelId) !== -1);
+  });
+  updateBrainstormModelNote();
+};
+window.psClearBrainstormModelSelection = function() {
+  document.querySelectorAll('#ps-brainstorm-models .ps-model-pill').forEach(function(btn){ btn.classList.remove('active'); });
+  updateBrainstormModelNote();
+  showToast('Brainstorm model selection cleared','success');
+};
+window.loadPromptStudioBrainstormModels = function() {
+  fetch('/api/health').then(function(r){ return r.json(); }).then(function(data){
+    var models = (data && data.brainstormModels) || [];
+    if(models.length){
+      renderPromptStudioBrainstormModels(models);
+      return;
+    }
+    renderPromptStudioBrainstormModels((window._psBrainstormModels && window._psBrainstormModels.length) ? window._psBrainstormModels : [
+      {id:'anthropic/claude-opus-4.7',label:'Claude Opus 4.7'},
+      {id:'openai/gpt-5.4',label:'GPT-5.4'},
+      {id:'google/gemini-3.1-pro-preview',label:'Gemini 3.1 Pro (OpenRouter)'},
+      {id:'minimax/minimax-m2.7',label:'MiniMax M2.7'},
+      {id:'moonshotai/kimi-k2.5',label:'Kimi K2.5'},
+      {id:'z-ai/glm-5.1',label:'GLM 5.1'}
+    ]);
+  }).catch(function(){
+    renderPromptStudioBrainstormModels([
+      {id:'anthropic/claude-opus-4.7',label:'Claude Opus 4.7'},
+      {id:'openai/gpt-5.4',label:'GPT-5.4'},
+      {id:'google/gemini-3.1-pro-preview',label:'Gemini 3.1 Pro (OpenRouter)'},
+      {id:'minimax/minimax-m2.7',label:'MiniMax M2.7'},
+      {id:'moonshotai/kimi-k2.5',label:'Kimi K2.5'},
+      {id:'z-ai/glm-5.1',label:'GLM 5.1'}
+    ]);
+  });
+};
 window.psSaveHistory = function(promptText, context) {
   try {
     var h = JSON.parse(localStorage.getItem(PS_HISTORY_KEY) || '[]');
@@ -11708,10 +11938,111 @@ window.psRestoreHistory = function(ts) {
     var h = JSON.parse(localStorage.getItem(PS_HISTORY_KEY) || '[]');
     var item = h.find(function(i){ return String(i.ts) === String(ts); });
     if(!item) return;
-    var textarea = document.getElementById('prompt-draft') || document.getElementById('ps-prompt-text') || document.querySelector('.ps-textarea, #prompt-text');
+    var textarea = document.getElementById('prompt-draft') || document.getElementById('ps-prompt-text') || document.querySelector('.ps-textarea, #prompt-text, .prompt-textarea');
     if(textarea) textarea.value = item.text;
   } catch(e){}
 };
+async function copyImprovedPromptBundle(){
+  const value=document.getElementById('prompt-output').value||'';
+  if(!value.trim()){showToast('Nothing to copy yet.','warn');return;}
+  await copyTextWithPreviewShot(value,'Prompt + preview copied');
+}
+async function copyTweakedHtmlBundle(){
+  const value=document.getElementById('prompt-tweak-output').value||'';
+  if(!value.trim()){showToast('No tweaked HTML to copy','warn');return;}
+  await copyTextWithPreviewShot(value,'HTML + preview copied');
+}
+function _downloadBlob(blob, filename){
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  a.href=url;
+  a.download=filename||'prompt-preview.png';
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  setTimeout(()=>URL.revokeObjectURL(url),1500);
+}
+function _promptPreviewFileBase(){
+  const domain=promptStudioContext.domain||'project';
+  const version=String(promptStudioContext.versionName||'preview').replace(/[^a-z0-9_-]+/gi,'-');
+  const mode=promptStudioContext.previewMode||'preview';
+  return `${domain}-${version}-${mode}-preview`;
+}
+async function capturePromptPreviewBlob(){
+  const frame=document.getElementById('prompt-preview-frame');
+  const doc=frame&&(frame.contentDocument||frame.contentWindow.document);
+  if(!doc || !doc.documentElement) throw new Error('Preview is not ready yet');
+  const width=Math.max(1280, doc.documentElement.scrollWidth||0, doc.body&&doc.body.scrollWidth||0, frame.clientWidth||0);
+  const height=Math.max(720, doc.documentElement.scrollHeight||0, doc.body&&doc.body.scrollHeight||0, frame.clientHeight||0);
+  let serialized='';
+  try{
+    serialized=new XMLSerializer().serializeToString(doc.documentElement);
+  }catch(err){
+    serialized=doc.documentElement.outerHTML||'';
+  }
+  if(!/xmlns=/.test(serialized)){
+    serialized=serialized.replace(/^<html/i,'<html xmlns="http://www.w3.org/1999/xhtml"');
+  }
+  const svg=`<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}"><foreignObject width="100%" height="100%">${serialized}</foreignObject></svg>`;
+  const svgBlob=new Blob([svg],{type:'image/svg+xml;charset=utf-8'});
+  const url=URL.createObjectURL(svgBlob);
+  try{
+    const img=await new Promise((resolve,reject)=>{
+      const image=new Image();
+      image.onload=()=>resolve(image);
+      image.onerror=()=>reject(new Error('Could not render preview screenshot'));
+      image.src=url;
+    });
+    const canvas=document.createElement('canvas');
+    canvas.width=width;
+    canvas.height=height;
+    const ctx=canvas.getContext('2d');
+    ctx.fillStyle='#ffffff';
+    ctx.fillRect(0,0,width,height);
+    ctx.drawImage(img,0,0);
+    const blob=await new Promise((resolve,reject)=>canvas.toBlob(b=>b?resolve(b):reject(new Error('Preview screenshot export failed')),'image/png'));
+    return blob;
+  }finally{
+    URL.revokeObjectURL(url);
+  }
+}
+async function copyTextWithPreviewShot(text, successMsg){
+  let pngBlob=null;
+  try{ pngBlob=await capturePromptPreviewBlob(); }catch(err){ console.warn('preview capture failed', err); }
+  const textBlob=new Blob([text],{type:'text/plain'});
+  try{
+    if(navigator.clipboard && window.ClipboardItem && pngBlob){
+      await navigator.clipboard.write([new ClipboardItem({'text/plain':textBlob,'image/png':pngBlob})]);
+      showToast(successMsg||'Text + preview copied','success');
+      return;
+    }
+    await navigator.clipboard.writeText(text);
+    if(pngBlob){
+      _downloadBlob(pngBlob,`${_promptPreviewFileBase()}.png`);
+      showToast((successMsg||'Text copied')+' — screenshot downloaded','success');
+    }else{
+      showToast(successMsg||'Text copied','success');
+    }
+  }catch(err){
+    const ta=document.createElement('textarea');
+    ta.value=text;
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand('copy');
+    ta.remove();
+    if(pngBlob) _downloadBlob(pngBlob,`${_promptPreviewFileBase()}.png`);
+    showToast((successMsg||'Text copied')+(pngBlob?' — screenshot downloaded':''),'success');
+  }
+}
+async function downloadPromptPreviewShot(){
+  try{
+    const blob=await capturePromptPreviewBlob();
+    _downloadBlob(blob,`${_promptPreviewFileBase()}.png`);
+    showToast('Preview screenshot downloaded','success');
+  }catch(err){
+    showToast((err&&err.message)||'Preview screenshot failed','error');
+  }
+}
 
 // Auto-load history when prompt studio opens
 (function() {

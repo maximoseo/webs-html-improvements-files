@@ -678,6 +678,7 @@ BRAINSTORM_MODELS = [
     {"id": "moonshotai/kimi-k2.5",            "label": "Kimi K2.5"},
     {"id": "z-ai/glm-5.1",                    "label": "GLM 5.1"},
 ]
+BRAINSTORM_MODELS_BY_ID = {m["id"]: m for m in BRAINSTORM_MODELS}
 SYNTH_MODEL = os.getenv("PROMPT_SYNTH_MODEL", "anthropic/claude-sonnet-4.6")
 
 
@@ -714,7 +715,7 @@ def _call_one_model(base, headers, model_id, system, user, timeout=180):
 
 
 def brainstorm_prompt_multi_model(payload):
-    """Run 6 top LLMs in parallel on the same draft, then synthesize into one final prompt."""
+    """Run selected top LLMs in parallel on the same draft, then synthesize into one final prompt."""
     draft = (payload.get("draftPrompt") or "").strip()
     if not draft:
         raise ValueError("Draft prompt is required")
@@ -728,6 +729,21 @@ def brainstorm_prompt_multi_model(payload):
     agent_name = payload.get("agentName") or "unknown"
     version_name = payload.get("versionName") or "unknown"
     file_manifest = payload.get("fileManifest") or []
+    requested_models = payload.get("brainstormModels") or []
+    selected_models = []
+    seen_models = set()
+    for model_id in requested_models:
+        if not isinstance(model_id, str):
+            continue
+        model_id = model_id.strip()
+        if not model_id or model_id in seen_models:
+            continue
+        model = BRAINSTORM_MODELS_BY_ID.get(model_id)
+        if model:
+            selected_models.append(model)
+            seen_models.add(model_id)
+    if not selected_models:
+        selected_models = list(BRAINSTORM_MODELS)
 
     # Build manifest summary for model context
     manifest_lines = []
@@ -746,7 +762,6 @@ def brainstorm_prompt_multi_model(payload):
         checklist_brain_block = "--- USER CHECKLIST RULES ---\n" + checklist_block + "\n--- END CHECKLIST ---\n\n"
         checklist_synth_block = "--- USER CHECKLIST RULES (MUST all be in the final) ---\n" + checklist_block + "\n--- END ---\n\n"
 
-    # The system prompt each model sees during the brainstorm round
     brain_system = (
         "You are an elite prompt engineer brainstorming the perfect AI-agent prompt for "
         "a production HTML redesign workflow. You will be given a draft + project context + "
@@ -775,10 +790,11 @@ def brainstorm_prompt_multi_model(payload):
     )
 
     results = []
-    with concurrent.futures.ThreadPoolExecutor(max_workers=6) as pool:
+    max_workers = max(1, min(6, len(selected_models)))
+    with concurrent.futures.ThreadPoolExecutor(max_workers=max_workers) as pool:
         futures = {
             pool.submit(_call_one_model, base, headers, m["id"], brain_system, brain_user, 180): m
-            for m in BRAINSTORM_MODELS
+            for m in selected_models
         }
         for fut in concurrent.futures.as_completed(futures, timeout=240):
             m = futures[fut]
@@ -794,7 +810,6 @@ def brainstorm_prompt_multi_model(payload):
         errors = [{"model": r["model"], "label": r.get("label"), "error": r.get("error"), "detail": r.get("detail","")} for r in results]
         raise RuntimeError(json.dumps({"code": "all_models_failed", "errors": errors}, ensure_ascii=False))
 
-    # Synthesis step — merge all successful outputs into the perfect final prompt
     drafts_block = "\n\n".join(
         f"=== DRAFT FROM {r['label']} ({r['model']}) ===\n{r['content']}\n=== END {r['label']} ==="
         for r in successes
@@ -845,6 +860,7 @@ def brainstorm_prompt_multi_model(payload):
         "synthModel": SYNTH_MODEL,
         "modelsUsed": [{"model": r["model"], "label": r["label"], "chars": len(r["content"])} for r in successes],
         "modelsFailed": [{"model": r["model"], "label": r.get("label"), "error": r.get("error")} for r in results if not r.get("ok")],
+        "requestedModels": [m["id"] for m in selected_models],
     }
 
 
