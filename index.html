@@ -5451,56 +5451,57 @@ body.light .stat-card{background:rgba(0,0,0,0.03)}
   #prompt-modal #prompt-tweak-output{height:auto!important;max-height:none!important;min-height:180px!important}
 }
 
-/* Prompt Studio sidebar scroll FINAL FIX v2 — 2026-04-21 */
+/* Prompt Studio sidebar scroll FINAL FIX v4 — 2026-04-21 */
 #prompt-modal .prompt-container > .prompt-panel:first-child{
   overflow-y:auto !important;
   overflow-x:hidden !important;
-  padding-bottom:64px !important;
-  scroll-padding-bottom:64px !important;
+  padding-bottom:16px !important;
+  scroll-padding-bottom:80px !important;
 }
-/* Compact sticky action bar — only 3 buttons, no wrapping, status hidden */
+/* Compact sticky action bar — pinned to bottom, solid bg, no overlap */
 #prompt-modal .prompt-container > .prompt-panel:first-child > .prompt-actions{
   position:sticky !important;
   bottom:-1px !important;
   display:flex !important;
   flex-wrap:nowrap !important;
   align-items:center !important;
-  gap:6px !important;
-  margin:10px -12px -10px !important;
-  padding:8px 10px !important;
-  background:#0c0b14 !important;
-  background-image:linear-gradient(0deg,#0c0b14 70%,rgba(12,11,20,0.9)) !important;
-  backdrop-filter:blur(10px) !important;
-  border-top:1px solid rgba(255,255,255,0.12) !important;
+  gap:8px !important;
+  margin:14px -12px -10px !important;
+  padding:10px 12px !important;
+  background:#0a0913 !important;
+  background-image:none !important;
+  border-top:1px solid rgba(255,255,255,0.10) !important;
   box-shadow:0 -8px 22px rgba(0,0,0,0.55) !important;
   z-index:20 !important;
   overflow-x:auto !important;
   overflow-y:hidden !important;
   scrollbar-width:thin !important;
 }
+/* CRITICAL: override .action-btn min-height:40px which was forcing 48px buttons */
+#prompt-modal .prompt-container > .prompt-panel:first-child > .prompt-actions > button.action-btn,
 #prompt-modal .prompt-container > .prompt-panel:first-child > .prompt-actions > button{
   flex:0 0 auto !important;
+  min-height:0 !important;
   height:34px !important;
-  padding:0 12px !important;
-  font-size:11.5px !important;
+  padding:0 14px !important;
+  font-size:12px !important;
+  line-height:1 !important;
   white-space:nowrap !important;
+  display:inline-flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+  border-radius:8px !important;
 }
-/* Hide the long instructional status from the sticky bar — show it inline above */
+#prompt-modal .prompt-container > .prompt-panel:first-child > .prompt-actions > button svg{
+  width:13px !important;
+  height:13px !important;
+  margin-right:4px !important;
+  flex:0 0 auto !important;
+}
+/* Hide noisy elements from the sticky bar */
 #prompt-modal .prompt-container > .prompt-panel:first-child > .prompt-actions #prompt-status,
 #prompt-modal .prompt-container > .prompt-panel:first-child > .prompt-actions .esc-hint{
   display:none !important;
-}
-/* Move the status hint to a non-sticky inline note above the action bar */
-#prompt-modal #prompt-status.prompt-status-inline{
-  display:block !important;
-  margin:8px 0 4px !important;
-  padding:8px 10px !important;
-  font-size:11px !important;
-  line-height:1.4 !important;
-  color:var(--muted) !important;
-  background:rgba(255,255,255,0.03) !important;
-  border:1px dashed rgba(255,255,255,0.07) !important;
-  border-radius:6px !important;
 }
 #prompt-modal #brainstorm-progress{margin-bottom:14px !important}
 #prompt-modal #brainstorm-progress:not(.is-active){display:none !important}
@@ -5509,9 +5510,6 @@ body.light .stat-card{background:rgba(0,0,0,0.03)}
   flex-wrap:wrap !important;
   gap:6px !important;
 }
-/* Provider pills — wrap cleanly */
-#prompt-modal .providers-ready,
-#prompt-modal [class*="provider"]{flex-wrap:wrap !important;gap:4px !important}
 
 /* Prompt Studio bugfixes — 2026-04-21 */
 .ps-select{appearance:auto;-webkit-appearance:menulist;-moz-appearance:menulist;background-color:rgba(255,255,255,0.06)!important;color:#f4f5f8!important;border:1px solid rgba(255,255,255,0.12)!important}
