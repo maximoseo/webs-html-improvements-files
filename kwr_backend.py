@@ -181,11 +181,22 @@ def build_excel(run_id: str) -> tuple:
             or str(col_c).strip() == str(col_b).strip()
         )
 
-        # Track the pillar block this row belongs to (by pillar name)
+        # Track the pillar block this row belongs to
+        # Only advance palette when we hit a new pillar header.
+        # Cluster rows often have empty pillar name → inherit from current block.
         pillar_key = str(col_b).strip().lower()
-        if is_pillar or pillar_key != current_pillar_key:
-            pillar_idx = (pillar_idx + 1) % len(PILLAR_PALETTE)
-            current_pillar_key = pillar_key
+        if is_pillar:
+            if pillar_key != current_pillar_key:
+                pillar_idx = (pillar_idx + 1) % len(PILLAR_PALETTE)
+                current_pillar_key = pillar_key
+        else:
+            # Cluster row — inherit pillar name if empty
+            if not str(col_b).strip() and current_pillar_key:
+                # find original-case pillar name from the most recent pillar row
+                col_b = ws.cell(row=r_idx - 1, column=2).value or col_b
+            if pillar_idx < 0:
+                # Cluster appeared before any pillar — start palette
+                pillar_idx = 0
 
         block_color = PILLAR_PALETTE[pillar_idx if pillar_idx >= 0 else 0]
         fill = PatternFill('solid', fgColor=block_color)
