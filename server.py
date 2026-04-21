@@ -1596,6 +1596,30 @@ class DashboardHandler(BaseHTTPRequestHandler):
             run_id = parsed.path.split('/')[-1].strip()
             if not run_id:
                 return json_response(self, 400, {'ok': False, 'error': 'run_id required'})
+            # Flat reports synced from GitHub (outputs/kwr_<slug>.xlsx)
+            if run_id.startswith('flat:'):
+                slug = run_id[5:]
+                fp = os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                                  'outputs', f'kwr_{slug}.xlsx')
+                if not os.path.isfile(fp):
+                    return json_response(self, 404, {'ok': False, 'error': 'flat report not found'})
+                with open(fp, 'rb') as f:
+                    excel_bytes = f.read()
+                ws_name = f'kwr_{slug}'
+                safe_ascii = re.sub(r'[^A-Za-z0-9._-]+', '-', ws_name).strip('-') or 'kwr'
+                filename_ascii = f"{safe_ascii}.xlsx"
+                filename_utf8 = urllib.parse.quote(f"{ws_name}.xlsx", safe='')
+                self.send_response(200)
+                self.send_header('Content-Type',
+                                 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+                self.send_header(
+                    'Content-Disposition',
+                    f"attachment; filename=\"{filename_ascii}\"; filename*=UTF-8''{filename_utf8}"
+                )
+                self.send_header('Content-Length', str(len(excel_bytes)))
+                self.end_headers()
+                self.wfile.write(excel_bytes)
+                return
             excel_bytes, ws_name, err = kwr_backend.build_excel(run_id)
             if err:
                 return json_response(self, 500, {'ok': False, 'error': err})

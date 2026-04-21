@@ -1791,6 +1791,55 @@ def list_reports() -> list:
                     'supabase': bool((sync.get('supabase') or {}).get('ok')),
                 },
             })
+        # Also include flat xlsx files synced from GitHub (e.g. outputs/kwr_<slug>.xlsx)
+        seen_slugs = set()
+        for r in out:
+            dom = (r.get('domain') or '').replace('.', '_').replace('-', '_').lower()
+            if dom:
+                seen_slugs.add(dom)
+        for fn in os.listdir(OUTPUTS_DIR):
+            if not fn.startswith('kwr_') or not fn.lower().endswith('.xlsx'):
+                continue
+            fp = os.path.join(OUTPUTS_DIR, fn)
+            if not os.path.isfile(fp):
+                continue
+            slug = fn[4:-5]  # strip 'kwr_' and '.xlsx'
+            if slug in seen_slugs:
+                continue
+            try:
+                size_kb = round(os.path.getsize(fp) / 1024.0, 1)
+            except Exception:
+                size_kb = 0
+            try:
+                mtime = datetime.datetime.utcfromtimestamp(os.path.getmtime(fp)).isoformat() + 'Z'
+            except Exception:
+                mtime = ''
+            domain_display = slug.replace('_', '.')
+            try:
+                from openpyxl import load_workbook
+                wb = load_workbook(fp, read_only=True)
+                ws = wb.active
+                row_count = max(0, ws.max_row - 1)
+                wb.close()
+            except Exception:
+                row_count = 0
+            out.append({
+                'run_id': f'flat:{slug}',
+                'domain': domain_display,
+                'website_url': f'https://{domain_display}',
+                'brand': '',
+                'worksheet_name': f'kwr_{slug}',
+                'created_at': mtime,
+                'updated_at': mtime,
+                'row_count': row_count,
+                'file_size_kb': size_kb,
+                'flat_file': fn,
+                'sync_status': {
+                    'github':   True,   # served from repo
+                    'obsidian': False,
+                    'supabase': False,
+                },
+            })
         out.sort(key=lambda x: x.get('created_at') or '', reverse=True)
     except Exception:
         pass
