@@ -7447,6 +7447,7 @@ header.header > .header-inner,
       <option value="x-ai/grok-4.20-multi-agent">Grok 4.20 Multi-Agent (OpenRouter)</option>
       <option value="z-ai/glm-5.1">GLM 5.1 (OpenRouter)</option>
       <option value="qwen/qwen3.6-plus">Qwen 3.6 Plus (OpenRouter)</option>
+      <option value="accounts/fireworks/models/qwen3-235b-a22b-instruct">Qwen 3.6 Plus (Fireworks)</option>
       <option value="minimax/minimax-m2.7">MiniMax M2.7 (OpenRouter)</option>
       <option value="google/gemini-2.5-pro">Gemini 2.5 Pro (OpenRouter)</option>
       <option value="__ensemble__">🔀 Best-of-N Ensemble (OpenRouter primary, Venice fallback)</option>
@@ -7469,6 +7470,7 @@ header.header > .header-inner,
       <label class="kwr-ensemble-check"><input type="checkbox" value="x-ai/grok-4.20-multi-agent"> Grok 4.20 Multi-Agent</label>
       <label class="kwr-ensemble-check"><input type="checkbox" value="z-ai/glm-5.1"> GLM 5.1</label>
       <label class="kwr-ensemble-check"><input type="checkbox" value="qwen/qwen3.6-plus"> Qwen 3.6 Plus</label>
+      <label class="kwr-ensemble-check"><input type="checkbox" value="accounts/fireworks/models/qwen3-235b-a22b-instruct"> Qwen 3.6 Plus (Fireworks)</label>
       <label class="kwr-ensemble-check"><input type="checkbox" value="minimax/minimax-m2.7"> MiniMax M2.7</label>
       <label class="kwr-ensemble-check"><input type="checkbox" value="google/gemini-2.5-pro"> Gemini 2.5 Pro</label>
     </div>
@@ -11459,13 +11461,25 @@ function loadTopicsFromStatus(state) {
     if (langCode) setVal('kwr-target-language', langCode);
     if (market) setVal('kwr-target-market',   market);
 
+    // Auto-fill competitor URLs (newline-separated for kwrCollectInputs)
+    if (probe && Array.isArray(probe.competitors) && probe.competitors.length) {
+      const compUrls = probe.competitors.map(c => c.url).filter(Boolean);
+      const compEl = document.getElementById('kwr-competitor-urls');
+      if (compEl && compUrls.length) {
+        compEl.value = compUrls.join('\n');
+        compEl.dispatchEvent(new Event('input'));
+      }
+    }
+
     const req = document.querySelector('.kwr-section-card:nth-child(3)');
     if (req) req.scrollIntoView({ behavior: 'smooth', block: 'start' });
 
     if (hint) {
       hint.style.color = '#22c55e';
       const verified = probe ? '<strong>verified</strong> ' : '';
-      hint.innerHTML = `✓ ${verified}fields filled for <strong>${host}</strong>. Review &amp; click <strong>Run KW Research</strong>.`;
+      const compCount = (probe && probe.competitors) ? probe.competitors.length : 0;
+      const compTxt = compCount ? ` · <strong>${compCount}</strong> competitor${compCount===1?'':'s'} discovered` : '';
+      hint.innerHTML = `✓ ${verified}fields filled for <strong>${host}</strong>${compTxt}. Review &amp; click <strong>Run KW Research</strong>.`;
     }
     if (btn) {
       btn.disabled = false;

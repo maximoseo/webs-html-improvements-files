@@ -1323,6 +1323,7 @@ class DashboardHandler(BaseHTTPRequestHandler):
                     # --- Fireworks AI ---
                     {'id': 'accounts/fireworks/models/llama-v3p3-70b-instruct',  'label': 'Llama 3.3 70B (Fireworks)',   'provider': 'fireworks'},
                     {'id': 'accounts/fireworks/models/llama-v3p1-405b-instruct', 'label': 'Llama 3.1 405B (Fireworks)',  'provider': 'fireworks'},
+                    {'id': 'accounts/fireworks/models/qwen3-235b-a22b-instruct', 'label': 'Qwen 3.6 Plus (Fireworks)',  'provider': 'fireworks'},
                     {'id': 'accounts/fireworks/models/deepseek-r1',              'label': 'DeepSeek R1 (Fireworks)',     'provider': 'fireworks'},
                     {'id': 'accounts/fireworks/models/deepseek-v3',              'label': 'DeepSeek V3 (Fireworks)',     'provider': 'fireworks'},
                     {'id': 'accounts/fireworks/models/qwen2p5-72b-instruct',     'label': 'Qwen 2.5 72B (Fireworks)',    'provider': 'fireworks'},

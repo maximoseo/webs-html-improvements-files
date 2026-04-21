@@ -1507,7 +1507,125 @@ def probe_domain(domain: str) -> dict:
     else:
         out['market'] = ''
 
+    # 4. Discover competitors via DuckDuckGo + LLM (best-effort)
+    try:
+        out['competitors'] = _discover_competitors_for_probe(
+            host=host,
+            brand=out.get('brand_name') or '',
+            language=out.get('language') or '',
+            market=out.get('market') or '',
+            homepage_html=homepage_html,
+        )
+    except Exception:
+        out['competitors'] = []
+
     return out
+
+
+def _discover_competitors_for_probe(host: str, brand: str, language: str,
+                                    market: str, homepage_html: str = '',
+                                    max_results: int = 5) -> list:
+    """
+    Find up to N competitor URLs using:
+      1. Page topics (h1/title) + market → DuckDuckGo HTML search
+      2. LLM call (best frontier model via call_with_fallback) to suggest
+         likely competitor domains given brand + language + market.
+    Returns list of {url, source}.
+    """
+    seed = (host or '').lower().replace('www.', '')
+    found = []           # list[(url, source)]
+    seen = set()
+    seen.add(seed)
+
+    # Build search topics from homepage
+    topics = []
+    if homepage_html:
+        m = re.search(r'<title[^>]*>([^<]{4,120})</title>', homepage_html, re.IGNORECASE)
+        if m:
+            topics.append(re.sub(r'\s+', ' ', m.group(1)).strip())
+        for h in re.findall(r'<h1[^>]*>([^<]{4,120})</h1>', homepage_html, re.IGNORECASE)[:2]:
+            topics.append(re.sub(r'\s+', ' ', h).strip())
+    if brand:
+        topics.append(brand)
+    topics = [t for t in topics if t][:3]
+
+    # 1. DuckDuckGo HTML search
+    market_q = market or ''
+    queries = []
+    for t in topics:
+        q = f"{t} {market_q}".strip()
+        queries.append(q)
+    if brand and market_q:
+        queries.append(f"competitors of {brand} {market_q}")
+    for q in queries:
+        if len(found) >= max_results:
+            break
+        try:
+            search_url = f"https://duckduckgo.com/html/?q={urllib.parse.quote(q)}"
+            req = urllib.request.Request(search_url, headers={'User-Agent': 'Mozilla/5.0'})
+            html = urllib.request.urlopen(req, timeout=10).read().decode('utf-8', errors='ignore')
+            for m in re.finditer(r'href="(https?://[^"?]+)"', html):
+                url = m.group(1)
+                dom = urllib.parse.urlparse(url).netloc.lower().replace('www.', '')
+                if not dom or dom in seen:
+                    continue
+                if any(x in dom for x in ('duckduckgo', 'google.', 'bing.', 'wikipedia',
+                                          'youtube.', 'facebook.', 'linkedin.',
+                                          'twitter.', 'instagram.', 'pinterest.',
+                                          'amazon.', 'tripadvisor.', 'yelp.', 'reddit.')):
+                    continue
+                seen.add(dom)
+                found.append({'url': f'https://{dom}', 'source': 'duckduckgo'})
+                if len(found) >= max_results:
+                    break
+        except Exception:
+            continue
+
+    # 2. LLM-based suggestion (frontier model via call_with_fallback)
+    if len(found) < max_results:
+        try:
+            from llm_router import call_with_fallback  # type: ignore
+        except Exception:
+            call_with_fallback = None  # type: ignore
+        if call_with_fallback:
+            try:
+                prompt = (
+                    f"List up to 8 real competitor websites (just bare domains, "
+                    f"one per line, no commentary, no numbering) for a business "
+                    f"with these details:\n"
+                    f"- Brand: {brand or '(unknown)'}\n"
+                    f"- Domain: {host}\n"
+                    f"- Language: {language or '(unknown)'}\n"
+                    f"- Market: {market or '(unknown)'}\n"
+                    f"- Homepage signals: {(topics[0] if topics else '')[:200]}\n\n"
+                    f"Return only domain names like example.com, no URLs, no http://."
+                )
+                resp = call_with_fallback(
+                    messages=[{'role': 'user', 'content': prompt}],
+                    max_tokens=300,
+                    temperature=0.4,
+                )
+                txt = ''
+                if isinstance(resp, dict):
+                    txt = (resp.get('content') or resp.get('text') or '') or ''
+                elif isinstance(resp, str):
+                    txt = resp
+                for line in (txt or '').splitlines():
+                    line = re.sub(r'[`*\-\u2022\d\.\s]+', ' ', line).strip().lower()
+                    line = line.split(' ')[0]
+                    if not line or '.' not in line:
+                        continue
+                    line = line.replace('http://', '').replace('https://', '').replace('www.', '').strip('/.,')
+                    if line in seen:
+                        continue
+                    seen.add(line)
+                    found.append({'url': f'https://{line}', 'source': 'llm'})
+                    if len(found) >= max_results:
+                        break
+            except Exception:
+                pass
+
+    return found[:max_results]
 
 
 # ===========================================================================
