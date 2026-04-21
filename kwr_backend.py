@@ -159,6 +159,20 @@ def build_excel(run_id: str) -> tuple:
         'FCE4EC',  # light pink
         'E8EAF6',  # light indigo
         'EFEBE9',  # light brown
+        'F1F8E9',  # light lime
+        'E0F2F1',  # light mint
+        'FFEBEE',  # blush
+        'EDE7F6',  # lavender
+        'FFF8E1',  # cream
+        'E1F5FE',  # sky
+        'F9FBE7',  # pale lime
+        'FBE9E7',  # peach
+        'F0F4C3',  # pale chartreuse
+        'D7CCC8',  # taupe
+        'C8E6C9',  # sage
+        'B3E5FC',  # baby blue
+        'F8BBD0',  # rose
+        'D1C4E9',  # lilac
     ]
     LINK_COLOR = '0563C1'
     pillar_idx = -1
@@ -606,7 +620,7 @@ Rules:
 - Output ONLY a JSON array of row objects
 - Each row has exactly these keys: existing_parent_page, pillar, cluster, intent, primary_keyword, keywords
 - pillar rows: existing_parent_page MUST be the FULL URL from the existing pages list above that best represents this pillar topic (e.g. https://galoz.co.il/pillar-page). If no matching existing page exists for this pillar, use "-".
-- cluster rows: existing_parent_page MUST be the SAME full URL used in the pillar row above it (so all clusters point back to their pillar's existing parent page URL). If the pillar has no existing URL, use "-".
+- cluster rows: existing_parent_page MUST be "-" by default. ONLY put a URL here if there is a SPECIFIC page from the existing pages list above that is dedicated to this exact cluster topic (not the pillar page). DO NOT copy the pillar's URL into cluster rows. DO NOT invent slugs or domains. When in doubt, use "-".
 - intent for pillar rows = "pillar"; intent for cluster rows = one of (informational|navigational|transactional|commercial)
 - Do NOT duplicate existing pages, do NOT create cannibalization between rows
 - Do NOT invent services not found on the site
