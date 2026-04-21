@@ -5477,9 +5477,11 @@ body.light .stat-card{background:rgba(0,0,0,0.03)}
   overflow-y:hidden !important;
   scrollbar-width:thin !important;
 }
-/* CRITICAL: override .action-btn min-height:40px which was forcing 48px buttons */
-#prompt-modal .prompt-container > .prompt-panel:first-child > .prompt-actions > button.action-btn,
-#prompt-modal .prompt-container > .prompt-panel:first-child > .prompt-actions > button{
+/* CRITICAL: high-specificity ID overrides — earlier rules use #prompt-modal #prompt-improve-btn */
+#prompt-modal #prompt-improve-btn,
+#prompt-modal #prompt-tweak-btn,
+#prompt-modal #prompt-brainstorm-btn,
+#prompt-modal #prompt-stop-all-btn{
   flex:0 0 auto !important;
   min-height:0 !important;
   height:34px !important;
