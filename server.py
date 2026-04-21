@@ -2256,20 +2256,14 @@ class DashboardHandler(BaseHTTPRequestHandler):
 
         # ── KWR POST routes ─────────────────────────────────────────────────
         if parsed.path == '/api/kwr/start':
-            try:
-                body = json.loads(raw_body.decode('utf-8', 'replace'))
-            except Exception:
-                return json_response(self, 400, {'ok': False, 'error': 'Invalid JSON'})
+            body = payload  # payload already parsed above
             run_id, err = kwr_backend.start_run(body, call_with_fallback)
             if err:
                 return json_response(self, 400, {'ok': False, 'error': err})
             return json_response(self, 200, {'ok': True, 'run_id': run_id})
 
         if parsed.path == '/api/kwr/cancel':
-            try:
-                body = json.loads(raw_body.decode('utf-8', 'replace'))
-            except Exception:
-                return json_response(self, 400, {'ok': False, 'error': 'Invalid JSON'})
+            body = payload
             run_id = (body.get('run_id') or '').strip()
             if not run_id:
                 return json_response(self, 400, {'ok': False, 'error': 'run_id required'})
@@ -2277,10 +2271,7 @@ class DashboardHandler(BaseHTTPRequestHandler):
             return json_response(self, 200, {'ok': ok})
 
         if parsed.path == '/api/kwr/update-rows':
-            try:
-                body = json.loads(raw_body.decode('utf-8', 'replace'))
-            except Exception:
-                return json_response(self, 400, {'ok': False, 'error': 'Invalid JSON'})
+            body = payload
             run_id = (body.get('run_id') or '').strip()
             rows = body.get('rows', [])
             if not run_id:
@@ -2291,10 +2282,7 @@ class DashboardHandler(BaseHTTPRequestHandler):
             return json_response(self, 200, {'ok': True})
 
         if parsed.path == '/api/kwr/approve':
-            try:
-                body = json.loads(raw_body.decode('utf-8', 'replace'))
-            except Exception:
-                return json_response(self, 400, {'ok': False, 'error': 'Invalid JSON'})
+            body = payload
             run_id       = (body.get('run_id') or '').strip()
             rows         = body.get('rows', [])
             sheet_prefix = (body.get('sheet_prefix') or '').strip()
@@ -2324,10 +2312,7 @@ class DashboardHandler(BaseHTTPRequestHandler):
             return
 
         if parsed.path == '/api/kwr/push-sheets':
-            try:
-                body = json.loads(raw_body.decode('utf-8', 'replace'))
-            except Exception:
-                return json_response(self, 400, {'ok': False, 'error': 'Invalid JSON'})
+            body = payload
             run_id       = (body.get('run_id') or '').strip()
             sheet_target = (body.get('sheet_target') or '').strip()
             if not run_id:
@@ -2340,10 +2325,7 @@ class DashboardHandler(BaseHTTPRequestHandler):
             return json_response(self, 200, {'ok': True, 'sheet_url': sheet_url})
 
         if parsed.path == '/api/kwr/save-obsidian':
-            try:
-                body = json.loads(raw_body.decode('utf-8', 'replace'))
-            except Exception:
-                return json_response(self, 400, {'ok': False, 'error': 'Invalid JSON'})
+            body = payload
             run_id = (body.get('run_id') or '').strip()
             if not run_id:
                 return json_response(self, 400, {'ok': False, 'error': 'run_id required'})
