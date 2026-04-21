@@ -5765,6 +5765,175 @@ body.light .stat-card{background:rgba(0,0,0,0.03)}
 }
 /* END PROMPT STUDIO OVERLAP HOTFIX v4.1 */
 
+/* ============================================================ */
+/* HEADER LAYOUT HOTFIX v1 — 2026-04-21                         */
+/* supersedes all prior .header / .header-inner / .header-actions */
+/* / .logo / .fixer-tab-nav rules (~22 conflicting declarations) */
+/* ============================================================ */
+.header{
+  display:block !important;
+  width:100% !important;
+  box-sizing:border-box !important;
+}
+.header .header-inner,
+header.header > .header-inner,
+.header-inner{
+  display:flex !important;
+  flex-direction:row !important;
+  align-items:center !important;
+  justify-content:space-between !important;
+  flex-wrap:nowrap !important;
+  gap:20px !important;
+  width:100% !important;
+  max-width:1600px !important;
+  margin:0 auto !important;
+  padding:10px 20px !important;
+  box-sizing:border-box !important;
+  min-height:60px !important;
+}
+.header-inner > .logo,
+.header .logo{
+  display:flex !important;
+  flex-direction:row !important;
+  align-items:center !important;
+  gap:10px !important;
+  flex-shrink:0 !important;
+  flex-grow:0 !important;
+  min-width:0 !important;
+  margin:0 !important;
+  padding:0 !important;
+  float:none !important;
+  position:static !important;
+}
+.header .logo .logo-link{
+  display:flex !important;
+  flex-direction:row !important;
+  align-items:center !important;
+  gap:10px !important;
+  text-decoration:none !important;
+}
+.header .logo .logo-icon{
+  display:inline-flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+  flex-shrink:0 !important;
+  width:36px !important;
+  height:36px !important;
+}
+.header .logo .logo-icon svg{
+  width:22px !important;
+  height:22px !important;
+  display:block !important;
+}
+.header .logo h1{
+  margin:0 !important;
+  padding:0 !important;
+  font-size:18px !important;
+  line-height:1.1 !important;
+  white-space:nowrap !important;
+  display:inline-flex !important;
+  align-items:center !important;
+  gap:4px !important;
+}
+.header .logo h1 span{
+  display:inline !important;
+  white-space:nowrap !important;
+}
+.header-inner > .header-actions,
+.header .header-actions{
+  display:flex !important;
+  flex-direction:row !important;
+  align-items:center !important;
+  justify-content:flex-end !important;
+  flex-wrap:wrap !important;
+  gap:12px !important;
+  flex:1 1 auto !important;
+  min-width:0 !important;
+  margin:0 !important;
+  padding:0 !important;
+}
+.header .fixer-tab-nav{
+  display:inline-flex !important;
+  flex-direction:row !important;
+  align-items:center !important;
+  flex-wrap:nowrap !important;
+  flex-shrink:0 !important;
+  gap:4px !important;
+  margin:0 !important;
+  padding:4px !important;
+  vertical-align:middle !important;
+}
+.header .fixer-tab-nav .fixer-tab-btn{
+  display:inline-flex !important;
+  align-items:center !important;
+  gap:6px !important;
+  vertical-align:middle !important;
+}
+.header .search-wrap{
+  display:inline-flex !important;
+  align-items:center !important;
+  flex-shrink:1 !important;
+  min-width:180px !important;
+  vertical-align:middle !important;
+}
+.header .status-stack{
+  display:inline-flex !important;
+  flex-direction:column !important;
+  align-items:flex-start !important;
+  justify-content:center !important;
+  gap:2px !important;
+  flex-shrink:0 !important;
+  vertical-align:middle !important;
+}
+.header .status-stack .status-pill{
+  display:inline-flex !important;
+  align-items:center !important;
+  gap:6px !important;
+}
+.header .hdr-expand-all-btn,
+.header .hdr-sync-btn,
+.header .hamburger-btn,
+.header .theme-toggle-btn,
+.header .hdr-overflow-btn{
+  display:inline-flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+  gap:6px !important;
+  flex-shrink:0 !important;
+  vertical-align:middle !important;
+  white-space:nowrap !important;
+}
+.header .hdr-overflow-wrap{
+  display:inline-flex !important;
+  align-items:center !important;
+  position:relative !important;
+  flex-shrink:0 !important;
+}
+/* Tablet / medium screens — allow actions row to wrap below logo */
+@media (max-width:1180px){
+  .header-inner,
+  .header .header-inner{
+    flex-wrap:wrap !important;
+    row-gap:10px !important;
+  }
+  .header .header-actions{
+    flex:1 1 100% !important;
+    justify-content:flex-start !important;
+  }
+}
+/* Small screens — hide full tab nav, rely on hamburger + mobile drawer */
+@media (max-width:820px){
+  .header .fixer-tab-nav{ display:none !important; }
+  .header .search-wrap{ flex:1 1 100% !important; min-width:0 !important; }
+}
+@media (max-width:640px){
+  .header .status-stack{ display:none !important; }
+  .header .hdr-expand-all-btn,
+  .header .hdr-overflow-wrap{ display:none !important; }
+  .header .logo h1{ font-size:16px !important; }
+}
+/* END HEADER LAYOUT HOTFIX v1 */
+
 </style>
 </head>
 <body>
