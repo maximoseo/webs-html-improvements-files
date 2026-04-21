@@ -448,8 +448,8 @@ def _runner(run_id: str, call_llm):
         sheet_target  = inputs.get('spreadsheet_target', '')
         competitor_urls = [u.strip() for u in (inputs.get('competitor_urls') or '').split('\n') if u.strip()]
         exclusions    = inputs.get('notes_exclusions', '')
-        # Model override from UI (optional — defaults to claude-opus-4)
-        llm_model     = (inputs.get('model') or inputs.get('_model') or 'anthropic/claude-opus-4').strip()
+        # Model override from UI (optional — defaults to OpenRouter-first GPT-5.4)
+        llm_model     = (inputs.get('model') or inputs.get('_model') or 'openai/gpt-5.4').strip()
 
         # ── Stage 1: validating ─────────────────────────────────────────────
         set_stage('validating', 5)

@@ -144,12 +144,41 @@ def prompt_headers():
 def _get_provider_chain():
     """
     Return list of providers in priority order.
-    Priority: Copilot -> Gemini -> Venice -> Fireworks -> Kimi -> xAI -> MiniMax -> GLM -> Anthropic -> OpenRouter.
-    OpenRouter remains the broad fallback because it can route to many frontier models.
+    Priority: OpenRouter -> Venice -> Copilot -> Gemini -> Fireworks -> Kimi -> xAI -> MiniMax -> GLM -> Anthropic.
+    OpenRouter is the primary route for frontier model IDs across the dashboard.
+    Venice is the first automatic fallback when OpenRouter fails.
     """
     chain = []
 
-    # 1. GitHub Copilot (unlimited via subscription — try first)
+    # 1. OpenRouter — primary route for all frontier model IDs shown in the dashboard
+    or_key = os.getenv('OPENROUTER_API_KEY')
+    if or_key:
+        chain.append({
+            'name': 'openrouter',
+            'base': 'https://openrouter.ai/api/v1',
+            'headers': {
+                'Authorization': f'Bearer {or_key}',
+                'Accept': 'application/json',
+                'HTTP-Referer': os.getenv('OPENROUTER_SITE_URL', 'https://html-redesign-dashboard.maximo-seo.ai/'),
+                'X-Title': os.getenv('OPENROUTER_APP_NAME', 'HTML Redesign Dashboard'),
+            },
+            'model_override': None,
+        })
+
+    # 2. Venice AI — first automatic fallback after OpenRouter
+    venice_key = os.getenv('VENICE_API_KEY')
+    if venice_key:
+        chain.append({
+            'name': 'venice',
+            'base': 'https://api.venice.ai/api/v1',
+            'headers': {
+                'Authorization': f'Bearer {venice_key}',
+                'Accept': 'application/json',
+            },
+            'model_override': os.getenv('VENICE_MODEL', 'llama-3.3-70b'),
+        })
+
+    # 3. GitHub Copilot
     copilot_key = os.getenv('COPILOT_API_KEY') or os.getenv('GITHUB_COPILOT_TOKEN')
     if copilot_key:
         chain.append({
@@ -165,7 +194,7 @@ def _get_provider_chain():
             'model_override': os.getenv('COPILOT_MODEL', 'claude-sonnet-4.6'),
         })
 
-    # 2. Google Gemini (native REST API)
+    # 4. Google Gemini (native REST API)
     gemini_key = os.getenv('GEMINI_API_KEY')
     if gemini_key:
         chain.append({
@@ -179,20 +208,7 @@ def _get_provider_chain():
             'gemini_native': True,
         })
 
-    # 3. Venice AI
-    venice_key = os.getenv('VENICE_API_KEY')
-    if venice_key:
-        chain.append({
-            'name': 'venice',
-            'base': 'https://api.venice.ai/api/v1',
-            'headers': {
-                'Authorization': f'Bearer {venice_key}',
-                'Accept': 'application/json',
-            },
-            'model_override': os.getenv('VENICE_MODEL', 'llama-3.3-70b'),
-        })
-
-    # 4. Fireworks AI
+    # 5. Fireworks AI
     fireworks_key = os.getenv('FIREWORKS_API_KEY')
     if fireworks_key:
         chain.append({
@@ -205,7 +221,7 @@ def _get_provider_chain():
             'model_override': os.getenv('FIREWORKS_MODEL', 'accounts/fireworks/models/llama-v3p3-70b-instruct'),
         })
 
-    # 5. Kimi / Moonshot
+    # 6. Kimi / Moonshot
     kimi_key = os.getenv('KIMI_API_KEY')
     if kimi_key:
         chain.append({
@@ -218,7 +234,7 @@ def _get_provider_chain():
             'model_override': os.getenv('KIMI_MODEL', 'kimi-k2.6'),
         })
 
-    # 6. xAI / Grok
+    # 7. xAI / Grok
     xai_key = os.getenv('XAI_API_KEY')
     if xai_key:
         chain.append({
@@ -231,7 +247,7 @@ def _get_provider_chain():
             'model_override': os.getenv('XAI_MODEL', 'grok-4.20-multi-agent'),
         })
 
-    # 7. MiniMax
+    # 8. MiniMax
     minimax_key = os.getenv('MINIMAX_API_KEY')
     if minimax_key:
         chain.append({
@@ -245,7 +261,7 @@ def _get_provider_chain():
             'model_override': os.getenv('MINIMAX_MODEL', 'minimax-m2.7'),
         })
 
-    # 8. Z.AI / GLM
+    # 9. Z.AI / GLM
     glm_key = os.getenv('GLM_API_KEY')
     if glm_key:
         chain.append({
@@ -259,7 +275,7 @@ def _get_provider_chain():
             'model_override': os.getenv('GLM_MODEL', 'glm-5.1'),
         })
 
-    # 9. Anthropic (native API — direct)
+    # 10. Anthropic (native API — direct)
     anthropic_key = os.getenv('ANTHROPIC_API_KEY')
     if anthropic_key:
         chain.append({
@@ -272,21 +288,6 @@ def _get_provider_chain():
             },
             'model_override': os.getenv('ANTHROPIC_MODEL', 'claude-opus-4.6'),
             'anthropic_native': True,
-        })
-
-    # 10. OpenRouter — broad model access
-    or_key = os.getenv('OPENROUTER_API_KEY')
-    if or_key:
-        chain.append({
-            'name': 'openrouter',
-            'base': 'https://openrouter.ai/api/v1',
-            'headers': {
-                'Authorization': f'Bearer {or_key}',
-                'Accept': 'application/json',
-                'HTTP-Referer': os.getenv('OPENROUTER_SITE_URL', 'https://html-redesign-dashboard.maximo-seo.ai/'),
-                'X-Title': os.getenv('OPENROUTER_APP_NAME', 'HTML Redesign Dashboard'),
-            },
-            'model_override': None,
         })
 
     return chain

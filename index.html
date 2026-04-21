@@ -6875,19 +6875,19 @@ body.light .stat-card{background:rgba(0,0,0,0.03)}
    <div class="kwr-model-row">
     <span class="kwr-model-label">Model</span>
     <select class="kwr-model-select" id="kwr-model-select">
-      <option value="">Default (best available server fallback)</option>
-      <option value="openai/gpt-5.4">GPT-5.4 (OpenAI)</option>
-      <option value="anthropic/claude-opus-4.6">Claude Opus 4.6 (Anthropic)</option>
-      <option value="anthropic/claude-opus-4.6-fast">Claude Opus 4.6 Fast (Anthropic)</option>
-      <option value="anthropic/claude-sonnet-4.6">Claude Sonnet 4.6 (Anthropic)</option>
-      <option value="moonshotai/kimi-k2-thinking">Kimi K2 Thinking (Moonshot)</option>
-      <option value="moonshotai/kimi-k2.6">Kimi 2.6 (Moonshot)</option>
-      <option value="x-ai/grok-4.20-multi-agent">Grok 4.20 Multi-Agent (xAI)</option>
-      <option value="z-ai/glm-5.1">GLM 5.1 (Z.AI)</option>
-      <option value="qwen/qwen3.6-plus">Qwen 3.6 Plus (Qwen)</option>
-      <option value="minimax/minimax-m2.7">MiniMax M2.7 (MiniMax)</option>
-      <option value="google/gemini-2.5-pro">Gemini 2.5 Pro (Google)</option>
-      <option value="__ensemble__">🔀 Best-of-N Ensemble (multi-model, deduplicated)</option>
+      <option value="">Default (OpenRouter primary → Venice fallback)</option>
+      <option value="openai/gpt-5.4">GPT-5.4 (OpenRouter)</option>
+      <option value="anthropic/claude-opus-4.6">Claude Opus 4.6 (OpenRouter)</option>
+      <option value="anthropic/claude-opus-4.6-fast">Claude Opus 4.6 Fast (OpenRouter)</option>
+      <option value="anthropic/claude-sonnet-4.6">Claude Sonnet 4.6 (OpenRouter)</option>
+      <option value="moonshotai/kimi-k2-thinking">Kimi K2 Thinking (OpenRouter)</option>
+      <option value="moonshotai/kimi-k2.6">Kimi 2.6 (OpenRouter)</option>
+      <option value="x-ai/grok-4.20-multi-agent">Grok 4.20 Multi-Agent (OpenRouter)</option>
+      <option value="z-ai/glm-5.1">GLM 5.1 (OpenRouter)</option>
+      <option value="qwen/qwen3.6-plus">Qwen 3.6 Plus (OpenRouter)</option>
+      <option value="minimax/minimax-m2.7">MiniMax M2.7 (OpenRouter)</option>
+      <option value="google/gemini-2.5-pro">Gemini 2.5 Pro (OpenRouter)</option>
+      <option value="__ensemble__">🔀 Best-of-N Ensemble (OpenRouter primary, Venice fallback)</option>
     </select>
     <span style="font-size:11px;color:var(--muted)">Used for LLM generation steps in the pipeline</span>
   </div>
@@ -6895,7 +6895,7 @@ body.light .stat-card{background:rgba(0,0,0,0.03)}
   <!-- Ensemble sub-options (shown only when __ensemble__ selected) -->
   <div id="kwr-ensemble-options" style="display:none;margin-top:10px;padding:10px 14px;background:rgba(139,92,246,0.07);border:1px solid rgba(139,92,246,0.2);border-radius:10px">
     <div style="font-size:11px;font-weight:700;color:#a78bfa;margin-bottom:8px;text-transform:uppercase;letter-spacing:.06em">
-      Ensemble Models — select which models to run in parallel
+      Ensemble Models — select which OpenRouter models to run in parallel
     </div>
     <div style="display:flex;flex-wrap:wrap;gap:10px">
       <label class="kwr-ensemble-check"><input type="checkbox" value="openai/gpt-5.4" checked> GPT-5.4</label>
