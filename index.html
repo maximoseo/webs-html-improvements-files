@@ -11968,12 +11968,40 @@ function _promptPreviewFileBase(){
   const mode=promptStudioContext.previewMode||'preview';
   return `${domain}-${version}-${mode}-preview`;
 }
+async function ensureHtmlToImageLib(){
+  if(window.htmlToImage) return window.htmlToImage;
+  if(window._htmlToImagePromise) return window._htmlToImagePromise;
+  window._htmlToImagePromise=new Promise((resolve,reject)=>{
+    const existing=document.querySelector('script[data-html-to-image-lib="1"]');
+    if(existing){
+      existing.addEventListener('load',()=>resolve(window.htmlToImage));
+      existing.addEventListener('error',()=>reject(new Error('html-to-image failed to load')));
+      return;
+    }
+    const script=document.createElement('script');
+    script.src='https://cdn.jsdelivr.net/npm/html-to-image@1.11.11/dist/html-to-image.min.js';
+    script.async=true;
+    script.dataset.htmlToImageLib='1';
+    script.onload=()=>window.htmlToImage?resolve(window.htmlToImage):reject(new Error('html-to-image unavailable after load'));
+    script.onerror=()=>reject(new Error('html-to-image failed to load'));
+    document.head.appendChild(script);
+  });
+  return window._htmlToImagePromise;
+}
 async function capturePromptPreviewBlob(){
   const frame=document.getElementById('prompt-preview-frame');
   const doc=frame&&(frame.contentDocument||frame.contentWindow.document);
   if(!doc || !doc.documentElement) throw new Error('Preview is not ready yet');
   const width=Math.max(1280, doc.documentElement.scrollWidth||0, doc.body&&doc.body.scrollWidth||0, frame.clientWidth||0);
   const height=Math.max(720, doc.documentElement.scrollHeight||0, doc.body&&doc.body.scrollHeight||0, frame.clientHeight||0);
+  try{
+    const htmlToImage=await ensureHtmlToImageLib();
+    const target=doc.body||doc.documentElement;
+    const blob=await htmlToImage.toBlob(target,{cacheBust:true,pixelRatio:1.5,backgroundColor:'#ffffff',canvasWidth:width,canvasHeight:height,skipAutoScale:false});
+    if(blob) return blob;
+  }catch(err){
+    console.warn('html-to-image capture failed, using fallback', err);
+  }
   let serialized='';
   try{
     serialized=new XMLSerializer().serializeToString(doc.documentElement);
