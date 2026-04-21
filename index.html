@@ -5451,6 +5451,52 @@ body.light .stat-card{background:rgba(0,0,0,0.03)}
   #prompt-modal #prompt-tweak-output{height:auto!important;max-height:none!important;min-height:180px!important}
 }
 
+/* Prompt Studio sidebar scroll FINAL FIX — 2026-04-21 */
+#prompt-modal .prompt-container > .prompt-panel:first-child{
+  overflow-y:auto !important;
+  overflow-x:hidden !important;
+  padding-bottom:140px !important;
+  scroll-padding-bottom:140px !important;
+}
+#prompt-modal .prompt-container > .prompt-panel:first-child > .prompt-actions{
+  position:sticky !important;
+  bottom:0 !important;
+  left:0 !important;
+  right:0 !important;
+  display:flex !important;
+  flex-wrap:wrap !important;
+  align-items:center !important;
+  gap:8px !important;
+  margin:12px -12px -10px !important;
+  padding:12px 14px !important;
+  background:linear-gradient(0deg, rgba(12,11,20,0.98) 65%, rgba(12,11,20,0.85)) !important;
+  backdrop-filter:blur(10px) !important;
+  border-top:1px solid rgba(255,255,255,0.10) !important;
+  box-shadow:0 -8px 18px rgba(0,0,0,0.45) !important;
+  z-index:5 !important;
+}
+#prompt-modal .prompt-container > .prompt-panel:first-child > .prompt-actions > button{
+  flex:0 0 auto !important;
+  height:36px !important;
+  white-space:nowrap !important;
+}
+#prompt-modal .prompt-container > .prompt-panel:first-child > .prompt-actions #prompt-status{
+  flex:1 1 100% !important;
+  order:99 !important;
+  min-width:0 !important;
+  padding-top:4px !important;
+  font-size:11px !important;
+  line-height:1.4 !important;
+  color:var(--muted) !important;
+}
+#prompt-modal #brainstorm-progress{margin-bottom:24px !important}
+#prompt-modal #ps-brainstorm-models.ps-model-pills{
+  display:flex !important;
+  flex-wrap:wrap !important;
+  gap:6px !important;
+  align-items:flex-start !important;
+}
+
 /* Prompt Studio bugfixes — 2026-04-21 */
 .ps-select{appearance:auto;-webkit-appearance:menulist;-moz-appearance:menulist;background-color:rgba(255,255,255,0.06)!important;color:#f4f5f8!important;border:1px solid rgba(255,255,255,0.12)!important}
 .ps-select:hover,.ps-select:focus{color:#ffffff!important;background-color:rgba(255,255,255,0.09)!important;border-color:rgba(124,58,237,0.55)!important;outline:none!important;box-shadow:0 0 0 3px rgba(124,58,237,0.14)!important}
