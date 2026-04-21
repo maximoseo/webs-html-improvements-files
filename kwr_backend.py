@@ -628,7 +628,7 @@ Only include real services/products visible in the content. Do not invent offeri
         comp_context = '\n'.join([f"Competitor {i+1} ({c['url']}): {c['text'][:500]}" for i,c in enumerate(comp_topics)]) if comp_topics else '(none provided)'
         exclusion_note = f"Exclusions: {exclusions}" if exclusions else ''
 
-        kwr_prompt = f"""Generate a comprehensive keyword research plan for:
+        kwr_prompt = f"""You are an expert SEO content strategist. Generate a comprehensive keyword research plan for:
 Brand: {brand_name}
 Website: {website_url}
 Target Language: {target_lang}
@@ -637,30 +637,56 @@ Services/Products: {json.dumps(site_summary.get('services', []))}
 Main Topics: {json.dumps(site_summary.get('topics', []))}
 {exclusion_note}
 
-Existing pages (do NOT duplicate these):
+Existing pages on the site (DO NOT create pillars/clusters that duplicate these — these are already covered):
 {existing_paths}
 
-Competitor context:
+Competitor research context (use these to find topical gaps the site is missing):
 {comp_context}
 
-Rules:
-- Output ONLY a JSON array of row objects
-- Each row has exactly these keys: existing_parent_page, pillar, cluster, intent, primary_keyword, keywords
-- STRUCTURE: every pillar is a "parent page" topic. Its cluster rows must be NEW supporting pages that DO NOT already exist on the site — they strengthen the pillar via internal linking and topical authority. Never make a cluster equivalent to an existing page.
-- PILLAR URLs: existing_parent_page MUST be the FULL URL from the existing pages list above that best represents this pillar topic. If no existing page matches — still include the pillar (it is a NEW parent page to be created) and set existing_parent_page = "-". DO NOT invent URLs.
-- CLUSTER URLs: existing_parent_page MUST ALWAYS be "-" (clusters are new pages by definition). NEVER copy the pillar's URL. NEVER invent slugs or domains.
-- COMPETITOR RESEARCH: use the competitor context above to identify topic gaps — include pillars/clusters the site is missing but competitors cover. Flag NEW pillars (those with "-") clearly via the pillar name only; do not add separate markers.
-- intent for pillar rows = "pillar"; intent for cluster rows = one of (informational|navigational|transactional|commercial)
-- Do NOT duplicate existing pages, do NOT create cannibalization between rows
-- Do NOT invent services not found on the site
-- Do NOT mix languages except where brand/URL requires it
-- Target 200-250 total rows (pillar + cluster combined)
-- primary_keyword must be unique across all rows
-- keywords = comma-separated list of 3-5 related keywords
-- Use language: {target_lang}
-- Market context: {target_market}
+═══════════════════════════════════════════════════════════════════════════
+STRUCTURE RULES — read carefully, this is the most important section:
+═══════════════════════════════════════════════════════════════════════════
 
-Return only the JSON array, no explanation."""
+1. CREATE 10-15 NEW PILLARS — topics NOT already covered by the existing pages above. Pillars are the strategic content gaps that will drive new traffic.
+
+2. EACH PILLAR = ONE "PILLAR ROW" + 10-15 "CLUSTER ROWS":
+   • PILLAR ROW: existing_parent_page="-", pillar=<topic>, cluster=<same as pillar>, intent="pillar", primary_keyword=<main KW for pillar>, keywords="<BRAND_NAME>, <3-4 supporting KWs>"
+   • CLUSTER ROWS: existing_parent_page="/<pillar-slug>/" (slug of the NEW pillar, e.g. "/garage-door-repair/"), pillar=<same pillar name>, cluster=<unique sub-topic>, intent=<one of: informational|commercial|transactional|navigational>, primary_keyword=<unique KW>, keywords="<BRAND_NAME>, <3-4 unique long-tail KWs>"
+
+3. URL RULES (STRICT):
+   • Pillar rows ALWAYS use "-" as existing_parent_page (these are NEW pages to be created).
+   • Cluster rows use a slug path "/<pillar-slug>/" pointing to their NEW pillar (not a real domain — the slug only). Example: "/garage-door-spring-repair/".
+   • DO NOT invent full URLs with the brand domain. DO NOT use real existing-page URLs (those pages are already covered).
+
+4. KEYWORDS FORMAT (CRITICAL):
+   • Brand/business name MUST always appear FIRST in the keywords field, then 3-4 supporting keywords separated by commas.
+   • Example: "{brand_name}, garage door repair, broken spring fix, emergency garage service"
+
+5. ANTI-CANNIBALIZATION:
+   • Cluster keywords must be DIFFERENT from their pillar's keywords (not even LSI/synonyms).
+   • Each primary_keyword must be UNIQUE across the entire output.
+   • Each cluster targets a distinct sub-intent / long-tail variation.
+
+6. PILLAR/CLUSTER NAMING:
+   • DO NOT include city names in pillar names or cluster names.
+   • City names are ALLOWED only inside primary_keyword and keywords fields (e.g. "garage door repair San Antonio").
+
+7. RELEVANCE:
+   • Only include topics genuinely related to what the business actually does (per the about page and existing pages).
+   • Use competitor context to identify legitimate topic gaps — but only adopt topics the business CAN credibly cover.
+   • Prefer terms real people search (Google Auto-Complete, People Also Ask, Related Searches mindset).
+
+8. VOLUME:
+   • Target 200-250 total rows (10-15 pillars × 11-16 rows each including the pillar row itself).
+   • Mix long-tail and short-tail keywords.
+
+9. LANGUAGE: Use {target_lang} for all pillar/cluster/keyword text (except brand name which stays as-is).
+
+═══════════════════════════════════════════════════════════════════════════
+OUTPUT FORMAT:
+Return ONLY a JSON array. Each object has exactly these keys:
+  existing_parent_page, pillar, cluster, intent, primary_keyword, keywords
+No explanation, no markdown, no preamble — just the raw JSON array."""
 
         kwr_msgs = [
             {'role': 'system', 'content': 'You are an expert SEO strategist. Return only valid JSON arrays.'},
