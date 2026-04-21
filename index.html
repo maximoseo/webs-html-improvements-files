@@ -31,7 +31,7 @@
 #projects-grid{min-height:60vh}
 #page-fixer,#page-radar,#page-kwr{min-height:60vh}
 /* ── Keyword Research tab ─────────────────────────────────────────── */
-.kwr-page{padding:0 0 60px}
+.kwr-page{padding:0 0 60px;max-width:960px;margin:0 auto;}
 .kwr-hero{margin-bottom:28px}
 .kwr-title{font-size:24px;font-weight:700;letter-spacing:-0.04em;display:flex;align-items:center;gap:12px;color:var(--text)}
 .kwr-title svg{width:26px;height:26px;color:#7c3aed;flex-shrink:0}
@@ -5213,6 +5213,37 @@ body.light .stat-card{background:rgba(0,0,0,0.03)}
   .tasks-filters{flex-direction:column}
   .tasks-search{min-width:unset;width:100%}
 }
+.kwr-section-card{background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.07);border-radius:14px;padding:20px 20px 8px;margin-bottom:16px}
+.kwr-model-row{display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding:12px 0 4px;margin-top:8px;border-top:1px solid rgba(255,255,255,0.06)}
+.kwr-model-label{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;white-space:nowrap}
+.kwr-model-select{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);border-radius:8px;color:var(--text);font-size:12px;padding:6px 10px;font-family:inherit}
+.kwr-history-panel{margin-top:28px;border-top:1px solid rgba(255,255,255,0.06);padding-top:20px}
+.kwr-history-title{font-size:12px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;margin-bottom:12px}
+.kwr-history-list{display:flex;flex-direction:column;gap:6px}
+.kwr-history-item{display:flex;align-items:center;gap:10px;padding:8px 12px;border-radius:9px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);font-size:12px;cursor:pointer;transition:all .15s}
+.kwr-history-item:hover{background:rgba(255,255,255,0.05);border-color:rgba(124,58,237,.3)}
+.kwr-history-badge{font-size:10px;padding:2px 7px;border-radius:4px;font-weight:700}
+.kwr-history-badge.done{background:rgba(74,222,128,.15);color:#4ade80}
+.kwr-history-badge.error{background:rgba(248,113,113,.15);color:#f87171}
+.kwr-history-badge.running{background:rgba(251,191,36,.15);color:#fbbf24}
+.kwr-swarm-hint{font-size:11px;color:var(--muted);margin-left:4px}
+
+/* Feature D: Prompt Studio enhancements */
+.ps-section{margin-bottom:16px}
+.ps-section-label{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px}
+.ps-agent-pills{display:flex;gap:6px;flex-wrap:wrap}
+.ps-pill{padding:5px 12px;border-radius:20px;border:1px solid rgba(255,255,255,0.12);background:transparent;color:var(--muted);font-size:11px;font-weight:600;cursor:pointer;transition:all .15s}
+.ps-pill.active{background:rgba(124,58,237,.2);border-color:rgba(124,58,237,.5);color:#a78bfa}
+.ps-template-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+.ps-template-btn{padding:7px 6px;border-radius:8px;border:1px solid rgba(255,255,255,0.08);background:rgba(255,255,255,0.03);color:var(--text-secondary);font-size:11px;font-weight:600;cursor:pointer;transition:all .15s;text-align:center}
+.ps-template-btn:hover{background:rgba(124,58,237,.15);border-color:rgba(124,58,237,.3);color:#a78bfa}
+.ps-constraints{display:flex;flex-direction:column;gap:8px}
+.ps-constraint-row{display:flex;align-items:center;gap:10px}
+.ps-constraint-label{font-size:11px;color:var(--muted);min-width:100px;flex-shrink:0}
+.ps-select,.ps-input{flex:1;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,.1);border-radius:7px;color:var(--text);font-size:12px;padding:6px 10px;font-family:inherit}
+.ps-history-list{display:flex;flex-direction:column;gap:4px}
+.ps-history-item{font-size:11px;padding:5px 10px;border-radius:6px;background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.06);color:var(--muted);cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ps-history-item:hover{background:rgba(255,255,255,.05);color:var(--text)}
 </style>
 </head>
 <body>
@@ -6338,6 +6369,58 @@ body.light .stat-card{background:rgba(0,0,0,0.03)}
           <button class="action-btn" onclick="clearPaletteExtract()" style="font-size:12px;padding:8px 14px">Clear</button>
         </div>
       </div>
+
+      <!-- Feature D: Target Agent + Templates + Constraints + History -->
+      <div class="ps-section">
+        <div class="ps-section-label">Target Coding Agent</div>
+        <div class="ps-agent-pills" id="ps-agent-pills">
+          <button class="ps-pill active" data-agent="claude-code" onclick="psSelectAgent(this)">&#x26A1; Claude Code</button>
+          <button class="ps-pill" data-agent="cursor" onclick="psSelectAgent(this)">&#x1F3AF; Cursor</button>
+          <button class="ps-pill" data-agent="windsurf" onclick="psSelectAgent(this)">&#x1F3C4; Windsurf</button>
+          <button class="ps-pill" data-agent="gemini-cli" onclick="psSelectAgent(this)">&#x1F537; Gemini CLI</button>
+          <button class="ps-pill" data-agent="gpt4o" onclick="psSelectAgent(this)">&#x1F4A1; GPT-4o</button>
+          <button class="ps-pill" data-agent="github-copilot" onclick="psSelectAgent(this)">&#x1F419; GitHub Copilot</button>
+          <button class="ps-pill" data-agent="kimi-cli" onclick="psSelectAgent(this)">&#x1F31A; Kimi CLI</button>
+          <button class="ps-pill" data-agent="hermes-cli" onclick="psSelectAgent(this)">&#x1F9E0; Hermes CLI</button>
+        </div>
+      </div>
+      <div class="ps-section">
+        <div class="ps-section-label">Task Template</div>
+        <div class="ps-template-grid" id="ps-template-grid">
+          <button class="ps-template-btn" onclick="psApplyTemplate('redesign')" title="Redesign a section">&#x1F3A8; Redesign</button>
+          <button class="ps-template-btn" onclick="psApplyTemplate('fix-bug')" title="Fix a specific bug">&#x1F41B; Fix Bug</button>
+          <button class="ps-template-btn" onclick="psApplyTemplate('add-feature')" title="Add new feature">&#x2795; Add Feature</button>
+          <button class="ps-template-btn" onclick="psApplyTemplate('performance')" title="Performance audit">&#x26A1; Performance</button>
+          <button class="ps-template-btn" onclick="psApplyTemplate('accessibility')" title="Accessibility fix">&#x267F; A11y</button>
+          <button class="ps-template-btn" onclick="psApplyTemplate('responsive')" title="Fix mobile/responsive">&#x1F4F1; Responsive</button>
+        </div>
+      </div>
+      <div class="ps-section" id="ps-constraints-section">
+        <div class="ps-section-label">Constraints</div>
+        <div class="ps-constraints">
+          <div class="ps-constraint-row">
+            <label class="ps-constraint-label">Output format</label>
+            <select id="ps-output-format" class="ps-select">
+              <option value="full-file">Return full file</option>
+              <option value="diff-only">Return diff only</option>
+              <option value="code-block">Code block only</option>
+              <option value="instructions">Instructions only</option>
+            </select>
+          </div>
+          <div class="ps-constraint-row">
+            <label class="ps-constraint-label">Tech stack</label>
+            <input id="ps-tech-stack" class="ps-input" type="text" placeholder="e.g. vanilla JS only, no React...">
+          </div>
+          <div class="ps-constraint-row">
+            <label class="ps-constraint-label">Lines to preserve</label>
+            <input id="ps-preserve-lines" class="ps-input" type="text" placeholder="e.g. 1-200, keep all .kwr-* CSS">
+          </div>
+        </div>
+      </div>
+      <div class="ps-section" id="ps-history-section">
+        <div class="ps-section-label">Recent Prompts</div>
+        <div id="ps-history-list" class="ps-history-list"></div>
+      </div>
       <div class="model-select-wrap">
         <span class="model-select-label">Model</span>
         <select id="prompt-model-select" class="model-select" aria-label="Select model for prompt improvement">
@@ -6535,6 +6618,7 @@ body.light .stat-card{background:rgba(0,0,0,0.03)}
   </div>
 
   <!-- SECTION: Required inputs -->
+  <div class="kwr-section-card">
   <div class="kwr-section-title">Required Information</div>
   <div class="kwr-grid">
     <div class="kwr-field">
@@ -6582,13 +6666,15 @@ body.light .stat-card{background:rgba(0,0,0,0.03)}
       <input class="kwr-input" id="kwr-worksheet-prefix" type="text" placeholder="KWR" autocomplete="off">
     </div>
   </div>
+  </div><!-- /kwr-section-card required -->
 
   <!-- SECTION: Optional inputs -->
+  <div class="kwr-section-card">
   <div class="kwr-section-title">Optional</div>
   <div class="kwr-grid">
     <div class="kwr-field">
-      <label class="kwr-label" for="kwr-worksheet-prefix">Worksheet Name Prefix</label>
-      <input class="kwr-input" id="kwr-worksheet-prefix" type="text" placeholder="KWR" autocomplete="off">
+      <label class="kwr-label" for="kwr-worksheet-prefix-2">Worksheet Name Prefix</label>
+      <input class="kwr-input" id="kwr-worksheet-prefix-2" type="text" placeholder="KWR" autocomplete="off">
     </div>
     <div class="kwr-field">
       <label class="kwr-label" for="kwr-competitor-urls">Competitor URLs</label>
@@ -6599,7 +6685,9 @@ body.light .stat-card{background:rgba(0,0,0,0.03)}
       <textarea class="kwr-textarea" id="kwr-exclusions" placeholder="Topics to exclude, brand constraints, tone notes, language mix rules…"></textarea>
     </div>
   </div>
+  </div><!-- /kwr-section-card optional -->
 
+  <div class="kwr-section-card">
   <!-- Actions -->
   <div class="kwr-actions">
     <button class="kwr-btn kwr-btn-primary" id="kwr-run-btn" onclick="kwrRun()">
@@ -6629,6 +6717,7 @@ body.light .stat-card{background:rgba(0,0,0,0.03)}
     </select>
     <span style="font-size:11px;color:var(--muted)">Used for LLM generation steps in the pipeline</span>
   </div>
+  </div><!-- /kwr-section-card actions -->
 
   <!-- Progress / stage list (hidden until running) -->
   <div id="kwr-progress-section" style="display:none">
@@ -6727,6 +6816,12 @@ body.light .stat-card{background:rgba(0,0,0,0.03)}
 
 </div>
 </div>
+  <div class="kwr-history-panel" id="kwr-history-panel">
+    <div class="kwr-history-title">Recent Runs</div>
+    <div class="kwr-history-list" id="kwr-history-list">
+      <div style="color:var(--muted);font-size:12px">Loading history...</div>
+    </div>
+  </div>
 <!-- /page-kwr -->
 
 <div class="action-toast" id="action-toast">
@@ -8229,6 +8324,22 @@ function toggleAllProjects(btn){
   showToast(allExpanded?'All projects collapsed':'All projects expanded','info');
   if(!allExpanded&&cards[0])setTimeout(()=>cards[0].scrollIntoView({behavior:'smooth',block:'start'}),320);
 }
+// Feature A: toggleAllCards alias (handles both expanded and open classes)
+function toggleAllCards() {
+  const cards = document.querySelectorAll('.project-card');
+  const anyCollapsed = Array.from(cards).some(c => !c.classList.contains('expanded') && !c.classList.contains('open'));
+  cards.forEach(c => {
+    if(anyCollapsed) {
+      c.classList.add('expanded'); c.classList.add('open');
+    } else {
+      c.classList.remove('expanded'); c.classList.remove('open');
+    }
+  });
+  const btn = document.getElementById('expand-all-btn');
+  if(btn) btn.textContent = anyCollapsed ? '▲ Collapse All' : '▼ Expand All';
+  syncBulkToggleLabel();
+}
+
 
 async function fetchJSON(url){
   try{
@@ -8442,16 +8553,18 @@ async function loadDashboard(){
         const _fCtxEnc=encodeURIComponent(JSON.stringify({domain:p.name,agentName:detectAgent(v.name),versionName:v.name,fileManifest:v.files}));
         const previewBtn=cls==='html'?`<button class="action-btn" onclick="event.preventDefault();event.stopPropagation();openPreview('${f.download}','${p.name} — ${f.name}','${_fCtxEnc}')" style="border-color:var(--purple);color:var(--purple)">&#9654; Preview</button>`:'';
         const deployBtn=cls==='json'&&/workflow/i.test(f.name)?`<button class="action-btn success" onclick="event.preventDefault();event.stopPropagation();deployToN8n('${encodeURIComponent(p.name)}','${encodeURIComponent(v.name)}','${encodeURIComponent(f.path)}','${encodeURIComponent(f.name)}',this)">Deploy to n8n</button>`:'';
+        const _isHtml=cls==='html';
+        const promptStudioBtn=_isHtml?`<button class="file-action-btn prompt action-btn" onclick="event.preventDefault();event.stopPropagation();openPromptStudioForFile('${encodeURIComponent(p.name)}','${encodeURIComponent(agentName)}','${encodeURIComponent(f.name)}','${f.download}')" title="Open Prompt Studio for this file" style="font-size:10px">✒️ Prompt</button>`:'';
         filesHTML+=`<div class="file-row">
           <div class="file-badge ${cls}">${label}</div>
           <div class="file-details"><div class="file-name">${f.name}</div><div class="file-size">${formatSize(f.size)}</div></div>
-          <div class="file-actions">${previewBtn}${deployBtn}<a href="${f.url}" target="_blank" class="action-btn">View Code</a><a href="${f.download}" class="action-btn primary">Download</a></div>
+          <div class="file-actions">${previewBtn}${deployBtn}${promptStudioBtn}<a href="${f.url}" target="_blank" class="action-btn">View Code</a><a href="${f.download}" class="action-btn primary">Download</a></div>
         </div>`;
       });
       const _agEnc=encodeURIComponent(agentName);
       const _dmEnc=encodeURIComponent(p.name);
       const _hidden=isAgentHidden(p.name,agentName);
-      return `<div class="agent-group${_hidden?' collapsed':''}" data-domain="${p.name}" data-agent="${agentName.replace(/"/g,'&quot;')}"><div class="agent-group-header"><strong>${agentName}</strong><div class="agent-group-controls"><span class="agent-group-badge">Current file set</span>${_hidden?'<span class="agent-group-hidden-note">hidden</span>':''}<button class="agent-hide-btn" onclick="event.stopPropagation();toggleAgentHidden('${_dmEnc}','${_agEnc}',this)" title="${_hidden?'Show this agent':'Hide this agent'}" aria-label="${_hidden?'Show':'Hide'} agent ${agentName}">${_hidden?'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>Show':'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17.94 17.94A10.94 10.94 0 0 1 12 20c-7 0-11-8-11-8a19.6 19.6 0 0 1 5.06-5.94M9.9 4.24A10.94 10.94 0 0 1 12 4c7 0 11 8 11 8a19.6 19.6 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>Hide'}</button></div></div><div class="agent-group-body"><div class="version-section"><div class="version-header"><span class="version-dot latest"></span><span class="version-title">${v.date||v.name} <span class="v-badge">&#x2605; Latest</span></span></div>${filesHTML}</div></div></div>`;
+      return `<div class="agent-group${_hidden?' collapsed':''}" data-domain="${p.name}" data-agent="${agentName.replace(/"/g,'&quot;')}"><div class="agent-group-header"><strong>${agentName}</strong><div class="agent-group-controls"><span class="agent-group-badge">Current file set</span>${_hidden?'<span class="agent-group-hidden-note">hidden</span>':''}<button class="agent-hide-btn" onclick="event.stopPropagation();toggleAgentHidden('${_dmEnc}','${_agEnc}',this)" title="${_hidden?'Show this agent':'Hide this agent'}" aria-label="${_hidden?'Show':'Hide'} agent ${agentName}">${_hidden?'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>Show':'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17.94 17.94A10.94 10.94 0 0 1 12 20c-7 0-11-8-11-8a19.6 19.6 0 0 1 5.06-5.94M9.9 4.24A10.94 10.94 0 0 1 12 4c7 0 11 8 11 8a19.6 19.6 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>Hide'}<button class="agent-delete-btn" onclick="deleteAgent(event,'${_dmEnc}','${_agEnc}')" title="Delete agent" style="background:none;border:none;color:#f87171;cursor:pointer;font-size:11px;padding:2px 6px;border-radius:4px;opacity:0.6;transition:opacity .15s" onmouseenter="this.style.opacity=1" onmouseleave="this.style.opacity=0.6">&#x2715; Remove</button></div></div><div class="agent-group-body"><div class="version-section"><div class="version-header"><span class="version-dot latest"></span><span class="version-title">${v.date||v.name} <span class="v-badge">&#x2605; Latest</span></span></div>${filesHTML}</div></div></div>`;
     }).join('');
     // Bulk bar if any agents hidden for this domain
     const _hiddenCount=Object.keys(versionsByAgent).filter(a=>isAgentHidden(p.name,a)).length;
@@ -8617,6 +8730,7 @@ document.addEventListener('click', function(ev){
     }
     if (kwrPage) {
       kwrPage.style.display = isKwr ? 'block' : 'none';
+      if (isKwr) kwrLoadHistory();
       kwrPage.classList.toggle('active', isKwr);
     }
     if (tasksPage) {
@@ -10336,6 +10450,38 @@ function loadTopicsFromStatus(state) {
   }
 
   // ---- Run ----
+  function kwrLoadHistory() {
+    fetch('/api/kwr/list?limit=5').then(r=>r.json()).then(function(d) {
+      var list = document.getElementById('kwr-history-list');
+      if(!list) return;
+      var jobs = d.jobs || d.runs || d.list || (Array.isArray(d) ? d : []);
+      if(!jobs.length) { list.innerHTML='<div style="color:var(--muted);font-size:12px">No recent runs</div>'; return; }
+      list.innerHTML = jobs.map(function(j) {
+        var status = j.status || j.current_stage || 'unknown';
+        var badge = status === 'ready' || status === 'done' ? 'done' : status === 'error' || status === 'failed' ? 'error' : 'running';
+        var label = status === 'ready' ? 'Done' : status.charAt(0).toUpperCase() + status.slice(1);
+        var rows = j.row_count || j.rows_count || '';
+        var site = (j.website_url || j.url || '').replace('https://','').replace('http://','').split('/')[0];
+        var date = j.created_at ? new Date(j.created_at).toLocaleDateString('en-GB') : '';
+        return '<div class="kwr-history-item" onclick="kwrLoadRun(&#39;' + j.run_id + '&#39;)">'
+          + '<span class="kwr-history-badge ' + badge + '">' + label + '</span>'
+          + '<span style="flex:1;font-weight:500">' + (site||j.run_id||'') + '</span>'
+          + (rows ? '<span style="color:var(--muted)">' + rows + ' rows</span>' : '')
+          + '<span style="color:var(--muted)">' + date + '</span>'
+          + (status==='ready'||status==='done' ? '<button onclick="event.stopPropagation();window.location.href=&#39;/api/kwr/download/' + j.run_id + '&#39;" style="background:rgba(124,58,237,.15);color:#a78bfa;border:none;border-radius:5px;padding:3px 8px;font-size:10px;cursor:pointer">&#8595; Excel</button>' : '')
+          + '</div>';
+      }).join('');
+    }).catch(function(){
+      var list = document.getElementById('kwr-history-list');
+      if(list) list.innerHTML='<div style="color:var(--muted);font-size:12px">History unavailable</div>';
+    });
+  }
+
+  function kwrLoadRun(runId) {
+    if(!runId) return;
+    if(window._kwrRunId !== undefined) { window._kwrRunId = runId; }
+  }
+
   window.kwrRun = function(regenFeedback) {
     const { inputs, missing } = kwrCollectInputs();
     if (missing.length > 0) {
@@ -11051,6 +11197,152 @@ function initTasksTab() {
   if(!_tasks.length) tasksLoad();
   else tasksRender();
 }
+
+// Feature B: deleteAgent — soft-delete agent folder via /api/delete-agent
+window.deleteAgent = function(e, project, agent) {
+  e.stopPropagation();
+  if(!confirm('Remove agent "' + agent + '" from project "' + project + '"?\nThis will move it to _deleted/ in GitHub.')) return;
+  fetch('/api/delete-agent', {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({project: project, agent: agent})
+  }).then(function(r){ return r.json(); }).then(function(d) {
+    if(d.ok) {
+      const row = e.target.closest('.agent-group, [data-agent]');
+      if(row) { row.style.opacity='0'; row.style.transition='opacity .3s'; setTimeout(function(){ row.remove(); }, 300); }
+      if(typeof showToast === 'function') showToast('Agent removed', 'success');
+    } else {
+      alert('Error: ' + (d.error || 'Failed to delete agent'));
+    }
+  }).catch(function(err) {
+    alert('Network error: ' + err.message);
+  });
+};
+
+// Feature C: openPromptStudioForFile — open Prompt Studio pre-filled for a specific file
+window.openPromptStudioForFile = function(project, agent, filename, fileUrl) {
+  window._psContext = { project: project, agent: agent, filename: filename, fileUrl: fileUrl, mode: 'per-file' };
+  if(typeof openPromptStudio === 'function') {
+    openPromptStudio(encodeURIComponent(project), encodeURIComponent(agent), '', fileUrl, '');
+  } else {
+    const psBtn = document.querySelector('[onclick*="openPromptStudio"], #prompt-studio-btn, .prompt-studio-btn');
+    if(psBtn) psBtn.click();
+  }
+  setTimeout(function() {
+    const fileInput = document.getElementById('ps-file-url') || document.getElementById('ps-context-url');
+    if(fileInput) fileInput.value = fileUrl;
+    const titleEl = document.getElementById('ps-modal-title') || document.querySelector('.ps-title');
+    if(titleEl) titleEl.textContent = 'Prompt Studio — ' + filename;
+  }, 200);
+};
+
+// Feature D6: Prompt Studio enhancement JS
+const PS_HISTORY_KEY = 'ps-history';
+window.psSelectAgent = function(btn) {
+  document.querySelectorAll('.ps-pill').forEach(function(p){ p.classList.remove('active'); });
+  btn.classList.add('active');
+};
+
+const PS_TEMPLATES = {
+  'redesign': `Redesign the following HTML section to improve visual hierarchy, spacing, and consistency with the existing design system. Do not change functionality.
+
+Target file: {file}
+
+Instructions:
+- Improve CSS: spacing, typography, colors
+- Keep all existing class names and IDs intact
+- Add CSS variables for new colors/spacing
+- Ensure full mobile responsiveness
+- Output: {output_format}`,
+  'fix-bug': `Fix the following bug in {file}:
+
+Bug description: [DESCRIBE BUG HERE]
+
+Instructions:
+- Do not change unrelated code
+- Add a brief comment explaining the fix
+- Output: {output_format}`,
+  'add-feature': `Add the following feature to {file}:
+
+Feature: [DESCRIBE FEATURE HERE]
+
+Instructions:
+- Integrate seamlessly with existing code style
+- Use vanilla JS (no new frameworks)
+- Add appropriate CSS classes
+- Output: {output_format}`,
+  'performance': `Perform a performance audit of {file} and apply the following optimizations:
+- Defer non-critical CSS
+- Lazy load images
+- Minimize DOM operations
+- Remove unused CSS rules
+- Output: {output_format}`,
+  'accessibility': `Fix accessibility issues in {file}:
+- Add missing ARIA labels
+- Ensure proper heading hierarchy
+- Add keyboard navigation
+- Fix color contrast issues
+- Output: {output_format}`,
+  'responsive': `Fix mobile/responsive layout issues in {file}:
+- Target breakpoints: 480px, 768px, 1024px
+- Fix overflowing elements
+- Adjust font sizes for mobile
+- Fix touch target sizes (min 44px)
+- Output: {output_format}`
+};
+
+window.psApplyTemplate = function(type) {
+  var tmpl = PS_TEMPLATES[type] || '';
+  var file = (window._psContext && window._psContext.filename) || '';
+  var outFmt = document.getElementById('ps-output-format');
+  var fmt = outFmt ? outFmt.value : 'full-file';
+  var filled = tmpl.replace(/{file}/g, file).replace(/{output_format}/g, fmt);
+  var textarea = document.getElementById('prompt-draft') || document.getElementById('ps-prompt-text') || document.querySelector('.ps-textarea, #prompt-text, .prompt-textarea');
+  if(textarea) textarea.value = filled;
+  document.querySelectorAll('.ps-template-btn').forEach(function(b){ b.style.background = ''; });
+  if(event && event.target) event.target.style.background = 'rgba(124,58,237,.2)';
+};
+
+window.psSaveHistory = function(promptText, context) {
+  try {
+    var h = JSON.parse(localStorage.getItem(PS_HISTORY_KEY) || '[]');
+    h.unshift({text: promptText.slice(0,80), context: context, ts: Date.now()});
+    localStorage.setItem(PS_HISTORY_KEY, JSON.stringify(h.slice(0,20)));
+  } catch(e){}
+};
+
+window.psLoadHistory = function() {
+  var el = document.getElementById('ps-history-list');
+  if(!el) return;
+  try {
+    var ctx = window._psContext && window._psContext.project;
+    var h = JSON.parse(localStorage.getItem(PS_HISTORY_KEY) || '[]').filter(function(i){ return !ctx || !i.context || i.context === ctx; }).slice(0,5);
+    el.innerHTML = h.length ? h.map(function(i){
+      return '<div class="ps-history-item" onclick="psRestoreHistory(&#39;' + i.ts + '&#39;)" title="' + i.text.replace(/"/g,'&quot;') + '">' + i.text + '...</div>';
+    }).join('') : '<div style="color:var(--muted);font-size:11px">No recent prompts</div>';
+  } catch(e) { el.innerHTML = ''; }
+};
+
+window.psRestoreHistory = function(ts) {
+  try {
+    var h = JSON.parse(localStorage.getItem(PS_HISTORY_KEY) || '[]');
+    var item = h.find(function(i){ return String(i.ts) === String(ts); });
+    if(!item) return;
+    var textarea = document.getElementById('prompt-draft') || document.getElementById('ps-prompt-text') || document.querySelector('.ps-textarea, #prompt-text');
+    if(textarea) textarea.value = item.text;
+  } catch(e){}
+};
+
+// Auto-load history when prompt studio opens
+(function() {
+  var _origOpen = window.openPromptStudio;
+  if(typeof _origOpen === 'function') {
+    window.openPromptStudio = function() {
+      _origOpen.apply(this, arguments);
+      setTimeout(window.psLoadHistory, 300);
+    };
+  }
+})();
 </script>
 </body>
 </html>
