@@ -97,7 +97,7 @@ def cancel_run(run_id: str) -> bool:
         return True
 
 
-COLUMNS = ['Existing Parent Page', 'Pillar', 'Cluster', 'Intent', 'Primary Keyword', 'Keywords']
+COLUMNS = ['עמוד אב קיים', 'Pillar', 'Cluster', 'Intent', 'Primary Keyword', 'Keywords']
 
 
 def _worksheet_name(job: dict, sheet_prefix: str) -> str:
@@ -147,19 +147,20 @@ def build_excel(run_id: str) -> tuple:
 
     ws.row_dimensions[1].height = 30
 
-    # Pillar / cluster row styles — distinct color per pillar block
+    # Pillar / cluster row styles — one pastel color per pillar block (matches reference template)
     PILLAR_PALETTE = [
-        ('1F3864', 'D9E1F2'),  # navy / light blue
-        ('2E7D32', 'E8F5E9'),  # green / mint
-        ('B26A00', 'FFF3E0'),  # amber / cream
-        ('6A1B9A', 'F3E5F5'),  # purple / lavender
-        ('AD1457', 'FCE4EC'),  # pink / light pink
-        ('00838F', 'E0F7FA'),  # teal / aqua
-        ('455A64', 'ECEFF1'),  # slate / light grey
-        ('5D4037', 'EFEBE9'),  # brown / cream brown
-        ('283593', 'E8EAF6'),  # indigo / light indigo
-        ('C62828', 'FFEBEE'),  # red / light red
+        'E6F3FF',  # light blue
+        'FFE6E6',  # light red/pink
+        'E8F5E9',  # light green
+        'FFF3E0',  # light amber
+        'F3E5F5',  # light purple
+        'E0F7FA',  # light teal
+        'FFF9C4',  # light yellow
+        'FCE4EC',  # light pink
+        'E8EAF6',  # light indigo
+        'EFEBE9',  # light brown
     ]
+    LINK_COLOR = '0563C1'
     pillar_idx = -1
     current_pillar_key = None
 
@@ -172,35 +173,47 @@ def build_excel(run_id: str) -> tuple:
         col_e = row.get('primary_keyword',      row.get('col_e', '')) or ''
         col_f = row.get('keywords',             row.get('col_f', '')) or ''
 
-        # Pillar detection: intent=='pillar' OR col_a == '-'
-        is_pillar = (str(col_d).strip().lower() == 'pillar' or str(col_a).strip() == '-')
+        # Pillar detection: intent=='pillar' OR col_a == '-' OR cluster empty/equals pillar
+        is_pillar = (
+            str(col_d).strip().lower() == 'pillar'
+            or str(col_a).strip() in ('-', '')
+            or not str(col_c).strip()
+            or str(col_c).strip() == str(col_b).strip()
+        )
 
         # Track the pillar block this row belongs to (by pillar name)
         pillar_key = str(col_b).strip().lower()
         if is_pillar or pillar_key != current_pillar_key:
-            if is_pillar:
-                pillar_idx = (pillar_idx + 1) % len(PILLAR_PALETTE)
-                current_pillar_key = pillar_key
-            elif pillar_key != current_pillar_key:
-                # cluster encountered without a preceding pillar — advance palette
-                pillar_idx = (pillar_idx + 1) % len(PILLAR_PALETTE)
-                current_pillar_key = pillar_key
+            pillar_idx = (pillar_idx + 1) % len(PILLAR_PALETTE)
+            current_pillar_key = pillar_key
 
-        dark_hex, light_hex = PILLAR_PALETTE[pillar_idx if pillar_idx >= 0 else 0]
+        block_color = PILLAR_PALETTE[pillar_idx if pillar_idx >= 0 else 0]
+        fill = PatternFill('solid', fgColor=block_color)
+
+        # Pillar row: bold, cluster column repeats pillar name (block header)
+        # Cluster row: regular weight
         if is_pillar:
-            fill = PatternFill('solid', fgColor=dark_hex)
-            font = Font(bold=True, size=11, color='FFFFFF')
+            font_default = Font(bold=True, size=11, color='000000')
+            if not str(col_c).strip():
+                col_c = col_b  # cluster column = pillar name on header rows
+            # Pillar URL: '-' if empty/dash, else hyperlink
+            url_value = str(col_a).strip() or '-'
         else:
-            fill = PatternFill('solid', fgColor=light_hex)
-            font = Font(size=10, color='000000')
+            font_default = Font(size=10, color='000000')
+            url_value = str(col_a).strip() or '-'
 
-        values = [col_a, col_b, col_c, col_d, col_e, col_f]
+        values = [url_value, col_b, col_c, col_d, col_e, col_f]
         for c_idx, val in enumerate(values, 1):
             cell = ws.cell(row=r_idx, column=c_idx, value=val)
             cell.fill = fill
-            cell.font = font
-            cell.alignment = Alignment(vertical='top', wrap_text=True)
+            cell.alignment = Alignment(vertical='top', wrap_text=True, horizontal='right' if c_idx in (2, 3, 5, 6) else 'left')
             cell.border = border
+            # Hyperlink styling for URL column when it's an actual URL
+            if c_idx == 1 and url_value and url_value != '-':
+                cell.hyperlink = url_value
+                cell.font = Font(size=11 if is_pillar else 10, bold=is_pillar, color=LINK_COLOR, underline='single')
+            else:
+                cell.font = font_default
 
     # Column widths
     col_widths = [30, 25, 30, 15, 35, 50]
