@@ -11453,8 +11453,11 @@ function loadTopicsFromStatus(state) {
     setVal('kwr-sitemap-url',    sitemap);
     setVal('kwr-about-url',      about);
     setVal('kwr-brand-name',     brand);
-    if (language) setVal('kwr-target-language', language);
-    if (market)   setVal('kwr-target-market',   market);
+    // Map language name -> select option code
+    const langMap = {Hebrew:'he',English:'en',Spanish:'es',French:'fr',German:'de',Portuguese:'pt',Italian:'it',Dutch:'nl',Arabic:'ar',Russian:'ru',Chinese:'zh',Japanese:'ja',Korean:'ko'};
+    const langCode = langMap[language] || (language && language.length===2 ? language.toLowerCase() : '');
+    if (langCode) setVal('kwr-target-language', langCode);
+    if (market) setVal('kwr-target-market',   market);
 
     const req = document.querySelector('.kwr-section-card:nth-child(3)');
     if (req) req.scrollIntoView({ behavior: 'smooth', block: 'start' });
