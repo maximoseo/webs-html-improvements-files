@@ -449,7 +449,7 @@ def _runner(run_id: str, call_llm):
         competitor_urls = [u.strip() for u in (inputs.get('competitor_urls') or '').split('\n') if u.strip()]
         exclusions    = inputs.get('notes_exclusions', '')
         # Model override from UI (optional — defaults to OpenRouter-first GPT-5.4)
-        llm_model     = (inputs.get('model') or inputs.get('_model') or 'openai/gpt-5.4').strip()
+        llm_model     = (inputs.get('model') or inputs.get('_model') or 'anthropic/claude-opus-4.7').strip()
 
         # ── Stage 1: validating ─────────────────────────────────────────────
         set_stage('validating', 5)
@@ -975,16 +975,53 @@ def _parse_sitemap(sitemap_url: str) -> list:
 
 
 def _extract_json(text: str) -> str:
-    """Extract JSON from LLM output that may contain prose or fenced blocks."""
+    """Extract JSON from LLM output that may contain prose, fenced blocks, or JSONL."""
     # Try fenced block first
-    m = re.search(r'```(?:json)?\s*([\[\{].*?)\s*```', text, re.DOTALL)
+    m = re.search(r'```(?:json|jsonl)?\s*(.+?)\s*```', text, re.DOTALL)
     if m:
-        return m.group(1)
-    # Try first [ ... ] or { ... }
-    m = re.search(r'(\[.*\]|\{.*\})', text, re.DOTALL)
-    if m:
-        return m.group(1)
-    return text
+        text = m.group(1)
+    # If it parses cleanly as-is, return it
+    stripped = text.strip()
+    try:
+        json.loads(stripped)
+        return stripped
+    except Exception:
+        pass
+    # Try to extract a balanced top-level JSON array
+    arr_match = re.search(r'\[\s*\{.*\}\s*\]', stripped, re.DOTALL)
+    if arr_match:
+        candidate = arr_match.group(0)
+        try:
+            json.loads(candidate)
+            return candidate
+        except Exception:
+            pass
+    # JSONL fallback: collect each {...} object on its own line(s) and wrap as array
+    objects = []
+    decoder = json.JSONDecoder()
+    idx = 0
+    s = stripped
+    while idx < len(s):
+        # skip whitespace and commas/newlines between objects
+        while idx < len(s) and s[idx] in ' \t\r\n,':
+            idx += 1
+        if idx >= len(s):
+            break
+        if s[idx] != '{':
+            # skip until next '{'
+            nxt = s.find('{', idx)
+            if nxt == -1:
+                break
+            idx = nxt
+        try:
+            obj, end = decoder.raw_decode(s, idx)
+            objects.append(obj)
+            idx = end
+        except Exception:
+            break
+    if objects:
+        return json.dumps(objects, ensure_ascii=False)
+    return stripped
 
 
 def _slugify(text: str) -> str:
