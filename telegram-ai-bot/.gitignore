@@ -1,0 +1,12 @@
+# Runtime / logs
+bot.log
+nohup.out
+
+# Per-user conversation history (runtime data)
+data/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.env
