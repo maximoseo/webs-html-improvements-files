@@ -89,11 +89,13 @@ def clean_keywords(cell: str, brand: str = '') -> str:
     """
     Split a comma-separated keyword cell, strip whitespace, dedup case-insensitively
     while preserving order, and (if brand given) ensure brand is the first entry.
-    Returns a clean comma-joined string.
+    Returns a clean comma-joined string. Also normalizes whitespace (collapses
+    multiple spaces) and strips surrounding quotes/brackets that LLMs sometimes add.
     """
     if not cell:
         return (brand or '').strip()
-    parts = [p.strip() for p in str(cell).replace('\n', ',').split(',')]
+    raw = str(cell).strip().strip('"\'[](){}').replace('\n', ',').replace(';', ',')
+    parts = [re.sub(r'\s+', ' ', p).strip(' "\'') for p in raw.split(',')]
     parts = [p for p in parts if p]
     seen = set()
     out = []
@@ -110,6 +112,76 @@ def clean_keywords(cell: str, brand: str = '') -> str:
         out = [p for p in out if p.casefold() != bk]
         out.insert(0, brand)
     return ', '.join(out)
+
+
+def _kw_set(cell: str) -> set:
+    """Helper: return casefolded set of individual keywords from a cleaned cell."""
+    return {p.strip().casefold() for p in (cell or '').split(',') if p.strip()}
+
+
+def validate_kwr_rows(rows: list, brand: str = '', log=None) -> dict:
+    """
+    Conservative validator — runs AFTER clean_keywords. Does NOT mutate rows.
+    Returns a dict with counts + list of warnings. Logs each warning if log() given.
+
+    Checks:
+      1. Pillar URL convention: pillar rows should have existing_parent_page='-'
+      2. Cluster URL convention: cluster rows should have '/pillar-slug/' format
+      3. Anti-cannibalization: cluster keywords overlapping their pillar's keywords
+      4. Brand-first: brand appears as first KW in every row
+    """
+    warnings = []
+    log = log or (lambda *_: None)
+
+    # Build pillar -> keyword-set map
+    pillar_kws = {}
+    for r in rows:
+        if (r.get('intent') or '').strip().lower() == 'pillar':
+            pname = (r.get('pillar') or '').strip()
+            if pname:
+                pillar_kws[pname] = _kw_set(r.get('keywords', ''))
+
+    brand_cf = (brand or '').strip().casefold()
+
+    for i, r in enumerate(rows):
+        intent = (r.get('intent') or '').strip().lower()
+        epp = (r.get('existing_parent_page') or '').strip()
+        pillar = (r.get('pillar') or '').strip()
+        kw_cell = (r.get('keywords') or '').strip()
+
+        # Brand-first check
+        if brand_cf:
+            first_kw = kw_cell.split(',')[0].strip().casefold() if kw_cell else ''
+            if first_kw != brand_cf:
+                warnings.append(f"row {i} ({pillar}): brand not first in keywords")
+
+        # URL convention checks
+        if intent == 'pillar':
+            if epp != '-':
+                warnings.append(f"row {i} pillar '{pillar}': existing_parent_page should be '-' (got '{epp}')")
+        else:
+            if epp == '-' or not epp.startswith('/') or not epp.endswith('/'):
+                warnings.append(f"row {i} cluster under '{pillar}': bad URL format '{epp}' (expected '/pillar-slug/')")
+
+        # Anti-cannibalization (warning only, no mutation)
+        if intent != 'pillar' and pillar in pillar_kws:
+            cluster_kws = _kw_set(kw_cell) - {brand_cf}
+            overlap = cluster_kws & (pillar_kws[pillar] - {brand_cf})
+            if overlap:
+                warnings.append(
+                    f"row {i} cluster under '{pillar}': cannibalization risk — "
+                    f"shares KWs with pillar: {sorted(overlap)[:3]}"
+                )
+
+    for w in warnings:
+        log(f"[KWR validate] WARN: {w}")
+
+    return {
+        'warnings_count': len(warnings),
+        'warnings': warnings[:50],  # cap to avoid bloat
+        'pillars_validated': len(pillar_kws),
+        'rows_validated': len(rows),
+    }
 
 # ---------------------------------------------------------------------------
 # Public API (called by server.py route handlers)
@@ -863,6 +935,16 @@ No explanation, no markdown, no preamble — just the raw JSON array."""
             })
 
         log(f"After deduplication: {len(clean_rows)} rows (from {len(raw_rows)} raw)")
+
+        # Conservative validation — warnings only, no mutation
+        try:
+            v = validate_kwr_rows(clean_rows, brand_name, log=log)
+            if v['warnings_count']:
+                log(f"[KWR validate] {v['warnings_count']} warning(s) across {v['rows_validated']} rows ({v['pillars_validated']} pillars)")
+            else:
+                log(f"[KWR validate] OK — {v['rows_validated']} rows, {v['pillars_validated']} pillars, no issues")
+        except Exception as _ve:
+            log(f"[KWR validate] skipped: {_ve}")
 
         honest_note = ''
         if len(clean_rows) < 200:
