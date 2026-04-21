@@ -1544,14 +1544,61 @@ def _read_run_xlsx(run_id: str) -> bytes | None:
 
 
 def _sync_github(run_id: str, xlsx_bytes: bytes, domain_slug: str) -> dict:
-    """Commit outputs/kwr_{slug}.xlsx into the repo via git CLI. Best-effort."""
+    """Commit outputs/kwr_{slug}.xlsx to the repo.
+
+    Primary: GitHub Contents REST API (works from Render). Requires GITHUB_PAT.
+    Fallback: local git CLI (works from the dev box).
+    """
+    import base64, json as _json
+    import urllib.request, urllib.error
+    pat = (os.getenv('GITHUB_PAT') or os.getenv('GH_TOKEN') or os.getenv('GITHUB_TOKEN') or '').strip()
+    owner = os.getenv('GITHUB_OWNER', 'maximoseo')
+    repo  = os.getenv('GITHUB_REPO',  'webs-html-improvements-files')
+    branch = os.getenv('GITHUB_BRANCH', 'main')
+    target_rel = f'outputs/kwr_{domain_slug}.xlsx'
+
+    if pat:
+        try:
+            api = f'https://api.github.com/repos/{owner}/{repo}/contents/{target_rel}'
+            headers = {
+                'Authorization': f'token {pat}',
+                'Accept': 'application/vnd.github+json',
+                'User-Agent': 'kwr-bot',
+            }
+            # Check existing file to get sha (required for update)
+            sha = None
+            try:
+                req = urllib.request.Request(f'{api}?ref={branch}', headers=headers)
+                with urllib.request.urlopen(req, timeout=15) as resp:
+                    sha = _json.loads(resp.read().decode('utf-8')).get('sha')
+            except urllib.error.HTTPError as e:
+                if e.code != 404:
+                    raise
+            body = {
+                'message': f'kwr: report for {domain_slug} ({run_id[:8]})',
+                'content': base64.b64encode(xlsx_bytes).decode('ascii'),
+                'branch': branch,
+                'committer': {'name': 'KWR Bot', 'email': 'kwr-bot@maximo-seo.ai'},
+            }
+            if sha:
+                body['sha'] = sha
+            data = _json.dumps(body).encode('utf-8')
+            req = urllib.request.Request(api, data=data, method='PUT', headers={**headers, 'Content-Type': 'application/json'})
+            with urllib.request.urlopen(req, timeout=30) as resp:
+                out = _json.loads(resp.read().decode('utf-8'))
+                commit_sha = ((out.get('commit') or {}).get('sha') or '')[:7]
+                return {'ok': True, 'path': target_rel, 'pushed': True, 'commit': commit_sha, 'via': 'api'}
+        except Exception as exc:
+            # fall through to git CLI
+            api_err = str(exc)[:200]
+    else:
+        api_err = 'no GITHUB_PAT'
+
+    # Fallback: local git CLI
     import subprocess
     repo_dir = os.path.dirname(os.path.abspath(__file__))
-    # On Render the workdir is read-only-ish; skip silently.
     if not os.path.isdir(os.path.join(repo_dir, '.git')):
-        return {'ok': False, 'skipped': True, 'reason': 'not a git repo (Render env)'}
-    pat = (os.getenv('GITHUB_PAT') or os.getenv('GH_TOKEN') or '').strip()
-    target_rel = f'outputs/kwr_{domain_slug}.xlsx'
+        return {'ok': False, 'skipped': True, 'reason': f'API failed ({api_err}); not a git repo'}
     target_abs = os.path.join(repo_dir, target_rel)
     try:
         os.makedirs(os.path.dirname(target_abs), exist_ok=True)
@@ -1562,23 +1609,20 @@ def _sync_github(run_id: str, xlsx_bytes: bytes, domain_slug: str) -> dict:
         env.setdefault('GIT_AUTHOR_EMAIL', 'kwr-bot@maximo-seo.ai')
         env.setdefault('GIT_COMMITTER_NAME', 'KWR Bot')
         env.setdefault('GIT_COMMITTER_EMAIL', 'kwr-bot@maximo-seo.ai')
-        subprocess.run(['git', 'add', target_rel], cwd=repo_dir, env=env,
-                       check=False, capture_output=True, timeout=30)
-        r = subprocess.run(
-            ['git', 'commit', '-m', f'kwr: report for {domain_slug}'],
-            cwd=repo_dir, env=env, check=False, capture_output=True, timeout=30,
-        )
+        subprocess.run(['git', 'add', target_rel], cwd=repo_dir, env=env, check=False, capture_output=True, timeout=30)
+        r = subprocess.run(['git', 'commit', '-m', f'kwr: report for {domain_slug}'],
+                           cwd=repo_dir, env=env, check=False, capture_output=True, timeout=30)
         if r.returncode != 0 and b'nothing to commit' not in (r.stdout + r.stderr):
             return {'ok': False, 'error': (r.stderr or r.stdout).decode('utf-8', 'replace')[:200]}
         if pat:
-            push_url = f'https://maximoseo:{pat}@github.com/maximoseo/webs-html-improvements-files.git'
-            r2 = subprocess.run(['git', 'push', push_url, 'HEAD:main'],
+            push_url = f'https://maximoseo:{pat}@github.com/{owner}/{repo}.git'
+            r2 = subprocess.run(['git', 'push', push_url, f'HEAD:{branch}'],
                                 cwd=repo_dir, env=env, check=False,
                                 capture_output=True, timeout=60)
             if r2.returncode != 0:
                 return {'ok': False, 'error': (r2.stderr or r2.stdout).decode('utf-8', 'replace')[:200]}
-            return {'ok': True, 'path': target_rel, 'pushed': True}
-        return {'ok': True, 'path': target_rel, 'pushed': False, 'note': 'no PAT'}
+            return {'ok': True, 'path': target_rel, 'pushed': True, 'via': 'cli'}
+        return {'ok': True, 'path': target_rel, 'pushed': False, 'note': 'no PAT', 'via': 'cli'}
     except Exception as exc:
         return {'ok': False, 'error': str(exc)[:200]}
 
