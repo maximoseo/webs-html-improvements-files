@@ -13429,6 +13429,163 @@ async function downloadPromptPreviewShot(){
     if(m) mo.observe(m,{attributes:true,attributeFilter:['class','style'],subtree:true});
   });
 })();
+
+/* ============================================================
+   STAGE 4 — UX upgrades: R1 (Bottom Nav), R9 (System theme),
+   R14 (Undo toast), R15 (Relative time auto-refresh)
+   ============================================================ */
+(function(){
+  /* ---------- R1: Mobile Bottom Navigation ---------- */
+  function buildBottomNav(){
+    if (document.getElementById('mobile-bottom-nav')) return;
+    var topNav = document.getElementById('fixer-tab-nav');
+    if (!topNav) return;
+    var nav = document.createElement('nav');
+    nav.id = 'mobile-bottom-nav';
+    nav.setAttribute('aria-label','Mobile navigation');
+    nav.setAttribute('role','tablist');
+    var defs = [
+      {id:'projects', label:'Projects', icon:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>'},
+      {id:'fixer',    label:'Fixer',    icon:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>'},
+      {id:'radar',    label:'Radar',    icon:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>'},
+      {id:'kwr',      label:'KW',       icon:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/><path d="M11 8v6M8 11h6"/></svg>'},
+      {id:'tasks',    label:'Tasks',    icon:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>'}
+    ];
+    nav.innerHTML = defs.map(function(d){
+      return '<button class="bn-btn" role="tab" data-page="'+d.id+'" aria-label="'+d.label+'">'
+           + '<span class="bn-icon">'+d.icon+'</span>'
+           + '<span class="bn-label">'+d.label+'</span></button>';
+    }).join('');
+    document.body.appendChild(nav);
+    nav.addEventListener('click', function(e){
+      var btn = e.target.closest('.bn-btn');
+      if (!btn) return;
+      var page = btn.getAttribute('data-page');
+      try { if (typeof showPage === 'function') showPage(page); } catch(_){}
+      syncBottomNavActive(page);
+    });
+    syncBottomNavActive();
+  }
+  function syncBottomNavActive(forceId){
+    var nav = document.getElementById('mobile-bottom-nav');
+    if (!nav) return;
+    var current = forceId;
+    if (!current) {
+      var activeTopBtn = document.querySelector('#fixer-tab-nav .fixer-tab-btn.active');
+      if (activeTopBtn) {
+        var id = activeTopBtn.id || '';
+        current = id.replace('tab-','');
+      }
+    }
+    nav.querySelectorAll('.bn-btn').forEach(function(b){
+      var on = b.getAttribute('data-page') === current;
+      b.classList.toggle('active', on);
+      b.setAttribute('aria-selected', on ? 'true' : 'false');
+    });
+  }
+  // Inject CSS for bottom nav (mobile only)
+  (function injectBnCss(){
+    var css = ''
+    + '@media (max-width:768px){'
+    +   'body{padding-bottom:64px}'
+    +   '#mobile-bottom-nav{position:fixed;left:0;right:0;bottom:0;z-index:90;display:flex;justify-content:space-around;align-items:stretch;background:var(--card,#1a1a1a);border-top:1px solid var(--border,#2a2a2a);box-shadow:0 -4px 12px rgba(0,0,0,0.18);padding:4px 0 max(4px,env(safe-area-inset-bottom));backdrop-filter:saturate(140%) blur(8px)}'
+    +   '#mobile-bottom-nav .bn-btn{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;padding:6px 4px;background:transparent;border:0;color:var(--muted,#888);cursor:pointer;min-height:54px;font:500 10px/1.2 inherit;transition:color .15s, transform .12s}'
+    +   '#mobile-bottom-nav .bn-btn:active{transform:scale(.94)}'
+    +   '#mobile-bottom-nav .bn-icon svg{width:22px;height:22px;display:block}'
+    +   '#mobile-bottom-nav .bn-label{letter-spacing:.2px}'
+    +   '#mobile-bottom-nav .bn-btn.active{color:var(--gold,#C9952A)}'
+    +   '#mobile-bottom-nav .bn-btn.active .bn-icon svg{stroke-width:2.4}'
+    + '}'
+    + '@media (min-width:769px){#mobile-bottom-nav{display:none !important}}';
+    var s = document.createElement('style');
+    s.id = 'mobile-bottom-nav-css';
+    s.textContent = css;
+    document.head.appendChild(s);
+  })();
+
+  /* ---------- R9: System theme detection (only when user hasn't chosen) ---------- */
+  function applySystemThemeIfUnset(){
+    if (localStorage.getItem('dash-theme')) return; // user choice wins
+    try {
+      var mql = window.matchMedia('(prefers-color-scheme: light)');
+      var setFrom = function(matches){
+        document.body.classList.toggle('light', !!matches);
+        var btn = document.getElementById('theme-toggle-btn');
+        if (btn) btn.textContent = matches ? '☀️' : '🌙';
+      };
+      setFrom(mql.matches);
+      // React to live OS-level changes (still only if user hasn't manually chosen)
+      var handler = function(e){ if (!localStorage.getItem('dash-theme')) setFrom(e.matches); };
+      if (mql.addEventListener) mql.addEventListener('change', handler);
+      else if (mql.addListener) mql.addListener(handler);
+    } catch(_){}
+  }
+
+  /* ---------- R14: Undo toast helper (window.toast.undo) ---------- */
+  if (window.toast && !window.toast.undo) {
+    window.toast.undo = function(message, onUndo, opts){
+      opts = opts || {};
+      var done = false;
+      var t = window.toast(message || 'Item deleted', 'info', {
+        duration: opts.duration || 6000,
+        action: {
+          label: opts.actionLabel || 'Undo',
+          onClick: function(){
+            if (done) return;
+            done = true;
+            try { typeof onUndo === 'function' && onUndo(); } catch(e){
+              try { window.toast.error('Undo failed: '+(e.message||e)); } catch(_){}
+            }
+          }
+        }
+      });
+      return t;
+    };
+  }
+
+  /* ---------- R15: Relative time auto-refresh ---------- */
+  // Convert any element with [data-ts="<unix-ms>"] or [data-iso="..."] to "5m ago"
+  function rel(ts){
+    if (!ts) return '';
+    var d = (typeof ts === 'number') ? ts : Date.parse(ts);
+    if (isNaN(d)) return '';
+    var s = Math.max(1, Math.floor((Date.now() - d)/1000));
+    if (s < 60)        return s+'s ago';
+    if (s < 3600)      return Math.floor(s/60)+'m ago';
+    if (s < 86400)     return Math.floor(s/3600)+'h ago';
+    if (s < 86400*7)   return Math.floor(s/86400)+'d ago';
+    return new Date(d).toLocaleDateString();
+  }
+  function refreshRelativeTimes(){
+    document.querySelectorAll('[data-ts],[data-iso]').forEach(function(el){
+      var v = el.getAttribute('data-ts') || el.getAttribute('data-iso');
+      var num = el.hasAttribute('data-ts') ? parseInt(v,10) : v;
+      var out = rel(num);
+      if (out && el.textContent !== out) el.textContent = out;
+    });
+  }
+  window.relTime = rel;
+  window.refreshRelativeTimes = refreshRelativeTimes;
+
+  /* ---------- Boot ---------- */
+  function boot(){
+    try { buildBottomNav(); } catch(e){ console.warn('[bottomNav]', e); }
+    try { applySystemThemeIfUnset(); } catch(e){ console.warn('[sysTheme]', e); }
+    try { refreshRelativeTimes(); } catch(_){}
+    setInterval(refreshRelativeTimes, 30000); // R15: refresh every 30s
+    // Re-sync bottom nav when top tabs change
+    try {
+      var topNav = document.getElementById('fixer-tab-nav');
+      if (topNav) {
+        var mo = new MutationObserver(function(){ syncBottomNavActive(); });
+        mo.observe(topNav, {subtree:true, attributes:true, attributeFilter:['class','aria-selected']});
+      }
+    } catch(_){}
+  }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', boot, {once:true});
+  } else { boot(); }
+})();
 </script>
 </body>
 </html>
