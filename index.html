@@ -14236,6 +14236,107 @@ async function downloadPromptPreviewShot(){
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot, {once:true});
   else boot();
 })();
+
+/* ============================================================
+   STAGE 7 — Performance: lazy images, fetch memo, idle warmup,
+            Save-Data awareness, connection hints
+   ============================================================ */
+(function(){
+  /* Lazy-load + async decode for all <img> (existing + future) */
+  function lazifyImg(img){
+    if (!img || img.__lazied) return;
+    img.__lazied = true;
+    if (!img.hasAttribute('loading')) img.setAttribute('loading','lazy');
+    if (!img.hasAttribute('decoding')) img.setAttribute('decoding','async');
+  }
+  function lazifyAll(root){ (root||document).querySelectorAll('img').forEach(lazifyImg); }
+
+  /* Memoize idempotent GET fetches for short window — collapses duplicate polling */
+  (function(){
+    if (window.__fetchMemoInstalled) return;
+    window.__fetchMemoInstalled = true;
+    var origFetch = window.fetch ? window.fetch.bind(window) : null;
+    if (!origFetch) return;
+    var TTL_MS = 4000; // 4s — safe for status polls
+    var SAFE_PATTERNS = [/\/api\/projects\/list/i, /\/api\/radar\/status/i, /\/api\/health/i];
+    var cache = new Map();
+    window.fetch = function(input, init){
+      try {
+        var method = (init && init.method) ? String(init.method).toUpperCase() : 'GET';
+        var url = (typeof input === 'string') ? input : (input && input.url) || '';
+        if (method === 'GET' && SAFE_PATTERNS.some(function(r){ return r.test(url); })){
+          var hit = cache.get(url);
+          var now = Date.now();
+          if (hit && (now - hit.t) < TTL_MS) return hit.p.then(function(r){ return r.clone(); });
+          var p = origFetch(input, init).then(function(r){ return r.clone(); });
+          cache.set(url, {t: now, p: p});
+          // Cleanup
+          setTimeout(function(){ cache.delete(url); }, TTL_MS + 500);
+          return p.then(function(r){ return r.clone(); });
+        }
+      } catch(_){}
+      return origFetch(input, init);
+    };
+  })();
+
+  /* Connection awareness — reduce noisy polls on Save-Data or 2g */
+  function isLowBandwidth(){
+    try {
+      var c = navigator.connection || navigator.webkitConnection || navigator.mozConnection;
+      if (!c) return false;
+      if (c.saveData) return true;
+      if (c.effectiveType && /^(slow-2g|2g)$/.test(c.effectiveType)) return true;
+    } catch(_){}
+    return false;
+  }
+  if (isLowBandwidth()){
+    document.documentElement.setAttribute('data-low-bw','1');
+    try { window.toast && window.toast.info('Low-bandwidth mode · reduced polling'); } catch(_){}
+  }
+
+  /* Idle warmup — prefetch likely-needed status endpoints during browser idle */
+  function idle(fn){
+    if ('requestIdleCallback' in window) return requestIdleCallback(fn, {timeout: 4000});
+    return setTimeout(fn, 1500);
+  }
+  function warmup(){
+    if (isLowBandwidth()) return;
+    var urls = ['/api/health', '/api/projects/list'];
+    urls.forEach(function(u){
+      try { fetch(u, {method:'GET', credentials:'same-origin'}).catch(function(){}); } catch(_){}
+    });
+  }
+
+  /* Defer non-critical work — hint the browser via content-visibility on long lists */
+  function applyContentVis(){
+    var cards = document.querySelectorAll('.skill-card, .project-card, .radar-card');
+    cards.forEach(function(c){
+      if (c.__cv) return; c.__cv = true;
+      c.style.containIntrinsicSize = c.style.containIntrinsicSize || '180px';
+      c.style.contentVisibility = c.style.contentVisibility || 'auto';
+    });
+  }
+
+  function boot(){
+    try { lazifyAll(); } catch(_){}
+    try {
+      new MutationObserver(function(muts){
+        muts.forEach(function(m){
+          m.addedNodes.forEach(function(n){
+            if (n.nodeType !== 1) return;
+            if (n.tagName === 'IMG') lazifyImg(n);
+            else if (n.querySelectorAll) n.querySelectorAll('img').forEach(lazifyImg);
+          });
+        });
+      }).observe(document.body, {childList:true, subtree:true});
+    } catch(_){}
+    idle(warmup);
+    idle(applyContentVis);
+    setTimeout(function(){ try{ applyContentVis(); }catch(_){} }, 2500);
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot, {once:true});
+  else boot();
+})();
 </script>
 </body>
 </html>
