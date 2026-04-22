@@ -13771,16 +13771,23 @@ async function downloadPromptPreviewShot(){
     if (chip) chip.remove();
   }
   function hookKwrEta(){
-    if (typeof window.kwrStartPoller === 'function' && !window.kwrStartPoller.__hooked){
-      var orig = window.kwrStartPoller;
-      window.kwrStartPoller = function(){ try{ kwrEtaStart(); }catch(_){ } return orig.apply(this, arguments); };
-      window.kwrStartPoller.__hooked = true;
-    }
-    if (typeof window.kwrStopPoller === 'function' && !window.kwrStopPoller.__hooked){
-      var orig2 = window.kwrStopPoller;
-      window.kwrStopPoller = function(){ try{ kwrEtaStop(true); }catch(_){ } return orig2.apply(this, arguments); };
-      window.kwrStopPoller.__hooked = true;
-    }
+    if (window.__kwrEtaFetchHooked) return;
+    window.__kwrEtaFetchHooked = true;
+    var nativeFetch = window.fetch.bind(window);
+    window.fetch = function(input, init){
+      var url = (typeof input === 'string') ? input : (input && input.url) || '';
+      var p = nativeFetch(input, init);
+      try {
+        if (/\/api\/kwr\/start/.test(url)) {
+          p.then(function(r){ if (r.ok) kwrEtaStart(); }).catch(function(){});
+        } else if (/\/api\/kwr\/status/.test(url) && _kwrStartTs) {
+          p.then(function(r){ return r.clone().json().catch(function(){return null;}); })
+           .then(function(d){ if (d && (d.done || d.status === 'done' || d.status === 'completed' || d.finished)) kwrEtaStop(true); else if (d && (d.status === 'error' || d.error)) kwrEtaStop(false); })
+           .catch(function(){});
+        }
+      } catch(_){}
+      return p;
+    };
   }
 
   /* ───────── R12: Page transitions ───────── */
