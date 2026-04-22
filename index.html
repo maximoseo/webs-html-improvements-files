@@ -13586,6 +13586,407 @@ async function downloadPromptPreviewShot(){
     document.addEventListener('DOMContentLoaded', boot, {once:true});
   } else { boot(); }
 })();
+
+/* ============================================================
+   STAGE 5 (FINAL) — R7 Sort, R8 KWR ETA, R12 View Transitions,
+   Command Palette (Ctrl+K), Notifications Center
+   ============================================================ */
+(function(){
+  var LS = {
+    notif:    'dash-notif-log-v1',
+    kwrTimes: 'dash-kwr-times-v1',
+    sortPref: 'dash-projects-sort-v1'
+  };
+  function lsGet(k, dflt){ try{var v=localStorage.getItem(k); return v?JSON.parse(v):dflt;}catch(_){return dflt;} }
+  function lsSet(k, v){ try{localStorage.setItem(k, JSON.stringify(v));}catch(_){} }
+
+  /* ───────── Inject Stage-5 CSS ───────── */
+  (function(){
+    var css = `
+/* R7 — Sort dropdown */
+#projects-sort-wrap{display:inline-flex;align-items:center;gap:6px;margin-left:10px;font:500 12px/1 inherit;color:var(--muted)}
+#projects-sort-wrap select{background:var(--card,rgba(255,255,255,0.04));color:var(--text);border:1px solid var(--border);border-radius:8px;padding:6px 10px;font:inherit;cursor:pointer}
+#projects-sort-wrap select:focus{outline:2px solid var(--gold);outline-offset:1px}
+
+/* R12 — view transitions / fade fallback */
+.page-fade-in{animation:pageFadeIn .22s var(--ease-standard,ease) both}
+@keyframes pageFadeIn{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion: reduce){.page-fade-in{animation:none}}
+::view-transition-old(root){animation:pageFadeOut .18s var(--ease-standard,ease) both}
+::view-transition-new(root){animation:pageFadeIn .22s var(--ease-standard,ease) both}
+@keyframes pageFadeOut{to{opacity:0}}
+
+/* Command Palette */
+#cmdk-backdrop{position:fixed;inset:0;background:rgba(0,0,0,0.55);backdrop-filter:blur(4px);z-index:10000;display:none;align-items:flex-start;justify-content:center;padding:80px 16px 16px;animation:cmdkFade .15s ease both}
+#cmdk-backdrop.open{display:flex}
+#cmdk-panel{width:100%;max-width:560px;background:var(--surface-strong,#131416);border:1px solid var(--border-strong,rgba(255,255,255,0.18));border-radius:14px;box-shadow:0 30px 80px rgba(0,0,0,0.6);overflow:hidden;animation:cmdkPop .18s var(--ease-standard,ease) both}
+#cmdk-input{width:100%;background:transparent;border:0;border-bottom:1px solid var(--border);color:var(--text);font:500 16px/1.4 inherit;padding:16px 18px;outline:none}
+#cmdk-list{max-height:50vh;overflow-y:auto;padding:6px 0}
+.cmdk-item{display:flex;align-items:center;gap:10px;padding:10px 18px;cursor:pointer;color:var(--text);font:13px/1.3 inherit;border-left:3px solid transparent}
+.cmdk-item .cmdk-kbd{margin-left:auto;font:11px/1 ui-monospace,monospace;color:var(--muted);border:1px solid var(--border);padding:3px 6px;border-radius:4px}
+.cmdk-item .cmdk-cat{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-left:8px}
+.cmdk-item.active,.cmdk-item:hover{background:rgba(113,112,255,0.12);border-left-color:var(--gold)}
+.cmdk-empty{padding:24px;text-align:center;color:var(--muted);font-size:13px}
+@keyframes cmdkFade{from{opacity:0}to{opacity:1}}
+@keyframes cmdkPop{from{opacity:0;transform:translateY(-8px) scale(.98)}to{opacity:1;transform:none}}
+
+/* Notifications Center bell + panel */
+#notif-bell{position:relative;display:inline-flex;align-items:center;justify-content:center;width:36px;height:36px;border-radius:10px;border:1px solid var(--border);background:transparent;cursor:pointer;color:var(--muted);transition:all .15s;flex-shrink:0;margin-left:6px}
+#notif-bell:hover{color:var(--text);border-color:var(--border-strong);background:rgba(255,255,255,0.05)}
+#notif-bell svg{width:16px;height:16px}
+#notif-bell .notif-dot{position:absolute;top:6px;right:7px;width:8px;height:8px;border-radius:50%;background:var(--red,#ef5f6b);border:1.5px solid var(--surface-strong,#131416);display:none}
+#notif-bell.has-unread .notif-dot{display:block}
+#notif-panel{position:fixed;top:60px;right:16px;width:340px;max-width:calc(100vw - 32px);max-height:60vh;background:var(--surface-strong,#131416);border:1px solid var(--border-strong);border-radius:12px;box-shadow:0 20px 60px rgba(0,0,0,0.5);z-index:9500;display:none;flex-direction:column;overflow:hidden;animation:cmdkPop .15s ease both}
+#notif-panel.open{display:flex}
+#notif-panel-hdr{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;border-bottom:1px solid var(--border)}
+#notif-panel-hdr h3{font:600 13px/1.2 inherit;color:var(--text);margin:0}
+#notif-panel-hdr button{background:transparent;border:0;color:var(--muted);cursor:pointer;font:11px inherit;padding:4px 8px;border-radius:6px}
+#notif-panel-hdr button:hover{color:var(--text);background:rgba(255,255,255,0.05)}
+#notif-list{flex:1;overflow-y:auto;padding:6px 0}
+.notif-item{display:flex;align-items:flex-start;gap:8px;padding:9px 14px;border-bottom:1px solid var(--border);font:12px/1.4 inherit;color:var(--text)}
+.notif-item:last-child{border-bottom:0}
+.notif-item .notif-dot-i{width:8px;height:8px;border-radius:50%;flex-shrink:0;margin-top:5px;background:var(--muted)}
+.notif-item.t-success .notif-dot-i{background:var(--green,#27a644)}
+.notif-item.t-error .notif-dot-i{background:var(--red,#ef5f6b)}
+.notif-item.t-warning .notif-dot-i{background:#f0a830}
+.notif-item.t-info .notif-dot-i{background:var(--blue,#4f8cff)}
+.notif-item .notif-meta{font-size:10px;color:var(--muted);margin-top:2px}
+.notif-empty{padding:24px;text-align:center;color:var(--muted);font-size:12px}
+
+/* KWR ETA chip */
+.kwr-eta-chip{display:inline-flex;align-items:center;gap:6px;font:500 11px/1 inherit;color:var(--muted);background:rgba(255,255,255,0.04);border:1px solid var(--border);padding:5px 9px;border-radius:6px;margin-left:8px}
+.kwr-eta-chip .kwr-eta-dot{width:6px;height:6px;border-radius:50%;background:var(--gold);animation:spin 1s linear infinite}
+@media (prefers-reduced-motion: reduce){.kwr-eta-chip .kwr-eta-dot{animation:none}}
+`;
+    var s = document.createElement('style');
+    s.id = 'stage5-css';
+    s.textContent = css;
+    document.head.appendChild(s);
+  })();
+
+  /* ───────── R7: Sort Projects ───────── */
+  function injectSortDropdown(){
+    if (document.getElementById('projects-sort-wrap')) return;
+    var grid = document.getElementById('projects-grid');
+    if (!grid) return;
+    // Find anchor: the Grid/List buttons or the projects header
+    var listBtn = Array.from(document.querySelectorAll('button')).find(b => /^List$/i.test(b.textContent.trim()));
+    var anchor = listBtn ? listBtn.parentElement : grid.parentElement;
+    if (!anchor) return;
+    var w = document.createElement('span');
+    w.id = 'projects-sort-wrap';
+    w.innerHTML = '<label for="projects-sort">Sort:</label>'
+      + '<select id="projects-sort" aria-label="Sort projects">'
+      +   '<option value="recent">Most recent</option>'
+      +   '<option value="oldest">Oldest first</option>'
+      +   '<option value="az">Name A→Z</option>'
+      +   '<option value="za">Name Z→A</option>'
+      + '</select>';
+    if (listBtn && listBtn.nextSibling) listBtn.parentNode.insertBefore(w, listBtn.nextSibling);
+    else anchor.appendChild(w);
+    var sel = w.querySelector('select');
+    sel.value = lsGet(LS.sortPref, 'recent');
+    sel.addEventListener('change', function(){ lsSet(LS.sortPref, sel.value); applySort(sel.value); });
+    applySort(sel.value);
+    // Re-apply when grid mutates (new cards added)
+    var mo = new MutationObserver(function(){
+      clearTimeout(window.__sortDebounce);
+      window.__sortDebounce = setTimeout(function(){ applySort(sel.value); }, 200);
+    });
+    mo.observe(grid, {childList:true});
+  }
+  function applySort(mode){
+    var grid = document.getElementById('projects-grid');
+    if (!grid) return;
+    var cards = Array.from(grid.children).filter(function(c){ return c.nodeType === 1 && !c.classList.contains('skel-row'); });
+    if (cards.length < 2) return;
+    var keyName = function(el){
+      var n = el.querySelector('h3,h2,.proj-name,.project-title,.card-title,[data-name]');
+      return (n ? (n.getAttribute('data-name') || n.textContent) : el.textContent || '').trim().toLowerCase();
+    };
+    var keyDate = function(el){
+      var d = el.getAttribute('data-mtime') || el.getAttribute('data-updated') || el.getAttribute('data-date');
+      if (d) return parseInt(d,10) || Date.parse(d) || 0;
+      var t = el.querySelector('[data-ts],[data-iso],time');
+      if (t) {
+        var v = t.getAttribute('data-ts') || t.getAttribute('data-iso') || t.getAttribute('datetime');
+        return parseInt(v,10) || Date.parse(v) || 0;
+      }
+      return 0;
+    };
+    var sorted = cards.slice().sort(function(a,b){
+      switch(mode){
+        case 'oldest': return keyDate(a) - keyDate(b);
+        case 'az':     return keyName(a).localeCompare(keyName(b));
+        case 'za':     return keyName(b).localeCompare(keyName(a));
+        case 'recent':
+        default:       return keyDate(b) - keyDate(a);
+      }
+    });
+    sorted.forEach(function(c){ grid.appendChild(c); });
+  }
+
+  /* ───────── R8: KWR ETA ───────── */
+  var _kwrStartTs = 0, _kwrEtaTimer = null;
+  function kwrTimes(){ return lsGet(LS.kwrTimes, []); }
+  function kwrAvgMs(){
+    var t = kwrTimes();
+    if (!t.length) return null;
+    return Math.round(t.reduce(function(s,v){return s+v;},0) / t.length);
+  }
+  function kwrPushTime(ms){
+    var t = kwrTimes();
+    t.push(ms);
+    if (t.length > 5) t = t.slice(-5);
+    lsSet(LS.kwrTimes, t);
+  }
+  function kwrEtaRender(){
+    var chip = document.getElementById('kwr-eta-chip');
+    if (!chip) return;
+    var avg = kwrAvgMs();
+    if (!_kwrStartTs || !avg){ chip.textContent = avg ? ('Avg ~' + Math.round(avg/1000) + 's') : 'No history yet'; return; }
+    var elapsed = Date.now() - _kwrStartTs;
+    var remain  = Math.max(0, avg - elapsed);
+    var pct = Math.min(99, Math.round(elapsed / avg * 100));
+    chip.innerHTML = '<span class="kwr-eta-dot"></span> ETA ~' + Math.round(remain/1000) + 's · ' + pct + '%';
+  }
+  function kwrEtaStart(){
+    _kwrStartTs = Date.now();
+    var anchor = document.querySelector('#kwr-status') || document.querySelector('[id^="kwr-dot"]')?.parentElement;
+    if (anchor && !document.getElementById('kwr-eta-chip')) {
+      var chip = document.createElement('span');
+      chip.id = 'kwr-eta-chip';
+      chip.className = 'kwr-eta-chip';
+      anchor.appendChild(chip);
+    }
+    if (_kwrEtaTimer) clearInterval(_kwrEtaTimer);
+    _kwrEtaTimer = setInterval(kwrEtaRender, 1000);
+    kwrEtaRender();
+  }
+  function kwrEtaStop(success){
+    if (_kwrStartTs && success) kwrPushTime(Date.now() - _kwrStartTs);
+    _kwrStartTs = 0;
+    if (_kwrEtaTimer){ clearInterval(_kwrEtaTimer); _kwrEtaTimer = null; }
+    var chip = document.getElementById('kwr-eta-chip');
+    if (chip) chip.remove();
+  }
+  function hookKwrEta(){
+    if (typeof window.kwrStartPoller === 'function' && !window.kwrStartPoller.__hooked){
+      var orig = window.kwrStartPoller;
+      window.kwrStartPoller = function(){ try{ kwrEtaStart(); }catch(_){ } return orig.apply(this, arguments); };
+      window.kwrStartPoller.__hooked = true;
+    }
+    if (typeof window.kwrStopPoller === 'function' && !window.kwrStopPoller.__hooked){
+      var orig2 = window.kwrStopPoller;
+      window.kwrStopPoller = function(){ try{ kwrEtaStop(true); }catch(_){ } return orig2.apply(this, arguments); };
+      window.kwrStopPoller.__hooked = true;
+    }
+  }
+
+  /* ───────── R12: Page transitions ───────── */
+  function hookViewTransitions(){
+    if (typeof window.showPage !== 'function' || window.showPage.__transitioned) return;
+    var orig = window.showPage;
+    window.showPage = function(name){
+      var args = arguments;
+      var run  = function(){ return orig.apply(this, args); }.bind(this);
+      try {
+        if (document.startViewTransition) {
+          document.startViewTransition(run);
+        } else {
+          run();
+          // Fallback fade on the target page container
+          var el = document.getElementById('page-' + name) || document.querySelector('[data-page="'+name+'"]');
+          if (el){ el.classList.remove('page-fade-in'); void el.offsetWidth; el.classList.add('page-fade-in'); }
+        }
+      } catch(e){ run(); }
+    };
+    window.showPage.__transitioned = true;
+  }
+
+  /* ───────── Command Palette (Ctrl+K) ───────── */
+  function buildPalette(){
+    if (document.getElementById('cmdk-backdrop')) return;
+    var bd = document.createElement('div');
+    bd.id = 'cmdk-backdrop';
+    bd.setAttribute('role','dialog');
+    bd.setAttribute('aria-modal','true');
+    bd.setAttribute('aria-label','Command palette');
+    bd.innerHTML = '<div id="cmdk-panel">'
+      + '<input id="cmdk-input" type="text" placeholder="Type a command or search…" autocomplete="off" spellcheck="false" />'
+      + '<div id="cmdk-list" role="listbox"></div></div>';
+    document.body.appendChild(bd);
+    var input = bd.querySelector('#cmdk-input');
+    var list  = bd.querySelector('#cmdk-list');
+    var commands = [
+      {cat:'Page', label:'Go to Projects',     kbd:'g p', run:function(){ showPage('projects'); }},
+      {cat:'Page', label:'Go to N8N Fixer',    kbd:'g f', run:function(){ showPage('fixer'); }},
+      {cat:'Page', label:'Go to Skills Radar', kbd:'g r', run:function(){ showPage('radar'); }},
+      {cat:'Page', label:'Go to KW Research',  kbd:'g k', run:function(){ showPage('kwr'); }},
+      {cat:'Page', label:'Go to Tasks',        kbd:'g t', run:function(){ showPage('tasks'); }},
+      {cat:'Action', label:'Sync now',         run:function(){ try{ fullSync(); }catch(_){ window.toast.info('Sync triggered'); } }},
+      {cat:'Action', label:'Toggle theme (dark/light)', run:function(){ try{ toggleTheme(); }catch(_){} }},
+      {cat:'Action', label:'Reset theme to system default', run:function(){ try{ localStorage.removeItem('dash-theme'); window.toast.info('Theme reset to system'); location.reload(); }catch(_){} }},
+      {cat:'Action', label:'Open Notifications', run:function(){ openNotifPanel(); }},
+      {cat:'Action', label:'Clear notifications', run:function(){ clearNotifs(); window.toast.info('Notifications cleared'); }},
+      {cat:'Help',   label:'Keyboard shortcuts: Ctrl+K (palette), Esc (close), N (notifications)', run:function(){ window.toast.info('Ctrl+K · Esc · N — global shortcuts active'); }}
+    ];
+    var active = 0;
+    function fuzzyMatch(q, s){
+      q = q.toLowerCase(); s = s.toLowerCase();
+      var i=0,j=0; while(i<q.length && j<s.length){ if(q[i]===s[j]) i++; j++; }
+      return i===q.length;
+    }
+    function render(){
+      var q = input.value.trim();
+      var items = q ? commands.filter(function(c){ return fuzzyMatch(q, c.label) || fuzzyMatch(q, c.cat); }) : commands;
+      if (!items.length){ list.innerHTML = '<div class="cmdk-empty">No commands match "'+q.replace(/[<>&]/g,'')+'"</div>'; return; }
+      active = Math.min(active, items.length-1);
+      list.innerHTML = items.map(function(c, i){
+        return '<div class="cmdk-item '+(i===active?'active':'')+'" data-i="'+i+'" role="option">'
+          + '<span>'+c.label.replace(/[<>&]/g,'')+'</span>'
+          + '<span class="cmdk-cat">'+c.cat+'</span>'
+          + (c.kbd ? '<span class="cmdk-kbd">'+c.kbd+'</span>' : '')
+          + '</div>';
+      }).join('');
+      // Bind clicks
+      list.querySelectorAll('.cmdk-item').forEach(function(el){
+        el.addEventListener('mouseenter', function(){ active = parseInt(el.getAttribute('data-i'),10); updateActive(); });
+        el.addEventListener('click', function(){ runItem(items[parseInt(el.getAttribute('data-i'),10)]); });
+      });
+      window.__cmdkItems = items;
+    }
+    function updateActive(){
+      list.querySelectorAll('.cmdk-item').forEach(function(el,i){ el.classList.toggle('active', i===active); });
+    }
+    function runItem(c){ closePalette(); if (c && typeof c.run === 'function') { try{ c.run(); }catch(e){ window.toast.error('Command failed: '+e.message); } } }
+    function openPalette(){ bd.classList.add('open'); input.value=''; active=0; render(); setTimeout(function(){ input.focus(); }, 30); }
+    function closePalette(){ bd.classList.remove('open'); }
+    window.openPalette = openPalette; window.closePalette = closePalette;
+    input.addEventListener('input', render);
+    input.addEventListener('keydown', function(e){
+      var items = window.__cmdkItems || [];
+      if (e.key === 'ArrowDown'){ e.preventDefault(); active = Math.min(items.length-1, active+1); updateActive(); }
+      else if (e.key === 'ArrowUp'){ e.preventDefault(); active = Math.max(0, active-1); updateActive(); }
+      else if (e.key === 'Enter'){ e.preventDefault(); runItem(items[active]); }
+      else if (e.key === 'Escape'){ e.preventDefault(); closePalette(); }
+    });
+    bd.addEventListener('click', function(e){ if (e.target === bd) closePalette(); });
+    // Global shortcut
+    document.addEventListener('keydown', function(e){
+      var meta = e.ctrlKey || e.metaKey;
+      if (meta && (e.key === 'k' || e.key === 'K')){ e.preventDefault(); bd.classList.contains('open') ? closePalette() : openPalette(); }
+      else if (!meta && e.key.toLowerCase() === 'n' && !isTypingTarget(e.target)){ e.preventDefault(); toggleNotifPanel(); }
+    });
+  }
+  function isTypingTarget(el){
+    if (!el) return false;
+    var t = (el.tagName || '').toLowerCase();
+    return t === 'input' || t === 'textarea' || t === 'select' || el.isContentEditable;
+  }
+
+  /* ───────── Notifications Center ───────── */
+  function getNotifs(){ return lsGet(LS.notif, []); }
+  function pushNotif(msg, type){
+    var arr = getNotifs();
+    arr.unshift({msg: String(msg).slice(0,300), type: type||'info', ts: Date.now(), read: false});
+    if (arr.length > 50) arr = arr.slice(0,50);
+    lsSet(LS.notif, arr);
+    updateBell();
+  }
+  function clearNotifs(){ lsSet(LS.notif, []); updateBell(); renderNotifList(); }
+  function markAllRead(){ var a = getNotifs().map(function(n){ n.read=true; return n; }); lsSet(LS.notif, a); updateBell(); }
+  function updateBell(){
+    var bell = document.getElementById('notif-bell');
+    if (!bell) return;
+    var unread = getNotifs().filter(function(n){return !n.read;}).length;
+    bell.classList.toggle('has-unread', unread > 0);
+    bell.setAttribute('aria-label', 'Notifications' + (unread ? ' ('+unread+' unread)' : ''));
+  }
+  function renderNotifList(){
+    var list = document.getElementById('notif-list');
+    if (!list) return;
+    var arr = getNotifs();
+    if (!arr.length){ list.innerHTML = '<div class="notif-empty">No notifications yet</div>'; return; }
+    list.innerHTML = arr.map(function(n){
+      return '<div class="notif-item t-'+(n.type||'info')+'">'
+        + '<span class="notif-dot-i"></span>'
+        + '<div><div>'+String(n.msg).replace(/[<>&]/g,'')+'</div>'
+        + '<div class="notif-meta">'+ (window.relTime ? window.relTime(n.ts) : new Date(n.ts).toLocaleTimeString()) +'</div></div>'
+        + '</div>';
+    }).join('');
+  }
+  function buildBell(){
+    if (document.getElementById('notif-bell')) return;
+    // Insert bell next to theme toggle if found, else to body as floating
+    var anchor = document.getElementById('theme-toggle-btn');
+    var bell = document.createElement('button');
+    bell.id = 'notif-bell';
+    bell.setAttribute('type','button');
+    bell.setAttribute('aria-label','Notifications');
+    bell.title = 'Notifications (N)';
+    bell.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg><span class="notif-dot"></span>';
+    if (anchor && anchor.parentNode){ anchor.parentNode.insertBefore(bell, anchor); }
+    else { document.body.appendChild(bell); bell.style.position='fixed'; bell.style.top='12px'; bell.style.right='12px'; bell.style.zIndex='9000'; }
+    bell.addEventListener('click', toggleNotifPanel);
+    // Build panel
+    var panel = document.createElement('div');
+    panel.id = 'notif-panel';
+    panel.setAttribute('role','region');
+    panel.setAttribute('aria-label','Notifications panel');
+    panel.innerHTML = '<div id="notif-panel-hdr"><h3>Notifications</h3>'
+      + '<div><button id="notif-mark-read" type="button">Mark all read</button>'
+      + '<button id="notif-clear" type="button">Clear</button></div></div>'
+      + '<div id="notif-list"></div>';
+    document.body.appendChild(panel);
+    panel.querySelector('#notif-mark-read').addEventListener('click', function(){ markAllRead(); renderNotifList(); });
+    panel.querySelector('#notif-clear').addEventListener('click', clearNotifs);
+    document.addEventListener('click', function(e){
+      if (!panel.classList.contains('open')) return;
+      if (panel.contains(e.target) || bell.contains(e.target)) return;
+      panel.classList.remove('open');
+    });
+    updateBell();
+  }
+  function openNotifPanel(){ var p=document.getElementById('notif-panel'); if(p){ p.classList.add('open'); renderNotifList(); markAllRead(); } }
+  function toggleNotifPanel(){
+    var p = document.getElementById('notif-panel');
+    if (!p) return;
+    if (p.classList.contains('open')) p.classList.remove('open');
+    else openNotifPanel();
+  }
+  // Hook into window.toast → log every toast in notif center
+  function hookToastLog(){
+    if (!window.toast || window.toast.__notifHooked) return;
+    var orig = window.toast;
+    var wrapped = function(msg, type, opts){
+      try { pushNotif(msg, type || 'info'); } catch(_){}
+      return orig.call(this, msg, type, opts);
+    };
+    // copy helper methods
+    wrapped.success = function(m,o){ return wrapped(m,'success',o); };
+    wrapped.error   = function(m,o){ return wrapped(m,'error',o); };
+    wrapped.warn    = function(m,o){ return wrapped(m,'warning',o); };
+    wrapped.info    = function(m,o){ return wrapped(m,'info',o); };
+    wrapped.undo    = orig.undo;
+    wrapped.__notifHooked = true;
+    window.toast = wrapped;
+  }
+
+  /* ───────── Boot ───────── */
+  function boot(){
+    try { injectSortDropdown(); } catch(e){ console.warn('[sort]', e); }
+    try { hookKwrEta(); }        catch(e){ console.warn('[kwrEta]', e); }
+    try { hookViewTransitions(); } catch(e){ console.warn('[viewTrans]', e); }
+    try { buildPalette(); }      catch(e){ console.warn('[palette]', e); }
+    try { buildBell(); }         catch(e){ console.warn('[bell]', e); }
+    try { hookToastLog(); }      catch(e){ console.warn('[toastLog]', e); }
+    // Retry hooks once after 1.5s in case showPage/kwrStartPoller defined later
+    setTimeout(function(){ try{ hookKwrEta(); hookViewTransitions(); injectSortDropdown(); }catch(_){} }, 1500);
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot, {once:true});
+  else boot();
+})();
 </script>
 </body>
 </html>
