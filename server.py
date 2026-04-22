@@ -90,6 +90,145 @@ def text_response(handler, status, body: bytes, content_type: str):
     handler.wfile.write(body)
 
 
+# ============================================================
+# Stage 8 — Lightweight session auth (opt-in)
+# Enable by setting env DASHBOARD_USERS="alice:pw1,bob:pw2"
+# Optional: DASHBOARD_AUTH_SECRET for token signing.
+# ============================================================
+import hmac as _hmac
+import hashlib as _hashlib
+import base64 as _b64
+import time as _time8
+
+_STAGE8_PUBLIC_PATHS = {
+    '/api/health', '/api/auth/login', '/api/auth/logout', '/api/auth/me',
+    '/login', '/login.html', '/static/login.css',
+}
+_STAGE8_PUBLIC_PREFIXES = ('/static/', '/assets/', '/css/', '/js/', '/img/', '/fonts/')
+
+def _stage8_secret():
+    return os.environ.get('DASHBOARD_AUTH_SECRET') or os.environ.get('DASHBOARD_USERS', 'fallback-secret-change-me')
+
+def _stage8_users():
+    raw = os.environ.get('DASHBOARD_USERS', '').strip()
+    out = {}
+    for pair in raw.split(','):
+        pair = pair.strip()
+        if ':' in pair:
+            u, p = pair.split(':', 1)
+            out[u.strip()] = p.strip()
+    return out
+
+def _stage8_make_token(user, ttl_seconds=86400 * 7):
+    payload = f"{user}|{int(_time8.time()) + ttl_seconds}"
+    sig = _hmac.new(_stage8_secret().encode(), payload.encode(), _hashlib.sha256).hexdigest()[:32]
+    raw = f"{payload}|{sig}".encode()
+    return _b64.urlsafe_b64encode(raw).decode().rstrip('=')
+
+def _stage8_verify_token(token):
+    try:
+        pad = '=' * (-len(token) % 4)
+        raw = _b64.urlsafe_b64decode(token + pad).decode()
+        user, exp_str, sig = raw.rsplit('|', 2)
+        if not _hmac.compare_digest(
+            sig,
+            _hmac.new(_stage8_secret().encode(), f"{user}|{exp_str}".encode(), _hashlib.sha256).hexdigest()[:32]
+        ):
+            return None
+        if int(exp_str) < _time8.time():
+            return None
+        return user
+    except Exception:
+        return None
+
+def _stage8_get_token(handler):
+    # Cookie first, then Authorization header
+    cookie = handler.headers.get('Cookie') or ''
+    for part in cookie.split(';'):
+        part = part.strip()
+        if part.startswith('dash_auth='):
+            return part[len('dash_auth='):]
+    auth = handler.headers.get('Authorization') or ''
+    if auth.startswith('Bearer '):
+        return auth[7:].strip()
+    return None
+
+def _stage8_check_auth(handler, parsed):
+    """Return True if request is allowed; otherwise write a 401/redirect and return False."""
+    path = parsed.path
+    if path in _STAGE8_PUBLIC_PATHS or any(path.startswith(p) for p in _STAGE8_PUBLIC_PREFIXES):
+        return True
+    token = _stage8_get_token(handler)
+    user = _stage8_verify_token(token) if token else None
+    if user:
+        return True
+    # API requests → 401 JSON; HTML pages → redirect to /login
+    if path.startswith('/api/'):
+        json_response(handler, 401, {'ok': False, 'error': 'auth_required'})
+    else:
+        handler.send_response(302)
+        handler.send_header('Location', '/login')
+        handler.end_headers()
+    return False
+
+def _stage8_login(handler, payload):
+    user = (payload or {}).get('user', '').strip()
+    password = (payload or {}).get('password', '')
+    users = _stage8_users()
+    if not users:
+        return json_response(handler, 503, {'ok': False, 'error': 'auth_not_configured'})
+    if user not in users or not _hmac.compare_digest(users[user], password):
+        return json_response(handler, 401, {'ok': False, 'error': 'invalid_credentials'})
+    token = _stage8_make_token(user)
+    body = json.dumps({'ok': True, 'user': user, 'token': token}).encode()
+    handler.send_response(200)
+    handler.send_header('Content-Type', 'application/json; charset=utf-8')
+    handler.send_header('Content-Length', str(len(body)))
+    # 7-day cookie, HttpOnly, SameSite=Lax
+    handler.send_header('Set-Cookie', f'dash_auth={token}; Path=/; Max-Age={86400*7}; HttpOnly; SameSite=Lax')
+    handler.end_headers()
+    handler.wfile.write(body)
+
+_STAGE8_LOGIN_HTML = """<!doctype html>
+<html lang="he" dir="rtl"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Dashboard Login</title>
+<style>
+:root{color-scheme:dark;--bg:#0b0d12;--fg:#e8e8f0;--accent:#7170ff;--err:#ff6b6b;--card:#161922;--border:#2a2f3d}
+*{box-sizing:border-box}html,body{margin:0;padding:0;background:var(--bg);color:var(--fg);font:14px/1.5 system-ui,-apple-system,Segoe UI,Roboto,sans-serif;height:100%}
+.wrap{min-height:100vh;display:grid;place-items:center;padding:20px}
+.card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:32px;width:100%;max-width:380px;box-shadow:0 10px 40px rgba(0,0,0,.5)}
+h1{margin:0 0 6px;font-size:22px;font-weight:600}.sub{opacity:.65;margin-bottom:24px;font-size:13px}
+label{display:block;margin-bottom:14px;font-size:12px;opacity:.85;font-weight:500}
+input{display:block;width:100%;margin-top:6px;padding:11px 13px;border-radius:8px;border:1px solid var(--border);background:#0e1018;color:var(--fg);font:inherit;outline:none;transition:border .15s}
+input:focus{border-color:var(--accent)}
+button{margin-top:8px;width:100%;padding:12px;border-radius:8px;border:0;background:var(--accent);color:#fff;font:600 14px inherit;cursor:pointer;transition:opacity .15s}
+button:hover{opacity:.9}button:disabled{opacity:.5;cursor:wait}
+.err{color:var(--err);margin-top:14px;min-height:18px;font-size:13px;text-align:center}
+.brand{text-align:center;font-size:11px;opacity:.4;margin-top:20px;letter-spacing:.5px}
+</style></head><body><div class="wrap"><form class="card" id="f">
+<h1>Sign in</h1><div class="sub">Dashboard access</div>
+<label>User<input name="user" autocomplete="username" required autofocus></label>
+<label>Password<input name="password" type="password" autocomplete="current-password" required></label>
+<button type="submit" id="b">Sign in</button>
+<div class="err" id="e"></div>
+<div class="brand">webs-html-improvements</div>
+</form></div><script>
+document.getElementById('f').addEventListener('submit', async function(ev){
+  ev.preventDefault();
+  var b=document.getElementById('b'), e=document.getElementById('e');
+  e.textContent=''; b.disabled=true; b.textContent='Signing in…';
+  try{
+    var fd=new FormData(ev.target);
+    var r=await fetch('/api/auth/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({user:fd.get('user'),password:fd.get('password')})});
+    var j=await r.json();
+    if(!r.ok||!j.ok){ e.textContent=j.error==='invalid_credentials'?'Invalid credentials':(j.error||'Login failed'); b.disabled=false; b.textContent='Sign in'; return; }
+    location.href = new URLSearchParams(location.search).get('next') || '/';
+  }catch(err){ e.textContent='Network error'; b.disabled=false; b.textContent='Sign in'; }
+});
+</script></body></html>"""
+
+
 def read_request_json(handler):
     length = int(handler.headers.get('Content-Length', '0') or '0')
     raw = handler.rfile.read(length) if length else b'{}'
@@ -1291,6 +1430,27 @@ class DashboardHandler(BaseHTTPRequestHandler):
 
     def do_GET(self):
         parsed = urllib.parse.urlparse(self.path)
+        # ---- Stage 8: Auth gate (opt-in via DASHBOARD_USERS env var) ----
+        # Format: "user1:pass1,user2:pass2"  Set DASHBOARD_AUTH_SECRET for token signing.
+        _auth_users_env = os.environ.get('DASHBOARD_USERS', '').strip()
+        if _auth_users_env and not _stage8_check_auth(self, parsed):
+            return  # _stage8_check_auth already wrote response
+        # Stage 8 endpoints
+        if parsed.path == '/login' or parsed.path == '/login.html':
+            return text_response(self, 200, _STAGE8_LOGIN_HTML.encode('utf-8'), 'text/html; charset=utf-8')
+        if parsed.path == '/api/auth/me':
+            tok = _stage8_get_token(self)
+            usr = _stage8_verify_token(tok) if tok else None
+            return json_response(self, 200, {'ok': True, 'user': usr, 'auth_enabled': bool(_auth_users_env)})
+        if parsed.path == '/api/auth/logout':
+            self.send_response(200)
+            self.send_header('Content-Type', 'application/json; charset=utf-8')
+            self.send_header('Set-Cookie', 'dash_auth=; Path=/; Max-Age=0; HttpOnly; SameSite=Lax')
+            body = b'{"ok":true}'
+            self.send_header('Content-Length', str(len(body)))
+            self.end_headers()
+            self.wfile.write(body)
+            return
         # ---- Stage 9: Activity log read ----
         if parsed.path == '/api/activity/log':
             try:
@@ -1729,6 +1889,17 @@ class DashboardHandler(BaseHTTPRequestHandler):
 
     def do_POST(self):
         parsed = urllib.parse.urlparse(self.path)
+        # Stage 8: auth gate (POST side)
+        _auth_users_env_post = os.environ.get('DASHBOARD_USERS', '').strip()
+        if _auth_users_env_post and parsed.path != '/api/auth/login' and not _stage8_check_auth(self, parsed):
+            return
+        # Stage 8: login
+        if parsed.path == '/api/auth/login':
+            try:
+                payload = read_request_json(self) or {}
+            except Exception:
+                payload = {}
+            return _stage8_login(self, payload)
         # ---- Stage 9: Activity log + Webhook receivers (early dispatch) ----
         if parsed.path in ('/api/activity/log', '/api/activity/append', '/api/webhooks/notify'):
             try:

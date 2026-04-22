@@ -14646,6 +14646,30 @@ async function downloadPromptPreviewShot(){
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot, {once:true});
   else boot();
 })();
+
+/* ============================================================
+   STAGE 8 — Auth UI: user badge + logout (only when enabled)
+   ============================================================ */
+(function(){
+  function logout(){
+    fetch('/api/auth/logout').finally(function(){ location.href = '/login'; });
+  }
+  window.dashLogout = logout;
+  function ensureBadge(user){
+    if (!user) return;
+    if (document.getElementById('user-badge')) return;
+    var b = document.createElement('div');
+    b.id = 'user-badge';
+    b.style.cssText = 'position:fixed;top:10px;left:10px;z-index:9998;background:rgba(22,25,34,.85);border:1px solid var(--border,#2a2f3d);border-radius:18px;padding:5px 12px;font:500 11px system-ui;color:var(--gold,#7170ff);backdrop-filter:blur(6px);cursor:pointer;display:flex;align-items:center;gap:8px';
+    b.innerHTML = '<span>👤 ' + user + '</span><span style="opacity:.6;border-left:1px solid currentColor;padding-left:8px">Logout</span>';
+    b.title = 'Click to logout';
+    b.addEventListener('click', logout);
+    document.body.appendChild(b);
+  }
+  fetch('/api/auth/me').then(function(r){return r.ok?r.json():null;}).then(function(j){
+    if (j && j.auth_enabled && j.user) ensureBadge(j.user);
+  }).catch(function(){});
+})();
 </script>
 </body>
 </html>
