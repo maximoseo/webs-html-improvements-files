@@ -14559,6 +14559,93 @@ async function downloadPromptPreviewShot(){
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot, {once:true});
   else boot();
 })();
+
+/* ============================================================
+   STAGE 9 — Activity log persistence + Webhook sync
+   - Mirrors local toast log to /api/activity/log
+   - Polls /api/activity/log every 60s for webhook-driven entries
+   - Surfaces new server-side entries as notifications
+   ============================================================ */
+(function(){
+  var API = '/api/activity/log';
+  var SEEN_KEY = 'dash-activity-seen-v1';
+  var seenIds = new Set();
+  try { JSON.parse(localStorage.getItem(SEEN_KEY) || '[]').forEach(function(id){ seenIds.add(id); }); } catch(_){}
+  function persistSeen(){
+    try {
+      var arr = Array.from(seenIds).slice(-500);
+      localStorage.setItem(SEEN_KEY, JSON.stringify(arr));
+    } catch(_){}
+  }
+
+  /* Push local notifications to server (best-effort, fire-and-forget) */
+  function pushToServer(kind, msg, meta){
+    try {
+      fetch(API, {
+        method: 'POST',
+        headers: {'Content-Type':'application/json'},
+        body: JSON.stringify({source:'dashboard', kind: kind || 'info', msg: msg || '', meta: meta || {}})
+      }).catch(function(){});
+    } catch(_){}
+  }
+  window.activityPush = pushToServer;
+
+  /* Hook into toast() so every user-visible message persists */
+  function hookToast(){
+    if (!window.toast || window.toast.__activityHooked) return;
+    ['success','error','warning','info'].forEach(function(kind){
+      var orig = window.toast[kind];
+      if (typeof orig !== 'function') return;
+      window.toast[kind] = function(msg, opts){
+        try { pushToServer(kind, msg); } catch(_){}
+        return orig.apply(this, arguments);
+      };
+    });
+    window.toast.__activityHooked = true;
+  }
+
+  /* Poll server for webhook/external entries */
+  function pollServer(){
+    fetch(API + '?limit=50&days=2', {credentials:'same-origin'})
+      .then(function(r){ return r.ok ? r.json() : null; })
+      .then(function(j){
+        if (!j || !j.ok || !Array.isArray(j.entries)) return;
+        var fresh = j.entries.filter(function(e){
+          if (!e || !e.id || seenIds.has(e.id)) return false;
+          // Skip dashboard-source entries (we already showed them locally)
+          if (e.source === 'dashboard') { seenIds.add(e.id); return false; }
+          return true;
+        });
+        fresh.reverse().forEach(function(e){
+          seenIds.add(e.id);
+          var k = e.kind || 'info';
+          if (!['success','error','warning','info'].includes(k)) k = 'info';
+          if (window.toast && window.toast[k]) {
+            try { window.toast[k]('🌐 ' + (e.msg || e.source || 'event')); } catch(_){}
+          }
+        });
+        if (fresh.length) persistSeen();
+      })
+      .catch(function(){});
+  }
+
+  function boot(){
+    hookToast();
+    setTimeout(hookToast, 1500);
+    setTimeout(hookToast, 4000);
+    // Initial poll seeds seen-set silently
+    fetch(API + '?limit=200&days=7', {credentials:'same-origin'})
+      .then(function(r){ return r.ok ? r.json() : null; })
+      .then(function(j){
+        if (j && j.entries) j.entries.forEach(function(e){ if (e && e.id) seenIds.add(e.id); });
+        persistSeen();
+      })
+      .catch(function(){});
+    setInterval(pollServer, 60000);
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot, {once:true});
+  else boot();
+})();
 </script>
 </body>
 </html>

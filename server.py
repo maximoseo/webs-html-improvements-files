@@ -1291,6 +1291,31 @@ class DashboardHandler(BaseHTTPRequestHandler):
 
     def do_GET(self):
         parsed = urllib.parse.urlparse(self.path)
+        # ---- Stage 9: Activity log read ----
+        if parsed.path == '/api/activity/log':
+            try:
+                import json as _json, os as _os, time as _time
+                qs = urllib.parse.parse_qs(parsed.query or '')
+                limit = max(1, min(int((qs.get('limit') or ['200'])[0]), 2000))
+                days = max(1, min(int((qs.get('days') or ['7'])[0]), 60))
+                log_dir = _os.path.join(_os.path.dirname(_os.path.abspath(__file__)), 'data', 'activity')
+                entries = []
+                for d in range(days):
+                    day = _time.strftime('%Y-%m-%d', _time.localtime(_time.time() - d * 86400))
+                    fp = _os.path.join(log_dir, f'{day}.jsonl')
+                    if not _os.path.exists(fp): continue
+                    try:
+                        with open(fp, 'r', encoding='utf-8') as f:
+                            for line in f:
+                                line = line.strip()
+                                if not line: continue
+                                try: entries.append(_json.loads(line))
+                                except Exception: pass
+                    except Exception: pass
+                entries.sort(key=lambda e: e.get('ts', 0), reverse=True)
+                return json_response(self, 200, {'ok': True, 'entries': entries[:limit], 'count': len(entries)})
+            except Exception as exc:
+                return json_response(self, 500, {'ok': False, 'error': str(exc)})
         if parsed.path == '/api/health':
             return json_response(self, 200, {
                 'ok': True,
@@ -1704,6 +1729,33 @@ class DashboardHandler(BaseHTTPRequestHandler):
 
     def do_POST(self):
         parsed = urllib.parse.urlparse(self.path)
+        # ---- Stage 9: Activity log + Webhook receivers (early dispatch) ----
+        if parsed.path in ('/api/activity/log', '/api/activity/append', '/api/webhooks/notify'):
+            try:
+                payload = read_request_json(self) or {}
+            except Exception:
+                payload = {}
+            try:
+                import json as _json, os as _os, time as _time, uuid as _uuid
+                log_dir = _os.path.join(_os.path.dirname(_os.path.abspath(__file__)), 'data', 'activity')
+                _os.makedirs(log_dir, exist_ok=True)
+                day = _time.strftime('%Y-%m-%d')
+                log_path = _os.path.join(log_dir, f'{day}.jsonl')
+                entry = {
+                    'id': str(_uuid.uuid4()),
+                    'ts': int(_time.time() * 1000),
+                    'source': payload.get('source') or ('webhook' if 'webhook' in parsed.path else 'dashboard'),
+                    'kind': payload.get('kind') or payload.get('event') or 'info',
+                    'msg': payload.get('msg') or payload.get('message') or payload.get('text') or '',
+                    'meta': payload.get('meta') or {k: v for k, v in payload.items() if k not in ('source','kind','event','msg','message','text','meta')},
+                    'ip': self.client_address[0] if self.client_address else '',
+                }
+                with open(log_path, 'a', encoding='utf-8') as f:
+                    f.write(_json.dumps(entry, ensure_ascii=False) + '\n')
+                return json_response(self, 200, {'ok': True, 'id': entry['id'], 'ts': entry['ts']})
+            except Exception as exc:
+                return json_response(self, 500, {'ok': False, 'error': str(exc)})
+
         try:
             payload = read_request_json(self)
         except Exception:
