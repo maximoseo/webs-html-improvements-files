@@ -293,6 +293,11 @@ a:hover{color:var(--gold-light)}
 /* Loading */
 .loading{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:80px 20px;gap:16px}
 .spinner{width:32px;height:32px;border:3px solid var(--border);border-top-color:var(--gold);border-radius:50%;animation:spin 0.8s linear infinite}
+/* R5 — Respect users with reduced-motion preference */
+@media (prefers-reduced-motion: reduce){
+  .spinner,.deploy-spinner,.btn-spinner,.skel-bar{animation-duration:2.4s !important}
+  .toast{animation:none !important}
+}
 @keyframes spin{to{transform:rotate(360deg)}}
 .loading-text{font-size:13px;color:var(--muted)}
 
@@ -6399,6 +6404,31 @@ table tbody tr[tabindex]:focus-visible{outline:2px solid #3b82f6;outline-offset:
     window.toast.error   = function(m,o){ return window.toast(m,'error',o); };
     window.toast.warn    = function(m,o){ return window.toast(m,'warning',o); };
     window.toast.info    = function(m,o){ return window.toast(m,'info',o); };
+
+    /* Stage 3 — alert() shim: route legacy alert() calls to window.toast.
+       Keeps backward compatibility (sync API) but never blocks the UI thread.
+       Auto-detects severity from message keywords. */
+    try {
+      var _origAlert = window.alert;
+      var ERR_RE  = /\b(fail|failed|error|denied|cannot|can't|invalid|missing|required|unable)\b/i;
+      var WARN_RE = /\b(warn|warning|please|select|paste|empty|first|fill in)\b/i;
+      window.alert = function(msg){
+        try{
+          if (msg == null) msg = '';
+          var s = String(msg);
+          if (!window.toast || typeof window.toast !== 'function') {
+            return _origAlert.call(window, msg);
+          }
+          var type = ERR_RE.test(s) ? 'error' : (WARN_RE.test(s) ? 'warning' : 'info');
+          var dur  = (type === 'error') ? 6000 : (type === 'warning' ? 4500 : 3500);
+          window.toast(s, type, { duration: dur });
+        } catch(e){
+          try { _origAlert.call(window, msg); } catch(_){}
+        }
+      };
+      // Expose escape hatch in case a flow truly needs blocking confirm-style dialog
+      window.__nativeAlert = _origAlert;
+    } catch(_){}
   })();
 })();
 </script>
