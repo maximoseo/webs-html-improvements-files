@@ -38,6 +38,29 @@ def _run_dir(run_id: str) -> str:
     return os.path.join(OUTPUTS_DIR, run_id)
 
 
+def _atomic_write_json(path: str, data) -> None:
+    """Write JSON atomically: write to .tmp then os.replace (POSIX atomic).
+    Prevents partial/corrupt files if the process is killed mid-write (e.g. Render OOM).
+    """
+    tmp = path + '.tmp'
+    try:
+        with open(tmp, 'w', encoding='utf-8') as f:
+            json.dump(data, f, ensure_ascii=False, indent=2, default=str)
+            try:
+                f.flush()
+                os.fsync(f.fileno())
+            except Exception:
+                pass
+        os.replace(tmp, path)
+    except Exception:
+        try:
+            if os.path.exists(tmp):
+                os.remove(tmp)
+        except Exception:
+            pass
+        raise
+
+
 def _persist_job(run_id: str) -> None:
     """Write job JSON + meta.json to outputs/{run_id}/ for cross-restart access."""
     try:
@@ -48,8 +71,7 @@ def _persist_job(run_id: str) -> None:
             job_copy = dict(job)
         rd = _run_dir(run_id)
         os.makedirs(rd, exist_ok=True)
-        with open(os.path.join(rd, 'job.json'), 'w', encoding='utf-8') as f:
-            json.dump(job_copy, f, ensure_ascii=False, indent=2, default=str)
+        _atomic_write_json(os.path.join(rd, 'job.json'), job_copy)
         # Write a small meta.json for the reports listing
         try:
             inputs = job_copy.get('inputs') or {}
@@ -66,8 +88,7 @@ def _persist_job(run_id: str) -> None:
                 'status': job_copy.get('status', ''),
                 'row_count': int(job_copy.get('row_count') or len(job_copy.get('rows') or [])),
             }
-            with open(os.path.join(rd, 'meta.json'), 'w', encoding='utf-8') as f:
-                json.dump(meta, f, ensure_ascii=False, indent=2)
+            _atomic_write_json(os.path.join(rd, 'meta.json'), meta)
         except Exception:
             pass
     except Exception:
@@ -1878,7 +1899,7 @@ def _sync_supabase_storage(run_id: str, xlsx_bytes: bytes, domain_slug: str) -> 
         'apikey': key,
         'Content-Type': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
         'x-upsert': 'true',
-        'Cache-Control': '3600',
+        'Cache-Control': 'max-age=3600',
     }
     try:
         req = urllib.request.Request(upload_url, data=xlsx_bytes, headers=headers, method='POST')

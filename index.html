@@ -11783,14 +11783,27 @@ function loadTopicsFromStatus(state) {
     });
   };
 
-  // ---- Poller ----
+  // ---- Poller (with exponential backoff on errors + tab visibility pause) ----
+  var _kwrPollDelay = 2500;
+  var _kwrPollMin = 2500, _kwrPollMax = 20000;
   function kwrStartPoller() {
-    if (_kwrPoller) clearInterval(_kwrPoller);
-    _kwrPoller = setInterval(kwrPoll, 2500);
+    kwrStopPoller();
+    _kwrPollDelay = _kwrPollMin;
+    var tick = function(){
+      if (!_kwrRunId) return;
+      if (document.hidden) { _kwrPoller = setTimeout(tick, 5000); return; }
+      Promise.resolve().then(function(){ return kwrPoll(); })
+        .then(function(){ _kwrPollDelay = _kwrPollMin; })
+        .catch(function(){ _kwrPollDelay = Math.min(_kwrPollMax, _kwrPollDelay * 2); })
+        .finally(function(){
+          if (_kwrRunId) _kwrPoller = setTimeout(tick, _kwrPollDelay);
+        });
+    };
+    _kwrPoller = setTimeout(tick, _kwrPollDelay);
   }
 
   function kwrStopPoller() {
-    if (_kwrPoller) { clearInterval(_kwrPoller); _kwrPoller = null; }
+    if (_kwrPoller) { clearTimeout(_kwrPoller); clearInterval(_kwrPoller); _kwrPoller = null; }
   }
 
   function kwrPoll() {
