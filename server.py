@@ -1255,6 +1255,33 @@ class DashboardHandler(BaseHTTPRequestHandler):
     def log_message(self, format, *args):
         return
 
+    # #14 Security headers — applied to every response automatically.
+    # CSP allows inline scripts/styles because the dashboard relies on them today;
+    # tightening that requires a separate refactor pass.
+    _SECURITY_HEADERS = (
+        ('X-Content-Type-Options', 'nosniff'),
+        ('X-Frame-Options', 'SAMEORIGIN'),
+        ('Referrer-Policy', 'strict-origin-when-cross-origin'),
+        ('Content-Security-Policy',
+            "default-src 'self'; "
+            "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.jsdelivr.net https://unpkg.com https://cdnjs.cloudflare.com; "
+            "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; "
+            "font-src 'self' data: https://fonts.gstatic.com https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; "
+            "img-src 'self' data: blob: https:; "
+            "connect-src 'self' https:; "
+            "frame-src 'self' https:; "
+            "object-src 'none'; "
+            "base-uri 'self'"),
+    )
+
+    def end_headers(self):
+        try:
+            for k, v in self._SECURITY_HEADERS:
+                self.send_header(k, v)
+        except Exception:
+            pass
+        BaseHTTPRequestHandler.end_headers(self)
+
     def do_OPTIONS(self):
         self.send_response(204)
         self.send_header('Access-Control-Allow-Origin', '*')

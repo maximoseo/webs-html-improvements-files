@@ -14,6 +14,7 @@ No imports from server.py - call_llm injected as argument.
 import datetime
 import io
 import json
+import logging
 import os
 import re
 import threading
@@ -22,6 +23,19 @@ import urllib.error
 import urllib.parse
 import urllib.request
 import uuid
+
+
+# #9 Structured logger for production debugging on Render
+logger = logging.getLogger('kwr')
+if not logger.handlers:
+    _h = logging.StreamHandler()
+    _h.setFormatter(logging.Formatter(
+        '%(asctime)s [%(levelname)s] kwr: %(message)s',
+        datefmt='%Y-%m-%dT%H:%M:%S'
+    ))
+    logger.addHandler(_h)
+    logger.setLevel(os.environ.get('KWR_LOG_LEVEL', 'INFO').upper())
+    logger.propagate = False
 
 _state = {}          # run_id -> job dict
 _lock = threading.RLock()

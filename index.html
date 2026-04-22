@@ -6123,7 +6123,170 @@ header.header > .header-inner,
   #prompt-modal .prompt-actions > #prompt-status,
   #prompt-modal .prompt-actions > .esc-hint{display:none !important}
 }
+/* #12 Skeleton rows for table loading states */
+.skel-row td{padding:10px 12px}
+.skel-bar{display:block;height:12px;border-radius:4px;background:linear-gradient(90deg,rgba(255,255,255,0.05) 0%,rgba(255,255,255,0.13) 50%,rgba(255,255,255,0.05) 100%);background-size:200% 100%;animation:skel-shimmer 1.4s ease-in-out infinite}
+@keyframes skel-shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
+[data-theme="light"] .skel-bar{background:linear-gradient(90deg,rgba(0,0,0,0.05) 0%,rgba(0,0,0,0.10) 50%,rgba(0,0,0,0.05) 100%);background-size:200% 100%}
+/* #15 Keyboard nav focus state for data table rows */
+table tbody tr[tabindex]:focus{outline:2px solid #3b82f6;outline-offset:-2px;background:rgba(59,130,246,0.08)}
+table tbody tr[tabindex]:focus-visible{outline:2px solid #3b82f6;outline-offset:-2px}
 </style>
+<script>
+/* ── P1/P2 global helpers (added 2026-04-22) ──────────────────────────── */
+(function(){
+  'use strict';
+
+  // #7 Safe localStorage with quota cleanup
+  // Strategy: try setItem; on QuotaExceededError, evict oldest known caches & retry.
+  var EVICT_ORDER = [
+    'dashboard_cache',
+    'radar_seen_urls',
+    'kwr_log_buffer',
+    'kwr_last_preview',
+    'comments_draft_cache'
+  ];
+  window.safeSetItem = function(key, value) {
+    try { localStorage.setItem(key, value); return true; }
+    catch (e) {
+      if (!e || (e.name !== 'QuotaExceededError' && e.code !== 22 && e.code !== 1014)) {
+        try { console.warn('safeSetItem failed:', e); } catch(_){}
+        return false;
+      }
+      // Quota hit: evict & retry up to 3 times
+      for (var i = 0; i < EVICT_ORDER.length; i++) {
+        try { localStorage.removeItem(EVICT_ORDER[i]); } catch(_){}
+        try { localStorage.setItem(key, value); return true; } catch(_){}
+      }
+      // Last resort: clear all keys whose value > 50KB (large caches)
+      try {
+        var keys = Object.keys(localStorage);
+        for (var j = 0; j < keys.length; j++) {
+          var v = localStorage.getItem(keys[j]) || '';
+          if (v.length > 50000 && keys[j] !== key) localStorage.removeItem(keys[j]);
+        }
+        localStorage.setItem(key, value); return true;
+      } catch (e2) {
+        try { console.error('safeSetItem: storage exhausted', e2); } catch(_){}
+        return false;
+      }
+    }
+  };
+
+  // #11 debounce helper
+  window.debounce = function(fn, wait) {
+    var t = null;
+    return function() {
+      var ctx = this, args = arguments;
+      clearTimeout(t);
+      t = setTimeout(function(){ fn.apply(ctx, args); }, wait || 200);
+    };
+  };
+
+  // #13 fetch with auto-retry on transient network errors
+  // Retries only on TypeError (network) and 5xx; never on 4xx (user error).
+  window.fetchWithRetry = function(url, options, retries, baseDelay) {
+    options = options || {};
+    retries = (retries == null) ? 2 : retries;
+    baseDelay = baseDelay || 600;
+    var attempt = 0;
+    function tryOnce() {
+      return fetch(url, options).then(function(r){
+        if (!r.ok && r.status >= 500 && attempt < retries) {
+          attempt++;
+          return new Promise(function(res){ setTimeout(res, baseDelay * Math.pow(2, attempt-1)); }).then(tryOnce);
+        }
+        return r;
+      }).catch(function(err){
+        if (attempt < retries && (err && err.name === 'TypeError')) {
+          attempt++;
+          return new Promise(function(res){ setTimeout(res, baseDelay * Math.pow(2, attempt-1)); }).then(tryOnce);
+        }
+        throw err;
+      });
+    }
+    return tryOnce();
+  };
+
+  // Tiny HTML escape (already exists locally but expose globally for new code)
+  if (!window.escHtml) {
+    window.escHtml = function(s){
+      return String(s == null ? '' : s).replace(/[&<>"']/g, function(c){
+        return ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[c];
+      });
+    };
+  }
+
+  // #11 Apply debounce to high-traffic search inputs (non-destructive — fires same handler, just throttled)
+  document.addEventListener('DOMContentLoaded', function(){
+    try {
+      var DEBOUNCE_TARGETS = [
+        { id: 'search',                  fn: 'filterProjects',       wait: 200 },
+        { id: 'tasks-search',            fn: 'filterTasks',          wait: 200 },
+        { id: 'checklist-filter-input',  fn: 'filterChecklist',      wait: 150 }
+      ];
+      DEBOUNCE_TARGETS.forEach(function(t){
+        var el = document.getElementById(t.id);
+        if (!el || !window[t.fn]) return;
+        var debounced = window.debounce(function(v){ try { window[t.fn](v); } catch(_){} }, t.wait);
+        el.removeAttribute('oninput');
+        el.addEventListener('input', function(){ debounced(el.value); });
+      });
+    } catch(_){}
+  });
+
+  // #12 Skeleton loader for tables — call: window.showTableSkeleton('kwr-preview-body', 8, 6)
+  window.showTableSkeleton = function(tbodyId, rows, cols) {
+    var tb = document.getElementById(tbodyId);
+    if (!tb) return;
+    rows = rows || 6; cols = cols || 6;
+    var html = '';
+    for (var r = 0; r < rows; r++) {
+      html += '<tr class="skel-row" aria-hidden="true">';
+      for (var c = 0; c < cols; c++) html += '<td><span class="skel-bar"></span></td>';
+      html += '</tr>';
+    }
+    tb.innerHTML = html;
+  };
+
+  // #15 Keyboard navigation for data tables — Arrow keys move focus between rows.
+  // Apply by calling: window.enableTableKeyNav('kwr-preview-table')
+  window.enableTableKeyNav = function(tableId) {
+    var t = document.getElementById(tableId);
+    if (!t || t.__kbNavBound) return;
+    t.__kbNavBound = true;
+    t.addEventListener('keydown', function(e){
+      var current = document.activeElement;
+      if (!current || current.tagName !== 'TR' || !t.contains(current)) return;
+      var rows = Array.prototype.slice.call(t.querySelectorAll('tbody > tr[tabindex]'));
+      var idx = rows.indexOf(current);
+      if (idx < 0) return;
+      if (e.key === 'ArrowDown' && idx < rows.length - 1) { rows[idx+1].focus(); e.preventDefault(); }
+      else if (e.key === 'ArrowUp' && idx > 0)            { rows[idx-1].focus(); e.preventDefault(); }
+      else if (e.key === 'Home')                           { rows[0].focus(); e.preventDefault(); }
+      else if (e.key === 'End')                            { rows[rows.length-1].focus(); e.preventDefault(); }
+    });
+    // MutationObserver: any new <tr> added → ensure tabindex
+    var mo = new MutationObserver(function(muts){
+      muts.forEach(function(m){
+        m.addedNodes && Array.prototype.forEach.call(m.addedNodes, function(n){
+          if (n.tagName === 'TR' && !n.classList.contains('skel-row')) {
+            if (!n.hasAttribute('tabindex')) n.setAttribute('tabindex', '0');
+            if (!n.hasAttribute('role')) n.setAttribute('role', 'row');
+          }
+        });
+      });
+    });
+    var tb = t.querySelector('tbody');
+    if (tb) mo.observe(tb, { childList: true });
+  };
+
+  // Auto-enable keyboard nav for known data tables once present
+  document.addEventListener('DOMContentLoaded', function(){
+    ['kwr-preview-table'].forEach(function(id){ window.enableTableKeyNav(id); });
+  });
+})();
+</script>
 </head>
 <body>
 <a href="#main-content" class="skip-link">Skip to main content</a>
@@ -9578,7 +9741,7 @@ async function loadDashboard(){
   }
 
   // 4. Save to cache on any success
-  if(tree&&tree.tree){try{localStorage.setItem('dashboard_cache',JSON.stringify(tree))}catch(e){}}
+  if(tree&&tree.tree){try{(window.safeSetItem||localStorage.setItem.bind(localStorage))('dashboard_cache',JSON.stringify(tree))}catch(e){}}
 
   if(!tree||!tree.tree){grid.innerHTML='<div class="empty-state"><p>Could not load data. Try refreshing.</p></div>';document.getElementById('data-source-detail').textContent='Source: unavailable';return}
   document.getElementById('data-source-detail').textContent=sourceDetail;
@@ -10967,7 +11130,7 @@ function radarRunNow() {
                     var seen2 = JSON.parse(localStorage.getItem('radar_seen_urls')||'[]');
                     var results = document.querySelectorAll('.skill-card-source a[href]');
                     results.forEach(function(a){ if(a.href && !seen2.includes(a.href)) seen2.push(a.href); });
-                    localStorage.setItem('radar_seen_urls', JSON.stringify(seen2.slice(-5000)));
+                    (window.safeSetItem||localStorage.setItem.bind(localStorage))('radar_seen_urls', JSON.stringify(seen2.slice(-5000)));
                   } catch(e){}
                 }
                 showToast('Radar run complete — '+((sd.state||{}).skills_found||0)+' skills found','success');
@@ -11015,7 +11178,9 @@ window.kwrRunSwarm = function() {
   kwrSetButtons && kwrSetButtons(true);
   kwrSetStatus && kwrSetStatus('kwr-dot-running', 'Swarm running…', '');
   kwrLog && kwrLog('Launching multi-agent swarm pipeline…');
-  fetch('/api/kwr/start', {
+  // #12 show skeleton while pipeline runs
+  try { window.showTableSkeleton && window.showTableSkeleton('kwr-preview-body', 8, 6); } catch(_){}
+  (window.fetchWithRetry || fetch)('/api/kwr/start', {
     method:'POST',
     headers:{'Content-Type':'application/json'},
     body: JSON.stringify(inputs)
@@ -11788,15 +11953,19 @@ function loadTopicsFromStatus(state) {
   var _kwrPollMin = 2500, _kwrPollMax = 20000;
   function kwrStartPoller() {
     kwrStopPoller();
+    // Global guard: prevent duplicate pollers if script loads twice (#6)
+    if (window.__kwrPollerActive) { try { console.warn('kwrStartPoller: already active, skipping'); } catch(_){} return; }
+    window.__kwrPollerActive = true;
     _kwrPollDelay = _kwrPollMin;
     var tick = function(){
-      if (!_kwrRunId) return;
+      if (!_kwrRunId) { window.__kwrPollerActive = false; return; }
       if (document.hidden) { _kwrPoller = setTimeout(tick, 5000); return; }
       Promise.resolve().then(function(){ return kwrPoll(); })
         .then(function(){ _kwrPollDelay = _kwrPollMin; })
         .catch(function(){ _kwrPollDelay = Math.min(_kwrPollMax, _kwrPollDelay * 2); })
         .finally(function(){
           if (_kwrRunId) _kwrPoller = setTimeout(tick, _kwrPollDelay);
+          else window.__kwrPollerActive = false;
         });
     };
     _kwrPoller = setTimeout(tick, _kwrPollDelay);
@@ -11804,6 +11973,7 @@ function loadTopicsFromStatus(state) {
 
   function kwrStopPoller() {
     if (_kwrPoller) { clearTimeout(_kwrPoller); clearInterval(_kwrPoller); _kwrPoller = null; }
+    window.__kwrPollerActive = false;
   }
 
   function kwrPoll() {
