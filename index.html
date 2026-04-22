@@ -14433,6 +14433,132 @@ async function downloadPromptPreviewShot(){
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot, {once:true});
   else boot();
 })();
+
+/* ============================================================
+   STAGE 10 — Export: CSV per-table + Notifications JSON + Print
+   ============================================================ */
+(function(){
+  /* CSS */
+  var style = document.createElement('style');
+  style.id = 'stage10-css';
+  style.textContent = `
+.tbl-export-btn{position:absolute;top:6px;right:6px;background:rgba(113,112,255,0.15);color:var(--gold,#7170ff);border:1px solid var(--border);border-radius:6px;padding:4px 9px;font:500 11px inherit;cursor:pointer;opacity:0;transition:opacity .15s;z-index:5}
+.tbl-export-wrap{position:relative}
+.tbl-export-wrap:hover .tbl-export-btn,.tbl-export-btn:focus{opacity:1}
+.tbl-export-btn:hover{background:rgba(113,112,255,0.3);color:#fff}
+@media print{
+  body *{visibility:hidden}
+  #main-content,#main-content *{visibility:visible}
+  #main-content{position:absolute;left:0;top:0;width:100%;background:#fff;color:#000}
+  .header,.bottom-nav,#cmdk-backdrop,#tour-backdrop,#notif-bell,#notif-panel,.tbl-export-btn{display:none !important}
+  table{border-collapse:collapse;width:100%}
+  th,td{border:1px solid #ccc;padding:6px;font-size:11px}
+}
+`;
+  document.head.appendChild(style);
+
+  /* CSV serializer */
+  function escCsv(v){
+    var s = (v==null?'':String(v)).replace(/\r?\n/g,' ').trim();
+    if (/[",;\t]/.test(s)) s = '"' + s.replace(/"/g,'""') + '"';
+    return s;
+  }
+  function tableToCsv(table){
+    var rows = [];
+    table.querySelectorAll('tr').forEach(function(tr){
+      var cells = [];
+      tr.querySelectorAll('th,td').forEach(function(c){ cells.push(escCsv(c.innerText || c.textContent || '')); });
+      if (cells.length) rows.push(cells.join(','));
+    });
+    return rows.join('\n');
+  }
+  function downloadBlob(blob, filename){
+    var a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    setTimeout(function(){ try{ URL.revokeObjectURL(a.href); a.remove(); }catch(_){} }, 1000);
+  }
+
+  /* Wrap every table with hover "CSV" button */
+  function decorateTables(){
+    document.querySelectorAll('table').forEach(function(t){
+      if (t.__exp) return;
+      // Find or wrap parent
+      var p = t.parentElement;
+      if (!p) return;
+      if (!p.classList.contains('tbl-export-wrap')) {
+        // Don't wrap if it's a layout container — just position the button absolutely on parent
+        if (getComputedStyle(p).position === 'static') p.style.position = 'relative';
+        p.classList.add('tbl-export-wrap');
+      }
+      var btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'tbl-export-btn';
+      btn.title = 'Export this table as CSV';
+      btn.textContent = '⬇ CSV';
+      btn.addEventListener('click', function(e){
+        e.preventDefault(); e.stopPropagation();
+        try {
+          var csv = '\ufeff' + tableToCsv(t); // BOM for Excel UTF-8
+          if (!csv.trim()) { window.toast && window.toast.warning('Table is empty'); return; }
+          var name = (document.title.replace(/\W+/g,'-').slice(0,40) || 'table') + '-' + new Date().toISOString().slice(0,10) + '.csv';
+          downloadBlob(new Blob([csv], {type:'text/csv;charset=utf-8'}), name);
+          window.toast && window.toast.success('Exported · ' + name);
+        } catch(err){ window.toast && window.toast.error('Export failed: ' + err.message); }
+      });
+      p.appendChild(btn);
+      t.__exp = true;
+    });
+  }
+
+  /* Export all notifications as JSON */
+  window.exportNotifications = function(){
+    try {
+      var raw = localStorage.getItem('dash-notif-log-v1') || '[]';
+      var name = 'notifications-' + new Date().toISOString().slice(0,10) + '.json';
+      downloadBlob(new Blob([raw], {type:'application/json'}), name);
+      window.toast && window.toast.success('Notifications exported · ' + name);
+    } catch(e){ window.toast && window.toast.error('Export failed'); }
+  };
+
+  /* Print current page */
+  window.printDashboard = function(){
+    window.toast && window.toast.info('Opening print dialog…');
+    setTimeout(function(){ window.print(); }, 300);
+  };
+
+  /* Add menu items to Command Palette if present */
+  function registerInPalette(){
+    if (!window.__cmdk || !window.__cmdk.register) {
+      // Try alt API
+      if (window.cmdkRegister) {
+        try {
+          window.cmdkRegister({label:'Export Notifications (JSON)', action: window.exportNotifications, icon:'⬇'});
+          window.cmdkRegister({label:'Print dashboard', action: window.printDashboard, icon:'🖨'});
+        } catch(_){}
+      }
+      return;
+    }
+    try {
+      window.__cmdk.register({label:'Export Notifications (JSON)', action: window.exportNotifications, icon:'⬇'});
+      window.__cmdk.register({label:'Print dashboard', action: window.printDashboard, icon:'🖨'});
+    } catch(_){}
+  }
+
+  function boot(){
+    decorateTables();
+    new MutationObserver(function(){
+      clearTimeout(window.__expDeb);
+      window.__expDeb = setTimeout(decorateTables, 400);
+    }).observe(document.body, {childList:true, subtree:true});
+    registerInPalette();
+    setTimeout(registerInPalette, 1500);
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot, {once:true});
+  else boot();
+})();
 </script>
 </body>
 </html>
