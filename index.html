@@ -13994,6 +13994,248 @@ async function downloadPromptPreviewShot(){
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot, {once:true});
   else boot();
 })();
+
+/* ============================================================
+   STAGE 6 — Polish: Empty states, Onboarding tour, Skeletons
+   ============================================================ */
+(function(){
+  /* CSS */
+  (function(){
+    var css = `
+/* Empty state */
+.empty-state{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:48px 24px;text-align:center;color:var(--muted);min-height:240px}
+.empty-state .empty-icon{font-size:42px;line-height:1;margin-bottom:14px;opacity:.6}
+.empty-state h4{font:600 16px/1.3 inherit;color:var(--text);margin:0 0 6px}
+.empty-state p{font:13px/1.5 inherit;max-width:380px;margin:0 0 16px}
+.empty-state .empty-cta{background:var(--gold,#7170ff);color:#fff;border:0;border-radius:8px;padding:9px 18px;font:500 13px inherit;cursor:pointer;transition:filter .15s}
+.empty-state .empty-cta:hover{filter:brightness(1.1)}
+.empty-state.compact{min-height:140px;padding:24px}
+
+/* Onboarding tour */
+#tour-backdrop{position:fixed;inset:0;background:rgba(0,0,0,0.65);z-index:10500;display:none;animation:cmdkFade .2s ease both}
+#tour-backdrop.open{display:block}
+.tour-spotlight{position:fixed;border-radius:12px;box-shadow:0 0 0 9999px rgba(0,0,0,0.65),0 0 0 3px var(--gold,#7170ff);transition:all .3s var(--ease-standard,ease);pointer-events:none;z-index:10501}
+.tour-tooltip{position:fixed;background:var(--surface-strong,#131416);border:1px solid var(--border-strong,rgba(255,255,255,0.18));border-radius:12px;box-shadow:0 20px 60px rgba(0,0,0,0.5);padding:18px 20px;width:320px;max-width:calc(100vw - 32px);z-index:10502;animation:cmdkPop .25s var(--ease-standard,ease) both;color:var(--text)}
+.tour-tooltip h4{font:600 14px inherit;margin:0 0 6px;color:var(--text)}
+.tour-tooltip p{font:13px/1.5 inherit;margin:0 0 14px;color:var(--muted)}
+.tour-tooltip .tour-actions{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.tour-tooltip .tour-step{font:11px inherit;color:var(--muted)}
+.tour-tooltip button{background:transparent;border:1px solid var(--border);color:var(--text);padding:6px 12px;border-radius:6px;cursor:pointer;font:500 12px inherit}
+.tour-tooltip button.primary{background:var(--gold,#7170ff);color:#fff;border-color:transparent}
+.tour-tooltip button:hover{filter:brightness(1.1)}
+
+/* Skeleton (re-use existing .skel-row/.skel-bar from Stage 4 — add list/card variants) */
+.skel-card{background:var(--card,rgba(255,255,255,0.04));border:1px solid var(--border);border-radius:10px;padding:14px;margin-bottom:10px}
+.skel-card .skel-bar{margin-bottom:8px}
+.skel-card .skel-bar:last-child{margin-bottom:0}
+@keyframes skelPulse{0%,100%{opacity:.55}50%{opacity:.95}}
+.skel-bar{background:linear-gradient(90deg,rgba(255,255,255,0.06),rgba(255,255,255,0.14),rgba(255,255,255,0.06));background-size:200% 100%;animation:skelPulse 1.4s ease-in-out infinite,skelShine 1.6s linear infinite;border-radius:6px;height:12px;width:100%}
+@keyframes skelShine{0%{background-position:200% 0}100%{background-position:-200% 0}}
+@media (prefers-reduced-motion: reduce){.skel-bar{animation:none}}
+`;
+    var s = document.createElement('style');
+    s.id = 'stage6-css';
+    s.textContent = css;
+    document.head.appendChild(s);
+  })();
+
+  /* ───── Empty States ───── */
+  function buildEmpty(opts){
+    var d = document.createElement('div');
+    d.className = 'empty-state' + (opts.compact ? ' compact' : '');
+    d.setAttribute('data-empty', '1');
+    d.innerHTML = '<div class="empty-icon">'+(opts.icon||'📭')+'</div>'
+      + '<h4>'+(opts.title||'Nothing here yet')+'</h4>'
+      + '<p>'+(opts.body||'')+'</p>'
+      + (opts.cta ? '<button class="empty-cta" type="button">'+opts.cta+'</button>' : '');
+    if (opts.cta && typeof opts.onCta === 'function') {
+      d.querySelector('.empty-cta').addEventListener('click', opts.onCta);
+    }
+    return d;
+  }
+
+  // Watch a container — when it becomes visually empty (no children or only text-only fallback), show empty state.
+  function watchEmpty(containerId, emptyOpts){
+    var el = document.getElementById(containerId);
+    if (!el) return;
+    var update = function(){
+      var hasContent = Array.from(el.children).some(function(c){
+        return c.nodeType === 1
+          && !c.classList.contains('skel-row')
+          && !c.classList.contains('skel-card')
+          && !c.hasAttribute('data-empty');
+      });
+      var existing = el.querySelector('[data-empty]');
+      if (!hasContent && !existing){
+        var node = buildEmpty(emptyOpts);
+        el.appendChild(node);
+      } else if (hasContent && existing){
+        existing.remove();
+      }
+    };
+    new MutationObserver(function(){
+      clearTimeout(el.__emptyDeb);
+      el.__emptyDeb = setTimeout(update, 250);
+    }).observe(el, {childList:true});
+    update();
+  }
+
+  /* ───── Skeletons (Radar + Tasks) ───── */
+  function showSkeletonCards(containerId, count){
+    var el = document.getElementById(containerId);
+    if (!el) return;
+    if (el.querySelector('.skel-card')) return;
+    var html = '';
+    for (var i=0;i<(count||3);i++){
+      html += '<div class="skel-card">'
+        + '<div class="skel-bar" style="width:60%;height:14px"></div>'
+        + '<div class="skel-bar" style="width:90%"></div>'
+        + '<div class="skel-bar" style="width:40%;height:10px"></div></div>';
+    }
+    el.insertAdjacentHTML('afterbegin', html);
+  }
+  function clearSkeletonCards(containerId){
+    var el = document.getElementById(containerId);
+    if (!el) return;
+    el.querySelectorAll('.skel-card').forEach(function(s){ s.remove(); });
+  }
+
+  // Hook radarRunNow + tasks fetch to show skeletons
+  function hookRadarSkeleton(){
+    if (typeof window.radarRunNow === 'function' && !window.radarRunNow.__skel){
+      var orig = window.radarRunNow;
+      window.radarRunNow = function(){ try{ showSkeletonCards('radar-results-list', 4); }catch(_){} return orig.apply(this, arguments); };
+      window.radarRunNow.__skel = true;
+    }
+    // Also clear when results visibly populate
+    var rl = document.getElementById('radar-results-list');
+    if (rl && !rl.__skelObs){
+      rl.__skelObs = true;
+      new MutationObserver(function(){
+        var hasReal = Array.from(rl.children).some(function(c){ return c.nodeType===1 && !c.classList.contains('skel-card') && !c.hasAttribute('data-empty'); });
+        if (hasReal) clearSkeletonCards('radar-results-list');
+      }).observe(rl, {childList:true});
+    }
+  }
+
+  /* ───── Onboarding Tour (3-step) ───── */
+  var TOUR_KEY = 'dash-tour-done-v1';
+  var STEPS = [
+    {selector:'#projects-sort-wrap',  title:'Sort & filter',         body:'Reorder projects by date or name. Your choice is remembered between visits.'},
+    {selector:'#cmdk-backdrop, body', anchor:'#main-content',         title:'Command Palette ⌘',  body:'Press Ctrl+K (or ⌘K on Mac) anywhere to jump between pages or trigger actions instantly.'},
+    {selector:'#notif-bell',          title:'Notifications 🔔',       body:'Every action and toast lands here. Press N to open. We highlight unread items with a red dot.'}
+  ];
+
+  function buildTour(){
+    if (document.getElementById('tour-backdrop')) return;
+    var bd = document.createElement('div'); bd.id = 'tour-backdrop';
+    var sp = document.createElement('div'); sp.className = 'tour-spotlight';
+    var tt = document.createElement('div'); tt.className = 'tour-tooltip'; tt.setAttribute('role','dialog'); tt.setAttribute('aria-modal','true');
+    bd.appendChild(sp); bd.appendChild(tt);
+    document.body.appendChild(bd);
+    return {bd:bd, sp:sp, tt:tt};
+  }
+  function positionTour(els, step, idx, total){
+    var anchor = document.querySelector(step.anchor || step.selector);
+    if (!anchor){ return false; }
+    var r = anchor.getBoundingClientRect();
+    if (r.width === 0 || r.height === 0) {
+      // Centered fallback when target not visible
+      els.sp.style.cssText = 'display:none';
+    } else {
+      var pad = 8;
+      els.sp.style.cssText = 'position:fixed;top:'+(r.top-pad)+'px;left:'+(r.left-pad)+'px;width:'+(r.width+pad*2)+'px;height:'+(r.height+pad*2)+'px;border-radius:12px;box-shadow:0 0 0 9999px rgba(0,0,0,0.65),0 0 0 3px var(--gold,#7170ff);transition:all .3s ease;pointer-events:none;z-index:10501';
+    }
+    // Tooltip: prefer below anchor; if would overflow, show above
+    var ttW = 320, ttH = 160;
+    var top = r.bottom + 14, left = Math.min(window.innerWidth - ttW - 16, Math.max(16, r.left));
+    if (top + ttH > window.innerHeight) top = Math.max(16, r.top - ttH - 14);
+    if (r.width === 0) { top = window.innerHeight/2 - ttH/2; left = window.innerWidth/2 - ttW/2; }
+    els.tt.style.cssText = 'position:fixed;top:'+top+'px;left:'+left+'px;width:'+ttW+'px';
+    els.tt.innerHTML = '<h4>'+step.title+'</h4><p>'+step.body+'</p>'
+      + '<div class="tour-actions">'
+      +   '<span class="tour-step">'+(idx+1)+' / '+total+'</span>'
+      +   '<div style="display:flex;gap:6px">'
+      +     '<button data-act="skip">Skip</button>'
+      +     '<button data-act="next" class="primary">'+(idx === total-1 ? 'Done' : 'Next →')+'</button>'
+      +   '</div></div>';
+    return true;
+  }
+  function startTour(){
+    var els = buildTour();
+    var i = 0;
+    var render = function(){
+      var ok = positionTour(els, STEPS[i], i, STEPS.length);
+      if (!ok && i < STEPS.length - 1){ i++; return render(); }
+      els.bd.classList.add('open');
+      els.tt.querySelectorAll('button').forEach(function(b){
+        b.addEventListener('click', function(){
+          var act = b.getAttribute('data-act');
+          if (act === 'skip'){ end(); }
+          else if (act === 'next'){
+            i++;
+            if (i >= STEPS.length){ end(); } else { render(); }
+          }
+        });
+      });
+    };
+    var end = function(){
+      els.bd.classList.remove('open');
+      try { localStorage.setItem(TOUR_KEY, '1'); } catch(_){}
+      try { window.toast && window.toast.info('Tour complete · Press Ctrl+K anytime'); } catch(_){}
+      setTimeout(function(){ try{ els.bd.remove(); }catch(_){} }, 300);
+    };
+    // Esc closes
+    document.addEventListener('keydown', function esc(e){ if (e.key==='Escape'){ end(); document.removeEventListener('keydown', esc); } });
+    // Reposition on resize
+    var onResize = function(){ positionTour(els, STEPS[i], i, STEPS.length); };
+    window.addEventListener('resize', onResize);
+    render();
+  }
+  window.startTour = startTour;
+
+  /* ───── Boot ───── */
+  function boot(){
+    try { hookRadarSkeleton(); } catch(e){ console.warn('[s6 skel]', e); }
+    // Empty state targets
+    try {
+      watchEmpty('projects-grid', {
+        icon:'📁', title:'No projects yet',
+        body:'Add an HTML redesign project to GitHub or sync to pull existing ones.',
+        cta:'Sync now', onCta:function(){ try{ fullSync(); }catch(_){ window.toast && window.toast.info('Sync triggered'); } }
+      });
+    } catch(_){}
+    try {
+      watchEmpty('radar-results-list', {
+        icon:'📡', title:'No skills found yet',
+        body:'Run Skills Radar to discover new agent capabilities.',
+        cta:'Run now', onCta:function(){ try{ radarRunNow(); }catch(_){} }
+      });
+    } catch(_){}
+    try {
+      watchEmpty('tasks-list-container', {
+        icon:'✅', title:'No tasks yet',
+        body:'Create your first task to start tracking work.',
+        compact:true
+      });
+    } catch(_){}
+    // Re-hook after dynamic loads
+    setTimeout(function(){ try{ hookRadarSkeleton(); }catch(_){} }, 1500);
+
+    // Auto-start tour for new users (after Stage 5 finished mounting)
+    try {
+      if (!localStorage.getItem(TOUR_KEY)) {
+        setTimeout(function(){
+          if (document.getElementById('cmdk-backdrop') && document.getElementById('notif-bell')){
+            startTour();
+          }
+        }, 2200);
+      }
+    } catch(_){}
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot, {once:true});
+  else boot();
+})();
 </script>
 </body>
 </html>
