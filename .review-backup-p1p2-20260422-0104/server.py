@@ -1255,33 +1255,6 @@ class DashboardHandler(BaseHTTPRequestHandler):
     def log_message(self, format, *args):
         return
 
-    # #14 Security headers — applied to every response automatically.
-    # CSP allows inline scripts/styles because the dashboard relies on them today;
-    # tightening that requires a separate refactor pass.
-    _SECURITY_HEADERS = (
-        ('X-Content-Type-Options', 'nosniff'),
-        ('X-Frame-Options', 'SAMEORIGIN'),
-        ('Referrer-Policy', 'strict-origin-when-cross-origin'),
-        ('Content-Security-Policy',
-            "default-src 'self'; "
-            "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.jsdelivr.net https://unpkg.com https://cdnjs.cloudflare.com; "
-            "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; "
-            "font-src 'self' data: https://fonts.gstatic.com https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; "
-            "img-src 'self' data: blob: https:; "
-            "connect-src 'self' https:; "
-            "frame-src 'self' https:; "
-            "object-src 'none'; "
-            "base-uri 'self'"),
-    )
-
-    def end_headers(self):
-        try:
-            for k, v in self._SECURITY_HEADERS:
-                self.send_header(k, v)
-        except Exception:
-            pass
-        BaseHTTPRequestHandler.end_headers(self)
-
     def do_OPTIONS(self):
         self.send_response(204)
         self.send_header('Access-Control-Allow-Origin', '*')
@@ -1646,13 +1619,7 @@ class DashboardHandler(BaseHTTPRequestHandler):
                 )
                 self.send_header('Content-Length', str(len(excel_bytes)))
                 self.end_headers()
-                try:
-                    mv = memoryview(excel_bytes)
-                    CHUNK = 65536
-                    for i in range(0, len(mv), CHUNK):
-                        self.wfile.write(mv[i:i+CHUNK])
-                except (BrokenPipeError, ConnectionResetError):
-                    return
+                self.wfile.write(excel_bytes)
                 return
             excel_bytes, ws_name, err = kwr_backend.build_excel(run_id)
             if err:
@@ -1670,14 +1637,7 @@ class DashboardHandler(BaseHTTPRequestHandler):
             )
             self.send_header('Content-Length', str(len(excel_bytes)))
             self.end_headers()
-            # Stream in 64KB chunks — avoids broken-pipe / memory spikes on Render proxies.
-            try:
-                mv = memoryview(excel_bytes)
-                CHUNK = 65536
-                for i in range(0, len(mv), CHUNK):
-                    self.wfile.write(mv[i:i+CHUNK])
-            except (BrokenPipeError, ConnectionResetError):
-                return
+            self.wfile.write(excel_bytes)
             return
 
         if parsed.path.startswith('/api/kwr/note-content/'):

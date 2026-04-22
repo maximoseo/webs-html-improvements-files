@@ -14,7 +14,6 @@ No imports from server.py - call_llm injected as argument.
 import datetime
 import io
 import json
-import logging
 import os
 import re
 import threading
@@ -23,19 +22,6 @@ import urllib.error
 import urllib.parse
 import urllib.request
 import uuid
-
-
-# #9 Structured logger for production debugging on Render
-logger = logging.getLogger('kwr')
-if not logger.handlers:
-    _h = logging.StreamHandler()
-    _h.setFormatter(logging.Formatter(
-        '%(asctime)s [%(levelname)s] kwr: %(message)s',
-        datefmt='%Y-%m-%dT%H:%M:%S'
-    ))
-    logger.addHandler(_h)
-    logger.setLevel(os.environ.get('KWR_LOG_LEVEL', 'INFO').upper())
-    logger.propagate = False
 
 _state = {}          # run_id -> job dict
 _lock = threading.RLock()
@@ -470,17 +456,6 @@ def build_excel(run_id: str) -> tuple:
     buf = io.BytesIO()
     wb.save(buf)
     data = buf.getvalue()
-    # Free workbook ASAP — openpyxl holds large in-memory structures
-    try:
-        wb.close()
-    except Exception:
-        pass
-    del wb, buf
-    try:
-        import gc as _gc
-        _gc.collect()
-    except Exception:
-        pass
     # Cache xlsx to disk so /api/kwr/download survives Render restarts.
     try:
         rd = _run_dir(run_id)

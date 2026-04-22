@@ -14,7 +14,6 @@ No imports from server.py - call_llm injected as argument.
 import datetime
 import io
 import json
-import logging
 import os
 import re
 import threading
@@ -23,19 +22,6 @@ import urllib.error
 import urllib.parse
 import urllib.request
 import uuid
-
-
-# #9 Structured logger for production debugging on Render
-logger = logging.getLogger('kwr')
-if not logger.handlers:
-    _h = logging.StreamHandler()
-    _h.setFormatter(logging.Formatter(
-        '%(asctime)s [%(levelname)s] kwr: %(message)s',
-        datefmt='%Y-%m-%dT%H:%M:%S'
-    ))
-    logger.addHandler(_h)
-    logger.setLevel(os.environ.get('KWR_LOG_LEVEL', 'INFO').upper())
-    logger.propagate = False
 
 _state = {}          # run_id -> job dict
 _lock = threading.RLock()
@@ -52,29 +38,6 @@ def _run_dir(run_id: str) -> str:
     return os.path.join(OUTPUTS_DIR, run_id)
 
 
-def _atomic_write_json(path: str, data) -> None:
-    """Write JSON atomically: write to .tmp then os.replace (POSIX atomic).
-    Prevents partial/corrupt files if the process is killed mid-write (e.g. Render OOM).
-    """
-    tmp = path + '.tmp'
-    try:
-        with open(tmp, 'w', encoding='utf-8') as f:
-            json.dump(data, f, ensure_ascii=False, indent=2, default=str)
-            try:
-                f.flush()
-                os.fsync(f.fileno())
-            except Exception:
-                pass
-        os.replace(tmp, path)
-    except Exception:
-        try:
-            if os.path.exists(tmp):
-                os.remove(tmp)
-        except Exception:
-            pass
-        raise
-
-
 def _persist_job(run_id: str) -> None:
     """Write job JSON + meta.json to outputs/{run_id}/ for cross-restart access."""
     try:
@@ -85,7 +48,8 @@ def _persist_job(run_id: str) -> None:
             job_copy = dict(job)
         rd = _run_dir(run_id)
         os.makedirs(rd, exist_ok=True)
-        _atomic_write_json(os.path.join(rd, 'job.json'), job_copy)
+        with open(os.path.join(rd, 'job.json'), 'w', encoding='utf-8') as f:
+            json.dump(job_copy, f, ensure_ascii=False, indent=2, default=str)
         # Write a small meta.json for the reports listing
         try:
             inputs = job_copy.get('inputs') or {}
@@ -102,7 +66,8 @@ def _persist_job(run_id: str) -> None:
                 'status': job_copy.get('status', ''),
                 'row_count': int(job_copy.get('row_count') or len(job_copy.get('rows') or [])),
             }
-            _atomic_write_json(os.path.join(rd, 'meta.json'), meta)
+            with open(os.path.join(rd, 'meta.json'), 'w', encoding='utf-8') as f:
+                json.dump(meta, f, ensure_ascii=False, indent=2)
         except Exception:
             pass
     except Exception:
@@ -470,17 +435,6 @@ def build_excel(run_id: str) -> tuple:
     buf = io.BytesIO()
     wb.save(buf)
     data = buf.getvalue()
-    # Free workbook ASAP — openpyxl holds large in-memory structures
-    try:
-        wb.close()
-    except Exception:
-        pass
-    del wb, buf
-    try:
-        import gc as _gc
-        _gc.collect()
-    except Exception:
-        pass
     # Cache xlsx to disk so /api/kwr/download survives Render restarts.
     try:
         rd = _run_dir(run_id)
@@ -1924,7 +1878,7 @@ def _sync_supabase_storage(run_id: str, xlsx_bytes: bytes, domain_slug: str) -> 
         'apikey': key,
         'Content-Type': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
         'x-upsert': 'true',
-        'Cache-Control': 'max-age=3600',
+        'Cache-Control': '3600',
     }
     try:
         req = urllib.request.Request(upload_url, data=xlsx_bytes, headers=headers, method='POST')
