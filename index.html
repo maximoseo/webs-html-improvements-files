@@ -14670,6 +14670,75 @@ async function downloadPromptPreviewShot(){
     if (j && j.auth_enabled && j.user) ensureBadge(j.user);
   }).catch(function(){});
 })();
+
+/* ============================================================
+   STAGE 14 — Admin: Backup panel
+   Visible only to first user in DASHBOARD_USERS (admin).
+   ============================================================ */
+(function(){
+  var panel, opened=false;
+  function fmtSize(n){ if(!n)return '—'; if(n<1024)return n+' B'; if(n<1048576)return (n/1024).toFixed(1)+' KB'; return (n/1048576).toFixed(2)+' MB'; }
+  function row(b){
+    var src = b.source==='github'?'🐙':b.source==='supabase'?'⚡':'💾';
+    var link = b.url?'<a href="'+b.url+'" target="_blank" style="color:inherit">'+b.name+'</a>':b.name;
+    return '<tr><td style="padding:4px 8px">'+src+'</td><td style="padding:4px 8px;font-family:ui-monospace,monospace;font-size:11px">'+link+'</td><td style="padding:4px 8px;text-align:right">'+fmtSize(b.size)+'</td></tr>';
+  }
+  function render(data){
+    var all=[].concat(data.local||[],data.github||[],data.supabase||[]);
+    var html='<div style="margin-bottom:10px;display:flex;gap:8px;align-items:center"><strong style="font-size:13px">Backups</strong><button id="bkp-run" style="margin-left:auto;padding:4px 10px;border:1px solid var(--border,#2a2f3d);background:var(--accent,#7170ff);color:#fff;border-radius:6px;cursor:pointer;font-size:11px">Run now</button><button id="bkp-close" style="padding:4px 8px;border:0;background:transparent;color:inherit;cursor:pointer;font-size:14px">×</button></div>';
+    if(!all.length){ html+='<div style="opacity:.6;font-size:12px">No backups yet.</div>'; }
+    else{
+      html+='<table style="width:100%;border-collapse:collapse;font-size:12px"><thead><tr style="opacity:.6;border-bottom:1px solid var(--border,#2a2f3d)"><th style="text-align:left;padding:4px 8px">Src</th><th style="text-align:left;padding:4px 8px">Name</th><th style="text-align:right;padding:4px 8px">Size</th></tr></thead><tbody>';
+      all.forEach(function(b){ html+=row(b); });
+      html+='</tbody></table>';
+    }
+    panel.innerHTML=html;
+    document.getElementById('bkp-close').onclick=close;
+    document.getElementById('bkp-run').onclick=runNow;
+  }
+  function refresh(){
+    fetch('/api/admin/backup/list').then(function(r){return r.json();}).then(render).catch(function(){
+      panel.innerHTML='<div style="color:var(--err,#ff6b6b)">Failed to load backups.</div>';
+    });
+  }
+  function runNow(){
+    var btn=document.getElementById('bkp-run');
+    btn.disabled=true; btn.textContent='Running…';
+    fetch('/api/admin/backup/run',{method:'POST'}).then(function(r){return r.json();}).then(function(j){
+      btn.textContent=j.ok?'Done ✓':'Failed';
+      setTimeout(refresh,800);
+    }).catch(function(){ btn.textContent='Error'; });
+  }
+  function open(){
+    if(opened)return; opened=true;
+    panel=document.createElement('div');
+    panel.id='bkp-panel';
+    panel.style.cssText='position:fixed;top:50px;left:10px;z-index:9997;background:var(--card,#161922);border:1px solid var(--border,#2a2f3d);border-radius:10px;padding:14px;width:min(420px,90vw);max-height:70vh;overflow:auto;box-shadow:0 10px 40px rgba(0,0,0,.5);color:var(--fg,#e8e8f0)';
+    document.body.appendChild(panel);
+    panel.innerHTML='Loading…';
+    refresh();
+  }
+  function close(){
+    if(panel){ panel.remove(); panel=null; }
+    opened=false;
+  }
+  function attach(){
+    var badge=document.getElementById('user-badge');
+    if(!badge)return setTimeout(attach,500);
+    // Test admin by hitting the endpoint
+    fetch('/api/admin/backup/list').then(function(r){
+      if(r.status===200){
+        var btn=document.createElement('span');
+        btn.textContent='💾';
+        btn.title='Backups (admin)';
+        btn.style.cssText='cursor:pointer;padding-left:8px;border-left:1px solid currentColor;opacity:.8';
+        btn.onclick=function(ev){ ev.stopPropagation(); opened?close():open(); };
+        badge.appendChild(btn);
+      }
+    }).catch(function(){});
+  }
+  attach();
+})();
 </script>
 </body>
 </html>

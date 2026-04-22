@@ -229,6 +229,116 @@ document.getElementById('f').addEventListener('submit', async function(ev){
 </script></body></html>"""
 
 
+# ============================================================
+# Stage 14 — Backup admin endpoints + daily scheduler
+# Requires: backup.py (sibling module). Uses the Stage 8 auth gate.
+# ============================================================
+import threading as _threading14
+import time as _time14
+
+try:
+    import backup as _backup_mod
+except Exception as _e14:
+    _backup_mod = None
+    print(f"[stage14] backup module unavailable: {_e14}", flush=True)
+
+
+def _stage14_is_admin(handler):
+    """First user in DASHBOARD_USERS is treated as admin. If auth disabled, deny."""
+    users_env = os.environ.get('DASHBOARD_USERS', '').strip()
+    if not users_env:
+        return False
+    first_user = users_env.split(',')[0].split(':')[0].strip()
+    tok = _stage8_get_token(handler)
+    user = _stage8_verify_token(tok) if tok else None
+    return user == first_user
+
+
+def _stage14_handle_get(handler, parsed):
+    """Returns True if the request was handled."""
+    if _backup_mod is None:
+        return False
+    path = parsed.path
+    if path == '/api/admin/backup/list':
+        if not _stage14_is_admin(handler):
+            json_response(handler, 403, {'ok': False, 'error': 'admin_only'})
+            return True
+        json_response(handler, 200, {'ok': True, **_backup_mod.list_all()})
+        return True
+    if path.startswith('/api/admin/backup/local/'):
+        if not _stage14_is_admin(handler):
+            json_response(handler, 403, {'ok': False, 'error': 'admin_only'})
+            return True
+        name = path.rsplit('/', 1)[-1]
+        if not name.startswith('dash-backup-') or '/' in name or '..' in name:
+            json_response(handler, 400, {'ok': False, 'error': 'bad_name'})
+            return True
+        fp = _backup_mod.BACKUP_DIR / name
+        if not fp.exists():
+            json_response(handler, 404, {'ok': False, 'error': 'not_found'})
+            return True
+        data = fp.read_bytes()
+        handler.send_response(200)
+        handler.send_header('Content-Type', 'application/gzip')
+        handler.send_header('Content-Length', str(len(data)))
+        handler.send_header('Content-Disposition', f'attachment; filename="{name}"')
+        handler.end_headers()
+        handler.wfile.write(data)
+        return True
+    return False
+
+
+def _stage14_handle_post(handler, parsed):
+    if _backup_mod is None:
+        return False
+    if parsed.path == '/api/admin/backup/run':
+        if not _stage14_is_admin(handler):
+            json_response(handler, 403, {'ok': False, 'error': 'admin_only'})
+            return True
+        try:
+            result = _backup_mod.run_backup()
+            json_response(handler, 200, result)
+        except Exception as e:
+            json_response(handler, 500, {'ok': False, 'error': str(e)})
+        return True
+    return False
+
+
+def _stage14_scheduler():
+    """Run a backup once a day at ~03:00 UTC. Best-effort, never raises."""
+    if _backup_mod is None:
+        return
+    last_run_day = None
+    while True:
+        try:
+            now = datetime.utcnow() if False else __import__('datetime').datetime.utcnow()
+            today = now.strftime('%Y-%m-%d')
+            # Run between 03:00 and 03:30 UTC, once per day
+            if now.hour == 3 and last_run_day != today:
+                print('[stage14] starting daily backup', flush=True)
+                try:
+                    res = _backup_mod.run_backup()
+                    print(f'[stage14] backup result: {res}', flush=True)
+                except Exception as e:
+                    print(f'[stage14] backup failed: {e}', flush=True)
+                last_run_day = today
+        except Exception as e:
+            print(f'[stage14] scheduler error: {e}', flush=True)
+        _time14.sleep(600)  # check every 10 min
+
+
+def _stage14_start_scheduler_once():
+    if getattr(_stage14_start_scheduler_once, '_started', False):
+        return
+    _stage14_start_scheduler_once._started = True
+    if _backup_mod is None:
+        return
+    t = _threading14.Thread(target=_stage14_scheduler, daemon=True, name='backup-scheduler')
+    t.start()
+    print('[stage14] daily backup scheduler started (03:00 UTC)', flush=True)
+
+
+
 def read_request_json(handler):
     length = int(handler.headers.get('Content-Length', '0') or '0')
     raw = handler.rfile.read(length) if length else b'{}'
@@ -1451,6 +1561,9 @@ class DashboardHandler(BaseHTTPRequestHandler):
             self.end_headers()
             self.wfile.write(body)
             return
+        # Stage 14 admin backup endpoints
+        if _stage14_handle_get(self, parsed):
+            return
         # ---- Stage 9: Activity log read ----
         if parsed.path == '/api/activity/log':
             try:
@@ -1900,6 +2013,9 @@ class DashboardHandler(BaseHTTPRequestHandler):
             except Exception:
                 payload = {}
             return _stage8_login(self, payload)
+        # Stage 14 admin backup POST
+        if _stage14_handle_post(self, parsed):
+            return
         # ---- Stage 9: Activity log + Webhook receivers (early dispatch) ----
         if parsed.path in ('/api/activity/log', '/api/activity/append', '/api/webhooks/notify'):
             try:
@@ -3513,6 +3629,10 @@ def main():
     port = int(os.getenv('PORT', '8000'))
     server = ThreadingHTTPServer(('0.0.0.0', port), DashboardHandler)
     print(f'listening on {port}', flush=True)
+    try:
+        _stage14_start_scheduler_once()
+    except Exception as _e:
+        print(f'[stage14] scheduler start failed: {_e}', flush=True)
     server.serve_forever()
 
 
