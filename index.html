@@ -8730,7 +8730,7 @@ function compareCandidatesForProject(projectName){
   if(!project) return [];
   const byAgent={};
   project.versions.forEach(v=>{
-    const htmlFiles=v.files.filter(f=>(f.name||\'\').toLowerCase().endsWith('.html'));
+    const htmlFiles=v.files.filter(f=>(f.name||'').toLowerCase().endsWith('.html'));
     if(!htmlFiles.length) return;
     const agent=detectAgent(v.name);
     const chosen=htmlFiles[0];
@@ -8759,7 +8759,7 @@ function openCompare(projectName){
     panel.className='compare-panel';
     // Find all deployable JSON workflow files in this version
     const allFiles=item.allFiles||[];
-    const workflowFiles=allFiles.filter(f=>/workflow/i.test(f.name)&&(f.name||\'\').toLowerCase().endsWith('.json'));
+    const workflowFiles=allFiles.filter(f=>/workflow/i.test(f.name)&&(f.name||'').toLowerCase().endsWith('.json'));
     const hasWorkflow=workflowFiles.length>0;
     const panelId=`cpanel-${idx}-${Date.now()}`;
     panel.id=panelId;
@@ -8910,10 +8910,10 @@ function openPromptStudio(projectName, agentName, versionName, htmlDownloadUrl, 
   const draft=document.getElementById('prompt-draft');
   if(!draft.value.trim()){
     // File list grouped by type
-    const htmlFiles=files.filter(f=>(f.name||\'\').toLowerCase().endsWith('.html'));
-    const txtFiles=files.filter(f=>(f.name||\'\').toLowerCase().endsWith('.txt'));
-    const jsonFiles=files.filter(f=>(f.name||\'\').toLowerCase().endsWith('.json'));
-    const otherFiles=files.filter(f=>!(f.name||\'\').toLowerCase().match(/\.(html|txt|json)$/));
+    const htmlFiles=files.filter(f=>(f.name||'').toLowerCase().endsWith('.html'));
+    const txtFiles=files.filter(f=>(f.name||'').toLowerCase().endsWith('.txt'));
+    const jsonFiles=files.filter(f=>(f.name||'').toLowerCase().endsWith('.json'));
+    const otherFiles=files.filter(f=>!(f.name||'').toLowerCase().match(/\.(html|txt|json)$/));
 
     const fileList=(arr,label)=>arr.length
       ? `\n### ${label}\n`+arr.map(f=>`- **${f.name}** (${formatSize(f.size)})\n  GitHub view: ${f.url}\n  Raw download: ${f.download}`).join('\n')
@@ -10222,7 +10222,7 @@ async function loadDashboard(){
     let latestHtmlUrl='';
     let latestHtmlName='';
     if(latest){
-      const htmlFile=latest.files.find(f=>(f.name||\'\').toLowerCase().endsWith('.html'));
+      const htmlFile=latest.files.find(f=>(f.name||'').toLowerCase().endsWith('.html'));
       if(htmlFile){latestHtmlUrl=htmlFile.download;latestHtmlName=p.name+' — '+htmlFile.name}
     }
 
@@ -10290,7 +10290,7 @@ async function loadDashboard(){
 
     const card=document.createElement('div');
     card.className='project-card';
-    card.dataset.name=(p.name||\'\').toLowerCase();
+    card.dataset.name=(p.name||'').toLowerCase();
     const isStarred = !!p.starred;
     const progressVal = p.progress || 25;
     const progressClass = progressVal >= 100 ? 'green' : (progressVal >= 50 ? 'yellow' : 'blue');
@@ -15610,7 +15610,7 @@ function _doSearch(q) {
   });
 
   var projMatches = projects.filter(function(p){
-    return (p.name||\'\').toLowerCase().includes(q);
+    return (p.name||'').toLowerCase().includes(q);
   }).slice(0,5);
 
   // Tasks from _tasks global
