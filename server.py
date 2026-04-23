@@ -4522,7 +4522,6 @@ body{{font-family:Arial;padding:24px}}h1{{color:#333}}pre{{background:#f4f4f4;pa
                 return json_response(self, 403, {'ok': False, 'error': 'Forbidden'})
         if not target.exists() or not target.is_file():
             return json_response(self, 404, {'ok': False, 'error': 'Not found'})
-        return self.serve_static(parsed.path)
 
         content_type, _ = mimetypes.guess_type(str(target))
         if not content_type:
