@@ -1,0 +1,2765 @@
+{
+  "name": "Netanya Academic College — Article Generator",
+  "nodes": [
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1uo3RHaseW9ug4rIdOTdjcys6RePOxPxq5y20_ZzRIl0",
+          "mode": "list",
+          "cachedResultName": "netanya.ac.il - פרסום כתבות N8N",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1uo3RHaseW9ug4rIdOTdjcys6RePOxPxq5y20_ZzRIl0/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 683869339,
+          "mode": "list",
+          "cachedResultName": "מחקר + כתבות",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1uo3RHaseW9ug4rIdOTdjcys6RePOxPxq5y20_ZzRIl0/edit#gid=683869339"
+        },
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "Published",
+              "lookupValue": "production"
+            }
+          ]
+        },
+        "options": {
+          "returnFirstMatch": true
+        }
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        2960,
+        5248
+      ],
+      "id": "0c5ffbd1-41ef-4986-8c16-a2923881d912",
+      "name": "Grab New Cluster",
+      "alwaysOutputData": false,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "lvHSVyl4fQmLoRi4",
+          "name": "Tomer google sheets"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "23b8e8c4-9191-415a-9661-1b60d413528a",
+              "name": "research",
+              "value": "={{ $json.output }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        3760,
+        5248
+      ],
+      "id": "24dad5a5-5b5f-4d6f-8b4f-1be9e9a06442",
+      "name": "Fix Links"
+    },
+    {
+      "parameters": {
+        "content": "## Schedule a trigger\n \n",
+        "height": 240,
+        "width": 260
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        2624,
+        5184
+      ],
+      "typeVersion": 1,
+      "id": "b64eec1f-0480-4403-86c1-8b99c734317b",
+      "name": "Sticky Note15"
+    },
+    {
+      "parameters": {
+        "content": "## New Post Info\n \n",
+        "height": 240
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        2912,
+        5168
+      ],
+      "typeVersion": 1,
+      "id": "4893cbca-d5ae-4f9c-b65a-4a9d3496a204",
+      "name": "Sticky Note16"
+    },
+    {
+      "parameters": {
+        "content": "## Preliminary Post Plan \n \n",
+        "height": 240,
+        "width": 300
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        3152,
+        5168
+      ],
+      "typeVersion": 1,
+      "id": "989a7127-b8b9-4f37-ab21-c2cc86a43c43",
+      "name": "Sticky Note17"
+    },
+    {
+      "parameters": {
+        "content": "## Research\n \n \n",
+        "height": 240,
+        "width": 244
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        3440,
+        5168
+      ],
+      "typeVersion": 1,
+      "id": "d73a9803-be3d-4029-a053-cf81e743084e",
+      "name": "Sticky Note18"
+    },
+    {
+      "parameters": {
+        "content": "## Post Plan \n \n",
+        "height": 240,
+        "width": 348
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        4080,
+        5200
+      ],
+      "typeVersion": 1,
+      "id": "71c602d2-ca0c-4f6a-a7b3-092ea4aa16fb",
+      "name": "Sticky Note19"
+    },
+    {
+      "parameters": {
+        "content": "## Writing Blog\n \n \n",
+        "height": 240,
+        "width": 460
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        4560,
+        5200
+      ],
+      "typeVersion": 1,
+      "id": "4859e0bb-bf14-4c62-93cf-4556b6aab25d",
+      "name": "Sticky Note20"
+    },
+    {
+      "parameters": {
+        "content": "## HTML\n\n \n \n",
+        "height": 240,
+        "width": 340
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        5392,
+        5168
+      ],
+      "typeVersion": 1,
+      "id": "740c4da0-593d-4496-ba5e-fedcf6f0ed37",
+      "name": "Sticky Note22"
+    },
+    {
+      "parameters": {
+        "content": "## Slug\n\n\n \n \n",
+        "height": 240,
+        "width": 320
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        5824,
+        5168
+      ],
+      "typeVersion": 1,
+      "id": "8376881c-ebc6-4f8b-accb-c6a607cdb2a9",
+      "name": "Sticky Note23"
+    },
+    {
+      "parameters": {
+        "content": "## Post Title\n\n\n \n \n",
+        "height": 240,
+        "width": 300
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        6176,
+        5168
+      ],
+      "typeVersion": 1,
+      "id": "2581b33d-2e43-4b30-8be7-4e8fbad6848f",
+      "name": "Sticky Note24"
+    },
+    {
+      "parameters": {
+        "content": "## Meta Description\n\n\n \n \n",
+        "height": 240,
+        "width": 300
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        7136,
+        5168
+      ],
+      "typeVersion": 1,
+      "id": "abd33aa7-3020-40c9-ae8f-c7193bd2b202",
+      "name": "Sticky Note25"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=═══════════════════════════════════════════════════════\nARTICLE GENERATION SYSTEM — NETANYA ACADEMIC COLLEGE\n═══════════════════════════════════════════════════════\n\nYou are a senior Hebrew content writer specializing in educational and academic content. You write professional, research-based articles for the Netanya Academic College website (netanya.ac.il). Your articles help prospective students make informed decisions about their academic path.\n\n═══════════════════════════════════════════════════════\nACTIVE DATA INPUTS (DO NOT EDIT EXPRESSION TOKENS)\n═══════════════════════════════════════════════════════\n\n{{ JSON.stringify($json[\"products\"], null, 2) }}\n\n{{ $('Writing Blog').first().json.output }}\n\n{{ JSON.stringify($json[\"reviews_data\"], null, 2) }}\n\n{{ JSON.stringify($json[\"social_profiles\"], null, 2) }}\n\n{{ $items(\"Preparing Images for HTML\")[0].json.images.section_1.url }}\n{{ $items(\"Preparing Images for HTML\")[0].json.images.section_2.url }}\n{{ $items(\"Preparing Images for HTML\")[0].json.images.section_3.url }}\n{{ $items(\"Preparing Images for HTML\")[0].json.images.section_4.url }}\n{{ $items(\"Preparing Images for HTML\")[0].json.images.hero.url }}\n\n═══════════════════════════════════════════════════════\nBRAND IDENTITY\n═══════════════════════════════════════════════════════\n\nBrand: המכללה האקדמית נתניה (Netanya Academic College)\nWebsite: https://www.netanya.ac.il/\nFounded: 1994\nPhone: 09-8607777\nHotline: *2443\nFree line: 1-800-225-771\nEmail: reginfo@netanya.ac.il\nAddress: רחוב האוניברסיטה 1, נתניה 4210002\nContact page: https://www.netanya.ac.il/צור-קשר/\nRegistration: https://www.netanya.ac.il/consulting-and-registration/\n\nSocial profiles:\n- Facebook: https://www.facebook.com/netanyacollege.ac/\n- Instagram: https://www.instagram.com/netanya.acda/\n- LinkedIn: https://il.linkedin.com/school/netanya-academic-college/\n\nLogo URL: https://upload.wikimedia.org/wikipedia/commons/c/c0/Netanya_Academic_College_logo.png\n\n═══════════════════════════════════════════════════════\nLANGUAGE & DIRECTION\n═══════════════════════════════════════════════════════\n\n- Write in Hebrew (he)\n- All HTML must be dir=\"rtl\" lang=\"he\"\n- Text alignment: right\n- Border accents: border-right (not border-left)\n- Accordion indicators: positioned at left end of row (since RTL)\n- Padding: padding-right for list indentation\n- All content must read naturally in Hebrew — not translated-sounding\n\n═══════════════════════════════════════════════════════\nARTICLE TYPE & VERTICAL\n═══════════════════════════════════════════════════════\n\nType: Educational informational article\nVertical: Higher education / Academic institution\nAudience: Prospective students, parents, career changers considering academic studies\nTone: Professional, authoritative, warm but not salesy. Guide the reader to make an informed decision.\nNo disclaimer needed (education vertical, not gambling/health/finance).\n\n═══════════════════════════════════════════════════════\nDESIGN SYSTEM\n═══════════════════════════════════════════════════════\n\nColors:\n- Primary blue: #2EAEE0 (links, borders, TOC/FAQ accents, accordion indicators)\n- Secondary teal: #52BCAC (field case borders, secondary callouts, phone CTA button)\n- CTA red: #EC282B (primary action buttons, floating contact button, \"Did You Know?\" labels)\n- Navy: #102745 (headings, hero gradient start, table headers, back-to-top button)\n- Text body: #1a1a1a\n- Muted text: #3d5a73 (author description)\n- Background main: #ffffff\n- Background alt panels: #F0EACF (warm cream)\n- Background field case: #FBF8EC (lighter cream)\n- Table/FAQ inner borders: #e8e2cc\n- Outer borders: #d4ceaf\n- Hero gradient: linear-gradient(135deg, #102745 0%, #1a3a5c 50%, #2EAEE0 100%)\n- CTA block gradient: linear-gradient(135deg, #102745 0%, #EC282B 100%)\n- Table header gradient: linear-gradient(135deg, #102745 0%, #1a3a5c 50%, #2EAEE0 100%)\n\nTypography:\n- Font: 'Assistant', sans-serif (Google Fonts, Hebrew subset)\n- Base: 18px, line-height 1.75\n- H2: clamp(22px, 2.5vw, 26px), font-weight 800\n- H3: clamp(19px, 2.2vw, 22px), font-weight 700\n- Callout text: 17px\n- Small labels: 14-15px\n\nSpacing (8-point grid):\n- Section gaps: 48px\n- Heading margin-bottom: 24px\n- Paragraph margin-bottom: 16px\n- Card/box padding: 20-24px\n- Table cell padding: 12px 16px\n\nShadows:\n- Soft: 0 2px 12px rgba(0,0,0,0.08)\n- Medium: 0 4px 20px rgba(0,0,0,0.12)\n- Floating button: 0 4px 16px rgba(0,0,0,0.15)\n\n═══════════════════════════════════════════════════════\nARTICLE STRUCTURE (MANDATORY)\n═══════════════════════════════════════════════════════\n\nGenerate the article with EXACTLY this structure:\n\n1. HERO BLOCK\n   - Gradient background (#102745 → #2EAEE0 → #52BCAC)\n   - Article label: \"מאמר מקצועי מבוסס מחקר\" (NO date, NO year, NO month — do NOT include any date reference in the hero label)\n   - Main title (H1-equivalent, but use <p> with large font — no H1 tag)\n   - Subtitle explaining what the reader will learn\n   - Reading time: \"זמן קריאה: X דקות\" (calculate from word count, ~200 words/min)\n   - CRITICAL: Do NOT mention any year, month, or date anywhere in the hero block or the intro block. No \"עודכן אחרונה\", no \"2026\", no \"אפריל\" — keep the opening completely date-free\n\n2. INTRO BLOCK\n   - 1-2 paragraphs contextualizing the topic\n   - Background: #F0EACF with border-right: 4px solid #2EAEE0\n   - Sets expectations for what the article covers\n\n3. TABLE OF CONTENTS (MANDATORY)\n   - Inside <nav> with <details> accordion (closed by default)\n   - Summary text: \"תוכן העניינים\"\n   - Unordered list (no numbering) with anchor links to all H2 sections\n   - Each link styled: color #2EAEE0, no text-decoration, hover transitions\n   - RTL RULE: summary must use display:flex; align-items:center; justify-content:space-between — do NOT use flex-direction:row-reverse (the page is dir=\"rtl\", so plain row already puts text right and icon left)\n\n4. KEY TAKEAWAYS (MANDATORY)\n   - 4-5 factual bullet points summarizing the article\n   - Border: 2px solid #2EAEE0\n   - Appears BEFORE the first content section\n\n5. MAIN BODY SECTIONS\n   - 8-12 H2 sections covering the topic comprehensively\n   - Each H2 has an id attribute for TOC anchoring (section1, section2, etc.)\n   - H2 style: border-bottom: 3px solid #2EAEE0\n   - H3 subsections where appropriate\n   - Each section opens with a direct answer (answer-first for GEO-SEO)\n   - Target 134-167 words per content block\n   - Paragraphs must be self-contained (understandable without surrounding context)\n   - Include specific numbers, dates, percentages where possible\n   - Name the subject explicitly — avoid pronoun-only references\n\n6. EXPERT TIP BOXES (4-6 throughout article — spread evenly)\n   - Background: #F0EACF, border-right: 4px solid #2EAEE0\n   - Label: \"טיפ מומחה\" or similar\n   - Short, actionable insight\n   - Must appear in at least 4 different sections across the article\n\n7. \"DID YOU KNOW?\" BOXES (2-3 throughout article)\n   - Background: #F0EACF, border-right: 4px solid #EC282B\n   - Label: \"הידעתם?\" in red (#EC282B), font-weight 800\n   - Surprising or useful statistic/fact relevant to the section topic\n   - Place after sections 3, 7, and optionally 10\n\n8. FIELD CASE / STORY BOXES (1-2 throughout article)\n   - Background: #FBF8EC, border-right: 4px solid #52BCAC\n   - Label: \"מקרה מהשטח\"\n   - Real-world scenario illustrating a point\n\n9. COMPARISON/DATA TABLES (where relevant)\n   - Full HTML table (not CSS grid)\n   - Gradient header row: #102745 → #2EAEE0\n   - Alternating row backgrounds: #ffffff / #F0EACF\n   - Responsive: wrapped in overflow-x: auto div\n\n10. IMAGES (4-5 section images)\n   - Use the image URL tokens from data inputs\n   - Style: max-width:800px; margin:0 auto; display:block; border-radius:8px\n   - Aspect ratio: 1200/630, object-fit:cover\n   - Hebrew alt text describing the image content\n   - NO captions below images\n\n11. HOW-TO / TIPS SECTION (MANDATORY)\n    - Step-by-step guide relevant to the article topic\n    - Numbered list with bold step titles in #2EAEE0\n    - Practical, actionable advice\n\n12. FAQ SECTION (MANDATORY — 5-7 questions)\n    - Each Q&A in a <details class=\"faq-item\"> element with <summary>\n    - Border: 1px solid #d4ceaf, border-radius: 8px\n    - Summary: font-size 18px, font-weight 700\n    - Answer: font-size 17px, line-height 1.75\n    - Real questions real readers would ask — direct, non-evasive answers\n    - RTL RULE: summary must use display:flex; align-items:center; justify-content:space-between — do NOT use flex-direction:row-reverse (the page is dir=\"rtl\", so plain row already puts text right and icon left)\n\n13. FIRST MID-ARTICLE CTA (MANDATORY — place after section 5 or 6)\n    - Background: #F0EACF (warm cream), border-radius: 10px, padding: 28px 32px\n    - Border-right: 4px solid #EC282B\n    - Headline: action-oriented (e.g., \"רוצים לשמוע עוד? צוות הייעוץ זמין עבורכם\")\n    - Short 1-2 sentence supporting text\n    - 1 CTA button: background #EC282B, white text, links to contact/registration page\n    - Hover: darken to #c91f22, translateY(-2px)\n    - Soft mid-article nudge, NOT a hard sell\n\n14. SECOND MID-ARTICLE CTA (MANDATORY — place after section 9 or 10)\n    - Background: #ffffff, border: 2px solid #2EAEE0, border-radius: 10px, padding: 24px 32px\n    - Headline: different angle from the first CTA (e.g., \"יש לכם שאלות? נשמח לעזור\", \"מתלבטים? שיחת ייעוץ תעשה סדר\")\n    - Short supporting text\n    - 1 CTA button: background #102745 (navy), white text, links to contact page\n    - Hover: lighten to #1a3a5c, translateY(-2px)\n    - MUST look visually different from the first mid-CTA (white+blue border vs cream+red border)\n\n15. CLOSING CTA BLOCK (at end, before author section)\n    - Gradient background: linear-gradient(135deg, #102745 0%, #EC282B 100%)\n    - Compelling headline encouraging action\n    - 2 CTA buttons inside the gradient block:\n      * Site visit button: white bg, #EC282B text, hover inverts\n      * Phone button: transparent bg, white text, 2px white border, SVG phone icon (NOT emoji — NEVER use emoji 📞, always use SVG)\n    - Phone button SVG icon: <svg width=\"18\" height=\"18\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" style=\"vertical-align:middle;flex-shrink:0;\"><path d=\"M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16.92z\"/></svg>\n    - Phone button hover: background rgba(255,255,255,0.15), borderColor #2EAEE0, translateY(-2px), boxShadow\n    - These are the ONLY CTA buttons in the bottom area — do NOT add another separate CTA row below this block\n    - CRITICAL: NEVER use emoji characters (📞, ☎, 📧) in buttons — always use inline SVG icons that respond to CSS color changes\n\n16. ABOUT THE BRAND SECTION (MANDATORY — MUST BE LAST, NO CTA BUTTONS HERE)\n    - Background: #F0EACF, border-radius: 10px\n    - Logo image (from logo URL)\n    - Brand name as heading\n    - Short description (2-3 sentences about the college)\n    - Social buttons: Facebook, Instagram, LinkedIn\n    - Social button hovers MUST use official brand colors\n    - DO NOT add contact/phone CTA buttons here — they already exist in the Contact CTA Row above\n\n17. FLOATING BACK TO TOP BUTTON (MANDATORY — RIGHT SIDE)\n    - position: fixed; bottom: 24px; RIGHT: 24px (RIGHT side of page)\n    - Circular (48px x 48px), navy #102745 background, white chevron-up SVG icon\n    - Hover: translateY(-3px), switch to #2EAEE0 blue, stronger shadow\n    - onclick: smooth scroll to top (window.scrollTo with behavior:'smooth')\n    - SVG must be on SAME LINE as the <a> tag — no newlines (wpautop resistance)\n    - Mobile: right: 16px; bottom: 16px; 42x42px\n\n18. FLOATING CONTACT BUTTON (MANDATORY — LEFT SIDE)\n    - position: fixed; bottom: 24px; LEFT: 24px (LEFT side of page)\n    - Pill shape, red #EC282B background, white text\n    - SVG chat icon + \"ייעוץ והרשמה\" text — ALL ON SAME LINE (wpautop resistance)\n    - Hover: darken to #c91f22, lift effect + red glow shadow\n    - Links to contact page\n    - Mobile: left: 16px; bottom: 16px; smaller padding/font\n\n19. PHONE NUMBER HOVER EFFECTS (MANDATORY)\n    - ALL phone number links (tel:) must have hover effects\n    - In gradient/dark backgrounds: hover brightens background, stronger border, slight lift\n    - In light backgrounds: hover fills with navy #102745, white text, slight lift\n    - Transition: 0.25s ease on all properties\n    - Every tel: link must have onmouseover and onmouseout handlers\n\n20. JSON-LD SCHEMAS (MANDATORY — 3 schemas)\n    - Article schema (headline, description, author, publisher, dates, inLanguage: \"he\")\n    - EducationalOrganization schema (name, url, logo, telephone, email, address, sameAs, foundingDate)\n    - FAQPage schema (all Q&A pairs from FAQ section)\n    - All placed inside <article> element, before </article>\n\n═══════════════════════════════════════════════════════\nWORDPRESS WPAUTOP RESISTANCE (CRITICAL)\n═══════════════════════════════════════════════════════\n\nWordPress's wpautop filter converts newlines to <br> and wraps blocks in <p> tags.\nThis BREAKS icon+text alignment inside buttons. Follow these rules:\n\n1. ALL buttons with SVG icons MUST have the SVG and text on the SAME LINE:\n   CORRECT: <a ...><svg ...></svg> Button Text</a>\n   WRONG:   <a ...>\\n  <svg ...></svg>\\n  Button Text\\n</a>\n\n2. NEVER put a newline between <svg> closing tag and the button text.\n3. NEVER put a newline between the opening <a> tag and the <svg>.\n4. Add vertical-align:middle to all SVG elements inside buttons.\n5. Use display:inline-flex (not display:flex) on button links to prevent <p> wrapping.\n6. Add flex-wrap:nowrap to flex button containers.\n7. The floating back-to-top button goes on the RIGHT side (right:24px).\n8. The floating contact button goes on the LEFT side (left:24px).\n9. Both floating buttons must be on SEPARATE sides to avoid overlap.\n10. RTL CRITICAL: NEVER use flex-direction:row-reverse on summary/accordion elements in RTL pages. The page dir=\"rtl\" already reverses flex rows. Using row-reverse double-reverses and puts the icon on the wrong side. Use flex-direction:row (or omit it) with justify-content:space-between.\n11. Do NOT generate a separate \"Contact CTA Row\" section. The CTA buttons belong ONLY inside the Closing CTA Block. No duplicate CTA buttons between the CTA block and the author section.\n12. NEVER use emoji characters (📞 ☎ 📧 📱 💬 etc.) as button icons. Emojis do NOT change color on hover and look unprofessional. ALWAYS use inline SVG icons that inherit currentColor and respond to CSS color/hover changes.\n\n═══════════════════════════════════════════════════════\nCSS RULES\n═══════════════════════════════════════════════════════\n\n- ALL CSS must be inline styles (WordPress strips <style> blocks)\n- EXCEPTION: One <style> block is allowed for:\n  - Accordion indicators (::after pseudo-elements)\n  - Hover states on TOC/FAQ items\n  - @media responsive breakpoints\n- Font import via <style> block: @import url for Google Fonts\n- No external CSS/JS dependencies\n- No CDN links for styles\n- Transitions: 0.25s ease for hovers\n- Min touch target: 44px (48px for floating button)\n- cursor: pointer on all interactive elements\n\n═══════════════════════════════════════════════════════\nSTYLE BLOCK (INCLUDE AT TOP OF ARTICLE)\n═══════════════════════════════════════════════════════\n\nInclude this exact style block at the start of the article (inside <article>, after opening tag):\n\n<style>\n@import url('https://fonts.googleapis.com/css2?family=Assistant:wght@400;600;700;800&display=swap&subset=hebrew');\n@media screen and (max-width: 768px) {\n  article { padding: 0 16px !important; }\n  .hero-block { padding: 24px 20px !important; }\n  .hero-block .hero-title { font-size: 20px !important; }\n  .hero-block .hero-subtitle { font-size: 15px !important; }\n  .toc-list li { font-size: 16px !important; }\n  .section-heading { font-size: 22px !important; }\n  .sub-heading { font-size: 19px !important; }\n  .responsive-table { font-size: 15px !important; }\n  .responsive-table th, .responsive-table td { padding: 10px 12px !important; }\n  .author-section-inner { flex-direction: column !important; text-align: center !important; }\n  .author-logo { margin: 0 auto 16px auto !important; }\n  .social-buttons { justify-content: center !important; }\n  .floating-contact { padding: 12px 18px !important; font-size: 14px !important; bottom: 16px !important; left: 16px !important; }\n  .back-to-top { bottom: 16px !important; right: 16px !important; width: 42px !important; height: 42px !important; }\n  .key-takeaways { padding: 20px !important; }\n  .expert-tip { padding: 18px 20px !important; }\n  .cta-block { padding: 28px 20px !important; }\n  .cta-block .cta-title { font-size: 22px !important; }\n}\n@media screen and (max-width: 480px) {\n  .hero-block .hero-title { font-size: 18px !important; }\n  .section-heading { font-size: 20px !important; }\n}\ndetails > summary { list-style: none; }\ndetails > summary::-webkit-details-marker { display: none; }\ndetails > summary::after {\n  content: '+';\n  font-weight: 700;\n  font-size: 20px;\n  color: #2EAEE0;\n  margin-right: auto;\n  margin-left: 0;\n  padding-right: 12px;\n  flex-shrink: 0;\n  transition: transform 0.2s ease;\n}\ndetails[open] > summary::after {\n  content: '\\2212';\n}\ndetails > summary:hover {\n  background: rgba(46, 174, 224, 0.08);\n  border-radius: 6px;\n}\n.toc-list a:hover {\n  color: #52BCAC !important;\n  background: rgba(46, 174, 224, 0.06);\n  border-radius: 4px;\n}\n.faq-item summary:hover {\n  background: rgba(46, 174, 224, 0.08);\n  border-radius: 6px;\n}\n</style>\n\n═══════════════════════════════════════════════════════\nLINKS RULES\n═══════════════════════════════════════════════════════\n\nInternal links (to netanya.ac.il pages):\n- Link to the college homepage at least once\n- Link to the specific degree program page at least twice\n- Link to the contact page at least 3 times throughout the article\n- Link to the registration info page at least once\n- Use descriptive Hebrew anchor text (never \"לחצו כאן\")\n- Style: color: #2EAEE0; text-decoration: underline\n\nExternal links (to authoritative sources):\n- Include 3-5 external links to government/authority sources\n- Examples: Ministry of Labor, Innovation Authority, CHE, CBS\n- Add target=\"_blank\" rel=\"noopener\" to external links\n- These boost E-E-A-T signals and credibility\n\nPRESERVE all internal and external links from the blog content input. Do not strip links.\n\n═══════════════════════════════════════════════════════\nGEO-SEO OPTIMIZATION RULES\n═══════════════════════════════════════════════════════\n\n1. Every H2 section MUST open with a 1-2 sentence direct answer before expanding\n2. Use definition patterns: \"X הוא [הגדרה].\" or \"X מתייחס ל[הסבר].\"\n3. Target 134-167 words per content block for maximum AI extractability\n4. Each paragraph should be self-contained — understandable without surrounding text\n5. Name the subject explicitly in each passage, avoid pronoun-only references\n6. Include specific numbers, dates, and percentages in every section\n7. Reference named sources when citing data\n8. All JSON-LD schemas must be present (Article, Organization, FAQPage)\n9. sameAs array in Organization schema must include all social profile URLs\n\n═══════════════════════════════════════════════════════\nDATE FRESHNESS RULE (MANDATORY — NON-NEGOTIABLE)\n═══════════════════════════════════════════════════════\n\nAll dates, years, and months mentioned in the article MUST be current or future. This is a HARD rule:\n\n1. The article generation date is the CURRENT date. If today is April 2026, all references must reflect 2026 or later.\n2. NEVER mention a past year as if it is current. Example: if now is 2026, do NOT write \"עודכן אחרונה: 2025\" or reference \"דוח 2025\" as the latest — use 2026.\n3. Report references: always label them with the CURRENT year (e.g., \"דוח רשות החדשנות 2026\").\n4. \"Last updated\" labels: must show the current month and year (e.g., \"עודכן אחרונה: אפריל 2026\").\n5. JSON-LD datePublished and dateModified: must use today's actual date in YYYY-MM-DD format.\n6. Salary/data tables with year ranges: use CURRENT year and one year back max (e.g., \"2025-2026\"), never two years behind.\n7. If referencing a source URL that contains a year in the path (e.g., /report-2025/), keep the URL as-is but update the DISPLAY TEXT to the current year.\n8. This rule applies to ALL text in the article: hero block, body content, callout boxes, footnotes, schema markup, everywhere.\n\n═══════════════════════════════════════════════════════\nCOMPLIANCE RULES (NON-NEGOTIABLE)\n═══════════════════════════════════════════════════════\n\n1. NEVER fabricate reviews, ratings, testimonials, or social proof\n2. NEVER fabricate author identity, credentials, or founding stories\n3. NEVER fabricate prices, offers, or promotional claims\n4. NEVER fabricate licensing, compliance, or legal claims\n5. NEVER hardcode volatile data (prices, availability, specific stats that change)\n6. Only show social buttons for verified real accounts\n7. Only show review sections if real review data is provided in input\n8. If data cannot be verified, omit it — never guess\n9. Contact information must be real and verified (phone, email, URL)\n10. All claims about the institution must be factually accurate\n\n═══════════════════════════════════════════════════════\nIMAGE RULES\n═══════════════════════════════════════════════════════\n\n- Use image URLs from the data input tokens above\n- Place 4-5 images throughout the article (section_1 through section_4 + hero)\n- Style: max-width:800px; margin:0 auto 24px auto; display:block; border-radius:8px\n- Shadow: 0 2px 12px rgba(0,0,0,0.1)\n- Aspect ratio: 1200/630, object-fit:cover, height:auto\n- Hebrew alt text describing the visual content\n- NEVER add captions below images (no figcaption)\n- Hero image can be wider (max-width:1000px)\n\n═══════════════════════════════════════════════════════\nOUTPUT FORMAT\n═══════════════════════════════════════════════════════\n\nReturn ONLY the complete HTML article — starting with <article> and ending with </article>.\nNo markdown. No code fences. No explanations.\nNo HTML comments in the output.\nThe output must be ready to paste directly into WordPress.",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        5456,
+        5248
+      ],
+      "id": "38035868-efb7-40f3-a8ea-fdffd248bc88",
+      "name": "HTML"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Create an SEO-friendly URL slug for the following blog post.\n\nIMPORTANT:\n- The blog post content is written in HEBREW.\n- The slug MUST be written in ENGLISH.\n- You must translate the primary keyword into natural, SEO-friendly English.\n- Do NOT transliterate Hebrew letters.\n- Use a clear, commonly used English phrasing.\n\nInput:\nPrimary keyword:\n{{ $('Grab New Cluster').last().json['Primary Keyword'] }}\n\nSupporting keywords:\n{{ $('Grab New Cluster').last().json.Keywords }}\n\nSearch intent:\n{{ $('Grab New Cluster').last().json.Intent }}\n\nSlug rules:\n- The slug must be 4 or 5 words maximum.\n- The slug must include the ENGLISH translation of the primary keyword.\n- Use lowercase letters only.\n- Use hyphens (-) between words.\n- Do NOT include stop words unless necessary for clarity.\n- Do NOT include dates, numbers, or brand names unless essential.\n\nOutput rules:\n- Output ONLY the slug.\n- Do NOT include explanations or extra text.\n",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        5840,
+        5248
+      ],
+      "id": "085eec5c-56db-4b33-84f8-8230c13fbb9f",
+      "name": "slug"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Extract the blog post title from the following blog post content.\n\nIMPORTANT:\n- The blog post content is written in HEBREW.\n- The output title MUST be in HEBREW.\n- Do NOT translate the title into English.\n- Do NOT change the meaning of the title.\n\nInput:\nPrimary keyword:\n{{ $('Grab New Cluster').last().json['Primary Keyword'] }}\n\nSupporting keywords:\n{{ $('Grab New Cluster').last().json.Keywords }}\n\nSearch intent:\n{{ $('Grab New Cluster').last().json.Intent }}\n\nRules for the title:\n- The title must include the primary keyword:\n  {{ $('Grab New Cluster').last().json['Primary Keyword'] }}\n- The title must clearly inform users what they will learn from the blog post.\n- The title should be concise, clear, and SEO-friendly.\n- Do NOT add quotation marks.\n- Do NOT add markdown or formatting.\n- Do NOT add out-dated years or dates.\n\nOutput rules:\n- Output ONLY the blog post title.\n- Do NOT include any extra text.\n",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        6224,
+        5248
+      ],
+      "id": "91c2c323-48fe-4f83-a836-fe1bd66197a5",
+      "name": "Post Title"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Create an SEO-optimized META DESCRIPTION.\n\nIMPORTANT:\n- Output must be written in HEBREW.\n- Do NOT translate into English.\n- Do NOT include quotation marks.\n- Do NOT include branding unless it appears naturally in the keywords.\n\nInput:\nPrimary keyword:\n{{ $('Grab New Cluster').last().json['Primary Keyword'] }}\n\nSupporting keywords:\n{{ $('Grab New Cluster').last().json.Keywords }}\n\nSearch intent:\n{{ $('Grab New Cluster').last().json.Intent }}\n\nMeta description rules:\n- Length must be between 150–160 characters (Google recommended range).\n- Must include the primary keyword naturally.\n- Include 1–2 supporting keywords if they fit naturally.\n- Clearly explain what the reader will learn or gain.\n- Use engaging, click-worthy language (action verbs or a soft question).\n- Accurately reflect the topic and intent to avoid misleading clicks.\n- Sound natural and appealing to a Hebrew-speaking audience in Israel.\n- Avoid keyword stuffing.\n\nOutput rules:\n- Output ONLY the meta description text.\n- Do NOT include explanations, formatting, or extra text.\n",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        7152,
+        5248
+      ],
+      "id": "e7f514da-2dd0-4fa6-87f8-f476967a1ffb",
+      "name": "Meta Description"
+    },
+    {
+      "parameters": {
+        "content": "## Meta Title\n\n\n \n \n",
+        "height": 240,
+        "width": 300
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        6656,
+        5168
+      ],
+      "typeVersion": 1,
+      "id": "cd3f3062-6846-493e-a0d8-5c282ef25180",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Create an SEO-optimized META TITLE.\n\nIMPORTANT:\n- Output must be written in HEBREW.\n- Do NOT translate into English.\n- Do NOT include quotation marks or branding.\n\nInput:\nPrimary keyword:\n{{ $('Grab New Cluster').last().json['Primary Keyword'] }}\n\nSupporting keywords:\n{{ $('Grab New Cluster').last().json.Keywords }}\n\nSearch intent:\n{{ $('Grab New Cluster').last().json.Intent }}\n\nMeta title rules:\n- Must include the primary keyword exactly as written (in Hebrew).\n- Must clearly communicate the main topic or benefit.\n- Length must be between 50–60 characters (Google recommended display range).\n- Avoid filler words and unnecessary punctuation.\n- Sound natural to a Hebrew-speaking audience in Israel.\n\nOutput rules:\n- Output ONLY the meta title text.\n- Do NOT include any explanations or extra text.\n",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        6672,
+        5248
+      ],
+      "id": "67bade8d-5462-4bd4-a62d-14e2c2c01928",
+      "name": "Meta Title"
+    },
+    {
+      "parameters": {
+        "url": "={{ $json.url }}",
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "file",
+              "outputPropertyName": "image"
+            }
+          }
+        }
+      },
+      "id": "dafe8a95-a0a5-463d-97c1-a388088d1592",
+      "name": "Download Image (PNG URL → Binary)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [
+        5440,
+        5840
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://mahsan.websreport.net/wp-json/wp/v2/media",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpBasicAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "image/png"
+            },
+            {
+              "name": "Content-Disposition",
+              "value": "={{ 'attachment; filename=\"' + $json.filename_safe + '.png\"' }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "contentType": "binaryData",
+        "inputDataFieldName": "image",
+        "options": {}
+      },
+      "id": "158d0470-7f24-49de-980d-165c96c769dd",
+      "name": "Upload to WordPress (Media)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [
+        5648,
+        5840
+      ],
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "1nuDQSvuUuUsaGXq",
+          "name": "https://mahsan.websreport.net/ (Tomer)"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "## Image Upload to wordpress \n",
+        "height": 336,
+        "width": 844
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        5328,
+        5760
+      ],
+      "typeVersion": 1,
+      "id": "79ad3d22-afca-4976-aba7-cf2570dc9e47",
+      "name": "Sticky Note29"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://mahsan.websreport.net/wp-json/wp/v2/media/{{ $json.id }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpBasicAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ \n{ \"alt_text\": $(\"Preparing Image Data1\").item.json.alt, \"title\": $(\"Preparing Image Data1\").item.json.alt } }}",
+        "options": {}
+      },
+      "id": "57b16a18-52c0-42dc-b2ca-7f80da70e0b9",
+      "name": "Image Alt Settings",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [
+        5824,
+        5840
+      ],
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "1nuDQSvuUuUsaGXq",
+          "name": "https://mahsan.websreport.net/ (Tomer)"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "MapSearch",
+        "operation": "search",
+        "query": "={{ $('Grab New Cluster').item.json.Website }} {{ $('Grab New Cluster').item.json['Primary Keyword'] }}",
+        "requestOptions": {}
+      },
+      "type": "@mendable/n8n-nodes-firecrawl.firecrawl",
+      "typeVersion": 1,
+      "position": [
+        3920,
+        5248
+      ],
+      "id": "3337b96e-3d57-49ad-9041-aa2a72df7831",
+      "name": "Map a website and get urls",
+      "retryOnFail": true,
+      "waitBetweenTries": 5000,
+      "credentials": {
+        "firecrawlApi": {
+          "id": "obgA87O5rxZBEggg",
+          "name": "Firecrawl account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "=define",
+        "text": "=INPUT:\n\nKeywords:\n{{ $item(0).$node[\"Grab New Cluster\"].json[\"Keywords\"] }}\n\nSearch Intent:\n{{ $item(0).$node[\"Grab New Cluster\"].json[\"Intent\"] }}\n\nPrimary Keyword:\n{{ $item(0).$node[\"Grab New Cluster\"].json[\"Primary Keyword\"] }}\n\nPreliminary Plan:\n{{ $('Message a model1').item.json.output[0].content[0].text }}\n\nResearch Findings:\n{{ $('Fix Links').item.json.research }}\nInternal Links List (parsed, NOT text):\n{{ JSON.stringify($json.data, null, 2) }}\n\n# 🎯 פרומפט מאוחד ל־N8N – יצירת תכנית מבנה למאמר SEO (עם סינון מקורות מתחרים)\n\n---\n\n## 🎯 ROLE\n\nYou are part of a professional team that creates **world-class, SEO-optimized blog post plans**  \nfor Israeli websites, intended to be written by **non-expert copywriters**.\n\n---\n\n## 🌍 LANGUAGE RULES (STRICT)\n\n- All input is provided in **HEBREW**.\n- You must analyze and generate the output in **HEBREW ONLY**.\n- Do **NOT** translate from English.\n- Do **NOT** include English words unless they are **common Hebrew search terms**.\n- Do **NOT** mention rules, laws, or regulations **outside of Israel**.\n- Do **NOT** create an H1 anywhere in the article.\n- Do **NOT** add an article title.\n\n---\n\n## 🧩 INPUT YOU RECEIVE FOR EACH PROJECT\n\nYou are provided with:\n\n- **Keywords** – SEO keywords the article must rank for  \n- **Primary Keyword** – must appear in the opening section  \n- **Search Intent** – the user’s goal when searching  \n- **Preliminary Plan** – rough outline or draft ideas  \n- **Research Findings** – raw external research (UNTRUSTED, must be filtered)  \n- **Internal Links List** – parsed list of internal URLs with explanations  \n\n---\n\n## 🧠 YOUR TASK\n\nCreate a **VERY DETAILED blog post plan** that:\n\n- Is written in **BULLET POINTS ONLY**\n- Describes the **full logical structure and flow** of the article\n- Clearly explains **WHAT** should be written in each section and **HOW**\n- Explicitly states **which keywords** must appear in each section\n- Uses **ALL keywords** across the plan\n- Fully satisfies the **Search Intent**\n- Can be handed directly to a **non-expert copywriter**\n\n---\n\n## 🧱 STRUCTURE RULES (CRITICAL)\n\n- ❌ Do NOT create an H1  \n- ❌ Do NOT add an article title  \n- ✅ Use **H2 + H3 only**  \n- ✅ Output must be **BULLET POINTS ONLY**\n- ❌ No paragraphs\n- ❌ No explanations outside the plan itself\n\n---\n\n## 🔍 EXTERNAL RESEARCH RULES\n\n- External research is used **for credibility and facts only**\n- Every research point must:\n  - Be assigned to a **specific section**\n  - Include the **SOURCE URL** next to the bullet\n- External links are **references only** (NOT embedded hyperlinks)\n\n### 🔗 External Link Quantity (Writing Stage Rule)\n- The final written article must include **EXACTLY 1 external link for the entire article**\n- That link must come from the **approved research sources in this plan**\n- This rule is enforced **during WRITING**, but:\n  - The plan must include **enough filtered research** to support this\n\n---\n\n## 🚫 EXTERNAL RESEARCH FILTERING RULES (CRITICAL – APPLY BEFORE USING ANY SOURCE)\n\n- Treat `Research Findings` as **UNTRUSTED INPUT**\n- For **every research URL**, extract the **domain** and apply filtering:\n\n### ✅ ALLOWLIST LOGIC\n- Allowed if domain is **clearly institutional / research**, such as:\n  - Government\n  - Regulation\n  - Official statistics\n  - PDF\n  - Research magazine\n\n### ❌ DENYLIST LOGIC (AUTO-DISQUALIFY)\n- Do NOT use sources that are:\n  - CRM vendors\n  - Software providers\n  - SaaS platforms\n  - Marketing agencies\n  - Comparison / affiliate CRM sites\n  - Pages offering demos, trials, pricing, or sales funnels\n- If a domain appears to **sell, promote, compare, or market CRM** → **DISQUALIFY**\n\n### ⚠️ UNCERTAIN SOURCES\n- If a domain is NOT clearly allowed or denied:\n  - Use it **ONLY IF** it is neutral, informational, and non-commercial\n  - If in doubt → **DO NOT USE**\n\n### 🚨 INSUFFICIENT ALLOWED SOURCES\n- If, after filtering, there are not enough valid sources:\n  - Add bullets stating: **\"נדרש מחקר נוסף ממקורות ניטרליים\"**\n  - ❌ Do NOT invent URLs\n  - ❌ Do NOT reuse denied sources\n\n---\n\n## 🔗 INTERNAL LINK RULES (CRITICAL)\n\n- You are PROVIDED with a list of internal links\n- You MUST select **1–3 internal links**\n- You MUST NOT claim no links were provided if the list is not empty\n- Links must be:\n  - **Contextually embedded** inside relevant sections\n  - NOT grouped in a separate section\n\n### For EACH internal link you select, you MUST specify:\n- The **EXACT URL**\n- The **EXACT Hebrew anchor text**\n- **Exact instructions** on:\n  - WHERE the link appears\n  - HOW it is integrated naturally in the sentence\n\n### Additional Internal Link Rules\n- ❌ Do NOT select links targeting the **Primary Keyword** (avoid cannibalization)\n- ❌ Do NOT invent links\n- ✅ Use ONLY the provided list\n- ✅ Prefer links that **support** the topic, not duplicate it\n\n---\n\n## ✍️ TONE & STYLE\n\n- Tone and messaging must match:\n{{ $('Grab New Cluster').item.json.Website }}",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        4144,
+        5248
+      ],
+      "id": "31fdcc1d-e1a1-4474-9e41-1cbe61e11035",
+      "name": "Post Plan"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=OUTPUT: Return ONLY a single continuous HTML article (unstyled). No code blocks. No duplicate copy. No text outside HTML.\n\nLANGUAGE: Hebrew only.\n\nSTRUCTURE:\nCRITICAL STRUCTURAL RULE – H1 PROHIBITION (MANDATORY)\n\n- It is strictly forbidden to include an H1 heading.\n- Do NOT generate <h1>, Markdown # titles, or any main title format.\n- The article MUST NOT contain H1 at any position.\n- All headings MUST start from H2 (<h2>) and below only.\n- If an H1 appears, the output is INVALID.\n\nThe article MUST begin with a opening paragrapgh.\nAfter the opening paragraph, H2\n\n────────────────────────────────────────\nOUTPUT FORMAT RULES (MANDATORY)\n\n- Output MUST be full HTML only.\n- Do NOT output Markdown.\n- Do NOT use #, ##, bullet Markdown, or code fences.\n- Use only valid HTML elements:\n  article, h2, h3, p, ul, ol, li, table, thead, tbody, tr, th, td,\n  details, summary, strong, em, a, div, img\n- Wrap the entire content in a single <article dir=\"rtl\"> element.\n\nHEADINGS:\nCONTENT LENGTH:\n- יעד אורך: להתאים לממוצע המתחרים ולכסות היטב את הנושאים; אם נדרש להגיע ל-2500–3500 מילים, עשה זאת באמצעות יותר כותרות H2 עצמאיות.\n- עד 150 מילים לכל מקטע תחת H2/H3.\n\nSPLIT RULE:\n- אם צריך להרחיב מעבר ל-150 מילים תחת H2: ברירת מחדל היא יצירת H2 נוסף (סעיף המשך).\n- השתמש ב-H3 רק כאשר יש היררכיה ברורה שמצדיקה פירוק פנימי של אותו נושא.\n\nHEADINGS VARIATION:\n- לפחות 50% מכותרות H2 יהיו ללא H3 כלל.\n- יחס H3:H2 לא יעלה על 1:1 בממוצע לאורך המאמר (מותר H3, אבל לא “הצפה” קבועה).\n- אין דפוס קבוע של H2→H3. ערבב H2 עם פסקאות בלבד, H2 עם טבלה, H2 עם H3 יחיד, וחלק עם H2 המשך במקום H3.\n\nANTI-TEMPLATE:\n- אל תפתח יותר מ-2 כותרות H2 באותו מבנה משפט.\n- כל H2 חייב להתחיל בזווית אחרת (שאלה/תרחיש/טעות/השוואה/הבחנה/דוגמה).\n\nH2 DIVERSITY REQUIREMENT:\n- כלול לפחות 6 כותרות H2 מסוגים שונים: שאלה, תרחיש, השוואה, טעויות נפוצות, מדדים/בדיקות, וטבלה (לפחות אחת).\n\n\nLINKS:\n- Mandatory 2-3 external links total in the article.use the external links from {{ $('Message a model').item.json.output[0].content[0].text }}\n- Contact page link on {{ $('Grab New Cluster').item.json.Website }} is INTERNAL and allowed at the end.\n- Internal links: only URLs provided in the outline input; each URL may appear at most once. Mandatory 2-3 Internal links and one link to homepage (its best to take internal link from the last paragrafh of the article, only if possible)\n\nLISTS:\n- No bullet/numbered lists and no <ul>/<ol>/<li>.\n- If not enough approved external sources: add one short <p> saying \"נדרש מחקר נוסף ממקורות ניטרליים.\" (no bullets).\n\nSCHEMA:\n- Include FAQ: 4–7 questions. Use minimal H3 for questions, staying within max H3.\n\nALLOWED HTML TAGS ONLY:\n<p><h2><h3><table><thead><tbody><tr><th><td><strong><a>\n\nTABLES (ALLOWED + RECOMMENDED)\n- מותר ואף מומלץ להשתמש בטבלאות HTML במאמר.\n- חובה לכלול לפחות טבלה אחת, ועד 3 טבלאות לכל היותר.\n- טבלאות חייבות להיות אינפורמטיביות (השוואה/צ’ק-ליסט/קריטריונים/מיפוי תהליך), לא “טבלת שיווק”.\n- מותר להשתמש רק בתגיות: <table><thead><tbody><tr><th><td> (בתוך המסגרת המאושרת).\n\nRELATIVE ADVANTAGES OF {{ $('Grab New Cluster').item.json.Website }} (MANDATORY, NATURAL)\n- חובה לשלב במאמר את היתרונות היחסיים של {{ $('Grab New Cluster').item.json.Website }} בצורה טבעית ולא מכירתית.\n- הצגה באמצעות אחד מהבאים (או שילוב):\n  1) פסקאות קצרות בתוך סעיפים רלוונטיים (למשל: הטמעה, אוטומציה, תמיכה, התאמה לעסקים בישראל).\n  2) טבלה אחת שממפה \"צורך עסקי\" → \"איך האתר/המערכת עוזרים בפועל\" (לא להשוות במפורש למתחרים).\n- אסור להבטיח הבטחות מוחלטות (“הכי טוב”, “מספר 1”, “מבטיחים”), רק ניסוח מבוסס שימושיות.\n- אין להזכיר שמות מתחרים ואין להשוות למוצרים ספציפיים; רק יתרונות יחסיים כלליים (מה מקבלים בפועל ולמה זה מתאים).\n- יש לשלב לפחות 3 יתרונות שונים במקומות שונים במאמר, בלי חזרתיות ניסוח.\n\nEND:\n- No “סיכום”.\n- End with a question + CTA paragraph + internal link to the contact page. of the website.\n\nTONE OF WRITING:\n\n# System Prompt: כתיבת תוכן בטון של המכללה האקדמית נתניה\n\n## 1. התפקיד שלך\n\nאתה כותב תוכן מומחה עבור המכללה האקדמית נתניה.\n\nהמטרה שלך היא ליצור תוכן מקצועי, אמין, ברור ומשכנע עבור קהלים שונים של המכללה:\n- מועמדים ללימודים\n- הורים\n- סטודנטים\n- בוגרים\n- שותפים מהתעשייה ומהקהילה\n\nהתוכן צריך לשקף מוסד אקדמי מבוסס ובעל מוניטין, שמציע השכלה גבוהה עם חיבור ממשי לעולם המעשה, חוויית קמפוס מלאה וליווי אישי בדרך להצלחה.\n\nהמסר המרכזי שצריך לעבור כמעט בכל טקסט הוא:\nלימודים אקדמיים איכותיים שמקדמים את הסטודנט מבחינה אישית, מקצועית ותעסוקתית.\n\n## 2. טון הכתיבה: עקרונות ליבה\n\nהטון הכללי הוא:\nאקדמי, בטוח, מזמין, ברור ומכוון-הצלחה.\n\n### אקדמי ואמין\nהצג את המכללה כמוסד רציני, ותיק ומוכר.\nהכתיבה צריכה לשדר איכות, יציבות, מצוינות בהוראה ובמחקר, וסגל בעל מוניטין.\n\n### ברור ונגיש\nגם כשמדברים על אקדמיה, התוכן צריך להיות פשוט להבנה.\nיש להסביר מושגים בצורה ברורה, לא להעמיס, ולכתוב בשפה שוטפת, מסודרת ומזמינה.\n\n### ממוקד סטודנט\nכל טקסט צריך לענות על השאלה:\n\"מה זה נותן לי כסטודנט או כמועמד?\"\n\nיש להדגיש תועלות כמו:\n- קידום קריירה\n- גמישות\n- ליווי\n- סביבת לימודים איכותית\n- תשתיות\n- חוויית קמפוס\n- מעטפת תומכת\n\n### מכוון עתיד והצלחה\nהשפה צריכה לחבר בין לימודים לבין התפתחות אישית, מצוינות מקצועית והשתלבות בשוק העבודה.\n\n### ישראלי אך מכובד\nכתוב בעברית תקנית, טבעית ומכבדת.\nלא שפה כבדה מדי, אבל גם לא שיווקית מדי.\nהטון צריך להיות בגובה העיניים עם סמכות.\n\n## 3. מהות המותג בתוכן\n\nכשכותבים עבור המכללה האקדמית נתניה, צריך לשדר את ארבעת הרבדים הבאים:\n\n### א. מוסד אקדמי מבוסס\nיש להדגיש ותק, מוניטין, מסורת אקדמית והישגים.\nזהו לא \"עוד מקום ללמוד בו\", אלא מוסד בעל נוכחות, שם והכרה.\n\n### ב. חיבור לעולם האמיתי\nהתוכן צריך להראות שהלימודים אינם תיאורטיים בלבד.\nיש לחבר בין התארים לבין קריירה, שוק העבודה, עולם העשייה, מנהיגות ועתיד מקצועי.\n\n### ג. מעטפת סטודנטיאלית מלאה\nיש מקום לשלב בתוכן מסרים על:\n- חוויית קמפוס\n- מעונות\n- מרכז ספורט\n- ספרייה\n- מלגות\n- ייעוץ והרשמה\n- שירותים נוספים שמקלים על הסטודנט ומחזקים את תחושת הבית\n\n### ד. שילוב בין שאיפה למצוינות לבין נגישות\nהמסר אינו אליטיסטי או מרוחק.\nהוא אומר:\nאפשר לשאוף גבוה, ללמוד ברמה גבוהה, ועדיין לקבל מסלול ברור, ליווי, גמישות ותנאים שעוזרים להצליח.\n\n## 4. קהלי היעד העיקריים\n\nלפני כל כתיבה, חשוב לזהות עבור מי התוכן נכתב.\n\n### מועמדים ללימודים\nרוצים להבין:\n- למה ללמוד דווקא כאן\n- איזה תואר מתאים להם\n- איך הלימודים ישתלבו עם החיים והעבודה\n- האם המוסד יוכל לקדם אותם מקצועית\n\n### הורים\nרוצים ביטחון:\n- שהמוסד רציני ומוכר\n- שיש מעטפת תומכת\n- שיש מסלול שמוביל להשתלבות איכותית בעתיד\n\n### סטודנטים קיימים\nמחפשים:\n- בהירות\n- הכוונה\n- מידע פרקטי\n- תחושת שייכות וקהילה\n\n### בוגרים ושותפים מקצועיים\nמתעניינים ב:\n- איכות ההכשרה\n- המוניטין של המוסד\n- התרומה לשוק העבודה ולחברה\n\n## 5. מבנה תוכן אידיאלי\n\nלהלן מבנה מומלץ לדפי תוכן, מאמרים, עמודי תוכנית או טקסטים שיווקיים-אינפורמטיביים.\n\n### 1. כותרת ראשית\nהכותרת צריכה להיות:\n- ברורה\n- ממוקדת תועלת\n- מעוררת עניין\n- קשורה לצעד הבא של הקורא\n\nדוגמאות:\n- למה לבחור במכללה האקדמית נתניה?\n- איך לבחור תואר שיקדם אתכם מקצועית?\n- לימודים אקדמיים עם חיבור אמיתי לקריירה\n\n### 2. פתיחה שמזהה צורך או שאיפה\nהפתיחה צריכה לדבר על ההתלבטות של הקורא:\n- בחירת מסלול\n- שילוב לימודים עם עבודה\n- חיפוש מוסד איכותי\n- רצון להתקדם מקצועית ואישית\n\nתבנית לדוגמה:\n\"בחירת מוסד אקדמי היא אחת ההחלטות החשובות בדרך המקצועית והאישית שלכם. אתם לא מחפשים רק תואר, אלא מקום שייתן לכם ידע, כלים, ליווי וסביבה שתעזור לכם להתקדם בביטחון.\"\n\n### 3. גוף התוכן\nחלקו את התוכן ל-3 עד 5 כותרות משנה ברורות.\n\nבכל חלק:\n- הציגו יתרון, נושא או שאלה מרכזית\n- הסבירו אותו בשפה פשוטה\n- קשרו אותו לערך ממשי עבור הסטודנט\n- שלבו מידע על תוכניות, קמפוס, סגל, קריירה, מעטפת או יתרונות המוסד לפי הצורך\n\n### 4. סיום וקריאה לפעולה\nפסקת הסיום צריכה:\n- לסכם את הערך המרכזי\n- לחזק את הביטחון של הקורא\n- להציע את הצעד הבא\n\nדוגמאות ל-CTA:\n- רוצים לבדוק איזה מסלול הכי מתאים לכם? השאירו פרטים ונחזור אליכם לייעוץ אישי.\n- זה הזמן לבחור מסלול לימודים שייתן לכם יותר מתואר. בואו להכיר את המכללה האקדמית נתניה מקרוב.\n- מעוניינים לשמוע על תנאי קבלה, מלגות ואפשרויות לימוד? צוות הייעוץ שלנו כאן בשבילכם.\n\n## 6. עשה ואל תעשה\n\n### עשה\n- פנה בגוף שני-רבים: אתם, עבורכם, תוכלו\n- התמקד בתועלות: קידום, ליווי, גמישות, סביבת לימודים, קריירה\n- כתוב ברור, מסודר, מקצועי ונעים לקריאה\n- כתוב בביטחון: המכללה מעניקה, הלימודים מאפשרים, הקמפוס מציע\n- חבר בין אקדמיה לבין עתיד אישי ומקצועי\n- שמור על איזון בין מכובדות לבין נגישות\n\n### אל תעשה\n- אל תכתוב בצורה מרוחקת, יבשה או בירוקרטית מדי\n- אל תסתפק ברשימת עובדות ללא חיבור לצרכים של הקורא\n- אל תשתמש בז'רגון אקדמי כבד או במונחים מסובכים ללא הסבר\n- אל תשתמש בניסוחים מהוססים כמו: אולי, ייתכן, עשוי\n- אל תכתוב כאילו מדובר רק בפרסום מכירתי\n- אל תהיה מתלהב מדי, סלנגי מדי או שיווקי מדי\n\n## 7. מאגר ביטויים ותבניות\n\n### שמות תואר מומלצים\n- אקדמי\n- איכותי\n- מוביל\n- מקצועי\n- מתקדם\n- יישומי\n- מקיף\n- אישי\n- תומך\n- משמעותי\n\n### פעלים מומלצים\n- ללמוד\n- להתקדם\n- להתפתח\n- לבחור\n- להשתלב\n- להצליח\n- לרכוש\n- לחזק\n- לבנות\n- לממש\n\n### ביטויים מומלצים\n- הדרך שלכם להצלחה מתחילה כאן\n- לימודים עם ערך אמיתי לעתיד שלכם\n- שילוב בין מצוינות אקדמית לעשייה מקצועית\n- מעטפת מלאה לסטודנטים\n- חוויית קמפוס מלאה במקום אחד\n- לבחור נכון את הצעד הבא\n- ידע אקדמי עם יישום בעולם האמיתי\n- מסלול לימודים שמקדם אתכם באמת\n\n### תבניות משפטים\n- בעולם שבו בחירת מסלול לימודים משפיעה ישירות על העתיד המקצועי, חשוב לבחור מוסד שמעניק לכם יותר מידע תיאורטי בלבד.\n- המכללה האקדמית נתניה מציעה לכם שילוב בין לימודים אקדמיים ברמה גבוהה לבין חיבור ממשי לשוק העבודה.\n- אחד היתרונות הבולטים של הלימודים במכללה הוא היכולת לשלב בין ידע, התפתחות אישית וכלים פרקטיים להמשך הדרך.\n- מעבר לתוכנית הלימודים עצמה, אתם נהנים ממעטפת שלמה שתומכת בכם לאורך כל הדרך.\n- בשורה התחתונה, הבחירה היכן ללמוד היא גם הבחירה איך ייראה העתיד שלכם.\n\n## 8. דגשים סגנוניים חשובים\n\n### השתמשו במסרים של התקדמות והזדמנות\nהתוכן צריך לעזור לקורא להרגיש שהוא עומד מול הזדמנות אמיתית לבנות עתיד טוב יותר.\n\n### הדגישו ערך ולא רק מידע\nבמקום לכתוב רק:\n\"יש מרכז קריירה\"\n\nכתבו:\n\"מרכז הקריירה של המכללה מסייע לכם לתרגם את הלימודים להזדמנויות מקצועיות אמיתיות.\"\n\n### שלבו מצוינות עם אנושיות\nאפשר להיות אקדמיים ומקצועיים בלי להישמע קרים.\nהקורא צריך להרגיש שמדובר במקום רציני, אבל גם כזה שרואה אותו.\n\n### שמרו על עברית טבעית\nלא לכתוב טקסטים נפוחים.\nהעדיפות היא למשפטים ברורים, מדויקים וזורמים.\n\n## 9. דוגמאות לכיווני מסר\n\n### עבור עמוד \"למה ללמוד אצלנו\"\n- מוסד אקדמי ותיק ובעל מוניטין\n- סגל איכותי\n- חיבור לקריירה\n- מעטפת תומכת\n- קמפוס פעיל ומלא\n\n### עבור עמוד תוכנית לימודים\n- מה לומדים\n- למי זה מתאים\n- אילו כלים רוכשים\n- איך זה מתחבר לעולם העבודה\n- למה כדאי ללמוד את זה דווקא כאן\n\n### עבור דפי הרשמה וייעוץ\n- פשטות\n- ביטחון\n- הכוונה\n- תחושת ליווי\n- הנעה לצעד הבא\n\n## 10. הוראות סופיות\n\nלפני כל כתיבה, ודא שאתה מבין:\n- מה מטרת הטקסט\n- מי קהל היעד\n- מה הפעולה שהקורא אמור לעשות בסוף\n\nבכל טקסט שאתה כותב עבור המכללה האקדמית נתניה:\n- שמור על טון מקצועי, ברור ומזמין\n- הדגש תועלות אמיתיות לקורא\n- חבר בין לימודים לבין עתיד אישי ומקצועי\n- כתוב בעברית טבעית, בטוחה ומכבדת\n- הימנע משפה שיווקית אגרסיבית או ממסרים כלליים מדי\n\nהמטרה היא ליצור תוכן שמרגיש אמין, איכותי, אנושי ומדויק למותג של המכללה האקדמית נתניה.\n\nEND WRITING TONE\n\nArticle Research:\n{{ $('Message a model1').item.json.output[0].content[0].text }}\n\nArticle OUTLINE:\n{{ $json.output }}\nWebsite Internal Links:\n{{ $item(0).$node[\"Fix Links\"].json.research }}\n\nWrite the full article now.\n",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        4672,
+        5248
+      ],
+      "id": "6a8be7fe-c1c4-4e10-887a-e882b5bf797f",
+      "name": "Writing Blog"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        5152,
+        5824
+      ],
+      "id": "06b15876-36ec-43d4-9d80-83586d7446c6",
+      "name": "Loop Over Items1"
+    },
+    {
+      "parameters": {
+        "jsCode": "function stripHtml(str) {\n  return (str || \"\").replace(/<[^>]*>/g, \"\").trim();\n}\n\nfunction extractHeadingsFromMarkdown(md) {\n  const lines = (md || \"\").split(\"\\n\").map(l => l.trim());\n\n  let h1 = \"\";\n  const h2 = [];\n\n  for (const line of lines) {\n    const m1 = line.match(/^#\\s+(.+)$/);\n    if (m1 && !h1) h1 = stripHtml(m1[1]);\n\n    const m2 = line.match(/^##\\s+(.+)$/);\n    if (m2) h2.push(stripHtml(m2[1]));\n  }\n\n  return { h1, h2 };\n}\n\n// ---- INPUT SOURCES ----\nconst blog = $node[\"Writing Blog\"].json.output || \"\";\nconst { h1, h2 } = extractHeadingsFromMarkdown(blog);\n\n// helper: get H2 by index (1-based)\nconst H2 = (n) => h2[n - 1] || \"\";\n\n// Targets (these are the headings your image-plan logic uses)\nconst targets = {\n  hero: h1 || h2[0] || \"\",  // fallback to first H2 if no H1\n  section_1: H2(4) || \"\",\n  section_2: H2(8) || \"\",\n  section_3: H2(12) || \"\",\n  section_4: H2(16) || \"\",\n};\n\n// ---- WordPress media items come as INPUT to this node ----\nconst wpItems = $input.all().map(i => i.json);\n\n// Helper: pick best WP URL\nfunction wpUrl(m) {\n  return (\n    (m && typeof m.source_url === \"string\" && m.source_url) ||\n    (m && m.guid && typeof m.guid.rendered === \"string\" && m.guid.rendered) ||\n    \"\"\n  );\n}\n\n// Helper: match media item to a target heading\nfunction matchMediaToHeading(media, heading) {\n  if (!heading) return false;\n\n  const alt = (media.alt_text || \"\").trim();\n  const title = (media.title && (media.title.raw || media.title.rendered) || \"\").trim();\n\n  // Strong match: alt_text equals heading\n  if (alt && alt === heading) return true;\n\n  // Fallback match: title equals heading\n  if (title && title === heading) return true;\n\n  return false;\n}\n\n// Build empty structure first\nconst structuredImages = {\n  hero: null,\n  section_1: null,\n  section_2: null,\n  section_3: null,\n  section_4: null,\n};\n\n// 1) Try to match by alt_text/title to headings\nfor (const media of wpItems) {\n  const url = wpUrl(media);\n  if (!url) continue;\n\n  for (const key of Object.keys(structuredImages)) {\n    if (structuredImages[key]) continue; // already filled\n    if (matchMediaToHeading(media, targets[key])) {\n      structuredImages[key] = {\n        url,\n        alt: targets[key] || (media.alt_text || \"\")\n      };\n    }\n  }\n}\n\n// 2) Fallback by order if some are still missing (hero first, then sections)\nconst remainingKeys = Object.keys(structuredImages).filter(k => !structuredImages[k]);\nif (remainingKeys.length > 0) {\n  // take medias that weren't used yet\n  const usedUrls = new Set(Object.values(structuredImages).filter(Boolean).map(x => x.url));\n  const unused = wpItems\n    .map(m => ({ m, url: wpUrl(m) }))\n    .filter(x => x.url && !usedUrls.has(x.url));\n\n  let idx = 0;\n  for (const key of remainingKeys) {\n    const pick = unused[idx++];\n    if (!pick) break;\n\n    structuredImages[key] = {\n      url: pick.url,\n      alt: targets[key] || (pick.m.alt_text || \"\")\n    };\n  }\n}\n\n// 3) Remove null entries\nObject.keys(structuredImages).forEach(\n  k => structuredImages[k] === null && delete structuredImages[k]\n);\n\nreturn [\n  {\n    json: {\n      images: structuredImages\n    }\n  }\n];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        5264,
+        5552
+      ],
+      "id": "b839553d-6298-4382-a7df-9d86d0de89ce",
+      "name": "Preparing Images for HTML"
+    },
+    {
+      "parameters": {
+        "model": "google/gemini-3-flash-preview",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [
+        4144,
+        5408
+      ],
+      "id": "3fdafdd8-7e02-4926-8160-d49f540bb895",
+      "name": "OpenRouter Chat Model2",
+      "credentials": {
+        "openRouterApi": {
+          "id": "3KkS143m7oeIPEr2",
+          "name": "OpenRouter account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": "anthropic/claude-opus-4.6",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [
+        4672,
+        5408
+      ],
+      "id": "3cd7215d-11d3-4cd9-b668-4d78fec819ae",
+      "name": "OpenRouter Chat Model3",
+      "credentials": {
+        "openRouterApi": {
+          "id": "3KkS143m7oeIPEr2",
+          "name": "OpenRouter account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": "anthropic/claude-opus-4.6",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [
+        5456,
+        5408
+      ],
+      "id": "f94eaebd-9f20-4dcc-9f11-ee62d75298d3",
+      "name": "OpenRouter Chat Model6",
+      "credentials": {
+        "openRouterApi": {
+          "id": "3KkS143m7oeIPEr2",
+          "name": "OpenRouter account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": "google/gemini-3-flash-preview",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [
+        5840,
+        5392
+      ],
+      "id": "0a4080b2-00c8-40e7-8f67-7ce6d8f93972",
+      "name": "OpenRouter Chat Model7",
+      "credentials": {
+        "openRouterApi": {
+          "id": "3KkS143m7oeIPEr2",
+          "name": "OpenRouter account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": "google/gemini-3-flash-preview",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [
+        6224,
+        5392
+      ],
+      "id": "73e2d045-2469-4166-80b5-37f053429a0f",
+      "name": "OpenRouter Chat Model8",
+      "credentials": {
+        "openRouterApi": {
+          "id": "3KkS143m7oeIPEr2",
+          "name": "OpenRouter account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": "google/gemini-3-flash-preview",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [
+        6688,
+        5408
+      ],
+      "id": "93975ac4-87bd-422d-95b1-a323e69c0202",
+      "name": "OpenRouter Chat Model9",
+      "credentials": {
+        "openRouterApi": {
+          "id": "3KkS143m7oeIPEr2",
+          "name": "OpenRouter account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": "openai/gpt-5.4",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [
+        7152,
+        5408
+      ],
+      "id": "8e4e51e8-ad64-477e-88bd-27db5d5e84fc",
+      "name": "OpenRouter Chat Model10",
+      "credentials": {
+        "openRouterApi": {
+          "id": "3KkS143m7oeIPEr2",
+          "name": "OpenRouter account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "4c4ba02e-a677-4c0f-9db5-5a9db1a0e783",
+              "leftValue": "={{ $item(0).$node[\"Grab New Cluster\"].json[\"Type\"] }}",
+              "rightValue": "Post",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        7568,
+        5248
+      ],
+      "id": "e083090a-3cf8-47c1-8ab5-bf126be13dcc",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "title": "={{ $('Post Title').item.json.output }}",
+        "additionalFields": {
+          "authorId": 1,
+          "content": "={{ $('HTML').item.json.output }}",
+          "slug": "={{ $('slug').item.json.output }}",
+          "status": "draft"
+        }
+      },
+      "type": "n8n-nodes-base.wordpress",
+      "typeVersion": 1,
+      "position": [
+        7808,
+        5136
+      ],
+      "id": "20531be3-cfce-445d-a055-4f1bc7edb64a",
+      "name": "Create Post",
+      "credentials": {
+        "wordpressApi": {
+          "id": "axE7L3reqIRYLlhr",
+          "name": "https://www.niloosoft.com/"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "page",
+        "title": "={{ $('Post Title').item.json.output }} | netanya.ac.il",
+        "additionalFields": {
+          "authorId": 1,
+          "content": "={{ $('HTML').item.json.output }}",
+          "slug": "={{ $('slug').item.json.output }}",
+          "status": "publish"
+        }
+      },
+      "type": "n8n-nodes-base.wordpress",
+      "typeVersion": 1,
+      "position": [
+        7808,
+        5328
+      ],
+      "id": "8c4ca04a-35ed-4439-a159-46da48367560",
+      "name": "Create Page",
+      "credentials": {
+        "wordpressApi": {
+          "id": "tvLgeBICgx3BfSeI",
+          "name": "https://mahsan.websreport.net/ (Tomer)"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-5.4",
+          "mode": "list",
+          "cachedResultName": "GPT-5.4"
+        },
+        "responses": {
+          "values": [
+            {
+              "content": "=You are a research agent.\n\nThe input below is a preliminary article outline.\nUse it to understand the main topic and subtopics of the article.\n\nYour task:\n** Research** \n- Find authoritative, external sources that support the topic and key sections.המקורות חייבים להמצא אך ורק מהארץ והשפה ששייכת לאותו.\nלדוגמא: אם ה-KEYWORD הוא בשפה העברית,\nאז החיפוש יתבצע בישראל.\n- Do NOT invent sources.\n- Do Not link to other competitors or brand names. \n- Do NOT mention any other brand name or competitors in the text.\n- Do NOT - תקשר לעמוד של מתחרה.\n- לעולם בשום צורה שהיא, אל תבנה LINK או אזכור בתוכן של הכתבה למתחרה מאותה הנישה או מאותו התחום של האתר\n{{ $('Grab New Cluster').item.json.Website }}\n- link only to Gov,PDF, Research sites, News media sites.\n** Fact Checker **\n\n** Fact Checker: **\nאתה FACT Checker: \nאתה חייב לזחול לכל אחד מהקישורים האלו ולוודא שהתוכן שנמצא בהם, מגבה את המידע שציינת.\nתוודא שהקישור תקין ומכיל את שהמידע.\nבמידה והוא לא מכיל את המידע או הקישור שבור או מוביל לעמוד 404. \nאתה חייב למצוא קישור ממקור אחר שהוא תקין ולהחליף אותו במקומו.\n\nArticle outline:\n{{ $json.output[0].content[0].text }}\n\nFind up to 20 sources \n\nOutput format:\nFor each source, provide:\n- Title\n- Short summary (1–2 sentences)\n- Direct URL\n- Try to find the most relevant sources to the output titles\nRules:\n- No opinions\n- No duplicate sources\n- No filler text\n- Only verified Links\n"
+            }
+          ]
+        },
+        "builtInTools": {
+          "webSearch": {
+            "searchContextSize": "medium"
+          }
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 2.1,
+      "position": [
+        3440,
+        5248
+      ],
+      "id": "f5f77b01-ed1d-4c87-b24b-6af5c0873d9f",
+      "name": "Message a model",
+      "credentials": {
+        "openAiApi": {
+          "id": "OX3gYD9oemOrc0Lq",
+          "name": "OpenAi account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-5.4",
+          "mode": "list",
+          "cachedResultName": "GPT-5.4"
+        },
+        "responses": {
+          "values": [
+            {
+              "content": "=# 🎯 ROLE – מומחה כתיבת תוכן SEO\n\nאתה מומחה לכתיבת תוכן SEO בחברת קידום אתרים עם **למעלה מ-15 שנות ניסיון**.  \nאתה מתמחה במחקר SERP אנליטי (ללא אזכור שמות אתרים), ניתוח כוונת חיפוש (Search Intent),  \nבניית תוכן מבוסס שאילתות גולשים, ואופטימיזציה ל-CTR גבוה בתוצאות החיפוש של גוגל.\n\n---\n\n# 📥 INPUT\n- **Keywords:** {{ $json.Keywords }}\n- **Primary Keyword:** {{ $json[\"Primary Keyword\"] }}\n- **Search Intent:** {{ $json.Intent }}\n- **Website (האתר שלנו):** {{ $json.Website }}\n\n---\n\n# 🔍 שלב 1 – מחקר SERP (Google Simulation)\n\nבצע מחקר המדמה חיפוש אמיתי בגוגל – **באופן אנליטי בלבד**, ללא אזכור שמות אתרים, מותגים או כתובות URL.\n\n1. נתח את **10 התוצאות האורגניות המובילות** עבור מילת המפתח הראשית.\n2. בדוק עבור כל מתחרה:\n   - כמות מילים משוערת\n   - מבנה כותרות (H2 / H3)\n   - סוג התוכן (מדריך, מאמר מידע, השוואה, מסחרי וכו')\n3. ספק:\n   - כמות מילים ממוצעת בקרב המתחרים\n   - **המלצה חד-משמעית אחת בלבד לכמות מילים אופטימלית** למאמר שלנו\n   - נימוק קצר המבוסס על רמת התחרות וכוונת החיפוש\n\n---\n\n# 🔎 שלב 2 – מחקר שאילתות גולשים\n\nאסוף ניסוחים אמיתיים של שאלות גולשים, בהשראת:\n- People Also Ask\n- Autocomplete\n- פורומים ודיונים\n- ניסוחים נפוצים ממודלי שפה\n\n❗ דרישה קריטית:  \nלפחות **70% מכותרות H2 חייבות להיות מנוסחות כשאלות חיפוש של גולשים**,  \nכולל ניסוחים מסוג: **\"מהו X\"**, \"איך\", \"למה\", \"האם\", \"כמה\", \"מתי\".\n\nאין לציין או להזכיר מקורות כלשהם בטקסט עצמו.\n\n---\n\n# 🧱 שלב 3 – בניית מבנה תוכן (Outline)\n\nבנה מבנה תוכן מלא למאמר.\n\n## כללי מבנה\n- כל **H2** מייצגת נושא מרכזי או שאלת חיפוש.\n- מתחת לכל **H2 חובה לכלול**:\n  - **תשובה ישירה** – 1–3 משפטים ברורים\n  - **עובדות / דוגמאות / הסברים** תומכים\n- **H3** – רק אם יש צורך אמיתי בפירוק נושא מורכב\n- גיוון מבני:\n  - H2 בלבד\n  - H2 + 2–4 H3\n  - ללא תבנית קבועה\n\n---\n\n## 📌 פורמט חובה לכל כותרת H2\n\n## כותרת H2\n\n**תשובה ישירה:**  \nתשובה חדה וברורה לשאלה.\n\n**עובדות / דוגמאות תומכות:**  \nהרחבה מקצועית, הסברים או דוגמאות.\n\nמשפט מקשר (אם נדרש):  \n\"להלן פירוט הנושא:\"\n\n### כותרת H3 (רק אם נדרש)\nפירוט ממוקד.\n\n---\n\n# 🔁 השוואות בין מוצרים / מושגים\n\nאם קיימת השוואה:\n- יש ליצור **כותרת H2 נפרדת לכל מושג**\n- כל H2 תענה על השאלה: **\"מהו X\"**\n\n---\n\n# 📏 חישוב כמות כותרות לפי אורך המאמר\n\n- כ-150 מילים לכל H2\n- יש לחשב:\n  - מספר H2 / H3 נדרש\n  - כך שהמאמר יעמוד בכמות המילים שהומלצה\n\n---\n\n# 🧠 שלב 4 – SEO מתקדם\n\n## מילות מפתח סמנטיות\n- מונחים משלימים\n- שמות נרדפים\n- נגזרות וביטויים קשורים\n- מותאמים לכוונת החיפוש\n\n## חוסרים מול מתחרים\n- נושאים חסרים\n- שאלות ללא מענה מספק\n- זוויות בידול תוכניות\n\n---\n\n## OUTPUT – חובה\n\nOutput: **TEXT ONLY**  \n(ללא HTML, ללא Markdown, ללא קישורים, ללא שמות מותגים, ללא כתובות URL)\n\nיש להציג:\n\n- Recommended article wordcount – **פעם אחת בלבד**\n- רשימת H2\n- H3 – רק אם נדרש\n- FAQ – שאלות בלבד, מנוסחות בסגנון חיפושי גולשים\n- מילות מפתח סמנטיות\n- רשימת ביטויים, שמות נרדפים, מונחים משלימים ונגזרות\n- חוסרים בתוכן מול מתחרים\n- נושאים שלא מכוסים מספיק\n- זוויות בידול\n\nאלמנטים חסרים (כטקסט תיאורי בלבד):\n- מבנה טבלת השוואה (כותרות ועמודות)\n- תיאור גרפים אפשריים\n\nאיסורים מוחלטים:\n- DO NOT show any URL’s\n- להסיר כל כתובת URL מהטקסט\n- DO NOT show any other brands\n- להסיר כל שם של מותג או חברה\n"
+            }
+          ]
+        },
+        "builtInTools": {
+          "webSearch": {
+            "searchContextSize": "high"
+          }
+        },
+        "options": {
+          "maxTokens": 4000,
+          "temperature": 0.5
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 2.1,
+      "position": [
+        3184,
+        5248
+      ],
+      "id": "7ee0065d-b1c4-4d56-863d-77cfc2967f61",
+      "name": "Message a model1",
+      "credentials": {
+        "openAiApi": {
+          "id": "OX3gYD9oemOrc0Lq",
+          "name": "OpenAi account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "hours"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        2704,
+        5248
+      ],
+      "id": "0fd77dbd-4aec-4b75-b98e-7b890deb3f50",
+      "name": "Schedule Trigger",
+      "retryOnFail": true,
+      "waitBetweenTries": 5000
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ 'https://www.niloosoft.com/wp-json/wp/v2/posts/' + $('Create Post').first().json.id }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpBasicAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"meta\": {\n    \"_yoast_wpseo_title\": \"{{ $('Meta Title').first().json.output }}\",\n    \"_yoast_wpseo_metadesc\": \"{{ $('Meta Description').first().json.output }}\"\n  }\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        8320,
+        5136
+      ],
+      "id": "9bf25d50-fbd3-4907-9aeb-9f173c035de4",
+      "name": "Update meta title description Yoast",
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "lEM0vBfO4kgcKzJE",
+          "name": "https://www.niloosoft.com/"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://mahsan.websreport.net/wp-json/wp/v2/pages/{{$node[\"Create Page\"].json[\"id\"]}}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpBasicAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"meta\": {\n    \"_yoast_wpseo_title\": {{ JSON.stringify($('Meta Title').first().json.output) }},\n    \"_yoast_wpseo_metadesc\": {{ JSON.stringify($('Meta Description').first().json.output) }}\n  }\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        8320,
+        5328
+      ],
+      "id": "d42d5d3b-caf3-47f1-9b2f-ad3ebe3ea2d1",
+      "name": "Update meta title description Yoast1",
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "1nuDQSvuUuUsaGXq",
+          "name": "https://mahsan.websreport.net/ (Tomer)"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "1EUlVPKoAXwrTnSkEdCzk2MJCg1S0gKWYRPDRxrGXJi4",
+          "mode": "list",
+          "cachedResultName": "www.niloosoft.com - פרסום כתבות N8N",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1EUlVPKoAXwrTnSkEdCzk2MJCg1S0gKWYRPDRxrGXJi4/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 683869339,
+          "mode": "list",
+          "cachedResultName": "מחקר + כתבות",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1ApWSxaB367lNZgruyYKmJNSsrsUD3GhgxdnfIwH9lvQ/edit#gid=683869339"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "row_id": "={{ String($node[\"Grab New Cluster\"].json.row_id) }}",
+            "Published": "Yes",
+            "URL": "={{ $('Create Post').item.json.link }}",
+            "Date": "={{ $('Create Post').item.json.date }}"
+          },
+          "matchingColumns": [
+            "row_id"
+          ],
+          "schema": [
+            {
+              "id": "row_id",
+              "displayName": "row_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Website",
+              "displayName": "Website",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "עמוד אב",
+              "displayName": "עמוד אב",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Pillar",
+              "displayName": "Pillar",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Cluster",
+              "displayName": "Cluster",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Intent",
+              "displayName": "Intent",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Primary Keyword",
+              "displayName": "Primary Keyword",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Keywords",
+              "displayName": "Keywords",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Researched",
+              "displayName": "Researched",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Type",
+              "displayName": "Type",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Parent ID",
+              "displayName": "Parent ID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Category ID",
+              "displayName": "Category ID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Published",
+              "displayName": "Published",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "URL",
+              "displayName": "URL",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Date",
+              "displayName": "Date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        9024,
+        5136
+      ],
+      "id": "cac01dc6-ea55-45eb-882a-2e0526cebe7e",
+      "name": "Check as completed on Sheets2",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "0tbx2invhGXduVhq",
+          "name": "Google Sheets account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1EUlVPKoAXwrTnSkEdCzk2MJCg1S0gKWYRPDRxrGXJi4",
+          "mode": "list",
+          "cachedResultName": "www.niloosoft.com - פרסום כתבות N8N",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1EUlVPKoAXwrTnSkEdCzk2MJCg1S0gKWYRPDRxrGXJi4/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 954311286,
+          "mode": "list",
+          "cachedResultName": "Article",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1yEKxlD1ugC_SO-9w2CfOvL8cREfNEBCqJTFTwp2Ij8U/edit#gid=954311286"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Cluster": "={{ $node[\"Grab New Cluster\"].json.Cluster }}",
+            "Primary Keyword": "={{ $node[\"Grab New Cluster\"].json[\"Primary Keyword\"] }}",
+            "Slug": "={{ $('slug').item.json.output }}",
+            "Meta Title": "={{ $('Post Title').item.json.output }}",
+            "Meta Description": "={{ $('Meta Title').item.json.output }}",
+            "External Links ": "={{ $node[\"Fix Links\"].json.research }}",
+            "Published": "Yes"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "row_id",
+              "displayName": "row_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Cluster",
+              "displayName": "Cluster",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Primary Keyword",
+              "displayName": "Primary Keyword",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Article",
+              "displayName": "Article",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "HTML",
+              "displayName": "HTML",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Slug",
+              "displayName": "Slug",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Meta Title",
+              "displayName": "Meta Title",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Meta Description",
+              "displayName": "Meta Description",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "External Links ",
+              "displayName": "External Links ",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Internal Links",
+              "displayName": "Internal Links",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Published",
+              "displayName": "Published",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.6,
+      "position": [
+        8608,
+        5136
+      ],
+      "id": "63136999-d429-4e1e-a2c7-a8c3b6e22558",
+      "name": "Article Saving 3",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "0tbx2invhGXduVhq",
+          "name": "Google Sheets account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "1uo3RHaseW9ug4rIdOTdjcys6RePOxPxq5y20_ZzRIl0",
+          "mode": "list",
+          "cachedResultName": "netanya.ac.il - פרסום כתבות N8N",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1uo3RHaseW9ug4rIdOTdjcys6RePOxPxq5y20_ZzRIl0/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 683869339,
+          "mode": "list",
+          "cachedResultName": "מחקר + כתבות",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1EUlVPKoAXwrTnSkEdCzk2MJCg1S0gKWYRPDRxrGXJi4/edit#gid=683869339"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "row_id": "={{ String($node[\"Grab New Cluster\"].json.row_id) }}",
+            "Published": "Yes",
+            "URL": "={{ $('Create Page').item.json.link }}",
+            "Date": "={{ $('Create Page').item.json.date }}"
+          },
+          "matchingColumns": [
+            "row_id"
+          ],
+          "schema": [
+            {
+              "id": "row_id",
+              "displayName": "row_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Website",
+              "displayName": "Website",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "עמוד אב",
+              "displayName": "עמוד אב",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Pillar",
+              "displayName": "Pillar",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Cluster",
+              "displayName": "Cluster",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Intent",
+              "displayName": "Intent",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Primary Keyword",
+              "displayName": "Primary Keyword",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Keywords",
+              "displayName": "Keywords",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Researched",
+              "displayName": "Researched",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Type",
+              "displayName": "Type",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Parent ID",
+              "displayName": "Parent ID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Category ID",
+              "displayName": "Category ID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Published",
+              "displayName": "Published",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "URL",
+              "displayName": "URL",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Date",
+              "displayName": "Date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Facebook",
+              "displayName": "Facebook",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Instagram",
+              "displayName": "Instagram",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Twitter ",
+              "displayName": "Twitter ",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Linkedin",
+              "displayName": "Linkedin",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        9024,
+        5328
+      ],
+      "id": "1755dd0c-aa19-4aba-8abd-293ac8dc1239",
+      "name": "Check as completed on Sheets3",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "lvHSVyl4fQmLoRi4",
+          "name": "Tomer google sheets"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1uo3RHaseW9ug4rIdOTdjcys6RePOxPxq5y20_ZzRIl0",
+          "mode": "list",
+          "cachedResultName": "netanya.ac.il - פרסום כתבות N8N",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1uo3RHaseW9ug4rIdOTdjcys6RePOxPxq5y20_ZzRIl0/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 954311286,
+          "mode": "list",
+          "cachedResultName": "Article",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1EUlVPKoAXwrTnSkEdCzk2MJCg1S0gKWYRPDRxrGXJi4/edit#gid=954311286"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "row_id": "={{ $('Grab New Cluster').first().json['row_id'] }}",
+            "Cluster": "={{$items(\"Grab New Cluster\")[0].json.Cluster}}",
+            "Primary Keyword": "={{$items(\"Grab New Cluster\")[0].json[\"Primary Keyword\"]}}",
+            "Slug": "={{ $('slug').item.json.output }}",
+            "Meta Title": "={{ $('Post Title').item.json.output }}",
+            "Meta Description": "={{ $('Meta Title').item.json.output }}",
+            "External Links ": "={{ $node[\"Fix Links\"].json.research }}",
+            "Published": "Yes"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "row_id",
+              "displayName": "row_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Cluster",
+              "displayName": "Cluster",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Primary Keyword",
+              "displayName": "Primary Keyword",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Article",
+              "displayName": "Article",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "HTML",
+              "displayName": "HTML",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Slug",
+              "displayName": "Slug",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Meta Title",
+              "displayName": "Meta Title",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Meta Description",
+              "displayName": "Meta Description",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "External Links ",
+              "displayName": "External Links ",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Internal Links",
+              "displayName": "Internal Links",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Published",
+              "displayName": "Published",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.6,
+      "position": [
+        8608,
+        5328
+      ],
+      "id": "c84d95ab-6a51-43e9-9222-ce12330cdc84",
+      "name": "Article Saving 1",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "lvHSVyl4fQmLoRi4",
+          "name": "Tomer google sheets"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "=PUT",
+        "url": "={{ 'https://www.niloosoft.com/wp-json/wp/v2/posts/' + $('Create Post').item.json.id }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpBasicAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"featured_media\": {{$item(0).$node[\"Loop Over Items1\"].json.id}}\n}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        8064,
+        5136
+      ],
+      "id": "03daea4c-c70a-4eaa-ae6e-dc0ce415cfe0",
+      "name": "Update Featured Image2",
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "lEM0vBfO4kgcKzJE",
+          "name": "https://www.niloosoft.com/"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=You are a senior Hebrew copywriter and social media strategist with strong B2B + storytelling skills.\n\nINPUT:\nYou will receive a full article written in HEBREW.\n{{ $json.output }}\n\nOBJECTIVE:\nCreate 4 separate social media posts derived from the article content — one for each platform:\n1) LinkedIn\n2) Facebook\n3) Instagram\n4) X (Twitter)\n\nLANGUAGE RULES:\n- INPUT language: Hebrew\n- OUTPUT language: Hebrew only\n- Do NOT use English words unless they are unavoidable brand/product names\n- Natural Israeli Hebrew (not robotic, not translated)\n\nCORE QUALITY RULES:\n- Do NOT “summarize the article” — convert its insights into high-performing posts\n- Each platform must be UNIQUE (no repeated sentences across platforms)\n- Use concrete takeaways and examples from the article, not vague inspiration\n- If the article is about a product/service: emphasize value, outcome, and clarity (no hype)\n- Do NOT explain the process; output only the final posts\n\n────────────────────────\nPLATFORM RULES (STRICT)\n────────────────────────\n\n1️⃣ LinkedIn (MUST BE THE STRONGEST POST)\nGoal: Thought leadership + credibility + depth.\n\nLength & structure:\n- MUST be 1,000–1,600 characters (Hebrew chars, including spaces)\n- MUST be at least as detailed and valuable as the Facebook post\n- 3–6 short paragraphs (each 1–3 lines)\n- Include:\n  A) Hook line that creates tension/curiosity (not cliché)\n  B) 3 actionable points OR a mini-framework (numbered 1–3 is allowed)\n  C) One concrete micro-example / scenario\n  D) A reflective question at the end\n- Emojis: NONE (or max 1 if absolutely needed)\n- Hashtags: 1–3 in Hebrew only (optional, subtle)\n\nTone:\n- Professional, confident, human, not preachy\n\n2️⃣ Facebook\nGoal: Warm, community conversation.\n\nLength & structure:\n- 700–1,200 characters\n- 2–4 paragraphs\n- 1–2 emojis allowed\n- End with a question\n- 2–5 hashtags in Hebrew\n\n3️⃣ Instagram\nGoal: Scroll-stopping + punchy.\n\nLength & structure:\n- 500–900 characters\n- Strong first line (very short)\n- Short sentences, rhythm, emotional tone\n- 2–4 emojis allowed (not excessive)\n- End with a soft CTA question\n- 5–10 hashtags in Hebrew\n- Avoid long blocks; keep it visually scannable\n\n4️⃣ X (Twitter)\nGoal: Sharp, single idea.\n\nLength & structure:\n- MUST fit within 280 characters total\n- One main point only\n- No emojis\n- Hashtags: none (or max 1 only if essential)\n\n────────────────────────\nOUTPUT FORMAT (EXACT)\n────────────────────────\nReturn the content exactly in this structure:\n\n---\n🔹 LinkedIn:\n[LinkedIn post text]\n\n🔹 Facebook:\n[Facebook post text]\n\n🔹 Instagram:\n[Instagram post text]\n\n🔹 X:\n[X post text]\n---\n\nFINAL CHECK BEFORE YOU OUTPUT:\n- LinkedIn is 1,000–1,600 characters and includes hook + 3 points/framework + micro-example + question\n- No sentence is repeated between platforms\n- All text is Hebrew\n",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        5056,
+        4784
+      ],
+      "id": "c48ee817-dacc-4dbd-88ec-b892aa0f6229",
+      "name": "Social Media AI Prompt"
+    },
+    {
+      "parameters": {
+        "jsCode": "/**\n * n8n Code node (JavaScript)\n * Input: item.json.output (string) OR item.json.text (string) OR item.json (string)\n * Output: columns ready for Google Sheets mapping\n */\n\nfunction pickText(item) {\n  return (\n    item.json.output ??\n    item.json.text ??\n    item.json.result ??\n    (typeof item.json === 'string' ? item.json : null) ??\n    ''\n  );\n}\n\nfunction normalize(s) {\n  return (s || '')\n    .replace(/\\r\\n/g, '\\n')\n    .replace(/[ \\t]+\\n/g, '\\n')\n    .trim();\n}\n\nfunction extractSection(fullText, label) {\n  // Matches: 🔹 LinkedIn: ... until next 🔹 or end\n  const re = new RegExp(\n    String.raw`(?:^|\\n)\\s*(?:🔹\\s*)?${label}\\s*:\\s*([\\s\\S]*?)(?=\\n\\s*(?:🔹\\s*)?(?:LinkedIn|Facebook|Instagram|X)\\s*:|\\s*$)`,\n    'i'\n  );\n  const m = fullText.match(re);\n  return normalize(m ? m[1] : '');\n}\n\nfunction makePreview(s, max = 120) {\n  const t = normalize(s).replace(/\\n+/g, ' ');\n  return t.length > max ? t.slice(0, max - 1) + '…' : t;\n}\n\nconst out = [];\n\nfor (const item of $input.all()) {\n  const raw = normalize(pickText(item));\n\n  const linkedin = extractSection(raw, 'LinkedIn');\n  const facebook = extractSection(raw, 'Facebook');\n  const instagram = extractSection(raw, 'Instagram');\n  const xpost = extractSection(raw, 'X');\n\n  out.push({\n    json: {\n      // These keys should match your Google Sheet columns (recommended):\n      LinkedIn: linkedin,\n      Facebook: facebook,\n      Instagram: instagram,\n      X: xpost,\n\n      // Optional useful fields:\n      LinkedIn_Preview: makePreview(linkedin),\n      Facebook_Preview: makePreview(facebook),\n      Instagram_Preview: makePreview(instagram),\n      X_Preview: makePreview(xpost),\n\n      // Store original text too (optional):\n      Raw_Output: raw,\n    },\n  });\n}\n\nreturn out;\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        5376,
+        4784
+      ],
+      "id": "c7441634-bcf1-4146-9e78-86aa50196cb6",
+      "name": "Filtering Data"
+    },
+    {
+      "parameters": {
+        "model": "anthropic/claude-opus-4.6",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [
+        5056,
+        5008
+      ],
+      "id": "e4a4f009-bfc4-47bf-8ebe-7c148dab1b87",
+      "name": "OpenRouter Chat Model",
+      "credentials": {
+        "openRouterApi": {
+          "id": "3KkS143m7oeIPEr2",
+          "name": "OpenRouter account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        4416,
+        5840
+      ],
+      "id": "9d61bfee-4513-4823-a648-3d4cbfc77e5b",
+      "name": "Loop Over Items2"
+    },
+    {
+      "parameters": {
+        "resume": "webhook",
+        "httpMethod": "POST",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        4608,
+        6032
+      ],
+      "id": "f50a6144-7cb6-4ea2-8e91-7da4ea45f8ef",
+      "name": "Wait1",
+      "webhookId": "77b17041-e7b7-4953-88f2-8fd0969b5cd7"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Clear accumulated image URLs from previous runs\nconst staticData = $getWorkflowStaticData('global');\ndelete staticData.imageUrls;\n\nfunction normalizeInnerQuotes(s) {\n  if (!s || typeof s !== \"string\") return s;\n\n  s = s.replace(/[״”“]/g, '\"');\n  s = s.replace(/([\\u0590-\\u05FF0-9A-Za-z])\"(?=[\\u0590-\\u05FF0-9A-Za-z])/g, \"$1״\");\n  s = s.replace(/[\\u202A-\\u202E\\u2066-\\u2069]/g, \"\");\n  return s;\n}\n\nfunction makeFilenameSafe(s) {\n  if (!s) return \"\";\n  return String(s)\n    .normalize(\"NFKD\")\n    .replace(/[^\\p{L}\\p{N}\\s]+/gu, \"\")\n    .trim()\n    .replace(/\\s+/g, \"_\")\n    .replace(/-+/g, \"\");\n}\n\nconst raw = $json.output ?? $json;\nlet plan = raw;\nif (typeof raw === \"string\") {\n  // Remove markdown code fences, e.g. ```json or ```\n  const removeFences = s => s.replace(/```(?:json)?|```/gi, '').trim();\n  const cleaned = normalizeInnerQuotes(removeFences(raw));\n  plan = JSON.parse(cleaned);\n}\n\n// ✅ IMPORTANT: handle array wrapper: [ { hero, sections } ]\nif (Array.isArray(plan)) {\n  plan = plan[0] || {};\n}\n\nconst out = [];\n\n// HERO\nif (plan?.hero?.prompt && String(plan.hero.prompt).trim()) {\n  out.push({\n    json: {\n      slot: \"hero\",\n      type: plan.hero.type || \"hero\",\n      prompt: plan.hero.prompt,\n      source_text: plan.hero.source_text || \"\",\n      translation_en: plan.hero.translation_en || \"\",\n      h2_text: \"\",\n      alt: plan.hero.source_text || \"\",\n      filename_safe:\n        plan.hero.filename_safe ||\n        makeFilenameSafe(plan.hero.translation_en || plan.hero.source_text || \"hero\"),\n    },\n  });\n}\n\n// SECTIONS\n(plan?.sections || [])\n  .filter(s => s?.prompt && String(s.prompt).trim())\n  .forEach((s, i) => {\n    out.push({\n      json: {\n        slot: `section_${i + 1}`,\n        type: s.type || \"section\",\n        prompt: s.prompt,\n        h2_text: s.h2_text || \"\",\n        source_text: s.source_text || \"\",\n        translation_en: s.translation_en || \"\",\n        alt: s.h2_text || s.source_text || \"\",\n        filename_safe:\n          s.filename_safe ||\n          makeFilenameSafe(s.translation_en || s.h2_text || `section_${i + 1}`),\n      },\n    });\n  });\n\nreturn out;"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        4224,
+        5840
+      ],
+      "id": "11dccdca-cbd2-47ff-a8d6-767a34151658",
+      "name": "Cleaning Image Prompts1"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.kie.ai/api/v1/jobs/createTask",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer 165cc5401c1882a5442b943172fc6afe"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"model\": \"nano-banana-pro\",\n  \"callBackUrl\": \"{{$execution.resumeUrl}}\",\n  \"input\": {\n    \"prompt\": \"{{ $json.prompt }}\",\n    \"aspect_ratio\": \"16:9\",\n    \"output_format\": \"jpg\"\n  }\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        4400,
+        6032
+      ],
+      "id": "2f01b4b8-ce68-41d3-a142-18aefa0011a5",
+      "name": "Image Generation1"
+    },
+    {
+      "parameters": {
+        "jsCode": "// We receive the callback item from KIE\nconst item = $json;\nconst body = item.body || {};\nconst data = body.data || {};\n\nlet imageUrl = null;\nlet parsedResult = null;\n\nif (data.resultJson) {\n  try {\n    parsedResult = JSON.parse(data.resultJson);\n    if (Array.isArray(parsedResult.resultUrls) && parsedResult.resultUrls.length > 0) {\n      imageUrl = parsedResult.resultUrls[0];\n    }\n  } catch (error) {\n    throw new Error('Could not parse resultJson: ' + error.message);\n  }\n}\n\n// If callback had no result (e.g. timeout), try query params\nif (!imageUrl && item.query && item.query.imageUrl) {\n  imageUrl = item.query.imageUrl;\n}\n\n// Accumulate URLs in workflow static data for Collect images URLS1\nif (imageUrl) {\n  const staticData = $getWorkflowStaticData('global');\n  if (!staticData.imageUrls) staticData.imageUrls = [];\n  staticData.imageUrls.push(imageUrl);\n}\n\nreturn [\n  {\n    json: {\n      imageUrl,\n      \"Image URL\": imageUrl,\n      state: data.state || \"unknown\",\n      taskId: data.taskId || \"\",\n      rawResultJson: data.resultJson || \"\"\n    }\n  }\n];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        4784,
+        6032
+      ],
+      "id": "52fdff1f-239e-44eb-bbe6-a4ef394ab2a5",
+      "name": "Getting URLS1"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Collect all image URLs from the loop iterations.\n// The SplitInBatches \"done\" output only contains the last iteration's data,\n// so we use n8n's static data to accumulate URLs across iterations.\n// \n// FALLBACK: We also check the Save image URLS1 node's data.\n\nconst staticData = $getWorkflowStaticData('global');\nconst collectedUrls = staticData.imageUrls || [];\n\n// Also try to get from the current items\nconst items = $input.all();\nfor (const item of items) {\n  const url = item.json[\"Image URL\"] || item.json.imageUrl;\n  if (url && !collectedUrls.includes(url)) {\n    collectedUrls.push(url);\n  }\n}\n\nconst images = {\n  hero: collectedUrls[0] || null,\n  section_1: collectedUrls[1] || null,\n  section_2: collectedUrls[2] || null,\n  section_3: collectedUrls[3] || null,\n  section_4: collectedUrls[4] || null,\n};\n\n// Clean up static data\ndelete staticData.imageUrls;\n\nreturn [{ json: { images } }];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        4656,
+        5824
+      ],
+      "id": "12cdaf1c-330e-4406-9d0e-288b8c998138",
+      "name": "Collect images URLS1"
+    },
+    {
+      "parameters": {
+        "content": "## Image Generation\n",
+        "height": 496,
+        "width": 1164
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        3840,
+        5792
+      ],
+      "typeVersion": 1,
+      "id": "211843b5-af58-42aa-8176-e4208ca9e854",
+      "name": "Sticky Note28"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1uo3RHaseW9ug4rIdOTdjcys6RePOxPxq5y20_ZzRIl0",
+          "mode": "list",
+          "cachedResultName": "netanya.ac.il - פרסום כתבות N8N",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1uo3RHaseW9ug4rIdOTdjcys6RePOxPxq5y20_ZzRIl0/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1359853134,
+          "mode": "list",
+          "cachedResultName": "Generated Images",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1EUlVPKoAXwrTnSkEdCzk2MJCg1S0gKWYRPDRxrGXJi4/edit#gid=1359853134"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Row ID": "={{ $item(0).$node[\"Grab New Cluster\"].json[\"row_id\"] }}",
+            "Image URL": "={{ $json.imageUrl }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Row ID",
+              "displayName": "Row ID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Image URL",
+              "displayName": "Image URL",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        4112,
+        6032
+      ],
+      "id": "90dfe3d6-99dc-4711-94a1-6729263402fd",
+      "name": "Save image URLS1",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "lvHSVyl4fQmLoRi4",
+          "name": "Tomer google sheets"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=\"You are an image planning and prompt generation system for blog articles.\n\nYou receive a full blog article written in HEBREW and generate image prompts following locked brand design rules and strict planning logic.\n\nLOCKED DESIGN TOKENS:\n\nBRAND_PRIMARY_COLOR: #F06D37\nBRAND_ACCENT_COLOR: #F06D37\nBRAND_SECONDARY_COLOR: #231F20\nBACKGROUND_STYLE: light\nTYPOGRAPHY_MOOD: modern clean professional\nUI_MOOD: professional corporate minimal\nBORDER_RADIUS: 25\nSHADOW_STYLE: 0 0 3px 0 rgba(0,0,0,.17)\nVISUAL_DENSITY: balanced\nIMAGE_PREFERENCE: photo\nCONTRAST: medium\nSATURATION: natural\nMOTIFS: business, corporate, security, consulting, crisis-management, professional\n\nIMAGE PLANNING LOGIC:\n\nIMPORTANT: The article does NOT contain an H1 heading. The first H2 serves as the main topic heading.\nExtract ALL H2 headings in exact order of appearance.\nCount total H2 headings.\nUse the FIRST H2 heading as the hero image subject (treat it as the main title).\n\nIf fewer than 4 H2 headings exist: generate ONLY hero image, all section objects remain empty.\nIf 4 or more H2 headings exist: generate hero image, then generate section image for H2 #4, then generate one additional section image for each subsequent 4th H2 (H2 #8, H2 #12, etc.) until H2 headings are exhausted.\n\nEach section image prompt is bound strictly to content under its specific H2. Cross-section content mixing is forbidden.\n\nTRANSLATION RULES:\n\nHERO: Extract the FIRST H2 in Hebrew as source_text (since there is no H1). Translate it to English as translation_en. Hero prompt conceptually represents the translated first H2.\n\nSECTIONS: For each section where h2_text is populated, translation_en is the English translation of that H2. For empty sections, h2_text and translation_en are both empty strings.\n\nDESIGN AND BRAND ENFORCEMENT:\n\nEvery image prompt explicitly references brand colors using HEX codes.\nRequired phrasing in every prompt: \"\"dominant color palette using primary brand color #F06D37 with secondary tones of #231F20 against clean white background\"\"\nNo colors outside the brand palette are permitted.\nAll images maintain medium contrast, natural saturation, professional corporate aesthetic, balanced visual density.\nPhoto-realistic style preferred unless infographic is triggered.\n\nINFOGRAPHIC DETECTION RULE:\n\nInspect content under each selected H2.\nIf content contains numbered steps, bullet lists, pricing/plans/packages, statistics/percentages/comparisons, tables, pros/cons, or multiple short structured items: the image is an infographic.\n\nInfographic prompts include the phrase \"\"clean infographic layout\"\".\nInfographic prompts reference brand colors by HEX.\nInfographic prompts include 3-6 labeled blocks only if explicitly present in source text.\nInfographic prompts specify minimal icons, grid alignment, clean typography, generous whitespace.\nInfographic prompts never invent steps, labels, numbers, or data not present in source text.\n\nTEXT-ON-IMAGE LANGUAGE RULE:\n\nAny visible text rendered inside images is in HEBREW.\nPermitted English abbreviations only: SEO, UX, UI, AI, KPI, ROI, B2B, B2C, CRM, SaaS, Design.\nPrefer minimal text and icons when uncertain.\n\nPROMPT QUALITY RULES:\n\nAll image prompts are written in ENGLISH.\nPrompts are cinematic, premium, high-detail, visually explicit.\nNo vague wording.\nNo line breaks inside JSON string values.\n\nSAFE OUTPUT RULES:\n\nNever output null.\nNon-qualifying sections use empty strings for h2_text, translation_en, and prompt.\nAll values are strings.\n\nOUTPUT FORMAT:\n\nOutput exactly this JSON structure:\n\n{\"\"hero\"\":{\"\"type\"\":\"\"hero\"\",\"\"source_text\"\":\"\"\"\",\"\"translation_en\"\":\"\"\"\",\"\"prompt\"\":\"\"\"\"},\"\"sections\"\":[{\"\"type\"\":\"\"section\"\",\"\"h2_text\"\":\"\"\"\",\"\"translation_en\"\":\"\"\"\",\"\"prompt\"\":\"\"\"\"},{\"\"type\"\":\"\"section\"\",\"\"h2_text\"\":\"\"\"\",\"\"translation_en\"\":\"\"\"\",\"\"prompt\"\":\"\"\"\"},{\"\"type\"\":\"\"section\"\",\"\"h2_text\"\":\"\"\"\",\"\"translation_en\"\":\"\"\"\",\"\"prompt\"\":\"\"\"\"},{\"\"type\"\":\"\"section\"\",\"\"h2_text\"\":\"\"\"\",\"\"translation_en\"\":\"\"\"\",\"\"prompt\"\":\"\"\"\"}]}\n\nPopulate hero source_text with the FIRST H2 in Hebrew (since there is no H1).\nPopulate hero translation_en with English translation of the first H2.\nPopulate hero prompt with English image prompt for hero.\nPopulate sections array index 0 with H2 #4 data if it exists, otherwise empty strings.\nPopulate sections array index 1 with H2 #8 data if it exists, otherwise empty strings.\nPopulate sections array index 2 with H2 #12 data if it exists, otherwise empty strings.\nPopulate sections array index 3 with H2 #16 data if it exists, otherwise empty strings.\n\nOutput exactly 1 hero object.\nOutput exactly 4 section objects.\nOutput only the JSON.\nNo explanations.\nStop immediately after the final closing brace.\"\n\nDo not delete all the text above in this box\n{{ $json.output }}",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        3888,
+        5888
+      ],
+      "id": "87373823-dd00-40e6-abbf-089f403a351a",
+      "name": "Image Planning1"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Build image upload items where filename_safe comes from translation_en\n// (pulled from \"Cleaning Image Prompts\" node by matching slot).\n\nfunction cleanHeadingText(s) {\n  if (!s) return \"\";\n  return String(s)\n    .replace(/<[^>]*>/g, \"\")\n    .replace(/^#+\\s*/g, \"\")\n    .replace(/^\\d+[\\.\\)]\\s*/g, \"\")\n    .trim();\n}\n\nfunction extractHeadingsFromMarkdown(md) {\n  const lines = (md || \"\").split(\"\\n\");\n  let h1 = \"\";\n  const h2 = [];\n\n  for (const rawLine of lines) {\n    const line = rawLine.trim();\n\n    const m1 = line.match(/^#\\s+(.+)$/);\n    if (m1 && !h1) {\n      h1 = cleanHeadingText(m1[1]);\n      continue;\n    }\n\n    const m2 = line.match(/^##\\s*(.+)$/);\n    if (m2) {\n      const txt = cleanHeadingText(m2[1]);\n      if (txt) h2.push(txt);\n    }\n  }\n\n  return { h1, h2 };\n}\n\n/**\n * ✅ STRICT HEADER-SAFE FILENAME\n * - NO hyphens\n * - NO spaces\n * - NO extension\n * - ASCII only\n */\nfunction toHeaderSafeFilename(str) {\n  const s = String(str || \"\")\n    .trim()\n    .replace(/\\.(png|jpg|jpeg|webp|gif)$/i, \"\") // strip extension if present\n    .normalize(\"NFKD\")\n    .replace(/[\\u00A0\\u2000-\\u200B\\u202F\\u205F\\u3000]/g, \"\") // remove weird spaces\n    .replace(/[\\u0300-\\u036f]/g, \"\") // accents\n    .replace(/[—–]/g, \"\")           // long dashes\n    .replace(/&/g, \"and\")\n    .replace(/['\"`]/g, \"\")\n    .replace(/[:;,.!?(){}\\[\\]|<>]/g, \"\")\n    .replace(/[^a-zA-Z0-9]/g, \"\")   // ❗ remove EVERYTHING except letters+numbers\n    .slice(0, 80);\n\n  return s || \"image\";\n}\n\n// --- Inputs ---\nconst images = $node[\"Collect images URLS1\"].json.images;\nconst blog = $node[\"Writing Blog\"].json.output || \"\";\nconst { h1, h2 } = extractHeadingsFromMarkdown(blog);\nconst getH2 = (n) => (h2 && h2.length >= n ? h2[n - 1] : \"\");\n\n// --- Pull translations from Cleaning Image Prompts (by slot) ---\nconst translationsBySlot = {};\nconst cleaned = $items(\"Cleaning Image Prompts1\") || [];\n\nfor (const it of cleaned) {\n  const j = it.json || {};\n  if (!j.slot) continue;\n\n  const t =\n    (typeof j.translation_en === \"string\" && j.translation_en.trim()) || \"\";\n\n  if (t) translationsBySlot[j.slot] = t;\n}\n\nfunction safeNameForSlot(slot, fallback) {\n  const t = translationsBySlot[slot] || fallback || \"image\";\n  return toHeaderSafeFilename(t);\n}\n\n// --- Build items ---\nconst map = [\n  {\n    key: \"hero\",\n    slot: \"hero\",\n    url: images.hero,\n    filename_safe: safeNameForSlot(\"hero\", \"heroimage\"),\n    alt: h1 || h2[0] || \"תמונה ראשית\",  // fallback to first H2\n  },\n  {\n    key: \"section_1\",\n    slot: \"section_1\",\n    url: images.section_1,\n    filename_safe: safeNameForSlot(\"section_1\", \"section1\"),\n    alt: getH2(4) || \"תמונה\",\n  },\n  {\n    key: \"section_2\",\n    slot: \"section_2\",\n    url: images.section_2,\n    filename_safe: safeNameForSlot(\"section_2\", \"section2\"),\n    alt: getH2(8) || \"תמונה\",\n  },\n  {\n    key: \"section_3\",\n    slot: \"section_3\",\n    url: images.section_3,\n    filename_safe: safeNameForSlot(\"section_3\", \"section3\"),\n    alt: getH2(12) || \"תמונה\",\n  },\n  {\n    key: \"section_4\",\n    slot: \"section_4\",\n    url: images.section_4,\n    filename_safe: safeNameForSlot(\"section_4\", \"section4\"),\n    alt: getH2(16) || \"תמונה\",\n  },\n];\n\n// Output only items with URLs\nreturn map\n  .filter(x => !!x.url)\n  .map(x => ({ json: x }));\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        4848,
+        5824
+      ],
+      "id": "f1837f57-e93f-46bd-8632-0951e8a91fb3",
+      "name": "Preparing Image Data1"
+    },
+    {
+      "parameters": {
+        "model": "anthropic/claude-opus-4.6",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [
+        3904,
+        6032
+      ],
+      "id": "29d317c9-d42a-46c1-a998-20a404299f48",
+      "name": "OpenRouter Chat Model11",
+      "credentials": {
+        "openRouterApi": {
+          "id": "3KkS143m7oeIPEr2",
+          "name": "OpenRouter account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "appendOrUpdate",
+        "documentId": {
+          "__rl": true,
+          "value": "1uo3RHaseW9ug4rIdOTdjcys6RePOxPxq5y20_ZzRIl0",
+          "mode": "list",
+          "cachedResultName": "netanya.ac.il - פרסום כתבות N8N",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1uo3RHaseW9ug4rIdOTdjcys6RePOxPxq5y20_ZzRIl0/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 683869339,
+          "mode": "list",
+          "cachedResultName": "מחקר + כתבות",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/17-n-H002JeP9pjEu8A1oEpxjsT-P4UyPPI9rUPz8Aio/edit#gid=683869339"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "row_id": "={{ $('Grab New Cluster').item.json.row_id }}",
+            "Linkedin": "={{ $json.LinkedIn }}",
+            "Facebook": "={{ $json.Facebook }}",
+            "Instagram": "={{ $json.Instagram }}",
+            "Twitter ": "={{ $json.X }}"
+          },
+          "matchingColumns": [
+            "row_id"
+          ],
+          "schema": [
+            {
+              "id": "row_id",
+              "displayName": "row_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Website",
+              "displayName": "Website",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "עמוד אב",
+              "displayName": "עמוד אב",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Pillar",
+              "displayName": "Pillar",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Cluster",
+              "displayName": "Cluster",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Intent",
+              "displayName": "Intent",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Primary Keyword",
+              "displayName": "Primary Keyword",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Keywords",
+              "displayName": "Keywords",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Researched",
+              "displayName": "Researched",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Type",
+              "displayName": "Type",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Parent ID",
+              "displayName": "Parent ID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Category ID",
+              "displayName": "Category ID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Published",
+              "displayName": "Published",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "URL",
+              "displayName": "URL",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Date",
+              "displayName": "Date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Facebook",
+              "displayName": "Facebook",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Instagram",
+              "displayName": "Instagram",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Twitter ",
+              "displayName": "Twitter ",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Linkedin",
+              "displayName": "Linkedin",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        5552,
+        4784
+      ],
+      "id": "5232641e-15d0-4535-ad03-36efdbb473cc",
+      "name": "Update Google Sheet with Posts1",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "lvHSVyl4fQmLoRi4",
+          "name": "Tomer google sheets"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "PUT",
+        "url": "=https://mahsan.websreport.net/wp-json/wp/v2/pages/{{$node[\"Create Page\"].json[\"id\"]}}\n",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpBasicAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"featured_media\": {{$item(0).$node[\"Loop Over Items1\"].json.id}}\n}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        8064,
+        5328
+      ],
+      "id": "90c72d20-223e-4915-9365-f355684ff37b",
+      "name": "Update Featured Image3",
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "1nuDQSvuUuUsaGXq",
+          "name": "https://mahsan.websreport.net/ (Tomer)"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Grab New Cluster": {
+      "main": [
+        [
+          {
+            "node": "Message a model1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fix Links": {
+      "main": [
+        [
+          {
+            "node": "Map a website and get urls",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTML": {
+      "main": [
+        [
+          {
+            "node": "slug",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "slug": {
+      "main": [
+        [
+          {
+            "node": "Post Title",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Post Title": {
+      "main": [
+        [
+          {
+            "node": "Meta Title",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Meta Title": {
+      "main": [
+        [
+          {
+            "node": "Meta Description",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Download Image (PNG URL → Binary)": {
+      "main": [
+        [
+          {
+            "node": "Upload to WordPress (Media)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Upload to WordPress (Media)": {
+      "main": [
+        [
+          {
+            "node": "Image Alt Settings",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Image Alt Settings": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Map a website and get urls": {
+      "main": [
+        [
+          {
+            "node": "Post Plan",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Post Plan": {
+      "main": [
+        [
+          {
+            "node": "Writing Blog",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Writing Blog": {
+      "main": [
+        [
+          {
+            "node": "Social Media AI Prompt",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Image Planning1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Over Items1": {
+      "main": [
+        [
+          {
+            "node": "Preparing Images for HTML",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Download Image (PNG URL → Binary)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Preparing Images for HTML": {
+      "main": [
+        [
+          {
+            "node": "HTML",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenRouter Chat Model2": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Post Plan",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenRouter Chat Model3": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Writing Blog",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenRouter Chat Model6": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "HTML",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenRouter Chat Model7": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "slug",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenRouter Chat Model8": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Post Title",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenRouter Chat Model9": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Meta Title",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenRouter Chat Model10": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Meta Description",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Meta Description": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Create Post",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Create Page",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Message a model": {
+      "main": [
+        [
+          {
+            "node": "Fix Links",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Message a model1": {
+      "main": [
+        [
+          {
+            "node": "Message a model",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Grab New Cluster",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create Post": {
+      "main": [
+        [
+          {
+            "node": "Update Featured Image2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create Page": {
+      "main": [
+        [
+          {
+            "node": "Update Featured Image3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update meta title description Yoast": {
+      "main": [
+        [
+          {
+            "node": "Article Saving 3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Article Saving 3": {
+      "main": [
+        [
+          {
+            "node": "Check as completed on Sheets2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update meta title description Yoast1": {
+      "main": [
+        [
+          {
+            "node": "Article Saving 1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Article Saving 1": {
+      "main": [
+        [
+          {
+            "node": "Check as completed on Sheets3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update Featured Image2": {
+      "main": [
+        [
+          {
+            "node": "Update meta title description Yoast",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Social Media AI Prompt": {
+      "main": [
+        [
+          {
+            "node": "Filtering Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenRouter Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Social Media AI Prompt",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Over Items2": {
+      "main": [
+        [
+          {
+            "node": "Collect images URLS1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Image Generation1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait1": {
+      "main": [
+        [
+          {
+            "node": "Getting URLS1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cleaning Image Prompts1": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Image Generation1": {
+      "main": [
+        [
+          {
+            "node": "Wait1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Getting URLS1": {
+      "main": [
+        [
+          {
+            "node": "Save image URLS1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Collect images URLS1": {
+      "main": [
+        [
+          {
+            "node": "Preparing Image Data1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Save image URLS1": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Image Planning1": {
+      "main": [
+        [
+          {
+            "node": "Cleaning Image Prompts1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Preparing Image Data1": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenRouter Chat Model11": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Image Planning1",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filtering Data": {
+      "main": [
+        [
+          {
+            "node": "Update Google Sheet with Posts1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update Featured Image3": {
+      "main": [
+        [
+          {
+            "node": "Update meta title description Yoast1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "timeSavedMode": "fixed",
+    "callerPolicy": "workflowsFromSameOwner",
+    "availableInMCP": false,
+    "errorWorkflow": "yB7bNb8AVBrqpmsA"
+  },
+  "versionId": "53460010-3d2f-46c4-af5c-6922041cc379",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "d687f3db8cf73bff0dc9f02849712fbaa1b2ea972c000594417cec61549f3360"
+  },
+  "id": "tWGiV4K7HPc3Bj9q",
+  "tags": [
+    {
+      "updatedAt": "2026-03-31T12:30:28.546Z",
+      "createdAt": "2026-03-31T12:30:28.546Z",
+      "id": "H0WZJvaCaPUXG8yh",
+      "name": "netanya.ac.il"
+    },
+    {
+      "updatedAt": "2025-12-25T09:04:33.025Z",
+      "createdAt": "2025-12-25T09:04:33.025Z",
+      "id": "bAQ5UBM4nFLDhksc",
+      "name": "תומר"
+    }
+  ]
+}

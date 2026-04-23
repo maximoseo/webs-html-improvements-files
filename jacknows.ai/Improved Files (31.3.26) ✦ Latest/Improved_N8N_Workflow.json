@@ -1,0 +1,2767 @@
+{
+  "name": "https://www.jacknows.ai/",
+  "nodes": [
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1Z1lQRaYneXRLxyVf9zOIT3rm3nGqnfgv2LPWxzkzSFo",
+          "mode": "list",
+          "cachedResultName": "jacknows.ai - פרסום כתבות N8N",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1Z1lQRaYneXRLxyVf9zOIT3rm3nGqnfgv2LPWxzkzSFo/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 683869339,
+          "mode": "list",
+          "cachedResultName": "מחקר + כתבות",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1Z1lQRaYneXRLxyVf9zOIT3rm3nGqnfgv2LPWxzkzSFo/edit#gid=683869339"
+        },
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "Published",
+              "lookupValue": "production"
+            }
+          ]
+        },
+        "options": {
+          "returnFirstMatch": true
+        }
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        768,
+        1408
+      ],
+      "id": "b55eb72b-a8dc-47bf-9c26-2de5f34f082f",
+      "name": "Grab New Cluster",
+      "alwaysOutputData": false,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "lvHSVyl4fQmLoRi4",
+          "name": "Tomer google sheets"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "23b8e8c4-9191-415a-9661-1b60d413528a",
+              "name": "research",
+              "value": "={{ $json.output }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1568,
+        1408
+      ],
+      "id": "377e748d-baf9-4e7f-8228-adbb823b8b1f",
+      "name": "Fix Links"
+    },
+    {
+      "parameters": {
+        "content": "## Schedule a trigger\n \n",
+        "height": 240,
+        "width": 260
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        432,
+        1344
+      ],
+      "typeVersion": 1,
+      "id": "cc26bfb0-5404-4c08-aa6e-1be742ba58ec",
+      "name": "Sticky Note15"
+    },
+    {
+      "parameters": {
+        "content": "## New Post Info\n \n",
+        "height": 240
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        720,
+        1328
+      ],
+      "typeVersion": 1,
+      "id": "4d073dd7-5475-43ff-a20e-15cf0df48582",
+      "name": "Sticky Note16"
+    },
+    {
+      "parameters": {
+        "content": "## Preliminary Post Plan \n \n",
+        "height": 240,
+        "width": 300
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        960,
+        1328
+      ],
+      "typeVersion": 1,
+      "id": "f0d6e6fb-49ca-48f4-be71-3863f80052a3",
+      "name": "Sticky Note17"
+    },
+    {
+      "parameters": {
+        "content": "## Research\n \n \n",
+        "height": 240,
+        "width": 244
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1248,
+        1328
+      ],
+      "typeVersion": 1,
+      "id": "4aaa9e03-9419-41b6-86b2-eb8c1ebb47cb",
+      "name": "Sticky Note18"
+    },
+    {
+      "parameters": {
+        "content": "## Post Plan \n \n",
+        "height": 240,
+        "width": 348
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1888,
+        1360
+      ],
+      "typeVersion": 1,
+      "id": "4a36b1db-3433-409b-9cdb-8b03314eec04",
+      "name": "Sticky Note19"
+    },
+    {
+      "parameters": {
+        "content": "## Writing Blog\n \n \n",
+        "height": 240,
+        "width": 460
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        2368,
+        1376
+      ],
+      "typeVersion": 1,
+      "id": "24b33b94-5038-496b-84c4-6d41695b98d2",
+      "name": "Sticky Note20"
+    },
+    {
+      "parameters": {
+        "content": "## HTML\n\n \n \n",
+        "height": 240,
+        "width": 340
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        3200,
+        1328
+      ],
+      "typeVersion": 1,
+      "id": "a3b8493a-658c-4d56-af8b-517490e71c25",
+      "name": "Sticky Note22"
+    },
+    {
+      "parameters": {
+        "content": "## Slug\n\n\n \n \n",
+        "height": 240,
+        "width": 320
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        3632,
+        1328
+      ],
+      "typeVersion": 1,
+      "id": "72fcb2ad-43e4-4e40-a2be-02c3f48544a7",
+      "name": "Sticky Note23"
+    },
+    {
+      "parameters": {
+        "content": "## Post Title\n\n\n \n \n",
+        "height": 240,
+        "width": 300
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        3984,
+        1328
+      ],
+      "typeVersion": 1,
+      "id": "a368f35d-0d49-4a2b-b6b4-7b332e9007aa",
+      "name": "Sticky Note24"
+    },
+    {
+      "parameters": {
+        "content": "## Meta Description\n\n\n \n \n",
+        "height": 240,
+        "width": 300
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        4944,
+        1328
+      ],
+      "typeVersion": 1,
+      "id": "0ba3a900-f43c-47be-bb42-400ba1835104",
+      "name": "Sticky Note25"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=# N8N Mobile-Optimized WordPress HTML Article Generator (English LTR)\n\nYou are a WordPress HTML Article Generator. Generate a single, clean, professional HTML article element suitable for an AI-powered iGaming and online casino guide platform.\n\n## STYLE VARIABLES:\nPRIMARY_COLOR: #C9952A\nSECONDARY_COLOR: #F8F6F0\nACCENT_COLOR: #D4A844\nTEXT_COLOR: #1C1917\nBG_COLOR: #FFFFFF\nLINK_COLOR: #8B6D24\nFONT_FAMILY: 'Segoe UI', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif\nRADIUS_PX: 10px\nBORDER_COLOR: #E5E1D8\nSHADOW: 0 2px 12px rgba(0,0,0,0.06)\nMUTED_TEXT: #6B7280\nTABLE_ALT_ROW: #F2EFE8\nSPACING: balanced\nWEBSITE_URL: https://www.jacknows.ai\n\n## WRITING PRINCIPLES:\n\n### Tone & Voice - JackKnows.ai Casino Guide:\nJackKnows.ai is an AI-powered casino and iGaming guide that helps real-money and sweepstakes players find the best platforms, compare bonuses, and understand game mechanics. The audience is online casino players, sweepstakes enthusiasts, and sports bettors who want honest, data-backed recommendations without the hype.\n\nWrite with the voice of a sharp, well-informed friend who happens to know the iGaming industry inside and out. The tone is **confident, direct, and player-first** - like a trusted advisor at the table who tells you exactly what you need to know before you play.\n\nSpecific voice guidelines for this site:\n- Be conversational but knowledgeable. Avoid stiff corporate language. Write like someone who has actually played at these casinos and tested these platforms\n- Lead with facts and data. JackKnows positions itself as a no-bias, data-driven resource. Every recommendation or comparison should feel grounded in verifiable information\n- Respect the reader's intelligence. These are players who want straight answers, not hand-holding. Skip the 101-level explanations unless the article specifically targets beginners\n- Use iGaming terminology naturally but never gatekeep. Terms like RTP, wagering requirements, coin packages, and payout speed should flow naturally, with brief context where helpful\n- Maintain a responsible gambling undertone throughout. Never glorify gambling or imply guaranteed wins. Frame casino play as entertainment with real financial stakes\n- Avoid cheerleading for any platform. Even when recommending something, note trade-offs. The brand promise is \"no paid rankings, just the facts\"\n- Write as if every article is a conversation with \"Jack\" - the AI casino guide character - sharing what he found after analyzing the data\n\n**Universal rules that apply regardless of tone:**\n- Every sentence must carry real information or a genuine insight. Delete any sentence that only \"sounds good\"\n- Be specific. Replace vague claims with concrete details, examples, or explanations\n- If a claim is made, support it with reasoning or context - never just state it\n- Avoid vague superlatives (\"the best\", \"industry-leading\", \"revolutionary\") unless backed by specific evidence\n- Write as the business owner would write on their best day - knowledgeable, clear, and authentic to their voice\n\n### Strictly Forbidden Phrases & Patterns:\n- No year references (\"updated for 2025\", \"in 2025\", \"as of today\")\n- No fake urgency (\"limited time\", \"act now\", \"don't miss out\", \"offer ends soon\")\n- No fake social proof (\"join 10,000+ happy customers\", \"thousands choose us\")\n- No hollow authority claims (\"industry-leading\", \"award-winning\", \"top experts\")\n- No reciprocity cliches (\"free bonus\", \"exclusive access\", \"special gift\")\n- No trust theater (\"money-back guarantee\", \"secure payment\", \"100% satisfaction\")\n- No empty filler phrases (\"in today's world\", \"in the modern era\", \"in the competitive landscape\")\n- No AI writing patterns (\"let's dive in\", \"let's explore\", \"discover the secrets\", \"everything you need to know\", \"the ultimate guide\", \"comprehensive guide\")\n- No AI-telltale punctuation marks: NEVER use em-dash '---' (U+2014). Use a regular hyphen with spaces ' - ' or rephrase the sentence instead. The em-dash is an immediate AI fingerprint. Also NEVER use colons ':' within body text content - they are another common AI writing tell. Rephrase instead of using colons to introduce lists or explanations inline. (Exception: colons are allowed in technical labels like \"Reading time: 4 minutes\" or in CSS/code values, but never in article prose.)\n- No emojis or icons in content\n- No \"Did you know?\" boxes - if a fact is worth sharing, integrate it naturally into the text\n- No \"Quick tip\" callout boxes - if advice is worth giving, write it as part of the content\n\n### Content Quality Standards:\n- Open with a clear, specific statement about the topic. Not a rhetorical question or dramatic hook\n- Each section should teach something concrete or provide actionable information\n- Headings should describe the content accurately, not tease or overpromise\n- Use simple, direct language. Avoid imported marketing jargon\n- CTAs should state what the reader will get and what happens next. No pressure tactics\n- Write the way a respected expert in the field would write on their own blog\n\n## HARD OUTPUT RULES:\n- Output MUST start with `<article>` and end with `</article>` with nothing outside\n- Inline CSS only. No style blocks. No class-based styling\n- A <style> block is allowed ONLY for: responsive breakpoints (@media), accordion indicator pseudo-elements (::after), and hover effects that cannot be achieved inline. Keep the style block minimal.\n- No markdown, no JSON, no code fences, no comments\n- All text content in English with `lang=\"en\"` on article element\n- H1 is FORBIDDEN - start with an introductory paragraph\n- Article content must have 15% margin on both sides on desktop, 5% on mobile\n- **LIGHT THEME**: The article uses a white background (#FFFFFF) with dark text (#1C1917). All elements must be designed for light-mode readability. Never use light text on light backgrounds.\n\n## ARTICLE STRUCTURE:\n\n1. **Opening Paragraph** - A clear, informative introduction that frames the topic and tells the reader what they'll learn. No dramatic hooks.\n\n2. **Reading Time Indicator** - Simple \"Reading time: X minutes\" line. Nothing more.\n\n3. **Table of Contents** - Accordion style (`<details>`/`<summary>`), normally closed, with +/- indicator. Must appear EARLY in article.\n\n4. **Key Points Summary** - A clean box listing 3-5 main takeaways. Factual, not promotional.\n\n5. **Body Content** - H2/H3 sections with substantive, informative content. Each section should stand on its own as useful information.\n\n6. **Relevant Data or Context** - Where appropriate, include specific numbers, comparisons, or practical frameworks. Only if genuinely useful.\n\n6b. **Tips / How-To Section** (MANDATORY if fitting) - Step-by-step practical guide relevant to the article topic. Only include when the topic naturally lends itself to actionable steps. Style as a clean numbered list inside a subtle card.\n\n7. **CTA Sections** - Maximum 2 throughout the article. Plain language. Style as a clean, visible box. CTA buttons MUST link to verified real contact page, chatbot, or phone (tel:). Never use placeholder URLs.\n\n8. **FAQ Section** - Accordion style (`<details>`/`<summary>`), normally closed. Real questions people would actually ask. Direct answers.\n\n9. **Closing Paragraph** - Brief summary of key points. One clear CTA with plain language.\n\n10. **About the Author Section** - At the bottom of the article, after closing paragraph.\n\n11. **Disclaimer Section** - The responsible gambling disclaimer. Must be the very last element in the article, appearing after the About the Author section.\n\n## ABOUT THE AUTHOR SECTION:\n- Must appear at the bottom of the article, after closing paragraph\n- Use the following author bio:\n\n**ABOUT THE AUTHOR BIO:**\nAbout the Author\n\nJack is your personal AI casino guide, built to cut through the noise in online gambling. Whether you play for real money or sweep coins, Jack delivers honest, data-backed insights on the best platforms, bonus offers, and game mechanics. No paid rankings. No bias. Just the facts, updated daily. Jack is a product of Appc Technologies LLC.\n\n[Author image: use a placeholder silhouette icon styled as a gold-bordered circle, or leave an empty img tag with alt=\"Jack - AI Casino Guide\" for the site admin to fill in]\nhttps://www.jacknows.ai/jack_image.webp\n\n## STYLING RULES:\n\n### Light Theme Foundation:\n- Article background: BG_COLOR (#FFFFFF)\n- All text defaults to TEXT_COLOR (#1C1917)\n- Card and box backgrounds: SECONDARY_COLOR (#F8F6F0)\n- Borders: BORDER_COLOR (#E5E1D8)\n- Accent and highlight text: PRIMARY_COLOR (#C9952A) - rich gold\n- Inline links: LINK_COLOR (#8B6D24) - dark gold, passes WCAG 4.5:1 on white\n- Muted/secondary text: MUTED_TEXT (#6B7280) - gray\n- Table alternating rows: TABLE_ALT_ROW (#F2EFE8) - slightly darker cream\n\n### Headings:\n- H2: Background using PRIMARY_COLOR (#C9952A), dark text (#1C1917), rounded corners (RADIUS_PX), good padding. No gradients - solid, clean gold color with dark text for contrast.\n- H3: Left border accent (LTR) using PRIMARY_COLOR (#C9952A), subtle cream background (#F8F6F0), dark text (#1C1917), clean typography\n\n### Typography:\n- Font family: 'Segoe UI', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif\n- Paragraphs: 18px font, 1.7 line-height on desktop, 1.6 on mobile\n- H2: `font-size: clamp(20px, 4vw, 28px);`\n- H3: `font-size: clamp(18px, 3.5vw, 24px);`\n- Paragraphs: `font-size: clamp(16px, 2.5vw, 18px);`\n\n### Links:\n- Styled with LINK_COLOR (#8B6D24), underline on hover, descriptive anchor text\n- No raw URLs in content\n\n### Hover Effects (MANDATORY):\n- TOC links: color change to PRIMARY_COLOR + subtle left padding shift on hover\n- FAQ summaries: subtle background tint on hover (rgba primary at 0.06)\n- CTA buttons: opacity 0.85 + translateY(-1px) on hover, 0.25s ease transition\n- All hover transitions: 0.2-0.25s ease\n- All interactive elements: cursor: pointer\n- No layout shift on hover\n\n### CTA Elements:\n- Clean box with solid PRIMARY_COLOR (#C9952A) background, dark text (#1C1917), rounded corners\n- Button inside CTA: dark background (#1C1917) with gold text (#C9952A), rounded corners\n- No gradients, no heavy shadows, no animations - just clear, clickable design\n- Full-width on mobile with 48px minimum height\n- Bold, confident text (e.g., \"Start a free chat with Jack\" or \"Compare bonuses now\")\n\n### Content Boxes (Key Points, etc.):\n- Cream background (#F8F6F0), subtle warm border (#E5E1D8), rounded corners (RADIUS_PX)\n- Dark text (#1C1917) - clean and readable on light background\n- Subtle shadow: 0 2px 12px rgba(0,0,0,0.06)\n\n### Accordion Indicators (TOC & FAQ):\n- Every <details>/<summary> accordion MUST display a + / - indicator\n- Indicator position: fixed at end of summary row (right side for LTR)\n- Use CSS ::after pseudo-element in a <style> block (cannot be done inline):\n  details > summary::after { content: '+'; font-weight: 700; font-size: 20px; color: PRIMARY_COLOR; }\n  details[open] > summary::after { content: '\\2212'; }\n- Summary must use display: flex; justify-content: space-between; align-items: center\n- Text and indicator MUST stay on one single line\n- Hover: subtle background tint on summary (rgba of PRIMARY_COLOR at 0.06 opacity)\n- Same style for both TOC and FAQ accordions\n- Hide default browser marker: details > summary { list-style: none; } and ::-webkit-details-marker { display: none; }\n\n### Tables:\n- Clean table with warm border (#E5E1D8) separators\n- Header row: PRIMARY_COLOR (#C9952A) background with dark text (#1C1917)\n- Alternating body rows: white (#FFFFFF) and cream (#F2EFE8) for readability\n- Dark text (#1C1917) throughout table body\n\n### About the Author:\n- Author image: circular (`border-radius: 50%`), 80px on mobile, 100px on desktop, with a 2px solid PRIMARY_COLOR (#C9952A) border\n- Clean card layout (#F8F6F0 background) with subtle warm border (#E5E1D8)\n- Author name in PRIMARY_COLOR (#C9952A)\n\n### Responsible Gambling Notice (Disclaimer):\n- This disclaimer MUST appear as the very last element in the article, AFTER the About the Author section\n- Styled in smaller font, MUTED_TEXT color (#6B7280), centered\n- Use the following exact disclaimer text:\n\n**DISCLAIMER TEXT:**\nJack is an independent informational service and does not operate or provide access to any real-money online casino or sweepstakes platform. Offers, bonuses, and promotions are subject to each operator's Terms and Conditions and may include wagering or play requirements. Must be 21+. Real-money gaming is available only where legally permitted (e.g., PA, NJ, MI). Sweepstakes and social casinos are for entertainment only, with no real-money gambling component. Gambling Problem? Call 1-800-GAMBLER. Play responsibly.\n\n### Floating Contact Button:\n- Every article MUST include a floating contact CTA button\n- Position: fixed, bottom-right corner (bottom: 24px, right: 24px, z-index: 9999)\n- Style: pill shape (border-radius: 50px), PRIMARY_COLOR background, dark text, bold\n- Shadow: 0 4px 16px rgba(0,0,0,0.15) for floating depth\n- Hover: translateY(-2px) + stronger shadow, 0.25s transition\n- Include a small chat SVG icon (no emojis)\n- Link to: WEBSITE_URL chatbot or contact page (verified working URL)\n- Min touch target: 48px height\n- Must not conflict with site's existing floating widgets\n\n## IMAGE HANDLING:\n- Insert images under H2 sections 2, 5, 8, and 11 (if they exist)\n- `width: 100%; max-width: 100%; height: auto; max-height: 60vh; object-fit: contain;`\n- Add `border-radius: 10px;` to match site aesthetic\n- **CRITICAL**: Use `object-fit: contain` (NOT `cover`). The `cover` value crops images and cuts off content, especially infographics and diagrams. `contain` ensures the full image is always visible within the container.\n- **CRITICAL**: Images must never exceed 60% of viewport height (`max-height: 60vh`). The image together with the H2 heading above it should be visible with minimal scrolling on most screens.\n- Descriptive alt text in English\n- Use `loading=\"lazy\"` for images below the fold\n- Only insert if URL variable is non-empty\n- Simple caption below if relevant - no promotional captions\n\n## MOBILE RESPONSIVENESS:\n\n### Breakpoints:\n- Mobile (320px-768px): Single column, 5% side margins\n- Tablet (769px-1024px): 10% side margins\n- Desktop (1025px+): 15% side margins\n\n### Mobile Rules:\n- All images: `width: 100%; max-width: 100%; height: auto;`\n- Touch targets: minimum 44px height for all interactive elements\n- CTA buttons: full-width on mobile, 48px minimum height\n- Accordion sections: min 44px touch areas\n- No horizontal scrolling on any device\n- Tables: convert to stacked card layout on mobile\n\n### LTR Support:\n- `dir=\"ltr\"` on article element (or omit, as LTR is default)\n- `text-align: left` as default\n- Border accents on left side for LTR\n- Proper English line breaking and word spacing\n\n### Accessibility:\n- WCAG AA color contrast minimum (especially important with light theme - verify gold on white meets 4.5:1 ratio; use LINK_COLOR #8B6D24 for text links on white backgrounds)\n- Semantic HTML with proper heading hierarchy\n- ARIA labels on interactive elements\n- Support portrait and landscape orientations\n- `loading=\"lazy\"` on below-fold images\n\n## CONTENT VARIABLES:\n- BLOG_CONTENT: `{{ $item(0).$node[\"Writing Blog\"].json[\"output\"] }}`\n- SECTION_IMAGE_1: `{{ $json.images.section_1.url }}`\n- SECTION_IMAGE_2: `{{ $json.images.section_2.url }}`\n- SECTION_IMAGE_3: `{{ $json.images.section_3.url }}`\n- SECTION_IMAGE_4: `{{ $json.images.section_4.url }}`\n\n## DO NOT:\n- Add emojis or decorative icons\n- Include year references in any form\n- Write salesy, pushy, or manipulative language\n- Use AI cliche phrases (see Forbidden Phrases list above)\n- Use em-dash '---' anywhere in text content\n- Use colons ':' in article prose (allowed only in technical labels and CSS values)\n- Add fake testimonials or invented statistics\n- Use gradient backgrounds on text elements (solid colors only)\n- Add unnecessary animation or visual effects\n- Include \"Did you know?\" or \"Quick tip\" boxes\n- Write dramatic or clickbait-style headings\n- Imply guaranteed gambling wins or downplay financial risk\n- Use dark/black backgrounds for any element (maintain light theme consistency)\n\n## FINAL OUTPUT REQUIREMENTS:\n- Maximum 2 CTA placements (not 3+)\n- Clean, professional light-theme design consistent with the JackKnows.ai brand\n- Mobile-responsive with no horizontal scroll\n- LTR English layout with `lang=\"en\"`\n- About the Author section near the bottom with circular image and gold accent\n- Responsible gambling disclaimer as the very last element in the article, after the About the Author section\n- 3-5 minute reading time\n- Every word earns its place - no filler, no fluff",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        3264,
+        1408
+      ],
+      "id": "6635ba44-70a1-428e-be75-3005859a6ce9",
+      "name": "HTML"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Create an SEO-friendly URL slug for the following blog post.\n\nIMPORTANT:\n- The blog post content is written in ENGLISH.\n- The slug MUST be written in ENGLISH.\n- You must translate the primary keyword into natural, SEO-friendly English.\n- Use a clear, commonly used English phrasing.\n\nInput:\nPrimary keyword:\n{{ $('Grab New Cluster').last().json['Primary Keyword'] }}\n\nSupporting keywords:\n{{ $('Grab New Cluster').last().json.Keywords }}\n\nSearch intent:\n{{ $('Grab New Cluster').last().json.Intent }}\n\nSlug rules:\n- The slug must be 3 words maximum.\n- The slug must include the primary keyword.\n- Use lowercase letters only.\n- Use hyphens (-) between words.\n- Do NOT include stop words unless necessary for clarity.\n- Do NOT include dates, numbers, or brand names unless essential.\n\nOutput rules:\n- Output ONLY the slug.\n- Do NOT include explanations or extra text.\n",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        3648,
+        1408
+      ],
+      "id": "4400224d-1f3f-42fa-bee7-9083cf4fd15c",
+      "name": "slug"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Extract the blog post title from the following blog post content.\n\nIMPORTANT:\n- The blog post content is written in ENGLISH.\n- The output title MUST be in ENGLISH.\n- Do NOT translate the title into Hebrew.\n- Do NOT change the meaning of the title.\n\nInput:\nPrimary keyword:\n{{ $('Grab New Cluster').last().json['Primary Keyword'] }}\n\nSupporting keywords:\n{{ $('Grab New Cluster').last().json.Keywords }}\n\nSearch intent:\n{{ $('Grab New Cluster').last().json.Intent }}\n\nRules for the title:\n- The title must include the primary keyword:\n  {{ $('Grab New Cluster').last().json['Primary Keyword'] }}\n- The title must clearly inform users what they will learn from the blog post.\n- The title should be concise, clear, and SEO-friendly.\n- Do NOT add quotation marks.\n- Do NOT add markdown or formatting.\n- Do NOT add out-dated years or dates.\n\nOutput rules:\n- Output ONLY the blog post title.\n- Do NOT include any extra text.\n",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        4032,
+        1408
+      ],
+      "id": "d65f6086-44d8-40ac-b5be-cc38584f9f87",
+      "name": "Post Title"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Create an SEO-optimized META DESCRIPTION.\n\nIMPORTANT:\n- Output must be written in ENGLISH.\n- Do NOT translate into Hebrew.\n- Do NOT include quotation marks.\n- Do NOT include branding unless it appears naturally in the keywords.\n## Language Requirements - CRITICAL\n\n- **Primary language**: English only for all content text.\n- **Exceptions allowed**:\n  - Company name: May remain in English if the original name is in English.\n  - Phone numbers: Use standard numeric digits (0-9).\n- **Strictly forbidden languages**: Arabic, Russian, Chinese, Hebrew, or any other non English characters.\n- **Character validation**: Ensure all text uses only English alphabet (A-Z, a-z), and standard punctuation marks.\n\nInput:\nPrimary keyword:\n{{ $('Grab New Cluster').last().json['Primary Keyword'] }}\n\nSupporting keywords:\n{{ $('Grab New Cluster').last().json.Keywords }}\n\nSearch intent:\n{{ $('Grab New Cluster').last().json.Intent }}\n\nMeta description rules:\n- Length must be between 150–160 characters (Google recommended range).\n- Must include the primary keyword naturally.\n- Include 1–2 supporting keywords if they fit naturally.\n- Clearly explain what the reader will learn or gain.\n- Use engaging, click-worthy language (action verbs or a soft question).\n- Accurately reflect the topic and intent to avoid misleading clicks.\n- Sound natural and appealing to a Hebrew-speaking audience in Israel.\n- Avoid keyword stuffing.\n\nOutput rules:\n- Output ONLY the meta description text.\n- Do NOT include explanations, formatting, or extra text.\n- DO NOT create and \",' or other marks or signals.\nIF output contains: signs or signal such as: \\ or \" etc., you MUST replace them with space instead.\nExample: if you have this \"חז״ל\" = INVALID.\nInstead, fix this: \"חז ל\"",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        4960,
+        1408
+      ],
+      "id": "c6732f95-eeed-4759-ac5e-507a795c817e",
+      "name": "Meta Description"
+    },
+    {
+      "parameters": {
+        "content": "## Meta Title\n\n\n \n \n",
+        "height": 240,
+        "width": 300
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        4464,
+        1328
+      ],
+      "typeVersion": 1,
+      "id": "ee12c76a-57e3-40ed-8c19-96e1f40b0e46",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Create an SEO-optimized META TITLE.\n\nIMPORTANT:\n- Output must be written in ENGLISH.\n- Do NOT translate into Hebrew.\n- Do NOT include quotation marks or branding.\n\n## Language Requirements - CRITICAL\n\n- **Primary language**: English only for all content text.\n- **Exceptions allowed**:\n  - Company name: May remain in English if the original name is in English.\n  - Phone numbers: Use standard numeric digits (0-9).\n- **Strictly forbidden languages**: Arabic, Russian, Chinese, Hebrew, or any other non-English characters.\n- **Character validation**: Ensure all text uses the English alphabet (A-Z, a-z), and standard punctuation marks.\n\nInput:\nPrimary keyword:\n{{ $('Grab New Cluster').last().json['Primary Keyword'] }}\n\nSupporting keywords:\n{{ $('Grab New Cluster').last().json.Keywords }}\n\nSearch intent:\n{{ $('Grab New Cluster').last().json.Intent }}\n\nMeta title rules:\n- Must include the primary keyword exactly as written (in English).\n- Must clearly communicate the main topic or benefit.\n- Length must be between 50–60 characters (Google recommended display range).\n- Avoid filler words and unnecessary punctuation.\n- Sound natural to a English-speaking audience in USA.\n\nOutput rules:\n- Output ONLY the meta title text.\n- Do NOT include any explanations or extra text.\n- DO NOT create and \",' or other marks\nIF output contains: signs or signal such as: \\ or \" etc., you MUST replace them with space instead.\nExample: if you have this \"חז״ל\" = INVALID.\nInstead, fix this: \"חז ל\"",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        4480,
+        1408
+      ],
+      "id": "ef7a3941-3c3f-403d-ab1d-28c73b5e0d1b",
+      "name": "Meta Title"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        2224,
+        2000
+      ],
+      "id": "ce4e6bb4-d037-46c4-b060-8b8e94a468ff",
+      "name": "Loop Over Items"
+    },
+    {
+      "parameters": {
+        "resume": "webhook",
+        "httpMethod": "POST",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        2416,
+        2192
+      ],
+      "id": "0007f6db-3f0c-44d6-a9b6-5f292a088e5c",
+      "name": "Wait",
+      "webhookId": "ce05428f-9540-4c32-b743-76d6aab3b157"
+    },
+    {
+      "parameters": {
+        "jsCode": "function normalizeInnerQuotes(s) {\n  if (!s || typeof s !== \"string\") return s;\n\n  s = s.replace(/[״”“]/g, '\"');\n  s = s.replace(/([\\u0590-\\u05FF0-9A-Za-z])\"(?=[\\u0590-\\u05FF0-9A-Za-z])/g, \"$1״\");\n  s = s.replace(/[\\u202A-\\u202E\\u2066-\\u2069]/g, \"\");\n  return s;\n}\n\nfunction makeFilenameSafe(s) {\n  if (!s) return \"\";\n  return String(s)\n    .normalize(\"NFKD\")\n    .replace(/[^\\p{L}\\p{N}\\s]+/gu, \"\")\n    .trim()\n    .replace(/\\s+/g, \"_\")\n    .replace(/-+/g, \"\");\n}\n\nconst raw = $json.output ?? $json;\nlet plan = raw;\nif (typeof raw === \"string\") {\n  // Remove markdown code fences, e.g. ```json or ```\n  const removeFences = s => s.replace(/```(?:json)?|```/gi, '').trim();\n  const cleaned = normalizeInnerQuotes(removeFences(raw));\n  plan = JSON.parse(cleaned);\n}\n\n// ✅ IMPORTANT: handle array wrapper: [ { hero, sections } ]\nif (Array.isArray(plan)) {\n  plan = plan[0] || {};\n}\n\nconst out = [];\n\n// HERO\nif (plan?.hero?.prompt && String(plan.hero.prompt).trim()) {\n  out.push({\n    json: {\n      slot: \"hero\",\n      type: plan.hero.type || \"hero\",\n      prompt: plan.hero.prompt,\n      source_text: plan.hero.source_text || \"\",\n      translation_en: plan.hero.translation_en || \"\",\n      h2_text: \"\",\n      alt: plan.hero.source_text || \"\",\n      filename_safe:\n        plan.hero.filename_safe ||\n        makeFilenameSafe(plan.hero.translation_en || plan.hero.source_text || \"hero\"),\n    },\n  });\n}\n\n// SECTIONS\n(plan?.sections || [])\n  .filter(s => s?.prompt && String(s.prompt).trim())\n  .forEach((s, i) => {\n    out.push({\n      json: {\n        slot: `section_${i + 1}`,\n        type: s.type || \"section\",\n        prompt: s.prompt,\n        h2_text: s.h2_text || \"\",\n        source_text: s.source_text || \"\",\n        translation_en: s.translation_en || \"\",\n        alt: s.h2_text || s.source_text || \"\",\n        filename_safe:\n          s.filename_safe ||\n          makeFilenameSafe(s.translation_en || s.h2_text || `section_${i + 1}`),\n      },\n    });\n  });\n\nreturn out;"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2032,
+        2000
+      ],
+      "id": "a619cecd-e872-4647-9dba-9b5ff62df14b",
+      "name": "Cleaning Image Prompts"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.kie.ai/api/v1/jobs/createTask",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer 165cc5401c1882a5442b943172fc6afe"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"model\": \"nano-banana-pro\",\n  \"callBackUrl\": \"{{$execution.resumeUrl}}\",\n  \"input\": {\n    \"prompt\": \"{{ $json.prompt }}\",\n    \"aspect_ratio\": \"16:9\",\n    \"output_format\": \"jpg\"\n  }\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        2208,
+        2192
+      ],
+      "id": "48c15bb1-20b5-4802-9e79-df1bdf37d7df",
+      "name": "Image Generation"
+    },
+    {
+      "parameters": {
+        "jsCode": "// We receive the callback item from KIE\n// In n8n, the JSON for this item looks like:\n// { headers: {...}, body: { code, data: { resultJson, taskId, state, ... } }, ... }\n\nconst item = $json;\n\n// Safely get the body object\nconst body = item.body || {};\nconst data = body.data || {};\n\nlet imageUrl = null;\nlet parsedResult = null;\n\nif (data.resultJson) {\n  try {\n    // resultJson is a JSON string, so we must parse it\n    parsedResult = JSON.parse(data.resultJson);\n\n    if (Array.isArray(parsedResult.resultUrls) && parsedResult.resultUrls.length > 0) {\n      imageUrl = parsedResult.resultUrls[0];\n    }\n  } catch (error) {\n    throw new Error('Could not parse resultJson: ' + error.message);\n  }\n}\n\nreturn [\n  {\n    json: {\n      imageUrl,              // 👈 this is your final image URL\n      state: data.state,     // \"success\"\n      taskId: data.taskId,   // useful for logging\n      rawResultJson: data.resultJson\n    }\n  }\n];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2592,
+        2192
+      ],
+      "id": "79d8057a-9912-48c4-aedd-5eef1f0d1e00",
+      "name": "Getting URLS"
+    },
+    {
+      "parameters": {
+        "jsCode": "const items = $items();\nconst urls = items.map(i => i.json[\"Image URL\"]).filter(Boolean);\n\nconst images = {\n  hero: urls[0] || null,\n  section_1: urls[1] || null,\n  section_2: urls[2] || null,\n  section_3: urls[3] || null,\n  section_4: urls[4] || null,\n};\n\nreturn [{ json: { images } }];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2464,
+        1984
+      ],
+      "id": "476b209d-c44a-49fb-9a97-f03a72b9af85",
+      "name": "Collect images URLS"
+    },
+    {
+      "parameters": {
+        "content": "## Image Generation\n",
+        "height": 496,
+        "width": 1164
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1648,
+        1952
+      ],
+      "typeVersion": 1,
+      "id": "29618e5b-820c-4a1b-a7bf-5addac7f13b7",
+      "name": "Sticky Note27"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1Z1lQRaYneXRLxyVf9zOIT3rm3nGqnfgv2LPWxzkzSFo",
+          "mode": "list",
+          "cachedResultName": "jacknows.ai - פרסום כתבות N8N",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1Z1lQRaYneXRLxyVf9zOIT3rm3nGqnfgv2LPWxzkzSFo/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1359853134,
+          "mode": "list",
+          "cachedResultName": "Generated Images",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1EUlVPKoAXwrTnSkEdCzk2MJCg1S0gKWYRPDRxrGXJi4/edit#gid=1359853134"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Row ID": "={{ $item(0).$node[\"Grab New Cluster\"].json[\"row_id\"] }}",
+            "Image URL": "={{ $json.imageUrl }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Row ID",
+              "displayName": "Row ID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Image URL",
+              "displayName": "Image URL",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        1920,
+        2192
+      ],
+      "id": "7aa8a39c-804f-4cb1-bd94-8f780c25ee88",
+      "name": "Save image URLS",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "lvHSVyl4fQmLoRi4",
+          "name": "Tomer google sheets"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "url": "={{ $json.url }}",
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "file",
+              "outputPropertyName": "image"
+            }
+          }
+        }
+      },
+      "id": "45eede41-7fb1-4490-bca0-5cb636706eda",
+      "name": "Download Image (PNG URL → Binary)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [
+        3248,
+        2000
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://mahsan.websreport.net/wp-json/wp/v2/media",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpBasicAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "image/png"
+            },
+            {
+              "name": "Content-Disposition",
+              "value": "={{ 'attachment; filename=\"' + $json.filename_safe + '.png\"' }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "contentType": "binaryData",
+        "inputDataFieldName": "image",
+        "options": {}
+      },
+      "id": "1528f893-46c6-4a8f-9059-148dd2b3b70d",
+      "name": "Upload to WordPress (Media)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [
+        3456,
+        2000
+      ],
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "Z9aJx8WfEZKmUlzu",
+          "name": "https://mahsan.websreport.net/ (sentice.com pages)"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "## Image Upload to wordpress \n",
+        "height": 336,
+        "width": 844
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        3136,
+        1920
+      ],
+      "typeVersion": 1,
+      "id": "1669db3d-1563-42b1-9540-b8589d267a66",
+      "name": "Sticky Note29"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://mahsan.websreport.net/wp-json/wp/v2/media/{{ $json.id }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpBasicAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ \n{ \"alt_text\": $(\"Preparing Image Data\").item.json.alt, \"title\": $(\"Preparing Image Data\").item.json.alt } }}",
+        "options": {}
+      },
+      "id": "9d5306cf-8c09-4d02-9116-0a08e7744243",
+      "name": "Image Alt Settings",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [
+        3632,
+        2000
+      ],
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "Z9aJx8WfEZKmUlzu",
+          "name": "https://mahsan.websreport.net/ (sentice.com pages)"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "=define",
+        "text": "=INPUT:\n\nKeywords:\n{{ $item(0).$node[\"Grab New Cluster\"].json[\"Keywords\"] }}\n\nSearch Intent:\n{{ $item(0).$node[\"Grab New Cluster\"].json[\"Intent\"] }}\n\nPrimary Keyword:\n{{ $item(0).$node[\"Grab New Cluster\"].json[\"Primary Keyword\"] }}\n\nPreliminary Plan:\n{{ $('Message a model1').item.json.output[0].content[0].text }}\n\nResearch Findings:\n{{ $('Fix Links').item.json.research }}\nInternal Links List (parsed, NOT text):\n{{ JSON.stringify($json.data, null, 2) }}\n\n# 🎯 פרומפט מאוחד ל־N8N – יצירת תכנית מבנה למאמר SEO (עם סינון מקורות מתחרים)\n\n---\n\n## 🎯 ROLE\n\nYou are part of a professional team that creates **world-class, SEO-optimized blog post plans**  \nfor Israeli websites, intended to be written by **non-expert copywriters**.\n\n---\n\n## 🌍 LANGUAGE RULES (STRICT)\n\n- All input is provided in **ENGLISH**.\n- You must analyze and generate the output in **ENGLISH ONLY**.\n- Do **NOT** translate from Hebrew.\n- Do **NOT** include Hebrew words unless they are **common English search terms**.\n- Do **NOT** mention rules, laws, or regulations.\n- Do **NOT** create an H1 anywhere in the article.\n- Do **NOT** add an article title.\n\n---\n\n## 🧩 INPUT YOU RECEIVE FOR EACH PROJECT\n\nYou are provided with:\n\n- **Keywords** – SEO keywords the article must rank for  \n- **Primary Keyword** – must appear in the opening section  \n- **Search Intent** – the user’s goal when searching  \n- **Preliminary Plan** – rough outline or draft ideas  \n- **Research Findings** – raw external research (UNTRUSTED, must be filtered)  \n- **Internal Links List** – parsed list of internal URLs with explanations  \n\n---\n\n## 🧠 YOUR TASK\n\nCreate a **VERY DETAILED blog post plan** that:\n\n- Is written in **BULLET POINTS ONLY**\n- Describes the **full logical structure and flow** of the article\n- Clearly explains **WHAT** should be written in each section and **HOW**\n- Explicitly states **which keywords** must appear in each section\n- Uses **ALL keywords** across the plan\n- Fully satisfies the **Search Intent**\n- Can be handed directly to a **non-expert copywriter**\n\n---\n\n## 🧱 STRUCTURE RULES (CRITICAL)\n\n- ❌ Do NOT create an H1  \n- ❌ Do NOT add an article title  \n- ✅ Use **H2 + H3 only**  \n- ✅ Output must be **BULLET POINTS ONLY**\n- ❌ No paragraphs\n- ❌ No explanations outside the plan itself\n\n---\n\n## 🔍 EXTERNAL RESEARCH RULES\n\n- External research is used **for credibility and facts only**\n- Every research point must:\n  - Be assigned to a **specific section**\n  - Include the **SOURCE URL** next to the bullet\n- External links are **references only** (NOT embedded hyperlinks)\n\n### 🔗 External Link Quantity (Writing Stage Rule)\n- The final written article must include **EXACTLY 1 external link for the entire article**\n- That link must come from the **approved research sources in this plan**\n- This rule is enforced **during WRITING**, but:\n  - The plan must include **enough filtered research** to support this\n\n---\n\n## 🚫 EXTERNAL RESEARCH FILTERING RULES (CRITICAL – APPLY BEFORE USING ANY SOURCE)\n\n- Treat `Research Findings` as **UNTRUSTED INPUT**\n- For **every research URL**, extract the **domain** and apply filtering:\n\n### ✅ ALLOWLIST LOGIC\n- Allowed if domain is **clearly institutional / research**, such as:\n  - Government\n  - Regulation\n  - Official statistics\n  - PDF\n  - Research magazine\n\n### ❌ DENYLIST LOGIC (AUTO-DISQUALIFY)\n- Do NOT use sources that are:\n  - CRM vendors\n  - Software providers\n  - SaaS platforms\n  - Marketing agencies\n  - Comparison / affiliate CRM sites\n  - Pages offering demos, trials, pricing, or sales funnels\n- If a domain appears to **sell, promote, compare, or market CRM** → **DISQUALIFY**\n\n### ⚠️ UNCERTAIN SOURCES\n- If a domain is NOT clearly allowed or denied:\n  - Use it **ONLY IF** it is neutral, informational, and non-commercial\n  - If in doubt → **DO NOT USE**\n\n### 🚨 INSUFFICIENT ALLOWED SOURCES\n- If, after filtering, there are not enough valid sources:\n  - Add bullets stating: **\"נדרש מחקר נוסף ממקורות ניטרליים\"**\n  - ❌ Do NOT invent URLs\n  - ❌ Do NOT reuse denied sources\n\n---\n\n## 🔗 INTERNAL LINK RULES (CRITICAL)\n\n- You are PROVIDED with a list of internal links\n- You MUST select **1–3 internal links**\n- You MUST NOT claim no links were provided if the list is not empty\n- Links must be:\n  - **Contextually embedded** inside relevant sections\n  - NOT grouped in a separate section\n\n### For EACH internal link you select, you MUST specify:\n- The **EXACT URL**\n- The **EXACT English anchor text**\n- **Exact instructions** on:\n  - WHERE the link appears\n  - HOW it is integrated naturally in the sentence\n\n### Additional Internal Link Rules\n- ❌ Do NOT select links targeting the **Primary Keyword** (avoid cannibalization)\n- ❌ Do NOT invent links\n- ✅ Use ONLY the provided list\n- ✅ Prefer links that **support** the topic, not duplicate it\n\n---\n\n## ✍️ TONE & STYLE\n\n- Tone and messaging must match:\n{{ $('Grab New Cluster').item.json.Website }}",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        1952,
+        1408
+      ],
+      "id": "1aa2e3cc-f580-4e26-ab5e-47fc8db75526",
+      "name": "Post Plan"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=---\n\nYou are writing a long-form SEO blog article for **JackKnows.ai** — an AI-powered casino advisor that serves both real-money and sweepstakes casino players in the US.\n\nThe article will be published on: {{ $('Grab New Cluster').item.json.Website }}\n\n---\n\n### VOICE & IDENTITY\n\nYou write like a sharp industry insider who respects the reader's intelligence. Think of a poker player who counts cards and is willing to share the math — confident, direct, occasionally blunt, always useful.\n\n**Core voice traits:**\n- Declarative, punchy sentences. You state facts. You don't \"explore\" or \"delve into\" them.\n- Second-person address throughout: \"you,\" \"your.\" You're talking to one player, not an audience.\n- Technical precision with zero jargon gatekeeping. Use real terms — RTP, volatility, wagering requirements, SC/GC mechanics, house edge — but make them land clearly in context.\n- Short paragraphs. Many are 1–2 sentences. Then a longer one when the argument needs breathing room.\n- Comparison is your default framework. You don't just describe a casino or bonus — you compare it to alternatives, show the math, expose what the marketing hides.\n\n**Sentences that capture this voice (use as calibration, do not copy):**\n- \"No generic top-10 lists. Just the right fit.\"\n- \"Jack decodes the fine print — wagering requirements, redemption limits — so the real value is never hidden.\"\n- \"No fluff. Straight to the point.\"\n- \"Two worlds. One chat. Just the facts, updated daily.\"\n\n---\n\n### ORIGINALITY MANDATE\n\nBefore writing, mentally map the top 10 Google results for this topic.\n\nPost plan: {{ $json.output }}\n\nCompetitor content for reference:\n{{ $('Search and optionally scrape search results').item.json.data.web.map(item => item.url).join('\\n') }}\n\nIdentify the dominant structure these articles use — the standard subheadings, the predictable flow, the same comparisons everyone makes. Now deliberately break from it.\n\n**Angle selection (pick at least two):**\n- A costly mistake players keep making that this topic directly relates to\n- A counter-intuitive insight that contradicts common advice in this niche\n- A comparison nobody else is making (e.g., comparing a sweepstakes mechanic to a real-money equivalent, or contrasting US state regulations to show hidden differences)\n- A failure scenario — what actually happens when a player ignores this, with specific consequences\n- A data point or calculation that dismantles a popular assumption\n\n**Every H2 must pass this test:** \"Would this heading appear in a generic article about this topic?\" If yes, rework the angle or kill it.\n\n---\n\n### BRAND NAMES & SPECIFICITY\n\nEvery article must reference **real sweepstakes and real-money casino brand names** by name. Do not write generically about \"some platforms\" or \"certain casinos.\" Name them.\n\n**Sweepstakes casino brands to reference (use at least 3–5 per article, as relevant to the topic):**\nChumba Casino, LuckyLand Slots, Stake.us, WOW Vegas, Pulsz, Fortune Coins, BetRivers.net, McLuck, Funrize, Zula Casino, Crown Coins Casino, Global Poker, High 5 Casino, Modo.us, NoLimitCoins, Sweep Slots.\n\n**Real-money casino brands (use where applicable):**\nBetMGM, DraftKings Casino, FanDuel Casino, Caesars Palace Online Casino, BetRivers, Golden Nugget Online Casino, PokerStars Casino, Borgata Online Casino, Hard Rock Bet, bet365 Casino.\n\n**Rules for brand name usage:**\n- Always use the brand's official capitalization and spelling (e.g., \"BetMGM\" not \"Betmgm\" or \"betMGM\"; \"LuckyLand Slots\" not \"Luckyland slots\"; \"DraftKings Casino\" not \"Draftkings casino\"; \"Stake.us\" not \"stake.us\" or \"StakeUs\").\n- When comparing platforms, use specific brand names with real data: bonus amounts, playthrough requirements, redemption minimums, payout timelines.\n- Don't dump brand names in a list. Weave them into comparisons, examples, and arguments naturally.\n- If referencing a brand's specific offer, bonus, or feature, make sure the data is accurate and current based on the research input.\n\n---\n\n### HOOK REQUIREMENTS (First Sentence)\n\nThe opening line must be one of:\n- A specific statistic that reframes the topic\n- A concrete scenario the reader has personally experienced\n- A provocative question that challenges a common belief\n- A sharp contradiction between what players assume and what's actually true\n\n**Banned openers — never use these:**\n- \"In today's world of online gaming...\"\n- \"If you're a casino player looking for...\"\n- \"We all know that...\"\n- \"In recent years...\"\n- \"Whether you're a beginner or a seasoned player...\"\n- \"The online casino industry has grown...\"\n- Any date reference without a specific, verified fact attached to it\n- Any opener that could apply equally to 50 other articles\n\n---\n\n### ANTI-AI DETECTION RULES (CRITICAL)\n\nThis section is non-negotiable. Every pattern below must be followed precisely.\n\n**Banned phrases and constructions — never use under any circumstances:**\n- \"It's important to note,\" \"It's worth mentioning,\" \"Of course,\" \"Needless to say\"\n- \"First...Second...Third\" as a structural backbone\n- \"The digital landscape,\" \"Navigate the world of,\" \"In the realm of\"\n- \"To summarize,\" \"In conclusion,\" \"All in all\"\n- \"Landscape,\" \"Leverage,\" \"Tapestry,\" \"Woven,\" \"A wide range of,\" \"Palette,\" \"Backdrop\"\n- \"Dive into,\" \"Dive deep,\" \"Let's explore,\" \"Let's take a look\"\n- \"Not only X but also Y\" as a recurring construction\n- \"Furthermore,\" \"Moreover,\" \"Additionally,\" \"In addition\" as paragraph openers\n- \"Comprehensive guide,\" \"Everything you need to know,\" \"The ultimate guide\"\n- Sentences using em-dash (—) as structural connectors between clauses. **Use a period, comma, or rewrite instead.**\n- Three parallel items with identical grammatical structure repeated more than once\n- Paragraph-ending philosophical generalizations (\"At the end of the day, responsible gambling is what matters most\")\n- Artificial transition sentences between paragraphs designed to \"smooth the flow\"\n- Excessive hedging: \"In many cases,\" \"It's possible that,\" \"Some players might find\" — when the statement can be direct\n- \"Empowers players to,\" \"Enables you to,\" \"Provides you with the tools to\" — corporate padding\n- Synonym stacking: don't use two or three adjectives where one works (\"exciting, thrilling experience\")\n\n**Phrases specifically foreign to JackKnows' voice — never use:**\n- \"Exciting world of online gambling/gaming\"\n- \"Thrilling casino experience\"\n- \"Generous bonus offers\" (Jack would say \"the bonus is worth X because...\" with specifics)\n- \"A plethora of games/options\"\n- \"Rest assured\"\n- \"Boasting an impressive selection\"\n- \"Cutting-edge technology\" (unless referring to specific tech with specifics)\n- \"Seamless experience\"\n- \"At your fingertips\"\n- \"Take your gaming to the next level\"\n- \"No paid rankings\" or \"no paid ranking\"\n- \"Affiliate\" or \"affiliate bias\" or \"affiliate content\"\n- \"Unbiased\" in relation to rankings or recommendations\n\n**Required techniques to break AI patterns:**\n- Write with a confident expert voice. State things directly. \"The wagering requirement is 35x. That's high.\" Not \"It's worth noting that the wagering requirement tends to be on the higher side.\"\n- Include at least 3 concrete examples with specific numbers, scenarios, or outcomes. Not \"bonuses can vary\" but \"Chumba Casino gives 2 SC no-deposit, Stake.us gives 5 SC but with a 3x playthrough. Do the math.\"\n- Vary sentence length intentionally. Short sentence. Then a longer sentence that develops a real point with actual data or a specific comparison. Then short again.\n- Vary paragraph length. A one-sentence paragraph is fine. So is a 4-sentence paragraph. Alternate.\n- Shift between third-person descriptions and second-person direct address within the same section.\n- Use natural phrasing a knowledgeable human would use: \"Here's the thing,\" \"That's the real question,\" \"This is where most players get it wrong.\"\n- Occasionally start a sentence with \"And\" or \"But.\" Real writers do this. AI rarely does.\n- Leave one minor imperfection — a repeated word two sentences apart, a sentence that starts one direction and course-corrects. Humans do this.\n- When making a comparison, be specific and asymmetric. Don't give both options the same paragraph structure.\n\n---\n\n### CAPITALIZATION RULES (ENGLISH)\n\nFollow standard English capitalization rules strictly:\n\n- **Brand names:** Always match the brand's official capitalization. Examples: BetMGM, DraftKings, LuckyLand Slots, Stake.us, FanDuel, WOW Vegas, McLuck.\n- **H1 and H2 headings:** Use Title Case (capitalize the first letter of each major word; do not capitalize articles, prepositions, or conjunctions under 4 letters unless they start the heading). Example: \"How Sweepstakes Casinos Actually Pay Out\" not \"How sweepstakes casinos actually pay out.\"\n- **H3 headings:** Use Sentence case (capitalize only the first word and proper nouns). Example: \"Why the playthrough math matters.\"\n- **Beginning of sentences:** Always capitalize the first word.\n- **Proper nouns:** Always capitalize. This includes state names (New Jersey, Michigan), organization names (Michigan Gaming Control Board), casino names, game provider names (Pragmatic Play, NetEnt).\n- **Common terms:** Do not capitalize generic terms like \"sweepstakes casino,\" \"online casino,\" \"real-money casino,\" \"bonus,\" \"wagering requirements\" unless they begin a sentence.\n\n---\n\n### HTML OUTPUT STRUCTURE\n\nWrap the entire article in `<article>`.\n\n**Approved tags only:** `article, h1, h2, h3, p, table, thead, tbody, tr, th, td, strong, em, a`\n\n**Forbidden:** `ul, ol, li, div, img, span, section, header, footer, figure, figcaption, blockquote`\n\n**No Markdown. No list tags. Ever.**\n\nWhen you need to list items, weave them into prose: \"The three platforms worth comparing here are Chumba Casino, Stake.us, and WOW Vegas, each for different reasons.\"\n\n---\n\n### CONTENT LENGTH & STRUCTURE\n\n- **Total length:** 2,500–3,500 words\n- **H2 sections:** Minimum 6, maximum 10. Each H2 section should be self-contained and capped at ~150 words.\n- **H2 opening variety:** No two H2 sections should open the same way. Mix: questions, scenarios, comparisons, data points, direct statements, provocations.\n- **H3 usage:** Maximum 1:1 ratio with H2. Use H3 only when a section genuinely has sub-components, not for visual spacing.\n- **One H1 only:** The article title.\n\n---\n\n### TABLES\n\nInclude 1–3 tables in the article. Tables must contain **comparison or decision data**, not cosmetic filler.\n\nGood table content:\n- Side-by-side platform comparisons with specific metrics (SC bonus, playthrough, min redemption, payout speed) using real brand names\n- Cost/benefit analysis of different bonus structures across named platforms\n- State availability or restriction comparisons for specific brands\n\nBad table content:\n- Lists of features with checkmarks\n- Definitions or glossary terms\n- Anything that's really just a list dressed up as a table\n- Tables with generic \"Casino A / Casino B\" instead of real brand names\n\n---\n\n### INTERNAL & EXTERNAL LINKS\n\n**Internal links:** Weave links from the `internal_links` variable naturally into the text. The anchor text must be contextually relevant — never \"click here\" or \"read more.\"\n\n**External links:** Use sources from `approved_external_sources` when citing data, regulations, or platform-specific claims. Link to the source inline with the relevant statement. Prefer official sources (state gaming commissions, operator sites, regulatory filings).\n\n---\n\n### COMPETITIVE ADVANTAGES\n\nIntegrate the following advantages naturally throughout the article. The mention should feel like a logical part of the argument being made, not a sales pitch. Never create a dedicated \"why choose us\" section.\n\nJackKnows differentiators to weave in:\n- AI-powered real-time data across both real-money and sweepstakes casinos\n- Decodes fine print (wagering requirements, redemption limits) that other guides gloss over\n- Updated daily, not static \"best of\" lists\n- Covers both real-money and sweepstakes in one place, most competitors focus on only one\n- Data-driven recommendations based on live platform data\n\nWhen referencing JackKnows, use the same confident, matter-of-fact tone as the rest of the article. Not \"JackKnows.ai is an amazing tool that...\" but \"Jack pulls live data on both SC and real-money platforms. That's the comparison most sites won't make.\"\n\n**Never use the following when describing JackKnows:**\n- \"No paid rankings\"\n- \"No affiliate bias\"\n- \"Unbiased\"\n- Any language that references paid placements, affiliate relationships, or ranking methodology\n\n---\n\n### CTA & CONTACT\n\nEmbed a natural call-to-action near the end of the article, directing readers to start a chat with Jack:\n\n**Chat link:** https://www.jacknows.ai/chat/75bf5047-d647-49d1-9aab-06392913602d  \n**Site:** https://www.jacknows.ai/\n\nThe CTA should fit the article's flow. Example tone: \"If you want a side-by-side comparison tailored to your state and play style, that's exactly what Jack does. Ask him directly.\"\n\n---\n\n### DISCLAIMER (REQUIRED)\n\nEvery article must end with the following disclaimer. Use this **exact wording** — do not rephrase, shorten, or split it:\n\n\"Jack is an independent informational service and does not operate or provide access to any real-money online casino or sweepstakes platform. Offers, bonuses, and promotions are subject to each operator's Terms & Conditions and may include wagering or play requirements. Must be 21+. Real-money gaming is available only where legally permitted (e.g., PA, NJ, MI). Sweepstakes and social casinos are for entertainment only — no real-money gambling. Gambling Problem? Call 1-800-GAMBLER. Play responsibly.\"\n\nWrap the entire disclaimer in a single `<p>` tag. Place it as the last element inside the `<article>` tag, after the CTA and any closing content. Do not add anything after it.\n\n---\n\n### FINAL SELF-CHECK\n\nBefore submitting the article, verify:\n1. No banned phrases appear anywhere in the text (including \"affiliate,\" \"no paid rankings,\" and \"unbiased\")\n2. The opening sentence would stop a scrolling reader\n3. Every H2 fails the \"would this appear in a generic article?\" test\n4. At least 3 specific numerical examples or comparisons exist, using real brand names\n5. Sentence and paragraph length visibly varies throughout\n6. No three consecutive paragraphs open with the same structure\n7. Tables contain real comparison data with named brands, not filler\n8. The article reads like it was written by someone who actually plays, not someone who researches \"online casinos\" for content purposes\n9. **The exact disclaimer text appears as the last element in the article**\n10. All HTML uses only approved tags — no lists, no Markdown\n11. **At least 3–5 real sweepstakes casino brand names appear in the article**\n12. **At least 2 real-money casino brand names appear (if relevant to the topic)**\n13. **All brand names use correct official capitalization**\n14. **All headings follow the capitalization rules (Title Case for H1/H2, Sentence case for H3)**\n\n---\n\n### RAW RESEARCH INPUT\n\n{{ $('Message a model').item.json.output[0].content[0].text }}",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        2480,
+        1408
+      ],
+      "id": "d3ac761f-1975-49aa-8272-2ecda4dd3f07",
+      "name": "Writing Blog"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=\"You are an image planning and prompt generation system for blog articles. You operate under locked design tokens and fixed procedural rules. No deviation is permitted.\n\nLOCKED DESIGN TOKENS:\n\nBRAND_PRIMARY_COLOR: #070708\nBRAND_ACCENT_COLOR: #E1AA2F\nBRAND_SECONDARY_COLOR: #E1AA2F\nBACKGROUND_STYLE: dark\nTYPOGRAPHY_MOOD: elegant serif headings with modern sans-serif body\nUI_MOOD: luxurious, high-contrast, premium\nBORDER_RADIUS: 12px\nSHADOW_STYLE: soft diffused shadow\nVISUAL_DENSITY: balanced\nIMAGERY_STYLE: illustration\nCONTRAST: high\nSATURATION: vibrant\nGRADIENTS: subtle\nMOTIFS: casino, gaming, AI, gold, luxury, chat\n\nEXECUTION PROCEDURE:\n\nSTEP 1 - EXTRACTION:\nParse the input article. Extract the H1 title. Extract all H2 headings in exact document order. Assign sequential index numbers to each H2 starting from 1.\n\nSTEP 2 - IMAGE COUNT DETERMINATION:\nCount total H2 headings. If total H2 count is less than 4, generate hero image only, generate zero section images. If total H2 count is 4 or more, generate hero image, generate section image for H2 at index 4, generate additional section image for every subsequent H2 at index 8, 12, 16, and so on. Stop when no H2 exists at the next required index.\n\nSTEP 3 - HERO IMAGE GENERATION:\nExtract H1 title as source_text. Translate H1 title to English as translation_en. Generate hero image prompt in English. Hero prompt must conceptually represent the translated H1. Hero prompt must explicitly include: dominant color palette using primary brand color #070708 with accents of #E1AA2F. Hero prompt must specify: high-contrast illustration style, dark background, luxurious premium aesthetic, vibrant saturation, subtle gradients, motifs from casino, gaming, AI, gold, luxury, chat where contextually relevant. Hero prompt must be cinematic, visually explicit, high-detail, with no vague wording.\n\nSTEP 4 - SECTION IMAGE GENERATION:\nFor each qualifying H2 index determined in Step 2, extract the H2 text as h2_text. Translate the H2 text to English as translation_en. Read only the content under that specific H2 section. Generate section image prompt based strictly on that section content. Section prompt must explicitly include: color palette using primary brand color #070708 with accents of #E1AA2F. Section prompt must maintain: high-contrast illustration style, dark background, luxurious premium aesthetic, vibrant saturation, subtle gradients. No content from other sections is permitted in the prompt.\n\nSTEP 5 - INFOGRAPHIC DETECTION:\nFor each section image, inspect the content under its H2. If the content contains any of the following: numbered steps, bullet lists, pricing or plans or packages, statistics or percentages or comparisons, tables or pros and cons, multiple short structured items, then the prompt must be an infographic. Infographic prompts must include the phrase: clean infographic layout. Infographic prompts must reference brand colors #070708 and #E1AA2F by HEX. Infographic prompts must specify 3 to 6 labeled blocks only if those blocks exist in the source text. Infographic prompts must include: minimal icons, grid alignment, clean typography, generous whitespace, dark background. Infographic prompts must never invent steps, labels, numbers, or data not present in the source content.\n\nSTEP 6 - TEXT-ON-IMAGE LANGUAGE:\nAny visible text rendered inside images must be in English. Permitted English abbreviations only: SEO, UX, UI, AI, KPI, ROI, B2B, B2C, CRM, SaaS, Design. Prefer icons over text when ambiguity exists. Minimize text inclusion.\n\nSTEP 7 - OUTPUT CONSTRUCTION:\nConstruct hero object with type, source_text, translation_en, prompt. Construct exactly 4 section objects. For each section object at array index 0, 1, 2, 3: if a qualifying H2 was identified for that slot, populate h2_text with original H2 text, populate translation_en with English translation, populate prompt with generated English prompt. If no qualifying H2 exists for that slot, set h2_text to empty string, set translation_en to empty string, set prompt to empty string. All values must be strings. No null values permitted. No line breaks inside JSON string values.\n\nOUTPUT FORMAT:\n\n{\"\"hero\"\":{\"\"type\"\":\"\"hero\"\",\"\"source_text\"\":\"\"\"\",\"\"translation_en\"\":\"\"\"\",\"\"prompt\"\":\"\"\"\"},\"\"sections\"\":[{\"\"type\"\":\"\"section\"\",\"\"h2_text\"\":\"\"\"\",\"\"translation_en\"\":\"\"\"\",\"\"prompt\"\":\"\"\"\"},{\"\"type\"\":\"\"section\"\",\"\"h2_text\"\":\"\"\"\",\"\"translation_en\"\":\"\"\"\",\"\"prompt\"\":\"\"\"\"},{\"\"type\"\":\"\"section\"\",\"\"h2_text\"\":\"\"\"\",\"\"translation_en\"\":\"\"\"\",\"\"prompt\"\":\"\"\"\"},{\"\"type\"\":\"\"section\"\",\"\"h2_text\"\":\"\"\"\",\"\"translation_en\"\":\"\"\"\",\"\"prompt\"\":\"\"\"\"}]}\n\nOutput only the JSON object. No explanations. No commentary. Stop immediately after the final closing brace.\"\n\nDo not delete all the text above in this box\n{{ $json.output }}",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        1696,
+        2048
+      ],
+      "id": "c23c6750-5172-4816-a48f-c34811148718",
+      "name": "Image Planning"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Build image upload items where filename_safe comes from translation_en\n// (pulled from \"Cleaning Image Prompts\" node by matching slot).\n\nfunction cleanHeadingText(s) {\n  if (!s) return \"\";\n  return String(s)\n    .replace(/<[^>]*>/g, \"\")\n    .replace(/^#+\\s*/g, \"\")\n    .replace(/^\\d+[\\.\\)]\\s*/g, \"\")\n    .trim();\n}\n\nfunction extractHeadingsFromMarkdown(md) {\n  const lines = (md || \"\").split(\"\\n\");\n  let h1 = \"\";\n  const h2 = [];\n\n  for (const rawLine of lines) {\n    const line = rawLine.trim();\n\n    const m1 = line.match(/^#\\s+(.+)$/);\n    if (m1 && !h1) {\n      h1 = cleanHeadingText(m1[1]);\n      continue;\n    }\n\n    const m2 = line.match(/^##\\s*(.+)$/);\n    if (m2) {\n      const txt = cleanHeadingText(m2[1]);\n      if (txt) h2.push(txt);\n    }\n  }\n\n  return { h1, h2 };\n}\n\n/**\n * ✅ STRICT HEADER-SAFE FILENAME\n * - NO hyphens\n * - NO spaces\n * - NO extension\n * - ASCII only\n */\nfunction toHeaderSafeFilename(str) {\n  const s = String(str || \"\")\n    .trim()\n    .replace(/\\.(png|jpg|jpeg|webp|gif)$/i, \"\") // strip extension if present\n    .normalize(\"NFKD\")\n    .replace(/[\\u00A0\\u2000-\\u200B\\u202F\\u205F\\u3000]/g, \"\") // remove weird spaces\n    .replace(/[\\u0300-\\u036f]/g, \"\") // accents\n    .replace(/[—–]/g, \"\")           // long dashes\n    .replace(/&/g, \"and\")\n    .replace(/['\"`]/g, \"\")\n    .replace(/[:;,.!?(){}\\[\\]|<>]/g, \"\")\n    .replace(/[^a-zA-Z0-9]/g, \"\")   // ❗ remove EVERYTHING except letters+numbers\n    .slice(0, 80);\n\n  return s || \"image\";\n}\n\n// --- Inputs ---\nconst images = $node[\"Collect images URLS\"].json.images;\nconst blog = $node[\"Writing Blog\"].json.output || \"\";\nconst { h1, h2 } = extractHeadingsFromMarkdown(blog);\nconst getH2 = (n) => (h2 && h2.length >= n ? h2[n - 1] : \"\");\n\n// --- Pull translations from Cleaning Image Prompts (by slot) ---\nconst translationsBySlot = {};\nconst cleaned = $items(\"Cleaning Image Prompts\") || [];\n\nfor (const it of cleaned) {\n  const j = it.json || {};\n  if (!j.slot) continue;\n\n  const t =\n    (typeof j.translation_en === \"string\" && j.translation_en.trim()) || \"\";\n\n  if (t) translationsBySlot[j.slot] = t;\n}\n\nfunction safeNameForSlot(slot, fallback) {\n  const t = translationsBySlot[slot] || fallback || \"image\";\n  return toHeaderSafeFilename(t);\n}\n\n// --- Build items ---\nconst map = [\n  {\n    key: \"hero\",\n    slot: \"hero\",\n    url: images.hero,\n    filename_safe: safeNameForSlot(\"hero\", \"heroimage\"),\n    alt: h1 || \"תמונה ראשית\",\n  },\n  {\n    key: \"section_1\",\n    slot: \"section_1\",\n    url: images.section_1,\n    filename_safe: safeNameForSlot(\"section_1\", \"section1\"),\n    alt: getH2(4) || \"תמונה\",\n  },\n  {\n    key: \"section_2\",\n    slot: \"section_2\",\n    url: images.section_2,\n    filename_safe: safeNameForSlot(\"section_2\", \"section2\"),\n    alt: getH2(8) || \"תמונה\",\n  },\n  {\n    key: \"section_3\",\n    slot: \"section_3\",\n    url: images.section_3,\n    filename_safe: safeNameForSlot(\"section_3\", \"section3\"),\n    alt: getH2(12) || \"תמונה\",\n  },\n  {\n    key: \"section_4\",\n    slot: \"section_4\",\n    url: images.section_4,\n    filename_safe: safeNameForSlot(\"section_4\", \"section4\"),\n    alt: getH2(16) || \"תמונה\",\n  },\n];\n\n// Output only items with URLs\nreturn map\n  .filter(x => !!x.url)\n  .map(x => ({ json: x }));\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2656,
+        1984
+      ],
+      "id": "5d17c787-c200-42ca-8b29-da6ae620bcb7",
+      "name": "Preparing Image Data"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        2960,
+        1984
+      ],
+      "id": "425e3980-1a66-4b55-81db-d3b036e2075a",
+      "name": "Loop Over Items1"
+    },
+    {
+      "parameters": {
+        "jsCode": "function stripHtml(str) {\n  return (str || \"\").replace(/<[^>]*>/g, \"\").trim();\n}\n\nfunction extractHeadingsFromMarkdown(md) {\n  const lines = (md || \"\").split(\"\\n\").map(l => l.trim());\n\n  let h1 = \"\";\n  const h2 = [];\n\n  for (const line of lines) {\n    const m1 = line.match(/^#\\s+(.+)$/);\n    if (m1 && !h1) h1 = stripHtml(m1[1]);\n\n    const m2 = line.match(/^##\\s+(.+)$/);\n    if (m2) h2.push(stripHtml(m2[1]));\n  }\n\n  return { h1, h2 };\n}\n\n// ---- INPUT SOURCES ----\nconst blog = $node[\"Writing Blog\"].json.output || \"\";\nconst { h1, h2 } = extractHeadingsFromMarkdown(blog);\n\n// helper: get H2 by index (1-based)\nconst H2 = (n) => h2[n - 1] || \"\";\n\n// Targets (these are the headings your image-plan logic uses)\nconst targets = {\n  hero: h1 || \"\",\n  section_1: H2(4) || \"\",\n  section_2: H2(8) || \"\",\n  section_3: H2(12) || \"\",\n  section_4: H2(16) || \"\",\n};\n\n// ---- WordPress media items come as INPUT to this node ----\nconst wpItems = $input.all().map(i => i.json);\n\n// Helper: pick best WP URL\nfunction wpUrl(m) {\n  return (\n    (m && typeof m.source_url === \"string\" && m.source_url) ||\n    (m && m.guid && typeof m.guid.rendered === \"string\" && m.guid.rendered) ||\n    \"\"\n  );\n}\n\n// Helper: match media item to a target heading\nfunction matchMediaToHeading(media, heading) {\n  if (!heading) return false;\n\n  const alt = (media.alt_text || \"\").trim();\n  const title = (media.title && (media.title.raw || media.title.rendered) || \"\").trim();\n\n  // Strong match: alt_text equals heading\n  if (alt && alt === heading) return true;\n\n  // Fallback match: title equals heading\n  if (title && title === heading) return true;\n\n  return false;\n}\n\n// Build empty structure first\nconst structuredImages = {\n  hero: null,\n  section_1: null,\n  section_2: null,\n  section_3: null,\n  section_4: null,\n};\n\n// 1) Try to match by alt_text/title to headings\nfor (const media of wpItems) {\n  const url = wpUrl(media);\n  if (!url) continue;\n\n  for (const key of Object.keys(structuredImages)) {\n    if (structuredImages[key]) continue; // already filled\n    if (matchMediaToHeading(media, targets[key])) {\n      structuredImages[key] = {\n        url,\n        alt: targets[key] || (media.alt_text || \"\")\n      };\n    }\n  }\n}\n\n// 2) Fallback by order if some are still missing (hero first, then sections)\nconst remainingKeys = Object.keys(structuredImages).filter(k => !structuredImages[k]);\nif (remainingKeys.length > 0) {\n  // take medias that weren't used yet\n  const usedUrls = new Set(Object.values(structuredImages).filter(Boolean).map(x => x.url));\n  const unused = wpItems\n    .map(m => ({ m, url: wpUrl(m) }))\n    .filter(x => x.url && !usedUrls.has(x.url));\n\n  let idx = 0;\n  for (const key of remainingKeys) {\n    const pick = unused[idx++];\n    if (!pick) break;\n\n    structuredImages[key] = {\n      url: pick.url,\n      alt: targets[key] || (pick.m.alt_text || \"\")\n    };\n  }\n}\n\n// 3) Remove null entries\nObject.keys(structuredImages).forEach(\n  k => structuredImages[k] === null && delete structuredImages[k]\n);\n\nreturn [\n  {\n    json: {\n      images: structuredImages\n    }\n  }\n];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        3072,
+        1712
+      ],
+      "id": "01c0de25-9435-44a8-9128-2d48f51d8d3d",
+      "name": "Preparing Images for HTML"
+    },
+    {
+      "parameters": {
+        "model": "google/gemini-3-flash-preview",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [
+        1952,
+        1568
+      ],
+      "id": "3ab3d52b-5467-47f7-b1be-3a199fe137c5",
+      "name": "OpenRouter Chat Model2",
+      "credentials": {
+        "openRouterApi": {
+          "id": "3KkS143m7oeIPEr2",
+          "name": "OpenRouter account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": "anthropic/claude-opus-4.6",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [
+        2480,
+        1568
+      ],
+      "id": "e8c25fb3-c27a-424c-8b11-99f12de4ba40",
+      "name": "OpenRouter Chat Model3",
+      "credentials": {
+        "openRouterApi": {
+          "id": "3KkS143m7oeIPEr2",
+          "name": "OpenRouter account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": "anthropic/claude-opus-4.6",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [
+        1712,
+        2192
+      ],
+      "id": "9c9da867-e164-4e85-b93c-199992da1362",
+      "name": "OpenRouter Chat Model5",
+      "credentials": {
+        "openRouterApi": {
+          "id": "3KkS143m7oeIPEr2",
+          "name": "OpenRouter account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": "anthropic/claude-opus-4.6",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [
+        3264,
+        1568
+      ],
+      "id": "a195c7da-9c72-460f-b9cb-b3e18a817275",
+      "name": "OpenRouter Chat Model6",
+      "credentials": {
+        "openRouterApi": {
+          "id": "3KkS143m7oeIPEr2",
+          "name": "OpenRouter account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": "google/gemini-3-flash-preview",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [
+        3648,
+        1552
+      ],
+      "id": "f052545c-fa58-4f89-b6aa-67c5b844fa30",
+      "name": "OpenRouter Chat Model7",
+      "credentials": {
+        "openRouterApi": {
+          "id": "3KkS143m7oeIPEr2",
+          "name": "OpenRouter account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": "google/gemini-3-flash-preview",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [
+        4032,
+        1552
+      ],
+      "id": "f0b36186-d77e-4d99-a094-ec3936cbc77a",
+      "name": "OpenRouter Chat Model8",
+      "credentials": {
+        "openRouterApi": {
+          "id": "3KkS143m7oeIPEr2",
+          "name": "OpenRouter account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": "google/gemini-3-flash-preview",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [
+        4496,
+        1568
+      ],
+      "id": "ac3752dd-fccf-415f-b9c8-30a13904c9b9",
+      "name": "OpenRouter Chat Model9",
+      "credentials": {
+        "openRouterApi": {
+          "id": "3KkS143m7oeIPEr2",
+          "name": "OpenRouter account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": "openai/gpt-5.4",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [
+        4960,
+        1568
+      ],
+      "id": "0a26d4b2-92e3-442c-be70-43c8e63dfac4",
+      "name": "OpenRouter Chat Model10",
+      "credentials": {
+        "openRouterApi": {
+          "id": "3KkS143m7oeIPEr2",
+          "name": "OpenRouter account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "4c4ba02e-a677-4c0f-9db5-5a9db1a0e783",
+              "leftValue": "={{ $item(0).$node[\"Grab New Cluster\"].json[\"Type\"] }}",
+              "rightValue": "Post",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        5376,
+        1408
+      ],
+      "id": "6893259a-4e75-42dd-8ce2-54c6dc5388d9",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "title": "={{ $('Post Title').item.json.output }}",
+        "additionalFields": {
+          "authorId": 8,
+          "content": "={{ $('HTML').item.json.output }}",
+          "slug": "={{ $('slug').item.json.output }}",
+          "status": "draft"
+        }
+      },
+      "type": "n8n-nodes-base.wordpress",
+      "typeVersion": 1,
+      "position": [
+        5616,
+        1296
+      ],
+      "id": "0df7ad98-05de-4393-a546-86c28ed7f6a6",
+      "name": "Create Post"
+    },
+    {
+      "parameters": {
+        "resource": "page",
+        "title": "={{ $('Post Title').item.json.output }} | jacknows.ai",
+        "additionalFields": {
+          "authorId": 3,
+          "content": "={{ $('HTML').item.json.output }}",
+          "slug": "={{ $('slug').item.json.output }}",
+          "status": "publish"
+        }
+      },
+      "type": "n8n-nodes-base.wordpress",
+      "typeVersion": 1,
+      "position": [
+        5616,
+        1488
+      ],
+      "id": "2a6bf674-dab5-4438-9a61-0ab6b60352f9",
+      "name": "Create Page",
+      "credentials": {
+        "wordpressApi": {
+          "id": "hkAi0KcrDmLstQPo",
+          "name": "https://mahsan.websreport.net/ (sentice.com)"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-5.2",
+          "mode": "list",
+          "cachedResultName": "GPT-5.2"
+        },
+        "responses": {
+          "values": [
+            {
+              "content": "=You are a research agent.\n\nThe input below is a preliminary article outline.\nUse it to understand the main topic and subtopics of the article.\n\nYour task:\n** Research** \n- Find authoritative, external sources that support the topic and key sections.המקורות חייבים להמצא אך ורק מהארץ והשפה ששייכת לאותו.\nלדוגמא: אם ה-KEYWORD הוא בשפה העברית,\nאז החיפוש יתבצע בישראל.\n- Do NOT invent sources.\n- Do Not link to other competitors or brand names. \n- Do NOT mention any other brand name or competitors in the text.\n- Do NOT - תקשר לעמוד של מתחרה.\n- לעולם בשום צורה שהיא, אל תבנה LINK או אזכור בתוכן של הכתבה למתחרה מאותה הנישה או מאותו התחום של האתר\n{{ $('Grab New Cluster').item.json.Website }}\n- link only to Gov,PDF, Research sites, News media sites.\n** Fact Checker **\n\n** Fact Checker: **\nאתה FACT Checker: \nאתה חייב לזחול לכל אחד מהקישורים האלו ולוודא שהתוכן שנמצא בהם, מגבה את המידע שציינת.\nתוודא שהקישור תקין ומכיל את שהמידע.\nבמידה והוא לא מכיל את המידע או הקישור שבור או מוביל לעמוד 404. \nאתה חייב למצוא קישור ממקור אחר שהוא תקין ולהחליף אותו במקומו.\n\nArticle outline:\n{{ $json.output[0].content[0].text }}\n\nFind up to 20 sources \n\nOutput format:\nFor each source, provide:\n- Title\n- Short summary (1–2 sentences)\n- Direct URL\n- Try to find the most relevant sources to the output titles\nRules:\n- No opinions\n- No duplicate sources\n- No filler text\n- Only verified Links\n"
+            }
+          ]
+        },
+        "builtInTools": {
+          "webSearch": {
+            "searchContextSize": "medium"
+          }
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 2.1,
+      "position": [
+        1248,
+        1408
+      ],
+      "id": "34cdf229-d698-4544-a4fb-c6a731907f69",
+      "name": "Message a model",
+      "credentials": {
+        "openAiApi": {
+          "id": "OX3gYD9oemOrc0Lq",
+          "name": "OpenAi account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-5.2",
+          "mode": "list",
+          "cachedResultName": "GPT-5.2"
+        },
+        "responses": {
+          "values": [
+            {
+              "content": "=# 🎯 ROLE – מומחה כתיבת תוכן SEO\n\nאתה מומחה לכתיבת תוכן SEO בחברת קידום אתרים עם **למעלה מ-15 שנות ניסיון**.  \nאתה מתמחה במחקר SERP אנליטי (ללא אזכור שמות אתרים), ניתוח כוונת חיפוש (Search Intent),  \nבניית תוכן מבוסס שאילתות גולשים, ואופטימיזציה ל-CTR גבוה בתוצאות החיפוש של גוגל.\n\n---\n\n# 📥 INPUT\n- **Keywords:** {{ $json.Keywords }}\n- **Primary Keyword:** {{ $json[\"Primary Keyword\"] }}\n- **Search Intent:** {{ $json.Intent }}\n- **Website (האתר שלנו):** {{ $json.Website }}\n\n---\n\n# 🔍 שלב 1 – מחקר SERP (Google Simulation)\n\nבצע מחקר המדמה חיפוש אמיתי בגוגל – **באופן אנליטי בלבד**, ללא אזכור שמות אתרים, מותגים או כתובות URL.\n\n1. נתח את **10 התוצאות האורגניות המובילות** עבור מילת המפתח הראשית.\n2. בדוק עבור כל מתחרה:\n   - כמות מילים משוערת\n   - מבנה כותרות (H2 / H3)\n   - סוג התוכן (מדריך, מאמר מידע, השוואה, מסחרי וכו')\n3. ספק:\n   - כמות מילים ממוצעת בקרב המתחרים\n   - **המלצה חד-משמעית אחת בלבד לכמות מילים אופטימלית** למאמר שלנו\n   - נימוק קצר המבוסס על רמת התחרות וכוונת החיפוש\n\n---\n\n# 🔎 שלב 2 – מחקר שאילתות גולשים\n\nאסוף ניסוחים אמיתיים של שאלות גולשים, בהשראת:\n- People Also Ask\n- Autocomplete\n- פורומים ודיונים\n- ניסוחים נפוצים ממודלי שפה\n\n❗ דרישה קריטית:  \nלפחות **70% מכותרות H2 חייבות להיות מנוסחות כשאלות חיפוש של גולשים**,  \nכולל ניסוחים מסוג: **\"מהו X\"**, \"איך\", \"למה\", \"האם\", \"כמה\", \"מתי\".\n\nאין לציין או להזכיר מקורות כלשהם בטקסט עצמו.\n\n---\n\n# 🧱 שלב 3 – בניית מבנה תוכן (Outline)\n\nבנה מבנה תוכן מלא למאמר.\n\n## כללי מבנה\n- כל **H2** מייצגת נושא מרכזי או שאלת חיפוש.\n- מתחת לכל **H2 חובה לכלול**:\n  - **תשובה ישירה** – 1–3 משפטים ברורים\n  - **עובדות / דוגמאות / הסברים** תומכים\n- **H3** – רק אם יש צורך אמיתי בפירוק נושא מורכב\n- גיוון מבני:\n  - H2 בלבד\n  - H2 + 2–4 H3\n  - ללא תבנית קבועה\n\n---\n\n## 📌 פורמט חובה לכל כותרת H2\n\n## כותרת H2\n\n**תשובה ישירה:**  \nתשובה חדה וברורה לשאלה.\n\n**עובדות / דוגמאות תומכות:**  \nהרחבה מקצועית, הסברים או דוגמאות.\n\nמשפט מקשר (אם נדרש):  \n\"להלן פירוט הנושא:\"\n\n### כותרת H3 (רק אם נדרש)\nפירוט ממוקד.\n\n---\n\n# 🔁 השוואות בין מוצרים / מושגים\n\nאם קיימת השוואה:\n- יש ליצור **כותרת H2 נפרדת לכל מושג**\n- כל H2 תענה על השאלה: **\"מהו X\"**\n\n---\n\n# 📏 חישוב כמות כותרות לפי אורך המאמר\n\n- כ-150 מילים לכל H2\n- יש לחשב:\n  - מספר H2 / H3 נדרש\n  - כך שהמאמר יעמוד בכמות המילים שהומלצה\n\n---\n\n# 🧠 שלב 4 – SEO מתקדם\n\n## מילות מפתח סמנטיות\n- מונחים משלימים\n- שמות נרדפים\n- נגזרות וביטויים קשורים\n- מותאמים לכוונת החיפוש\n\n## חוסרים מול מתחרים\n- נושאים חסרים\n- שאלות ללא מענה מספק\n- זוויות בידול תוכניות\n\n---\n\n## OUTPUT – חובה\n\nOutput: **TEXT ONLY**  \n(ללא HTML, ללא Markdown, ללא קישורים, ללא שמות מותגים, ללא כתובות URL)\n\nיש להציג:\n\n- Recommended article wordcount – **פעם אחת בלבד**\n- רשימת H2\n- H3 – רק אם נדרש\n- FAQ – שאלות בלבד, מנוסחות בסגנון חיפושי גולשים\n- מילות מפתח סמנטיות\n- רשימת ביטויים, שמות נרדפים, מונחים משלימים ונגזרות\n- חוסרים בתוכן מול מתחרים\n- נושאים שלא מכוסים מספיק\n- זוויות בידול\n\nאלמנטים חסרים (כטקסט תיאורי בלבד):\n- מבנה טבלת השוואה (כותרות ועמודות)\n- תיאור גרפים אפשריים\n\nאיסורים מוחלטים:\n- DO NOT show any URL’s\n- להסיר כל כתובת URL מהטקסט\n- DO NOT show any other brands\n- להסיר כל שם של מותג או חברה\n"
+            }
+          ]
+        },
+        "builtInTools": {
+          "webSearch": {
+            "searchContextSize": "high"
+          }
+        },
+        "options": {
+          "maxTokens": 4000,
+          "temperature": 0.5
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 2.1,
+      "position": [
+        992,
+        1408
+      ],
+      "id": "a59f76bc-5bbf-440f-8aff-828f77c8f8a8",
+      "name": "Message a model1",
+      "credentials": {
+        "openAiApi": {
+          "id": "OX3gYD9oemOrc0Lq",
+          "name": "OpenAi account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "hours"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        512,
+        1408
+      ],
+      "id": "7ee56937-b6d3-460c-8044-18c93abaee0a",
+      "name": "Schedule Trigger",
+      "retryOnFail": true,
+      "waitBetweenTries": 5000
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ 'https://www.jacknows.ai/wp-json/wp/v2/posts/' + $('Create Post').first().json.id }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpBasicAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"meta\": {\n    \"_yoast_wpseo_title\": \"{{ $('Meta Title').first().json.output }}\",\n    \"_yoast_wpseo_metadesc\": \"{{ $('Meta Description').first().json.output }}\"\n  }\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        6128,
+        1296
+      ],
+      "id": "baa6f8df-bda2-4d39-a09d-e2e209f7cd8c",
+      "name": "Update meta title description Yoast"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://mahsan.websreport.net/wp-json/wp/v2/pages/{{$node[\"Create Page\"].json[\"id\"]}}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpBasicAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"meta\": {\n    \"_yoast_wpseo_title\": {{ JSON.stringify($('Meta Title').first().json.output) }},\n    \"_yoast_wpseo_metadesc\": {{ JSON.stringify($('Meta Description').first().json.output) }}\n  }\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        6128,
+        1488
+      ],
+      "id": "d054a7af-23c3-4893-9715-e6c5e4c85b81",
+      "name": "Update meta title description Yoast1",
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "Z9aJx8WfEZKmUlzu",
+          "name": "https://mahsan.websreport.net/ (sentice.com pages)"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "1Z1lQRaYneXRLxyVf9zOIT3rm3nGqnfgv2LPWxzkzSFo",
+          "mode": "list",
+          "cachedResultName": "jacknows.ai - פרסום כתבות N8N",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1Z1lQRaYneXRLxyVf9zOIT3rm3nGqnfgv2LPWxzkzSFo/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 683869339,
+          "mode": "list",
+          "cachedResultName": "מחקר + כתבות",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1Z1lQRaYneXRLxyVf9zOIT3rm3nGqnfgv2LPWxzkzSFo/edit#gid=683869339"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "row_id": "={{ String($node[\"Grab New Cluster\"].json.row_id) }}",
+            "Published": "Yes",
+            "URL": "={{ $('Create Post').item.json.link }}",
+            "Date": "={{ $('Create Post').item.json.date }}"
+          },
+          "matchingColumns": [
+            "row_id"
+          ],
+          "schema": [
+            {
+              "id": "row_id",
+              "displayName": "row_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Website",
+              "displayName": "Website",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "עמוד אב",
+              "displayName": "עמוד אב",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Pillar",
+              "displayName": "Pillar",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Cluster",
+              "displayName": "Cluster",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Intent",
+              "displayName": "Intent",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Primary Keyword",
+              "displayName": "Primary Keyword",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Keywords",
+              "displayName": "Keywords",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Researched",
+              "displayName": "Researched",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Type",
+              "displayName": "Type",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Category ID",
+              "displayName": "Category ID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Published",
+              "displayName": "Published",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "URL",
+              "displayName": "URL",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Date",
+              "displayName": "Date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Facebook",
+              "displayName": "Facebook",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Instagram",
+              "displayName": "Instagram",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Twitter ",
+              "displayName": "Twitter ",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Linkedin",
+              "displayName": "Linkedin",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        6832,
+        1296
+      ],
+      "id": "464d8b48-6ed0-4ba5-b66b-c6fed7f9e56a",
+      "name": "Check as completed on Sheets2",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "lvHSVyl4fQmLoRi4",
+          "name": "Tomer google sheets"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1Z1lQRaYneXRLxyVf9zOIT3rm3nGqnfgv2LPWxzkzSFo",
+          "mode": "list",
+          "cachedResultName": "jacknows.ai - פרסום כתבות N8N",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1Z1lQRaYneXRLxyVf9zOIT3rm3nGqnfgv2LPWxzkzSFo/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 954311286,
+          "mode": "list",
+          "cachedResultName": "Article",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1Z1lQRaYneXRLxyVf9zOIT3rm3nGqnfgv2LPWxzkzSFo/edit#gid=954311286"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Cluster": "={{ $node[\"Grab New Cluster\"].json.Cluster }}",
+            "Primary Keyword": "={{ $node[\"Grab New Cluster\"].json[\"Primary Keyword\"] }}",
+            "Slug": "={{ $('slug').item.json.output }}",
+            "Meta Title": "={{ $('Post Title').item.json.output }}",
+            "Meta Description": "={{ $('Meta Description').item.json.output }}",
+            "External Links ": "={{ $node[\"Fix Links\"].json.research }}",
+            "Published": "Yes"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "row_id",
+              "displayName": "row_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Cluster",
+              "displayName": "Cluster",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Primary Keyword",
+              "displayName": "Primary Keyword",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Article",
+              "displayName": "Article",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "HTML",
+              "displayName": "HTML",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Slug",
+              "displayName": "Slug",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Meta Title",
+              "displayName": "Meta Title",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Meta Description",
+              "displayName": "Meta Description",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "External Links ",
+              "displayName": "External Links ",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Internal Links",
+              "displayName": "Internal Links",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Published",
+              "displayName": "Published",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.6,
+      "position": [
+        6416,
+        1296
+      ],
+      "id": "e1ff1f62-32c8-4194-9150-6feb5cecc98a",
+      "name": "Article Saving 3",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "lvHSVyl4fQmLoRi4",
+          "name": "Tomer google sheets"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "1Z1lQRaYneXRLxyVf9zOIT3rm3nGqnfgv2LPWxzkzSFo",
+          "mode": "list",
+          "cachedResultName": "jacknows.ai - פרסום כתבות N8N",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1Z1lQRaYneXRLxyVf9zOIT3rm3nGqnfgv2LPWxzkzSFo/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 683869339,
+          "mode": "list",
+          "cachedResultName": "מחקר + כתבות",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1Z1lQRaYneXRLxyVf9zOIT3rm3nGqnfgv2LPWxzkzSFo/edit#gid=683869339"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "row_id": "={{ String($node[\"Grab New Cluster\"].json.row_id) }}",
+            "Published": "Yes",
+            "URL": "={{ $('Create Page').item.json.link }}",
+            "Date": "={{ $('Create Page').item.json.date }}"
+          },
+          "matchingColumns": [
+            "row_id"
+          ],
+          "schema": [
+            {
+              "id": "row_id",
+              "displayName": "row_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Website",
+              "displayName": "Website",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "עמוד אב",
+              "displayName": "עמוד אב",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Pillar",
+              "displayName": "Pillar",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Cluster",
+              "displayName": "Cluster",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Intent",
+              "displayName": "Intent",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Primary Keyword",
+              "displayName": "Primary Keyword",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Keywords",
+              "displayName": "Keywords",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Researched",
+              "displayName": "Researched",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Type",
+              "displayName": "Type",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Category ID",
+              "displayName": "Category ID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Published",
+              "displayName": "Published",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "URL",
+              "displayName": "URL",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Date",
+              "displayName": "Date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Facebook",
+              "displayName": "Facebook",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Instagram",
+              "displayName": "Instagram",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Twitter ",
+              "displayName": "Twitter ",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Linkedin",
+              "displayName": "Linkedin",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        6832,
+        1488
+      ],
+      "id": "f4d037e3-e9de-461b-9dc5-da60edfb1933",
+      "name": "Check as completed on Sheets3",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "lvHSVyl4fQmLoRi4",
+          "name": "Tomer google sheets"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1Z1lQRaYneXRLxyVf9zOIT3rm3nGqnfgv2LPWxzkzSFo",
+          "mode": "list",
+          "cachedResultName": "jacknows.ai - פרסום כתבות N8N",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1Z1lQRaYneXRLxyVf9zOIT3rm3nGqnfgv2LPWxzkzSFo/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 954311286,
+          "mode": "list",
+          "cachedResultName": "Article",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1Z1lQRaYneXRLxyVf9zOIT3rm3nGqnfgv2LPWxzkzSFo/edit#gid=954311286"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Cluster": "={{ $node[\"Grab New Cluster\"].json.Cluster }}",
+            "Primary Keyword": "={{ $node[\"Grab New Cluster\"].json[\"Primary Keyword\"] }}",
+            "Slug": "={{ $('slug').item.json.output }}",
+            "Meta Title": "={{ $('Post Title').item.json.output }}",
+            "Meta Description": "={{ $('Meta Description').item.json.output }}",
+            "External Links ": "={{ $node[\"Fix Links\"].json.research }}",
+            "Published": "Yes"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "row_id",
+              "displayName": "row_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Cluster",
+              "displayName": "Cluster",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Primary Keyword",
+              "displayName": "Primary Keyword",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Article",
+              "displayName": "Article",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "HTML",
+              "displayName": "HTML",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Slug",
+              "displayName": "Slug",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Meta Title",
+              "displayName": "Meta Title",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Meta Description",
+              "displayName": "Meta Description",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "External Links ",
+              "displayName": "External Links ",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Internal Links",
+              "displayName": "Internal Links",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Published",
+              "displayName": "Published",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.6,
+      "position": [
+        6416,
+        1488
+      ],
+      "id": "2e35bad2-9fa6-4e2a-b2ae-01e15cd794fc",
+      "name": "Article Saving 1",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "lvHSVyl4fQmLoRi4",
+          "name": "Tomer google sheets"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "=PUT",
+        "url": "={{ 'https://www.jacknows.ai/wp-json/wp/v2/posts/' + $('Create Post').item.json.id }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpBasicAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"featured_media\": {{$item(0).$node[\"Loop Over Items1\"].json.id}}\n}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        5872,
+        1296
+      ],
+      "id": "cf45ca1b-8e83-450d-bf60-aa35f0b3b972",
+      "name": "Update Featured Image2"
+    },
+    {
+      "parameters": {
+        "method": "PUT",
+        "url": "=https://mahsan.websreport.net/wp-json/wp/v2/pages/{{$node[\"Create Page\"].json[\"id\"]}}\n",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpBasicAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"featured_media\": {{$item(0).$node[\"Loop Over Items1\"].json.id}}\n}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        5872,
+        1488
+      ],
+      "id": "601b7265-c25a-4e1f-b78e-39468a7e4ae5",
+      "name": "Update Featured Image3",
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "Z9aJx8WfEZKmUlzu",
+          "name": "https://mahsan.websreport.net/ (sentice.com pages)"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=You are a senior English copywriter and social media strategist with strong B2B + storytelling skills.\n\nINPUT:\nYou will receive a full article written in ENGLISH.\n{{ $json.output }}\n\nOBJECTIVE:\nCreate 4 separate social media posts derived from the article content — one for each platform:\n1) LinkedIn\n2) Facebook\n3) Instagram\n4) X (Twitter)\n\nLANGUAGE RULES:\n- INPUT language: English\n- OUTPUT language: English only\n- Do NOT use English words unless they are unavoidable brand/product names\n- Natural american english (not robotic, not translated)\n\nCORE QUALITY RULES:\n- Do NOT “summarize the article” — convert its insights into high-performing posts\n- Each platform must be UNIQUE (no repeated sentences across platforms)\n- Use concrete takeaways and examples from the article, not vague inspiration\n- If the article is about a product/service: emphasize value, outcome, and clarity (no hype)\n- Do NOT explain the process; output only the final posts\n\n────────────────────────\nPLATFORM RULES (STRICT)\n────────────────────────\n\n1️⃣ LinkedIn (MUST BE THE STRONGEST POST)\nGoal: Thought leadership + credibility + depth.\n\nLength & structure:\n- MUST be 1,000–1,600 characters (English chars, including spaces)\n- MUST be at least as detailed and valuable as the Facebook post\n- 3–6 short paragraphs (each 1–3 lines)\n- Include:\n  A) Hook line that creates tension/curiosity (not cliché)\n  B) 3 actionable points OR a mini-framework (numbered 1–3 is allowed)\n  C) One concrete micro-example / scenario\n  D) A reflective question at the end\n- Emojis: NONE (or max 1 if absolutely needed)\n- Hashtags: 1–3 in English only (optional, subtle)\n\nTone:\n- Professional, confident, human, not preachy\n\n2️⃣ Facebook\nGoal: Warm, community conversation.\n\nLength & structure:\n- 700–1,200 characters\n- 2–4 paragraphs\n- 1–2 emojis allowed\n- End with a question\n- 2–5 hashtags in English\n\n3️⃣ Instagram\nGoal: Scroll-stopping + punchy.\n\nLength & structure:\n- 500–900 characters\n- Strong first line (very short)\n- Short sentences, rhythm, emotional tone\n- 2–4 emojis allowed (not excessive)\n- End with a soft CTA question\n- 5–10 hashtags in English\n- Avoid long blocks; keep it visually scannable\n\n4️⃣ X (Twitter)\nGoal: Sharp, single idea.\n\nLength & structure:\n- MUST fit within 280 characters total\n- One main point only\n- No emojis\n- Hashtags: none (or max 1 only if essential)\n\n────────────────────────\nOUTPUT FORMAT (EXACT)\n────────────────────────\nReturn the content exactly in this structure:\n\n---\n🔹 LinkedIn:\n[LinkedIn post text]\n\n🔹 Facebook:\n[Facebook post text]\n\n🔹 Instagram:\n[Instagram post text]\n\n🔹 X:\n[X post text]\n---\n\nFINAL CHECK BEFORE YOU OUTPUT:\n- LinkedIn is 1,000–1,600 characters and includes hook + 3 points/framework + micro-example + question\n- No sentence is repeated between platforms\n- All text is English\n",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        2864,
+        944
+      ],
+      "id": "988e5170-f643-47ea-90cf-ff5d41dd4f2d",
+      "name": "Social Media AI Prompt"
+    },
+    {
+      "parameters": {
+        "jsCode": "/**\n * n8n Code node (JavaScript)\n * Input: item.json.output (string) OR item.json.text (string) OR item.json (string)\n * Output: columns ready for Google Sheets mapping\n */\n\nfunction pickText(item) {\n  return (\n    item.json.output ??\n    item.json.text ??\n    item.json.result ??\n    (typeof item.json === 'string' ? item.json : null) ??\n    ''\n  );\n}\n\nfunction normalize(s) {\n  return (s || '')\n    .replace(/\\r\\n/g, '\\n')\n    .replace(/[ \\t]+\\n/g, '\\n')\n    .trim();\n}\n\nfunction extractSection(fullText, label) {\n  // Matches: 🔹 LinkedIn: ... until next 🔹 or end\n  const re = new RegExp(\n    String.raw`(?:^|\\n)\\s*(?:🔹\\s*)?${label}\\s*:\\s*([\\s\\S]*?)(?=\\n\\s*(?:🔹\\s*)?(?:LinkedIn|Facebook|Instagram|X)\\s*:|\\s*$)`,\n    'i'\n  );\n  const m = fullText.match(re);\n  return normalize(m ? m[1] : '');\n}\n\nfunction makePreview(s, max = 120) {\n  const t = normalize(s).replace(/\\n+/g, ' ');\n  return t.length > max ? t.slice(0, max - 1) + '…' : t;\n}\n\nconst out = [];\n\nfor (const item of $input.all()) {\n  const raw = normalize(pickText(item));\n\n  const linkedin = extractSection(raw, 'LinkedIn');\n  const facebook = extractSection(raw, 'Facebook');\n  const instagram = extractSection(raw, 'Instagram');\n  const xpost = extractSection(raw, 'X');\n\n  out.push({\n    json: {\n      // These keys should match your Google Sheet columns (recommended):\n      LinkedIn: linkedin,\n      Facebook: facebook,\n      Instagram: instagram,\n      X: xpost,\n\n      // Optional useful fields:\n      LinkedIn_Preview: makePreview(linkedin),\n      Facebook_Preview: makePreview(facebook),\n      Instagram_Preview: makePreview(instagram),\n      X_Preview: makePreview(xpost),\n\n      // Store original text too (optional):\n      Raw_Output: raw,\n    },\n  });\n}\n\nreturn out;\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        3184,
+        944
+      ],
+      "id": "f15a8a65-7d65-43a7-bc18-d0945c965e61",
+      "name": "Filtering Data"
+    },
+    {
+      "parameters": {
+        "model": "anthropic/claude-opus-4.6",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [
+        2864,
+        1168
+      ],
+      "id": "2380df30-cd85-4314-b4d1-0950c44e61ea",
+      "name": "OpenRouter Chat Model",
+      "credentials": {
+        "openRouterApi": {
+          "id": "3KkS143m7oeIPEr2",
+          "name": "OpenRouter account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "appendOrUpdate",
+        "documentId": {
+          "__rl": true,
+          "value": "1Z1lQRaYneXRLxyVf9zOIT3rm3nGqnfgv2LPWxzkzSFo",
+          "mode": "list",
+          "cachedResultName": "jacknows.ai - פרסום כתבות N8N",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1Z1lQRaYneXRLxyVf9zOIT3rm3nGqnfgv2LPWxzkzSFo/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 683869339,
+          "mode": "list",
+          "cachedResultName": "מחקר + כתבות",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1Z1lQRaYneXRLxyVf9zOIT3rm3nGqnfgv2LPWxzkzSFo/edit#gid=683869339"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "row_id": "={{ $('Grab New Cluster').item.json.row_id }}",
+            "Facebook": "={{ $json.Facebook }}",
+            "Instagram": "={{ $json.Instagram }}",
+            "Twitter ": "={{ $json.X }}",
+            "Linkedin": "={{ $json.LinkedIn }}"
+          },
+          "matchingColumns": [
+            "row_id"
+          ],
+          "schema": [
+            {
+              "id": "row_id",
+              "displayName": "row_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Website",
+              "displayName": "Website",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "עמוד אב",
+              "displayName": "עמוד אב",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Pillar",
+              "displayName": "Pillar",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Cluster",
+              "displayName": "Cluster",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Intent",
+              "displayName": "Intent",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Primary Keyword",
+              "displayName": "Primary Keyword",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Keywords",
+              "displayName": "Keywords",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Researched",
+              "displayName": "Researched",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Type",
+              "displayName": "Type",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Category ID",
+              "displayName": "Category ID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Published",
+              "displayName": "Published",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "URL",
+              "displayName": "URL",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Date",
+              "displayName": "Date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Facebook",
+              "displayName": "Facebook",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Instagram",
+              "displayName": "Instagram",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Twitter ",
+              "displayName": "Twitter ",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Linkedin",
+              "displayName": "Linkedin",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        3360,
+        944
+      ],
+      "id": "9ae45b90-d7fc-4c74-ad39-ba4ef5f01871",
+      "name": "Update Google Sheet with Posts",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "lvHSVyl4fQmLoRi4",
+          "name": "Tomer google sheets"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "MapSearch",
+        "operation": "search",
+        "query": "={{ $('Grab New Cluster').item.json.Website }} {{ $('Grab New Cluster').item.json['Primary Keyword'] }}",
+        "limit": 100,
+        "requestOptions": {}
+      },
+      "type": "@mendable/n8n-nodes-firecrawl.firecrawl",
+      "typeVersion": 1,
+      "position": [
+        1712,
+        1408
+      ],
+      "id": "0a936b10-967b-4e35-a617-888d9fa129b8",
+      "name": "Search and optionally scrape search results",
+      "retryOnFail": true,
+      "waitBetweenTries": 5000,
+      "credentials": {
+        "firecrawlApi": {
+          "id": "obgA87O5rxZBEggg",
+          "name": "Firecrawl account"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        432,
+        1712
+      ],
+      "id": "1a0313c6-af7d-4ddb-a093-2224e7f7a575",
+      "name": "When clicking ‘Execute workflow’"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Grab New Cluster": {
+      "main": [
+        [
+          {
+            "node": "Message a model1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fix Links": {
+      "main": [
+        [
+          {
+            "node": "Search and optionally scrape search results",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTML": {
+      "main": [
+        [
+          {
+            "node": "slug",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "slug": {
+      "main": [
+        [
+          {
+            "node": "Post Title",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Post Title": {
+      "main": [
+        [
+          {
+            "node": "Meta Title",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Meta Description": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Meta Title": {
+      "main": [
+        [
+          {
+            "node": "Meta Description",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Over Items": {
+      "main": [
+        [
+          {
+            "node": "Collect images URLS",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Image Generation",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait": {
+      "main": [
+        [
+          {
+            "node": "Getting URLS",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cleaning Image Prompts": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Image Generation": {
+      "main": [
+        [
+          {
+            "node": "Wait",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Getting URLS": {
+      "main": [
+        [
+          {
+            "node": "Save image URLS",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Collect images URLS": {
+      "main": [
+        [
+          {
+            "node": "Preparing Image Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Save image URLS": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Download Image (PNG URL → Binary)": {
+      "main": [
+        [
+          {
+            "node": "Upload to WordPress (Media)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Upload to WordPress (Media)": {
+      "main": [
+        [
+          {
+            "node": "Image Alt Settings",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Image Alt Settings": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Post Plan": {
+      "main": [
+        [
+          {
+            "node": "Writing Blog",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Writing Blog": {
+      "main": [
+        [
+          {
+            "node": "Image Planning",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Social Media AI Prompt",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Image Planning": {
+      "main": [
+        [
+          {
+            "node": "Cleaning Image Prompts",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Preparing Image Data": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Over Items1": {
+      "main": [
+        [
+          {
+            "node": "Preparing Images for HTML",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Download Image (PNG URL → Binary)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Preparing Images for HTML": {
+      "main": [
+        [
+          {
+            "node": "HTML",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenRouter Chat Model2": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Post Plan",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenRouter Chat Model3": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Writing Blog",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenRouter Chat Model5": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Image Planning",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenRouter Chat Model6": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "HTML",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenRouter Chat Model7": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "slug",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenRouter Chat Model8": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Post Title",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenRouter Chat Model9": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Meta Title",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenRouter Chat Model10": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Meta Description",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Create Post",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Create Page",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create Post": {
+      "main": [
+        [
+          {
+            "node": "Update Featured Image2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create Page": {
+      "main": [
+        [
+          {
+            "node": "Update Featured Image3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Message a model": {
+      "main": [
+        [
+          {
+            "node": "Fix Links",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Message a model1": {
+      "main": [
+        [
+          {
+            "node": "Message a model",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Grab New Cluster",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update meta title description Yoast": {
+      "main": [
+        [
+          {
+            "node": "Article Saving 3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update meta title description Yoast1": {
+      "main": [
+        [
+          {
+            "node": "Article Saving 1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Article Saving 3": {
+      "main": [
+        [
+          {
+            "node": "Check as completed on Sheets2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Article Saving 1": {
+      "main": [
+        [
+          {
+            "node": "Check as completed on Sheets3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update Featured Image2": {
+      "main": [
+        [
+          {
+            "node": "Update meta title description Yoast",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update Featured Image3": {
+      "main": [
+        [
+          {
+            "node": "Update meta title description Yoast1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Social Media AI Prompt": {
+      "main": [
+        [
+          {
+            "node": "Filtering Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filtering Data": {
+      "main": [
+        [
+          {
+            "node": "Update Google Sheet with Posts",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenRouter Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Social Media AI Prompt",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Search and optionally scrape search results": {
+      "main": [
+        [
+          {
+            "node": "Post Plan",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Grab New Cluster",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "timeSavedMode": "fixed",
+    "callerPolicy": "workflowsFromSameOwner",
+    "availableInMCP": false
+  },
+  "versionId": "85e1a464-5e60-408a-ac55-41e14073f25c",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "d687f3db8cf73bff0dc9f02849712fbaa1b2ea972c000594417cec61549f3360"
+  },
+  "id": "Ywe0Eien8D292sQg",
+  "tags": [
+    {
+      "updatedAt": "2026-03-12T10:09:19.983Z",
+      "createdAt": "2026-03-12T10:09:19.983Z",
+      "id": "NFi0zO0TtAvWhKwD",
+      "name": "jacknows.ai"
+    },
+    {
+      "updatedAt": "2025-12-25T09:04:33.025Z",
+      "createdAt": "2025-12-25T09:04:33.025Z",
+      "id": "bAQ5UBM4nFLDhksc",
+      "name": "תומר"
+    }
+  ]
+}

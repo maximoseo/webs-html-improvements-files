@@ -1,0 +1,188 @@
+{
+  "name": "PowerPlug.ai Article Generation — Claude Code rebuild 2026-04-15",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "powerplug-article",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "node-webhook-trigger",
+      "name": "Webhook Trigger",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [240, 320],
+      "notes": "Receives { topic, targetKeyword, wordCount?, faqCount?, includeImages? } and triggers the pipeline."
+    },
+    {
+      "parameters": {
+        "url": "https://powerplug.ai/",
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "text"
+            }
+          },
+          "timeout": 20000
+        }
+      },
+      "id": "node-fetch-brand-site",
+      "name": "Fetch PowerPlug Site",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [460, 200],
+      "notes": "Pulls the live PowerPlug homepage HTML once per run so brand intel stays in sync with any rebrand."
+    },
+    {
+      "parameters": {
+        "jsCode": "// ── PowerPlug brand intelligence (Claude Code rebuild 2026-04-15) ──\nconst html = $input.first().json.data || $input.first().json.body || '';\n\n// Logo URL (verified on live site; fallback to known canonical path).\nconst logoMatch = html.match(/(https?:\\/\\/powerplug\\.ai\\/wp-content\\/uploads\\/\\d{4}\\/\\d{2}\\/powerplug-logo\\.(?:png|svg|webp))/i);\nconst logoUrl = logoMatch ? logoMatch[1] : 'https://powerplug.ai/wp-content/uploads/2022/06/powerplug-logo.png';\n\n// Contact URL (discovered or canonical).\nconst contactMatch = html.match(/href=[\\\"']((?:https?:\\/\\/powerplug\\.ai)?\\/contact-us[^\\\"']*)[\\\"']/i);\nconst contactUrl = contactMatch\n  ? (contactMatch[1].startsWith('http') ? contactMatch[1] : `https://powerplug.ai${contactMatch[1]}`)\n  : 'https://powerplug.ai/contact-us';\n\nreturn [{\n  json: {\n    brand: {\n      name: 'PowerPlug Ltd.',\n      domain: 'powerplug.ai',\n      homeUrl: 'https://powerplug.ai',\n      contactUrl: contactUrl,\n      logoUrl: logoUrl,\n      phone: '+1-646-751-7797',\n      phoneHref: 'tel:+16467517797',\n      email: 'info@powerplug.ai',\n      address: '7 HaArad Street, Tel Aviv 6971060, Israel',\n      colors: {\n        navyPrimary: '#151d3f',\n        navySection: '#202953',\n        navyDeep:    '#131b3b',\n        greenAccent: '#8bc540',\n        greenLight:  '#f7fbf3',\n        surface:     '#f5f9fc',\n        card:        '#ffffff',\n        textPrimary: '#1a2540',\n        textMuted:   '#475569',\n        border:      '#e2e5ea'\n      },\n      socialHover: {\n        facebook: '#1877F2',\n        twitter:  '#000000',\n        linkedin: '#0A66C2'\n      },\n      social: {\n        facebook: 'https://www.facebook.com/PowerPlugLtd/',\n        twitter:  'https://twitter.com/PowerPlugLtd',\n        linkedin: 'https://www.linkedin.com/company/powerplug-ltd'\n      },\n      internalUrls: [\n        'https://powerplug.ai/our-platform',\n        'https://powerplug.ai/wakeup-technology',\n        'https://powerplug.ai/case-studies',\n        'https://powerplug.ai/who-we-are',\n        'https://powerplug.ai/downloads',\n        'https://powerplug.ai/category/powerplug-blog',\n        'https://powerplug.ai/contact-us'\n      ],\n      externalReferences: [\n        'https://www.energystar.gov/products/office_equipment/computers',\n        'https://www.iea.org/reports/digitalisation-and-energy',\n        'https://www.gartner.com/en/information-technology/insights/sustainability',\n        'https://learn.microsoft.com/en-us/windows/win32/power/power-management-portal'\n      ],\n      verifiedCaseStudies: [\n        { name: 'Clalit Health Services', metric: '45,000+ PCs', outcome: '$1.2M annual savings' },\n        { name: 'Rambam Healthcare Campus', metric: '2,000+ PCs', outcome: 'ROI under 4 months' },\n        { name: 'Ben Gurion University', metric: '20,000+ student PCs', outcome: 'green-campus initiative' }\n      ],\n      fontStack: \"'Montserrat','Segoe UI',-apple-system,BlinkMacSystemFont,Roboto,Arial,sans-serif\"\n    },\n    articleConfig: {\n      direction: 'ltr',\n      lang: 'en',\n      maxWidth: '820px',\n      baseFontSize: '17px',\n      bodyLineHeight: '1.75'\n    }\n  }\n}];"
+      },
+      "id": "node-extract-brand",
+      "name": "Extract Brand Intelligence",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [680, 200],
+      "notes": "Emits the canonical PowerPlug brand object consumed by prompt + validator."
+    },
+    {
+      "parameters": {
+        "jsCode": "// ── Load the 34-rule system prompt (Claude Code rebuild 2026-04-15) ──\nconst b = $('Extract Brand Intelligence').first().json.brand;\nconst systemPrompt = `You are a senior B2B content strategist and front-end engineer writing enterprise-grade long-form articles for PowerPlug.ai. Every output must be a WordPress-safe HTML article ready to paste into a post.\n\nBRAND SOURCE OF TRUTH (never fabricate):\n- Company: ${b.name} (${b.domain})\n- Home: ${b.homeUrl} | Contact: ${b.contactUrl}\n- Logo: ${b.logoUrl}\n- Phone: ${b.phone} (href ${b.phoneHref}) | Email: ${b.email} | Address: ${b.address}\n- Colors (use ONLY these): navy ${b.colors.navyPrimary}, navy-section ${b.colors.navySection}, navy-deep ${b.colors.navyDeep}, green ${b.colors.greenAccent}, green-light ${b.colors.greenLight}, surface ${b.colors.surface}, card ${b.colors.card}, text ${b.colors.textPrimary}, muted ${b.colors.textMuted}, border ${b.colors.border}.\n- Social hover colors: Facebook ${b.socialHover.facebook}, Twitter/X ${b.socialHover.twitter}, LinkedIn ${b.socialHover.linkedin}.\n- Social links: FB ${b.social.facebook}, X ${b.social.twitter}, LI ${b.social.linkedin}.\n- Internal URLs: ${b.internalUrls.join(', ')}.\n- External refs (use 2+): ${b.externalReferences.join(', ')}.\n- Verified case studies ONLY: ${b.verifiedCaseStudies.map(c => `${c.name} (${c.metric}, ${c.outcome})`).join(' | ')}.\n- Font: ${b.fontStack}\n\n34 NON-NEGOTIABLE RULES:\n1. Real social links (FB/Twitter/LinkedIn — exact URLs above) in About the Author.\n2. Logo in About the Author wraps in <a href=\"${b.homeUrl}\">.\n3. About the Author shows logo + name + description + phone + email + address + social icons + Contact button.\n4. TOC anchor text has NO numeric prefix (never \"1. Intro\" in the clickable text).\n5. TOC placed after the first intro paragraph — never first element, never later than second content block.\n6. TOC and FAQ use <details>/<summary> and are COLLAPSED by default (no \"open\" attribute).\n7. TOC/FAQ clean modern design: 14px radius, #e2e5ea border, hover #f7fbf3, chevron rotates 0.3s on open.\n8. MINIMUM two mid-article CTAs (one green-tinted, one dark navy) pointing to ${b.contactUrl}.\n9. STRONG end-of-article CTA block on dark navy with action verb, points to ${b.contactUrl}.\n10. Weave phone (${b.phoneHref}) and email (mailto:${b.email}) into body at least once each outside the author block.\n11. Floating Contact Us: fixed bottom-right 24px (16px mobile), minimum 44x44 tap, hover effect, never overlaps Scroll-to-Top.\n12. Floating Scroll-to-Top: fixed bottom-right above Contact (bottom 96px), appears only after 300px scroll via a small inline script toggling .pp-visible, smooth scroll on click.\n13. At least 3 Tip/How-To/Did-You-Know callouts (suggest 2 Tip amber, 1 How-To green, 2 Did-You-Know indigo).\n14. EXACTLY ONE <h1> (hero only). Every other heading is <h2> or <h3>.\n15. Minimum 2 internal links to internal URLs list, minimum 2 external links to approved external refs.\n16. No Lorem Ipsum, no empty image containers, minimum ~2,500 body words.\n17. Real H2/H3 hierarchy, real lists, real tables, figure+caption images.\n18. NO dates, years, or time phrases in the hero, first paragraph, Key Takeaways, or anything before the TOC.\n19. Responsive via ONE scoped <style> block (breakpoints 860 and 480px). All other styling inline.\n20. WordPress-safe: no external CSS, no external JS framework, no Tailwind/React classes. Single inline script for scroll-top visibility only.\n21. Floating buttons never overlap content at 320/375/414 px.\n22. Author, social, CTA, FAQ, TOC, trust strip, case-study tiles all render correctly at 1200/768/375 px.\n23. Use ONLY the brand hex values above.\n24. Use ONLY the verified case-study data above — never invent clients or numbers.\n25. Hover rules: CTA shift+shadow, TOC highlight, FAQ tint + chevron 0.3s rotate, social fills with brand hex above.\n26. Content max-width 820px, body line-height 1.75, H1≥2.4rem H2≥1.8rem H3≥1.2rem, 40px margin-top on every H2.\n27. Consistent alignment: flex row + gap:10px for all icon+text pairs.\n28. Every color combo ≥ 4.5:1 contrast in default/hover/focus/active/visited.\n29. Every <img>: width:100%, max-width:800px, display:block, border-radius:12px, object-fit appropriate, loading=\"lazy\", real descriptive alt, no broken src.\n30. Premium layout: no Bootstrap classes, no AI chrome, consistent radii (12/14/20), generous spacing rhythm.\n31. Balanced sections: no section > 2x the vertical space of an adjacent one without justification.\n32. All links/buttons readable in default/hover/focus/active/visited. Keyboard focus = 2–3px #8bc540 outline with 2–3px offset.\n33. LTR English. All icon+text groups on the same line via flexbox (never absolute). Safe for future RTL swap by changing root dir=\"rtl\".\n34. Output must be safe to commit to GitHub and Obsidian, and trigger Render redeploy cleanly. No <!DOCTYPE>, no <html>, no <head>, no <body>.\n\nSTRUCTURE ORDER (mandatory):\nArticle wrapper → scoped <style> → HERO (ONE h1) → KEY TAKEAWAYS → INTRO (2 paragraphs, no dates) → TOC collapsed → TRUST STRIP → 8-11 body sections with callouts → MID-CTA #1 (green tint) → MID-CTA #2 (dark navy) → ROI TABLE → 3 CASE STUDIES → END-OF-ARTICLE STRONG CTA → FAQ collapsed (6-8 items) → ABOUT THE AUTHOR → FLOATING CONTACT → FLOATING SCROLL-TO-TOP → inline visibility script.\n\nCTA labels (all href ${b.contactUrl}):\n• Hero: \"Book a Power Savings Assessment →\"\n• Mid #1: \"Talk to a Specialist →\"\n• Mid #2: \"Schedule a Working Session →\"\n• End: \"Start Saving This Quarter →\"\n• Author: \"Contact PowerPlug →\"\n\nOUTPUT: only the <article>…</article>, the two floating button elements, and the inline visibility script. Nothing else. No markdown fences, no commentary.`;\n\nreturn [{ json: { systemPrompt } }];"
+      },
+      "id": "node-load-system-prompt",
+      "name": "Load System Prompt",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [900, 200],
+      "notes": "Embeds all 34 rules + structure + CTA labels dynamically against the extracted brand object."
+    },
+    {
+      "parameters": {
+        "jsCode": "// ── Merge webhook input with brand + system prompt ──\nconst webhook = $('Webhook Trigger').first().json.body || $('Webhook Trigger').first().json;\nconst brand = $('Extract Brand Intelligence').first().json.brand;\nconst articleConfig = $('Extract Brand Intelligence').first().json.articleConfig;\nconst systemPrompt = $('Load System Prompt').first().json.systemPrompt;\n\nconst topic         = webhook.topic || 'Enterprise PC Power Management';\nconst targetKeyword = webhook.targetKeyword || topic;\nconst wordCount     = webhook.wordCount || 2800;\nconst sections      = webhook.sections || 10;\nconst faqCount      = webhook.faqCount || 7;\nconst includeImages = webhook.includeImages !== false;\nconst imageUrls     = Array.isArray(webhook.imageUrls) ? webhook.imageUrls : [];\n\nconst userPrompt = `Write a complete enterprise-grade HTML article for PowerPlug.ai about: ${topic}\\nPrimary keyword: ${targetKeyword}\\nTarget body length: ~${wordCount} words\\nNumber of H2 body sections: ${sections}\\nNumber of FAQ items: ${faqCount}\\n${includeImages ? `You may use these image URLs where relevant (omit rather than include a broken image):\\n${imageUrls.join('\\n') || '- none supplied — omit images or use a single decorative figure at most'}` : 'Do not include any <img> tags in the body.'}\\n\\nEnforce every rule from the system message. Return ONLY the article HTML.`;\n\nreturn [{\n  json: {\n    systemPrompt,\n    userPrompt,\n    brand,\n    articleConfig,\n    content: { topic, targetKeyword, wordCount, sections, faqCount, includeImages, imageUrls }\n  }\n}];"
+      },
+      "id": "node-prepare-context",
+      "name": "Prepare Prompt Context",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1120, 320],
+      "notes": "Merges webhook input (topic, keyword, word count, images) with brand intel and the system prompt."
+    },
+    {
+      "parameters": {
+        "resource": "chat",
+        "model": "gpt-4o",
+        "messages": {
+          "values": [
+            {
+              "role": "system",
+              "content": "={{ $json.systemPrompt }}"
+            },
+            {
+              "role": "user",
+              "content": "={{ $json.userPrompt }}"
+            }
+          ]
+        },
+        "options": {
+          "temperature": 0.35,
+          "maxTokens": 16000
+        }
+      },
+      "id": "node-generate-article",
+      "name": "Generate Article (AI)",
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [1340, 320],
+      "notes": "Uses GPT-4o with the 34-rule system prompt. Swap for any other chat model by replacing this node."
+    },
+    {
+      "parameters": {
+        "jsCode": "// ── Post-generation validation (Claude Code rebuild 2026-04-15) ──\nconst brand = $('Extract Brand Intelligence').first().json.brand;\nlet html = $input.first().json.message?.content\n        || $input.first().json.text\n        || $input.first().json.choices?.[0]?.message?.content\n        || '';\nhtml = html.replace(/^```html?\\n?/i, '').replace(/\\n?```\\s*$/i, '').trim();\n\nconst errors = [];\nconst warnings = [];\n\n// Rule 14 — exactly one H1\nconst h1Count = (html.match(/<h1[\\s>]/gi) || []).length;\nif (h1Count !== 1) errors.push(`Rule 14: expected exactly 1 <h1>, found ${h1Count}`);\n\n// Rule 6 — no \"open\" on any details element (TOC + FAQ collapsed)\nif (/<details[^>]*\\sopen[\\s>]/i.test(html)) errors.push('Rule 6: found <details open> — all TOC/FAQ must start collapsed');\n\n// Rule 4 — TOC anchor text must not start with \"N.\"\nconst numberedToc = html.match(/<li[^>]*>\\s*<a[^>]*>\\s*\\d+\\s*[\\.\\)]/i);\nif (numberedToc) errors.push('Rule 4: TOC contains a numeric prefix in the anchor text');\n\n// Rule 18 — no dates in intro area (first 1800 chars, pre-TOC)\nconst preToc = html.split(/<details[^>]*class=[\\\"'][^\\\"']*pp-toc/)[0] || '';\nif (/\\b(19|20)\\d{2}\\b|\\b(January|February|March|April|May|June|July|August|September|October|November|December)\\b|\\b(last|this|next)\\s+(week|month|quarter|year)\\b/i.test(preToc)) {\n  warnings.push('Rule 18: possible date/time reference in intro area — review pre-TOC content');\n}\n\n// Rule 11 & 12 — floating buttons present\nif (!/id=[\\\"']pp-float-contact[\\\"']/i.test(html)) errors.push('Rule 11: floating Contact Us button missing');\nif (!/id=[\\\"']pp-float-top[\\\"']/i.test(html))     errors.push('Rule 12: floating Scroll-to-Top button missing');\nif (!/window\\.scrollY\\s*>\\s*300/.test(html) && !/scrollY > 300/.test(html)) warnings.push('Rule 12: scroll-top visibility threshold (300px) not detected');\n\n// Rule 9 & 8 — CTAs to contact page\nconst contactHits = (html.match(new RegExp(brand.contactUrl.replace(/[.*+?^${}()|[\\\\]/g,'\\\\$&'),'gi')) || []).length;\nif (contactHits < 4) warnings.push(`Rules 8/9/10: only ${contactHits} occurrences of ${brand.contactUrl} — expected 4+`);\n\n// Rule 1, 2, 3 — About the Author integrity\nif (!/PowerPlugLtd|powerplug-ltd/i.test(html)) errors.push('Rule 1: no real PowerPlug social URLs found');\nif (!/href=[\\\"']https:\\/\\/powerplug\\.ai[\\\"'][^>]*>[\\s\\S]{0,200}powerplug-logo/i.test(html)) warnings.push('Rule 2: verify the logo in the author block is wrapped in <a href=\"https://powerplug.ai\">');\n\n// Rule 13 — content blocks\nconst tipCount = (html.match(/class=[\\\"']pp-tip[\\\"']/gi) || []).length;\nconst howtoCount = (html.match(/class=[\\\"']pp-howto[\\\"']/gi) || []).length;\nconst didCount = (html.match(/class=[\\\"']pp-did[\\\"']/gi) || []).length;\nif ((tipCount + howtoCount + didCount) < 3) errors.push(`Rule 13: only ${tipCount + howtoCount + didCount} Tip/How-To/Did-You-Know callouts — minimum 3`);\n\n// Rule 15 — internal + external links\nconst internal = (html.match(/href=[\\\"']https?:\\/\\/powerplug\\.ai[^\\\"']*[\\\"']/gi) || []).length;\nconst external = (html.match(/href=[\\\"']https?:\\/\\/(?!powerplug\\.ai)[^\\\"']+[\\\"']/gi) || []).length;\nif (internal < 2) errors.push(`Rule 15: ${internal} internal links — need at least 2`);\nif (external < 2) errors.push(`Rule 15: ${external} external links — need at least 2`);\n\n// Rule 16 — word count + placeholders\nconst text = html.replace(/<[^>]+>/g,' ').replace(/\\s+/g,' ').trim();\nconst words = text.split(' ').filter(Boolean).length;\nif (words < 1800) errors.push(`Rule 16: ~${words} words — under the 1,800 minimum`);\nif (/lorem\\s+ipsum|\\[placeholder\\]|TODO:/i.test(html)) errors.push('Rule 16: placeholder / Lorem Ipsum detected');\n\n// Rule 20 — WordPress safety\nif (/<!DOCTYPE|<html[\\s>]|<head[\\s>]|<body[\\s>]/i.test(html)) errors.push('Rule 20/34: output must not include DOCTYPE/html/head/body');\nif (/class=[\\\"'](?:[^\\\"']*\\s)?(?:flex|grid-cols|bg-gradient|md:)/i.test(html)) warnings.push('Rule 20: possible Tailwind utility class detected — WordPress-safe inline styling preferred');\n\n// Rule 23 — brand colors present\nif (!html.includes(brand.colors.navyPrimary)) warnings.push(`Rule 23: ${brand.colors.navyPrimary} not present`);\nif (!html.includes(brand.colors.greenAccent)) warnings.push(`Rule 23: ${brand.colors.greenAccent} not present`);\n\nconst passed = errors.length === 0;\nconst sizeBytes = new TextEncoder().encode(html).length;\n\nreturn [{\n  json: {\n    html,\n    validation: {\n      passed,\n      errors,\n      warnings,\n      stats: { h1Count, tipCount, howtoCount, didCount, internal, external, words, contactHits, sizeBytes }\n    }\n  }\n}];"
+      },
+      "id": "node-validate",
+      "name": "Validate & Sanitize Output",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1560, 320],
+      "notes": "Enforces the rule set post-generation. Returns { passed, errors[], warnings[], stats{} } alongside the article."
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ JSON.stringify({ success: $json.validation.passed, html: $json.html, validation: $json.validation }) }}"
+      },
+      "id": "node-respond",
+      "name": "Respond to Webhook",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [1780, 320],
+      "notes": "Returns { success, html, validation } to the webhook caller."
+    }
+  ],
+  "connections": {
+    "Webhook Trigger": {
+      "main": [
+        [
+          { "node": "Fetch PowerPlug Site", "type": "main", "index": 0 },
+          { "node": "Prepare Prompt Context", "type": "main", "index": 0 }
+        ]
+      ]
+    },
+    "Fetch PowerPlug Site": {
+      "main": [
+        [
+          { "node": "Extract Brand Intelligence", "type": "main", "index": 0 }
+        ]
+      ]
+    },
+    "Extract Brand Intelligence": {
+      "main": [
+        [
+          { "node": "Load System Prompt", "type": "main", "index": 0 }
+        ]
+      ]
+    },
+    "Load System Prompt": {
+      "main": [
+        [
+          { "node": "Prepare Prompt Context", "type": "main", "index": 0 }
+        ]
+      ]
+    },
+    "Prepare Prompt Context": {
+      "main": [
+        [
+          { "node": "Generate Article (AI)", "type": "main", "index": 0 }
+        ]
+      ]
+    },
+    "Generate Article (AI)": {
+      "main": [
+        [
+          { "node": "Validate & Sanitize Output", "type": "main", "index": 0 }
+        ]
+      ]
+    },
+    "Validate & Sanitize Output": {
+      "main": [
+        [
+          { "node": "Respond to Webhook", "type": "main", "index": 0 }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "powerplug-article-claude-code-2026-04-15"
+  },
+  "tags": [
+    { "name": "powerplug" },
+    { "name": "article-generation" },
+    { "name": "claude-code" },
+    { "name": "2026-04-15" }
+  ]
+}

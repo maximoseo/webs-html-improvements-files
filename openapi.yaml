@@ -1,0 +1,50 @@
+openapi: 3.0.3
+info:
+  title: HTML Redesign Dashboard API
+  version: "5.0.0"
+  description: Round 5 unified API surface
+servers:
+  - url: https://webs-html-improvements-files.onrender.com
+paths:
+  /health: { get: { summary: Health check, responses: { "200": { description: OK } } } }
+  /metrics: { get: { summary: Prometheus metrics, responses: { "200": { description: text/plain } } } }
+  /api/csrf: { get: { summary: Get CSRF token, responses: { "200": { description: OK } } } }
+  /api/auth/login:
+    post:
+      summary: Login
+      requestBody: { required: true, content: { application/json: { schema: { type: object, properties: { username: {type: string}, password: {type: string} } } } } }
+      responses: { "200": { description: OK }, "401": { description: Invalid } }
+  /api/users:
+    get: { summary: List users, responses: { "200": { description: OK } } }
+    post:
+      summary: Create user
+      requestBody: { required: true, content: { application/json: { schema: { type: object, properties: { username: {type: string}, password: {type: string}, role: {type: string, enum: [viewer,editor,admin]} } } } } }
+      responses: { "200": { description: OK } }
+  /api/audit: { get: { summary: Audit log, parameters: [{name: limit, in: query, schema: {type: integer, default: 100}}], responses: { "200": { description: OK } } } }
+  /api/analytics: { get: { summary: Aggregated analytics, responses: { "200": { description: OK } } } }
+  /api/bulk:
+    post:
+      summary: Bulk operation
+      requestBody: { required: true, content: { application/json: { schema: { type: object, properties: { action: {type: string, enum: [delete,tag,archive]}, ids: {type: array, items: {type: string}} } } } } }
+      responses: { "200": { description: OK } }
+  /api/views:
+    get: { summary: List saved views, responses: { "200": { description: OK } } }
+    post:
+      summary: Save view
+      requestBody: { required: true, content: { application/json: { schema: { type: object, properties: { name: {type: string}, config: {type: object} } } } } }
+      responses: { "200": { description: OK } }
+  /api/webhooks/history: { get: { summary: Webhook call history, responses: { "200": { description: OK } } } }
+  /api/backup/run: { post: { summary: Trigger backup, responses: { "200": { description: OK } } } }
+  /api/kwr/summary/{run_id}:
+    get:
+      summary: AI-style summary of a run
+      parameters: [{name: run_id, in: path, required: true, schema: {type: string}}]
+      responses: { "200": { description: OK }, "404": { description: Not found } }
+  /api/events: { get: { summary: SSE event stream, responses: { "200": { description: text/event-stream } } } }
+  /api/kwr/export.pdf: { get: { summary: Export KWR as PDF, responses: { "200": { description: application/pdf } } } }
+components:
+  securitySchemes:
+    csrfToken:
+      type: apiKey
+      in: header
+      name: X-CSRF-Token

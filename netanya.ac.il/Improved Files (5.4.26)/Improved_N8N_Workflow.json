@@ -1,0 +1,373 @@
+{
+  "name": "Netanya Academic College — Article Generator",
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "trigger-001",
+      "name": "Manual Trigger",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [220, 300]
+    },
+    {
+      "parameters": {
+        "url": "={{ $json.target_url }}",
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "text"
+            }
+          }
+        }
+      },
+      "id": "discover-001",
+      "name": "Discover Target Page",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [440, 160],
+      "notes": "Fetches the target page URL to extract content structure and internal links"
+    },
+    {
+      "parameters": {
+        "url": "https://www.netanya.ac.il/",
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "text"
+            }
+          }
+        }
+      },
+      "id": "discover-002",
+      "name": "Discover Homepage",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [440, 440],
+      "notes": "Fetches homepage to extract navigation, social links, and branding"
+    },
+    {
+      "parameters": {
+        "jsCode": "const targetHtml = $('Discover Target Page').first().json.data || '';\nconst homepageHtml = $('Discover Homepage').first().json.data || '';\n\n// Extract internal links from target page\nconst internalLinks = [];\nconst linkRegex = /href=[\"'](https?:\\/\\/(?:www\\.)?netanya\\.ac\\.il[^\"']*)[\"']/gi;\nlet match;\nwhile ((match = linkRegex.exec(targetHtml)) !== null) {\n  if (!internalLinks.includes(match[1])) {\n    internalLinks.push(match[1]);\n  }\n}\n\n// Extract social links from homepage\nconst socialProfiles = {\n  facebook: 'https://www.facebook.com/netanyacollege.ac/',\n  instagram: 'https://www.instagram.com/netanya.acda/',\n  linkedin: 'https://il.linkedin.com/school/netanya-academic-college/'\n};\n\nreturn [{\n  json: {\n    internal_links: internalLinks,\n    social_profiles: socialProfiles,\n    brand: {\n      name: 'המכללה האקדמית נתניה',\n      phone: '09-8607777',\n      hotline: '*2443',\n      email: 'reginfo@netanya.ac.il',\n      contact_url: 'https://www.netanya.ac.il/%D7%A6%D7%95%D7%A8-%D7%A7%D7%A9%D7%A8/',\n      registration_url: 'https://www.netanya.ac.il/consulting-and-registration/',\n      logo: 'https://upload.wikimedia.org/wikipedia/commons/c/c0/Netanya_Academic_College_logo.png'\n    }\n  }\n}];"
+      },
+      "id": "process-001",
+      "name": "Process Discovery Data",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [680, 300],
+      "notes": "Extracts internal links, social profiles, and brand data from discovered pages"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "topic",
+              "name": "topic",
+              "value": "={{ $json.topic || 'לימודי מערכות מידע' }}",
+              "type": "string"
+            },
+            {
+              "id": "keyword",
+              "name": "keyword",
+              "value": "={{ $json.keyword || 'לימודי מערכות מידע תואר ראשון' }}",
+              "type": "string"
+            },
+            {
+              "id": "target_url",
+              "name": "target_url",
+              "value": "={{ $json.target_url || 'https://www.netanya.ac.il/school/management-of-information-systems/' }}",
+              "type": "string"
+            }
+          ]
+        }
+      },
+      "id": "set-input-001",
+      "name": "Set Article Input",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [220, 160],
+      "notes": "Configure article topic, keyword, and target URL"
+    },
+    {
+      "parameters": {
+        "model": "claude-sonnet-4-20250514",
+        "messages": {
+          "values": [
+            {
+              "content": "You are a research writer. Write a comprehensive, research-based blog post in Hebrew about the following topic. Use professional academic tone. Include real data, statistics, and references where possible. Structure with clear sections and subheadings.\n\nTopic: {{ $json.topic }}\nKeyword: {{ $json.keyword }}\nTarget institution: המכללה האקדמית נתניה (netanya.ac.il)\n\nInternal links to include:\n{{ JSON.stringify($('Process Discovery Data').first().json.internal_links, null, 2) }}\n\nWrite 2000-2500 words. Include:\n- Definition and overview of the field\n- Why study this now (market trends)\n- What you learn in the degree\n- Comparison with related fields\n- Who this suits\n- Admission requirements\n- Career opportunities with specific roles\n- Salary ranges and career progression\n- Common mistakes when choosing\n- How to choose the right institution\n- FAQ section with 6 real questions\n\nOutput plain text with section markers. Do not include HTML.",
+              "role": "user"
+            }
+          ]
+        },
+        "options": {
+          "maxTokensToSample": 4096,
+          "temperature": 0.7
+        }
+      },
+      "id": "write-001",
+      "name": "Writing Blog",
+      "type": "@n8n/n8n-nodes-langchain.lmChatAnthropic",
+      "typeVersion": 1.4,
+      "position": [920, 160],
+      "notes": "Generates the research-based blog content in Hebrew"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Generate image prompts for the article\nconst topic = $('Set Article Input').first().json.topic;\n\nconst imagePrompts = {\n  hero: `Professional academic campus photo, modern university building, students walking, blue sky, academic atmosphere, related to ${topic}`,\n  section_1: `Infographic comparing information systems and computer science programs, academic comparison chart, professional design`,\n  section_2: `University admission documents, student registration, academic paperwork, modern campus office`,\n  section_3: `Career decision making, professional choosing path, modern office workspace, business technology`,\n  section_4: `Job market demand, technology workforce, Israeli tech industry, professional charts and graphs`\n};\n\n// Output image data for downstream processing\nreturn [{\n  json: {\n    images: {\n      hero: { prompt: imagePrompts.hero, url: '' },\n      section_1: { prompt: imagePrompts.section_1, url: '' },\n      section_2: { prompt: imagePrompts.section_2, url: '' },\n      section_3: { prompt: imagePrompts.section_3, url: '' },\n      section_4: { prompt: imagePrompts.section_4, url: '' }\n    }\n  }\n}];"
+      },
+      "id": "images-001",
+      "name": "Preparing Images for HTML",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [920, 440],
+      "notes": "Prepares image prompts and URLs for the HTML template"
+    },
+    {
+      "parameters": {
+        "model": "claude-sonnet-4-20250514",
+        "messages": {
+          "values": [
+            {
+              "content": "={{ $('Improved_N8N_Prompt').first().json.prompt }}\n\n═══════════════════════════════════════════════════════\nBLOG CONTENT INPUT\n═══════════════════════════════════════════════════════\n\n{{ $('Writing Blog').first().json.output }}\n\n═══════════════════════════════════════════════════════\nIMAGE URLS\n═══════════════════════════════════════════════════════\n\nHero: {{ $items('Preparing Images for HTML')[0].json.images.hero.url }}\nSection 1: {{ $items('Preparing Images for HTML')[0].json.images.section_1.url }}\nSection 2: {{ $items('Preparing Images for HTML')[0].json.images.section_2.url }}\nSection 3: {{ $items('Preparing Images for HTML')[0].json.images.section_3.url }}\nSection 4: {{ $items('Preparing Images for HTML')[0].json.images.section_4.url }}\n\n═══════════════════════════════════════════════════════\nSOCIAL PROFILES\n═══════════════════════════════════════════════════════\n\n{{ JSON.stringify($('Process Discovery Data').first().json.social_profiles, null, 2) }}\n\n═══════════════════════════════════════════════════════\nPRODUCT DATA (if any)\n═══════════════════════════════════════════════════════\n\n{{ JSON.stringify($json['products'], null, 2) }}\n\n═══════════════════════════════════════════════════════\nREVIEW DATA (if any)\n═══════════════════════════════════════════════════════\n\n{{ JSON.stringify($json['reviews_data'], null, 2) }}",
+              "role": "user"
+            }
+          ]
+        },
+        "options": {
+          "maxTokensToSample": 16384,
+          "temperature": 0.3
+        }
+      },
+      "id": "html-001",
+      "name": "Generate HTML Article",
+      "type": "@n8n/n8n-nodes-langchain.lmChatAnthropic",
+      "typeVersion": 1.4,
+      "position": [1180, 300],
+      "notes": "Generates the final HTML article using the prompt template, blog content, and image URLs"
+    },
+    {
+      "parameters": {
+        "jsCode": "const htmlOutput = $('Generate HTML Article').first().json.output || '';\n\n// Clean up the HTML output\nlet cleanHtml = htmlOutput\n  .replace(/```html\\n?/g, '')\n  .replace(/```\\n?/g, '')\n  .trim();\n\n// Validate basic structure\nconst hasArticleOpen = cleanHtml.includes('<article');\nconst hasArticleClose = cleanHtml.includes('</article>');\nconst hasToc = cleanHtml.includes('תוכן העניינים');\nconst hasFaq = cleanHtml.includes('שאלות נפוצות');\nconst hasAuthor = cleanHtml.includes('המכללה האקדמית נתניה');\nconst hasSchema = cleanHtml.includes('application/ld+json');\nconst hasFloating = cleanHtml.includes('floating-contact');\n\nconst validation = {\n  article_wrapper: hasArticleOpen && hasArticleClose,\n  toc_present: hasToc,\n  faq_present: hasFaq,\n  author_section: hasAuthor,\n  json_ld_schemas: hasSchema,\n  floating_button: hasFloating,\n  all_passed: hasArticleOpen && hasArticleClose && hasToc && hasFaq && hasAuthor && hasSchema && hasFloating\n};\n\nreturn [{\n  json: {\n    html: cleanHtml,\n    validation: validation,\n    word_count: cleanHtml.split(/\\s+/).length,\n    char_count: cleanHtml.length\n  }\n}];"
+      },
+      "id": "validate-001",
+      "name": "Validate & Clean HTML",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1420, 300],
+      "notes": "Validates the HTML output has all mandatory sections and cleans up formatting"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "validation-check",
+              "leftValue": "={{ $json.validation.all_passed }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        }
+      },
+      "id": "switch-001",
+      "name": "Validation Check",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [1660, 300],
+      "notes": "Routes to WordPress publish if validation passes, or to error handler if not"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $('Set Article Input').first().json.wp_api_url || 'https://example.com/wp-json/wp/v2/pages' }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpBasicAuth",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "title",
+              "value": "={{ $('Set Article Input').first().json.topic }} | המכללה האקדמית נתניה"
+            },
+            {
+              "name": "content",
+              "value": "={{ $('Validate & Clean HTML').first().json.html }}"
+            },
+            {
+              "name": "status",
+              "value": "draft"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "wp-001",
+      "name": "Publish to WordPress",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1900, 200],
+      "notes": "Publishes the validated HTML as a draft page in WordPress"
+    },
+    {
+      "parameters": {
+        "jsCode": "const validation = $('Validate & Clean HTML').first().json.validation;\nconst failures = Object.entries(validation)\n  .filter(([key, val]) => key !== 'all_passed' && val === false)\n  .map(([key]) => key);\n\nreturn [{\n  json: {\n    error: 'HTML validation failed',\n    failed_checks: failures,\n    message: `The following mandatory sections are missing: ${failures.join(', ')}. Please regenerate.`\n  }\n}];"
+      },
+      "id": "error-001",
+      "name": "Validation Error Handler",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1900, 440],
+      "notes": "Reports which validation checks failed"
+    }
+  ],
+  "connections": {
+    "Manual Trigger": {
+      "main": [
+        [
+          {
+            "node": "Set Article Input",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set Article Input": {
+      "main": [
+        [
+          {
+            "node": "Discover Target Page",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Discover Homepage",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Discover Target Page": {
+      "main": [
+        [
+          {
+            "node": "Process Discovery Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Discover Homepage": {
+      "main": [
+        [
+          {
+            "node": "Process Discovery Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Process Discovery Data": {
+      "main": [
+        [
+          {
+            "node": "Writing Blog",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Preparing Images for HTML",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Writing Blog": {
+      "main": [
+        [
+          {
+            "node": "Generate HTML Article",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Preparing Images for HTML": {
+      "main": [
+        [
+          {
+            "node": "Generate HTML Article",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate HTML Article": {
+      "main": [
+        [
+          {
+            "node": "Validate & Clean HTML",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Validate & Clean HTML": {
+      "main": [
+        [
+          {
+            "node": "Validation Check",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Validation Check": {
+      "main": [
+        [
+          {
+            "node": "Publish to WordPress",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Validation Error Handler",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": [
+    {
+      "name": "article-generator"
+    },
+    {
+      "name": "netanya-ac-il"
+    }
+  ]
+}

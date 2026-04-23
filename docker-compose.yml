@@ -1,0 +1,16 @@
+version: "3.9"
+services:
+  dashboard:
+    build: .
+    ports: ["8000:8000"]
+    environment:
+      DASHBOARD_ADMIN_USER: ${DASHBOARD_ADMIN_USER:-admin}
+      DASHBOARD_ADMIN_PASS: ${DASHBOARD_ADMIN_PASS:-change-me}
+      DASH_CSRF: "1"
+      SENTRY_DSN: ${SENTRY_DSN:-}
+      N8N_KWR_WEBHOOK_URL: ${N8N_KWR_WEBHOOK_URL:-}
+    volumes:
+      - dashboard-data:/data
+    restart: unless-stopped
+volumes:
+  dashboard-data:

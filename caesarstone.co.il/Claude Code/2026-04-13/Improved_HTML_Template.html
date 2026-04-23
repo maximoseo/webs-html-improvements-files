@@ -1,0 +1,546 @@
+<article lang="he" dir="rtl" id="article-top">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700;800&family=Frank+Ruhl+Libre:wght@400;500;700;900&display=swap');
+:root{--primary:#87562E;--primary-light:#A0704A;--primary-dark:#6B4323;--secondary:#B2A99A;--text:#333333;--text-light:#555555;--bg:#FFFFFF;--bg-soft:#F5F3F1;--bg-warm:#DCDAD8;--border:#C8C1B8;--radius:8px;--shadow:0 2px 12px rgba(135,86,46,0.08);--shadow-hover:0 4px 20px rgba(135,86,46,0.15)}
+details>summary{list-style:none;cursor:pointer}
+details>summary::-webkit-details-marker{display:none}
+details>summary::after{content:'';display:inline-block;width:10px;height:10px;border-right:2px solid #87562E;border-bottom:2px solid #87562E;transform:rotate(45deg);transition:transform 0.25s ease;margin-inline-start:12px;flex-shrink:0}
+details[open]>summary::after{transform:rotate(-135deg)}
+details>summary:hover{background:rgba(135,86,46,0.04);border-radius:8px}
+[data-toc-link]:hover{color:#87562E !important;background:rgba(135,86,46,0.05);border-radius:4px;padding-right:8px}
+[data-resp="cta-btn"]:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(135,86,46,0.3) !important}
+[data-resp="cta-btn-outline"]:hover{background:#87562E !important;color:#fff !important;transform:translateY(-2px)}
+[data-social="facebook"]:hover{background:#1877F2 !important;color:#fff !important;border-color:#1877F2 !important}
+[data-social="instagram"]:hover{background:linear-gradient(45deg,#F58529 0%,#DD2A7B 50%,#8134AF 100%) !important;color:#fff !important;border-color:#DD2A7B !important}
+[data-social="pinterest"]:hover{background:#E60023 !important;color:#fff !important;border-color:#E60023 !important}
+[data-social="youtube"]:hover{background:#FF0000 !important;color:#fff !important;border-color:#FF0000 !important}
+[data-social="linkedin"]:hover{background:#0A66C2 !important;color:#fff !important;border-color:#0A66C2 !important}
+[data-resp="card"]:hover{box-shadow:0 4px 20px rgba(135,86,46,0.1)}
+[data-resp="sticky-header"]{position:sticky;top:0;z-index:100;background:#FFFFFF;border-bottom:1px solid #C8C1B8;box-shadow:0 2px 8px rgba(0,0,0,0.04)}
+[data-resp="container"]{padding:0 15%}
+[data-resp="heading"]{font-size:2.5rem}
+[data-resp="table-wrap"]{overflow-x:auto;-webkit-overflow-scrolling:touch}
+[data-resp="table"]{min-width:600px}
+[data-resp="img"]{width:100%;height:auto}
+[data-resp="cta-btn"]{padding:16px 32px;font-size:1.1rem;transition:all 0.25s ease}
+[data-resp="grid"]{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+[data-resp="card"]{padding:24px;transition:box-shadow 0.25s ease}
+[data-resp="toc"]{padding:24px}
+[data-resp="author-box"]{display:flex;flex-direction:row;gap:24px}
+[data-resp="stat-grid"]{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+[data-resp="trust-strip"]{display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:clamp(16px,3vw,28px)}
+[data-resp="social-grid"]{display:flex;flex-wrap:wrap;gap:10px}
+[data-resp="footer-grid"]{display:grid;grid-template-columns:1.5fr 1fr 1fr 1fr;gap:clamp(20px,4vw,40px)}
+[data-resp="faq-item"]{padding:16px}
+[data-resp="callout-tip"]{background:#F5F3F1;border-right:4px solid #87562E;border-radius:8px;padding:clamp(18px,3vw,24px);margin:clamp(20px,3vw,28px) 0;box-shadow:0 2px 12px rgba(135,86,46,0.08)}
+[data-resp="callout-howto"]{background:#FAF8F5;border:1px solid #A0704A;border-radius:8px;padding:clamp(18px,3vw,24px);margin:clamp(20px,3vw,28px) 0;box-shadow:0 2px 12px rgba(135,86,46,0.08)}
+[data-resp="callout-didyouknow"]{background:#DCDAD8;border-radius:8px;padding:clamp(18px,3vw,24px);margin:clamp(20px,3vw,28px) 0;box-shadow:0 2px 12px rgba(135,86,46,0.08);position:relative}
+[data-resp="callout-label"]{display:inline-flex;align-items:center;gap:8px;font-family:'Frank Ruhl Libre',serif;font-size:clamp(0.9rem,2vw,1rem);font-weight:700;color:#87562E;letter-spacing:0.5px;text-transform:uppercase;margin-bottom:10px}
+@media(max-width:1024px){
+[data-resp="container"]{padding:0 8%}
+[data-resp="grid"]{grid-template-columns:repeat(2,1fr) !important}
+[data-resp="stat-grid"]{grid-template-columns:repeat(2,1fr) !important}
+[data-resp="footer-grid"]{grid-template-columns:1fr 1fr !important}
+}
+@media(max-width:768px){
+[data-resp="container"]{padding:0 5%}
+[data-resp="heading"]{font-size:1.8rem}
+[data-resp="table"]{font-size:0.85rem}
+[data-resp="cta-btn"]{padding:14px 24px;font-size:1rem;width:100%;box-sizing:border-box}
+[data-resp="grid"]{grid-template-columns:1fr !important}
+[data-resp="card"]{padding:16px}
+[data-resp="toc"]{padding:16px}
+[data-resp="author-box"]{flex-direction:column !important;text-align:center !important;align-items:center !important;gap:20px !important}
+[data-resp="author-box"] > div{width:100% !important;text-align:center !important}
+[data-resp="author-box"] > div > div{justify-content:center !important;flex-wrap:wrap !important}
+[data-resp="author-box"] p{text-align:center !important}
+[data-resp="author-section"] .author-section-h3{text-align:center !important}
+[data-resp="stat-grid"]{grid-template-columns:repeat(2,1fr) !important;gap:12px}
+[data-resp="social-grid"]{justify-content:center !important}
+[data-resp="footer-grid"]{grid-template-columns:1fr 1fr !important;gap:20px !important;text-align:right}
+[data-resp="sticky-header"]{padding:10px 5% !important}
+.author-section-h3{text-align:center !important}
+footer{padding-inline:5% !important}
+}
+@media(max-width:480px){
+[data-resp="container"]{padding:0 4%}
+[data-resp="heading"]{font-size:1.5rem}
+[data-resp="table"]{font-size:0.75rem;min-width:500px}
+[data-resp="cta-btn"]{padding:12px 20px;font-size:0.95rem}
+[data-resp="stat-grid"]{grid-template-columns:1fr 1fr !important;gap:8px}
+[data-resp="footer-grid"]{grid-template-columns:1fr !important;gap:16px !important}
+[data-resp="footer-grid"] > div{text-align:right}
+[data-resp="faq-item"]{padding:12px}
+[data-resp="author-box"]{gap:16px !important}
+[data-resp="author-box"] img{max-width:160px !important}
+footer{padding:clamp(24px,5vw,32px) 4% !important}
+footer h4{font-size:0.95rem !important}
+}
+@media(max-width:480px){
+[data-resp="simple-table"] tr{display:block;margin-bottom:16px;border:1px solid #C8C1B8;border-radius:8px}
+[data-resp="simple-table"] td{display:flex;justify-content:space-between;padding:8px 12px}
+[data-resp="simple-table"] td::before{content:attr(data-label);font-weight:bold}
+[data-resp="simple-table"] thead{display:none}
+}
+
+/* ── Floating buttons — professional, no overlap, all devices ── */
+[data-resp="float-btn"]{
+  position:fixed;
+  bottom:24px;
+  left:24px;
+  z-index:9999;
+  display:inline-flex;
+  align-items:center;
+  gap:7px;
+  background:#87562E;
+  color:#fff;
+  padding:0 18px;
+  height:40px;
+  border-radius:20px;
+  text-decoration:none;
+  font-size:0.82rem;
+  font-weight:600;
+  letter-spacing:0.02em;
+  white-space:nowrap;
+  box-shadow:0 2px 8px rgba(0,0,0,0.12),0 4px 16px rgba(135,86,46,0.22);
+  transition:transform 0.2s ease,box-shadow 0.2s ease,background 0.2s ease;
+  cursor:pointer;
+}
+[data-resp="float-btn"]:hover{
+  background:#6B4323;
+  transform:translateY(-2px);
+  box-shadow:0 4px 14px rgba(0,0,0,0.14),0 8px 24px rgba(135,86,46,0.28);
+}
+[data-resp="float-btn"] svg{width:13px;height:13px;flex-shrink:0}
+
+[data-resp="top-btn"]{
+  position:fixed;
+  bottom:74px;
+  left:24px;
+  z-index:9998;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  width:40px;
+  height:40px;
+  background:#fff;
+  color:#87562E;
+  border:1.5px solid #C8C1B8;
+  border-radius:50%;
+  text-decoration:none;
+  box-shadow:0 2px 6px rgba(0,0,0,0.07),0 4px 12px rgba(135,86,46,0.10);
+  cursor:pointer;
+  transition:opacity 0.3s ease,transform 0.2s ease,background 0.2s ease,border-color 0.2s ease,box-shadow 0.2s ease;
+  opacity:1;
+  pointer-events:auto;
+}
+[data-resp="top-btn"].js-hidden{opacity:0;pointer-events:none;transform:translateY(8px)}
+[data-resp="top-btn"]:hover{
+  background:#87562E;
+  border-color:#87562E;
+  color:#fff;
+  transform:translateY(-2px);
+  box-shadow:0 4px 12px rgba(135,86,46,0.22);
+}
+[data-resp="top-btn"]:hover svg{stroke:#fff}
+[data-resp="top-btn"] svg{width:14px;height:14px;transition:stroke 0.2s ease}
+
+/* Mobile: slightly smaller, same safe gap */
+@media(max-width:600px){
+  [data-resp="float-btn"]{
+    bottom:16px;
+    left:16px;
+    height:38px;
+    padding:0 14px;
+    font-size:0.80rem;
+    gap:6px;
+  }
+  [data-resp="float-btn"] svg{width:12px;height:12px}
+  [data-resp="top-btn"]{
+    bottom:64px;
+    left:16px;
+    width:38px;
+    height:38px;
+  }
+}
+</style>
+
+<div data-resp="sticky-header" style="padding:12px 15%;display:flex;justify-content:space-between;align-items:center;font-family:'Heebo','Segoe UI',Tahoma,sans-serif">
+<div style="display:flex;align-items:center;gap:12px">
+<a href="https://www.caesarstone.co.il/" aria-label="Caesarstone homepage" style="display:inline-flex;align-items:center;text-decoration:none"><img src="https://www.caesarstone.co.il/wp-content/uploads/2025/11/i-want-this-logo-to-be-in-21-white-frame-so-it-wil-1-350x100.png" alt="אבן קיסר" style="height:32px;width:auto;object-fit:contain" loading="eager" /></a>
+<span style="font-family:'Frank Ruhl Libre',serif;font-weight:700;font-size:clamp(0.95rem,2vw,1.15rem);color:#87562E">מדריך עיצוב מטבחים</span>
+</div>
+<a href="https://www.caesarstone.co.il/contact-us/" style="display:inline-flex;align-items:center;gap:6px;background:#87562E;color:#fff;padding:8px 20px;border-radius:6px;text-decoration:none;font-size:0.9rem;font-weight:600;transition:all 0.25s ease;cursor:pointer;white-space:nowrap;min-height:40px">
+<span>צרו קשר</span>
+<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+</a>
+</div>
+
+<div data-resp="container" style="font-family:'Heebo','Segoe UI',Tahoma,sans-serif;color:#333333;background:#ffffff;line-height:1.75;max-width:100%;box-sizing:border-box">
+
+<p style="font-size:clamp(0.85rem,2vw,0.95rem);color:#B2A99A;margin:clamp(16px,3vw,24px) 0 0;text-align:center">זמן קריאה: כ-12 דקות</p>
+
+<header style="text-align:center;padding:clamp(24px,5vw,48px) 0 clamp(24px,4vw,40px)">
+<p style="font-size:clamp(0.85rem,2vw,1rem);color:#87562E;font-weight:600;letter-spacing:1px;margin-bottom:clamp(12px,2vw,20px)">מדריך מקצועי מבית אבן קיסר</p>
+<h1 data-resp="heading" style="font-family:'Frank Ruhl Libre','Times New Roman',David,serif;font-size:clamp(1.8rem,5vw,3rem);font-weight:700;color:#333333;line-height:1.2;margin:0 0 clamp(16px,3vw,24px);border:none">סגנונות עיצוב מטבח פופולריים בישראל: המדריך המלא לבחירה שתחזיק לכל החיים</h1>
+<p style="font-size:clamp(1rem,2.5vw,1.2rem);color:#555555;max-width:800px;margin:0 auto;line-height:1.6">המטבח הישראלי עבר מהפכה שקטה. הנה כל מה שצריך לדעת כדי לבחור את הסגנון שמתאים בדיוק לחלל, לאורח החיים ולתקציב שלכם.</p>
+</header>
+
+<img data-resp="img" src="https://caesarstone.articlehub.work/wp-content/uploads/2026/04/PopularKitchenDesignStylesinIsrael.jpg" alt="סגנונות עיצוב מטבח פופולריים בישראל – מטבח מודרני בחלל פתוח עם משטח אבן קיסר" loading="eager" decoding="async" style="width:100%;max-width:1000px;margin:0 auto clamp(24px,4vw,40px);display:block;height:auto;max-height:500px;object-fit:cover;border-radius:8px;box-shadow:0 2px 12px rgba(135,86,46,0.08);aspect-ratio:1200/630" />
+
+<p style="font-size:clamp(1rem,2.5vw,1.15rem);color:#333333;line-height:1.8;margin:0 0 clamp(20px,3vw,28px);max-width:780px;margin-inline:auto">המטבח הוא הלב הפועם של הבית — חלל שמשלב בישול, אירוח ושהייה משפחתית. כשהוא חשוף לעין וחלק בלתי נפרד מהסלון, הבחירה בסגנון הנכון הופכת להחלטה שמעצבת את אופי הבית כולו. במדריך הזה נסקור את הסגנונות המובילים, איך לבחור נכון, ומה ההבדל בין מטבח שייראה מדהים בתמונה לבין מטבח שיעבוד באמת בחיים היומיומיים.</p>
+
+<nav data-resp="toc" aria-label="תוכן עניינים" style="padding:clamp(20px,4vw,28px);border:1px solid #C8C1B8;border-radius:8px;box-shadow:0 2px 12px rgba(135,86,46,0.08);margin:clamp(24px,4vw,40px) 0;background:#F5F3F1">
+<details data-resp="accordion" style="margin:0;border:none">
+<summary style="padding:clamp(8px,2vw,12px) 0;font-family:'Frank Ruhl Libre',serif;font-weight:700;font-size:clamp(1.1rem,2.5vw,1.3rem);color:#333333;display:flex;justify-content:space-between;align-items:center"><span>תוכן עניינים</span></summary>
+<div style="padding:clamp(12px,3vw,18px) 0 0;border-top:1px solid #C8C1B8;margin-top:8px">
+<ul style="list-style:none;padding:0;margin:0">
+<li style="padding:clamp(6px,1.5vw,10px) 0;border-bottom:1px solid rgba(135,86,46,0.08)"><a data-toc-link href="#modern" style="color:#333333;text-decoration:none;font-size:clamp(0.95rem,2.5vw,1.05rem);font-weight:500;display:block;padding:4px 0;transition:all 0.25s ease">למה הסגנון המודרני נחשב לבחירה הנפוצה ביותר?</a></li>
+<li style="padding:clamp(6px,1.5vw,10px) 0;border-bottom:1px solid rgba(135,86,46,0.08)"><a data-toc-link href="#farmhouse" style="color:#333333;text-decoration:none;font-size:clamp(0.95rem,2.5vw,1.05rem);font-weight:500;display:block;padding:4px 0;transition:all 0.25s ease">מטבח כפרי מודרני – למה הוא עדיין מבוקש?</a></li>
+<li style="padding:clamp(6px,1.5vw,10px) 0;border-bottom:1px solid rgba(135,86,46,0.08)"><a data-toc-link href="#minimalist" style="color:#333333;text-decoration:none;font-size:clamp(0.95rem,2.5vw,1.05rem);font-weight:500;display:block;padding:4px 0;transition:all 0.25s ease">מטבח מינימליסטי – לשקט ויזואלי</a></li>
+<li style="padding:clamp(6px,1.5vw,10px) 0;border-bottom:1px solid rgba(135,86,46,0.08)"><a data-toc-link href="#classic" style="color:#333333;text-decoration:none;font-size:clamp(0.95rem,2.5vw,1.05rem);font-weight:500;display:block;padding:4px 0;transition:all 0.25s ease">מטבח קלאסי בגרסה עדכנית</a></li>
+<li style="padding:clamp(6px,1.5vw,10px) 0;border-bottom:1px solid rgba(135,86,46,0.08)"><a data-toc-link href="#eclectic" style="color:#333333;text-decoration:none;font-size:clamp(0.95rem,2.5vw,1.05rem);font-weight:500;display:block;padding:4px 0;transition:all 0.25s ease">הסגנון האקלקטי – הכי "ישראלי" מכולם</a></li>
+<li style="padding:clamp(6px,1.5vw,10px) 0;border-bottom:1px solid rgba(135,86,46,0.08)"><a data-toc-link href="#mistake" style="color:#333333;text-decoration:none;font-size:clamp(0.95rem,2.5vw,1.05rem);font-weight:500;display:block;padding:4px 0;transition:all 0.25s ease">הטעות הנפוצה: בחירת סגנון לפי תמונה בלבד</a></li>
+<li style="padding:clamp(6px,1.5vw,10px) 0;border-bottom:1px solid rgba(135,86,46,0.08)"><a data-toc-link href="#choose" style="color:#333333;text-decoration:none;font-size:clamp(0.95rem,2.5vw,1.05rem);font-weight:500;display:block;padding:4px 0;transition:all 0.25s ease">איך בוחרים סגנון שמתאים לבית בישראל?</a></li>
+<li style="padding:clamp(6px,1.5vw,10px) 0;border-bottom:1px solid rgba(135,86,46,0.08)"><a data-toc-link href="#comparison" style="color:#333333;text-decoration:none;font-size:clamp(0.95rem,2.5vw,1.05rem);font-weight:500;display:block;padding:4px 0;transition:all 0.25s ease">השוואת סגנונות מטבח פופולריים</a></li>
+<li style="padding:clamp(6px,1.5vw,10px) 0;border-bottom:1px solid rgba(135,86,46,0.08)"><a data-toc-link href="#white" style="color:#333333;text-decoration:none;font-size:clamp(0.95rem,2.5vw,1.05rem);font-weight:500;display:block;padding:4px 0;transition:all 0.25s ease">מטבח לבן – עדיין פופולרי?</a></li>
+<li style="padding:clamp(6px,1.5vw,10px) 0;border-bottom:1px solid rgba(135,86,46,0.08)"><a data-toc-link href="#colors" style="color:#333333;text-decoration:none;font-size:clamp(0.95rem,2.5vw,1.05rem);font-weight:500;display:block;padding:4px 0;transition:all 0.25s ease">הצבעים והחומרים המובילים</a></li>
+<li style="padding:clamp(6px,1.5vw,10px) 0;border-bottom:1px solid rgba(135,86,46,0.08)"><a data-toc-link href="#function" style="color:#333333;text-decoration:none;font-size:clamp(0.95rem,2.5vw,1.05rem);font-weight:500;display:block;padding:4px 0;transition:all 0.25s ease">אסתטיקה מול פונקציונליות</a></li>
+<li style="padding:clamp(6px,1.5vw,10px) 0;border-bottom:1px solid rgba(135,86,46,0.08)"><a data-toc-link href="#small" style="color:#333333;text-decoration:none;font-size:clamp(0.95rem,2.5vw,1.05rem);font-weight:500;display:block;padding:4px 0;transition:all 0.25s ease">איזה סגנון מתאים למטבח קטן?</a></li>
+<li style="padding:clamp(6px,1.5vw,10px) 0;border-bottom:1px solid rgba(135,86,46,0.08)"><a data-toc-link href="#trendy" style="color:#333333;text-decoration:none;font-size:clamp(0.95rem,2.5vw,1.05rem);font-weight:500;display:block;padding:4px 0;transition:all 0.25s ease">טרנדי או על-זמני?</a></li>
+<li style="padding:clamp(6px,1.5vw,10px) 0"><a data-toc-link href="#faq" style="color:#333333;text-decoration:none;font-size:clamp(0.95rem,2.5vw,1.05rem);font-weight:500;display:block;padding:4px 0;transition:all 0.25s ease">שאלות נפוצות</a></li>
+</ul>
+</div>
+</details>
+</nav>
+
+<div data-resp="trust-strip" style="display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:clamp(16px,3vw,28px);padding:clamp(16px,3vw,20px) clamp(12px,3vw,24px);background:#FAF8F5;border:1px solid #C8C1B8;border-radius:8px;margin:clamp(24px,4vw,32px) 0">
+<div style="display:inline-flex;align-items:center;gap:8px;font-size:clamp(0.85rem,2vw,0.95rem);color:#333333;font-weight:600"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#87562E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="6"/><path d="M9 14l-2 6 5-3 5 3-2-6"/></svg><span>מותג ישראלי מוביל מאז 1987</span></div>
+<div style="display:inline-flex;align-items:center;gap:8px;font-size:clamp(0.85rem,2vw,0.95rem);color:#333333;font-weight:600"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#87562E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s-8-4.5-8-11.8A5.2 5.2 0 0 1 12 4a5.2 5.2 0 0 1 8 6.2c0 7.3-8 11.8-8 11.8z"/></svg><span>אחריות לכל החיים על המשטח</span></div>
+<div style="display:inline-flex;align-items:center;gap:8px;font-size:clamp(0.85rem,2vw,0.95rem);color:#333333;font-weight:600"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#87562E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg><span>חברה גלובלית, ייצור בישראל</span></div>
+<div style="display:inline-flex;align-items:center;gap:8px;font-size:clamp(0.85rem,2vw,0.95rem);color:#333333;font-weight:600"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#87562E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2zM22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg><span>יותר מ-50 גוונים ומרקמים</span></div>
+</div>
+
+<div data-resp="stat-grid" style="display:grid;grid-template-columns:repeat(4,1fr);gap:clamp(12px,3vw,20px);margin:clamp(24px,4vw,40px) 0">
+<div style="text-align:center;padding:clamp(16px,3vw,24px);background:#F5F3F1;border-radius:8px;border:1px solid #C8C1B8">
+<div style="font-family:'Frank Ruhl Libre',serif;font-size:clamp(1.5rem,4vw,2.5rem);font-weight:700;color:#87562E">5</div>
+<div style="font-size:clamp(0.8rem,2vw,0.95rem);color:#555555">סגנונות מובילים בישראל</div>
+</div>
+<div style="text-align:center;padding:clamp(16px,3vw,24px);background:#F5F3F1;border-radius:8px;border:1px solid #C8C1B8">
+<div style="font-family:'Frank Ruhl Libre',serif;font-size:clamp(1.5rem,4vw,2.5rem);font-weight:700;color:#87562E">8-14</div>
+<div style="font-size:clamp(0.8rem,2vw,0.95rem);color:#555555">מ"ר ממוצע למטבח ישראלי</div>
+</div>
+<div style="text-align:center;padding:clamp(16px,3vw,24px);background:#F5F3F1;border-radius:8px;border:1px solid #C8C1B8">
+<div style="font-family:'Frank Ruhl Libre',serif;font-size:clamp(1.5rem,4vw,2.5rem);font-weight:700;color:#87562E">50+</div>
+<div style="font-size:clamp(0.8rem,2vw,0.95rem);color:#555555">גוונים ומרקמים זמינים</div>
+</div>
+<div style="text-align:center;padding:clamp(16px,3vw,24px);background:#F5F3F1;border-radius:8px;border:1px solid #C8C1B8">
+<div style="font-family:'Frank Ruhl Libre',serif;font-size:clamp(1.5rem,4vw,2.5rem);font-weight:700;color:#87562E">∞</div>
+<div style="font-size:clamp(0.8rem,2vw,0.95rem);color:#555555">אחריות לכל החיים</div>
+</div>
+</div>
+
+<div data-resp="card" style="background:#F5F3F1;border:1px solid #C8C1B8;border-radius:8px;padding:clamp(20px,4vw,32px);margin:clamp(24px,4vw,40px) 0;box-shadow:0 2px 12px rgba(135,86,46,0.08);border-right:4px solid #87562E">
+<p style="font-family:'Frank Ruhl Libre',serif;font-size:clamp(1.1rem,2.5vw,1.3rem);color:#87562E;font-weight:700;margin:0 0 12px">תובנה מרכזית</p>
+<p style="font-size:clamp(1rem,2.5vw,1.1rem);color:#333333;margin:0;line-height:1.75">המטבח הישראלי עבר מהפכה שקטה. מה שהיה פעם חדר עבודה סגור וצר הפך ללב הפועם של הבית – חלל פתוח שמשלב בישול, אירוח ושהייה משפחתית. כשהמטבח חשוף לעין, הבחירה בסגנון הנכון הופכת להחלטה שמעצבת את אופי הבית כולו.</p>
+</div>
+
+<div data-resp="card" style="background:#F5F3F1;border:1px solid #C8C1B8;border-radius:8px;padding:clamp(20px,4vw,32px);margin:clamp(24px,4vw,40px) 0;box-shadow:0 2px 12px rgba(135,86,46,0.08)">
+<p style="font-family:'Frank Ruhl Libre',serif;font-size:clamp(1.1rem,2.5vw,1.3rem);color:#87562E;font-weight:700;margin:0 0 16px">נקודות מפתח</p>
+<ul style="list-style:none;padding:0;margin:0">
+<li style="padding:10px 0;border-bottom:1px solid rgba(135,86,46,0.1);font-size:clamp(0.95rem,2.5vw,1.05rem);color:#333333;line-height:1.7;padding-right:20px;position:relative"><span style="position:absolute;right:0;color:#87562E;font-weight:700">&#10003;</span> הסגנון המודרני הוא הנפוץ ביותר בישראל, הודות להתאמתו לחללים פתוחים ולדירות קומפקטיות</li>
+<li style="padding:10px 0;border-bottom:1px solid rgba(135,86,46,0.1);font-size:clamp(0.95rem,2.5vw,1.05rem);color:#333333;line-height:1.7;padding-right:20px;position:relative"><span style="position:absolute;right:0;color:#87562E;font-weight:700">&#10003;</span> בחירת סגנון מטבח צריכה להתאים לגודל החלל, אורח החיים והתקציב – לא רק למראה</li>
+<li style="padding:10px 0;border-bottom:1px solid rgba(135,86,46,0.1);font-size:clamp(0.95rem,2.5vw,1.05rem);color:#333333;line-height:1.7;padding-right:20px;position:relative"><span style="position:absolute;right:0;color:#87562E;font-weight:700">&#10003;</span> שילוב חומרים מהנדסים כמו משטחי אבן קיסר מאפשר ליהנות מעיצוב מרהיב יחד עם עמידות ארוכת-שנים</li>
+<li style="padding:10px 0;font-size:clamp(0.95rem,2.5vw,1.05rem);color:#333333;line-height:1.7;padding-right:20px;position:relative"><span style="position:absolute;right:0;color:#87562E;font-weight:700">&#10003;</span> הטרנד החם: מטבח מודרני-חם שמשלב קווים נקיים עם חומרים טבעיים וטקסטורות עץ</li>
+</ul>
+</div>
+
+<section id="modern" style="margin:clamp(32px,5vw,56px) 0">
+<h2 style="font-family:'Frank Ruhl Libre',serif;font-size:clamp(1.5rem,4vw,2.25rem);font-weight:700;color:#333333;line-height:1.3;border-bottom:2px solid #87562E;padding-bottom:clamp(8px,2vw,16px);margin-bottom:clamp(16px,3vw,28px)">למה הסגנון המודרני נחשב לבחירה הכי נפוצה במטבחים בישראל?</h2>
+<p style="font-size:clamp(1rem,2.5vw,1.1rem);color:#333333;line-height:1.75;margin-bottom:clamp(12px,2vw,20px)">הסגנון המודרני שולט בנוף המטבחים הישראלי, וזה לא מקרי. הוא מבוסס על קווים ישרים, חזיתות חלקות, פלטת צבעים מאוזנת והימנעות מעומס ויזואלי. בדירות ישראליות, שבהן שטח המטבח נע לרוב בין 8 ל-14 מ"ר, התכונות האלה הופכות את החלל לנושם ופתוח יותר.</p>
+<p style="font-size:clamp(1rem,2.5vw,1.1rem);color:#333333;line-height:1.75;margin-bottom:clamp(12px,2vw,20px)">הסגנון המודרני מאפשר שילוב של מכשירי חשמל אינטגרליים, פתרונות אחסון חכמים וזרימת עבודה נוחה – כל מה שמטבח פעיל באמת צריך. מעבר לפרקטיקה, <a href="https://www.caesarstone.co.il/blog/4-architects-4-kitchen-design-styles/" style="color:#87562E;text-decoration:underline;font-weight:600">סגנון מודרני בעיצוב מטבח</a> מציע גמישות עיצובית רחבה.</p>
+<p style="font-size:clamp(1rem,2.5vw,1.1rem);color:#333333;line-height:1.75;margin-bottom:clamp(12px,2vw,20px)">אפשר להוסיף לו חמימות באמצעות משטחי עבודה בגוון טבעי, לשלב תאורה אווירתית או להכניס טקסטורת עץ בפרט אחד בולט. הוא משמש כבסיס מצוין שעליו אפשר לבנות אופי אישי, בלי להתפשר על הסדר הוויזואלי שמאפיין אותו.</p>
+<aside data-resp="callout-didyouknow" style="background:#DCDAD8;border-radius:8px;padding:clamp(18px,3vw,24px);margin:clamp(20px,3vw,28px) 0;box-shadow:0 2px 12px rgba(135,86,46,0.08)">
+<p data-resp="callout-label" style="display:inline-flex;align-items:center;gap:8px;font-family:'Frank Ruhl Libre',serif;font-size:clamp(0.9rem,2vw,1rem);font-weight:700;color:#87562E;letter-spacing:0.5px;margin:0 0 10px"><span>הידעת?</span><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#87562E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg></p>
+<p style="font-size:clamp(0.95rem,2.5vw,1.05rem);color:#333333;margin:0;line-height:1.75">הסגנון המודרני בעיצוב מטבחים התפתח במקור באסכולת באוהאוס הגרמנית, שטענה ש"הצורה עוקבת אחרי הפונקציה". העיקרון הזה – מטבח שמתחיל מהשימוש היומיומי, לא מהאסתטיקה – הוא מה שהפך אותו למועדף בדירות הקומפקטיות של ישראל.</p>
+</aside>
+</section>
+
+<section id="farmhouse" style="margin:clamp(32px,5vw,56px) 0">
+<h2 style="font-family:'Frank Ruhl Libre',serif;font-size:clamp(1.5rem,4vw,2.25rem);font-weight:700;color:#333333;line-height:1.3;border-bottom:2px solid #87562E;padding-bottom:clamp(8px,2vw,16px);margin-bottom:clamp(16px,3vw,28px)">מהו מטבח כפרי מודרני ולמה הוא עדיין מבוקש?</h2>
+<p style="font-size:clamp(1rem,2.5vw,1.1rem);color:#333333;line-height:1.75;margin-bottom:clamp(12px,2vw,20px)">הסגנון הכפרי-מעודכן, או Farmhouse Modern, מציע חלופה חמה למי שמרגיש שהקו המודרני הטהור קר מדי עבורו. זהו לא הכפרי האירופאי הכבד עם ארונות עץ כהים ופרטי ברזל מסיביים, אלא גרסה קלילה ומזמינה שמשלבת עץ טבעי בגוונים בהירים, פרזול עדין, מדפים פתוחים ותחושה כללית של ביתיות נינוחה.</p>
+<p style="font-size:clamp(1rem,2.5vw,1.1rem);color:#333333;line-height:1.75;margin-bottom:clamp(12px,2vw,20px)">הביקוש לסגנון הזה בישראל נובע מהצורך העמוק ב"תחושת בית" – מטבח שמזמין לשבת בו, לבשל ביחד, לארח. כפי שעולה <a href="https://www.globes.co.il/news/sparticle.aspx?did=1001397305" style="color:#87562E;text-decoration:underline;font-weight:600" rel="noopener">מכתבות עיצוב על בתים ישראליים</a>, שילוב של אור טבעי עם חומרים חמים וקווים נקיים יוצר חלל שמרגיש גם עכשווי וגם מחבק.</p>
+<p style="font-size:clamp(1rem,2.5vw,1.1rem);color:#333333;line-height:1.75;margin-bottom:clamp(12px,2vw,20px)"><strong style="color:#333333">החומרים המובילים בסגנון הזה:</strong> עץ אלון, משטחי עבודה בגוון אבן או שמנת, וגימורים מט שמרככים את המראה הכולל.</p>
+</section>
+
+<section id="minimalist" style="margin:clamp(32px,5vw,56px) 0">
+<h2 style="font-family:'Frank Ruhl Libre',serif;font-size:clamp(1.5rem,4vw,2.25rem);font-weight:700;color:#333333;line-height:1.3;border-bottom:2px solid #87562E;padding-bottom:clamp(8px,2vw,16px);margin-bottom:clamp(16px,3vw,28px)">מהו מטבח מינימליסטי ולמי הוא מתאים?</h2>
+<img data-resp="img" src="https://caesarstone.articlehub.work/wp-content/uploads/2026/04/ComparisonofPopularKitchenDesignStylesinIsrael.jpg" alt="השוואה בין סגנונות מטבח מובילים בישראל – מינימליסטי, מודרני וקלאסי" loading="lazy" decoding="async" style="width:100%;max-width:800px;margin:0 auto clamp(24px,3vw,32px);display:block;height:auto;object-fit:cover;border-radius:8px;box-shadow:0 2px 12px rgba(135,86,46,0.08);aspect-ratio:1200/630" />
+<p style="font-size:clamp(1rem,2.5vw,1.1rem);color:#333333;line-height:1.75;margin-bottom:clamp(12px,2vw,20px)">פילוסופיית ה-Less is More מקבלת ביטוי מעשי במטבח המינימליסטי. כאן הכל מוסתר: ידיות נעלמות לטובת פתיחה בלחיצה, מכשירי חשמל מוטמעים מאחורי חזיתות אחידות, ומשטחי העבודה נותרים נקיים ופנויים ככל האפשר.</p>
+<p style="font-size:clamp(1rem,2.5vw,1.1rem);color:#333333;line-height:1.75;margin-bottom:clamp(12px,2vw,20px)">מטבח מינימליסטי דורש תכנון מדויק במיוחד. כל שגיאה באחסון או בפונקציונליות בולטת בחלל כל כך נקי. בישראל, הסגנון הזה מתאים במיוחד לדירות קטנות שבהן כל סנטימטר חשוב, ולבעלי בית שמעדיפים סדר וויזואלי על פני אקספרסיביות.</p>
+</section>
+
+<div style="background:linear-gradient(135deg,#87562E 0%,#A0704A 100%);border-radius:12px;padding:clamp(24px,5vw,40px);margin:clamp(32px,5vw,48px) 0;text-align:center;box-shadow:0 4px 20px rgba(135,86,46,0.2)">
+<h3 style="font-family:'Frank Ruhl Libre',serif;font-size:clamp(1.2rem,3vw,1.6rem);font-weight:700;color:#ffffff;margin:0 0 clamp(10px,2vw,16px);line-height:1.3">מתלבטים איזה סגנון באמת מתאים לחלל שלכם?</h3>
+<p style="font-size:clamp(0.95rem,2.5vw,1.1rem);color:#F5F3F1;margin:0 0 clamp(16px,3vw,24px);max-width:640px;display:inline-block;line-height:1.7">הצוות המקצועי של אבן קיסר ישמח ללוות אתכם בבחירה – ממשטחי העבודה ועד לגוונים שישתלבו בצורה מושלמת עם הסגנון שאתם חולמים עליו.</p>
+<div style="display:flex;flex-wrap:wrap;gap:12px;justify-content:center;align-items:center">
+<a data-resp="cta-btn" href="https://www.caesarstone.co.il/contact-us/" style="display:inline-flex;align-items:center;gap:8px;background:#ffffff;color:#87562E;padding:clamp(12px,2.5vw,16px) clamp(24px,4vw,36px);font-size:clamp(0.95rem,2.5vw,1.1rem);font-weight:700;text-decoration:none;border-radius:8px;box-shadow:0 4px 16px rgba(0,0,0,0.12);cursor:pointer;min-height:44px"><span>קבעו פגישת ייעוץ</span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg></a>
+<a href="tel:1800778800" style="display:inline-flex;align-items:center;gap:8px;color:#ffffff;text-decoration:none;font-size:clamp(0.9rem,2vw,1rem);font-weight:600;padding:10px 20px;border:2px solid rgba(255,255,255,0.5);border-radius:8px;transition:all 0.25s ease;cursor:pointer;min-height:44px"><span>1-800-77-88-00</span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg></a>
+</div>
+</div>
+
+<section id="classic" style="margin:clamp(32px,5vw,56px) 0">
+<h2 style="font-family:'Frank Ruhl Libre',serif;font-size:clamp(1.5rem,4vw,2.25rem);font-weight:700;color:#333333;line-height:1.3;border-bottom:2px solid #87562E;padding-bottom:clamp(8px,2vw,16px);margin-bottom:clamp(16px,3vw,28px)">מטבח קלאסי בגרסה עדכנית – מתי זה עובד?</h2>
+<p style="font-size:clamp(1rem,2.5vw,1.1rem);color:#333333;line-height:1.75;margin-bottom:clamp(12px,2vw,20px)">הסגנון הקלאסי-עכשווי לוקח את האלגנטיות של המטבח המסורתי ומנקה אותו מהעומס. במקום פרטים מוגזמים, יש פרופילים עדינים. במקום צבעים כבדים, יש גוונים רכים. במקום חומרים כבדים, יש שילוב של מסורתי ומודרני שמרגיש נכון גם היום.</p>
+<img data-resp="img" src="https://caesarstone.articlehub.work/wp-content/uploads/2026/04/ClassicKitcheninaModernVersionWhenDoesItWork.jpg" alt="מטבח קלאסי בגרסה מודרנית עם משטחי אבן קיסר" loading="lazy" decoding="async" style="width:100%;max-width:800px;margin:0 auto clamp(24px,3vw,32px);display:block;height:auto;object-fit:cover;border-radius:8px;box-shadow:0 2px 12px rgba(135,86,46,0.08);aspect-ratio:1200/630" />
+<p style="font-size:clamp(1rem,2.5vw,1.1rem);color:#333333;line-height:1.75;margin-bottom:clamp(12px,2vw,20px)">היתרון הגדול של הקלאסי העכשווי הוא שהוא לא ייראה מיושן בעוד חמש שנים. הוא מבוסס על פרופורציות מאוזנות ועל חומרים שמתבגרים יפה. למי שמתכנן מטבח בבית שיחזיק לטווח ארוך, הגרסה העכשווית של הקלאסי היא בחירה בטוחה ומכובדת.</p>
+<aside data-resp="callout-tip" style="background:#F5F3F1;border-right:4px solid #87562E;border-radius:8px;padding:clamp(18px,3vw,24px);margin:clamp(20px,3vw,28px) 0;box-shadow:0 2px 12px rgba(135,86,46,0.08)">
+<p data-resp="callout-label" style="display:inline-flex;align-items:center;gap:8px;font-family:'Frank Ruhl Libre',serif;font-size:clamp(0.9rem,2vw,1rem);font-weight:700;color:#87562E;letter-spacing:0.5px;margin:0 0 10px"><span>טיפ מקצועי</span><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#87562E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5M9 18h6M10 22h4"/></svg></p>
+<p style="font-size:clamp(0.95rem,2.5vw,1.05rem);color:#333333;margin:0;line-height:1.75">בוחרים קלאסי? שמרו על האיזון. מטבח קלאסי עכשווי עובד הכי טוב כשבוחרים פריט עיצוב אחד מרכזי (וויטרינה, כיור מעוצב, או משטח עבודה עם וריד טבעי) ומשאירים את יתר המטבח רגוע יותר. עומס של אלמנטים קלאסיים יוצר מראה עמוס ומיושן.</p>
+</aside>
+</section>
+
+<section id="eclectic" style="margin:clamp(32px,5vw,56px) 0">
+<h2 style="font-family:'Frank Ruhl Libre',serif;font-size:clamp(1.5rem,4vw,2.25rem);font-weight:700;color:#333333;line-height:1.3;border-bottom:2px solid #87562E;padding-bottom:clamp(8px,2vw,16px);margin-bottom:clamp(16px,3vw,28px)">למה יותר ישראלים בוחרים בסגנון אקלקטי?</h2>
+<p style="font-size:clamp(1rem,2.5vw,1.1rem);color:#333333;line-height:1.75;margin-bottom:clamp(12px,2vw,20px)">הסגנון האקלקטי הוא אולי הכי "ישראלי" מכולם – חופש יצירתי, שילוב של השפעות שונות, ותחושה של בית שנבנה לאורך זמן ולא נקנה מקטלוג. כאן אפשר לשלב ארונות מודרניים עם אריחים מרוקאיים, משטח עבודה בגוון בטון ליד קיר צבעוני, או מנורת וינטג' מעל אי מודרני.</p>
+<p style="font-size:clamp(1rem,2.5vw,1.1rem);color:#333333;line-height:1.75;margin-bottom:clamp(12px,2vw,20px)">המפתח להצלחה בסגנון אקלקטי הוא קו מנחה. בלי עוגן עיצובי – בין אם זה פלטת צבעים מוגבלת, חומר מוביל, או קו סגנוני שחוזר – האקלקטיות עלולה להפוך לכאוס. כשיש עוגן, היא הופכת לאמירה אישית חזקה. מקור מצוין להשראה: <a href="https://www.archdaily.com/category/kitchen" style="color:#87562E;text-decoration:underline;font-weight:600" rel="noopener" target="_blank">הקטגוריה של ArchDaily לעיצוב מטבחים</a>, שמציגה פרויקטים מכל העולם.</p>
+</section>
+
+<section id="mistake" style="margin:clamp(32px,5vw,56px) 0">
+<h2 style="font-family:'Frank Ruhl Libre',serif;font-size:clamp(1.5rem,4vw,2.25rem);font-weight:700;color:#333333;line-height:1.3;border-bottom:2px solid #87562E;padding-bottom:clamp(8px,2vw,16px);margin-bottom:clamp(16px,3vw,28px)">טעות נפוצה: לבחור סגנון לפי תמונה בלי לבדוק התאמה לחלל</h2>
+<img data-resp="img" src="https://caesarstone.articlehub.work/wp-content/uploads/2026/04/PopularKitchenDesignStylesinIsrael.jpg" alt="בחירת סגנון מטבח – חשיבות ההתאמה לחלל הביתי" loading="lazy" decoding="async" style="width:100%;max-width:800px;margin:0 auto clamp(24px,3vw,32px);display:block;height:auto;object-fit:cover;border-radius:8px;box-shadow:0 2px 12px rgba(135,86,46,0.08);aspect-ratio:1200/630" />
+<p style="font-size:clamp(1rem,2.5vw,1.1rem);color:#333333;line-height:1.75;margin-bottom:clamp(12px,2vw,20px)">אחת הטעויות הנפוצות ביותר היא בחירת סגנון על סמך תמונות מ-Pinterest או מגזינים, בלי לבדוק איך הסגנון הזה יתנהג בחלל הספציפי שלכם. המטבח הנהדר שראיתם בתמונה צולם כנראה בחלל של 30 מ"ר, עם גובה תקרה של 3.5 מטר ואור טבעי מכל הכיוונים – תנאים שרוב המטבחים הישראליים פשוט לא עומדים בהם.</p>
+<div data-resp="card" style="background:#F5F3F1;border:1px solid #C8C1B8;border-radius:8px;padding:clamp(16px,4vw,28px);margin:clamp(16px,3vw,28px) 0;box-shadow:0 2px 12px rgba(135,86,46,0.08);border-right:3px solid #B2A99A">
+<p style="font-size:clamp(1rem,2.5vw,1.1rem);color:#87562E;font-weight:600;margin:0 0 8px">שאלו את עצמכם לפני שמתחייבים:</p>
+<ul style="padding-right:20px;margin:0">
+<li style="font-size:clamp(0.95rem,2.5vw,1.05rem);color:#333333;line-height:1.75;margin-bottom:8px">מה גודל החלל שלי ומה מבנהו?</li>
+<li style="font-size:clamp(0.95rem,2.5vw,1.05rem);color:#333333;line-height:1.75;margin-bottom:8px">כמה אור טבעי נכנס?</li>
+<li style="font-size:clamp(0.95rem,2.5vw,1.05rem);color:#333333;line-height:1.75;margin-bottom:8px">מה אורח החיים שלי – בישול יומיומי או מינימלי?</li>
+<li style="font-size:clamp(0.95rem,2.5vw,1.05rem);color:#333333;line-height:1.75;margin-bottom:0">כמה זמן אני מתכנן/ת לגור כאן?</li>
+</ul>
+</div>
+</section>
+
+<div style="text-align:center;margin:clamp(32px,5vw,48px) 0">
+<a data-resp="cta-btn" href="https://www.caesarstone.co.il/" style="display:inline-block;background:#87562E;color:#fff;padding:clamp(14px,3vw,18px) clamp(28px,5vw,44px);font-size:clamp(0.95rem,2.5vw,1.15rem);font-weight:700;text-decoration:none;border-radius:8px;box-shadow:0 4px 16px rgba(135,86,46,0.2);transition:all 0.25s ease;cursor:pointer;min-height:44px">בואו לגלות איזה משטח מתאים לסגנון שלכם</a>
+</div>
+
+<section id="choose" style="margin:clamp(32px,5vw,56px) 0">
+<h2 style="font-family:'Frank Ruhl Libre',serif;font-size:clamp(1.5rem,4vw,2.25rem);font-weight:700;color:#333333;line-height:1.3;border-bottom:2px solid #87562E;padding-bottom:clamp(8px,2vw,16px);margin-bottom:clamp(16px,3vw,28px)">איך בוחרים סגנון מטבח שמתאים לבית בישראל?</h2>
+<p style="font-size:clamp(1rem,2.5vw,1.1rem);color:#333333;line-height:1.75;margin-bottom:clamp(12px,2vw,20px)">בחירת סגנון מטבח היא לא רק עניין של טעם – היא החלטה שמשלבת שיקולים של חלל, אורח חיים, תקציב ועמידות לאורך זמן.</p>
+<h3 style="font-family:'Frank Ruhl Libre',serif;font-size:clamp(1.2rem,3vw,1.5rem);font-weight:700;color:#333333;line-height:1.4;margin:clamp(20px,3vw,32px) 0 clamp(12px,2vw,16px)">התאמה לגודל החלל</h3>
+<p style="font-size:clamp(1rem,2.5vw,1.1rem);color:#333333;line-height:1.75;margin-bottom:clamp(12px,2vw,20px)">חלל קטן דורש קווים נקיים וצבעים בהירים. חלל גדול מאפשר יותר חופש – עומק צבע, אלמנטים דקורטיביים, ואי מרכזי.</p>
+<h3 style="font-family:'Frank Ruhl Libre',serif;font-size:clamp(1.2rem,3vw,1.5rem);font-weight:700;color:#333333;line-height:1.4;margin:clamp(20px,3vw,32px) 0 clamp(12px,2vw,16px)">התאמה לאורח החיים</h3>
+<p style="font-size:clamp(1rem,2.5vw,1.1rem);color:#333333;line-height:1.75;margin-bottom:clamp(12px,2vw,20px)">משפחה עם ילדים קטנים צריכה משטחים עמידים וקלים לניקוי. זוג צעיר שמבשל הרבה יעדיף פריסה מקצועית.</p>
+<aside data-resp="callout-howto" style="background:#FAF8F5;border:1px solid #A0704A;border-radius:8px;padding:clamp(18px,3vw,24px);margin:clamp(20px,3vw,28px) 0;box-shadow:0 2px 12px rgba(135,86,46,0.08)">
+<p data-resp="callout-label" style="display:inline-flex;align-items:center;gap:8px;font-family:'Frank Ruhl Libre',serif;font-size:clamp(0.9rem,2vw,1rem);font-weight:700;color:#87562E;letter-spacing:0.5px;margin:0 0 14px"><span>איך עושים את זה – מדריך צעד-אחר-צעד</span><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#87562E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg></p>
+<ol style="padding-inline-start:24px;margin:0;counter-reset:howto">
+<li style="font-size:clamp(0.95rem,2.5vw,1.05rem);color:#333333;line-height:1.75;margin-bottom:10px"><strong style="color:#87562E">מדדו את החלל שלכם</strong> – אורך, רוחב, גובה תקרה, חלונות ודלתות. רשמו הכול.</li>
+<li style="font-size:clamp(0.95rem,2.5vw,1.05rem);color:#333333;line-height:1.75;margin-bottom:10px"><strong style="color:#87562E">אפיינו את שגרת הבישול שלכם</strong> – בישול יומיומי, אירוח סופ"ש, או שימוש מינימלי?</li>
+<li style="font-size:clamp(0.95rem,2.5vw,1.05rem);color:#333333;line-height:1.75;margin-bottom:10px"><strong style="color:#87562E">בחרו 2–3 סגנונות שמדברים אליכם</strong> וסננו רק את אלה שמתאימים לתוצאות הסעיפים הקודמים.</li>
+<li style="font-size:clamp(0.95rem,2.5vw,1.05rem);color:#333333;line-height:1.75;margin-bottom:10px"><strong style="color:#87562E">בקרו באולם תצוגה</strong> – תראו את המשטחים במציאות, לא רק במסך.</li>
+<li style="font-size:clamp(0.95rem,2.5vw,1.05rem);color:#333333;line-height:1.75;margin-bottom:0"><strong style="color:#87562E">התייעצו עם מומחה</strong> – גם עיצובית וגם מקצועית, לפני שחותמים על הזמנה.</li>
+</ol>
+</aside>
+<div data-resp="card" style="background:#F5F3F1;border:1px solid #C8C1B8;border-radius:8px;padding:clamp(16px,4vw,28px);margin:clamp(16px,3vw,28px) 0;box-shadow:0 2px 12px rgba(135,86,46,0.08);border-right:3px solid #87562E">
+<p style="font-size:clamp(1rem,2.5vw,1.1rem);color:#87562E;font-weight:600;margin:0 0 8px">היתרון של חומר מהנדס:</p>
+<p style="font-size:clamp(0.95rem,2.5vw,1.05rem);color:#333333;margin:0;line-height:1.75">משטחי אבן קיסר מתאימים לכל סגנון – מודרני, כפרי, מינימליסטי או קלאסי. הם עמידים בפני כתמים, שריטות וחום, ומגיעים במגוון של יותר מ-50 גוונים ומרקמים.</p>
+</div>
+</section>
+
+<div style="background:linear-gradient(135deg,#F5F3F1 0%,#FAF8F5 100%);border:2px solid #87562E;border-radius:12px;padding:clamp(24px,5vw,36px);margin:clamp(32px,5vw,48px) 0;text-align:center;box-shadow:0 4px 20px rgba(135,86,46,0.1)">
+<h3 style="font-family:'Frank Ruhl Libre',serif;font-size:clamp(1.2rem,3vw,1.6rem);font-weight:700;color:#333333;margin:0 0 clamp(10px,2vw,16px);line-height:1.3">עדיין בלבול בין שלושה סגנונות? בואו נעשה לכם סדר.</h3>
+<p style="font-size:clamp(0.95rem,2.5vw,1.1rem);color:#555555;margin:0 0 clamp(16px,3vw,24px);max-width:640px;display:inline-block;line-height:1.7">השאירו פרטים וייעוץ קצר יעזור לכם לצמצם את הבחירה למה שבאמת יתאים לבית, לתקציב ולסגנון החיים שלכם.</p>
+<div style="display:flex;flex-wrap:wrap;gap:12px;justify-content:center;align-items:center">
+<a data-resp="cta-btn" href="https://www.caesarstone.co.il/contact-us/" style="display:inline-flex;align-items:center;gap:8px;background:#87562E;color:#ffffff;padding:clamp(12px,2.5vw,16px) clamp(24px,4vw,36px);font-size:clamp(0.95rem,2.5vw,1.1rem);font-weight:700;text-decoration:none;border-radius:8px;box-shadow:0 4px 16px rgba(135,86,46,0.2);cursor:pointer;min-height:44px"><span>השאירו פרטים לייעוץ אישי</span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 5l7 7-7 7"/></svg></a>
+<a href="https://api.whatsapp.com/send?phone=972524411209" target="_blank" rel="noopener noreferrer" style="display:inline-flex;align-items:center;gap:8px;background:#25D366;color:#ffffff;padding:clamp(12px,2.5vw,16px) clamp(20px,4vw,28px);font-size:clamp(0.9rem,2vw,1rem);font-weight:700;text-decoration:none;border-radius:8px;transition:all 0.25s ease;cursor:pointer;min-height:44px"><span>WhatsApp</span><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.5 14.3c-.3-.1-1.6-.8-1.8-.9-.2-.1-.4-.1-.6.1-.2.3-.7.9-.9 1.1-.2.2-.3.2-.6.1-.3-.1-1.2-.5-2.4-1.5-.9-.8-1.4-1.8-1.6-2.1-.2-.3 0-.5.1-.6.1-.1.3-.3.4-.5.1-.2.2-.3.3-.5 0-.2 0-.3-.1-.4 0-.1-.5-1.3-.8-1.8-.2-.5-.4-.4-.6-.4h-.5c-.2 0-.5.1-.7.3-.2.3-.9.9-.9 2.2 0 1.3 1 2.6 1.1 2.8.1.2 1.9 2.9 4.6 4.1.6.3 1.1.4 1.5.5.6.2 1.2.2 1.6.1.5-.1 1.5-.6 1.7-1.2.2-.6.2-1.1.1-1.2 0-.1-.2-.2-.5-.3zM12 2C6.5 2 2 6.5 2 12c0 1.8.5 3.5 1.3 5L2 22l5.1-1.3c1.4.8 3.1 1.2 4.9 1.2 5.5 0 10-4.5 10-10S17.5 2 12 2z"/></svg></a>
+</div>
+</div>
+
+<section id="comparison" style="margin:clamp(32px,5vw,56px) 0">
+<h2 style="font-family:'Frank Ruhl Libre',serif;font-size:clamp(1.5rem,4vw,2.25rem);font-weight:700;color:#333333;line-height:1.3;border-bottom:2px solid #87562E;padding-bottom:clamp(8px,2vw,16px);margin-bottom:clamp(16px,3vw,28px)">השוואת סגנונות מטבח פופולריים בישראל</h2>
+<div data-resp="table-wrap" style="width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch;margin:24px 0;border-radius:8px;box-shadow:0 2px 12px rgba(135,86,46,0.08)">
+<table data-resp="table" style="width:100%;min-width:600px;border-collapse:collapse;font-size:clamp(0.75rem,2vw,1rem)">
+<thead>
+<tr style="background:#87562E;color:#ffffff">
+<th style="padding:clamp(10px,2vw,16px);text-align:right;font-weight:600;min-width:120px">סגנון</th>
+<th style="padding:clamp(10px,2vw,16px);text-align:right;font-weight:600">מאפיינים</th>
+<th style="padding:clamp(10px,2vw,16px);text-align:right;font-weight:600">מתאים ל...</th>
+<th style="padding:clamp(10px,2vw,16px);text-align:right;font-weight:600">רמת תחזוקה</th>
+</tr>
+</thead>
+<tbody>
+<tr style="background:#F5F3F1"><td style="padding:clamp(10px,2vw,14px);border-bottom:1px solid #C8C1B8;font-weight:600;color:#333333">מודרני</td><td style="padding:clamp(10px,2vw,14px);border-bottom:1px solid #C8C1B8">קווים ישרים, חזיתות חלקות, צבעוניות מאופקת</td><td style="padding:clamp(10px,2vw,14px);border-bottom:1px solid #C8C1B8">חללים פתוחים, דירות קומפקטיות</td><td style="padding:clamp(10px,2vw,14px);border-bottom:1px solid #C8C1B8">בינונית</td></tr>
+<tr><td style="padding:clamp(10px,2vw,14px);border-bottom:1px solid #C8C1B8;font-weight:600;color:#333333">כפרי מודרני</td><td style="padding:clamp(10px,2vw,14px);border-bottom:1px solid #C8C1B8">עץ טבעי, גוונים חמים, מדפים פתוחים</td><td style="padding:clamp(10px,2vw,14px);border-bottom:1px solid #C8C1B8">משפחות, אוהבי בישול ואירוח</td><td style="padding:clamp(10px,2vw,14px);border-bottom:1px solid #C8C1B8">גבוהה</td></tr>
+<tr style="background:#F5F3F1"><td style="padding:clamp(10px,2vw,14px);border-bottom:1px solid #C8C1B8;font-weight:600;color:#333333">מינימליסטי</td><td style="padding:clamp(10px,2vw,14px);border-bottom:1px solid #C8C1B8">ידיות נסתרות, חזיתות אחידות, מונוכרומטי</td><td style="padding:clamp(10px,2vw,14px);border-bottom:1px solid #C8C1B8">דירות קטנות, אוהבי סדר</td><td style="padding:clamp(10px,2vw,14px);border-bottom:1px solid #C8C1B8">נמוכה</td></tr>
+<tr><td style="padding:clamp(10px,2vw,14px);border-bottom:1px solid #C8C1B8;font-weight:600;color:#333333">קלאסי עכשווי</td><td style="padding:clamp(10px,2vw,14px);border-bottom:1px solid #C8C1B8">פרופילים עדינים, גוונים רכים, אלגנטיות</td><td style="padding:clamp(10px,2vw,14px);border-bottom:1px solid #C8C1B8">מי שרוצה עיצוב על-זמני</td><td style="padding:clamp(10px,2vw,14px);border-bottom:1px solid #C8C1B8">בינונית</td></tr>
+<tr style="background:#F5F3F1"><td style="padding:clamp(10px,2vw,14px);border-bottom:1px solid #C8C1B8;font-weight:600;color:#333333">אקלקטי</td><td style="padding:clamp(10px,2vw,14px);border-bottom:1px solid #C8C1B8">שילוב השפעות, חופש יצירתי, ייחודיות</td><td style="padding:clamp(10px,2vw,14px);border-bottom:1px solid #C8C1B8">אנשי סגנון שרוצים ביטוי אישי</td><td style="padding:clamp(10px,2vw,14px);border-bottom:1px solid #C8C1B8">משתנה</td></tr>
+</tbody>
+</table>
+</div>
+</section>
+
+<section id="white" style="margin:clamp(32px,5vw,56px) 0">
+<h2 style="font-family:'Frank Ruhl Libre',serif;font-size:clamp(1.5rem,4vw,2.25rem);font-weight:700;color:#333333;line-height:1.3;border-bottom:2px solid #87562E;padding-bottom:clamp(8px,2vw,16px);margin-bottom:clamp(16px,3vw,28px)">האם מטבח לבן עדיין פופולרי בישראל?</h2>
+<img data-resp="img" src="https://caesarstone.articlehub.work/wp-content/uploads/2026/04/ComparisonofPopularKitchenDesignStylesinIsrael.jpg" alt="מטבח לבן מודרני עם משטחי אבן קיסר" loading="lazy" decoding="async" style="width:100%;max-width:800px;margin:0 auto clamp(24px,3vw,32px);display:block;height:auto;object-fit:cover;border-radius:8px;box-shadow:0 2px 12px rgba(135,86,46,0.08);aspect-ratio:1200/630" />
+<p style="font-size:clamp(1rem,2.5vw,1.1rem);color:#333333;line-height:1.75;margin-bottom:clamp(12px,2vw,20px)">בהחלט. המטבח הלבן ממשיך להוביל בדירות בישראל, אבל הגרסה שלו התפתחה. במקום לבן "שטוח" ואחיד, רואים היום לבן עם ניואנסים: שמנת, שנהב, לבן חם עם נגיעות עץ, או לבן טהור בשילוב משטח עבודה כהה ליצירת קונטרסט.</p>
+<p style="font-size:clamp(1rem,2.5vw,1.1rem);color:#333333;line-height:1.75;margin-bottom:clamp(12px,2vw,20px)">היתרון הגדול של מטבח לבן הוא שהוא מגדיל חזותית את החלל ומשתלב עם כמעט כל סגנון. החסרון – הוא דורש חומרים איכותיים שלא מצהיבים ולא מתלכלכים בקלות.</p>
+</section>
+
+<section id="colors" style="margin:clamp(32px,5vw,56px) 0">
+<h2 style="font-family:'Frank Ruhl Libre',serif;font-size:clamp(1.5rem,4vw,2.25rem);font-weight:700;color:#333333;line-height:1.3;border-bottom:2px solid #87562E;padding-bottom:clamp(8px,2vw,16px);margin-bottom:clamp(16px,3vw,28px)">מהם הצבעים והחומרים שהכי מזוהים עם מטבחים פופולריים בישראל?</h2>
+<p style="font-size:clamp(1rem,2.5vw,1.1rem);color:#333333;line-height:1.75;margin-bottom:clamp(12px,2vw,20px)">בשנים האחרונות, הצבעים המובילים במטבחים ישראליים הם לבן (בכל גווניו), אפור בגווניו השונים, ועץ טבעי כאלמנט חימום. הטרנד העכשווי מוסיף ירוק מרווה, כחול עמוק וטרקוטה כנגיעות צבע נועזות.</p>
+<p style="font-size:clamp(1rem,2.5vw,1.1rem);color:#333333;line-height:1.75;margin-bottom:clamp(12px,2vw,20px)">מבחינת חומרים, <a href="https://www.caesarstone.co.il/catalog/" style="color:#87562E;text-decoration:underline;font-weight:600">משטחי אבן מהנדסת</a> ממשיכים להוביל בקטגוריית משטחי העבודה, הודות ליתרונותיהם בעמידות, מגוון הגוונים והקלות בתחזוקה.</p>
+</section>
+
+<section id="function" style="margin:clamp(32px,5vw,56px) 0">
+<h2 style="font-family:'Frank Ruhl Libre',serif;font-size:clamp(1.5rem,4vw,2.25rem);font-weight:700;color:#333333;line-height:1.3;border-bottom:2px solid #87562E;padding-bottom:clamp(8px,2vw,16px);margin-bottom:clamp(16px,3vw,28px)">איך משלבים בין אסתטיקה לפונקציונליות בעיצוב מטבח?</h2>
+<p style="font-size:clamp(1rem,2.5vw,1.1rem);color:#333333;line-height:1.75;margin-bottom:clamp(12px,2vw,20px)">עיצוב מטבח מוצלח הוא כזה שנראה מרהיב וגם עובד מצוין. שלושת העקרונות המנחים הם: משולש עבודה יעיל, אחסון מספיק ונגיש, ומשטחי עבודה שמאפשרים הכנה נוחה של מזון.</p>
+<div data-resp="card" style="background:#F5F3F1;border:1px solid #C8C1B8;border-radius:8px;padding:clamp(16px,4vw,28px);margin:clamp(16px,3vw,28px) 0;box-shadow:0 2px 12px rgba(135,86,46,0.08);border-right:3px solid #87562E">
+<p style="font-size:clamp(1rem,2.5vw,1.1rem);color:#87562E;font-weight:600;margin:0 0 8px">טיפ מעשי שעושה הבדל גדול:</p>
+<p style="font-size:clamp(0.95rem,2.5vw,1.05rem);color:#333333;margin:0;line-height:1.75">תכננו את המטבח סביב שגרת הבישול שלכם, לא סביב תמונה. אם אתם מבשלים כל יום – תעדיפו משטחי עבודה רחבים ועמידים.</p>
+</div>
+</section>
+
+<section id="small" style="margin:clamp(32px,5vw,56px) 0">
+<h2 style="font-family:'Frank Ruhl Libre',serif;font-size:clamp(1.5rem,4vw,2.25rem);font-weight:700;color:#333333;line-height:1.3;border-bottom:2px solid #87562E;padding-bottom:clamp(8px,2vw,16px);margin-bottom:clamp(16px,3vw,28px)">איזה סגנון מטבח מתאים למטבח קטן?</h2>
+<img data-resp="img" src="https://caesarstone.articlehub.work/wp-content/uploads/2026/04/WhichKitchenDesignStyleSuitsaSmallKitchen.jpg" alt="עיצוב מטבח קטן בסגנון מודרני עם משטח אבן קיסר" loading="lazy" decoding="async" style="width:100%;max-width:800px;margin:0 auto clamp(24px,3vw,32px);display:block;height:auto;object-fit:cover;border-radius:8px;box-shadow:0 2px 12px rgba(135,86,46,0.08);aspect-ratio:1200/630" />
+<p style="font-size:clamp(1rem,2.5vw,1.1rem);color:#333333;line-height:1.75;margin-bottom:clamp(12px,2vw,20px)">במטבחים קטנים (עד 8 מ"ר), הסגנון המודרני או המינימליסטי הם הבחירה הנכונה ביותר. קווים נקיים, חזיתות חלקות וצבעים בהירים יוצרים אשליית מרחב.</p>
+<p style="font-size:clamp(1rem,2.5vw,1.1rem);color:#333333;line-height:1.75;margin-bottom:clamp(12px,2vw,20px)">שלושה טיפים למטבח קטן: ראשית, בחרו ארונות גבוהים עד התקרה. שנית, השתמשו במשטח עבודה בגוון אחיד ובהיר. שלישית, שקלו אי נייד או דלפק צר שמשמש גם כמשטח עבודה וגם כפינת ישיבה.</p>
+</section>
+
+<section id="trendy" style="margin:clamp(32px,5vw,56px) 0">
+<h2 style="font-family:'Frank Ruhl Libre',serif;font-size:clamp(1.5rem,4vw,2.25rem);font-weight:700;color:#333333;line-height:1.3;border-bottom:2px solid #87562E;padding-bottom:clamp(8px,2vw,16px);margin-bottom:clamp(16px,3vw,28px)">האם כדאי לבחור סגנון טרנדי או עיצוב שיחזיק לאורך שנים?</h2>
+<p style="font-size:clamp(1rem,2.5vw,1.1rem);color:#333333;line-height:1.75;margin-bottom:clamp(12px,2vw,20px)">הגישה החכמה: בחרו ארונות ומשטחי עבודה בגוונים נייטרליים שלא ייראו מיושנים, והוסיפו צבע ואופי דרך תאורה, אביזרים, בר סטולים, או אפילו קיר אחד צבעוני שקל לצבוע מחדש. כך תקבלו מטבח שיחזיק עיצובית לאורך שנים, אבל גם יאפשר לכם לרענן אותו בלי לפרק אותו מחדש.</p>
+</section>
+
+<section style="margin:clamp(32px,5vw,56px) 0">
+<h2 style="font-family:'Frank Ruhl Libre',serif;font-size:clamp(1.5rem,4vw,2.25rem);font-weight:700;color:#333333;line-height:1.3;border-bottom:2px solid #87562E;padding-bottom:clamp(8px,2vw,16px);margin-bottom:clamp(16px,3vw,28px)">בדיקה מהירה: מה באמת חשוב לכם במטבח?</h2>
+<div data-resp="table-wrap" style="width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch;margin:24px 0;border-radius:8px;box-shadow:0 2px 12px rgba(135,86,46,0.08)">
+<table data-resp="table" style="width:100%;min-width:600px;border-collapse:collapse;font-size:clamp(0.75rem,2vw,1rem)">
+<thead>
+<tr style="background:#87562E;color:#ffffff">
+<th style="padding:clamp(10px,2vw,16px);text-align:right;font-weight:600;min-width:120px">קריטריון</th>
+<th style="padding:clamp(10px,2vw,16px);text-align:right;font-weight:600">אם חשוב לכם מאוד</th>
+<th style="padding:clamp(10px,2vw,16px);text-align:right;font-weight:600">סגנון מומלץ</th>
+</tr>
+</thead>
+<tbody>
+<tr style="background:#F5F3F1"><td style="padding:clamp(10px,2vw,14px);border-bottom:1px solid #C8C1B8;font-weight:600;color:#333333">תחושת מרחב</td><td style="padding:clamp(10px,2vw,14px);border-bottom:1px solid #C8C1B8">המטבח קטן או פתוח לסלון</td><td style="padding:clamp(10px,2vw,14px);border-bottom:1px solid #C8C1B8">מודרני / מינימליסטי</td></tr>
+<tr><td style="padding:clamp(10px,2vw,14px);border-bottom:1px solid #C8C1B8;font-weight:600;color:#333333">חמימות ביתית</td><td style="padding:clamp(10px,2vw,14px);border-bottom:1px solid #C8C1B8">משפחה, בישול, אירוח</td><td style="padding:clamp(10px,2vw,14px);border-bottom:1px solid #C8C1B8">כפרי מודרני / מודרני חם</td></tr>
+<tr style="background:#F5F3F1"><td style="padding:clamp(10px,2vw,14px);border-bottom:1px solid #C8C1B8;font-weight:600;color:#333333">מראה על-זמני</td><td style="padding:clamp(10px,2vw,14px);border-bottom:1px solid #C8C1B8">לא רוצים להחליף אחרי כמה שנים</td><td style="padding:clamp(10px,2vw,14px);border-bottom:1px solid #C8C1B8">קלאסי עכשווי</td></tr>
+<tr><td style="padding:clamp(10px,2vw,14px);border-bottom:1px solid #C8C1B8;font-weight:600;color:#333333">ביטוי אישי</td><td style="padding:clamp(10px,2vw,14px);border-bottom:1px solid #C8C1B8">ייחודיות וחופש יצירתי</td><td style="padding:clamp(10px,2vw,14px);border-bottom:1px solid #C8C1B8">אקלקטי</td></tr>
+<tr style="background:#F5F3F1"><td style="padding:clamp(10px,2vw,14px);border-bottom:1px solid #C8C1B8;font-weight:600;color:#333333">סדר ושקט ויזואלי</td><td style="padding:clamp(10px,2vw,14px);border-bottom:1px solid #C8C1B8">אורח חיים עמוס, צורך ב"נקיון" לעין</td><td style="padding:clamp(10px,2vw,14px);border-bottom:1px solid #C8C1B8">מינימליסטי</td></tr>
+</tbody>
+</table>
+</div>
+</section>
+
+<div style="text-align:center;margin:clamp(32px,5vw,48px) 0">
+<a data-resp="cta-btn" href="https://www.caesarstone.co.il/catalog/" style="display:inline-block;background:#87562E;color:#fff;padding:clamp(14px,3vw,18px) clamp(28px,5vw,44px);font-size:clamp(0.95rem,2.5vw,1.15rem);font-weight:700;text-decoration:none;border-radius:8px;box-shadow:0 4px 16px rgba(135,86,46,0.2);transition:all 0.25s ease;cursor:pointer;min-height:44px">גלו את מגוון המשטחים של אבן קיסר</a>
+</div>
+
+<div style="background:linear-gradient(135deg,#F5F3F1 0%,#ffffff 100%);border:2px solid #87562E;border-radius:12px;padding:clamp(28px,5vw,48px);margin:clamp(32px,5vw,56px) 0;text-align:center;box-shadow:0 4px 20px rgba(135,86,46,0.1)">
+<h2 style="font-family:'Frank Ruhl Libre',serif;font-size:clamp(1.3rem,3.5vw,2rem);font-weight:700;color:#333333;line-height:1.3;margin:0 0 clamp(12px,2vw,20px);border:none">רוצים לראות איך הסגנון שחלמתם עליו ייראה עם המשטח המושלם?</h2>
+<p style="font-size:clamp(1rem,2.5vw,1.1rem);color:#555555;line-height:1.75;margin:0 0 clamp(20px,3vw,32px);max-width:700px;display:inline-block">צרו קשר עם הצוות המקצועי של אבן קיסר ותתחילו את המסע לבחירת המשטח שמתאים בדיוק לחלל, לסגנון ולחיים שלכם. ייעוץ אישי, ביקור באולם תצוגה והתאמה מדויקת – חינם ובלי התחייבות.</p>
+<div style="display:flex;flex-wrap:wrap;gap:16px;justify-content:center;align-items:center">
+<a data-resp="cta-btn" href="https://www.caesarstone.co.il/contact-us/" style="display:inline-flex;align-items:center;gap:8px;background:#87562E;color:#fff;padding:clamp(14px,3vw,18px) clamp(28px,5vw,44px);font-size:clamp(1rem,2.5vw,1.15rem);font-weight:700;text-decoration:none;border-radius:8px;box-shadow:0 4px 16px rgba(135,86,46,0.2);transition:all 0.25s ease;cursor:pointer;min-height:48px"><span>דברו איתנו עכשיו</span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 5l7 7-7 7"/></svg></a>
+<a data-resp="cta-btn-outline" href="tel:1800778800" style="display:inline-flex;align-items:center;gap:8px;background:transparent;color:#87562E;border:2px solid #87562E;padding:clamp(12px,3vw,16px) clamp(24px,5vw,40px);font-size:clamp(1rem,2.5vw,1.15rem);font-weight:700;text-decoration:none;border-radius:8px;transition:all 0.25s ease;cursor:pointer;min-height:48px"><span>1-800-77-88-00</span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg></a>
+<a href="https://api.whatsapp.com/send?phone=972524411209" target="_blank" rel="noopener noreferrer" style="display:inline-flex;align-items:center;gap:8px;background:#25D366;color:#ffffff;padding:clamp(12px,3vw,16px) clamp(20px,4vw,32px);font-size:clamp(0.95rem,2.5vw,1.1rem);font-weight:700;text-decoration:none;border-radius:8px;transition:all 0.25s ease;cursor:pointer;min-height:48px"><span>WhatsApp</span><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.5 14.3c-.3-.1-1.6-.8-1.8-.9-.2-.1-.4-.1-.6.1-.2.3-.7.9-.9 1.1-.2.2-.3.2-.6.1-.3-.1-1.2-.5-2.4-1.5-.9-.8-1.4-1.8-1.6-2.1-.2-.3 0-.5.1-.6.1-.1.3-.3.4-.5.1-.2.2-.3.3-.5 0-.2 0-.3-.1-.4 0-.1-.5-1.3-.8-1.8-.2-.5-.4-.4-.6-.4h-.5c-.2 0-.5.1-.7.3-.2.3-.9.9-.9 2.2 0 1.3 1 2.6 1.1 2.8.1.2 1.9 2.9 4.6 4.1.6.3 1.1.4 1.5.5.6.2 1.2.2 1.6.1.5-.1 1.5-.6 1.7-1.2.2-.6.2-1.1.1-1.2 0-.1-.2-.2-.5-.3zM12 2C6.5 2 2 6.5 2 12c0 1.8.5 3.5 1.3 5L2 22l5.1-1.3c1.4.8 3.1 1.2 4.9 1.2 5.5 0 10-4.5 10-10S17.5 2 12 2z"/></svg></a>
+</div>
+</div>
+
+<section id="faq" style="margin:clamp(32px,5vw,56px) 0">
+<h2 style="font-family:'Frank Ruhl Libre',serif;font-size:clamp(1.5rem,4vw,2.25rem);font-weight:700;color:#333333;line-height:1.3;border-bottom:2px solid #87562E;padding-bottom:clamp(8px,2vw,16px);margin-bottom:clamp(16px,3vw,28px)">שאלות נפוצות</h2>
+<details data-resp="accordion" style="margin:12px 0;border:1px solid #C8C1B8;border-radius:8px;overflow:hidden;background:#ffffff"><summary style="padding:clamp(14px,3vw,20px);font-weight:600;font-size:clamp(0.95rem,2.5vw,1.1rem);color:#333333;display:flex;justify-content:space-between;align-items:center;transition:background 0.25s ease">מהו סגנון המטבח הכי פופולרי בישראל כיום?</summary><div style="padding:clamp(14px,3vw,20px);border-top:1px solid #C8C1B8;background:#F5F3F1"><p style="font-size:clamp(0.95rem,2.5vw,1.05rem);color:#333333;margin:0;line-height:1.75">הסגנון המודרני הוא הנפוץ ביותר, הודות להתאמתו לחללים פתוחים, לדירות בגדלים שונים ולשילוב טבעי עם פתרונות אחסון וטכנולוגיה.</p></div></details>
+<details data-resp="accordion" style="margin:12px 0;border:1px solid #C8C1B8;border-radius:8px;overflow:hidden;background:#ffffff"><summary style="padding:clamp(14px,3vw,20px);font-weight:600;font-size:clamp(0.95rem,2.5vw,1.1rem);color:#333333;display:flex;justify-content:space-between;align-items:center;transition:background 0.25s ease">איך לבחור בין מטבח מודרני למטבח כפרי?</summary><div style="padding:clamp(14px,3vw,20px);border-top:1px solid #C8C1B8;background:#F5F3F1"><p style="font-size:clamp(0.95rem,2.5vw,1.05rem);color:#333333;margin:0;line-height:1.75">שאלו את עצמכם מה חשוב לכם יותר: תחושת סדר ונקיון ויזואלי (מודרני) או חמימות ביתית ואווירה מזמינה (כפרי). אם התשובה היא שילוב של שניהם – בדקו את הסגנון המודרני-חם.</p></div></details>
+<details data-resp="accordion" style="margin:12px 0;border:1px solid #C8C1B8;border-radius:8px;overflow:hidden;background:#ffffff"><summary style="padding:clamp(14px,3vw,20px);font-weight:600;font-size:clamp(0.95rem,2.5vw,1.1rem);color:#333333;display:flex;justify-content:space-between;align-items:center;transition:background 0.25s ease">האם מטבח לבן מתאים גם לבית עם ילדים?</summary><div style="padding:clamp(14px,3vw,20px);border-top:1px solid #C8C1B8;background:#F5F3F1"><p style="font-size:clamp(0.95rem,2.5vw,1.05rem);color:#333333;margin:0;line-height:1.75">בהחלט, בתנאי שבוחרים חומרים עמידים ונוחים לניקוי. משטחי עבודה איכותיים שעמידים בפני כתמים ושריטות הופכים את המטבח הלבן לבחירה פרקטית גם למשפחות עם ילדים קטנים.</p></div></details>
+<details data-resp="accordion" style="margin:12px 0;border:1px solid #C8C1B8;border-radius:8px;overflow:hidden;background:#ffffff"><summary style="padding:clamp(14px,3vw,20px);font-weight:600;font-size:clamp(0.95rem,2.5vw,1.1rem);color:#333333;display:flex;justify-content:space-between;align-items:center;transition:background 0.25s ease">מה ההבדל בין מטבח מודרני למינימליסטי?</summary><div style="padding:clamp(14px,3vw,20px);border-top:1px solid #C8C1B8;background:#F5F3F1"><p style="font-size:clamp(0.95rem,2.5vw,1.05rem);color:#333333;margin:0;line-height:1.75">מטבח מודרני מאופיין בקווים נקיים ובפתרונות פרקטיים, אך מאפשר שילוב של טקסטורות וצבעים. מטבח מינימליסטי מצמצם את הכל למינימום: פחות צבעים, פחות פרטים, פחות אלמנטים גלויים.</p></div></details>
+<details data-resp="accordion" style="margin:12px 0;border:1px solid #C8C1B8;border-radius:8px;overflow:hidden;background:#ffffff"><summary style="padding:clamp(14px,3vw,20px);font-weight:600;font-size:clamp(0.95rem,2.5vw,1.1rem);color:#333333;display:flex;justify-content:space-between;align-items:center;transition:background 0.25s ease">איך משלבים אי במטבח קטן?</summary><div style="padding:clamp(14px,3vw,20px);border-top:1px solid #C8C1B8;background:#F5F3F1"><p style="font-size:clamp(0.95rem,2.5vw,1.05rem);color:#333333;margin:0;line-height:1.75">במטבח קטן, אי נייד או דלפק צר שמשמש גם כמשטח עבודה וגם כפינת ישיבה הוא פתרון מצוין. חשוב לוודא שנשאר מעבר נוח של לפחות 90 ס"מ סביב האי בכל צד.</p></div></details>
+</section>
+
+<section data-resp="author-section" style="margin:clamp(48px,6vw,64px) 0 clamp(32px,5vw,48px);background:#F5F3F1;border-radius:12px;padding:clamp(24px,5vw,40px);border:1px solid #C8C1B8">
+<h3 class="author-section-h3" style="font-family:'Frank Ruhl Libre',serif;font-size:clamp(1.2rem,3vw,1.5rem);font-weight:700;color:#333333;margin:0 0 clamp(16px,3vw,24px);text-align:right">אודות המחבר</h3>
+<div data-resp="author-box" style="display:flex;flex-direction:row;gap:clamp(20px,4vw,32px);align-items:flex-start">
+<div style="flex-shrink:0;text-align:center">
+<a href="https://www.caesarstone.co.il/" aria-label="Caesarstone homepage" style="display:inline-block;text-decoration:none;background:#ffffff;padding:16px 20px;border-radius:8px;border:1px solid #C8C1B8;box-shadow:0 2px 12px rgba(135,86,46,0.08);transition:all 0.25s ease">
+<img src="https://www.caesarstone.co.il/wp-content/uploads/2025/11/i-want-this-logo-to-be-in-21-white-frame-so-it-wil-1-350x100.png" alt="לוגו אבן קיסר" style="width:clamp(140px,22vw,200px);height:auto;object-fit:contain;display:block" loading="lazy" />
+</a>
+</div>
+<div style="flex:1">
+<p style="font-family:'Frank Ruhl Libre',serif;font-size:clamp(1.1rem,2.8vw,1.35rem);font-weight:700;color:#333333;margin:0 0 4px">מערכת התוכן של אבן קיסר</p>
+<p style="font-size:clamp(0.9rem,2vw,1rem);color:#87562E;font-weight:600;margin:0 0 12px">צוות עיצוב ותוכן מקצועי</p>
+<p style="font-size:clamp(0.95rem,2.5vw,1.05rem);color:#333333;line-height:1.75;margin:0 0 20px">אבן קיסר היא חברה ישראלית מובילה בעולם בתחום משטחי אבן מהנדסת, הפועלת מאז 1987. המאמרים שלנו נכתבים על ידי צוות מומחים שכולל מעצבי פנים, אדריכלים ומומחי חומרים, כדי לספק לכם ידע מקצועי, טיפים מבוססי ניסיון, והשראה אמיתית לעיצוב המטבח שלכם.</p>
+<p style="font-family:'Frank Ruhl Libre',serif;font-size:clamp(0.95rem,2vw,1.05rem);color:#87562E;font-weight:600;margin:0 0 14px">עקבו אחרינו ברשתות:</p>
+<div data-resp="social-grid" style="display:flex;flex-wrap:wrap;gap:12px;margin-bottom:24px">
+<a data-social="facebook" href="https://www.facebook.com/CaesarstoneIL" target="_blank" rel="noopener noreferrer" aria-label="Caesarstone Israel on Facebook" style="display:inline-flex;align-items:center;justify-content:center;width:42px;height:42px;background:#ffffff;color:#555555;border:1px solid #C8C1B8;border-radius:50%;text-decoration:none;transition:all 0.25s ease;cursor:pointer"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M24 12.07C24 5.4 18.63 0 12 0S0 5.4 0 12.07C0 18.1 4.39 23.1 10.12 24v-8.44H7.08v-3.49h3.04V9.41c0-3.02 1.8-4.69 4.54-4.69 1.31 0 2.69.24 2.69.24v2.97h-1.52c-1.49 0-1.96.93-1.96 1.89v2.26h3.33l-.53 3.49h-2.8V24C19.61 23.1 24 18.1 24 12.07z"/></svg></a>
+<a data-social="instagram" href="https://www.instagram.com/caesarstone_il/" target="_blank" rel="noopener noreferrer" aria-label="Caesarstone Israel on Instagram" style="display:inline-flex;align-items:center;justify-content:center;width:42px;height:42px;background:#ffffff;color:#555555;border:1px solid #C8C1B8;border-radius:50%;text-decoration:none;transition:all 0.25s ease;cursor:pointer"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2.16c3.2 0 3.58.01 4.85.07 1.17.05 1.8.25 2.23.41.56.22.96.48 1.38.9.42.42.68.82.9 1.38.16.42.36 1.06.41 2.23.06 1.27.07 1.65.07 4.85s-.01 3.58-.07 4.85c-.05 1.17-.25 1.8-.41 2.23-.22.56-.48.96-.9 1.38a3.7 3.7 0 0 1-1.38.9c-.42.16-1.06.36-2.23.41-1.27.06-1.65.07-4.85.07s-3.58-.01-4.85-.07c-1.17-.05-1.8-.25-2.23-.41a3.7 3.7 0 0 1-1.38-.9 3.7 3.7 0 0 1-.9-1.38c-.16-.42-.36-1.06-.41-2.23-.06-1.27-.07-1.65-.07-4.85s.01-3.58.07-4.85c.05-1.17.25-1.8.41-2.23.22-.56.48-.96.9-1.38.42-.42.82-.68 1.38-.9.42-.16 1.06-.36 2.23-.41 1.27-.06 1.65-.07 4.85-.07M12 0C8.74 0 8.33.01 7.05.07 5.78.13 4.9.33 4.14.63a5.86 5.86 0 0 0-2.13 1.38A5.86 5.86 0 0 0 .63 4.14C.33 4.9.13 5.78.07 7.05.01 8.33 0 8.74 0 12s.01 3.67.07 4.95c.06 1.27.26 2.15.56 2.91a5.86 5.86 0 0 0 1.38 2.13 5.86 5.86 0 0 0 2.13 1.38c.76.3 1.64.5 2.91.56C8.33 23.99 8.74 24 12 24s3.67-.01 4.95-.07c1.27-.06 2.15-.26 2.91-.56a5.86 5.86 0 0 0 2.13-1.38 5.86 5.86 0 0 0 1.38-2.13c.3-.76.5-1.64.56-2.91.06-1.28.07-1.69.07-4.95s-.01-3.67-.07-4.95c-.06-1.27-.26-2.15-.56-2.91a5.86 5.86 0 0 0-1.38-2.13A5.86 5.86 0 0 0 19.86.63C19.1.33 18.22.13 16.95.07 15.67.01 15.26 0 12 0zm0 5.84a6.16 6.16 0 1 0 0 12.32 6.16 6.16 0 0 0 0-12.32zm0 10.16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.4-11.85a1.44 1.44 0 1 0 0 2.88 1.44 1.44 0 0 0 0-2.88z"/></svg></a>
+<a data-social="youtube" href="https://www.youtube.com/user/CaesarstoneIL" target="_blank" rel="noopener noreferrer" aria-label="Caesarstone Israel on YouTube" style="display:inline-flex;align-items:center;justify-content:center;width:42px;height:42px;background:#ffffff;color:#555555;border:1px solid #C8C1B8;border-radius:50%;text-decoration:none;transition:all 0.25s ease;cursor:pointer"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M23.5 6.5a3 3 0 0 0-2.1-2.1C19.6 4 12 4 12 4s-7.6 0-9.4.4A3 3 0 0 0 .5 6.5C.1 8.3.1 12 .1 12s0 3.7.4 5.5a3 3 0 0 0 2.1 2.1c1.8.4 9.4.4 9.4.4s7.6 0 9.4-.4a3 3 0 0 0 2.1-2.1c.4-1.8.4-5.5.4-5.5s0-3.7-.4-5.5zM9.8 15.5v-7l6.4 3.5-6.4 3.5z"/></svg></a>
+<a data-social="linkedin" href="https://www.linkedin.com/company/caesarstone-corporate" target="_blank" rel="noopener noreferrer" aria-label="Caesarstone on LinkedIn" style="display:inline-flex;align-items:center;justify-content:center;width:42px;height:42px;background:#ffffff;color:#555555;border:1px solid #C8C1B8;border-radius:50%;text-decoration:none;transition:all 0.25s ease;cursor:pointer"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.45 20.45h-3.56v-5.57c0-1.33-.02-3.04-1.85-3.04-1.85 0-2.14 1.45-2.14 2.95v5.67H9.36V9h3.42v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28zM5.34 7.43a2.07 2.07 0 1 1 0-4.14 2.07 2.07 0 0 1 0 4.14zM7.12 20.45H3.55V9h3.57v11.45zM22.22 0H1.77C.79 0 0 .77 0 1.72v20.55C0 23.22.79 24 1.77 24h20.45C23.2 24 24 23.22 24 22.28V1.72C24 .77 23.2 0 22.22 0z"/></svg></a>
+<a data-social="pinterest" href="https://www.pinterest.com/caesarstone" target="_blank" rel="noopener noreferrer" aria-label="Caesarstone on Pinterest" style="display:inline-flex;align-items:center;justify-content:center;width:42px;height:42px;background:#ffffff;color:#555555;border:1px solid #C8C1B8;border-radius:50%;text-decoration:none;transition:all 0.25s ease;cursor:pointer"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.08 3.16 9.43 7.63 11.18-.1-.95-.2-2.4.04-3.43.22-.94 1.4-5.94 1.4-5.94s-.36-.72-.36-1.78c0-1.67.97-2.92 2.17-2.92 1.03 0 1.52.77 1.52 1.7 0 1.03-.66 2.58-1 4.02-.28 1.2.6 2.17 1.78 2.17 2.14 0 3.78-2.25 3.78-5.5 0-2.88-2.07-4.89-5.02-4.89-3.42 0-5.43 2.57-5.43 5.22 0 1.03.4 2.14.9 2.74.1.12.11.22.08.34-.09.37-.29 1.17-.33 1.34-.05.22-.17.26-.4.16-1.5-.7-2.43-2.87-2.43-4.62 0-3.77 2.74-7.22 7.89-7.22 4.14 0 7.36 2.95 7.36 6.89 0 4.12-2.6 7.43-6.2 7.43-1.21 0-2.35-.63-2.74-1.37 0 0-.6 2.29-.75 2.85-.27 1.04-1 2.35-1.49 3.15C9.57 23.81 10.77 24 12 24c6.63 0 12-5.37 12-12S18.63 0 12 0z"/></svg></a>
+</div>
+<div style="display:flex;flex-wrap:wrap;gap:12px">
+<a href="https://www.caesarstone.co.il/contact-us/" style="display:inline-flex;align-items:center;gap:8px;background:#87562E;color:#fff;padding:10px 24px;border-radius:8px;text-decoration:none;font-size:clamp(0.9rem,2vw,1rem);font-weight:600;transition:all 0.25s ease;cursor:pointer;min-height:44px"><span>צרו קשר</span></a>
+<a href="tel:1800778800" style="display:inline-flex;align-items:center;gap:8px;background:transparent;color:#87562E;border:2px solid #87562E;padding:8px 24px;border-radius:8px;text-decoration:none;font-size:clamp(0.9rem,2vw,1rem);font-weight:600;transition:all 0.25s ease;cursor:pointer;min-height:44px"><span>1-800-77-88-00</span></a>
+<a href="https://api.whatsapp.com/send?phone=972524411209" target="_blank" rel="noopener noreferrer" style="display:inline-flex;align-items:center;gap:8px;background:#25D366;color:#fff;padding:10px 24px;border-radius:8px;text-decoration:none;font-size:clamp(0.9rem,2vw,1rem);font-weight:600;transition:all 0.25s ease;cursor:pointer;min-height:44px"><span>WhatsApp</span></a>
+</div>
+</div>
+</div>
+</section>
+
+</div>
+
+<footer dir="rtl" style="background:#2C2218;color:#DCDAD8;padding:clamp(32px,5vw,48px) clamp(5%,10vw,15%);margin-top:0;font-family:'Heebo',sans-serif">
+<div data-resp="footer-grid" style="display:grid;grid-template-columns:1.5fr 1fr 1fr 1fr;gap:clamp(20px,4vw,40px)">
+<div>
+<a href="https://www.caesarstone.co.il/" aria-label="Caesarstone homepage" style="display:inline-block;text-decoration:none;margin-bottom:16px"><img src="https://www.caesarstone.co.il/wp-content/uploads/2025/11/i-want-this-logo-to-be-in-21-white-frame-so-it-wil-1-350x100.png" alt="אבן קיסר" style="height:36px;width:auto;object-fit:contain;filter:brightness(1.2)" loading="lazy" /></a>
+<p style="font-size:0.9rem;line-height:1.7;color:#B2A99A;margin:0">אבן קיסר – מובילה עולמית בתחום משטחי אבן מהנדסת למטבחים וחדרי אמבטיה, מאז 1987.</p>
+</div>
+<div>
+<h4 style="font-family:'Frank Ruhl Libre',serif;font-size:1rem;font-weight:700;color:#DCDAD8;margin:0 0 16px;border-bottom:1px solid rgba(220,218,216,0.15);padding-bottom:10px">ניווט מהיר</h4>
+<ul style="list-style:none;padding:0;margin:0">
+<li style="margin-bottom:10px"><a href="https://www.caesarstone.co.il/" style="color:#B2A99A;text-decoration:none;font-size:0.9rem;transition:color 0.2s">דף הבית</a></li>
+<li style="margin-bottom:10px"><a href="https://www.caesarstone.co.il/catalog/" style="color:#B2A99A;text-decoration:none;font-size:0.9rem;transition:color 0.2s">קטלוג משטחים</a></li>
+<li style="margin-bottom:10px"><a href="https://www.caesarstone.co.il/blog/" style="color:#B2A99A;text-decoration:none;font-size:0.9rem;transition:color 0.2s">בלוג</a></li>
+</ul>
+</div>
+<div>
+<h4 style="font-family:'Frank Ruhl Libre',serif;font-size:1rem;font-weight:700;color:#DCDAD8;margin:0 0 16px;border-bottom:1px solid rgba(220,218,216,0.15);padding-bottom:10px">מידע</h4>
+<ul style="list-style:none;padding:0;margin:0">
+<li style="margin-bottom:10px"><a href="https://www.caesarstone.co.il/about/" style="color:#B2A99A;text-decoration:none;font-size:0.9rem;transition:color 0.2s">אודות</a></li>
+<li style="margin-bottom:10px"><a href="https://www.caesarstone.co.il/contact-us/" style="color:#B2A99A;text-decoration:none;font-size:0.9rem;transition:color 0.2s">צרו קשר</a></li>
+<li style="margin-bottom:10px"><a href="https://www.caesarstone.co.il/where-to-buy/" style="color:#B2A99A;text-decoration:none;font-size:0.9rem;transition:color 0.2s">איפה לקנות</a></li>
+</ul>
+</div>
+<div>
+<h4 style="font-family:'Frank Ruhl Libre',serif;font-size:1rem;font-weight:700;color:#DCDAD8;margin:0 0 16px;border-bottom:1px solid rgba(220,218,216,0.15);padding-bottom:10px">יצירת קשר</h4>
+<p style="font-size:0.9rem;color:#B2A99A;margin:0 0 8px">טלפון: <a href="tel:1800778800" style="color:#DCDAD8;text-decoration:none">1-800-77-88-00</a></p>
+<p style="font-size:0.9rem;color:#B2A99A;margin:0 0 8px">WhatsApp: <a href="https://api.whatsapp.com/send?phone=972524411209" style="color:#DCDAD8;text-decoration:none">052-441-1209</a></p>
+<p style="font-size:0.9rem;color:#B2A99A;margin:0">דוא"ל: <a href="mailto:Sherut@caesarstone.com" style="color:#DCDAD8;text-decoration:none">Sherut@caesarstone.com</a></p>
+</div>
+</div>
+<div style="border-top:1px solid rgba(220,218,216,0.15);margin-top:clamp(24px,4vw,36px);padding-top:clamp(16px,3vw,24px);text-align:center;font-size:0.85rem;color:#B2A99A">
+&copy; אבן קיסר — כל הזכויות שמורות | <a href="https://www.caesarstone.co.il/" style="color:#DCDAD8;text-decoration:none">www.caesarstone.co.il</a>
+</div>
+</footer>
+
+<a data-resp="top-btn" href="#article-top" onclick="window.scrollTo({top:0,behavior:'smooth'});return false;" aria-label="חזרה למעלה"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 15l-6-6-6 6"/></svg></a>
+
+<a data-resp="float-btn" href="https://www.caesarstone.co.il/contact-us/" aria-label="צור קשר עם אבן קיסר">
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+<span>צור קשר</span>
+</a>
+
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"Article","headline":"סגנונות עיצוב מטבח פופולריים בישראל: המדריך המלא","description":"אילו סגנונות עיצוב מטבח הכי פופולריים בישראל? המדריך המלא של אבן קיסר.","inLanguage":"he-IL","author":{"@type":"Organization","name":"אבן קיסר","url":"https://www.caesarstone.co.il/"},"publisher":{"@type":"Organization","name":"אבן קיסר","url":"https://www.caesarstone.co.il/","logo":{"@type":"ImageObject","url":"https://www.caesarstone.co.il/wp-content/uploads/2025/11/i-want-this-logo-to-be-in-21-white-frame-so-it-wil-1-350x100.png"}},"image":"https://caesarstone.articlehub.work/wp-content/uploads/2026/04/PopularKitchenDesignStylesinIsrael.jpg"}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"Organization","name":"אבן קיסר","url":"https://www.caesarstone.co.il/","logo":"https://www.caesarstone.co.il/wp-content/uploads/2025/11/i-want-this-logo-to-be-in-21-white-frame-so-it-wil-1-350x100.png","foundingDate":"1987","telephone":"1-800-77-88-00","email":"Sherut@caesarstone.com","sameAs":["https://www.facebook.com/CaesarstoneIL","https://www.instagram.com/caesarstone_il/","https://www.pinterest.com/caesarstone","https://www.youtube.com/user/CaesarstoneIL","https://www.linkedin.com/company/caesarstone-corporate"]}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"מהו סגנון המטבח הכי פופולרי בישראל כיום?","acceptedAnswer":{"@type":"Answer","text":"הסגנון המודרני הוא הנפוץ ביותר, הודות להתאמתו לחללים פתוחים, לדירות בגדלים שונים ולשילוב טבעי עם פתרונות אחסון וטכנולוגיה."}},{"@type":"Question","name":"איך לבחור בין מטבח מודרני למטבח כפרי?","acceptedAnswer":{"@type":"Answer","text":"שאלו את עצמכם מה חשוב לכם יותר: תחושת סדר ונקיון ויזואלי (מודרני) או חמימות ביתית ואווירה מזמינה (כפרי)."}},{"@type":"Question","name":"האם מטבח לבן מתאים גם לבית עם ילדים?","acceptedAnswer":{"@type":"Answer","text":"בהחלט, בתנאי שבוחרים חומרים עמידים ונוחים לניקוי."}},{"@type":"Question","name":"מה ההבדל בין מטבח מודרני למינימליסטי?","acceptedAnswer":{"@type":"Answer","text":"מטבח מודרני מאופיין בקווים נקיים ובפתרונות פרקטיים אך מאפשר שילוב טקסטורות. מטבח מינימליסטי מצמצם את הכל למינימום."}},{"@type":"Question","name":"איך משלבים אי במטבח קטן?","acceptedAnswer":{"@type":"Answer","text":"אי נייד או דלפק צר שמשמש גם כמשטח עבודה וגם כפינת ישיבה הוא פתרון מצוין. חשוב לוודא שנשאר מעבר של לפחות 90 ס\"מ סביב האי."}}]}
+</script>
+<script>
+(function(){var b=document.querySelector('[data-resp="top-btn"]');if(!b)return;var t=function(){if(window.pageYOffset<=300){b.classList.add('js-hidden')}else{b.classList.remove('js-hidden')}};window.addEventListener('scroll',t,{passive:true});t();})();
+</script>
+</article>

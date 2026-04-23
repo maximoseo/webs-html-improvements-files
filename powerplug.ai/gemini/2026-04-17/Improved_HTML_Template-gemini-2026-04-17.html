@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HTML Redesign Example: Images & UI Patterns</title>
+  <!-- Google Fonts for Typography Pairing -->
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  
+  <!-- Scoped CSS for WordPress Safety -->
+  <style>
+    .sa-article {
+      font-family: 'Inter', system-ui, sans-serif;
+      color: #334155;
+      line-height: 1.8;
+      max-width: 840px;
+      margin: 0 auto;
+      padding: 32px 20px;
+      font-size: 17px;
+      box-sizing: border-box;
+      background: #f8fafc;
+    }
+    .sa-article * {
+      box-sizing: border-box;
+    }
+    
+    /* Premium Typography */
+    .sa-article h1, .sa-article h2, .sa-article h3 {
+      font-family: 'Montserrat', system-ui, sans-serif;
+      color: #0f172a;
+      line-height: 1.3;
+      letter-spacing: -0.02em;
+    }
+    .sa-article h2 { font-size: 1.75em; font-weight: 800; margin-top: 48px; margin-bottom: 24px; padding-bottom: 12px; border-bottom: 2px solid #e2e8f0; }
+    .sa-article h3 { font-size: 1.35em; font-weight: 700; margin-top: 32px; margin-bottom: 16px; }
+    
+    /* Playwright-Safe Images */
+    .sa-article .sa-figure {
+      margin: 40px 0;
+      width: 100%;
+    }
+    .sa-article .sa-image {
+      width: 100%;
+      max-width: 100%;
+      height: auto;
+      border-radius: 12px;
+      border: 1px solid #e2e8f0;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.05);
+      display: block;
+    }
+    .sa-article .sa-figcaption {
+      font-size: 0.9em;
+      color: #64748b;
+      text-align: center;
+      margin-top: 12px;
+      font-style: italic;
+    }
+
+    /* Uiverse-Inspired Buttons */
+    .sa-article .sa-btn-primary {
+      display: inline-block;
+      background: #0f172a;
+      color: #ffffff;
+      padding: 14px 28px;
+      border-radius: 8px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.2s ease;
+      box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+      border: 1px solid rgba(255,255,255,0.1);
+      text-align: center;
+    }
+    .sa-article .sa-btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1);
+      background: #1e293b;
+    }
+    
+    .sa-article .sa-btn-secondary {
+      display: inline-block;
+      background: transparent;
+      color: #0f172a;
+      padding: 14px 28px;
+      border-radius: 8px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.2s ease;
+      border: 2px solid #e2e8f0;
+      text-align: center;
+    }
+    .sa-article .sa-btn-secondary:hover {
+      background: #f1f5f9;
+      border-color: #cbd5e1;
+    }
+
+    /* Shadcn-Inspired Cards */
+    .sa-article .sa-card {
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-radius: 12px;
+      padding: 32px;
+      margin: 32px 0;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+    
+    /* Interactive FAQ & TOC */
+    .sa-article .sa-accordion-body { max-height: 0; overflow: hidden; transition: max-height 0.4s ease; }
+    .sa-article .sa-accordion-body.open { max-height: 2000px; }
+    .sa-article .sa-icon { transition: transform 0.3s ease; display: inline-block; }
+    .sa-article .sa-icon.open { transform: rotate(45deg); }
+
+    /* Mobile Button Stacking Constraint */
+    @media (max-width: 480px) {
+      .sa-article .sa-btn-group { flex-direction: column !important; }
+      .sa-article .sa-btn-primary, .sa-article .sa-btn-secondary { width: 100% !important; margin-bottom: 12px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- BEGIN WORDPRESS-SAFE ARTICLE -->
+<article class="sa-article">
+
+  <!-- 1. Hero / Intro Section with Gradient Background -->
+  <div style="background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); border-radius: 16px; padding: 56px 32px; text-align: center; margin-bottom: 48px; box-shadow: 0 10px 30px rgba(15,23,42,0.2);">
+    <span style="font-size: 13px; font-weight: 700; color: #38bdf8; text-transform: uppercase; letter-spacing: 0.1em; display: block; margin-bottom: 16px;">Best Practices & Guidelines</span>
+    <h1 style="font-size: 2.2em; font-weight: 800; color: #ffffff; margin: 0 0 20px 0; line-height: 1.2;">Mastering UI Redesign: Integrating Images & Media Safely</h1>
+    <p style="font-size: 1.1em; color: #cbd5e1; max-width: 600px; margin: 0 auto; line-height: 1.6;">A definitive guide to embedding responsive images, building trustworthy conversion blocks, and leveraging CSS to create an impeccable, WordPress-friendly layout.</p>
+  </div>
+
+  <p>Modern article templates require more than just a wall of text. They need a visual rhythm constructed from perfectly scaled typography, well-padded container blocks, and flawlessly responsive media assets. If an image stretches on mobile, or a button feels "dead", brand trust is immediately compromised.</p>
+  <p>In this example, we demonstrate the integration of <strong>Playwright-safe images</strong>, <strong>Shadcn-style minimal callouts</strong>, and <strong>Uiverse-inspired tactile buttons</strong>—all perfectly contained within a WordPress-safe `<article>` wrapper.</p>
+
+  <!-- 2. Functional TOC (Collapsed by Default) -->
+  <div class="sa-card" style="padding: 0; overflow: hidden; margin-bottom: 48px;">
+    <div onclick="var b=this.parentElement.querySelector('.sa-accordion-body'),i=this.querySelector('.sa-icon');b.classList.toggle('open');i.classList.toggle('open');" style="padding: 20px 24px; background: #0f172a; color: #ffffff; font-weight: 600; cursor: pointer; display: flex; justify-content: space-between; align-items: center; user-select: none;">
+      <span>Table of Contents</span>
+      <span class="sa-icon" style="font-size: 1.4em; color: #38bdf8; line-height: 1;">+</span>
+    </div>
+    <div class="sa-accordion-body">
+      <ul style="list-style: none; padding: 20px 24px; margin: 0; background: #ffffff;">
+        <li style="margin-bottom: 12px;"><a href="#section-1" style="color: #0f172a; text-decoration: none; font-weight: 500;">1. The Golden Rule of Responsive Images</a></li>
+        <li style="margin-bottom: 12px;"><a href="#section-2" style="color: #0f172a; text-decoration: none; font-weight: 500;">2. Building Trust with Validated CTAs</a></li>
+        <li style="margin-bottom: 0;"><a href="#section-3" style="color: #0f172a; text-decoration: none; font-weight: 500;">3. Frequently Asked Questions</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- 3. Standard Section with an Image -->
+  <h2 id="section-1">1. The Golden Rule of Responsive Images</h2>
+  <p>The single most common failure point in HTML generation is responsive media. An image with a hardcoded `width="800"` will immediately break the viewport on a 360px mobile screen, triggering horizontal scrolling and failing Playwright QA tests.</p>
+  
+  <figure class="sa-figure">
+    <img src="https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&q=80&w=1200&h=600" alt="A laptop on a desk showing clean code, demonstrating a developer's workspace" class="sa-image" />
+    <figcaption class="sa-figcaption">Always enforce max-width: 100% and height: auto to ensure aspect ratios are preserved on any screen.</figcaption>
+  </figure>
+
+  <p>By applying `max-width: 100%` and wrapping the image in a `<figure>` tag, we provide semantic context for screen readers while guaranteeing physical boundaries are respected. Additionally, `display: block` removes the dreaded inline "descender gap" below the image.</p>
+
+  <!-- 4. Shadcn-Style Feature / "Did You Know?" Callout -->
+  <div class="sa-card" style="border-left: 4px solid #38bdf8;">
+    <h3 style="margin-top: 0; color: #0f172a;">💡 Did You Know?</h3>
+    <p style="margin-bottom: 0; color: #475569;">Using CSS logical properties like <code>margin-inline-start</code> instead of <code>margin-left</code> automatically prepares your template for RTL (Right-to-Left) languages like Hebrew or Arabic without requiring completely new stylesheets.</p>
+  </div>
+
+  <!-- 5. Second Image (Product/Feature Highlight) -->
+  <h2 id="section-2">2. Building Trust with Validated CTAs</h2>
+  <p>Call-to-Action (CTA) blocks are not just buttons; they are <strong>Conversion Assemblies</strong>. If you place a "Buy Now" button inside a paragraph of text, it lacks the visual authority to command a click. Instead, wrap it in a distinct layout with a clear value proposition and a "Trust Layer".</p>
+
+  <figure class="sa-figure">
+    <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&q=80&w=1200&h=600" alt="Data dashboard showing high conversion rates and analytics" class="sa-image" />
+    <figcaption class="sa-figcaption">Visualizing success builds the necessary momentum right before the user reaches the conversion block.</figcaption>
+  </figure>
+
+  <!-- 6. Validated CTA Assembly (Uiverse + UntitledUI patterns) -->
+  <div class="sa-card" style="text-align: center; background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);">
+    <h3 style="font-size: 1.8em; margin-top: 0; margin-bottom: 16px;">Ready to Upgrade Your Layouts?</h3>
+    <p style="color: #64748b; margin-bottom: 32px; max-width: 500px; margin-inline: auto;">Join 15,000+ developers using our design system to build faster, cleaner, and more accessible WordPress templates.</p>
+    
+    <div class="sa-btn-group" style="display: flex; justify-content: center; gap: 16px; margin-bottom: 24px;">
+      <a href="#" class="sa-btn-primary">Download Free Template</a>
+      <a href="#" class="sa-btn-secondary">View Documentation</a>
+    </div>
+    
+    <!-- Trust Layer -->
+    <div style="display: flex; align-items: center; justify-content: center; gap: 8px; color: #94a3b8; font-size: 0.9em;">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: #10b981;"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+      <span>No credit card required. Free forever.</span>
+    </div>
+  </div>
+
+  <!-- 7. Interactive FAQ -->
+  <h2 id="section-3">3. Frequently Asked Questions</h2>
+  
+  <div class="sa-card" style="padding: 0; margin-bottom: 12px; overflow: hidden;">
+    <div onclick="var a=this.parentElement.querySelector('.sa-accordion-body'),i=this.querySelector('.sa-icon');if(a.classList.contains('open')){a.classList.remove('open');}else{a.classList.add('open');}i.classList.toggle('open');" style="padding: 20px 24px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; font-weight: 600; color: #0f172a; user-select: none;">
+      <span>Will these images break on mobile devices?</span>
+      <span class="sa-icon" style="font-size: 1.4em; color: #38bdf8; line-height: 1;">+</span>
+    </div>
+    <div class="sa-accordion-body">
+      <div style="padding: 0 24px 20px 24px; color: #475569; line-height: 1.6;">
+        No. Because every image is strictly bounded by <code>max-width: 100%</code> and <code>height: auto</code>, they will scale down perfectly to fit any viewport, from a 4K desktop monitor to a 320px iPhone SE screen.
+      </div>
+    </div>
+  </div>
+
+  <div class="sa-card" style="padding: 0; margin-bottom: 48px; overflow: hidden;">
+    <div onclick="var a=this.parentElement.querySelector('.sa-accordion-body'),i=this.querySelector('.sa-icon');if(a.classList.contains('open')){a.classList.remove('open');}else{a.classList.add('open');}i.classList.toggle('open');" style="padding: 20px 24px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; font-weight: 600; color: #0f172a; user-select: none;">
+      <span>Do hover effects work if JavaScript is disabled?</span>
+      <span class="sa-icon" style="font-size: 1.4em; color: #38bdf8; line-height: 1;">+</span>
+    </div>
+    <div class="sa-accordion-body">
+      <div style="padding: 0 24px 20px 24px; color: #475569; line-height: 1.6;">
+        Yes! All button transformations, shadow spreads, and color transitions are handled entirely by pure CSS <code>:hover</code> and <code>transition</code> properties. The only JavaScript used is the minimal inline toggle for the TOC and FAQ.
+      </div>
+    </div>
+  </div>
+
+  <!-- 8. Professional Author Box -->
+  <div class="sa-card" style="display: flex; gap: 24px; align-items: flex-start; flex-wrap: wrap;">
+    <img src="https://powerplug.ai/wp-content/uploads/2022/06/powerplug-logo.png" alt="PowerPlug Editorial Team" style="max-width: 180px; height: auto; object-fit: contain; border-radius: 8px; border: 1px solid #e2e8f0; padding: 8px; background: #ffffff; flex-shrink: 0;" />
+    <div style="flex: 1; min-width: 200px;">
+      <div style="font-size: 12px; font-weight: 700; color: #38bdf8; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 4px;">About the Author</div>
+      <div style="font-size: 1.2em; font-weight: 700; color: #0f172a; margin-bottom: 8px;">Frontend Design Team</div>
+      <p style="font-size: 0.95em; color: #475569; margin: 0 0 16px 0; line-height: 1.6;">Specialists in bridging the gap between heavy React design systems and pure, lightweight WordPress-safe HTML. We build templates that convert without sacrificing performance.</p>
+      <a href="#" style="color: #38bdf8; font-weight: 600; text-decoration: none;">View all posts &rarr;</a>
+    </div>
+  </div>
+
+</article>
+<!-- END WORDPRESS-SAFE ARTICLE -->
+
+</body>
+</html>
