@@ -6200,8 +6200,17 @@ window.onerror = function(msg, src, line, col, err) {
   return false;
 };
 window.onunhandledrejection = function(e) {
-  console.error('[Dashboard Promise Error]', e && e.reason ? e.reason : e);
-  if (typeof showErrorToast === 'function') showErrorToast('Async Error: ' + (e && e.reason ? e.reason : 'Unknown'));
+  var reason = e && e.reason ? e.reason : e;
+  var message = '';
+  try { message = String((reason && reason.message) || reason || ''); } catch(_) {}
+  var name = '';
+  try { name = String((reason && reason.name) || ''); } catch(_) {}
+  if (name === 'AbortError' && /Transition was skipped/i.test(message)) {
+    if (e && typeof e.preventDefault === 'function') e.preventDefault();
+    return;
+  }
+  console.error('[Dashboard Promise Error]', reason);
+  if (typeof showErrorToast === 'function') showErrorToast('Async Error: ' + (message || 'Unknown'));
 };
 function showErrorToast(msg) {
   var t = document.createElement('div');
@@ -8486,6 +8495,10 @@ function openPreview(downloadUrl,filename,ctx){
   fetch(downloadUrl).then(r=>r.text()).then(html=>{
     const doc=iframe.contentDocument||iframe.contentWindow.document;
     doc.open();doc.write(html);doc.close();
+  }).catch(err=>{
+    const doc=iframe.contentDocument||iframe.contentWindow.document;
+    doc.open();doc.write('<body style="font-family:Segoe UI,sans-serif;padding:24px;color:#ef4444">Failed to load preview. The file may be missing or the network request failed.<br><br><a href="'+downloadUrl+'" target="_blank" style="color:#7170ff">Open raw file directly</a></body>');doc.close();
+    console.error('openPreview fetch failed:', err);
   });
   setDevice('desktop',document.querySelector('.device-tab:last-child'));
   // ctx is always a URI-encoded JSON string from onclick attributes (safe from " injection)
@@ -8683,8 +8696,9 @@ function closePreview(){
   if(_pebtn){_pebtn.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" style="width:12px;height:12px"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg> Expand';_pebtn.title='Expand to full screen';}
   document.body.classList.remove('scroll-locked');
   const iframe=document.getElementById('preview-iframe');
+  if(!iframe) return;
   const doc=iframe.contentDocument||iframe.contentWindow.document;
-  doc.open();doc.write('');doc.close();
+  if(doc){doc.open();doc.write('');doc.close();}
 }
 function setDevice(mode,btn){
   const frame=document.getElementById('device-frame');
@@ -8797,10 +8811,17 @@ function setFocusedDevice(mode,btn){
   btn.classList.add('active');
 }
 function openPromptStudio(projectName, agentName, versionName, htmlDownloadUrl, fileManifestEncoded){
-  const domain=decodeURIComponent(projectName||'');
-  const agent=decodeURIComponent(agentName||'');
-  const version=decodeURIComponent(versionName||'');
-  const dlUrl=decodeURIComponent(htmlDownloadUrl||'');
+  let domain='', agent='', version='', dlUrl='';
+  try {
+    domain=decodeURIComponent(projectName||'');
+    agent=decodeURIComponent(agentName||'');
+    version=decodeURIComponent(versionName||'');
+    dlUrl=decodeURIComponent(htmlDownloadUrl||'');
+  } catch(e) {
+    console.error('openPromptStudio decode error:', e);
+    showToast('Invalid URL data — cannot open Prompt Studio','error');
+    return;
+  }
   let files=[];
   try{ files=JSON.parse(decodeURIComponent(fileManifestEncoded||'[]')); }catch(e){}
 
@@ -8978,8 +8999,10 @@ function closePromptStudio(){
   const btn=document.getElementById('prompt-expand-btn');
   if(btn){btn.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:13px;height:13px"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/></svg> Expand';btn.title='Expand to full screen';}
   const previewFrame=document.getElementById('prompt-preview-frame');
-  const doc=previewFrame.contentDocument||previewFrame.contentWindow.document;
-  doc.open();doc.write('');doc.close();
+  if(previewFrame){
+    const doc=previewFrame.contentDocument||previewFrame.contentWindow.document;
+    if(doc){doc.open();doc.write('');doc.close();}
+  }
 }
 function writePromptPreviewDocument(html){
   const previewFrame=document.getElementById('prompt-preview-frame');
@@ -10235,7 +10258,7 @@ async function loadDashboard(){
       const _agEnc=encodeURIComponent(agentName);
       const _dmEnc=encodeURIComponent(p.name);
       const _hidden=isAgentHidden(p.name,agentName);
-      return `<div class="agent-group${_hidden?' collapsed':''}" data-domain="${p.name}" data-agent="${agentName.replace(/"/g,'&quot;')}"><div class="agent-group-header"><strong>${agentName}</strong><div class="agent-group-controls"><span class="agent-group-badge">Current file set</span>${_hidden?'<span class="agent-group-hidden-note">hidden</span>':''}<button class="agent-hide-btn" onclick="event.stopPropagation();toggleAgentHidden('${_dmEnc}','${_agEnc}',this)" title="${_hidden?'Show this agent':'Hide this agent'}" aria-label="${_hidden?'Show':'Hide'} agent ${agentName}">${_hidden?'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>Show':'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17.94 17.94A10.94 10.94 0 0 1 12 20c-7 0-11-8-11-8a19.6 19.6 0 0 1 5.06-5.94M9.9 4.24A10.94 10.94 0 0 1 12 4c7 0 11 8 11 8a19.6 19.6 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>Hide'}<button class="agent-delete-btn" onclick="deleteAgent(event,'${_dmEnc}','${_agEnc}')" title="Delete agent" style="background:none;border:none;color:#f87171;cursor:pointer;font-size:11px;padding:2px 6px;border-radius:4px;opacity:0.6;transition:opacity .15s" onmouseenter="this.style.opacity=1" onmouseleave="this.style.opacity=0.6">&#x2715; Remove</button></div></div><div class="agent-group-body"><div class="version-section"><div class="version-header"><span class="version-dot latest"></span><span class="version-title">${v.date||v.name} <span class="v-badge">&#x2605; Latest</span></span></div>${filesHTML}</div></div></div>`;
+      return `<div class="agent-group${_hidden?' collapsed':''}" data-domain="${p.name}" data-agent="${agentName.replace(/"/g,'&quot;')}"><div class="agent-group-header"><strong>${agentName}</strong><div class="agent-group-controls"><span class="agent-group-badge">Current file set</span>${_hidden?'<span class="agent-group-hidden-note">hidden</span>':''}<button class="agent-hide-btn" onclick="event.stopPropagation();toggleAgentHidden('${_dmEnc}','${_agEnc}',this)" title="${_hidden?'Show this agent':'Hide this agent'}" aria-label="${_hidden?'Show':'Hide'} agent ${agentName}">${_hidden?'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>Show':'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17.94 17.94A10.94 10.94 0 0 1 12 20c-7 0-11-8-11-8a19.6 19.6 0 0 1 5.06-5.94M9.9 4.24A10.94 10.94 0 0 1 12 4c7 0 11 8 11 8a19.6 19.6 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>Hide'}</button><button class="agent-delete-btn" onclick="deleteAgent(event,'${_dmEnc}','${_agEnc}')" title="Delete agent" style="background:none;border:none;color:#f87171;cursor:pointer;font-size:11px;padding:2px 6px;border-radius:4px;opacity:0.6;transition:opacity .15s" onmouseenter="this.style.opacity=1" onmouseleave="this.style.opacity=0.6">&#x2715; Remove</button></div></div><div class="agent-group-body"><div class="version-section"><div class="version-header"><span class="version-dot latest"></span><span class="version-title">${v.date||v.name} <span class="v-badge">&#x2605; Latest</span></span></div>${filesHTML}</div></div></div>`;
     }).join('');
     // Bulk bar if any agents hidden for this domain
     const _hiddenCount=Object.keys(versionsByAgent).filter(a=>isAgentHidden(p.name,a)).length;
@@ -13361,7 +13384,7 @@ window.deleteAgent = function(e, project, agent) {
 window.openPromptStudioForFile = function(project, agent, filename, fileUrl) {
   window._psContext = { project: project, agent: agent, filename: filename, fileUrl: fileUrl, mode: 'per-file' };
   if(typeof openPromptStudio === 'function') {
-    openPromptStudio(encodeURIComponent(project), encodeURIComponent(agent), '', fileUrl, '');
+    openPromptStudio(encodeURIComponent(project), encodeURIComponent(agent), '', encodeURIComponent(fileUrl), '');
   } else {
     const psBtn = document.querySelector('[onclick*="openPromptStudio"], #prompt-studio-btn, .prompt-studio-btn');
     if(psBtn) psBtn.click();
@@ -14265,14 +14288,10 @@ async function downloadPromptPreviewShot(){
       var args = arguments;
       var run  = function(){ return orig.apply(this, args); }.bind(this);
       try {
-        if (document.startViewTransition) {
-          document.startViewTransition(run);
-        } else {
-          run();
-          // Fallback fade on the target page container
-          var el = document.getElementById('page-' + name) || document.querySelector('[data-page="'+name+'"]');
-          if (el){ el.classList.remove('page-fade-in'); void el.offsetWidth; el.classList.add('page-fade-in'); }
-        }
+        run();
+        // Fallback fade on the target page container
+        var el = document.getElementById('page-' + name) || document.querySelector('[data-page="'+name+'"]');
+        if (el){ el.classList.remove('page-fade-in'); void el.offsetWidth; el.classList.add('page-fade-in'); }
       } catch(e){ run(); }
     };
     window.showPage.__transitioned = true;
@@ -15689,7 +15708,7 @@ window.initSettingsPage = function() {
       var parts = tok.split('.');
       if (parts.length < 2) return {};
       var pad = parts[1] + '=='.slice(0, (4 - parts[1].length % 4) % 4);
-      return JSON.parse(atob(pad.replace(/-/g,'+').replace(/_/,'/')));
+      return JSON.parse(atob(pad.replace(/-/g,'+').replace(/_/g,'/')));
     } catch(e) { return {}; }
   }
   var jwtPayload = getJwtPayload();
@@ -15797,7 +15816,7 @@ function umGetCurrentUsername() {
     var parts = tok.split('.');
     if (parts.length < 2) return '';
     var pad = parts[1] + '=='.slice(0, (4 - parts[1].length % 4) % 4);
-    return JSON.parse(atob(pad.replace(/-/g,'+').replace(/_/,'/'))).username || '';
+    return JSON.parse(atob(pad.replace(/-/g,'+').replace(/_/g,'/'))).username || '';
   } catch(e) { return ''; }
 }
 
