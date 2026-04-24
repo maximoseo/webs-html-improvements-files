@@ -42,6 +42,14 @@ def _looks_like_project_domain(name: str) -> bool:
         return False
     return bool(_PROJECT_DOMAIN_RE.fullmatch(name))
 
+
+def _truthy_env(name: str) -> bool:
+    return (os.getenv(name) or '').strip().lower() in ('1', 'true', 'yes', 'on')
+
+
+def _dashboard_is_production() -> bool:
+    return _truthy_env('RENDER') or _truthy_env('DASHBOARD_PRODUCTION') or _truthy_env('PRODUCTION')
+
 # ===== DAILY SKILLS RADAR — global state & sources =====
 _radar_state = {
     'status': 'idle',
@@ -145,12 +153,18 @@ _STAGE8_PUBLIC_PATHS = {
     '/api/health', '/api/auth/login', '/api/auth/logout', '/api/auth/me',
     '/api/auth/request-reset', '/api/auth/reset',
     '/login', '/login.html', '/static/login.css', '/api/login', '/api/reset-password',
-    '/api/file/raw', '/api/version',
+    '/api/csrf', '/api/version', '/healthz',
 }
 _STAGE8_PUBLIC_PREFIXES = ('/static/', '/assets/', '/css/', '/js/', '/img/', '/fonts/')
 
+def _stage8_public_path(path):
+    return path in _STAGE8_PUBLIC_PATHS or any(path.startswith(p) for p in _STAGE8_PUBLIC_PREFIXES)
+
 def _stage8_secret():
-    return os.environ.get('DASHBOARD_AUTH_SECRET') or os.environ.get('DASHBOARD_USERS', 'fallback-secret-change-me')
+    secret = os.environ.get('DASHBOARD_AUTH_SECRET') or os.environ.get('DASHBOARD_USERS', '').strip()
+    if not secret and _dashboard_is_production():
+        raise RuntimeError('DASHBOARD_AUTH_SECRET must be set in production')
+    return secret or 'dev-only-dashboard-auth-secret'
 
 def _stage8_users():
     raw = os.environ.get('DASHBOARD_USERS', '').strip()
@@ -162,25 +176,58 @@ def _stage8_users():
             out[u.strip()] = p.strip()
     return out
 
-def _stage8_make_token(user, ttl_seconds=86400 * 7):
-    payload = f"{user}|{int(_time8.time()) + ttl_seconds}"
+def _stage8_role_for_user(user):
+    user = (user or '').strip()
+    if not user:
+        return None
+    try:
+        for record in _mu_users_load():
+            if record.get('username') == user or record.get('email') == user:
+                return record.get('role') or 'viewer'
+    except Exception:
+        pass
+    env_user = os.getenv('DASHBOARD_USER', '').strip()
+    if env_user and user == env_user:
+        return 'admin'
+    users = _stage8_users()
+    if user in users:
+        first_user = next(iter(users.keys()), '')
+        return 'admin' if user == first_user else 'viewer'
+    return None
+
+def _stage8_make_token(user, role='viewer', ttl_seconds=86400 * 7):
+    role = role if role in ('admin', 'viewer') else 'viewer'
+    payload = f"{user}|{role}|{int(_time8.time()) + ttl_seconds}"
     sig = _hmac.new(_stage8_secret().encode(), payload.encode(), _hashlib.sha256).hexdigest()[:32]
     raw = f"{payload}|{sig}".encode()
     return _b64.urlsafe_b64encode(raw).decode().rstrip('=')
 
-def _stage8_verify_token(token):
+def _stage8_verify_session(token):
     try:
         pad = '=' * (-len(token) % 4)
         raw = _b64.urlsafe_b64decode(token + pad).decode()
-        user, exp_str, sig = raw.rsplit('|', 2)
-        if not _hmac.compare_digest(
-            sig,
-            _hmac.new(_stage8_secret().encode(), f"{user}|{exp_str}".encode(), _hashlib.sha256).hexdigest()[:32]
-        ):
+        parts = raw.rsplit('|', 3)
+        if len(parts) == 4:
+            user, role, exp_str, sig = parts
+            payload = f"{user}|{role}|{exp_str}"
+        else:
+            user, exp_str, sig = raw.rsplit('|', 2)
+            role = _stage8_role_for_user(user) or 'viewer'
+            payload = f"{user}|{exp_str}"
+        expected = _hmac.new(_stage8_secret().encode(), payload.encode(), _hashlib.sha256).hexdigest()[:32]
+        if not _hmac.compare_digest(sig, expected):
             return None
         if int(exp_str) < _time8.time():
             return None
-        return user
+        role = role if role in ('admin', 'viewer') else 'viewer'
+        return {'username': user, 'user': user, 'role': role}
+    except Exception:
+        return None
+
+def _stage8_verify_token(token):
+    try:
+        session = _stage8_verify_session(token)
+        return session.get('username') if session else None
     except Exception:
         return None
 
@@ -199,11 +246,11 @@ def _stage8_get_token(handler):
 def _stage8_check_auth(handler, parsed):
     """Return True if request is allowed; otherwise write a 401/redirect and return False."""
     path = parsed.path
-    if path in _STAGE8_PUBLIC_PATHS or any(path.startswith(p) for p in _STAGE8_PUBLIC_PREFIXES):
+    if _stage8_public_path(path):
         return True
     token = _stage8_get_token(handler)
-    user = _stage8_verify_token(token) if token else None
-    if user:
+    session = _stage8_verify_session(token) if token else None
+    if session:
         return True
     # Also accept JWT Bearer tokens (used by frontend API clients)
     jwt_user = _get_current_user(handler)
@@ -249,7 +296,7 @@ def _stage8_login(handler, payload):
         return json_response(handler, 401, {'ok': False, 'error': 'invalid_credentials'})
     role = matched.get('role', 'admin')
     username = matched.get('username') or identifier
-    token = _stage8_make_token(username)
+    token = _stage8_make_token(username, role)
     jwt_token = _jwt_make(username, role)
     body = json.dumps({
         'ok': True,
@@ -319,7 +366,10 @@ import uuid as _uuid_mu
 import threading as _threading_mu
 
 _USERS_JSON_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'data', 'users.json')
-_JWT_SECRET_KEY  = os.getenv('DASHBOARD_JWT_SECRET', 'maximo-dashboard-secret-2025')
+_JWT_SECRET_KEY  = os.getenv('DASHBOARD_JWT_SECRET')
+if not _JWT_SECRET_KEY and _dashboard_is_production():
+    raise RuntimeError('DASHBOARD_JWT_SECRET must be set in production')
+_JWT_SECRET_KEY = _JWT_SECRET_KEY or 'maximo-dashboard-secret-2025-DEV-ONLY'
 _USERS_JSON_LOCK = _threading_mu.Lock()
 
 def _mu_users_load():
@@ -328,6 +378,28 @@ def _mu_users_load():
             return json.load(_f)
     except Exception:
         return []
+
+def _mu_hash_password(password):
+    salt = os.urandom(16).hex()
+    iterations = 260000
+    digest = _hashlib.pbkdf2_hmac('sha256', (password or '').encode(), bytes.fromhex(salt), iterations).hex()
+    return f'pbkdf2_sha256${iterations}${salt}${digest}'
+
+def _mu_verify_password(password, stored_hash):
+    stored_hash = stored_hash or ''
+    password = password or ''
+    try:
+        if stored_hash.startswith('pbkdf2_sha256$'):
+            _, iter_str, salt, expected = stored_hash.split('$', 3)
+            digest = _hashlib.pbkdf2_hmac('sha256', password.encode(), bytes.fromhex(salt), int(iter_str)).hex()
+            return _hmac.compare_digest(digest, expected)
+        # Legacy local fallback: unsalted SHA-256. Kept only so existing users can log in once and be upgraded.
+        return _hmac.compare_digest(stored_hash, _hashlib.sha256(password.encode()).hexdigest())
+    except Exception:
+        return False
+
+def _mu_password_needs_rehash(stored_hash):
+    return not (stored_hash or '').startswith('pbkdf2_sha256$')
 
 def _mu_users_save(users):
     with _USERS_JSON_LOCK:
@@ -339,13 +411,15 @@ def _mu_users_save(users):
 
 def _mu_init_users():
     if not os.path.exists(_USERS_JSON_PATH):
-        import hashlib as _hl_mu
         admin_user = os.getenv('DASHBOARD_USER', 'admin')
-        admin_pass = os.getenv('DASHBOARD_PASSWORD', 'Maximo2025!')
+        admin_pass = os.getenv('DASHBOARD_PASSWORD') or ''
+        if _dashboard_is_production() and not admin_pass:
+            return
+        admin_pass = admin_pass or 'Maximo2025!'
         users = [{
             'id': str(_uuid_mu.uuid4()),
             'username': admin_user,
-            'password_hash': _hl_mu.sha256(admin_pass.encode()).hexdigest(),
+            'password_hash': _mu_hash_password(admin_pass),
             'role': 'admin',
             'email': 'service@maximo-seo.com',
             'created_at': datetime.datetime.utcnow().isoformat() + 'Z',
@@ -419,7 +493,6 @@ def _supabase_verify_password(email, password):
     }
 
 def _dashboard_validate_credentials(username, password):
-    import hashlib as _hl_login
     username = (username or '').strip()
     password = password or ''
     if not username or not password:
@@ -433,8 +506,15 @@ def _dashboard_validate_credentials(username, password):
 
     # 2. Local users.json fallback (sha256 — legacy; to be retired after Supabase migration).
     users = _mu_users_load()
-    pw_hash = _hl_login.sha256(password.encode()).hexdigest()
-    matched = next((u for u in users if u.get('username') == username and u.get('password_hash') == pw_hash), None)
+    matched = None
+    updated = False
+    for u in users:
+        if u.get('username') == username and _mu_verify_password(password, u.get('password_hash', '')):
+            matched = u
+            if _mu_password_needs_rehash(u.get('password_hash', '')):
+                u['password_hash'] = _mu_hash_password(password)
+                updated = True
+            break
 
     if not matched:
         env_user = os.getenv('DASHBOARD_USER', '').strip()
@@ -455,7 +535,6 @@ def _dashboard_validate_credentials(username, password):
     if not matched:
         return None
 
-    updated = False
     for u in users:
         if u.get('username') == username:
             u['last_login'] = datetime.datetime.utcnow().isoformat() + 'Z'
@@ -499,7 +578,12 @@ def _jwt_verify(token):
 def _get_current_user(handler):
     auth = handler.headers.get('Authorization', '')
     if auth.startswith('Bearer '):
-        return _jwt_verify(auth[7:].strip())
+        user = _jwt_verify(auth[7:].strip())
+        if user:
+            return user
+    token = _stage8_get_token(handler)
+    if token:
+        return _stage8_verify_session(token)
     return None
 
 def _require_admin(handler):
@@ -524,14 +608,9 @@ except Exception as _e14:
 
 
 def _stage14_is_admin(handler):
-    """First user in DASHBOARD_USERS is treated as admin. If auth disabled, deny."""
-    users_env = os.environ.get('DASHBOARD_USERS', '').strip()
-    if not users_env:
-        return False
-    first_user = users_env.split(',')[0].split(':')[0].strip()
-    tok = _stage8_get_token(handler)
-    user = _stage8_verify_token(tok) if tok else None
-    return user == first_user
+    """Return True for authenticated dashboard admins."""
+    user = _get_current_user(handler)
+    return bool(user and user.get('role') == 'admin')
 
 
 def _stage14_handle_get(handler, parsed):
@@ -1936,6 +2015,27 @@ def _r3_csrf_verify(token):
     expected = _r3_hashlib.sha256((raw + _R3_CSRF_SECRET).encode()).hexdigest()[:16]
     return _r3_secrets.compare_digest(sig, expected)
 
+def _r3_csrf_enforce_hard():
+    raw = os.environ.get('DASH_CSRF_ENFORCE')
+    if raw is not None:
+        return raw in ('1', 'true', 'True', 'yes', 'on')
+    return _dashboard_is_production() or bool(getattr(r6, 'CSRF_HARD', False))
+
+def _r3_check_csrf_or_warn(handler, parsed):
+    if not _R3_CSRF_ENABLED or any(parsed.path.startswith(p) for p in _R3_CSRF_EXEMPT):
+        return True
+    tok = handler.headers.get('X-CSRF-Token', '')
+    if _r3_csrf_verify(tok):
+        return True
+    if _r3_csrf_enforce_hard():
+        json_response(handler, 403, {'ok': False, 'error': 'csrf_invalid'})
+        return False
+    rec = logging.LogRecord('dashboard', logging.WARNING, '', 0,
+        f'csrf-missing path={parsed.path}', None, None)
+    rec.event = 'csrf_warn'; rec.path = parsed.path
+    _r2_log.handle(rec)
+    return True
+
 def sse_broadcast(event_type, payload):
     """Push a notification to all connected SSE clients. Safe to call from any thread."""
     msg = {'type': event_type, 'payload': payload, 'ts': time.time()}
@@ -2197,9 +2297,10 @@ body{{font-family:Arial;padding:24px}}h1{{color:#333}}pre{{background:#f4f4f4;pa
         ('X-Content-Type-Options', 'nosniff'),
         ('X-Frame-Options', 'SAMEORIGIN'),
         ('Referrer-Policy', 'strict-origin-when-cross-origin'),
+        ('Permissions-Policy', 'camera=(), microphone=(), geolocation=(), payment=()'),
         ('Content-Security-Policy',
             "default-src 'self'; "
-            "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.jsdelivr.net https://unpkg.com https://cdnjs.cloudflare.com; "
+            "script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://unpkg.com https://cdnjs.cloudflare.com; "
             "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; "
             "font-src 'self' data: https://fonts.gstatic.com https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; "
             "img-src 'self' data: blob: https:; "
@@ -2235,13 +2336,61 @@ body{{font-family:Arial;padding:24px}}h1{{color:#333}}pre{{background:#f4f4f4;pa
     def do_OPTIONS(self):
         self.send_response(204)
         self.send_header('Access-Control-Allow-Origin', '*')
-        self.send_header('Access-Control-Allow-Headers', 'Content-Type')
-        self.send_header('Access-Control-Allow-Methods', 'GET,POST,OPTIONS')
+        self.send_header('Access-Control-Allow-Headers', 'Content-Type, X-CSRF-Token, Authorization')
+        self.send_header('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE,OPTIONS,HEAD')
+        self.end_headers()
+
+    def do_HEAD(self):
+        if not self._r2_check_rate(): return
+        parsed = urllib.parse.urlparse(self.path)
+        if _dashboard_auth_enabled() and not _stage8_public_path(parsed.path):
+            token = _stage8_get_token(self)
+            if not (token and _stage8_verify_session(token)) and not _get_current_user(self):
+                if parsed.path.startswith('/api/'):
+                    self.send_response(401)
+                    self.send_header('Content-Type', 'application/json; charset=utf-8')
+                    self.send_header('Cache-Control', 'no-store, must-revalidate')
+                    self.end_headers()
+                else:
+                    self.send_response(302)
+                    self.send_header('Location', '/login')
+                    self.end_headers()
+                return
+        if parsed.path in ('/api/health', '/api/health/detailed'):
+            self.send_response(200)
+            self.send_header('Content-Type', 'application/json; charset=utf-8')
+            self.send_header('Cache-Control', 'no-store, must-revalidate')
+            self.end_headers()
+            return
+        if parsed.path == '/healthz':
+            self.send_response(200)
+            self.send_header('Content-Type', 'text/plain')
+            self.end_headers()
+            return
+        target = None
+        if parsed.path in ('/login', '/login.html'):
+            target = ROOT / 'login-page.html'
+        else:
+            clean = posixpath.normpath(urllib.parse.unquote(parsed.path))
+            target = INDEX if clean in ('', '.', '/') else (ROOT / clean.lstrip('/')).resolve()
+            if ROOT not in target.parents and target != ROOT:
+                self.send_response(403); self.end_headers(); return
+        if not target.exists() or not target.is_file():
+            self.send_response(404); self.end_headers(); return
+        content_type, _ = mimetypes.guess_type(str(target))
+        if not content_type:
+            content_type = 'application/octet-stream'
+        self.send_response(200)
+        self.send_header('Content-Type', content_type)
+        self.send_header('Content-Length', str(target.stat().st_size))
+        self.send_header('Cache-Control', _cache_control_for(content_type, parsed.path))
         self.end_headers()
 
     def do_GET(self):
         if not self._r2_check_rate(): return
         parsed = urllib.parse.urlparse(self.path)
+        if _dashboard_auth_enabled() and not _stage8_check_auth(self, parsed):
+            return
         # ---- Round 3: New endpoints ----
         if parsed.path in ('/api/health/detailed', '/api/health'):
             return json_response(self, 200, _r3_health_detailed())
@@ -2423,21 +2572,21 @@ body{{font-family:Arial;padding:24px}}h1{{color:#333}}pre{{background:#f4f4f4;pa
                 return text_response(self, 200, _STAGE8_LOGIN_HTML.encode('utf-8'), 'text/html; charset=utf-8')
         if parsed.path == '/api/auth/me':
             tok = _stage8_get_token(self)
-            usr = _stage8_verify_token(tok) if tok else None
+            session_user = _stage8_verify_session(tok) if tok else None
             # Also check JWT Bearer token
             jwt_user = _get_current_user(self)
             if jwt_user:
                 return json_response(self, 200, {'ok': True, 'user': jwt_user.get('username'), 'role': jwt_user.get('role', 'viewer'), 'auth_enabled': _dashboard_auth_enabled()})
-            role = 'admin' if usr else None
-            users = _stage8_users()
-            if usr and usr in users:
-                first_user = next(iter(users.keys()), '')
-                role = 'admin' if usr == first_user else 'viewer'
-            return json_response(self, 200, {'ok': True, 'user': usr, 'role': role, 'auth_enabled': _dashboard_auth_enabled()})
+            return json_response(self, 200, {
+                'ok': True,
+                'user': session_user.get('username') if session_user else None,
+                'role': session_user.get('role') if session_user else None,
+                'auth_enabled': _dashboard_auth_enabled()
+            })
         if parsed.path == '/api/auth/logout':
             self.send_response(200)
             self.send_header('Content-Type', 'application/json; charset=utf-8')
-            self.send_header('Set-Cookie', 'dash_auth=; Path=/; Max-Age=0; HttpOnly; SameSite=Lax')
+            self.send_header('Set-Cookie', 'dash_auth=; Path=/; Max-Age=0; HttpOnly; Secure; SameSite=Lax')
             body = b'{"ok":true}'
             self.send_header('Content-Length', str(len(body)))
             self.end_headers()
@@ -3120,6 +3269,10 @@ body{{font-family:Arial;padding:24px}}h1{{color:#333}}pre{{background:#f4f4f4;pa
     def do_POST(self):
         if not self._r2_check_rate(): return
         parsed = urllib.parse.urlparse(self.path)
+        if _dashboard_auth_enabled() and not _stage8_check_auth(self, parsed):
+            return
+        if not _r3_check_csrf_or_warn(self, parsed):
+            return
         # Round 4: manual backup trigger
         if parsed.path == '/api/backup/run':
             try:
@@ -3161,7 +3314,6 @@ body{{font-family:Arial;padding:24px}}h1{{color:#333}}pre{{background:#f4f4f4;pa
         if parsed.path == '/api/users':
             if not _require_admin(self): return
             try:
-                import hashlib as _hl_add
                 ln = int(self.headers.get('Content-Length', 0))
                 body = json.loads(self.rfile.read(ln) or b'{}')
                 u = (body.get('username') or '').strip()
@@ -3175,32 +3327,13 @@ body{{font-family:Arial;padding:24px}}h1{{color:#333}}pre{{background:#f4f4f4;pa
                     return json_response(self, 400, {'ok': False, 'error': 'username exists'})
                 import uuid as _uuid_add
                 users.append({'id': str(_uuid_add.uuid4()), 'username': u,
-                    'password_hash': _hl_add.sha256(p.encode()).hexdigest(),
+                    'password_hash': _mu_hash_password(p),
                     'role': role, 'email': email,
                     'created_at': datetime.datetime.utcnow().isoformat() + 'Z', 'last_login': None})
                 _mu_users_save(users)
                 return json_response(self, 200, {'ok': True})
             except Exception as e:
                 return json_response(self, 500, {'ok': False, 'error': str(e)})
-        if _R3_CSRF_ENABLED and not any(parsed.path.startswith(p) for p in _R3_CSRF_EXEMPT):
-            tok = self.headers.get('X-CSRF-Token', '')
-            if not _r3_csrf_verify(tok):
-                # Soft-fail mode: log but allow (so we can roll out gradually)
-                # To enforce hard, set DASH_CSRF_ENFORCE=1
-                if os.environ.get('DASH_CSRF_ENFORCE', '0') in ('1','true','True') or r6.CSRF_HARD:
-                    return json_response(self, 403, {'ok': False, 'error': 'csrf_invalid'})
-                else:
-                    rec = logging.LogRecord('dashboard', logging.WARNING, '', 0,
-                        f'csrf-missing path={parsed.path}', None, None)
-                    rec.event = 'csrf_warn'; rec.path = parsed.path
-                    _r2_log.handle(rec)
-        # Stage 8: auth gate (POST side) — now enforces whenever auth is configured.
-        if (
-            _dashboard_auth_enabled()
-            and parsed.path not in ('/api/auth/login', '/api/auth/request-reset', '/api/auth/reset', '/api/login', '/api/reset-password')
-            and not _stage8_check_auth(self, parsed)
-        ):
-            return
         # Stage 8: login — both endpoints are aliases for the same cookie-setting handler.
         if parsed.path in ('/api/auth/login', '/api/login'):
             try:
@@ -3261,6 +3394,29 @@ body{{font-family:Arial;padding:24px}}h1{{color:#333}}pre{{background:#f4f4f4;pa
             payload = read_request_json(self)
         except Exception:
             return json_response(self, 400, {'ok': False, 'error': 'Invalid JSON body'})
+
+        if parsed.path == '/api/tasks/sync-github':
+            tasks = payload.get('tasks')
+            if not isinstance(tasks, list):
+                return json_response(self, 400, {'ok': False, 'error': 'tasks must be an array'})
+            try:
+                content = json.dumps(tasks, ensure_ascii=False, indent=2)
+                result = commit_prompt_to_github({
+                    'path': 'tasks/tasks.json',
+                    'content': content,
+                    'message': 'chore: update dashboard tasks',
+                    'branch': payload.get('branch') or 'main',
+                })
+                return json_response(self, 200, {'ok': True, **result})
+            except RuntimeError as exc:
+                return json_response(self, 503, {'ok': False, 'error': str(exc)})
+            except ValueError as exc:
+                return json_response(self, 400, {'ok': False, 'error': str(exc)})
+            except urllib.error.HTTPError as exc:
+                body = exc.read().decode('utf-8', 'replace')[:1000]
+                return json_response(self, 502, {'ok': False, 'error': f'GitHub API error {exc.code}', 'details': body})
+            except Exception as exc:
+                return json_response(self, 500, {'ok': False, 'error': str(exc)})
 
         if parsed.path == '/api/prompt/improve':
             try:
@@ -4293,7 +4449,12 @@ body{{font-family:Arial;padding:24px}}h1{{color:#333}}pre{{background:#f4f4f4;pa
         return json_response(self, 404, {'ok': False, 'error': 'Not found'})
 
     def do_DELETE(self):
+        if not self._r2_check_rate(): return
         parsed = urllib.parse.urlparse(self.path)
+        if _dashboard_auth_enabled() and not _stage8_check_auth(self, parsed):
+            return
+        if not _r3_check_csrf_or_warn(self, parsed):
+            return
         if parsed.path.startswith('/api/kwr/reports/'):
             run_id = parsed.path.split('/')[-1].strip()
             if not run_id:
@@ -4321,7 +4482,12 @@ body{{font-family:Arial;padding:24px}}h1{{color:#333}}pre{{background:#f4f4f4;pa
         return json_response(self, 404, {'ok': False, 'error': 'Not found'})
 
     def do_PUT(self):
+        if not self._r2_check_rate(): return
         parsed = urllib.parse.urlparse(self.path)
+        if _dashboard_auth_enabled() and not _stage8_check_auth(self, parsed):
+            return
+        if not _r3_check_csrf_or_warn(self, parsed):
+            return
         if parsed.path.startswith('/api/users/'):
             username = parsed.path.split('/')[-1].strip()
             if not username:
@@ -4334,7 +4500,6 @@ body{{font-family:Arial;padding:24px}}h1{{color:#333}}pre{{background:#f4f4f4;pa
             if not is_admin and not is_self:
                 return json_response(self, 403, {'ok': False, 'error': 'forbidden'})
             try:
-                import hashlib as _hl_put
                 ln = int(self.headers.get('Content-Length', 0))
                 body = json.loads(self.rfile.read(ln) or b'{}')
                 users = _mu_users_load()
@@ -4350,7 +4515,7 @@ body{{font-family:Arial;padding:24px}}h1{{color:#333}}pre{{background:#f4f4f4;pa
                 if is_self and 'password' in body and body['password']:
                     if len(body['password']) < 6:
                         return json_response(self, 400, {'ok': False, 'error': 'password too short'})
-                    target['password_hash'] = _hl_put.sha256(body['password'].encode()).hexdigest()
+                    target['password_hash'] = _mu_hash_password(body['password'])
                 _mu_users_save(users)
                 return json_response(self, 200, {'ok': True})
             except Exception as e:

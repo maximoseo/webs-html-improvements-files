@@ -63,6 +63,12 @@ class AuthLoginFlowTests(unittest.TestCase):
         self.assertEqual(me_data['user'], 'admin')
         self.assertTrue(me_data['auth_enabled'])
 
+    def test_early_dashboard_api_routes_require_auth(self):
+        for path in ('/api/analytics', '/api/audit', '/api/views', '/api/file/raw?path=index.html'):
+            status, _, body = req(path)
+            self.assertEqual(status, 401, path)
+            self.assertEqual(json.loads(body)['error'], 'auth_required')
+
     def test_password_reset_endpoints_exist_and_do_not_enumerate_users(self):
         payload = json.dumps({'username': 'admin', 'user': 'admin'}).encode()
         status, _, body = req('/api/auth/request-reset', method='POST', headers={'Content-Type': 'application/json'}, data=payload)

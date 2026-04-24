@@ -8,30 +8,31 @@
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>&#9672;</text></svg>">
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-body{background:#0a0a0f;color:#e2e8f0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;min-height:100vh;display:flex;align-items:center;justify-content:center}
-.card{background:#13131a;border:1px solid #1e1e2e;border-radius:16px;padding:40px;width:100%;max-width:400px;box-shadow:0 20px 60px rgba(0,0,0,.6)}
+body{background:radial-gradient(circle at 18% 0%,rgba(122,162,255,.2),transparent 30%),radial-gradient(circle at 88% 18%,rgba(34,197,94,.1),transparent 24%),linear-gradient(180deg,#090b0f,#07080b);color:#e5edf8;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:22px}
+.card{background:rgba(17,21,27,.92);border:1px solid rgba(218,230,255,.12);border-radius:14px;padding:36px;width:100%;max-width:420px;box-shadow:0 24px 70px rgba(0,0,0,.5),inset 0 1px 0 rgba(255,255,255,.04);backdrop-filter:blur(18px)}
 .logo{display:flex;align-items:center;gap:12px;margin-bottom:32px;justify-content:center}
-.logo-icon{width:40px;height:40px;background:linear-gradient(135deg,#7c3aed,#a855f7);border-radius:10px;display:flex;align-items:center;justify-content:center}
+.logo-icon{width:40px;height:40px;background:linear-gradient(135deg,#7aa2ff,#22c55e);border-radius:10px;display:flex;align-items:center;justify-content:center;box-shadow:0 12px 28px rgba(122,162,255,.24)}
 .logo-icon svg{width:22px;height:22px;stroke:#fff;stroke-width:2.5;fill:none}
 .logo h1{font-size:1.3rem;font-weight:700;color:#f8fafc}
-.logo h1 span{color:#a855f7}
-.subtitle{text-align:center;color:#64748b;font-size:.85rem;margin-bottom:28px}
+.logo h1 span{color:#9fc0ff}
+.subtitle{text-align:center;color:#93a4ba;font-size:.88rem;margin-bottom:28px}
 .form-group{margin-bottom:18px}
-label{display:block;font-size:.8rem;font-weight:600;color:#94a3b8;margin-bottom:6px;text-transform:uppercase;letter-spacing:.05em}
-input{width:100%;background:#0a0a0f;border:1px solid #2d2d3d;border-radius:8px;padding:11px 14px;color:#f1f5f9;font-size:.95rem;outline:none;transition:border-color .2s}
-input:focus{border-color:#7c3aed;box-shadow:0 0 0 3px rgba(124,58,237,.15)}
+label{display:block;font-size:.76rem;font-weight:700;color:#9aa9bd;margin-bottom:6px;text-transform:uppercase;letter-spacing:.06em}
+input{width:100%;background:#090d13;border:1px solid rgba(218,230,255,.12);border-radius:9px;padding:12px 14px;color:#f1f5f9;font-size:.95rem;outline:none;transition:border-color .2s,box-shadow .2s,background .2s}
+input:focus{border-color:#7aa2ff;box-shadow:0 0 0 3px rgba(122,162,255,.14);background:#0b1119}
 input::placeholder{color:#475569}
-.btn{width:100%;background:linear-gradient(135deg,#7c3aed,#6d28d9);border:none;border-radius:8px;color:#fff;font-size:.95rem;font-weight:600;padding:12px;cursor:pointer;transition:opacity .2s;margin-top:8px}
-.btn:hover{opacity:.9}
+.btn{width:100%;background:linear-gradient(135deg,#2f7dff,#1f9d72);border:none;border-radius:9px;color:#fff;font-size:.95rem;font-weight:700;padding:12px;cursor:pointer;transition:filter .2s,transform .2s;margin-top:8px;box-shadow:0 12px 30px rgba(47,125,255,.2)}
+.btn:hover{filter:brightness(1.08);transform:translateY(-1px)}
 .btn:disabled{opacity:.5;cursor:not-allowed}
-.forgot{display:block;text-align:center;color:#7c3aed;font-size:.82rem;margin-top:16px;cursor:pointer;background:none;border:none;width:100%}
-.forgot:hover{color:#a855f7;text-decoration:underline}
+.forgot{display:block;text-align:center;color:#9fc0ff;font-size:.82rem;margin-top:16px;cursor:pointer;background:none;border:none;width:100%}
+.forgot:hover{color:#c4d7ff;text-decoration:underline}
 .msg{margin-top:14px;padding:10px 14px;border-radius:8px;font-size:.85rem;text-align:center;display:none}
 .msg.error{background:#2d1515;color:#f87171;border:1px solid #7f1d1d;display:block}
 .msg.success{background:#0d2d1a;color:#4ade80;border:1px solid #166534;display:block}
 .reset-section{display:none;margin-top:4px}
 .back-link{display:block;text-align:center;color:#64748b;font-size:.82rem;margin-top:12px;cursor:pointer;background:none;border:none;width:100%}
 .back-link:hover{color:#94a3b8}
+@media(max-width:480px){.card{padding:28px 22px}}
 </style>
 </head>
 <body>
