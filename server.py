@@ -3090,7 +3090,11 @@ body{{font-family:Arial;padding:24px}}h1{{color:#333}}pre{{background:#f4f4f4;pa
                     'email_notifications': True,
                     'telegram_notifications': False,
                     'email_address': os.getenv('RADAR_EMAIL_TO', 'service@maximo-seo.com'),
+                    'theme_color': 'purple',
                 }
+            if not isinstance(settings, dict):
+                settings = {}
+            settings.setdefault('theme_color', 'purple')
             return json_response(self, 200, {'ok': True, **settings})
 
         # ── NEW: /api/settings/api-keys ─────────────────────────────────

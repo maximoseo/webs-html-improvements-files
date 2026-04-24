@@ -8489,35 +8489,73 @@ function showErrorToast(msg) {
 (function(){
   var _origFetch = window.fetch;
   var _redirecting = false;
+  var _csrfToken = '';
+  var _csrfPromise = null;
+  function _setHeader(headers, name, value){
+    if (!headers || !value) return;
+    if (typeof headers.set === 'function') {
+      if (!headers.has || !headers.has(name)) headers.set(name, value);
+    } else if (!headers[name] && !headers[String(name).toLowerCase()]) {
+      headers[name] = value;
+    }
+  }
+  function _sameOrigin(url){
+    try {
+      var full = new URL((typeof url === 'string') ? url : ((url && url.url) || ''), window.location.href);
+      return full.origin === window.location.origin;
+    } catch(_e) {
+      return true;
+    }
+  }
+  function _methodOf(opts){
+    return String((opts && opts.method) || 'GET').toUpperCase();
+  }
+  function _needsCsrf(url, opts){
+    var method = _methodOf(opts);
+    return _sameOrigin(url) && ['POST','PUT','PATCH','DELETE'].indexOf(method) !== -1;
+  }
+  function _ensureCsrf(){
+    if (_csrfToken) return Promise.resolve(_csrfToken);
+    if (_csrfPromise) return _csrfPromise;
+    _csrfPromise = _origFetch.call(window, '/api/csrf', {credentials:'same-origin'})
+      .then(function(r){ return r && r.ok ? r.json() : null; })
+      .then(function(data){
+        _csrfToken = (data && data.token) || '';
+        return _csrfToken;
+      })
+      .catch(function(){ return ''; })
+      .finally(function(){ _csrfPromise = null; });
+    return _csrfPromise;
+  }
   window.fetch = function(url, opts){
+    var self = this;
     opts = opts || {};
     opts.headers = opts.headers || {};
     var tok = '';
     try { tok = localStorage.getItem('dashboard_token') || ''; } catch(_e) {}
-    if (tok) {
-      if (typeof opts.headers.set === 'function') {
-        if (!opts.headers.has || !opts.headers.has('Authorization')) {
-          opts.headers.set('Authorization', 'Bearer ' + tok);
-        }
-      } else if (!opts.headers['Authorization'] && !opts.headers['authorization']) {
-        opts.headers['Authorization'] = 'Bearer ' + tok;
-      }
-    }
+    if (tok) _setHeader(opts.headers, 'Authorization', 'Bearer ' + tok);
     if (opts.credentials == null) opts.credentials = 'same-origin';
-    var p = _origFetch.call(this, url, opts);
-    p.then(function(r){
-      if (r && r.status === 401 && !_redirecting && window.location.pathname !== '/login') {
-        // Real auth failure from a same-origin API call → log out cleanly.
-        var u = '';
-        try { u = (typeof url === 'string') ? url : (url && url.url) || ''; } catch(_e2) {}
-        if (u.indexOf('/api/') !== -1) {
-          _redirecting = true;
-          try { localStorage.removeItem('dashboard_token'); } catch(_e3) {}
-          window.location.replace('/login');
+    function send(){
+      var p = _origFetch.call(self, url, opts);
+      p.then(function(r){
+        if (r && r.status === 401 && !_redirecting && window.location.pathname !== '/login') {
+          // Real auth failure from a same-origin API call → log out cleanly.
+          var u = '';
+          try { u = (typeof url === 'string') ? url : (url && url.url) || ''; } catch(_e2) {}
+          if (u.indexOf('/api/') !== -1) {
+            _redirecting = true;
+            try { localStorage.removeItem('dashboard_token'); } catch(_e3) {}
+            window.location.replace('/login');
+          }
         }
-      }
-    }).catch(function(){});
-    return p;
+      }).catch(function(){});
+      return p;
+    }
+    if (!_needsCsrf(url, opts)) return send();
+    return _ensureCsrf().then(function(csrf){
+      if (csrf) _setHeader(opts.headers, 'X-CSRF-Token', csrf);
+      return send();
+    });
   };
 })();
 
@@ -10362,7 +10400,7 @@ async function loadDashboard(){
         </div>
       </div>
       <div class="card-header" onclick="(function(c){c.classList.toggle('expanded');syncBulkToggleLabel();if(c.classList.contains('expanded'))setTimeout(()=>c.scrollIntoView({behavior:'smooth',block:'nearest'}),300)})(this.parentElement)">
-        <div class="card-icon" id="icon-${p.name.replace(/[^a-z0-9]/gi,'-')}" style="background:linear-gradient(135deg,${color},${color}88)"><span class="icon-initials">${initials}</span><img class="favicon" src="https://www.google.com/s2/favicons?domain=${p.name}&sz=64" alt="" loading="lazy" onerror="this.onerror=null;this.src='https://icons.duckduckgo.com/ip3/'+encodeURIComponent('${p.name}')+'.ico';this.onerror=function(){this.style.display='none';}" onload="this.classList.add('loaded');this.closest('.card-icon').classList.add('has-logo')"></div>
+        <div class="card-icon" id="icon-${p.name.replace(/[^a-z0-9]/gi,'-')}" style="background:linear-gradient(135deg,${color},${color}88)"><span class="icon-initials">${initials}</span><img class="favicon" src="https://www.google.com/s2/favicons?domain=${p.name}&sz=64" alt="" loading="lazy" onerror="this.onerror=null;this.removeAttribute('src');this.style.display='none';" onload="this.classList.add('loaded');this.closest('.card-icon').classList.add('has-logo')"></div>
         <div class="card-info">
           <h3>${p.name}</h3>
           <div class="card-meta">
@@ -16196,18 +16234,30 @@ async function toggleStar(domain, btn){
 function reloadProjects(){ if(typeof loadProjects==='function') loadProjects(); }
 
 // Theme
-function setThemeColor(color){
+function setThemeColor(color, persist){
+  if (persist === undefined) persist = true;
   var colors = {purple:'#7c3aed', blue:'#2563eb', green:'#16a34a', red:'#dc2626', orange:'#ea580c', pink:'#db2777'};
   var c = colors[color] || colors.purple;
   document.documentElement.style.setProperty('--primary', c);
   document.querySelectorAll('.theme-swatch').forEach(function(s){ s.classList.toggle('active', s.dataset.color===color); });
   try{localStorage.setItem('theme_color', color);}catch(_){}
-  // Also save to server
-  fetch('/api/settings/theme',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({theme_color:color})}).catch(function(){});
+  if (persist) {
+    fetch('/api/settings/theme',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({theme_color:color})}).catch(function(){});
+  }
 }
 (function initTheme(){
-  var saved = localStorage.getItem('theme_color') || 'purple';
-  setThemeColor(saved);
+  var saved = 'purple';
+  var hasLocalTheme = false;
+  try {
+    saved = localStorage.getItem('theme_color') || 'purple';
+    hasLocalTheme = !!localStorage.getItem('theme_color');
+  } catch(_) {}
+  setThemeColor(saved, false);
+  if (!hasLocalTheme) {
+    fetch('/api/settings').then(function(r){return r.ok?r.json():null;}).then(function(j){
+      if (j && j.theme_color) setThemeColor(j.theme_color, false);
+    }).catch(function(){});
+  }
 })();
 
 </script>
