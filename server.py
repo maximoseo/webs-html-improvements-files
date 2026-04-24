@@ -33,6 +33,14 @@ REPO = 'maximoseo/webs-html-improvements-files'
 RAW_BASE = f'https://raw.githubusercontent.com/{REPO}/main'
 DEFAULT_N8N_BASE = 'https://websiseo.app.n8n.cloud'
 _SERVER_START_TIME = time.time()
+_PROJECT_DOMAIN_RE = re.compile(r'^(?![.-])[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?(?:\.[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?)+$', re.I)
+
+
+def _looks_like_project_domain(name: str) -> bool:
+    name = (name or '').strip()
+    if not name:
+        return False
+    return bool(_PROJECT_DOMAIN_RE.fullmatch(name))
 
 # ===== DAILY SKILLS RADAR — global state & sources =====
 _radar_state = {
@@ -135,6 +143,7 @@ import time as _time8
 
 _STAGE8_PUBLIC_PATHS = {
     '/api/health', '/api/auth/login', '/api/auth/logout', '/api/auth/me',
+    '/api/auth/request-reset', '/api/auth/reset',
     '/login', '/login.html', '/static/login.css', '/api/login', '/api/reset-password',
     '/api/file/raw', '/api/version',
 }
@@ -685,7 +694,20 @@ def _get_provider_chain():
             'model_override': None,
         })
 
-    # 2. Venice AI — first automatic fallback after OpenRouter
+    # 2. OpenAI (Direct API)
+    openai_key = os.getenv('OPENAI_API_KEY')
+    if openai_key:
+        chain.append({
+            'name': 'openai',
+            'base': 'https://api.openai.com/v1',
+            'headers': {
+                'Authorization': f'Bearer {openai_key}',
+                'Accept': 'application/json',
+            },
+            'model_override': None,
+        })
+
+    # 3. Venice AI — automatic fallback
     venice_key = os.getenv('VENICE_API_KEY')
     if venice_key:
         chain.append({
@@ -698,7 +720,7 @@ def _get_provider_chain():
             'model_override': os.getenv('VENICE_MODEL', 'llama-3.3-70b'),
         })
 
-    # 3. GitHub Copilot
+    # 4. GitHub Copilot
     copilot_key = os.getenv('COPILOT_API_KEY') or os.getenv('GITHUB_COPILOT_TOKEN')
     if copilot_key:
         chain.append({
@@ -714,7 +736,7 @@ def _get_provider_chain():
             'model_override': os.getenv('COPILOT_MODEL', 'claude-sonnet-4.6'),
         })
 
-    # 4. Google Gemini (native REST API)
+    # 5. Google Gemini (native REST API)
     gemini_key = os.getenv('GEMINI_API_KEY')
     if gemini_key:
         chain.append({
@@ -728,7 +750,7 @@ def _get_provider_chain():
             'gemini_native': True,
         })
 
-    # 5. Fireworks AI
+    # 6. Fireworks AI
     fireworks_key = os.getenv('FIREWORKS_API_KEY')
     if fireworks_key:
         chain.append({
@@ -741,7 +763,7 @@ def _get_provider_chain():
             'model_override': os.getenv('FIREWORKS_MODEL', 'accounts/fireworks/models/llama-v3p3-70b-instruct'),
         })
 
-    # 6. Kimi / Moonshot
+    # 7. Kimi / Moonshot
     kimi_key = os.getenv('KIMI_API_KEY')
     if kimi_key:
         chain.append({
@@ -754,7 +776,7 @@ def _get_provider_chain():
             'model_override': os.getenv('KIMI_MODEL', 'kimi-k2.6'),
         })
 
-    # 7. xAI / Grok
+    # 8. xAI / Grok
     xai_key = os.getenv('XAI_API_KEY')
     if xai_key:
         chain.append({
@@ -767,7 +789,7 @@ def _get_provider_chain():
             'model_override': os.getenv('XAI_MODEL', 'grok-4.20-multi-agent'),
         })
 
-    # 8. MiniMax
+    # 9. MiniMax
     minimax_key = os.getenv('MINIMAX_API_KEY')
     if minimax_key:
         chain.append({
@@ -781,7 +803,7 @@ def _get_provider_chain():
             'model_override': os.getenv('MINIMAX_MODEL', 'minimax-m2.7'),
         })
 
-    # 9. Z.AI / GLM
+    # 10. Z.AI / GLM
     glm_key = os.getenv('GLM_API_KEY')
     if glm_key:
         chain.append({
@@ -795,7 +817,7 @@ def _get_provider_chain():
             'model_override': os.getenv('GLM_MODEL', 'glm-5.1'),
         })
 
-    # 10. Anthropic (native API — direct)
+    # 11. Anthropic (native API — direct)
     anthropic_key = os.getenv('ANTHROPIC_API_KEY')
     if anthropic_key:
         chain.append({
@@ -853,6 +875,9 @@ def _detect_preferred_provider(model: str) -> str | None:
         return 'minimax'
     if model.startswith('glm-'):
         return 'glm'
+    # OpenAI direct models (gpt-4o, gpt-4.5-preview, o1, o3-mini, etc.)
+    if model.startswith('gpt-') or model.startswith('o1') or model.startswith('o3'):
+        return 'openai'
     # Copilot short IDs have dots (version numbers like 4.6, 5.4, 4.1)
     if '.' in model:
         return 'copilot'
@@ -1194,6 +1219,8 @@ BRAINSTORM_MODELS = [
     {"id": "gemini-2.5-pro",                  "label": "Gemini 2.5 Pro (Direct)",          "provider": "gemini"},
     {"id": "anthropic/claude-opus-4.7",       "label": "Claude Opus 4.7"},
     {"id": "openai/gpt-5.4",                  "label": "GPT-5.4"},
+    {"id": "gpt-4o",                          "label": "GPT-4o (OpenAI Direct)",           "provider": "openai"},
+    {"id": "gpt-4.5-preview",                 "label": "GPT-4.5 Preview (OpenAI Direct)",  "provider": "openai"},
     {"id": "minimax/minimax-m2.7",            "label": "MiniMax M2.7"},
     {"id": "moonshotai/kimi-k2.5",            "label": "Kimi K2.5"},
     {"id": "z-ai/glm-5.1",                    "label": "GLM 5.1"},
@@ -1892,7 +1919,10 @@ _R3_SSE_CLIENTS = []  # list of queue.Queue
 _R3_SSE_LOCK = threading.Lock()
 _R3_CSRF_SECRET = os.environ.get('DASH_CSRF_SECRET') or _r3_secrets.token_hex(32)
 _R3_CSRF_ENABLED = os.environ.get('DASH_CSRF', '1') not in ('0','false','False','')
-_R3_CSRF_EXEMPT = ('/api/auth/login', '/api/n8n/webhook', '/login', '/api/csrf', '/metrics', '/api/login', '/api/reset-password')
+_R3_CSRF_EXEMPT = (
+    '/api/auth/login', '/api/auth/request-reset', '/api/auth/reset',
+    '/api/n8n/webhook', '/login', '/api/csrf', '/metrics', '/api/login', '/api/reset-password'
+)
 
 def _r3_csrf_token():
     """Generate a per-session CSRF token (signed with server secret)."""
@@ -2257,6 +2287,8 @@ body{{font-family:Arial;padding:24px}}h1{{color:#333}}pre{{background:#f4f4f4;pa
                     domain = parts[0]
                     if domain in ('index.html', 'server.py', 'data.json', 'login-page.html', 'Dockerfile', '.dockerignore', 'AGENTS.md', 'kwr_backend.py', 'n8n-workflow-map.json'):
                         continue
+                    if not _looks_like_project_domain(domain):
+                        continue
                     if len(parts) < 3:
                         continue
                     agent = parts[1]
@@ -2286,6 +2318,8 @@ body{{font-family:Arial;padding:24px}}h1{{color:#333}}pre{{background:#f4f4f4;pa
                     parts = path.split('/')
                     domain = parts[0]
                     if domain in ('index.html', 'server.py', 'data.json'):
+                        continue
+                    if not _looks_like_project_domain(domain):
                         continue
                     fpath = ROOT / path
                     try:
@@ -2464,6 +2498,12 @@ body{{font-family:Arial;padding:24px}}h1{{color:#333}}pre{{background:#f4f4f4;pa
                     {'id': 'openai/gpt-4o',                     'label': 'GPT-4o (OpenRouter)',             'provider': 'openrouter'},
                     {'id': 'google/gemini-3.1-pro-preview',     'label': 'Gemini 3.1 Pro (OpenRouter)',     'provider': 'openrouter'},
                     {'id': 'google/gemini-2.5-pro',             'label': 'Gemini 2.5 Pro (OpenRouter)',     'provider': 'openrouter'},
+                    # --- OpenAI (Direct API) ---
+                    {'id': 'gpt-4o',                            'label': 'GPT-4o (OpenAI Direct)',          'provider': 'openai'},
+                    {'id': 'gpt-4.5-preview',                   'label': 'GPT-4.5 Preview (OpenAI Direct)', 'provider': 'openai'},
+                    {'id': 'gpt-4o-mini',                       'label': 'GPT-4o Mini (OpenAI Direct)',     'provider': 'openai'},
+                    {'id': 'o1',                                'label': 'o1 (OpenAI Direct)',              'provider': 'openai'},
+                    {'id': 'o3-mini',                           'label': 'o3-mini (OpenAI Direct)',         'provider': 'openai'},
                     # --- GitHub Copilot (direct) ---
                     {'id': 'claude-sonnet-4.6',                 'label': 'Claude Sonnet 4.6 (Copilot)',     'provider': 'copilot'},
                     {'id': 'gpt-4o',                            'label': 'GPT-4o (Copilot)',                'provider': 'copilot'},
@@ -2956,6 +2996,8 @@ body{{font-family:Arial;padding:24px}}h1{{color:#333}}pre{{background:#f4f4f4;pa
                     domain = parts[0]
                     if domain in ('index.html', 'server.py', 'data.json', 'login-page.html', 'Dockerfile', '.dockerignore', 'AGENTS.md', 'kwr_backend.py', 'n8n-workflow-map.json'):
                         continue
+                    if not _looks_like_project_domain(domain):
+                        continue
                     bucket = grouped.setdefault(domain, {'domain': domain, 'name': domain, 'agents': [], 'updated_at': None, 'status': 'active', 'deployed': False})
                     if len(parts) < 3:
                         continue
@@ -3151,7 +3193,7 @@ body{{font-family:Arial;padding:24px}}h1{{color:#333}}pre{{background:#f4f4f4;pa
         # Stage 8: auth gate (POST side) — now enforces whenever auth is configured.
         if (
             _dashboard_auth_enabled()
-            and parsed.path not in ('/api/auth/login', '/api/login', '/api/reset-password')
+            and parsed.path not in ('/api/auth/login', '/api/auth/request-reset', '/api/auth/reset', '/api/login', '/api/reset-password')
             and not _stage8_check_auth(self, parsed)
         ):
             return
@@ -3162,6 +3204,25 @@ body{{font-family:Arial;padding:24px}}h1{{color:#333}}pre{{background:#f4f4f4;pa
             except Exception:
                 payload = {}
             return _stage8_login(self, payload)
+        # Stage 8: password-reset request — canonical endpoint plus legacy alias.
+        if parsed.path in ('/api/auth/request-reset', '/api/reset-password'):
+            try:
+                payload = read_request_json(self) or {}
+            except Exception:
+                payload = {}
+            # Deliberately do not enumerate users.
+            return json_response(self, 200, {'ok': True})
+        # Stage 8: password-reset confirm — return canonical invalid token state until wired.
+        if parsed.path == '/api/auth/reset':
+            try:
+                payload = read_request_json(self) or {}
+            except Exception:
+                payload = {}
+            token = (payload.get('token') or '').strip()
+            new_password = payload.get('new_password') or ''
+            if not token or not new_password:
+                return json_response(self, 400, {'ok': False, 'error': 'token_and_new_password_required'})
+            return json_response(self, 400, {'ok': False, 'error': 'invalid_or_expired_token'})
         # Stage 14 admin backup POST
         if _stage14_handle_post(self, parsed):
             return
@@ -4103,8 +4164,8 @@ body{{font-family:Arial;padding:24px}}h1{{color:#333}}pre{{background:#f4f4f4;pa
 
         # ── PROJECT QUICK ACTIONS ──────────────────────────────────────
         if parsed.path == '/api/projects/duplicate':
-            payload = read_json_body(self)
-            domain = (payload.get('domain') or '').strip()
+            route_payload = payload if isinstance(payload, dict) else {}
+            domain = (route_payload.get('domain') or '').strip()
             if not domain:
                 return json_response(self, 400, {'ok': False, 'error': 'domain required'})
             data_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'data.json')
@@ -4129,9 +4190,9 @@ body{{font-family:Arial;padding:24px}}h1{{color:#333}}pre{{background:#f4f4f4;pa
                 return json_response(self, 500, {'ok': False, 'error': str(exc)})
 
         if parsed.path == '/api/projects/rename':
-            payload = read_json_body(self)
-            old_domain = (payload.get('old_domain') or '').strip()
-            new_domain = (payload.get('new_domain') or '').strip()
+            route_payload = payload if isinstance(payload, dict) else {}
+            old_domain = (route_payload.get('old_domain') or '').strip()
+            new_domain = (route_payload.get('new_domain') or '').strip()
             if not old_domain or not new_domain:
                 return json_response(self, 400, {'ok': False, 'error': 'old_domain and new_domain required'})
             data_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'data.json')
@@ -4151,8 +4212,8 @@ body{{font-family:Arial;padding:24px}}h1{{color:#333}}pre{{background:#f4f4f4;pa
                 return json_response(self, 500, {'ok': False, 'error': str(exc)})
 
         if parsed.path == '/api/projects/delete':
-            payload = read_json_body(self)
-            domain = (payload.get('domain') or '').strip()
+            route_payload = payload if isinstance(payload, dict) else {}
+            domain = (route_payload.get('domain') or '').strip()
             if not domain:
                 return json_response(self, 400, {'ok': False, 'error': 'domain required'})
             data_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'data.json')
@@ -4169,9 +4230,9 @@ body{{font-family:Arial;padding:24px}}h1{{color:#333}}pre{{background:#f4f4f4;pa
                 return json_response(self, 500, {'ok': False, 'error': str(exc)})
 
         if parsed.path == '/api/projects/star':
-            payload = read_json_body(self)
-            domain = (payload.get('domain') or '').strip()
-            starred = bool(payload.get('starred'))
+            route_payload = payload if isinstance(payload, dict) else {}
+            domain = (route_payload.get('domain') or '').strip()
+            starred = bool(route_payload.get('starred'))
             if not domain:
                 return json_response(self, 400, {'ok': False, 'error': 'domain required'})
             # Store starred state in a separate JSON file
@@ -4195,8 +4256,8 @@ body{{font-family:Arial;padding:24px}}h1{{color:#333}}pre{{background:#f4f4f4;pa
 
         # ── THEME SETTINGS ─────────────────────────────────────────────
         if parsed.path == '/api/settings/theme':
-            payload = read_json_body(self)
-            theme_color = (payload.get('theme_color') or 'purple').strip().lower()
+            route_payload = payload if isinstance(payload, dict) else {}
+            theme_color = (route_payload.get('theme_color') or 'purple').strip().lower()
             valid_colors = ['purple', 'blue', 'green', 'red', 'orange', 'pink']
             if theme_color not in valid_colors:
                 return json_response(self, 400, {'ok': False, 'error': f'Invalid color. Choose from: {valid_colors}'})
@@ -4245,8 +4306,8 @@ body{{font-family:Arial;padding:24px}}h1{{color:#333}}pre{{background:#f4f4f4;pa
 
         # ── PROJECT QUICK ACTIONS ──────────────────────────────────────
         if parsed.path == '/api/projects/duplicate':
-            payload = read_json_body(self)
-            domain = (payload.get('domain') or '').strip()
+            route_payload = payload if isinstance(payload, dict) else {}
+            domain = (route_payload.get('domain') or '').strip()
             if not domain:
                 return json_response(self, 400, {'ok': False, 'error': 'domain required'})
             data_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'data.json')
@@ -4271,9 +4332,9 @@ body{{font-family:Arial;padding:24px}}h1{{color:#333}}pre{{background:#f4f4f4;pa
                 return json_response(self, 500, {'ok': False, 'error': str(exc)})
 
         if parsed.path == '/api/projects/rename':
-            payload = read_json_body(self)
-            old_domain = (payload.get('old_domain') or '').strip()
-            new_domain = (payload.get('new_domain') or '').strip()
+            route_payload = payload if isinstance(payload, dict) else {}
+            old_domain = (route_payload.get('old_domain') or '').strip()
+            new_domain = (route_payload.get('new_domain') or '').strip()
             if not old_domain or not new_domain:
                 return json_response(self, 400, {'ok': False, 'error': 'old_domain and new_domain required'})
             data_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'data.json')
@@ -4293,8 +4354,8 @@ body{{font-family:Arial;padding:24px}}h1{{color:#333}}pre{{background:#f4f4f4;pa
                 return json_response(self, 500, {'ok': False, 'error': str(exc)})
 
         if parsed.path == '/api/projects/delete':
-            payload = read_json_body(self)
-            domain = (payload.get('domain') or '').strip()
+            route_payload = payload if isinstance(payload, dict) else {}
+            domain = (route_payload.get('domain') or '').strip()
             if not domain:
                 return json_response(self, 400, {'ok': False, 'error': 'domain required'})
             data_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'data.json')
@@ -4311,9 +4372,9 @@ body{{font-family:Arial;padding:24px}}h1{{color:#333}}pre{{background:#f4f4f4;pa
                 return json_response(self, 500, {'ok': False, 'error': str(exc)})
 
         if parsed.path == '/api/projects/star':
-            payload = read_json_body(self)
-            domain = (payload.get('domain') or '').strip()
-            starred = bool(payload.get('starred'))
+            route_payload = payload if isinstance(payload, dict) else {}
+            domain = (route_payload.get('domain') or '').strip()
+            starred = bool(route_payload.get('starred'))
             if not domain:
                 return json_response(self, 400, {'ok': False, 'error': 'domain required'})
             # Store starred state in a separate JSON file
@@ -4337,8 +4398,8 @@ body{{font-family:Arial;padding:24px}}h1{{color:#333}}pre{{background:#f4f4f4;pa
 
         # ── THEME SETTINGS ─────────────────────────────────────────────
         if parsed.path == '/api/settings/theme':
-            payload = read_json_body(self)
-            theme_color = (payload.get('theme_color') or 'purple').strip().lower()
+            route_payload = payload if isinstance(payload, dict) else {}
+            theme_color = (route_payload.get('theme_color') or 'purple').strip().lower()
             valid_colors = ['purple', 'blue', 'green', 'red', 'orange', 'pink']
             if theme_color not in valid_colors:
                 return json_response(self, 400, {'ok': False, 'error': f'Invalid color. Choose from: {valid_colors}'})
@@ -4397,8 +4458,8 @@ body{{font-family:Arial;padding:24px}}h1{{color:#333}}pre{{background:#f4f4f4;pa
 
         # ── PROJECT QUICK ACTIONS ──────────────────────────────────────
         if parsed.path == '/api/projects/duplicate':
-            payload = read_json_body(self)
-            domain = (payload.get('domain') or '').strip()
+            route_payload = payload if isinstance(payload, dict) else {}
+            domain = (route_payload.get('domain') or '').strip()
             if not domain:
                 return json_response(self, 400, {'ok': False, 'error': 'domain required'})
             data_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'data.json')
@@ -4423,9 +4484,9 @@ body{{font-family:Arial;padding:24px}}h1{{color:#333}}pre{{background:#f4f4f4;pa
                 return json_response(self, 500, {'ok': False, 'error': str(exc)})
 
         if parsed.path == '/api/projects/rename':
-            payload = read_json_body(self)
-            old_domain = (payload.get('old_domain') or '').strip()
-            new_domain = (payload.get('new_domain') or '').strip()
+            route_payload = payload if isinstance(payload, dict) else {}
+            old_domain = (route_payload.get('old_domain') or '').strip()
+            new_domain = (route_payload.get('new_domain') or '').strip()
             if not old_domain or not new_domain:
                 return json_response(self, 400, {'ok': False, 'error': 'old_domain and new_domain required'})
             data_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'data.json')
@@ -4445,8 +4506,8 @@ body{{font-family:Arial;padding:24px}}h1{{color:#333}}pre{{background:#f4f4f4;pa
                 return json_response(self, 500, {'ok': False, 'error': str(exc)})
 
         if parsed.path == '/api/projects/delete':
-            payload = read_json_body(self)
-            domain = (payload.get('domain') or '').strip()
+            route_payload = payload if isinstance(payload, dict) else {}
+            domain = (route_payload.get('domain') or '').strip()
             if not domain:
                 return json_response(self, 400, {'ok': False, 'error': 'domain required'})
             data_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'data.json')
@@ -4463,9 +4524,9 @@ body{{font-family:Arial;padding:24px}}h1{{color:#333}}pre{{background:#f4f4f4;pa
                 return json_response(self, 500, {'ok': False, 'error': str(exc)})
 
         if parsed.path == '/api/projects/star':
-            payload = read_json_body(self)
-            domain = (payload.get('domain') or '').strip()
-            starred = bool(payload.get('starred'))
+            route_payload = payload if isinstance(payload, dict) else {}
+            domain = (route_payload.get('domain') or '').strip()
+            starred = bool(route_payload.get('starred'))
             if not domain:
                 return json_response(self, 400, {'ok': False, 'error': 'domain required'})
             # Store starred state in a separate JSON file
@@ -4489,8 +4550,8 @@ body{{font-family:Arial;padding:24px}}h1{{color:#333}}pre{{background:#f4f4f4;pa
 
         # ── THEME SETTINGS ─────────────────────────────────────────────
         if parsed.path == '/api/settings/theme':
-            payload = read_json_body(self)
-            theme_color = (payload.get('theme_color') or 'purple').strip().lower()
+            route_payload = payload if isinstance(payload, dict) else {}
+            theme_color = (route_payload.get('theme_color') or 'purple').strip().lower()
             valid_colors = ['purple', 'blue', 'green', 'red', 'orange', 'pink']
             if theme_color not in valid_colors:
                 return json_response(self, 400, {'ok': False, 'error': f'Invalid color. Choose from: {valid_colors}'})
