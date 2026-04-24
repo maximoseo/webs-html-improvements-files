@@ -63,6 +63,44 @@ class AuthLoginFlowTests(unittest.TestCase):
         self.assertEqual(me_data['user'], 'admin')
         self.assertTrue(me_data['auth_enabled'])
 
+    def test_cookie_session_can_use_jwt_secret_in_production(self):
+        old = {name: os.environ.get(name) for name in ('RENDER', 'DASHBOARD_AUTH_SECRET', 'DASHBOARD_JWT_SECRET', 'DASHBOARD_USERS')}
+        try:
+            os.environ['RENDER'] = 'true'
+            os.environ['DASHBOARD_JWT_SECRET'] = 'test-production-jwt-secret'
+            os.environ.pop('DASHBOARD_AUTH_SECRET', None)
+            os.environ.pop('DASHBOARD_USERS', None)
+            token = server._stage8_make_token('admin', 'admin')
+            session = server._stage8_verify_session(token)
+            self.assertEqual(session['username'], 'admin')
+            self.assertEqual(session['role'], 'admin')
+        finally:
+            for key, value in old.items():
+                if value is None:
+                    os.environ.pop(key, None)
+                else:
+                    os.environ[key] = value
+
+    def test_break_glass_login_accepts_service_email_alias(self):
+        keys = ('DASHBOARD_USER', 'DASHBOARD_PASSWORD', 'DASHBOARD_EMAIL', 'SUPABASE_URL', 'SUPABASE_ANON_KEY', 'SUPABASE_SERVICE_ROLE_KEY')
+        old = {name: os.environ.get(name) for name in keys}
+        try:
+            os.environ['DASHBOARD_USER'] = 'admin'
+            os.environ['DASHBOARD_PASSWORD'] = 'Maximo2025!'
+            os.environ['DASHBOARD_EMAIL'] = 'service@maximo-seo.com'
+            for key in ('SUPABASE_URL', 'SUPABASE_ANON_KEY', 'SUPABASE_SERVICE_ROLE_KEY'):
+                os.environ.pop(key, None)
+            matched = server._dashboard_validate_credentials('service@maximo-seo.com', 'Maximo2025!')
+            self.assertIsNotNone(matched)
+            self.assertEqual(matched['username'], 'admin')
+            self.assertEqual(matched['role'], 'admin')
+        finally:
+            for key, value in old.items():
+                if value is None:
+                    os.environ.pop(key, None)
+                else:
+                    os.environ[key] = value
+
     def test_early_dashboard_api_routes_require_auth(self):
         for path in ('/api/analytics', '/api/audit', '/api/views', '/api/file/raw?path=index.html'):
             status, _, body = req(path)

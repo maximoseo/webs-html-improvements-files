@@ -142,7 +142,7 @@ def text_response(handler, status, body: bytes, content_type: str):
 # ============================================================
 # Stage 8 — Lightweight session auth (opt-in)
 # Enable by setting env DASHBOARD_USERS="alice:pw1,bob:pw2"
-# Optional: DASHBOARD_AUTH_SECRET for token signing.
+# Optional: DASHBOARD_AUTH_SECRET for cookie signing; falls back to DASHBOARD_JWT_SECRET.
 # ============================================================
 import hmac as _hmac
 import hashlib as _hashlib
@@ -161,9 +161,13 @@ def _stage8_public_path(path):
     return path in _STAGE8_PUBLIC_PATHS or any(path.startswith(p) for p in _STAGE8_PUBLIC_PREFIXES)
 
 def _stage8_secret():
-    secret = os.environ.get('DASHBOARD_AUTH_SECRET') or os.environ.get('DASHBOARD_USERS', '').strip()
+    secret = (
+        os.environ.get('DASHBOARD_AUTH_SECRET')
+        or os.environ.get('DASHBOARD_JWT_SECRET')
+        or os.environ.get('DASHBOARD_USERS', '').strip()
+    )
     if not secret and _dashboard_is_production():
-        raise RuntimeError('DASHBOARD_AUTH_SECRET must be set in production')
+        raise RuntimeError('DASHBOARD_AUTH_SECRET or DASHBOARD_JWT_SECRET must be set in production')
     return secret or 'dev-only-dashboard-auth-secret'
 
 def _stage8_users():
@@ -296,8 +300,12 @@ def _stage8_login(handler, payload):
         return json_response(handler, 401, {'ok': False, 'error': 'invalid_credentials'})
     role = matched.get('role', 'admin')
     username = matched.get('username') or identifier
-    token = _stage8_make_token(username, role)
-    jwt_token = _jwt_make(username, role)
+    try:
+        token = _stage8_make_token(username, role)
+        jwt_token = _jwt_make(username, role)
+    except Exception as exc:
+        print(f'[auth] failed to create login session: {exc}', flush=True)
+        return json_response(handler, 500, {'ok': False, 'error': 'login_session_failed'})
     body = json.dumps({
         'ok': True,
         'user': username,
@@ -508,8 +516,12 @@ def _dashboard_validate_credentials(username, password):
     users = _mu_users_load()
     matched = None
     updated = False
+    lookup = username.lower()
     for u in users:
-        if u.get('username') == username and _mu_verify_password(password, u.get('password_hash', '')):
+        record_username = (u.get('username') or '').strip()
+        record_email = (u.get('email') or '').strip()
+        is_same_user = record_username == username or (record_email and record_email.lower() == lookup)
+        if is_same_user and _mu_verify_password(password, u.get('password_hash', '')):
             matched = u
             if _mu_password_needs_rehash(u.get('password_hash', '')):
                 u['password_hash'] = _mu_hash_password(password)
@@ -518,9 +530,12 @@ def _dashboard_validate_credentials(username, password):
 
     if not matched:
         env_user = os.getenv('DASHBOARD_USER', '').strip()
+        env_email = (os.getenv('DASHBOARD_EMAIL') or 'service@maximo-seo.com').strip()
         env_pass = os.getenv('DASHBOARD_PASSWORD', '')
-        if env_user and _hmac.compare_digest(username, env_user) and _hmac.compare_digest(password, env_pass):
-            matched = {'username': username, 'role': 'admin', 'email': 'service@maximo-seo.com'}
+        email_matches = bool(env_email and _hmac.compare_digest(lookup, env_email.lower()))
+        user_matches = bool(env_user and _hmac.compare_digest(username, env_user))
+        if (user_matches or email_matches) and _hmac.compare_digest(password, env_pass):
+            matched = {'username': env_user or username, 'role': 'admin', 'email': env_email}
 
     if not matched:
         stage8_users = _stage8_users()
@@ -536,7 +551,7 @@ def _dashboard_validate_credentials(username, password):
         return None
 
     for u in users:
-        if u.get('username') == username:
+        if u.get('username') == username or (u.get('email') or '').strip().lower() == lookup:
             u['last_login'] = datetime.datetime.utcnow().isoformat() + 'Z'
             updated = True
             break
