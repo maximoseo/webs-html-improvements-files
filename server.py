@@ -3974,7 +3974,17 @@ body{{font-family:Arial;padding:24px}}h1{{color:#333}}pre{{background:#f4f4f4;pa
         # ── KWR POST routes ─────────────────────────────────────────────────
         if parsed.path == '/api/kwr/start':
             body = payload  # payload already parsed above
-            run_id, err = kwr_backend.start_run(body, call_with_fallback)
+            if (body.get('_mode') or '').strip() == 'swarm':
+                run_id, err = kwr_backend.start_best_text_swarm(body, call_with_fallback)
+            else:
+                run_id, err = kwr_backend.start_run(body, call_with_fallback)
+            if err:
+                return json_response(self, 400, {'ok': False, 'error': err})
+            return json_response(self, 200, {'ok': True, 'run_id': run_id})
+
+        if parsed.path == '/api/kwr/swarm':
+            body = payload
+            run_id, err = kwr_backend.start_best_text_swarm(body, call_with_fallback)
             if err:
                 return json_response(self, 400, {'ok': False, 'error': err})
             return json_response(self, 200, {'ok': True, 'run_id': run_id})

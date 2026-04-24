@@ -8167,13 +8167,13 @@ function showErrorToast(msg) {
   <div class="kwr-section-card">
   <!-- Actions -->
   <div class="kwr-actions">
-    <button class="kwr-btn kwr-btn-primary" id="kwr-run-btn" onclick="kwrRun()">
+    <button class="kwr-btn kwr-btn-primary" id="kwr-run-btn" onclick="kwrRun()" title="Run the research pipeline with the exact model selected below">
       <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-      Run Research
+      Run Selected Model
     </button>
-    <button class="kwr-btn kwr-btn-ghost kwr-btn-swarm" id="kwr-swarm-btn" onclick="kwrRunSwarm()" title="Run multi-agent swarm pipeline for deeper research">
+    <button class="kwr-btn kwr-btn-ghost kwr-btn-swarm" id="kwr-swarm-btn" onclick="kwrRunSwarm()" title="Run a best-text swarm across the strongest text models and merge the best deduplicated result">
       <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="2"/><path d="M12 2v2m0 16v2M2 12h2m16 0h2m-3.5-7.5-1.4 1.4M5.9 18.1l-1.4 1.4m0-15.1 1.4 1.4M18.1 18.1l1.4 1.4"/></svg>
-      Swarm Agent
+      Best Text Swarm
     </button>
     <button class="kwr-btn kwr-btn-ghost" id="kwr-cancel-btn" onclick="kwrCancel()" style="display:none">
       <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
@@ -8200,33 +8200,8 @@ function showErrorToast(msg) {
       <option value="accounts/fireworks/models/qwen3-235b-a22b-instruct">Qwen 3.6 Plus (Fireworks)</option>
       <option value="minimax/minimax-m2.7">MiniMax M2.7 (OpenRouter)</option>
       <option value="google/gemini-2.5-pro">Gemini 2.5 Pro (OpenRouter)</option>
-      <option value="__ensemble__">🔀 Best-of-N Ensemble (OpenRouter primary, Venice fallback)</option>
     </select>
-    <span style="font-size:11px;color:var(--muted)">Used for LLM generation steps in the pipeline</span>
-  </div>
-
-  <!-- Ensemble sub-options (shown only when __ensemble__ selected) -->
-  <div id="kwr-ensemble-options" style="display:none;margin-top:10px;padding:10px 14px;background:rgba(139,92,246,0.07);border:1px solid rgba(139,92,246,0.2);border-radius:10px">
-    <div style="font-size:11px;font-weight:700;color:#a78bfa;margin-bottom:8px;text-transform:uppercase;letter-spacing:.06em">
-      Ensemble Models — select which OpenRouter models to run in parallel
-    </div>
-    <div style="display:flex;flex-wrap:wrap;gap:10px">
-      <label class="kwr-ensemble-check"><input type="checkbox" value="openai/gpt-5.4" checked> GPT-5.4</label>
-      <label class="kwr-ensemble-check"><input type="checkbox" value="anthropic/claude-opus-4.6" checked> Claude Opus 4.6</label>
-      <label class="kwr-ensemble-check"><input type="checkbox" value="anthropic/claude-opus-4.6-fast" checked> Claude Opus 4.6 Fast</label>
-      <label class="kwr-ensemble-check"><input type="checkbox" value="anthropic/claude-sonnet-4.6" checked> Claude Sonnet 4.6</label>
-      <label class="kwr-ensemble-check"><input type="checkbox" value="moonshotai/kimi-k2-thinking" checked> Kimi K2 Thinking</label>
-      <label class="kwr-ensemble-check"><input type="checkbox" value="moonshotai/kimi-k2.6"> Kimi 2.6</label>
-      <label class="kwr-ensemble-check"><input type="checkbox" value="x-ai/grok-4.20-multi-agent"> Grok 4.20 Multi-Agent</label>
-      <label class="kwr-ensemble-check"><input type="checkbox" value="z-ai/glm-5.1"> GLM 5.1</label>
-      <label class="kwr-ensemble-check"><input type="checkbox" value="qwen/qwen3.6-plus"> Qwen 3.6 Plus</label>
-      <label class="kwr-ensemble-check"><input type="checkbox" value="accounts/fireworks/models/qwen3-235b-a22b-instruct"> Qwen 3.6 Plus (Fireworks)</label>
-      <label class="kwr-ensemble-check"><input type="checkbox" value="minimax/minimax-m2.7"> MiniMax M2.7</label>
-      <label class="kwr-ensemble-check"><input type="checkbox" value="google/gemini-2.5-pro"> Gemini 2.5 Pro</label>
-    </div>
-    <div style="font-size:11px;color:var(--muted);margin-top:8px">
-      Each model runs independently, then results are merged and deduplicated by primary keyword — no duplicates guaranteed.
-    </div>
+    <span style="font-size:11px;color:var(--muted)">Used only for the selected-model run. Best Text Swarm ignores this picker and automatically uses the strongest text models.</span>
   </div>
   </div><!-- /kwr-section-card actions -->
 
@@ -11831,25 +11806,30 @@ window.kwrRunSwarm = function() {
   }
   inputs._mode = 'swarm';
   var btn = $id('kwr-swarm-btn');
-  if (btn) { btn.disabled = true; btn.textContent = 'Starting Swarm…'; }
+  if (btn) { btn.disabled = true; btn.textContent = 'Starting Best Text Swarm…'; }
   kwrShowProgress && kwrShowProgress(true);
   kwrSetButtons && kwrSetButtons(true);
-  kwrSetStatus && kwrSetStatus('kwr-dot-running', 'Swarm running…', '');
-  kwrLog && kwrLog('Launching multi-agent swarm pipeline…');
+  kwrSetStatus && kwrSetStatus('kwr-dot-running', 'Best text swarm running…', '');
+  kwrLog && kwrLog('Launching best-text swarm across the strongest text models…');
   // #12 show skeleton while pipeline runs
   try { window.showTableSkeleton && window.showTableSkeleton('kwr-preview-body', 8, 6); } catch(_){}
-  (window.fetchWithRetry || fetch)('/api/kwr/start', {
+  (window.fetchWithRetry || fetch)('/api/kwr/swarm', {
     method:'POST',
     headers:{'Content-Type':'application/json'},
     body: JSON.stringify(inputs)
   }).then(r=>r.json()).then(function(data){
-    if (btn) { btn.disabled = false; btn.textContent = '⚡ Swarm Agent'; }
-    if (!data.ok) { alert(data.error||'Swarm start failed'); return; }
+    if (btn) { btn.disabled = false; btn.textContent = 'Best Text Swarm'; }
+    if (!data.ok) {
+      kwrSetButtons && kwrSetButtons(false);
+      alert(data.error||'Best text swarm start failed');
+      return;
+    }
     if (typeof _kwrRunId !== 'undefined') _kwrRunId = data.run_id;
-    kwrSetStatus && kwrSetStatus('kwr-dot-running', 'Swarm running: '+data.run_id, data.run_id);
+    kwrSetStatus && kwrSetStatus('kwr-dot-running', 'Best text swarm running: '+data.run_id, data.run_id);
     kwrStartPoller && kwrStartPoller();
   }).catch(function(e){
-    if (btn) { btn.disabled = false; btn.textContent = '⚡ Swarm Agent'; }
+    if (btn) { btn.disabled = false; btn.textContent = 'Best Text Swarm'; }
+    kwrSetButtons && kwrSetButtons(false);
     alert('Error: '+e.message);
   });
 };
@@ -12318,10 +12298,12 @@ function loadTopicsFromStatus(state) {
   }
 
   function kwrSetButtons(running) {
-    const runBtn    = $id('kwr-run-btn');
+    const runBtn = $id('kwr-run-btn');
+    const swarmBtn = $id('kwr-swarm-btn');
     const cancelBtn = $id('kwr-cancel-btn');
     const approveBtn = $id('kwr-approve-btn');
-    if (runBtn)    { runBtn.disabled = running;   runBtn.style.display = running ? 'none' : ''; }
+    if (runBtn)   { runBtn.disabled = running;   runBtn.style.display = running ? 'none' : ''; }
+    if (swarmBtn) { swarmBtn.disabled = running; swarmBtn.style.display = running ? 'none' : ''; }
     if (cancelBtn) { cancelBtn.style.display = running ? '' : 'none'; }
     if (approveBtn) approveBtn.disabled = running;
   }
@@ -12620,36 +12602,20 @@ function loadTopicsFromStatus(state) {
     kwrSetButtons(true);
     $id('kwr-deploy-result').style.display = 'none';
     $id('kwr-log-box').textContent = '';
-    kwrSetStatus('kwr-dot-running', 'Starting research pipeline…', '');
-    kwrLog('Submitting run request…');
+    kwrSetStatus('kwr-dot-running', 'Starting selected-model research…', '');
+    kwrLog('Submitting selected-model run request…');
 
-    // Determine if ensemble mode
-    const modelSel = $id('kwr-model-select');
-    const modelVal = modelSel ? modelSel.value : '';
-    const isEnsemble = (modelVal === '__ensemble__');
-
-    let endpoint = '/api/kwr/start';
-    let body = Object.assign({}, inputs);
-
-    if (isEnsemble) {
-      endpoint = '/api/kwr/ensemble';
-      // Collect selected ensemble models
-      const checks = document.querySelectorAll('#kwr-ensemble-options input[type=checkbox]:checked');
-      const selectedModels = Array.from(checks).map(c => c.value);
-      body.ensemble_models = selectedModels.length > 0 ? selectedModels : undefined;
-    }
-
-    fetch(endpoint, {
+    (window.fetchWithRetry || fetch)('/api/kwr/start', {
       method: 'POST',
       headers: {'Content-Type':'application/json'},
-      body: JSON.stringify(body)
+      body: JSON.stringify(inputs)
     })
     .then(r => r.json())
     .then(data => {
       if (!data.ok) throw new Error(data.error || 'Start failed');
       _kwrRunId = data.run_id;
-      kwrSetStatus('kwr-dot-running', isEnsemble ? 'Ensemble running…' : 'Running…', _kwrRunId);
-      kwrLog('Run started: ' + _kwrRunId + (isEnsemble ? ' (ensemble)' : ''));
+      kwrSetStatus('kwr-dot-running', 'Selected-model run running…', _kwrRunId);
+      kwrLog('Selected-model run started: ' + _kwrRunId);
       kwrStartPoller();
     })
     .catch(err => {
@@ -13092,18 +13058,6 @@ document.addEventListener('DOMContentLoaded',function(){
     const el=document.getElementById(t.id);
     if(el&&el.textContent==='-')el.textContent=t.txt;
   });
-
-  // KWR ensemble mode toggle
-  const kwrModelSelect = document.getElementById('kwr-model-select');
-  const kwrEnsembleBox = document.getElementById('kwr-ensemble-options');
-  function syncKwrEnsembleUi(){
-    if(!kwrModelSelect || !kwrEnsembleBox) return;
-    kwrEnsembleBox.style.display = kwrModelSelect.value === '__ensemble__' ? '' : 'none';
-  }
-  if(kwrModelSelect && kwrEnsembleBox){
-    kwrModelSelect.addEventListener('change', syncKwrEnsembleUi);
-    syncKwrEnsembleUi();
-  }
 });
 
 // === DARK/LIGHT MODE ===

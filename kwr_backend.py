@@ -1210,29 +1210,56 @@ def save_to_supabase(run_id: str) -> tuple:
 
 
 # ---------------------------------------------------------------------------
-# Ensemble mode — run multiple models, merge + deduplicate results
+# Ensemble / swarm mode — run multiple models, merge + deduplicate results
 # ---------------------------------------------------------------------------
 
 ENSEMBLE_MODELS = [
-    'anthropic/claude-opus-4',
-    'openai/gpt-4o',
+    'anthropic/claude-opus-4.7',
+    'openai/gpt-5.4',
     'google/gemini-2.5-pro',
 ]
 
+BEST_TEXT_SWARM_MODELS = [
+    'anthropic/claude-opus-4.7',
+    'openai/gpt-5.4',
+    'google/gemini-2.5-pro',
+    'x-ai/grok-4.20-multi-agent',
+    'z-ai/glm-5.1',
+    'moonshotai/kimi-k2-thinking',
+]
 
-def start_ensemble(payload: dict, call_llm) -> tuple:
+
+def _normalize_model_list(models) -> list:
+    if not isinstance(models, list):
+        return []
+    normalized = []
+    seen = set()
+    for raw in models:
+        model = str(raw or '').strip()
+        if not model or model in seen:
+            continue
+        seen.add(model)
+        normalized.append(model)
+    return normalized
+
+
+def start_ensemble(payload: dict, call_llm, default_models=None, mode_label: str = 'ensemble') -> tuple:
     """
     Launch ensemble run: fire N single-model runs, then merge + deduplicate.
     Returns (ensemble_run_id, None) or (None, error_str).
     """
-    models = payload.get('ensemble_models') or ENSEMBLE_MODELS
-    if not isinstance(models, list) or not models:
-        models = ENSEMBLE_MODELS
+    models = _normalize_model_list(payload.get('ensemble_models') or default_models or ENSEMBLE_MODELS)
+    if not models:
+        models = list(default_models or ENSEMBLE_MODELS)
 
+    run_prefix = 'swarm' if mode_label == 'swarm' else 'ensemble'
     # Create a coordinator run_id
-    ensemble_id = 'ensemble-' + str(uuid.uuid4())
+    ensemble_id = run_prefix + '-' + str(uuid.uuid4())
     now = datetime.datetime.utcnow().isoformat() + 'Z'
     child_run_ids = []
+    stored_inputs = dict(payload)
+    stored_inputs['ensemble_models'] = list(models)
+    stored_inputs['_mode'] = mode_label
 
     with _lock:
         _state[ensemble_id] = {
@@ -1242,7 +1269,7 @@ def start_ensemble(payload: dict, call_llm) -> tuple:
             'finished_stages': [],
             'error_stages': [],
             'progress': 0,
-            'logs': [f'[{datetime.datetime.utcnow().strftime("%H:%M:%S")}] Ensemble: launching {len(models)} models'],
+            'logs': [f'[{datetime.datetime.utcnow().strftime("%H:%M:%S")}] {mode_label.title()}: launching {len(models)} models'],
             'rows': [],
             'existing_pages': [],
             'row_count': 0,
@@ -1250,7 +1277,7 @@ def start_ensemble(payload: dict, call_llm) -> tuple:
             'preview_edited': False,
             'created_at': now,
             'updated_at': now,
-            'inputs': payload,
+            'inputs': stored_inputs,
             'cancel_requested': False,
             'sheet_url': None,
             'deploy_error': None,
@@ -1282,6 +1309,20 @@ def start_ensemble(payload: dict, call_llm) -> tuple:
     t = threading.Thread(target=_ensemble_merger, args=(ensemble_id, child_run_ids), daemon=True)
     t.start()
     return ensemble_id, None
+
+
+def start_best_text_swarm(payload: dict, call_llm) -> tuple:
+    swarm_payload = dict(payload or {})
+    swarm_payload.pop('ensemble_models', None)
+    swarm_payload.pop('model', None)
+    swarm_payload['model'] = 'best-text-swarm'
+    swarm_payload['_mode'] = 'swarm'
+    return start_ensemble(
+        swarm_payload,
+        call_llm,
+        default_models=BEST_TEXT_SWARM_MODELS,
+        mode_label='swarm',
+    )
 
 
 def _ensemble_merger(ensemble_id: str, child_run_ids: list):
@@ -1333,8 +1374,8 @@ def _ensemble_merger(ensemble_id: str, child_run_ids: list):
         if all_done or done_count == total:
             break
 
-    # Merge rows from all ready children — deduplicate by primary_keyword (lowercase)
-    log('All child runs complete — merging results…')
+    mode_label = (_state.get(ensemble_id, {}).get('inputs') or {}).get('_mode') or 'ensemble'
+    log(f'All child runs complete — merging {mode_label} results…')
     with _lock:
         _state[ensemble_id]['current_stage'] = 'merging'
         _state[ensemble_id]['progress'] = 85
@@ -1360,6 +1401,7 @@ def _ensemble_merger(ensemble_id: str, child_run_ids: list):
 
     log(f'Merged {len(all_rows)} unique rows from {len(ready_ids)} models (deduplication applied)')
 
+    summary_label = 'Best text swarm' if mode_label == 'swarm' else 'Ensemble'
     with _lock:
         _state[ensemble_id]['rows'] = all_rows
         _state[ensemble_id]['row_count'] = len(all_rows)
@@ -1369,12 +1411,12 @@ def _ensemble_merger(ensemble_id: str, child_run_ids: list):
         _state[ensemble_id]['progress'] = 100
         _state[ensemble_id]['finished_stages'].append('merging')
         _state[ensemble_id]['honest_count_note'] = (
-            f'Ensemble of {len(ready_ids)} models. '
+            f'{summary_label} of {len(ready_ids)} models. '
             f'{len(all_rows)} unique rows after deduplication.'
         )
         _state[ensemble_id]['updated_at'] = datetime.datetime.utcnow().isoformat() + 'Z'
 
-    log('Ensemble complete.')
+    log(f'{summary_label} complete.')
 
 
 def _fetch_page_text(url: str, timeout: int = 15) -> str:
