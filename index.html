@@ -6265,16 +6265,31 @@ body{
 </style>
 <script>
 // ── Global Error Handler (added) ──────────────────────────────────────────
+function dashboardDebugErrorToastsEnabled() {
+  try { return localStorage.getItem('dashboard_debug_errors') === '1'; }
+  catch (e) { return false; }
+}
+function dashboardErrorText(value) {
+  if (!value) return 'Unknown';
+  if (value && value.message) return value.message;
+  return String(value);
+}
 window.onerror = function(msg, src, line, col, err) {
-  console.error('[Dashboard Error]', msg, 'at', src, line);
-  if (typeof showErrorToast === 'function') showErrorToast('JS Error: ' + msg);
+  console.error('[Dashboard Error]', msg, 'at', src, line, col, err || '');
+  if (dashboardDebugErrorToastsEnabled() && typeof showErrorToast === 'function') {
+    showErrorToast('JS Error: ' + dashboardErrorText(msg));
+  }
   return false;
 };
 window.onunhandledrejection = function(e) {
-  console.error('[Dashboard Promise Error]', e && e.reason ? e.reason : e);
-  if (typeof showErrorToast === 'function') showErrorToast('Async Error: ' + (e && e.reason ? e.reason : 'Unknown'));
+  var reason = e && e.reason ? e.reason : e;
+  console.error('[Dashboard Promise Error]', reason);
+  if (dashboardDebugErrorToastsEnabled() && typeof showErrorToast === 'function') {
+    showErrorToast('Async Error: ' + dashboardErrorText(reason));
+  }
 };
 function showErrorToast(msg) {
+  if (!document.body) return;
   var t = document.createElement('div');
   t.style.cssText = 'position:fixed;bottom:20px;right:20px;z-index:99999;background:#dc2626;color:#fff;padding:10px 16px;border-radius:8px;font-size:13px;max-width:340px;box-shadow:0 4px 16px rgba(0,0,0,0.4);font-family:inherit;animation:toast-in 0.2s ease';
   t.textContent = '⚠ ' + msg;
@@ -10561,6 +10576,16 @@ document.addEventListener('click', function(ev){
   let _fixerScreenshots = [];     // array of {name, dataUrl}
   let _fixerWorkflows = [];       // N8N workflows list cache
 
+  function runPageInit(label, fn, delay) {
+    if (typeof fn !== 'function') return;
+    var invoke = function() {
+      try { fn(); }
+      catch (e) { console.warn('[Dashboard Navigation] ' + label + ' init skipped:', e); }
+    };
+    if (delay) setTimeout(invoke, delay);
+    else invoke();
+  }
+
   // ---- Page navigation ----
   window.showPage = function(name) {
     const isProjects = (name === 'projects');
@@ -10591,7 +10616,7 @@ document.addEventListener('click', function(ev){
     }
     if (kwrPage) {
       kwrPage.style.display = isKwr ? 'block' : 'none';
-      if (isKwr) { try { kwrLoadHistory(); } catch(e) {} }
+      if (isKwr) runPageInit('kwr', window.kwrLoadHistory);
       kwrPage.classList.toggle('active', isKwr);
     }
     if (tasksPage) {
@@ -10604,8 +10629,8 @@ document.addEventListener('click', function(ev){
     var isSettings    = (name === 'settings');
     if (analyticsPage) { analyticsPage.style.display = isAnalytics ? 'block' : 'none'; }
     if (settingsPage)  { settingsPage.style.display  = isSettings  ? 'block' : 'none'; }
-    if (isAnalytics) { try { initAnalyticsPage(); } catch(e) {} }
-    if (isSettings)  { try { initSettingsPage();  } catch(e) {} }
+    if (isAnalytics) runPageInit('analytics', window.initAnalyticsPage);
+    if (isSettings)  runPageInit('settings', window.initSettingsPage);
     // Update tab buttons
     const tabProj  = document.getElementById('tab-projects');
     const tabFixer = document.getElementById('tab-fixer');
@@ -10622,9 +10647,9 @@ document.addEventListener('click', function(ev){
     if (tabAnalytics) { tabAnalytics.classList.toggle('active', isAnalytics); tabAnalytics.setAttribute('aria-selected', isAnalytics ? 'true' : 'false'); }
     if (tabSettings)  { tabSettings.classList.toggle('active',  isSettings);  tabSettings.setAttribute('aria-selected',  isSettings  ? 'true' : 'false'); }
 
-    if (isFixer) initFixerPage();
-    if (isRadar) initRadarPage();
-    if (isTask) setTimeout(initTasksTab, 50);
+    if (isFixer) runPageInit('fixer', window.initFixerPage);
+    if (isRadar) runPageInit('radar', window.initRadarPage);
+    if (isTask) runPageInit('tasks', window.initTasksTab, 50);
   };
 
   // ---- Init ----
@@ -16373,27 +16398,27 @@ body *,
 .header-inner,
 .header .header-inner{
   max-width:1520px !important;
-  min-height:62px !important;
-  padding:10px 24px !important;
-  gap:16px !important;
+  min-height:52px !important;
+  padding:6px 18px !important;
+  gap:10px !important;
 }
-.logo-link{gap:10px !important}
+.logo-link{gap:8px !important}
 .logo-icon{
-  width:34px !important;
-  height:34px !important;
+  width:30px !important;
+  height:30px !important;
   border-radius:var(--ops-radius) !important;
   background:linear-gradient(135deg,var(--ops-blue),var(--ops-green)) !important;
   box-shadow:0 8px 20px rgba(37,129,211,0.22) !important;
 }
 .logo h1{
-  font-size:17px !important;
+  font-size:16px !important;
   line-height:1 !important;
   font-weight:700 !important;
 }
 .logo h1 span{color:#a9d7ff !important}
-.header-actions{gap:8px !important}
+.header-actions{gap:6px !important}
 .fixer-tab-nav{
-  height:38px !important;
+  height:32px !important;
   padding:3px !important;
   gap:2px !important;
   border-radius:var(--ops-radius) !important;
@@ -16401,17 +16426,17 @@ body *,
   border:1px solid var(--ops-border) !important;
 }
 .fixer-tab-btn{
-  min-height:30px !important;
-  height:30px !important;
-  padding:0 10px !important;
+  min-height:26px !important;
+  height:26px !important;
+  padding:0 8px !important;
   border-radius:6px !important;
   color:var(--ops-muted) !important;
   border:1px solid transparent !important;
   background:transparent !important;
-  font-size:12px !important;
+  font-size:11.5px !important;
   font-weight:650 !important;
 }
-.fixer-tab-btn svg{width:14px !important;height:14px !important}
+.fixer-tab-btn svg{width:13px !important;height:13px !important}
 .fixer-tab-btn:hover{
   color:var(--ops-text) !important;
   background:rgba(255,255,255,0.055) !important;
@@ -16431,14 +16456,14 @@ body *,
 .theme-toggle-btn,
 #logout-btn,
 .header-menu-btn{
-  min-height:34px !important;
-  height:34px !important;
+  min-height:30px !important;
+  height:30px !important;
   border-radius:var(--ops-radius) !important;
   border:1px solid var(--ops-border) !important;
   background:rgba(255,255,255,0.04) !important;
   color:var(--ops-text-2) !important;
   box-shadow:none !important;
-  font-size:12px !important;
+  font-size:11.5px !important;
   font-weight:650 !important;
 }
 .hdr-search-btn:hover,
@@ -16455,13 +16480,13 @@ body *,
   transform:none !important;
 }
 .search-box{
-  width:min(300px,24vw) !important;
-  padding-left:36px !important;
+  width:min(260px,22vw) !important;
+  padding-left:32px !important;
   color:var(--ops-text) !important;
 }
 .search-box::placeholder{color:rgba(199,210,223,0.55) !important}
 .status-stack{
-  height:34px !important;
+  height:30px !important;
   padding:0 !important;
   gap:6px !important;
   background:transparent !important;
@@ -16470,8 +16495,8 @@ body *,
 }
 .status-pill,
 .last-sync-meta{
-  height:34px !important;
-  padding:0 10px !important;
+  height:30px !important;
+  padding:0 8px !important;
   border-radius:var(--ops-radius) !important;
   background:rgba(255,255,255,0.04) !important;
   border:1px solid var(--ops-border) !important;
@@ -16485,7 +16510,7 @@ body *,
 /* Page shell */
 .container{
   max-width:1520px !important;
-  padding:26px 24px 72px !important;
+  padding:18px 24px 72px !important;
 }
 .section-head,
 .tasks-title-row,
@@ -16907,9 +16932,9 @@ table tbody td{border-color:rgba(198,212,231,0.08) !important}
 /* Mobile */
 @media (max-width:1180px){
   .header-inner,
-  .header .header-inner{padding:10px 16px !important}
+  .header .header-inner{padding:6px 14px !important}
   .header-actions{justify-content:flex-start !important}
-  .search-box{width:240px !important}
+  .search-box{width:220px !important}
   .stats{grid-template-columns:repeat(2,minmax(0,1fr)) !important}
 }
 @media (max-width:820px){
@@ -16919,7 +16944,7 @@ table tbody td{border-color:rgba(198,212,231,0.08) !important}
   .status-stack,
   .hdr-expand-all-btn,
   .hdr-overflow-wrap{display:none !important}
-  .container{padding:18px 14px 76px !important}
+  .container{padding:14px 14px 76px !important}
   .projects-grid{grid-template-columns:1fr !important}
   .tasks-header{padding:14px !important}
 }
