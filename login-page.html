@@ -54,11 +54,12 @@ input::placeholder{color:#475569}
   </div>
 </div>
 <script>
+const RESET_REQUEST_ENDPOINT='/api/auth/request-reset';
+const RESET_CONFIRM_ENDPOINT='/api/auth/reset';
 function showReset(){document.getElementById('login-section').style.display='none';document.getElementById('reset-section').style.display='block';}
 function showLogin(){document.getElementById('login-section').style.display='';document.getElementById('reset-section').style.display='none';}
 // Single-endpoint login: /api/auth/login sets the dash_auth cookie atomically
-// AND returns the JWT in the body. Redirect happens only after we've awaited
-// the response (cookie is committed by then).
+// and redirects only after the response resolves.
 async function doLogin(){
   var btn=document.getElementById('login-btn');
   var msg=document.getElementById('login-msg');
@@ -78,11 +79,8 @@ async function doLogin(){
     var d={};
     try{ d=await r.json(); }catch(_j){ d={}; }
     if(r.ok && d.ok){
-      // Persist JWT for Authorization-header API calls (dashboard uses cookie primarily).
-      try{ localStorage.setItem('dashboard_token', d.jwt || d.token || ''); }catch(_s){}
       msg.className='msg success';msg.textContent='Signed in! Redirecting...';
       var next = new URLSearchParams(location.search).get('next') || '/';
-      // Wait one frame so Set-Cookie is committed before navigation.
       requestAnimationFrame(function(){ location.replace(next); });
       return;
     }
@@ -105,10 +103,10 @@ async function doReset(){
   btn.disabled=true;btn.textContent='Sending...';
   msg.className='msg';msg.textContent='';
   try{
-    var r=await fetch('/api/reset-password',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:email})});
+    var r=await fetch(RESET_REQUEST_ENDPOINT,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:email,user:email,username:email})});
     var d=await r.json();
     if(d.ok){msg.className='msg success';msg.textContent='Reset email sent! Check your inbox.';}
-    else{msg.className='msg error';msg.textContent=d.error||' Failed to send reset email.';}
+    else{msg.className='msg error';msg.textContent=d.error||'Failed to send reset email.';}
   }catch(e){msg.className='msg error';msg.textContent='Network error. Try again.';}
   btn.disabled=false;btn.textContent='Send Reset Email';
 }
