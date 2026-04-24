@@ -201,7 +201,7 @@ a:hover{color:var(--gold-light)}
 .view-btn.active{background:rgba(255,255,255,0.06);color:var(--text);box-shadow:0 6px 18px rgba(0,0,0,0.22)}
 
 /* Project Grid */
-.projects-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(400px,1fr));gap:18px;margin-bottom:36px}
+.projects-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(360px,1fr));gap:18px;margin-bottom:36px}
 .projects-grid.list-view{grid-template-columns:1fr}
 
 /* Project Card */
@@ -2812,7 +2812,7 @@ body {
 .fixer-page.active{display:block}
 
 .fixer-page-header{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;margin-bottom:28px;flex-wrap:wrap}
-.fixer-page-title{font-size:24px;font-weight:700;letter-spacing:-0.04em;display:flex;align-items:center;gap:12px}
+.fixer-page-title{font-size:clamp(22px,3vw,28px);font-weight:700;letter-spacing:-0.04em;display:flex;align-items:center;gap:12px}
 .fixer-page-title svg{width:26px;height:26px;color:var(--gold)}
 .fixer-page-desc{font-size:13px;color:var(--muted);margin-top:6px;line-height:1.5}
 .fixer-page-actions{display:flex;gap:10px;flex-wrap:wrap;align-items:center;flex-shrink:0}
@@ -6588,13 +6588,13 @@ function showErrorToast(msg) {
     <span class="mobile-drawer-title">Navigation</span>
     <button class="mobile-drawer-x" onclick="closeMobileMenu()" aria-label="Close menu">×</button>
   </div>
-  <button class="mobile-nav-item" onclick="showPage('projects');closeMobileMenu()">📁 Projects</button>
-  <button class="mobile-nav-item" onclick="showPage('fixer');closeMobileMenu()">🔧 N8N Fixer</button>
-  <button class="mobile-nav-item" onclick="showPage('radar');closeMobileMenu()">📡 Skills Radar</button>
-  <button class="mobile-nav-item" onclick="showPage('kwr');closeMobileMenu()">🔍 KW Research</button>
-  <button class="mobile-nav-item" onclick="showPage('tasks');closeMobileMenu()">&#x2705; Tasks</button>
-  <button class="mobile-nav-item" onclick="showPage('analytics');closeMobileMenu()">📊 Analytics</button>
-  <button class="mobile-nav-item" onclick="showPage('settings');closeMobileMenu()">⚙️ Settings</button>
+  <button class="mobile-nav-item" onclick="showPage('projects');closeMobileMenu()">Projects</button>
+  <button class="mobile-nav-item" onclick="showPage('fixer');closeMobileMenu()">N8N Fixer</button>
+  <button class="mobile-nav-item" onclick="showPage('radar');closeMobileMenu()">Skills Radar</button>
+  <button class="mobile-nav-item" onclick="showPage('kwr');closeMobileMenu()">Keyword Research</button>
+  <button class="mobile-nav-item" onclick="showPage('tasks');closeMobileMenu()">Tasks</button>
+  <button class="mobile-nav-item" onclick="showPage('analytics');closeMobileMenu()">Analytics</button>
+  <button class="mobile-nav-item" onclick="showPage('settings');closeMobileMenu()">Settings</button>
 </div>
 
 
@@ -6630,11 +6630,11 @@ function showErrorToast(msg) {
       </button>
       <button class="fixer-tab-btn" id="tab-analytics" onclick="showPage('analytics')" aria-label="Analytics" role="tab" aria-selected="false">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
-        <span class="tab-label">📊 Analytics</span>
+        <span class="tab-label">Analytics</span>
       </button>
       <button class="fixer-tab-btn" id="tab-settings" onclick="showPage('settings')" aria-label="Settings" role="tab" aria-selected="false">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
-        <span class="tab-label">⚙️ Settings</span>
+        <span class="tab-label">Settings</span>
       </button>
     </div>
     <button class="hdr-search-btn" id="hdr-global-search-btn" onclick="openGlobalSearch()" title="Global search (Ctrl+Shift+F)" aria-label="Global search">
@@ -10126,6 +10126,7 @@ async function loadDashboard(){
   const RAW_BASE=`https://raw.githubusercontent.com/${REPO}/main`;
   const GH_BASE=`https://github.com/${REPO}/blob/main`;
   const skipRoots=new Set(['Dockerfile','README.md','index.html','render.yaml']);
+  const domainPattern=/^(?!\.)(?:[a-z0-9-]+\.)+[a-z]{2,}$/i;
   let totalFiles=0,totalVersions=0,latestCount=0;
   let latestSetCount=0, latestSetFileCount=0, visibleAgentCount=0;
   const projectMap={};
@@ -10135,7 +10136,7 @@ async function loadDashboard(){
     const parts=item.path.split('/');
     if(parts.length<2)continue;
     const domain=parts[0];
-    if(skipRoots.has(domain)||!domain.includes('.'))continue; // must be a domain name (has a dot)
+    if(skipRoots.has(domain)||!domainPattern.test(domain))continue; // only real-looking domain roots
     const fileName=parts[parts.length-1];
     // Version path = everything between domain and filename
     const versionPath=parts.length>2?parts.slice(1,parts.length-1).join('/'):'root';
@@ -10248,7 +10249,7 @@ async function loadDashboard(){
         const previewBtn=cls==='html'?`<button class="action-btn" onclick="event.preventDefault();event.stopPropagation();openPreview('${f.download}','${p.name} — ${f.name}','${_fCtxEnc}')" style="border-color:var(--purple);color:var(--purple)">&#9654; Preview</button>`:'';
         const deployBtn=cls==='json'&&/workflow/i.test(f.name)?`<button class="action-btn success" onclick="event.preventDefault();event.stopPropagation();deployToN8n('${encodeURIComponent(p.name)}','${encodeURIComponent(v.name)}','${encodeURIComponent(f.path)}','${encodeURIComponent(f.name)}',this)">Deploy to n8n</button>`:'';
         const _isHtml=cls==='html';
-        const promptStudioBtn=_isHtml?`<button class="file-action-btn prompt action-btn" onclick="event.preventDefault();event.stopPropagation();openPromptStudioForFile('${encodeURIComponent(p.name)}','${encodeURIComponent(agentName)}','${encodeURIComponent(f.name)}','${f.download}')" title="Open Prompt Studio for this file" style="font-size:10px">✒️ Prompt</button>`:'';
+        const promptStudioBtn=_isHtml?`<button class="file-action-btn prompt action-btn" onclick="event.preventDefault();event.stopPropagation();openPromptStudioForFile('${encodeURIComponent(p.name)}','${encodeURIComponent(agentName)}','${encodeURIComponent(f.name)}','${f.download}')" title="Open Prompt Studio for this file" style="font-size:10px">Prompt</button>`:'';
         filesHTML+=`<div class="file-row">
           <div class="file-badge ${cls}">${label}</div>
           <div class="file-details"><div class="file-name">${f.name}</div><div class="file-size">${formatSize(f.size)}</div></div>
@@ -10273,6 +10274,7 @@ async function loadDashboard(){
     const compareCandidates=compareCandidatesForProject(p.name);
     const compareCTA=compareCandidates.length>1?`<button class="action-btn" onclick="event.stopPropagation();openCompare('${p.name}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M10 3H3v7h7V3zM21 14h-7v7h7v-7zM21 3h-7v7h7V3zM10 14H3v7h7v-7z"/></svg>Compare agents</button>`:'';
     const promptStudioCTA=latestHtmlUrl?`<button class="action-btn" onclick="event.stopPropagation();openPromptStudio('${encodeURIComponent(p.name)}','${encodeURIComponent(_psAgent)}','${encodeURIComponent(_psVersion)}','${latestHtmlUrl.replace(/'/g,"%27")}','${_psFilesEnc}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" style="width:13px;height:13px"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 1 1 3 3L7 19l-4 1 1-4Z"/></svg>Prompt Studio</button>`:'';
+    const commentsCTA=`<button class="action-btn project-comments-btn" onclick="event.stopPropagation();openCommentsFromProject('${encodeURIComponent(p.name)}','${encodeURIComponent(_psAgent)}','${encodeURIComponent(_psVersion)}','${encodeURIComponent((latest&&latest.files.find(f=>(f.name||'').toLowerCase().endsWith('.html'))?.path)||'')}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" style="width:13px;height:13px"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>Review Notes</button>`;
     const latestLabel=latestDate||'Pending sync';
     const expandedTools=(compareCTA||promptStudioCTA||commentsCTA)?`<div class="card-tools-row">${compareCTA}${promptStudioCTA}${commentsCTA}</div>`:'';
 
@@ -10299,8 +10301,8 @@ async function loadDashboard(){
       <div class="card-actions">
         <button class="action-btn" onclick="event.stopPropagation();toggleActionMenu('${p.name}',this)" title="Actions">⋯</button>
         <div class="action-menu" id="menu-${p.name}">
-          <div class="action-menu-item" onclick="event.stopPropagation();duplicateProject('${p.name}')">📋 Duplicate</div>
-          <div class="action-menu-item danger" onclick="event.stopPropagation();deleteProject('${p.name}')">🗑️ Delete</div>
+          <div class="action-menu-item" onclick="event.stopPropagation();duplicateProject('${p.name}')">Duplicate</div>
+          <div class="action-menu-item danger" onclick="event.stopPropagation();deleteProject('${p.name}')">Delete</div>
         </div>
       </div>
       <div class="card-header" onclick="(function(c){c.classList.toggle('expanded');syncBulkToggleLabel();if(c.classList.contains('expanded'))setTimeout(()=>c.scrollIntoView({behavior:'smooth',block:'nearest'}),300)})(this.parentElement)">
@@ -15231,7 +15233,7 @@ async function downloadPromptPreviewShot(){
 <div id="page-analytics" class="fixer-page" style="display:none">
   <div class="fixer-page-header">
     <div>
-      <div class="fixer-page-title">📊 Analytics</div>
+      <div class="fixer-page-title">Analytics</div>
       <div class="fixer-page-desc">Dashboard statistics and activity overview.</div>
     </div>
   </div>
@@ -15309,7 +15311,7 @@ async function downloadPromptPreviewShot(){
 <div id="page-settings" class="fixer-page" style="display:none">
   <div class="fixer-page-header">
     <div>
-      <div class="fixer-page-title">⚙️ Settings</div>
+      <div class="fixer-page-title">Settings</div>
       <div class="fixer-page-desc">Dashboard configuration and account settings.</div>
     </div>
   </div>
