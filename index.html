@@ -95,7 +95,15 @@
 .kwr-dot-ready{background:#10b981}
 .kwr-dot-error{background:#ef4444}
 .kwr-dot-complete{background:#6ee7b7}
-.kwr-note-box{padding:10px 14px;border-radius:8px;border:1px solid rgba(245,158,11,0.3);background:rgba(245,158,11,0.06);font-size:12px;color:#fcd34d;margin-top:10px;line-height:1.5}
+.kwr-note-box{padding:10px 14px;border-radius:8px;border:1px solid rgba(245,158,11,0.3);background:rgba(245,158,11,0.06);font-size:12px;color:#fcd34d;margin-top:10px;line-height:1.5;white-space:pre-line}
+.kwr-score-stack{display:flex;flex-direction:column;gap:6px;align-items:flex-start}
+.difficulty-badge,.kwr-quality-badge{display:inline-flex;align-items:center;gap:6px;padding:3px 8px;border-radius:999px;font-size:10.5px;font-weight:700;border:1px solid rgba(255,255,255,0.12)}
+.difficulty-easy{background:rgba(34,197,94,0.12);color:#86efac;border-color:rgba(34,197,94,0.28)}
+.difficulty-med{background:rgba(250,204,21,0.12);color:#fde68a;border-color:rgba(250,204,21,0.28)}
+.difficulty-hard{background:rgba(248,113,113,0.12);color:#fca5a5;border-color:rgba(248,113,113,0.28)}
+.kwr-quality-high{background:rgba(59,130,246,0.14);color:#bfdbfe;border-color:rgba(59,130,246,0.28)}
+.kwr-quality-medium{background:rgba(168,85,247,0.14);color:#e9d5ff;border-color:rgba(168,85,247,0.28)}
+.kwr-quality-low{background:rgba(244,114,182,0.12);color:#fbcfe8;border-color:rgba(244,114,182,0.24)}
 
 /* Phase-2.3 compact mobile sticky header — keeps logo + tabs + sync only, hides nice-to-haves */
 @media (max-width:768px){
@@ -12375,6 +12383,35 @@ function loadTopicsFromStatus(state) {
     return Math.max(0, Math.min(100, Math.round(score)));
   }
 
+  function kwrFormatModelLabel(model) {
+    const raw = (model || '').toString().trim();
+    if (!raw) return 'unknown';
+    const parts = raw.split('/');
+    return parts[parts.length - 1].replace(/[-_]+/g, ' ');
+  }
+
+  function kwrBuildInsightNote(data) {
+    const lines = [];
+    const primaryNote = data.note || data.honest_count_note || '';
+    if (primaryNote) lines.push(primaryNote);
+    const quality = data.quality_summary || {};
+    if (quality.total) {
+      lines.push(`Quality mix: avg ${quality.avg_score} · high ${quality.high} · medium ${quality.medium} · low ${quality.low}`);
+    }
+    const dedup = data.dedup_summary || {};
+    if ((dedup.exact_duplicates_removed || 0) || (dedup.semantic_duplicates_removed || 0) || (dedup.existing_coverage_removed || 0)) {
+      lines.push(`Dedup: exact ${dedup.exact_duplicates_removed || 0} · semantic ${dedup.semantic_duplicates_removed || 0} · existing coverage ${dedup.existing_coverage_removed || 0}`);
+    }
+    const participation = Array.isArray(data.model_participation) ? data.model_participation : [];
+    if (participation.length) {
+      lines.push('Swarm participation:');
+      participation.slice(0, 5).forEach(p => {
+        lines.push(`- ${kwrFormatModelLabel(p.model)} kept ${p.kept_rows}/${p.total_rows} (${p.kept_pct}%)`);
+      });
+    }
+    return lines.join('\n');
+  }
+
   // ---- SERP Preview ----
   window.kwrShowSerp = function(keyword, pageTitle) {
     const wrap = document.getElementById('kwr-serp-section');
@@ -12410,14 +12447,18 @@ function loadTopicsFromStatus(state) {
       const diffScore = kwrDifficultyScore(kw, (r.keywords || ''));
       const diffCls = diffScore <= 30 ? 'difficulty-easy' : diffScore <= 60 ? 'difficulty-med' : 'difficulty-hard';
       const diffLabel = diffScore <= 30 ? 'Easy' : diffScore <= 60 ? 'Medium' : 'Hard';
+      const qualityScore = Number.isFinite(Number(r.quality_score)) ? Number(r.quality_score) : null;
+      const qualityTier = (r.quality_tier || '').toString().toLowerCase();
+      const qualityLabel = qualityTier ? qualityTier.charAt(0).toUpperCase() + qualityTier.slice(1) : 'Scored';
+      const qualityBadge = qualityScore === null ? '' : `<span class="kwr-quality-badge kwr-quality-${kwrEsc(qualityTier || 'medium')}" title="${kwrEsc((r.quality_reasons || []).join(' • '))}">Q ${qualityScore} - ${qualityLabel}</span>`;
       const serpBtn = kw ? `<button class="skill-action-btn" style="padding:3px 10px;font-size:11px" onclick="kwrShowSerp('${kwrEsc(kw)}', '${kwrEsc(r.pillar || '')}')" title="Preview SERP">👁</button>` : '-';
       html += `<tr class="${trClass}" data-idx="${i}">
         <td contenteditable="true" data-col="existing_parent_page" onblur="kwrCellEdit(${i},'existing_parent_page',this)">${kwrEsc(r.existing_parent_page||'')}</td>
         <td contenteditable="true" data-col="pillar" onblur="kwrCellEdit(${i},'pillar',this)">${kwrEsc(r.pillar||'')}</td>
         <td contenteditable="true" data-col="cluster" onblur="kwrCellEdit(${i},'cluster',this)">${kwrEsc(r.cluster||'')}</td>
         <td>${kwrIntentBadge(r.intent)}</td>
-        <td contenteditable="true" data-col="primary_keyword" onblur="kwrCellEdit(${i},'primary_keyword',this)">${kwrEsc(r.primary_keyword||'')}</td>
-        <td><span class="difficulty-badge ${diffCls}">${diffScore} - ${diffLabel}</span></td>
+        <td contenteditable="true" data-col="primary_keyword" onblur="kwrCellEdit(${i},'primary_keyword',this)" title="${kwrEsc((r.quality_reasons || []).join(' • '))}">${kwrEsc(r.primary_keyword||'')}</td>
+        <td><div class="kwr-score-stack"><span class="difficulty-badge ${diffCls}">D ${diffScore} - ${diffLabel}</span>${qualityBadge}</div></td>
         <td>${serpBtn}</td>
         <td contenteditable="true" data-col="keywords" onblur="kwrCellEdit(${i},'keywords',this)">${kwrEsc(Array.isArray(r.keywords) ? r.keywords.join(', ') : (r.keywords||''))}</td>
       </tr>`;
@@ -12675,10 +12716,23 @@ function loadTopicsFromStatus(state) {
           kwrRenderTable(_kwrRows);
           kwrShowPreview(true);
           const meta = $id('kwr-preview-meta');
-          if (meta) meta.textContent = `${_kwrRows.length} rows  •  ${data.pillar_count || 0} pillars  •  editable before deploy`;
-          if (data.note) {
-            const nb = $id('kwr-note-box');
-            if (nb) { nb.textContent = data.note; nb.style.display = ''; }
+          const quality = data.quality_summary || {};
+          if (meta) {
+            const metaBits = [`${_kwrRows.length} rows`, `${data.pillar_count || 0} pillars`];
+            if (quality.total) metaBits.push(`quality avg ${quality.avg_score}`);
+            metaBits.push('editable before deploy');
+            meta.textContent = metaBits.join('  •  ');
+          }
+          const insightNote = kwrBuildInsightNote(data);
+          const nb = $id('kwr-note-box');
+          if (nb) {
+            if (insightNote) {
+              nb.textContent = insightNote;
+              nb.style.display = '';
+            } else {
+              nb.textContent = '';
+              nb.style.display = 'none';
+            }
           }
           kwrSetStatus('kwr-dot-ready', 'Preview ready - review, edit, then Approve & Deploy', _kwrRunId);
           kwrLog('Preview ready: ' + _kwrRows.length + ' rows');

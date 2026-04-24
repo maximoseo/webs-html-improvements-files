@@ -48,6 +48,8 @@ class KwResearchControlsTests(unittest.TestCase):
         self.assertIn('Used only for the selected-model run', html)
         self.assertNotIn('__ensemble__', html)
         self.assertIn("kwrSetButtons && kwrSetButtons(false);", html)
+        self.assertIn('Swarm participation:', html)
+        self.assertIn('kwr-quality-badge', html)
 
     def test_swarm_endpoint_uses_best_text_models(self):
         payload = json.dumps({'website_url': 'https://example.com', 'model': 'openai/gpt-5.4'}).encode()
