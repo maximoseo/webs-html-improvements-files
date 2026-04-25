@@ -269,12 +269,24 @@ def _stage8_check_auth(handler, parsed):
         handler.end_headers()
     return False
 
+def _stage8_client_ip(handler):
+    """Best-effort real client IP behind Cloudflare/Render proxies."""
+    try:
+        for header in ('CF-Connecting-IP', 'X-Forwarded-For', 'X-Real-IP'):
+            raw = (handler.headers.get(header) or '').strip()
+            if raw:
+                return raw.split(',')[0].strip()
+    except Exception:
+        pass
+    try:
+        return handler.client_address[0]
+    except Exception:
+        return 'unknown'
+
+
 def _stage8_login_rate_limit(handler):
     """Per-IP token bucket for login endpoints. 10 attempts, refills 1 every 10s."""
-    try:
-        ip = handler.client_address[0]
-    except Exception:
-        ip = 'unknown'
+    ip = _stage8_client_ip(handler)
     now = _time8.time()
     bucket = _R2_RATE_BUCKETS.setdefault(f'login:{ip}', {'tokens': 10.0, 'last': now})
     bucket['tokens'] = min(10.0, bucket['tokens'] + (now - bucket['last']) * 0.1)
