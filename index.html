@@ -16636,6 +16636,7 @@ window.copyAuthIncidentPack = function() {
       }
       return summary;
     }).catch(function() {
+      window._recordSettingsAuthIncidentAction('incident-pack-copy');
       window._showAuthDiagnosticsFallback(summary);
       if (msgEl) msgEl.textContent = 'Clipboard access was blocked. Showing a manual-copy fallback with the incident pack pre-selected.';
       if (window.toast && typeof window.toast.info === 'function') {
@@ -16698,6 +16699,7 @@ window.copyAuthDiagnostics = function() {
       }
       return summary;
     }).catch(function() {
+      window._recordSettingsAuthIncidentAction('diagnostics-copy');
       window._showAuthDiagnosticsFallback(summary);
       if (msgEl) msgEl.textContent = 'Clipboard access was blocked. Showing a manual-copy fallback with the diagnostics pre-selected.';
       if (window.toast && typeof window.toast.info === 'function') {
