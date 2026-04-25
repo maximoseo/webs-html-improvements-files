@@ -184,6 +184,219 @@ def _kw_set(cell: str) -> set:
     return {p.strip().casefold() for p in (cell or '').split(',') if p.strip()}
 
 
+_SEMANTIC_STOPWORDS = {
+    'a', 'an', 'the', 'and', 'or', 'for', 'to', 'of', 'in', 'on', 'with', 'near',
+    'best', 'top', 'service', 'services', 'company', 'companies', 'expert', 'experts',
+}
+
+
+def _keyword_tokens(text: str, brand: str = '') -> list:
+    text = re.sub(r'[^\w\s-]', ' ', (text or '').casefold())
+    text = re.sub(r'[_\-/]+', ' ', text)
+    parts = [p for p in text.split() if p]
+    brand_tokens = {p for p in re.sub(r'[^\w\s-]', ' ', (brand or '').casefold()).split() if p}
+    out = []
+    for token in parts:
+        if token in brand_tokens or token in _SEMANTIC_STOPWORDS:
+            continue
+        if len(token) > 4 and token.endswith('ies'):
+            token = token[:-3] + 'y'
+        elif len(token) > 4 and token.endswith('es'):
+            token = token[:-2]
+        elif len(token) > 3 and token.endswith('s'):
+            token = token[:-1]
+        out.append(token)
+    return out
+
+
+def _semantic_fingerprint(text: str, brand: str = '') -> tuple:
+    tokens = sorted(set(_keyword_tokens(text, brand)))
+    if tokens:
+        return tuple(tokens)
+    fallback = re.sub(r'\s+', ' ', (text or '').casefold()).strip()
+    return (fallback,) if fallback else tuple()
+
+
+def _slug_fingerprint(path: str) -> tuple:
+    slug = (path or '').strip('/').split('/')[-1]
+    slug = slug.replace('-', ' ')
+    return _semantic_fingerprint(slug)
+
+
+def _quality_score_row(row: dict, brand: str = '', existing_page_fps=None, pillar_primary_map=None) -> tuple:
+    existing_page_fps = existing_page_fps or set()
+    pillar_primary_map = pillar_primary_map or {}
+    keyword = (row.get('primary_keyword') or '').strip()
+    keywords = clean_keywords(row.get('keywords') or '', brand)
+    intent = (row.get('intent') or '').strip().lower()
+    pillar = (row.get('pillar') or '').strip()
+    fp = _semantic_fingerprint(keyword, brand)
+    keyword_terms = [p for p in keyword.split() if p]
+    support_terms = [p.strip() for p in keywords.split(',') if p.strip()]
+
+    score = 70
+    reasons = []
+
+    if 2 <= len(keyword_terms) <= 5:
+        score += 8
+        reasons.append('keyword length is long-tail friendly')
+    elif len(keyword_terms) <= 1:
+        score -= 18
+        reasons.append('keyword is too broad')
+    elif len(keyword_terms) >= 7:
+        score -= 8
+        reasons.append('keyword may be too long or unnatural')
+
+    if support_terms and support_terms[0].casefold() == (brand or '').strip().casefold():
+        score += 4
+        reasons.append('brand-first keyword list is preserved')
+    else:
+        score -= 6
+        reasons.append('brand-first keyword list is missing')
+
+    if len(set(support_terms)) >= 4:
+        score += 6
+        reasons.append('supporting keywords add topic depth')
+    elif len(set(support_terms)) <= 2:
+        score -= 8
+        reasons.append('supporting keywords are too thin')
+
+    if intent == 'pillar':
+        score += 4
+        reasons.append('pillar topic can support multiple clusters')
+    elif fp and fp in existing_page_fps:
+        score -= 28
+        reasons.append('keyword looks close to existing site coverage')
+
+    pillar_fp = _semantic_fingerprint((pillar_primary_map.get(pillar) or ''), brand) if pillar else tuple()
+    if intent != 'pillar' and fp and pillar_fp and fp == pillar_fp:
+        score -= 32
+        reasons.append('cluster looks too similar to its pillar keyword')
+
+    score = max(0, min(100, int(round(score))))
+    tier = 'high' if score >= 80 else 'medium' if score >= 60 else 'low'
+    if not reasons:
+        reasons.append('balanced keyword opportunity')
+    return score, tier, reasons[:4]
+
+
+def prepare_kwr_rows(raw_rows: list, existing_pages=None, brand: str = '', source_model: str = '') -> tuple:
+    existing_pages = existing_pages or []
+    normalized_rows = []
+    pillar_primary_map = {}
+    brand_name = (brand or '').strip()
+
+    for row in raw_rows or []:
+        cleaned_kw = clean_keywords((row.get('keywords') or '').strip(), brand_name)
+        clean_row = {
+            'existing_parent_page': (row.get('existing_parent_page') or '-').strip(),
+            'pillar': (row.get('pillar') or '').strip(),
+            'cluster': (row.get('cluster') or '').strip(),
+            'intent': (row.get('intent') or 'informational').strip(),
+            'primary_keyword': (row.get('primary_keyword') or '').strip(),
+            'keywords': cleaned_kw,
+            'source_model': (row.get('source_model') or source_model or '').strip(),
+        }
+        normalized_rows.append(clean_row)
+        if clean_row['intent'].strip().lower() == 'pillar' and clean_row['pillar']:
+            pillar_primary_map[clean_row['pillar']] = clean_row['primary_keyword']
+
+    seen_kw = set()
+    seen_fp = set()
+    cluster_fp_by_pillar = {}
+    existing_page_fps = {_slug_fingerprint(p) for p in existing_pages if p}
+    existing_page_fps.discard(tuple())
+    clean_rows = []
+    quality_counts = {'high': 0, 'medium': 0, 'low': 0}
+    score_total = 0
+    stats = {
+        'raw_count': len(raw_rows or []),
+        'exact_duplicates_removed': 0,
+        'semantic_duplicates_removed': 0,
+        'existing_coverage_removed': 0,
+        'quality_summary': {'total': 0, 'avg_score': 0, 'high': 0, 'medium': 0, 'low': 0},
+    }
+
+    for row in normalized_rows:
+        pk = (row.get('primary_keyword') or '').strip()
+        if not pk:
+            continue
+        pk_cf = pk.casefold()
+        fp = _semantic_fingerprint(pk, brand_name)
+        intent = (row.get('intent') or '').strip().lower()
+        pillar = (row.get('pillar') or '').strip()
+
+        if pk_cf in seen_kw:
+            stats['exact_duplicates_removed'] += 1
+            continue
+        if fp and fp in seen_fp:
+            stats['semantic_duplicates_removed'] += 1
+            continue
+        if fp and intent != 'pillar' and fp in existing_page_fps:
+            stats['existing_coverage_removed'] += 1
+            continue
+        pillar_fp = _semantic_fingerprint(pillar_primary_map.get(pillar, ''), brand_name) if pillar else tuple()
+        if fp and intent != 'pillar' and pillar_fp and fp == pillar_fp:
+            stats['semantic_duplicates_removed'] += 1
+            continue
+        if fp and intent != 'pillar':
+            bucket = cluster_fp_by_pillar.setdefault(pillar, set())
+            if fp in bucket:
+                stats['semantic_duplicates_removed'] += 1
+                continue
+            bucket.add(fp)
+
+        seen_kw.add(pk_cf)
+        if fp:
+            seen_fp.add(fp)
+
+        score, tier, reasons = _quality_score_row(
+            row,
+            brand=brand_name,
+            existing_page_fps=existing_page_fps,
+            pillar_primary_map=pillar_primary_map,
+        )
+        row['quality_score'] = score
+        row['quality_tier'] = tier
+        row['quality_reasons'] = reasons
+        clean_rows.append(row)
+        quality_counts[tier] += 1
+        score_total += score
+
+    total = len(clean_rows)
+    stats['quality_summary'] = {
+        'total': total,
+        'avg_score': round(score_total / total, 1) if total else 0,
+        'high': quality_counts['high'],
+        'medium': quality_counts['medium'],
+        'low': quality_counts['low'],
+    }
+    return clean_rows, stats
+
+
+def build_model_participation(child_jobs: list, merged_rows: list) -> list:
+    kept_counts = {}
+    for row in merged_rows or []:
+        model = (row.get('source_model') or '').strip() or 'unknown'
+        kept_counts[model] = kept_counts.get(model, 0) + 1
+
+    summary = []
+    for job in child_jobs or []:
+        inputs = job.get('inputs') or {}
+        model = (inputs.get('model') or inputs.get('_model') or '').strip() or 'unknown'
+        total_rows = len(job.get('rows') or [])
+        kept_rows = kept_counts.get(model, 0)
+        summary.append({
+            'model': model,
+            'total_rows': total_rows,
+            'kept_rows': kept_rows,
+            'kept_pct': round((kept_rows / total_rows) * 100, 1) if total_rows else 0,
+        })
+
+    summary.sort(key=lambda item: (-item.get('kept_rows', 0), item.get('model', '')))
+    return summary
+
+
 def validate_kwr_rows(rows: list, brand: str = '', log=None) -> dict:
     """
     Conservative validator — runs AFTER clean_keywords. Does NOT mutate rows.
@@ -285,6 +498,9 @@ def start_run(payload: dict, call_llm) -> tuple:
             'existing_pages': [],
             'row_count': 0,
             'honest_count_note': '',
+            'quality_summary': {'total': 0, 'avg_score': 0, 'high': 0, 'medium': 0, 'low': 0},
+            'dedup_summary': {'raw_count': 0, 'exact_duplicates_removed': 0, 'semantic_duplicates_removed': 0, 'existing_coverage_removed': 0},
+            'model_participation': [],
             'preview_edited': False,
             'created_at': now,
             'updated_at': now,
@@ -1000,31 +1216,20 @@ No explanation, no markdown, no preamble — just the raw JSON array."""
             fail('deduplicating', f"Failed to parse LLM output as JSON: {e}\nRaw (first 500): {kwr_raw[:500]}")
             return
 
-        # Normalize + deduplicate
-        seen_kw = set()
-        seen_pages = set(p.lower() for p in existing_pages)
-        clean_rows = []
+        # Normalize + deduplicate with semantic filtering + quality scoring
         brand_name = (_state.get(run_id, {}).get('inputs', {}) or {}).get('brand_name', '') if run_id in _state else ''
-        for row in raw_rows:
-            check_cancel()
-            pk = (row.get('primary_keyword') or '').strip().lower()
-            if not pk:
-                continue
-            if pk in seen_kw:
-                continue
-            seen_kw.add(pk)
-            raw_kw = (row.get('keywords') or '').strip()
-            cleaned_kw = clean_keywords(raw_kw, brand_name)
-            clean_rows.append({
-                'existing_parent_page': (row.get('existing_parent_page') or '-').strip(),
-                'pillar':               (row.get('pillar') or '').strip(),
-                'cluster':              (row.get('cluster') or '').strip(),
-                'intent':               (row.get('intent') or 'informational').strip(),
-                'primary_keyword':      (row.get('primary_keyword') or '').strip(),
-                'keywords':             cleaned_kw,
-            })
-
-        log(f"After deduplication: {len(clean_rows)} rows (from {len(raw_rows)} raw)")
+        clean_rows, prep_stats = prepare_kwr_rows(
+            raw_rows,
+            existing_pages=existing_pages,
+            brand=brand_name,
+            source_model=llm_model,
+        )
+        log(
+            f"After deduplication: {len(clean_rows)} rows (from {len(raw_rows)} raw, "
+            f"exact dupes removed={prep_stats.get('exact_duplicates_removed', 0)}, "
+            f"semantic dupes removed={prep_stats.get('semantic_duplicates_removed', 0)}, "
+            f"existing coverage removed={prep_stats.get('existing_coverage_removed', 0)})"
+        )
 
         # Conservative validation — warnings only, no mutation
         try:
@@ -1035,6 +1240,12 @@ No explanation, no markdown, no preamble — just the raw JSON array."""
                 log(f"[KWR validate] OK — {v['rows_validated']} rows, {v['pillars_validated']} pillars, no issues")
         except Exception as _ve:
             log(f"[KWR validate] skipped: {_ve}")
+
+        quality_summary = prep_stats.get('quality_summary') or {'total': len(clean_rows), 'avg_score': 0, 'high': 0, 'medium': 0, 'low': 0}
+        log(
+            f"Quality mix — avg {quality_summary.get('avg_score', 0)}, "
+            f"high {quality_summary.get('high', 0)}, medium {quality_summary.get('medium', 0)}, low {quality_summary.get('low', 0)}"
+        )
 
         honest_note = ''
         if len(clean_rows) < 200:
@@ -1049,6 +1260,13 @@ No explanation, no markdown, no preamble — just the raw JSON array."""
             _state[run_id]['rows'] = clean_rows
             _state[run_id]['row_count'] = len(clean_rows)
             _state[run_id]['honest_count_note'] = honest_note
+            _state[run_id]['quality_summary'] = quality_summary
+            _state[run_id]['dedup_summary'] = {
+                'raw_count': prep_stats.get('raw_count', len(raw_rows)),
+                'exact_duplicates_removed': prep_stats.get('exact_duplicates_removed', 0),
+                'semantic_duplicates_removed': prep_stats.get('semantic_duplicates_removed', 0),
+                'existing_coverage_removed': prep_stats.get('existing_coverage_removed', 0),
+            }
             _state[run_id]['status'] = 'ready'
             _state[run_id]['current_stage'] = 'ready'
             _state[run_id]['progress'] = 100
@@ -1210,29 +1428,56 @@ def save_to_supabase(run_id: str) -> tuple:
 
 
 # ---------------------------------------------------------------------------
-# Ensemble mode — run multiple models, merge + deduplicate results
+# Ensemble / swarm mode — run multiple models, merge + deduplicate results
 # ---------------------------------------------------------------------------
 
 ENSEMBLE_MODELS = [
-    'anthropic/claude-opus-4',
-    'openai/gpt-4o',
+    'anthropic/claude-opus-4.7',
+    'openai/gpt-5.4',
     'google/gemini-2.5-pro',
 ]
 
+BEST_TEXT_SWARM_MODELS = [
+    'anthropic/claude-opus-4.7',
+    'openai/gpt-5.4',
+    'google/gemini-2.5-pro',
+    'x-ai/grok-4.20-multi-agent',
+    'z-ai/glm-5.1',
+    'moonshotai/kimi-k2-thinking',
+]
 
-def start_ensemble(payload: dict, call_llm) -> tuple:
+
+def _normalize_model_list(models) -> list:
+    if not isinstance(models, list):
+        return []
+    normalized = []
+    seen = set()
+    for raw in models:
+        model = str(raw or '').strip()
+        if not model or model in seen:
+            continue
+        seen.add(model)
+        normalized.append(model)
+    return normalized
+
+
+def start_ensemble(payload: dict, call_llm, default_models=None, mode_label: str = 'ensemble') -> tuple:
     """
     Launch ensemble run: fire N single-model runs, then merge + deduplicate.
     Returns (ensemble_run_id, None) or (None, error_str).
     """
-    models = payload.get('ensemble_models') or ENSEMBLE_MODELS
-    if not isinstance(models, list) or not models:
-        models = ENSEMBLE_MODELS
+    models = _normalize_model_list(payload.get('ensemble_models') or default_models or ENSEMBLE_MODELS)
+    if not models:
+        models = list(default_models or ENSEMBLE_MODELS)
 
+    run_prefix = 'swarm' if mode_label == 'swarm' else 'ensemble'
     # Create a coordinator run_id
-    ensemble_id = 'ensemble-' + str(uuid.uuid4())
+    ensemble_id = run_prefix + '-' + str(uuid.uuid4())
     now = datetime.datetime.utcnow().isoformat() + 'Z'
     child_run_ids = []
+    stored_inputs = dict(payload)
+    stored_inputs['ensemble_models'] = list(models)
+    stored_inputs['_mode'] = mode_label
 
     with _lock:
         _state[ensemble_id] = {
@@ -1242,15 +1487,18 @@ def start_ensemble(payload: dict, call_llm) -> tuple:
             'finished_stages': [],
             'error_stages': [],
             'progress': 0,
-            'logs': [f'[{datetime.datetime.utcnow().strftime("%H:%M:%S")}] Ensemble: launching {len(models)} models'],
+            'logs': [f'[{datetime.datetime.utcnow().strftime("%H:%M:%S")}] {mode_label.title()}: launching {len(models)} models'],
             'rows': [],
             'existing_pages': [],
             'row_count': 0,
             'honest_count_note': '',
+            'quality_summary': {'total': 0, 'avg_score': 0, 'high': 0, 'medium': 0, 'low': 0},
+            'dedup_summary': {'raw_count': 0, 'exact_duplicates_removed': 0, 'semantic_duplicates_removed': 0, 'existing_coverage_removed': 0},
+            'model_participation': [],
             'preview_edited': False,
             'created_at': now,
             'updated_at': now,
-            'inputs': payload,
+            'inputs': stored_inputs,
             'cancel_requested': False,
             'sheet_url': None,
             'deploy_error': None,
@@ -1282,6 +1530,20 @@ def start_ensemble(payload: dict, call_llm) -> tuple:
     t = threading.Thread(target=_ensemble_merger, args=(ensemble_id, child_run_ids), daemon=True)
     t.start()
     return ensemble_id, None
+
+
+def start_best_text_swarm(payload: dict, call_llm) -> tuple:
+    swarm_payload = dict(payload or {})
+    swarm_payload.pop('ensemble_models', None)
+    swarm_payload.pop('model', None)
+    swarm_payload['model'] = 'best-text-swarm'
+    swarm_payload['_mode'] = 'swarm'
+    return start_ensemble(
+        swarm_payload,
+        call_llm,
+        default_models=BEST_TEXT_SWARM_MODELS,
+        mode_label='swarm',
+    )
 
 
 def _ensemble_merger(ensemble_id: str, child_run_ids: list):
@@ -1333,14 +1595,14 @@ def _ensemble_merger(ensemble_id: str, child_run_ids: list):
         if all_done or done_count == total:
             break
 
-    # Merge rows from all ready children — deduplicate by primary_keyword (lowercase)
-    log('All child runs complete — merging results…')
+    mode_label = (_state.get(ensemble_id, {}).get('inputs') or {}).get('_mode') or 'ensemble'
+    log(f'All child runs complete — merging {mode_label} results…')
     with _lock:
         _state[ensemble_id]['current_stage'] = 'merging'
         _state[ensemble_id]['progress'] = 85
 
     all_rows = []
-    seen_kw = set()
+    ready_jobs = []
     with _lock:
         existing_pages_union = []
         ep_seen = set()
@@ -1348,33 +1610,61 @@ def _ensemble_merger(ensemble_id: str, child_run_ids: list):
             job = _state.get(cid)
             if not job:
                 continue
+            ready_jobs.append(dict(job))
             for row in (job.get('rows') or []):
-                pk = (row.get('col_e') or row.get('primary_keyword') or '').strip().lower()
-                if pk and pk not in seen_kw:
-                    seen_kw.add(pk)
-                    all_rows.append(row)
+                all_rows.append(dict(row))
             for ep in (job.get('existing_pages') or []):
                 if ep not in ep_seen:
                     ep_seen.add(ep)
                     existing_pages_union.append(ep)
 
-    log(f'Merged {len(all_rows)} unique rows from {len(ready_ids)} models (deduplication applied)')
+    brand_name = ((_state.get(ensemble_id, {}).get('inputs') or {}).get('brand_name') or '').strip()
+    merged_rows, prep_stats = prepare_kwr_rows(
+        all_rows,
+        existing_pages=existing_pages_union,
+        brand=brand_name,
+    )
+    participation = build_model_participation(ready_jobs, merged_rows)
+    log(
+        f"Merged {len(merged_rows)} unique rows from {len(ready_ids)} models "
+        f"(semantic dupes removed={prep_stats.get('semantic_duplicates_removed', 0)})"
+    )
 
+    summary_label = 'Best text swarm' if mode_label == 'swarm' else 'Ensemble'
+    quality_summary = prep_stats.get('quality_summary') or {'total': len(merged_rows), 'avg_score': 0, 'high': 0, 'medium': 0, 'low': 0}
     with _lock:
-        _state[ensemble_id]['rows'] = all_rows
-        _state[ensemble_id]['row_count'] = len(all_rows)
+        _state[ensemble_id]['rows'] = merged_rows
+        _state[ensemble_id]['row_count'] = len(merged_rows)
         _state[ensemble_id]['existing_pages'] = existing_pages_union[:200]
+        _state[ensemble_id]['quality_summary'] = quality_summary
+        _state[ensemble_id]['dedup_summary'] = {
+            'raw_count': prep_stats.get('raw_count', len(all_rows)),
+            'exact_duplicates_removed': prep_stats.get('exact_duplicates_removed', 0),
+            'semantic_duplicates_removed': prep_stats.get('semantic_duplicates_removed', 0),
+            'existing_coverage_removed': prep_stats.get('existing_coverage_removed', 0),
+        }
+        _state[ensemble_id]['model_participation'] = participation
         _state[ensemble_id]['status'] = 'ready'
         _state[ensemble_id]['current_stage'] = 'ready'
         _state[ensemble_id]['progress'] = 100
         _state[ensemble_id]['finished_stages'].append('merging')
         _state[ensemble_id]['honest_count_note'] = (
-            f'Ensemble of {len(ready_ids)} models. '
-            f'{len(all_rows)} unique rows after deduplication.'
+            f'{summary_label} of {len(ready_ids)} models. '
+            f'{len(merged_rows)} unique rows after deduplication. '
+            f'Quality avg {quality_summary.get("avg_score", 0)}.'
         )
         _state[ensemble_id]['updated_at'] = datetime.datetime.utcnow().isoformat() + 'Z'
 
-    log('Ensemble complete.')
+    if participation:
+        top = ', '.join(
+            f"{p.get('model')} kept {p.get('kept_rows')}/{p.get('total_rows')}"
+            for p in participation[:4]
+        )
+        log(f'{summary_label} participation — {top}')
+    log(
+        f'{summary_label} complete. Quality avg {quality_summary.get("avg_score", 0)} '
+        f'(high {quality_summary.get("high", 0)}, medium {quality_summary.get("medium", 0)}, low {quality_summary.get("low", 0)}).'
+    )
 
 
 def _fetch_page_text(url: str, timeout: int = 15) -> str:

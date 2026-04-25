@@ -33,6 +33,22 @@ REPO = 'maximoseo/webs-html-improvements-files'
 RAW_BASE = f'https://raw.githubusercontent.com/{REPO}/main'
 DEFAULT_N8N_BASE = 'https://websiseo.app.n8n.cloud'
 _SERVER_START_TIME = time.time()
+_PROJECT_DOMAIN_RE = re.compile(r'^(?![.-])[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?(?:\.[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?)+$', re.I)
+
+
+def _looks_like_project_domain(name: str) -> bool:
+    name = (name or '').strip()
+    if not name:
+        return False
+    return bool(_PROJECT_DOMAIN_RE.fullmatch(name))
+
+
+def _truthy_env(name: str) -> bool:
+    return (os.getenv(name) or '').strip().lower() in ('1', 'true', 'yes', 'on')
+
+
+def _dashboard_is_production() -> bool:
+    return _truthy_env('RENDER') or _truthy_env('DASHBOARD_PRODUCTION') or _truthy_env('PRODUCTION')
 
 # ===== DAILY SKILLS RADAR — global state & sources =====
 _radar_state = {
@@ -102,6 +118,10 @@ def _cache_control_for(content_type: str, path: str = '') -> str:
 
 def json_response(handler, status, payload):
     body = json.dumps(payload, ensure_ascii=False).encode('utf-8')
+    try:
+        handler._r2_status = status
+    except Exception:
+        pass
     handler.send_response(status)
     handler.send_header('Content-Type', 'application/json; charset=utf-8')
     handler.send_header('Content-Length', str(len(body)))
@@ -111,6 +131,10 @@ def json_response(handler, status, payload):
 
 
 def text_response(handler, status, body: bytes, content_type: str):
+    try:
+        handler._r2_status = status
+    except Exception:
+        pass
     handler.send_response(status)
     handler.send_header('Content-Type', content_type)
     handler.send_header('Content-Length', str(len(body)))
@@ -126,7 +150,7 @@ def text_response(handler, status, body: bytes, content_type: str):
 # ============================================================
 # Stage 8 — Lightweight session auth (opt-in)
 # Enable by setting env DASHBOARD_USERS="alice:pw1,bob:pw2"
-# Optional: DASHBOARD_AUTH_SECRET for token signing.
+# Optional: DASHBOARD_AUTH_SECRET for cookie signing; falls back to DASHBOARD_JWT_SECRET.
 # ============================================================
 import hmac as _hmac
 import hashlib as _hashlib
@@ -134,14 +158,25 @@ import base64 as _b64
 import time as _time8
 
 _STAGE8_PUBLIC_PATHS = {
-    '/api/health', '/api/auth/login', '/api/auth/logout', '/api/auth/me',
+    '/api/health', '/api/auth/login', '/api/auth/logout', '/api/auth/me', '/api/auth/status',
+    '/api/auth/request-reset', '/api/auth/reset',
     '/login', '/login.html', '/static/login.css', '/api/login', '/api/reset-password',
-    '/api/file/raw', '/api/version',
+    '/api/csrf', '/api/version', '/healthz',
 }
 _STAGE8_PUBLIC_PREFIXES = ('/static/', '/assets/', '/css/', '/js/', '/img/', '/fonts/')
 
+def _stage8_public_path(path):
+    return path in _STAGE8_PUBLIC_PATHS or any(path.startswith(p) for p in _STAGE8_PUBLIC_PREFIXES)
+
 def _stage8_secret():
-    return os.environ.get('DASHBOARD_AUTH_SECRET') or os.environ.get('DASHBOARD_USERS', 'fallback-secret-change-me')
+    secret = (
+        os.environ.get('DASHBOARD_AUTH_SECRET')
+        or os.environ.get('DASHBOARD_JWT_SECRET')
+        or os.environ.get('DASHBOARD_USERS', '').strip()
+    )
+    if not secret and _dashboard_is_production():
+        raise RuntimeError('DASHBOARD_AUTH_SECRET or DASHBOARD_JWT_SECRET must be set in production')
+    return secret or 'dev-only-dashboard-auth-secret'
 
 def _stage8_users():
     raw = os.environ.get('DASHBOARD_USERS', '').strip()
@@ -153,25 +188,58 @@ def _stage8_users():
             out[u.strip()] = p.strip()
     return out
 
-def _stage8_make_token(user, ttl_seconds=86400 * 7):
-    payload = f"{user}|{int(_time8.time()) + ttl_seconds}"
+def _stage8_role_for_user(user):
+    user = (user or '').strip()
+    if not user:
+        return None
+    try:
+        for record in _mu_users_load():
+            if record.get('username') == user or record.get('email') == user:
+                return record.get('role') or 'viewer'
+    except Exception:
+        pass
+    env_user = os.getenv('DASHBOARD_USER', '').strip()
+    if env_user and user == env_user:
+        return 'admin'
+    users = _stage8_users()
+    if user in users:
+        first_user = next(iter(users.keys()), '')
+        return 'admin' if user == first_user else 'viewer'
+    return None
+
+def _stage8_make_token(user, role='viewer', ttl_seconds=86400 * 7):
+    role = role if role in ('admin', 'viewer') else 'viewer'
+    payload = f"{user}|{role}|{int(_time8.time()) + ttl_seconds}"
     sig = _hmac.new(_stage8_secret().encode(), payload.encode(), _hashlib.sha256).hexdigest()[:32]
     raw = f"{payload}|{sig}".encode()
     return _b64.urlsafe_b64encode(raw).decode().rstrip('=')
 
-def _stage8_verify_token(token):
+def _stage8_verify_session(token):
     try:
         pad = '=' * (-len(token) % 4)
         raw = _b64.urlsafe_b64decode(token + pad).decode()
-        user, exp_str, sig = raw.rsplit('|', 2)
-        if not _hmac.compare_digest(
-            sig,
-            _hmac.new(_stage8_secret().encode(), f"{user}|{exp_str}".encode(), _hashlib.sha256).hexdigest()[:32]
-        ):
+        parts = raw.rsplit('|', 3)
+        if len(parts) == 4:
+            user, role, exp_str, sig = parts
+            payload = f"{user}|{role}|{exp_str}"
+        else:
+            user, exp_str, sig = raw.rsplit('|', 2)
+            role = _stage8_role_for_user(user) or 'viewer'
+            payload = f"{user}|{exp_str}"
+        expected = _hmac.new(_stage8_secret().encode(), payload.encode(), _hashlib.sha256).hexdigest()[:32]
+        if not _hmac.compare_digest(sig, expected):
             return None
         if int(exp_str) < _time8.time():
             return None
-        return user
+        role = role if role in ('admin', 'viewer') else 'viewer'
+        return {'username': user, 'user': user, 'role': role}
+    except Exception:
+        return None
+
+def _stage8_verify_token(token):
+    try:
+        session = _stage8_verify_session(token)
+        return session.get('username') if session else None
     except Exception:
         return None
 
@@ -187,14 +255,53 @@ def _stage8_get_token(handler):
         return auth[7:].strip()
     return None
 
+def _dashboard_auth_status():
+    try:
+        users = _mu_users_load()
+    except Exception:
+        users = []
+    env_user = os.getenv('DASHBOARD_USER', '').strip()
+    env_pass = os.getenv('DASHBOARD_PASSWORD', '')
+    env_email = (os.getenv('DASHBOARD_EMAIL') or 'service@maximo-seo.com').strip()
+    stage8_users = _stage8_users()
+    return {
+        'ok': True,
+        'authEnabled': _dashboard_auth_enabled(),
+        'cookieName': 'dash_auth',
+        'loginPaths': ['/api/auth/login', '/api/login', '/login'],
+        'logoutPath': '/api/auth/logout',
+        'mePath': '/api/auth/me',
+        'rateLimit': {
+            'bucketCapacity': 10,
+            'refillPerSecond': 0.1,
+            'ipSourceOrder': ['CF-Connecting-IP', 'X-Forwarded-For', 'X-Real-IP', 'client_address'],
+        },
+        'configuredSources': {
+            'breakGlassEnv': bool(env_user and env_pass),
+            'breakGlassEmailAlias': bool(env_pass and env_email),
+            'stage8UsersEnv': bool(stage8_users),
+            'usersJson': any((u.get('username') or u.get('email')) for u in users),
+            'supabasePassword': bool(os.getenv('SUPABASE_URL') and os.getenv('SUPABASE_ANON_KEY')),
+        },
+        'counts': {
+            'stage8Users': len(stage8_users),
+            'usersJson': sum(1 for u in users if u.get('username') or u.get('email')),
+        },
+        'sessionSecretsConfigured': bool(
+            os.getenv('DASHBOARD_AUTH_SECRET')
+            or os.getenv('DASHBOARD_JWT_SECRET')
+            or os.getenv('DASHBOARD_USERS', '').strip()
+        ),
+    }
+
 def _stage8_check_auth(handler, parsed):
     """Return True if request is allowed; otherwise write a 401/redirect and return False."""
     path = parsed.path
-    if path in _STAGE8_PUBLIC_PATHS or any(path.startswith(p) for p in _STAGE8_PUBLIC_PREFIXES):
+    if _stage8_public_path(path):
         return True
     token = _stage8_get_token(handler)
-    user = _stage8_verify_token(token) if token else None
-    if user:
+    session = _stage8_verify_session(token) if token else None
+    if session:
         return True
     # Also accept JWT Bearer tokens (used by frontend API clients)
     jwt_user = _get_current_user(handler)
@@ -209,18 +316,42 @@ def _stage8_check_auth(handler, parsed):
         handler.end_headers()
     return False
 
+def _stage8_client_ip(handler):
+    """Best-effort real client IP behind Cloudflare/Render proxies."""
+    try:
+        for header in ('CF-Connecting-IP', 'X-Forwarded-For', 'X-Real-IP'):
+            raw = (handler.headers.get(header) or '').strip()
+            if raw:
+                return raw.split(',')[0].strip()
+    except Exception:
+        pass
+    try:
+        return handler.client_address[0]
+    except Exception:
+        return 'unknown'
+
+
 def _stage8_login_rate_limit(handler):
     """Per-IP token bucket for login endpoints. 10 attempts, refills 1 every 10s."""
-    try:
-        ip = handler.client_address[0]
-    except Exception:
-        ip = 'unknown'
+    ip = _stage8_client_ip(handler)
     now = _time8.time()
     bucket = _R2_RATE_BUCKETS.setdefault(f'login:{ip}', {'tokens': 10.0, 'last': now})
     bucket['tokens'] = min(10.0, bucket['tokens'] + (now - bucket['last']) * 0.1)
     bucket['last'] = now
     if bucket['tokens'] < 1.0:
-        json_response(handler, 429, {'ok': False, 'error': 'rate_limited', 'retry_after': 60})
+        retry_after = 60
+        body = json.dumps({'ok': False, 'error': 'rate_limited', 'retry_after': retry_after}).encode('utf-8')
+        try:
+            handler._r2_status = 429
+        except Exception:
+            pass
+        handler.send_response(429)
+        handler.send_header('Content-Type', 'application/json; charset=utf-8')
+        handler.send_header('Content-Length', str(len(body)))
+        handler.send_header('Cache-Control', 'no-store, must-revalidate')
+        handler.send_header('Retry-After', str(retry_after))
+        handler.end_headers()
+        handler.wfile.write(body)
         return False
     bucket['tokens'] -= 1.0
     return True
@@ -240,8 +371,12 @@ def _stage8_login(handler, payload):
         return json_response(handler, 401, {'ok': False, 'error': 'invalid_credentials'})
     role = matched.get('role', 'admin')
     username = matched.get('username') or identifier
-    token = _stage8_make_token(username)
-    jwt_token = _jwt_make(username, role)
+    try:
+        token = _stage8_make_token(username, role)
+        jwt_token = _jwt_make(username, role)
+    except Exception as exc:
+        print(f'[auth] failed to create login session: {exc}', flush=True)
+        return json_response(handler, 500, {'ok': False, 'error': 'login_session_failed'})
     body = json.dumps({
         'ok': True,
         'user': username,
@@ -310,7 +445,10 @@ import uuid as _uuid_mu
 import threading as _threading_mu
 
 _USERS_JSON_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'data', 'users.json')
-_JWT_SECRET_KEY  = os.getenv('DASHBOARD_JWT_SECRET', 'maximo-dashboard-secret-2025')
+_JWT_SECRET_KEY  = os.getenv('DASHBOARD_JWT_SECRET')
+if not _JWT_SECRET_KEY and _dashboard_is_production():
+    raise RuntimeError('DASHBOARD_JWT_SECRET must be set in production')
+_JWT_SECRET_KEY = _JWT_SECRET_KEY or 'maximo-dashboard-secret-2025-DEV-ONLY'
 _USERS_JSON_LOCK = _threading_mu.Lock()
 
 def _mu_users_load():
@@ -319,6 +457,28 @@ def _mu_users_load():
             return json.load(_f)
     except Exception:
         return []
+
+def _mu_hash_password(password):
+    salt = os.urandom(16).hex()
+    iterations = 260000
+    digest = _hashlib.pbkdf2_hmac('sha256', (password or '').encode(), bytes.fromhex(salt), iterations).hex()
+    return f'pbkdf2_sha256${iterations}${salt}${digest}'
+
+def _mu_verify_password(password, stored_hash):
+    stored_hash = stored_hash or ''
+    password = password or ''
+    try:
+        if stored_hash.startswith('pbkdf2_sha256$'):
+            _, iter_str, salt, expected = stored_hash.split('$', 3)
+            digest = _hashlib.pbkdf2_hmac('sha256', password.encode(), bytes.fromhex(salt), int(iter_str)).hex()
+            return _hmac.compare_digest(digest, expected)
+        # Legacy local fallback: unsalted SHA-256. Kept only so existing users can log in once and be upgraded.
+        return _hmac.compare_digest(stored_hash, _hashlib.sha256(password.encode()).hexdigest())
+    except Exception:
+        return False
+
+def _mu_password_needs_rehash(stored_hash):
+    return not (stored_hash or '').startswith('pbkdf2_sha256$')
 
 def _mu_users_save(users):
     with _USERS_JSON_LOCK:
@@ -330,13 +490,15 @@ def _mu_users_save(users):
 
 def _mu_init_users():
     if not os.path.exists(_USERS_JSON_PATH):
-        import hashlib as _hl_mu
         admin_user = os.getenv('DASHBOARD_USER', 'admin')
-        admin_pass = os.getenv('DASHBOARD_PASSWORD', 'Maximo2025!')
+        admin_pass = os.getenv('DASHBOARD_PASSWORD') or ''
+        if _dashboard_is_production() and not admin_pass:
+            return
+        admin_pass = admin_pass or 'Maximo2025!'
         users = [{
             'id': str(_uuid_mu.uuid4()),
             'username': admin_user,
-            'password_hash': _hl_mu.sha256(admin_pass.encode()).hexdigest(),
+            'password_hash': _mu_hash_password(admin_pass),
             'role': 'admin',
             'email': 'service@maximo-seo.com',
             'created_at': datetime.datetime.utcnow().isoformat() + 'Z',
@@ -410,7 +572,6 @@ def _supabase_verify_password(email, password):
     }
 
 def _dashboard_validate_credentials(username, password):
-    import hashlib as _hl_login
     username = (username or '').strip()
     password = password or ''
     if not username or not password:
@@ -424,14 +585,28 @@ def _dashboard_validate_credentials(username, password):
 
     # 2. Local users.json fallback (sha256 — legacy; to be retired after Supabase migration).
     users = _mu_users_load()
-    pw_hash = _hl_login.sha256(password.encode()).hexdigest()
-    matched = next((u for u in users if u.get('username') == username and u.get('password_hash') == pw_hash), None)
+    matched = None
+    updated = False
+    lookup = username.lower()
+    for u in users:
+        record_username = (u.get('username') or '').strip()
+        record_email = (u.get('email') or '').strip()
+        is_same_user = record_username == username or (record_email and record_email.lower() == lookup)
+        if is_same_user and _mu_verify_password(password, u.get('password_hash', '')):
+            matched = u
+            if _mu_password_needs_rehash(u.get('password_hash', '')):
+                u['password_hash'] = _mu_hash_password(password)
+                updated = True
+            break
 
     if not matched:
         env_user = os.getenv('DASHBOARD_USER', '').strip()
+        env_email = (os.getenv('DASHBOARD_EMAIL') or 'service@maximo-seo.com').strip()
         env_pass = os.getenv('DASHBOARD_PASSWORD', '')
-        if env_user and _hmac.compare_digest(username, env_user) and _hmac.compare_digest(password, env_pass):
-            matched = {'username': username, 'role': 'admin', 'email': 'service@maximo-seo.com'}
+        email_matches = bool(env_email and _hmac.compare_digest(lookup, env_email.lower()))
+        user_matches = bool(env_user and _hmac.compare_digest(username, env_user))
+        if (user_matches or email_matches) and _hmac.compare_digest(password, env_pass):
+            matched = {'username': env_user or username, 'role': 'admin', 'email': env_email}
 
     if not matched:
         stage8_users = _stage8_users()
@@ -446,9 +621,8 @@ def _dashboard_validate_credentials(username, password):
     if not matched:
         return None
 
-    updated = False
     for u in users:
-        if u.get('username') == username:
+        if u.get('username') == username or (u.get('email') or '').strip().lower() == lookup:
             u['last_login'] = datetime.datetime.utcnow().isoformat() + 'Z'
             updated = True
             break
@@ -490,7 +664,12 @@ def _jwt_verify(token):
 def _get_current_user(handler):
     auth = handler.headers.get('Authorization', '')
     if auth.startswith('Bearer '):
-        return _jwt_verify(auth[7:].strip())
+        user = _jwt_verify(auth[7:].strip())
+        if user:
+            return user
+    token = _stage8_get_token(handler)
+    if token:
+        return _stage8_verify_session(token)
     return None
 
 def _require_admin(handler):
@@ -515,14 +694,9 @@ except Exception as _e14:
 
 
 def _stage14_is_admin(handler):
-    """First user in DASHBOARD_USERS is treated as admin. If auth disabled, deny."""
-    users_env = os.environ.get('DASHBOARD_USERS', '').strip()
-    if not users_env:
-        return False
-    first_user = users_env.split(',')[0].split(':')[0].strip()
-    tok = _stage8_get_token(handler)
-    user = _stage8_verify_token(tok) if tok else None
-    return user == first_user
+    """Return True for authenticated dashboard admins."""
+    user = _get_current_user(handler)
+    return bool(user and user.get('role') == 'admin')
 
 
 def _stage14_handle_get(handler, parsed):
@@ -685,7 +859,20 @@ def _get_provider_chain():
             'model_override': None,
         })
 
-    # 2. Venice AI — first automatic fallback after OpenRouter
+    # 2. OpenAI (Direct API)
+    openai_key = os.getenv('OPENAI_API_KEY')
+    if openai_key:
+        chain.append({
+            'name': 'openai',
+            'base': 'https://api.openai.com/v1',
+            'headers': {
+                'Authorization': f'Bearer {openai_key}',
+                'Accept': 'application/json',
+            },
+            'model_override': None,
+        })
+
+    # 3. Venice AI — automatic fallback
     venice_key = os.getenv('VENICE_API_KEY')
     if venice_key:
         chain.append({
@@ -698,7 +885,7 @@ def _get_provider_chain():
             'model_override': os.getenv('VENICE_MODEL', 'llama-3.3-70b'),
         })
 
-    # 3. GitHub Copilot
+    # 4. GitHub Copilot
     copilot_key = os.getenv('COPILOT_API_KEY') or os.getenv('GITHUB_COPILOT_TOKEN')
     if copilot_key:
         chain.append({
@@ -714,7 +901,7 @@ def _get_provider_chain():
             'model_override': os.getenv('COPILOT_MODEL', 'claude-sonnet-4.6'),
         })
 
-    # 4. Google Gemini (native REST API)
+    # 5. Google Gemini (native REST API)
     gemini_key = os.getenv('GEMINI_API_KEY')
     if gemini_key:
         chain.append({
@@ -728,7 +915,7 @@ def _get_provider_chain():
             'gemini_native': True,
         })
 
-    # 5. Fireworks AI
+    # 6. Fireworks AI
     fireworks_key = os.getenv('FIREWORKS_API_KEY')
     if fireworks_key:
         chain.append({
@@ -741,7 +928,7 @@ def _get_provider_chain():
             'model_override': os.getenv('FIREWORKS_MODEL', 'accounts/fireworks/models/llama-v3p3-70b-instruct'),
         })
 
-    # 6. Kimi / Moonshot
+    # 7. Kimi / Moonshot
     kimi_key = os.getenv('KIMI_API_KEY')
     if kimi_key:
         chain.append({
@@ -754,7 +941,7 @@ def _get_provider_chain():
             'model_override': os.getenv('KIMI_MODEL', 'kimi-k2.6'),
         })
 
-    # 7. xAI / Grok
+    # 8. xAI / Grok
     xai_key = os.getenv('XAI_API_KEY')
     if xai_key:
         chain.append({
@@ -767,7 +954,7 @@ def _get_provider_chain():
             'model_override': os.getenv('XAI_MODEL', 'grok-4.20-multi-agent'),
         })
 
-    # 8. MiniMax
+    # 9. MiniMax
     minimax_key = os.getenv('MINIMAX_API_KEY')
     if minimax_key:
         chain.append({
@@ -781,7 +968,7 @@ def _get_provider_chain():
             'model_override': os.getenv('MINIMAX_MODEL', 'minimax-m2.7'),
         })
 
-    # 9. Z.AI / GLM
+    # 10. Z.AI / GLM
     glm_key = os.getenv('GLM_API_KEY')
     if glm_key:
         chain.append({
@@ -795,7 +982,7 @@ def _get_provider_chain():
             'model_override': os.getenv('GLM_MODEL', 'glm-5.1'),
         })
 
-    # 10. Anthropic (native API — direct)
+    # 11. Anthropic (native API — direct)
     anthropic_key = os.getenv('ANTHROPIC_API_KEY')
     if anthropic_key:
         chain.append({
@@ -853,6 +1040,9 @@ def _detect_preferred_provider(model: str) -> str | None:
         return 'minimax'
     if model.startswith('glm-'):
         return 'glm'
+    # OpenAI direct models (gpt-4o, gpt-4.5-preview, o1, o3-mini, etc.)
+    if model.startswith('gpt-') or model.startswith('o1') or model.startswith('o3'):
+        return 'openai'
     # Copilot short IDs have dots (version numbers like 4.6, 5.4, 4.1)
     if '.' in model:
         return 'copilot'
@@ -861,6 +1051,25 @@ def _detect_preferred_provider(model: str) -> str | None:
         if os.getenv('ANTHROPIC_API_KEY'):
             return 'anthropic'
         return 'copilot'
+    return None
+
+
+def _preferred_backup_provider(model: str, preferred: str | None) -> str | None:
+    """Return a preferred second-choice provider for models that have a strong twin route."""
+    model = (model or '').strip().lower()
+    if not preferred or not model:
+        return None
+    is_moonshot_family = (
+        model.startswith('moonshotai/')
+        or model.startswith('kimi')
+        or model.startswith('moonshot-')
+    )
+    if not is_moonshot_family:
+        return None
+    if preferred == 'openrouter':
+        return 'kimi'
+    if preferred == 'kimi':
+        return 'openrouter'
     return None
 
 
@@ -880,8 +1089,10 @@ def call_with_fallback(messages, model, timeout=120):
     preferred = _detect_preferred_provider(model)
     if preferred:
         preferred_providers = [p for p in chain if p['name'] == preferred]
-        other_providers    = [p for p in chain if p['name'] != preferred]
-        chain = preferred_providers + other_providers
+        buddy = _preferred_backup_provider(model, preferred)
+        buddy_providers = [p for p in chain if p['name'] == buddy and p['name'] != preferred]
+        other_providers = [p for p in chain if p['name'] not in {preferred, buddy}]
+        chain = preferred_providers + buddy_providers + other_providers
 
     errors = []
     for provider in chain:
@@ -1194,6 +1405,8 @@ BRAINSTORM_MODELS = [
     {"id": "gemini-2.5-pro",                  "label": "Gemini 2.5 Pro (Direct)",          "provider": "gemini"},
     {"id": "anthropic/claude-opus-4.7",       "label": "Claude Opus 4.7"},
     {"id": "openai/gpt-5.4",                  "label": "GPT-5.4"},
+    {"id": "gpt-4o",                          "label": "GPT-4o (OpenAI Direct)",           "provider": "openai"},
+    {"id": "gpt-4.5-preview",                 "label": "GPT-4.5 Preview (OpenAI Direct)",  "provider": "openai"},
     {"id": "minimax/minimax-m2.7",            "label": "MiniMax M2.7"},
     {"id": "moonshotai/kimi-k2.5",            "label": "Kimi K2.5"},
     {"id": "z-ai/glm-5.1",                    "label": "GLM 5.1"},
@@ -1202,34 +1415,17 @@ BRAINSTORM_MODELS_BY_ID = {m["id"]: m for m in BRAINSTORM_MODELS}
 SYNTH_MODEL = os.getenv("PROMPT_SYNTH_MODEL", "anthropic/claude-sonnet-4.6")
 
 
-def _call_one_model(base, headers, model_id, system, user, timeout=180):
-    body = {
-        "model": model_id,
-        "messages": [
-            {"role": "system", "content": system},
-            {"role": "user",   "content": user},
-        ],
-    }
+def _call_one_model(model_id, system, user, timeout=180):
+    messages = [
+        {"role": "system", "content": system},
+        {"role": "user",   "content": user},
+    ]
     try:
-        r = fetch_json(f"{base}/chat/completions", headers=headers, method="POST", body=body, timeout=timeout)
-        choices = r.get("choices") or []
-        content = ""
-        if choices:
-            msg = choices[0].get("message") or {}
-            content = msg.get("content") or ""
-        if isinstance(content, list):
-            content = "".join(p.get("text","") for p in content if isinstance(p, dict))
+        content, provider_used = call_with_fallback(messages, model_id, timeout=timeout)
         content = str(content).strip()
         if not content:
             return {"model": model_id, "ok": False, "error": "empty response"}
-        return {"model": model_id, "ok": True, "content": content}
-    except urllib.error.HTTPError as e:
-        detail = ""
-        try:
-            detail = e.read().decode("utf-8", "replace")[:400]
-        except Exception:
-            pass
-        return {"model": model_id, "ok": False, "error": f"HTTP {e.code}", "detail": detail}
+        return {"model": model_id, "ok": True, "content": content, "provider": provider_used}
     except Exception as e:
         return {"model": model_id, "ok": False, "error": str(e)[:400]}
 
@@ -1239,9 +1435,8 @@ def brainstorm_prompt_multi_model(payload):
     draft = (payload.get("draftPrompt") or "").strip()
     if not draft:
         raise ValueError("Draft prompt is required")
-    base, headers = prompt_headers()
-    if not headers:
-        raise RuntimeError("OPENROUTER_API_KEY is not configured")
+    if not _get_provider_chain():
+        raise RuntimeError("No LLM provider configured")
 
     current_date = os.getenv("PROMPT_CURRENT_DATE", "2026-04-17")
     checklist_rules = _normalize_checklist(payload.get("checklist"))
@@ -1313,7 +1508,7 @@ def brainstorm_prompt_multi_model(payload):
     max_workers = max(1, min(6, len(selected_models)))
     with concurrent.futures.ThreadPoolExecutor(max_workers=max_workers) as pool:
         futures = {
-            pool.submit(_call_one_model, base, headers, m["id"], brain_system, brain_user, 180): m
+            pool.submit(_call_one_model, m["id"], brain_system, brain_user, 180): m
             for m in selected_models
         }
         for fut in concurrent.futures.as_completed(futures, timeout=240):
@@ -1365,7 +1560,7 @@ def brainstorm_prompt_multi_model(payload):
         "Produce the single synthesized final prompt now."
     )
 
-    synth = _call_one_model(base, headers, SYNTH_MODEL, synth_system, synth_user, timeout=240)
+    synth = _call_one_model(SYNTH_MODEL, synth_system, synth_user, timeout=240)
     if not synth.get("ok") or not synth.get("content"):
         raise RuntimeError(json.dumps({
             "code": "synthesis_failed",
@@ -1378,7 +1573,8 @@ def brainstorm_prompt_multi_model(payload):
         "ok": True,
         "finalPrompt": synth["content"],
         "synthModel": SYNTH_MODEL,
-        "modelsUsed": [{"model": r["model"], "label": r["label"], "chars": len(r["content"])} for r in successes],
+        "synthProvider": synth.get("provider"),
+        "modelsUsed": [{"model": r["model"], "label": r["label"], "chars": len(r["content"]), "provider": r.get("provider")} for r in successes],
         "modelsFailed": [{"model": r["model"], "label": r.get("label"), "error": r.get("error")} for r in results if not r.get("ok")],
         "requestedModels": [m["id"] for m in selected_models],
     }
@@ -1449,9 +1645,8 @@ def tweak_html_with_prompt(payload):
         raise ValueError('improvedPrompt is required')
     if not html_download_url:
         raise ValueError('htmlDownloadUrl is required')
-    base, headers = prompt_headers()
-    if not headers:
-        raise RuntimeError('OPENROUTER_API_KEY is not configured')
+    if not _get_provider_chain():
+        raise RuntimeError('No LLM provider configured')
     default_model = os.getenv('PROMPT_TWEAK_MODEL', 'anthropic/claude-sonnet-4.6')
     model = (payload.get('model') or '').strip() or default_model
     domain = payload.get('domain') or 'unknown'
@@ -1493,9 +1688,8 @@ def improve_prompt_with_model(payload):
     draft = (payload.get('draftPrompt') or '').strip()
     if not draft:
         raise ValueError('Draft prompt is required')
-    base, headers = prompt_headers()
-    if not headers:
-        raise RuntimeError('OPENROUTER_API_KEY is not configured')
+    if not _get_provider_chain():
+        raise RuntimeError('No LLM provider configured')
     # Accept model override from the browser payload; fall back to env / default
     default_model = os.getenv('PROMPT_IMPROVER_MODEL', 'anthropic/claude-sonnet-4.6')
     model = (payload.get('model') or '').strip() or default_model
@@ -1864,10 +2058,7 @@ if not _r2_log.handlers:
     _r2_log.propagate = False
 
 def _r2_log_request(handler, status, duration_ms):
-    try:
-        ip = handler.headers.get('X-Forwarded-For', handler.client_address[0]).split(',')[0].strip()
-    except Exception:
-        ip = '-'
+    ip = _stage8_client_ip(handler) or '-'
     try:
         path = handler.path
         method = handler.command
@@ -1892,7 +2083,10 @@ _R3_SSE_CLIENTS = []  # list of queue.Queue
 _R3_SSE_LOCK = threading.Lock()
 _R3_CSRF_SECRET = os.environ.get('DASH_CSRF_SECRET') or _r3_secrets.token_hex(32)
 _R3_CSRF_ENABLED = os.environ.get('DASH_CSRF', '1') not in ('0','false','False','')
-_R3_CSRF_EXEMPT = ('/api/auth/login', '/api/n8n/webhook', '/login', '/api/csrf', '/metrics', '/api/login', '/api/reset-password')
+_R3_CSRF_EXEMPT = (
+    '/api/auth/login', '/api/auth/request-reset', '/api/auth/reset',
+    '/api/n8n/webhook', '/login', '/api/csrf', '/metrics', '/api/login', '/api/reset-password'
+)
 
 def _r3_csrf_token():
     """Generate a per-session CSRF token (signed with server secret)."""
@@ -1905,6 +2099,27 @@ def _r3_csrf_verify(token):
     raw, sig = token.rsplit('.', 1)
     expected = _r3_hashlib.sha256((raw + _R3_CSRF_SECRET).encode()).hexdigest()[:16]
     return _r3_secrets.compare_digest(sig, expected)
+
+def _r3_csrf_enforce_hard():
+    raw = os.environ.get('DASH_CSRF_ENFORCE')
+    if raw is not None:
+        return raw in ('1', 'true', 'True', 'yes', 'on')
+    return _dashboard_is_production() or bool(getattr(r6, 'CSRF_HARD', False))
+
+def _r3_check_csrf_or_warn(handler, parsed):
+    if not _R3_CSRF_ENABLED or any(parsed.path.startswith(p) for p in _R3_CSRF_EXEMPT):
+        return True
+    tok = handler.headers.get('X-CSRF-Token', '')
+    if _r3_csrf_verify(tok):
+        return True
+    if _r3_csrf_enforce_hard():
+        json_response(handler, 403, {'ok': False, 'error': 'csrf_invalid'})
+        return False
+    rec = logging.LogRecord('dashboard', logging.WARNING, '', 0,
+        f'csrf-missing path={parsed.path}', None, None)
+    rec.event = 'csrf_warn'; rec.path = parsed.path
+    _r2_log.handle(rec)
+    return True
 
 def sse_broadcast(event_type, payload):
     """Push a notification to all connected SSE clients. Safe to call from any thread."""
@@ -2045,7 +2260,7 @@ class DashboardHandler(BaseHTTPRequestHandler):
     def _r2_check_rate(self):
         """Call early in do_GET/do_POST. Returns True if request should proceed."""
         try:
-            ip = self.headers.get('X-Forwarded-For', self.client_address[0]).split(',')[0].strip()
+            ip = _stage8_client_ip(self)
             path = urllib.parse.urlparse(self.path).path
         except Exception:
             return True
@@ -2167,9 +2382,10 @@ body{{font-family:Arial;padding:24px}}h1{{color:#333}}pre{{background:#f4f4f4;pa
         ('X-Content-Type-Options', 'nosniff'),
         ('X-Frame-Options', 'SAMEORIGIN'),
         ('Referrer-Policy', 'strict-origin-when-cross-origin'),
+        ('Permissions-Policy', 'camera=(), microphone=(), geolocation=(), payment=()'),
         ('Content-Security-Policy',
             "default-src 'self'; "
-            "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.jsdelivr.net https://unpkg.com https://cdnjs.cloudflare.com; "
+            "script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://unpkg.com https://cdnjs.cloudflare.com; "
             "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; "
             "font-src 'self' data: https://fonts.gstatic.com https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; "
             "img-src 'self' data: blob: https:; "
@@ -2205,13 +2421,61 @@ body{{font-family:Arial;padding:24px}}h1{{color:#333}}pre{{background:#f4f4f4;pa
     def do_OPTIONS(self):
         self.send_response(204)
         self.send_header('Access-Control-Allow-Origin', '*')
-        self.send_header('Access-Control-Allow-Headers', 'Content-Type')
-        self.send_header('Access-Control-Allow-Methods', 'GET,POST,OPTIONS')
+        self.send_header('Access-Control-Allow-Headers', 'Content-Type, X-CSRF-Token, Authorization')
+        self.send_header('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE,OPTIONS,HEAD')
+        self.end_headers()
+
+    def do_HEAD(self):
+        if not self._r2_check_rate(): return
+        parsed = urllib.parse.urlparse(self.path)
+        if _dashboard_auth_enabled() and not _stage8_public_path(parsed.path):
+            token = _stage8_get_token(self)
+            if not (token and _stage8_verify_session(token)) and not _get_current_user(self):
+                if parsed.path.startswith('/api/'):
+                    self.send_response(401)
+                    self.send_header('Content-Type', 'application/json; charset=utf-8')
+                    self.send_header('Cache-Control', 'no-store, must-revalidate')
+                    self.end_headers()
+                else:
+                    self.send_response(302)
+                    self.send_header('Location', '/login')
+                    self.end_headers()
+                return
+        if parsed.path in ('/api/health', '/api/health/detailed'):
+            self.send_response(200)
+            self.send_header('Content-Type', 'application/json; charset=utf-8')
+            self.send_header('Cache-Control', 'no-store, must-revalidate')
+            self.end_headers()
+            return
+        if parsed.path == '/healthz':
+            self.send_response(200)
+            self.send_header('Content-Type', 'text/plain')
+            self.end_headers()
+            return
+        target = None
+        if parsed.path in ('/login', '/login.html'):
+            target = ROOT / 'login-page.html'
+        else:
+            clean = posixpath.normpath(urllib.parse.unquote(parsed.path))
+            target = INDEX if clean in ('', '.', '/') else (ROOT / clean.lstrip('/')).resolve()
+            if ROOT not in target.parents and target != ROOT:
+                self.send_response(403); self.end_headers(); return
+        if not target.exists() or not target.is_file():
+            self.send_response(404); self.end_headers(); return
+        content_type, _ = mimetypes.guess_type(str(target))
+        if not content_type:
+            content_type = 'application/octet-stream'
+        self.send_response(200)
+        self.send_header('Content-Type', content_type)
+        self.send_header('Content-Length', str(target.stat().st_size))
+        self.send_header('Cache-Control', _cache_control_for(content_type, parsed.path))
         self.end_headers()
 
     def do_GET(self):
         if not self._r2_check_rate(): return
         parsed = urllib.parse.urlparse(self.path)
+        if _dashboard_auth_enabled() and not _stage8_check_auth(self, parsed):
+            return
         # ---- Round 3: New endpoints ----
         if parsed.path in ('/api/health/detailed', '/api/health'):
             return json_response(self, 200, _r3_health_detailed())
@@ -2257,6 +2521,8 @@ body{{font-family:Arial;padding:24px}}h1{{color:#333}}pre{{background:#f4f4f4;pa
                     domain = parts[0]
                     if domain in ('index.html', 'server.py', 'data.json', 'login-page.html', 'Dockerfile', '.dockerignore', 'AGENTS.md', 'kwr_backend.py', 'n8n-workflow-map.json'):
                         continue
+                    if not _looks_like_project_domain(domain):
+                        continue
                     if len(parts) < 3:
                         continue
                     agent = parts[1]
@@ -2286,6 +2552,8 @@ body{{font-family:Arial;padding:24px}}h1{{color:#333}}pre{{background:#f4f4f4;pa
                     parts = path.split('/')
                     domain = parts[0]
                     if domain in ('index.html', 'server.py', 'data.json'):
+                        continue
+                    if not _looks_like_project_domain(domain):
                         continue
                     fpath = ROOT / path
                     try:
@@ -2389,21 +2657,23 @@ body{{font-family:Arial;padding:24px}}h1{{color:#333}}pre{{background:#f4f4f4;pa
                 return text_response(self, 200, _STAGE8_LOGIN_HTML.encode('utf-8'), 'text/html; charset=utf-8')
         if parsed.path == '/api/auth/me':
             tok = _stage8_get_token(self)
-            usr = _stage8_verify_token(tok) if tok else None
+            session_user = _stage8_verify_session(tok) if tok else None
             # Also check JWT Bearer token
             jwt_user = _get_current_user(self)
             if jwt_user:
                 return json_response(self, 200, {'ok': True, 'user': jwt_user.get('username'), 'role': jwt_user.get('role', 'viewer'), 'auth_enabled': _dashboard_auth_enabled()})
-            role = 'admin' if usr else None
-            users = _stage8_users()
-            if usr and usr in users:
-                first_user = next(iter(users.keys()), '')
-                role = 'admin' if usr == first_user else 'viewer'
-            return json_response(self, 200, {'ok': True, 'user': usr, 'role': role, 'auth_enabled': _dashboard_auth_enabled()})
+            return json_response(self, 200, {
+                'ok': True,
+                'user': session_user.get('username') if session_user else None,
+                'role': session_user.get('role') if session_user else None,
+                'auth_enabled': _dashboard_auth_enabled()
+            })
+        if parsed.path == '/api/auth/status':
+            return json_response(self, 200, _dashboard_auth_status())
         if parsed.path == '/api/auth/logout':
             self.send_response(200)
             self.send_header('Content-Type', 'application/json; charset=utf-8')
-            self.send_header('Set-Cookie', 'dash_auth=; Path=/; Max-Age=0; HttpOnly; SameSite=Lax')
+            self.send_header('Set-Cookie', 'dash_auth=; Path=/; Max-Age=0; HttpOnly; Secure; SameSite=Lax')
             body = b'{"ok":true}'
             self.send_header('Content-Length', str(len(body)))
             self.end_headers()
@@ -2464,6 +2734,12 @@ body{{font-family:Arial;padding:24px}}h1{{color:#333}}pre{{background:#f4f4f4;pa
                     {'id': 'openai/gpt-4o',                     'label': 'GPT-4o (OpenRouter)',             'provider': 'openrouter'},
                     {'id': 'google/gemini-3.1-pro-preview',     'label': 'Gemini 3.1 Pro (OpenRouter)',     'provider': 'openrouter'},
                     {'id': 'google/gemini-2.5-pro',             'label': 'Gemini 2.5 Pro (OpenRouter)',     'provider': 'openrouter'},
+                    # --- OpenAI (Direct API) ---
+                    {'id': 'gpt-4o',                            'label': 'GPT-4o (OpenAI Direct)',          'provider': 'openai'},
+                    {'id': 'gpt-4.5-preview',                   'label': 'GPT-4.5 Preview (OpenAI Direct)', 'provider': 'openai'},
+                    {'id': 'gpt-4o-mini',                       'label': 'GPT-4o Mini (OpenAI Direct)',     'provider': 'openai'},
+                    {'id': 'o1',                                'label': 'o1 (OpenAI Direct)',              'provider': 'openai'},
+                    {'id': 'o3-mini',                           'label': 'o3-mini (OpenAI Direct)',         'provider': 'openai'},
                     # --- GitHub Copilot (direct) ---
                     {'id': 'claude-sonnet-4.6',                 'label': 'Claude Sonnet 4.6 (Copilot)',     'provider': 'copilot'},
                     {'id': 'gpt-4o',                            'label': 'GPT-4o (Copilot)',                'provider': 'copilot'},
@@ -2956,6 +3232,8 @@ body{{font-family:Arial;padding:24px}}h1{{color:#333}}pre{{background:#f4f4f4;pa
                     domain = parts[0]
                     if domain in ('index.html', 'server.py', 'data.json', 'login-page.html', 'Dockerfile', '.dockerignore', 'AGENTS.md', 'kwr_backend.py', 'n8n-workflow-map.json'):
                         continue
+                    if not _looks_like_project_domain(domain):
+                        continue
                     bucket = grouped.setdefault(domain, {'domain': domain, 'name': domain, 'agents': [], 'updated_at': None, 'status': 'active', 'deployed': False})
                     if len(parts) < 3:
                         continue
@@ -3048,7 +3326,11 @@ body{{font-family:Arial;padding:24px}}h1{{color:#333}}pre{{background:#f4f4f4;pa
                     'email_notifications': True,
                     'telegram_notifications': False,
                     'email_address': os.getenv('RADAR_EMAIL_TO', 'service@maximo-seo.com'),
+                    'theme_color': 'purple',
                 }
+            if not isinstance(settings, dict):
+                settings = {}
+            settings.setdefault('theme_color', 'purple')
             return json_response(self, 200, {'ok': True, **settings})
 
         # ── NEW: /api/settings/api-keys ─────────────────────────────────
@@ -3074,6 +3356,10 @@ body{{font-family:Arial;padding:24px}}h1{{color:#333}}pre{{background:#f4f4f4;pa
     def do_POST(self):
         if not self._r2_check_rate(): return
         parsed = urllib.parse.urlparse(self.path)
+        if _dashboard_auth_enabled() and not _stage8_check_auth(self, parsed):
+            return
+        if not _r3_check_csrf_or_warn(self, parsed):
+            return
         # Round 4: manual backup trigger
         if parsed.path == '/api/backup/run':
             try:
@@ -3115,7 +3401,6 @@ body{{font-family:Arial;padding:24px}}h1{{color:#333}}pre{{background:#f4f4f4;pa
         if parsed.path == '/api/users':
             if not _require_admin(self): return
             try:
-                import hashlib as _hl_add
                 ln = int(self.headers.get('Content-Length', 0))
                 body = json.loads(self.rfile.read(ln) or b'{}')
                 u = (body.get('username') or '').strip()
@@ -3129,32 +3414,13 @@ body{{font-family:Arial;padding:24px}}h1{{color:#333}}pre{{background:#f4f4f4;pa
                     return json_response(self, 400, {'ok': False, 'error': 'username exists'})
                 import uuid as _uuid_add
                 users.append({'id': str(_uuid_add.uuid4()), 'username': u,
-                    'password_hash': _hl_add.sha256(p.encode()).hexdigest(),
+                    'password_hash': _mu_hash_password(p),
                     'role': role, 'email': email,
                     'created_at': datetime.datetime.utcnow().isoformat() + 'Z', 'last_login': None})
                 _mu_users_save(users)
                 return json_response(self, 200, {'ok': True})
             except Exception as e:
                 return json_response(self, 500, {'ok': False, 'error': str(e)})
-        if _R3_CSRF_ENABLED and not any(parsed.path.startswith(p) for p in _R3_CSRF_EXEMPT):
-            tok = self.headers.get('X-CSRF-Token', '')
-            if not _r3_csrf_verify(tok):
-                # Soft-fail mode: log but allow (so we can roll out gradually)
-                # To enforce hard, set DASH_CSRF_ENFORCE=1
-                if os.environ.get('DASH_CSRF_ENFORCE', '0') in ('1','true','True') or r6.CSRF_HARD:
-                    return json_response(self, 403, {'ok': False, 'error': 'csrf_invalid'})
-                else:
-                    rec = logging.LogRecord('dashboard', logging.WARNING, '', 0,
-                        f'csrf-missing path={parsed.path}', None, None)
-                    rec.event = 'csrf_warn'; rec.path = parsed.path
-                    _r2_log.handle(rec)
-        # Stage 8: auth gate (POST side) — now enforces whenever auth is configured.
-        if (
-            _dashboard_auth_enabled()
-            and parsed.path not in ('/api/auth/login', '/api/login', '/api/reset-password')
-            and not _stage8_check_auth(self, parsed)
-        ):
-            return
         # Stage 8: login — both endpoints are aliases for the same cookie-setting handler.
         if parsed.path in ('/api/auth/login', '/api/login'):
             try:
@@ -3162,6 +3428,25 @@ body{{font-family:Arial;padding:24px}}h1{{color:#333}}pre{{background:#f4f4f4;pa
             except Exception:
                 payload = {}
             return _stage8_login(self, payload)
+        # Stage 8: password-reset request — canonical endpoint plus legacy alias.
+        if parsed.path in ('/api/auth/request-reset', '/api/reset-password'):
+            try:
+                payload = read_request_json(self) or {}
+            except Exception:
+                payload = {}
+            # Deliberately do not enumerate users.
+            return json_response(self, 200, {'ok': True})
+        # Stage 8: password-reset confirm — return canonical invalid token state until wired.
+        if parsed.path == '/api/auth/reset':
+            try:
+                payload = read_request_json(self) or {}
+            except Exception:
+                payload = {}
+            token = (payload.get('token') or '').strip()
+            new_password = payload.get('new_password') or ''
+            if not token or not new_password:
+                return json_response(self, 400, {'ok': False, 'error': 'token_and_new_password_required'})
+            return json_response(self, 400, {'ok': False, 'error': 'invalid_or_expired_token'})
         # Stage 14 admin backup POST
         if _stage14_handle_post(self, parsed):
             return
@@ -3196,6 +3481,29 @@ body{{font-family:Arial;padding:24px}}h1{{color:#333}}pre{{background:#f4f4f4;pa
             payload = read_request_json(self)
         except Exception:
             return json_response(self, 400, {'ok': False, 'error': 'Invalid JSON body'})
+
+        if parsed.path == '/api/tasks/sync-github':
+            tasks = payload.get('tasks')
+            if not isinstance(tasks, list):
+                return json_response(self, 400, {'ok': False, 'error': 'tasks must be an array'})
+            try:
+                content = json.dumps(tasks, ensure_ascii=False, indent=2)
+                result = commit_prompt_to_github({
+                    'path': 'tasks/tasks.json',
+                    'content': content,
+                    'message': 'chore: update dashboard tasks',
+                    'branch': payload.get('branch') or 'main',
+                })
+                return json_response(self, 200, {'ok': True, **result})
+            except RuntimeError as exc:
+                return json_response(self, 503, {'ok': False, 'error': str(exc)})
+            except ValueError as exc:
+                return json_response(self, 400, {'ok': False, 'error': str(exc)})
+            except urllib.error.HTTPError as exc:
+                body = exc.read().decode('utf-8', 'replace')[:1000]
+                return json_response(self, 502, {'ok': False, 'error': f'GitHub API error {exc.code}', 'details': body})
+            except Exception as exc:
+                return json_response(self, 500, {'ok': False, 'error': str(exc)})
 
         if parsed.path == '/api/prompt/improve':
             try:
@@ -3909,7 +4217,17 @@ body{{font-family:Arial;padding:24px}}h1{{color:#333}}pre{{background:#f4f4f4;pa
         # ── KWR POST routes ─────────────────────────────────────────────────
         if parsed.path == '/api/kwr/start':
             body = payload  # payload already parsed above
-            run_id, err = kwr_backend.start_run(body, call_with_fallback)
+            if (body.get('_mode') or '').strip() == 'swarm':
+                run_id, err = kwr_backend.start_best_text_swarm(body, call_with_fallback)
+            else:
+                run_id, err = kwr_backend.start_run(body, call_with_fallback)
+            if err:
+                return json_response(self, 400, {'ok': False, 'error': err})
+            return json_response(self, 200, {'ok': True, 'run_id': run_id})
+
+        if parsed.path == '/api/kwr/swarm':
+            body = payload
+            run_id, err = kwr_backend.start_best_text_swarm(body, call_with_fallback)
             if err:
                 return json_response(self, 400, {'ok': False, 'error': err})
             return json_response(self, 200, {'ok': True, 'run_id': run_id})
@@ -4103,8 +4421,8 @@ body{{font-family:Arial;padding:24px}}h1{{color:#333}}pre{{background:#f4f4f4;pa
 
         # ── PROJECT QUICK ACTIONS ──────────────────────────────────────
         if parsed.path == '/api/projects/duplicate':
-            payload = read_json_body(self)
-            domain = (payload.get('domain') or '').strip()
+            route_payload = payload if isinstance(payload, dict) else {}
+            domain = (route_payload.get('domain') or '').strip()
             if not domain:
                 return json_response(self, 400, {'ok': False, 'error': 'domain required'})
             data_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'data.json')
@@ -4129,9 +4447,9 @@ body{{font-family:Arial;padding:24px}}h1{{color:#333}}pre{{background:#f4f4f4;pa
                 return json_response(self, 500, {'ok': False, 'error': str(exc)})
 
         if parsed.path == '/api/projects/rename':
-            payload = read_json_body(self)
-            old_domain = (payload.get('old_domain') or '').strip()
-            new_domain = (payload.get('new_domain') or '').strip()
+            route_payload = payload if isinstance(payload, dict) else {}
+            old_domain = (route_payload.get('old_domain') or '').strip()
+            new_domain = (route_payload.get('new_domain') or '').strip()
             if not old_domain or not new_domain:
                 return json_response(self, 400, {'ok': False, 'error': 'old_domain and new_domain required'})
             data_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'data.json')
@@ -4151,8 +4469,8 @@ body{{font-family:Arial;padding:24px}}h1{{color:#333}}pre{{background:#f4f4f4;pa
                 return json_response(self, 500, {'ok': False, 'error': str(exc)})
 
         if parsed.path == '/api/projects/delete':
-            payload = read_json_body(self)
-            domain = (payload.get('domain') or '').strip()
+            route_payload = payload if isinstance(payload, dict) else {}
+            domain = (route_payload.get('domain') or '').strip()
             if not domain:
                 return json_response(self, 400, {'ok': False, 'error': 'domain required'})
             data_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'data.json')
@@ -4169,9 +4487,9 @@ body{{font-family:Arial;padding:24px}}h1{{color:#333}}pre{{background:#f4f4f4;pa
                 return json_response(self, 500, {'ok': False, 'error': str(exc)})
 
         if parsed.path == '/api/projects/star':
-            payload = read_json_body(self)
-            domain = (payload.get('domain') or '').strip()
-            starred = bool(payload.get('starred'))
+            route_payload = payload if isinstance(payload, dict) else {}
+            domain = (route_payload.get('domain') or '').strip()
+            starred = bool(route_payload.get('starred'))
             if not domain:
                 return json_response(self, 400, {'ok': False, 'error': 'domain required'})
             # Store starred state in a separate JSON file
@@ -4195,8 +4513,8 @@ body{{font-family:Arial;padding:24px}}h1{{color:#333}}pre{{background:#f4f4f4;pa
 
         # ── THEME SETTINGS ─────────────────────────────────────────────
         if parsed.path == '/api/settings/theme':
-            payload = read_json_body(self)
-            theme_color = (payload.get('theme_color') or 'purple').strip().lower()
+            route_payload = payload if isinstance(payload, dict) else {}
+            theme_color = (route_payload.get('theme_color') or 'purple').strip().lower()
             valid_colors = ['purple', 'blue', 'green', 'red', 'orange', 'pink']
             if theme_color not in valid_colors:
                 return json_response(self, 400, {'ok': False, 'error': f'Invalid color. Choose from: {valid_colors}'})
@@ -4218,7 +4536,12 @@ body{{font-family:Arial;padding:24px}}h1{{color:#333}}pre{{background:#f4f4f4;pa
         return json_response(self, 404, {'ok': False, 'error': 'Not found'})
 
     def do_DELETE(self):
+        if not self._r2_check_rate(): return
         parsed = urllib.parse.urlparse(self.path)
+        if _dashboard_auth_enabled() and not _stage8_check_auth(self, parsed):
+            return
+        if not _r3_check_csrf_or_warn(self, parsed):
+            return
         if parsed.path.startswith('/api/kwr/reports/'):
             run_id = parsed.path.split('/')[-1].strip()
             if not run_id:
@@ -4243,124 +4566,15 @@ body{{font-family:Arial;padding:24px}}h1{{color:#333}}pre{{background:#f4f4f4;pa
             _mu_users_save(users)
             return json_response(self, 200, {'ok': True})
 
-        # ── PROJECT QUICK ACTIONS ──────────────────────────────────────
-        if parsed.path == '/api/projects/duplicate':
-            payload = read_json_body(self)
-            domain = (payload.get('domain') or '').strip()
-            if not domain:
-                return json_response(self, 400, {'ok': False, 'error': 'domain required'})
-            data_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'data.json')
-            try:
-                with open(data_path, 'r', encoding='utf-8') as f:
-                    data = json.load(f)
-                tree = data.get('tree', []) if isinstance(data, dict) else []
-                new_domain = domain + '_copy'
-                # Add copies of all files with new domain prefix
-                new_items = []
-                for item in tree:
-                    path = item.get('path', '')
-                    if path.startswith(domain + '/'):
-                        new_path = new_domain + path[len(domain):]
-                        new_items.append({'path': new_path, 'type': item.get('type', 'blob'), 'size': item.get('size', 0)})
-                tree.extend(new_items)
-                data['tree'] = tree
-                with open(data_path, 'w', encoding='utf-8') as f:
-                    json.dump(data, f, indent=2)
-                return json_response(self, 200, {'ok': True, 'new_domain': new_domain})
-            except Exception as exc:
-                return json_response(self, 500, {'ok': False, 'error': str(exc)})
-
-        if parsed.path == '/api/projects/rename':
-            payload = read_json_body(self)
-            old_domain = (payload.get('old_domain') or '').strip()
-            new_domain = (payload.get('new_domain') or '').strip()
-            if not old_domain or not new_domain:
-                return json_response(self, 400, {'ok': False, 'error': 'old_domain and new_domain required'})
-            data_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'data.json')
-            try:
-                with open(data_path, 'r', encoding='utf-8') as f:
-                    data = json.load(f)
-                tree = data.get('tree', []) if isinstance(data, dict) else []
-                for item in tree:
-                    path = item.get('path', '')
-                    if path.startswith(old_domain + '/'):
-                        item['path'] = new_domain + path[len(old_domain):]
-                data['tree'] = tree
-                with open(data_path, 'w', encoding='utf-8') as f:
-                    json.dump(data, f, indent=2)
-                return json_response(self, 200, {'ok': True, 'domain': new_domain})
-            except Exception as exc:
-                return json_response(self, 500, {'ok': False, 'error': str(exc)})
-
-        if parsed.path == '/api/projects/delete':
-            payload = read_json_body(self)
-            domain = (payload.get('domain') or '').strip()
-            if not domain:
-                return json_response(self, 400, {'ok': False, 'error': 'domain required'})
-            data_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'data.json')
-            try:
-                with open(data_path, 'r', encoding='utf-8') as f:
-                    data = json.load(f)
-                tree = data.get('tree', []) if isinstance(data, dict) else []
-                tree = [item for item in tree if not item.get('path', '').startswith(domain + '/')]
-                data['tree'] = tree
-                with open(data_path, 'w', encoding='utf-8') as f:
-                    json.dump(data, f, indent=2)
-                return json_response(self, 200, {'ok': True, 'deleted': domain})
-            except Exception as exc:
-                return json_response(self, 500, {'ok': False, 'error': str(exc)})
-
-        if parsed.path == '/api/projects/star':
-            payload = read_json_body(self)
-            domain = (payload.get('domain') or '').strip()
-            starred = bool(payload.get('starred'))
-            if not domain:
-                return json_response(self, 400, {'ok': False, 'error': 'domain required'})
-            # Store starred state in a separate JSON file
-            stars_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'data', 'stars.json')
-            try:
-                os.makedirs(os.path.dirname(stars_path), exist_ok=True)
-                try:
-                    with open(stars_path, 'r', encoding='utf-8') as f:
-                        stars = json.load(f)
-                except Exception:
-                    stars = {}
-                if starred:
-                    stars[domain] = True
-                else:
-                    stars.pop(domain, None)
-                with open(stars_path, 'w', encoding='utf-8') as f:
-                    json.dump(stars, f, indent=2)
-                return json_response(self, 200, {'ok': True, 'domain': domain, 'starred': starred})
-            except Exception as exc:
-                return json_response(self, 500, {'ok': False, 'error': str(exc)})
-
-        # ── THEME SETTINGS ─────────────────────────────────────────────
-        if parsed.path == '/api/settings/theme':
-            payload = read_json_body(self)
-            theme_color = (payload.get('theme_color') or 'purple').strip().lower()
-            valid_colors = ['purple', 'blue', 'green', 'red', 'orange', 'pink']
-            if theme_color not in valid_colors:
-                return json_response(self, 400, {'ok': False, 'error': f'Invalid color. Choose from: {valid_colors}'})
-            settings_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'data', 'settings.json')
-            try:
-                os.makedirs(os.path.dirname(settings_path), exist_ok=True)
-                try:
-                    with open(settings_path, 'r', encoding='utf-8') as f:
-                        existing = json.load(f)
-                except Exception:
-                    existing = {}
-                existing['theme_color'] = theme_color
-                with open(settings_path, 'w', encoding='utf-8') as f:
-                    json.dump(existing, f, indent=2)
-                return json_response(self, 200, {'ok': True, 'theme_color': theme_color})
-            except Exception as exc:
-                return json_response(self, 500, {'ok': False, 'error': str(exc)})
-
         return json_response(self, 404, {'ok': False, 'error': 'Not found'})
 
     def do_PUT(self):
+        if not self._r2_check_rate(): return
         parsed = urllib.parse.urlparse(self.path)
+        if _dashboard_auth_enabled() and not _stage8_check_auth(self, parsed):
+            return
+        if not _r3_check_csrf_or_warn(self, parsed):
+            return
         if parsed.path.startswith('/api/users/'):
             username = parsed.path.split('/')[-1].strip()
             if not username:
@@ -4373,7 +4587,6 @@ body{{font-family:Arial;padding:24px}}h1{{color:#333}}pre{{background:#f4f4f4;pa
             if not is_admin and not is_self:
                 return json_response(self, 403, {'ok': False, 'error': 'forbidden'})
             try:
-                import hashlib as _hl_put
                 ln = int(self.headers.get('Content-Length', 0))
                 body = json.loads(self.rfile.read(ln) or b'{}')
                 users = _mu_users_load()
@@ -4389,125 +4602,11 @@ body{{font-family:Arial;padding:24px}}h1{{color:#333}}pre{{background:#f4f4f4;pa
                 if is_self and 'password' in body and body['password']:
                     if len(body['password']) < 6:
                         return json_response(self, 400, {'ok': False, 'error': 'password too short'})
-                    target['password_hash'] = _hl_put.sha256(body['password'].encode()).hexdigest()
+                    target['password_hash'] = _mu_hash_password(body['password'])
                 _mu_users_save(users)
                 return json_response(self, 200, {'ok': True})
             except Exception as e:
                 return json_response(self, 500, {'ok': False, 'error': str(e)})
-
-        # ── PROJECT QUICK ACTIONS ──────────────────────────────────────
-        if parsed.path == '/api/projects/duplicate':
-            payload = read_json_body(self)
-            domain = (payload.get('domain') or '').strip()
-            if not domain:
-                return json_response(self, 400, {'ok': False, 'error': 'domain required'})
-            data_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'data.json')
-            try:
-                with open(data_path, 'r', encoding='utf-8') as f:
-                    data = json.load(f)
-                tree = data.get('tree', []) if isinstance(data, dict) else []
-                new_domain = domain + '_copy'
-                # Add copies of all files with new domain prefix
-                new_items = []
-                for item in tree:
-                    path = item.get('path', '')
-                    if path.startswith(domain + '/'):
-                        new_path = new_domain + path[len(domain):]
-                        new_items.append({'path': new_path, 'type': item.get('type', 'blob'), 'size': item.get('size', 0)})
-                tree.extend(new_items)
-                data['tree'] = tree
-                with open(data_path, 'w', encoding='utf-8') as f:
-                    json.dump(data, f, indent=2)
-                return json_response(self, 200, {'ok': True, 'new_domain': new_domain})
-            except Exception as exc:
-                return json_response(self, 500, {'ok': False, 'error': str(exc)})
-
-        if parsed.path == '/api/projects/rename':
-            payload = read_json_body(self)
-            old_domain = (payload.get('old_domain') or '').strip()
-            new_domain = (payload.get('new_domain') or '').strip()
-            if not old_domain or not new_domain:
-                return json_response(self, 400, {'ok': False, 'error': 'old_domain and new_domain required'})
-            data_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'data.json')
-            try:
-                with open(data_path, 'r', encoding='utf-8') as f:
-                    data = json.load(f)
-                tree = data.get('tree', []) if isinstance(data, dict) else []
-                for item in tree:
-                    path = item.get('path', '')
-                    if path.startswith(old_domain + '/'):
-                        item['path'] = new_domain + path[len(old_domain):]
-                data['tree'] = tree
-                with open(data_path, 'w', encoding='utf-8') as f:
-                    json.dump(data, f, indent=2)
-                return json_response(self, 200, {'ok': True, 'domain': new_domain})
-            except Exception as exc:
-                return json_response(self, 500, {'ok': False, 'error': str(exc)})
-
-        if parsed.path == '/api/projects/delete':
-            payload = read_json_body(self)
-            domain = (payload.get('domain') or '').strip()
-            if not domain:
-                return json_response(self, 400, {'ok': False, 'error': 'domain required'})
-            data_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'data.json')
-            try:
-                with open(data_path, 'r', encoding='utf-8') as f:
-                    data = json.load(f)
-                tree = data.get('tree', []) if isinstance(data, dict) else []
-                tree = [item for item in tree if not item.get('path', '').startswith(domain + '/')]
-                data['tree'] = tree
-                with open(data_path, 'w', encoding='utf-8') as f:
-                    json.dump(data, f, indent=2)
-                return json_response(self, 200, {'ok': True, 'deleted': domain})
-            except Exception as exc:
-                return json_response(self, 500, {'ok': False, 'error': str(exc)})
-
-        if parsed.path == '/api/projects/star':
-            payload = read_json_body(self)
-            domain = (payload.get('domain') or '').strip()
-            starred = bool(payload.get('starred'))
-            if not domain:
-                return json_response(self, 400, {'ok': False, 'error': 'domain required'})
-            # Store starred state in a separate JSON file
-            stars_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'data', 'stars.json')
-            try:
-                os.makedirs(os.path.dirname(stars_path), exist_ok=True)
-                try:
-                    with open(stars_path, 'r', encoding='utf-8') as f:
-                        stars = json.load(f)
-                except Exception:
-                    stars = {}
-                if starred:
-                    stars[domain] = True
-                else:
-                    stars.pop(domain, None)
-                with open(stars_path, 'w', encoding='utf-8') as f:
-                    json.dump(stars, f, indent=2)
-                return json_response(self, 200, {'ok': True, 'domain': domain, 'starred': starred})
-            except Exception as exc:
-                return json_response(self, 500, {'ok': False, 'error': str(exc)})
-
-        # ── THEME SETTINGS ─────────────────────────────────────────────
-        if parsed.path == '/api/settings/theme':
-            payload = read_json_body(self)
-            theme_color = (payload.get('theme_color') or 'purple').strip().lower()
-            valid_colors = ['purple', 'blue', 'green', 'red', 'orange', 'pink']
-            if theme_color not in valid_colors:
-                return json_response(self, 400, {'ok': False, 'error': f'Invalid color. Choose from: {valid_colors}'})
-            settings_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'data', 'settings.json')
-            try:
-                os.makedirs(os.path.dirname(settings_path), exist_ok=True)
-                try:
-                    with open(settings_path, 'r', encoding='utf-8') as f:
-                        existing = json.load(f)
-                except Exception:
-                    existing = {}
-                existing['theme_color'] = theme_color
-                with open(settings_path, 'w', encoding='utf-8') as f:
-                    json.dump(existing, f, indent=2)
-                return json_response(self, 200, {'ok': True, 'theme_color': theme_color})
-            except Exception as exc:
-                return json_response(self, 500, {'ok': False, 'error': str(exc)})
 
         return json_response(self, 404, {'ok': False, 'error': 'Not found'})
 
