@@ -15757,6 +15757,10 @@ async function downloadPromptPreviewShot(){
         <div id="settings-auth-alert-body" class="settings-auth-alert-body">Comparing runtime auth sources, session secrets, and proxy metadata…</div>
         <div id="settings-auth-alert-list" class="settings-auth-alert-list"></div>
       </div>
+      <div id="settings-auth-checklist" class="settings-auth-checklist">
+        <div class="settings-auth-checklist-title">Auth operator checklist</div>
+        <div class="settings-auth-checklist-body">Building the safest next checks from live auth status…</div>
+      </div>
       <div class="settings-auth-grid">
         <div class="settings-auth-card">
           <div class="settings-auth-card-title">Runtime</div>
@@ -16063,6 +16067,12 @@ async function downloadPromptPreviewShot(){
 .settings-auth-alert-list{display:flex;flex-direction:column;gap:6px}
 .settings-auth-alert-item{font-size:12px;color:#f8fafc;line-height:1.55;display:flex;gap:8px;align-items:flex-start}
 .settings-auth-alert-item::before{content:'•';color:#fbbf24;font-weight:900;line-height:1.2}
+.settings-auth-checklist{margin-bottom:16px;padding:14px 15px;border-radius:12px;border:1px solid rgba(255,255,255,0.14);background:rgba(15,23,42,0.5);display:flex;flex-direction:column;gap:10px}
+.settings-auth-checklist-title{font-size:12px;font-weight:800;color:#f8fafc;text-transform:uppercase;letter-spacing:.08em}
+.settings-auth-checklist-body{display:flex;flex-direction:column;gap:8px}
+.settings-auth-checklist-item{display:flex;gap:10px;align-items:flex-start;font-size:12px;line-height:1.55;color:#e2e8f0}
+.settings-auth-checklist-item::before{content:counter(auth-checklist);counter-increment:auth-checklist;display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;flex:0 0 20px;border-radius:999px;background:rgba(113,112,255,0.2);border:1px solid rgba(113,112,255,0.35);color:#f8fafc;font-size:11px;font-weight:800}
+.settings-auth-checklist-body{counter-reset:auth-checklist}
 .settings-auth-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
 .settings-auth-card{background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.14);border-radius:10px;padding:15px;display:flex;flex-direction:column;gap:12px;min-width:0;box-shadow:inset 0 1px 0 rgba(255,255,255,0.04)}
 .settings-auth-card-title{font-size:12px;font-weight:800;color:#e2e8f0;text-transform:uppercase;letter-spacing:.08em}
@@ -16397,6 +16407,39 @@ window._formatAuthDiagnostics = function(data, warningState) {
   return lines.join('\n');
 };
 
+window._buildSettingsAuthChecklist = function(data, warningState) {
+  data = data || {};
+  warningState = warningState || window._analyzeSettingsAuthWarnings(data);
+  var steps = [
+    'Refresh this card before touching auth so the checklist reflects the current Render runtime, not stale browser state.',
+    'Compare Render env values for DASHBOARD_USER / DASHBOARD_EMAIL against the operator identity shown in users.json.',
+    'Validate a real login via /api/auth/login after any password or env rotation.'
+  ];
+  var items = warningState.items || [];
+  if (items.some(function(item){ return item.indexOf('users.json password hash does not match the configured break-glass password') !== -1; })) {
+    steps.unshift('Re-align the break-glass password: update either Render env or users.json so both authenticate the same operator password.');
+  }
+  if (items.some(function(item){ return item.indexOf('Session secrets are missing') !== -1; })) {
+    steps.unshift('Add DASHBOARD_AUTH_SECRET or DASHBOARD_JWT_SECRET before trusting cookie sessions in this environment.');
+  }
+  if (items.some(function(item){ return item.indexOf('Proxy IP source order looks incomplete') !== -1; })) {
+    steps.push('Confirm forwarded IP headers are preserved end-to-end so login rate limiting still keys off the real operator IP.');
+  }
+  if (!items.length) {
+    steps.push('Auth runtime looks aligned. Keep Render env and users.json in sync after password rotations or emergency break-glass changes.');
+  }
+  return steps;
+};
+
+window._renderSettingsAuthChecklist = function(targetId, items) {
+  var el = document.getElementById(targetId);
+  if (!el) return;
+  var list = Array.isArray(items) ? items : [];
+  el.innerHTML = '<div class="settings-auth-checklist-title">Auth operator checklist</div><div class="settings-auth-checklist-body">'
+    + list.map(function(item){ return '<div class="settings-auth-checklist-item">' + _escHtml(item) + '</div>'; }).join('')
+    + '</div>';
+};
+
 window._showAuthDiagnosticsFallback = function(summary) {
   var wrap = document.getElementById('settings-auth-copy-fallback');
   var textEl = document.getElementById('settings-auth-copy-text');
@@ -16478,6 +16521,7 @@ window.renderSettingsAuthHealth = function(data) {
   var alertBodyEl = document.getElementById('settings-auth-alert-body');
   var alertListEl = document.getElementById('settings-auth-alert-list');
   var warningState = window._analyzeSettingsAuthWarnings(data);
+  var checklistItems = window._buildSettingsAuthChecklist(data, warningState);
   window._lastSettingsAuthHealth = data;
   window._lastSettingsAuthWarningState = warningState;
   if (enabledEl) {
@@ -16521,6 +16565,7 @@ window.renderSettingsAuthHealth = function(data) {
       return '<div class="settings-auth-alert-item">' + _escHtml(item) + '</div>';
     }).join('');
   }
+  window._renderSettingsAuthChecklist('settings-auth-checklist', checklistItems);
 
   if (msgEl) {
     msgEl.textContent = 'Live data from /api/auth/status. Refresh this card after auth or environment changes.' + ((warningState.items || []).length ? ' ' + warningState.items.length + ' warning signal(s) detected.' : ' No auth drift signals detected.');
