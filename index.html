@@ -15658,9 +15658,19 @@ async function downloadPromptPreviewShot(){
   <div style="margin-bottom:32px">
     <h3 style="font-size:16px;font-weight:700;margin-bottom:14px;color:var(--text)">Recent Audit Events</h3>
     <div class="analytics-chart" style="padding:16px">
+      <div id="analytics-audit-toolbar" class="analytics-audit-toolbar">
+        <select id="analytics-audit-action-filter" class="settings-input" style="max-width:220px" onchange="setAnalyticsAuditFilter(this.value)">
+          <option value="all">All actions</option>
+        </select>
+        <input id="analytics-audit-search" class="settings-input" style="flex:1 1 220px" type="search" placeholder="Filter by user, target, or action" oninput="setAnalyticsAuditQuery(this.value)">
+        <button id="analytics-audit-copy" class="settings-btn" type="button" onclick="copyAnalyticsAuditSummary()">Copy summary</button>
+      </div>
       <div id="analytics-audit-summary" style="font-size:12px;color:var(--muted);margin-bottom:12px">Loading audit events…</div>
-      <div id="analytics-audit-list" style="display:grid;gap:10px">
-        <div style="color:var(--muted);font-size:13px">Loading…</div>
+      <div class="analytics-audit-layout">
+        <div id="analytics-audit-list" style="display:grid;gap:10px">
+          <div class="analytics-panel-loading">Loading audit events…</div>
+        </div>
+        <div id="analytics-audit-detail" class="analytics-panel-empty">Select an audit event to inspect its details.</div>
       </div>
     </div>
   </div>
@@ -15947,6 +15957,36 @@ async function downloadPromptPreviewShot(){
 .analytics-chart {
   background:var(--card);border:1px solid var(--border);border-radius:12px;
   padding:20px 24px 12px;
+}
+.analytics-audit-toolbar {
+  display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:12px;
+}
+.analytics-audit-layout {
+  display:grid;grid-template-columns:minmax(0,1.2fr) minmax(280px,0.8fr);gap:14px;align-items:start;
+}
+.analytics-audit-item {
+  display:grid;gap:4px;padding:12px;border:1px solid var(--border);border-radius:10px;
+  background:rgba(255,255,255,0.03);cursor:pointer;transition:border-color 0.15s ease,background 0.15s ease;
+}
+.analytics-audit-item:hover,
+.analytics-audit-item.active {
+  border-color:rgba(113,112,255,0.35);background:rgba(113,112,255,0.08);
+}
+.analytics-audit-item-meta {
+  font-size:12px;color:var(--text-secondary);
+}
+.analytics-audit-detail {
+  display:grid;gap:10px;padding:14px;border:1px solid var(--border);border-radius:12px;background:rgba(255,255,255,0.03);
+}
+.analytics-audit-detail pre {
+  white-space:pre-wrap;word-break:break-word;font-size:12px;line-height:1.5;color:var(--text-secondary);background:rgba(0,0,0,0.18);border:1px solid rgba(255,255,255,0.06);padding:12px;border-radius:10px;
+}
+.analytics-panel-loading,
+.analytics-panel-empty {
+  border:1px dashed var(--border);border-radius:12px;background:rgba(255,255,255,0.02);padding:18px;color:var(--muted);font-size:13px;line-height:1.5;
+}
+@media (max-width:900px) {
+  .analytics-audit-layout { grid-template-columns:1fr; }
 }
 .an-chart-bars {
   display:flex;align-items:flex-end;gap:8px;height:80px;margin-bottom:8px;
@@ -16726,6 +16766,24 @@ window.settingsSaveNotifications = function() {
 };
 
 // ── Analytics ─────────────────────────────────────────────────
+var analyticsAuditState = {
+  rawEvents: [],
+  filteredEvents: [],
+  action: 'all',
+  query: '',
+  selectedIndex: 0
+};
+
+function setAnalyticsAuditFilter(value) {
+  analyticsAuditState.action = value || 'all';
+  renderAnalyticsAuditEvents(analyticsAuditState.rawEvents);
+}
+
+function setAnalyticsAuditQuery(value) {
+  analyticsAuditState.query = (value || '').trim().toLowerCase();
+  renderAnalyticsAuditEvents(analyticsAuditState.rawEvents);
+}
+
 window.initAnalyticsPage = function() {
   // Load tasks count from _tasks
   var taskCount = typeof _tasks !== 'undefined' ? _tasks.length : 0;
@@ -16772,7 +16830,7 @@ window.initAnalyticsPage = function() {
     var topEl = document.getElementById('analytics-top-projects');
     if (topEl && data.top_projects) {
       if (!data.top_projects.length) {
-        topEl.innerHTML = '<div style="color:var(--muted);font-size:13px">No projects yet.</div>';
+        topEl.innerHTML = '<div class="analytics-panel-empty">No projects yet.</div>';
       } else {
         topEl.innerHTML = data.top_projects.map(function(p){
           return '<div style="background:var(--card);border:1px solid var(--border);border-radius:10px;padding:14px;display:flex;justify-content:space-between;align-items:center">'
@@ -16819,16 +16877,20 @@ window.initAnalyticsPage = function() {
     var tableEl = document.getElementById('analytics-projects-table');
     if (tableEl) {
       var html = '<div class="analytics-proj-row header"><span>Domain</span><span>Files</span><span>Status</span></div>';
-      projects.forEach(function(p) {
-        var files = (p.agents||[]).reduce(function(a,ag){return a+(ag.files||[]).length;},0);
-        var statusLabel = p.status ? p.status.replace('_',' ') : '-';
-        html += '<div class="analytics-proj-row">'
-          + '<span style="font-weight:500;color:var(--text)">'+(p.domain||p.name||'-')+'</span>'
-          + '<span style="color:var(--muted)">'+files+'</span>'
-          + '<span style="color:var(--muted)">'+statusLabel+'</span>'
-          + '</div>';
-      });
-      tableEl.innerHTML = html;
+      if (!projects.length) {
+        tableEl.innerHTML = '<div class="analytics-panel-empty">No projects available yet.</div>';
+      } else {
+        projects.forEach(function(p) {
+          var files = (p.agents||[]).reduce(function(a,ag){return a+(ag.files||[]).length;},0);
+          var statusLabel = p.status ? p.status.replace('_',' ') : '-';
+          html += '<div class="analytics-proj-row">'
+            + '<span style="font-weight:500;color:var(--text)">'+(p.domain||p.name||'-')+'</span>'
+            + '<span style="color:var(--muted)">'+files+'</span>'
+            + '<span style="color:var(--muted)">'+statusLabel+'</span>'
+            + '</div>';
+        });
+        tableEl.innerHTML = html;
+      }
     }
   }).catch(function(){});
 
@@ -16836,7 +16898,7 @@ window.initAnalyticsPage = function() {
   fetch('/api/radar/results?status=approved&limit=10').then(function(r){return r.ok?r.json():null;}).then(function(d){
     var el = document.getElementById('analytics-skills-list');
     if (!el || !d || !d.skills) return;
-    if (!d.skills.length) { el.innerHTML = '<div style="color:var(--muted);font-size:13px">No skills approved yet.</div>'; return; }
+    if (!d.skills.length) { el.innerHTML = '<div class="analytics-panel-empty">No skills approved yet.</div>'; return; }
     el.innerHTML = d.skills.map(function(s){
       return '<span style="background:rgba(113,112,255,0.15);border:1px solid rgba(113,112,255,0.3);border-radius:6px;padding:5px 10px;font-size:12px;color:var(--text)">'
         + (s.title||s.name||'-') + '</span>';
@@ -16848,14 +16910,59 @@ window.initAnalyticsPage = function() {
   _renderActivityChart();
 };
 
+function populateAnalyticsAuditActionFilter(events) {
+  var selectEl = document.getElementById('analytics-audit-action-filter');
+  if (!selectEl) return;
+  var current = analyticsAuditState.action || 'all';
+  var actions = {};
+  (Array.isArray(events) ? events : []).forEach(function(ev){
+    var action = ev && ev.action ? ev.action : 'unknown';
+    actions[action] = true;
+  });
+  var options = ['<option value="all">All actions</option>'].concat(Object.keys(actions).sort().map(function(action){
+    return '<option value="'+action+'">'+action+'</option>';
+  }));
+  selectEl.innerHTML = options.join('');
+  selectEl.value = actions[current] || current === 'all' ? current : 'all';
+  analyticsAuditState.action = selectEl.value;
+}
+
+function applyAnalyticsAuditFilters(events) {
+  var query = analyticsAuditState.query || '';
+  var selectedAction = analyticsAuditState.action || 'all';
+  return (Array.isArray(events) ? events : []).filter(function(ev){
+    var action = ev && ev.action ? String(ev.action) : 'unknown';
+    var user = ev && ev.user ? String(ev.user) : 'anon';
+    var target = ev && ev.target ? String(ev.target) : '';
+    var meta = ev && ev.meta ? JSON.stringify(ev.meta) : '';
+    if (selectedAction !== 'all' && action !== selectedAction) return false;
+    if (!query) return true;
+    var haystack = [action, user, target, meta].join(' ').toLowerCase();
+    return haystack.indexOf(query) !== -1;
+  });
+}
+
 function renderAnalyticsAuditEvents(events) {
   var summaryEl = document.getElementById('analytics-audit-summary');
   var listEl = document.getElementById('analytics-audit-list');
-  if (!summaryEl || !listEl) return;
-  events = Array.isArray(events) ? events : [];
-  if (!events.length) {
+  var detailEl = document.getElementById('analytics-audit-detail');
+  if (!summaryEl || !listEl || !detailEl) return;
+  analyticsAuditState.rawEvents = Array.isArray(events) ? events : [];
+  populateAnalyticsAuditActionFilter(analyticsAuditState.rawEvents);
+  analyticsAuditState.filteredEvents = applyAnalyticsAuditFilters(analyticsAuditState.rawEvents);
+  events = analyticsAuditState.filteredEvents;
+  if (!analyticsAuditState.rawEvents.length) {
     summaryEl.textContent = 'No audit events found yet.';
-    listEl.innerHTML = '<div style="color:var(--muted);font-size:13px">No audit events yet.</div>';
+    listEl.innerHTML = '<div class="analytics-panel-empty">No audit events yet.</div>';
+    detailEl.className = 'analytics-panel-empty';
+    detailEl.textContent = 'Select an audit event to inspect its details.';
+    return;
+  }
+  if (!events.length) {
+    summaryEl.textContent = analyticsAuditState.rawEvents.length + ' total events · 0 match the current filters';
+    listEl.innerHTML = '<div class="analytics-panel-empty">No matching audit events.</div>';
+    detailEl.className = 'analytics-panel-empty';
+    detailEl.textContent = 'Select an audit event to inspect its details.';
     return;
   }
   var actions = {};
@@ -16864,20 +16971,74 @@ function renderAnalyticsAuditEvents(events) {
     actions[action] = (actions[action] || 0) + 1;
   });
   var topAction = Object.keys(actions).sort(function(a,b){ return actions[b] - actions[a]; })[0] || 'unknown';
-  summaryEl.textContent = events.length + ' recent events · top action: ' + topAction;
-  listEl.innerHTML = events.slice(0, 8).map(function(ev){
+  summaryEl.textContent = events.length + ' visible events · top action: ' + topAction + (analyticsAuditState.rawEvents.length !== events.length ? ' · filtered from ' + analyticsAuditState.rawEvents.length : '');
+  if (analyticsAuditState.selectedIndex >= events.length) analyticsAuditState.selectedIndex = 0;
+  listEl.innerHTML = events.slice(0, 25).map(function(ev, index){
     var when = ev && ev.ts ? new Date(ev.ts * 1000).toLocaleString() : 'Unknown time';
     var action = ev && ev.action ? ev.action : 'unknown';
     var user = ev && ev.user ? ev.user : 'anon';
     var target = ev && ev.target ? ev.target : '—';
-    return '<div style="display:grid;gap:4px;padding:12px;border:1px solid var(--border);border-radius:10px;background:rgba(255,255,255,0.03)">'
+    return '<button type="button" class="analytics-audit-item'+(index===analyticsAuditState.selectedIndex?' active':'')+'" onclick="showAnalyticsAuditDetail('+index+')">'
       + '<div style="display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap">'
       + '<span style="font-weight:600;color:var(--text)">' + action + '</span>'
       + '<span style="font-size:12px;color:var(--muted)">' + when + '</span>'
       + '</div>'
-      + '<div style="font-size:12px;color:var(--text-secondary)">User: ' + user + ' · Target: ' + target + '</div>'
-      + '</div>';
+      + '<div class="analytics-audit-item-meta">User: ' + user + ' · Target: ' + target + '</div>'
+      + '</button>';
   }).join('');
+  showAnalyticsAuditDetail(analyticsAuditState.selectedIndex);
+}
+
+function showAnalyticsAuditDetail(index) {
+  var detailEl = document.getElementById('analytics-audit-detail');
+  if (!detailEl) return;
+  var events = analyticsAuditState.filteredEvents || [];
+  var event = events[index];
+  analyticsAuditState.selectedIndex = typeof index === 'number' ? index : 0;
+  if (!event) {
+    detailEl.className = 'analytics-panel-empty';
+    detailEl.textContent = 'Select an audit event to inspect its details.';
+    return;
+  }
+  detailEl.className = 'analytics-audit-detail';
+  var when = event && event.ts ? new Date(event.ts * 1000).toLocaleString() : 'Unknown time';
+  var meta = event && event.meta ? JSON.stringify(event.meta, null, 2) : '{}';
+  detailEl.innerHTML = '<div style="display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap">'
+    + '<strong style="font-size:14px;color:var(--text)">' + (event.action || 'unknown') + '</strong>'
+    + '<span style="font-size:12px;color:var(--muted)">' + when + '</span>'
+    + '</div>'
+    + '<div style="font-size:12px;color:var(--text-secondary)">User: ' + (event.user || 'anon') + '</div>'
+    + '<div style="font-size:12px;color:var(--text-secondary)">Target: ' + (event.target || '—') + '</div>'
+    + '<pre>' + meta.replace(/[<>&]/g, function(ch){ return ({'<':'&lt;','>':'&gt;','&':'&amp;'})[ch]; }) + '</pre>';
+  var listButtons = document.querySelectorAll('#analytics-audit-list .analytics-audit-item');
+  Array.prototype.forEach.call(listButtons, function(btn, btnIndex){
+    btn.classList.toggle('active', btnIndex === analyticsAuditState.selectedIndex);
+  });
+}
+
+async function copyAnalyticsAuditSummary() {
+  var events = analyticsAuditState.filteredEvents || [];
+  if (!events.length) {
+    showToast('No audit events to copy','warn');
+    return;
+  }
+  var summary = (document.getElementById('analytics-audit-summary') || {}).textContent || '';
+  var lines = events.slice(0, 10).map(function(ev){
+    var when = ev && ev.ts ? new Date(ev.ts * 1000).toLocaleString() : 'Unknown time';
+    return [when, ev.action || 'unknown', ev.user || 'anon', ev.target || '—'].join(' | ');
+  });
+  var payload = ['Recent Audit Events', summary, ''].concat(lines).join('\n');
+  try {
+    await navigator.clipboard.writeText(payload);
+  } catch (e) {
+    var ta = document.createElement('textarea');
+    ta.value = payload;
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand('copy');
+    ta.remove();
+  }
+  showToast('Audit summary copied','success');
 }
 
 function _renderActivityChart() {
