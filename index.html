@@ -15595,7 +15595,10 @@ async function downloadPromptPreviewShot(){
           <div class="settings-auth-title">Live auth runtime</div>
           <div class="settings-auth-subtitle">Reads directly from <code>/api/auth/status</code> so operators can confirm auth wiring without leaving the dashboard.</div>
         </div>
-        <button class="settings-btn" type="button" onclick="refreshAuthHealthPanel()">Refresh Auth Status</button>
+        <div class="settings-auth-actions">
+          <button class="settings-btn" type="button" onclick="refreshAuthHealthPanel()">Refresh Auth Status</button>
+          <button class="settings-btn" type="button" onclick="copyAuthDiagnostics()">Copy Auth Diagnostics</button>
+        </div>
       </div>
       <div id="settings-auth-alert" class="settings-auth-alert info">
         <div class="settings-auth-alert-head">
@@ -15655,6 +15658,10 @@ async function downloadPromptPreviewShot(){
         </div>
       </div>
       <div id="settings-auth-msg" class="settings-auth-footnote">Loading auth health…</div>
+      <div id="settings-auth-copy-fallback" class="settings-auth-copy-fallback" style="display:none">
+        <div class="settings-auth-copy-fallback-title">Manual copy fallback</div>
+        <textarea id="settings-auth-copy-text" class="settings-auth-copy-text" readonly></textarea>
+      </div>
     </div>
   </div>
   <!-- B-0. User Management (admin only) -->
@@ -15863,6 +15870,7 @@ async function downloadPromptPreviewShot(){
 }
 .settings-toggle:checked::after { transform:translateX(16px); }
 .settings-auth-toolbar{display:flex;align-items:flex-start;justify-content:space-between;gap:14px;flex-wrap:wrap;margin-bottom:18px}
+.settings-auth-actions{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
 .settings-auth-title{font-size:15px;font-weight:800;color:#f8fafc;margin-bottom:6px;letter-spacing:-0.02em}
 .settings-auth-subtitle{font-size:12px;color:#cbd5e1;line-height:1.55;max-width:68ch}
 .settings-auth-alert{margin-bottom:16px;padding:14px 15px;border-radius:12px;border:1px solid rgba(255,255,255,0.14);background:rgba(15,23,42,0.72);display:flex;flex-direction:column;gap:10px}
@@ -15894,6 +15902,9 @@ async function downloadPromptPreviewShot(){
 .settings-auth-metric-label{font-size:11px;color:#cbd5e1;text-transform:uppercase;letter-spacing:.06em;font-weight:700}
 .settings-auth-metric-value{font-size:14px;color:#f8fafc;font-weight:800}
 .settings-auth-footnote{margin-top:14px;font-size:12px;color:#cbd5e1;line-height:1.55}
+.settings-auth-copy-fallback{margin-top:12px;padding:12px;border-radius:10px;border:1px dashed rgba(255,255,255,0.18);background:rgba(15,23,42,0.45)}
+.settings-auth-copy-fallback-title{font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:#cbd5e1;margin-bottom:8px}
+.settings-auth-copy-text{width:100%;min-height:146px;border-radius:8px;border:1px solid rgba(255,255,255,0.16);background:rgba(2,6,23,0.78);color:#f8fafc;padding:10px 12px;font:12px/1.55 ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;resize:vertical}
 @media(max-width:900px){.settings-auth-grid{grid-template-columns:1fr}.settings-auth-metrics{grid-template-columns:1fr}}
 .api-key-row {
   display:flex;align-items:center;justify-content:space-between;
@@ -16137,6 +16148,136 @@ window._analyzeSettingsAuthWarnings = function(data) {
   };
 };
 
+window._copyTextToClipboard = function(text) {
+  var fallbackCopy = function() {
+    return new Promise(function(resolve, reject) {
+      try {
+        var el = document.createElement('textarea');
+        el.value = text;
+        el.setAttribute('readonly', 'readonly');
+        el.style.position = 'fixed';
+        el.style.opacity = '0';
+        document.body.appendChild(el);
+        el.focus();
+        el.select();
+        var ok = document.execCommand('copy');
+        document.body.removeChild(el);
+        if (!ok) throw new Error('copy_failed');
+        resolve();
+      } catch (err) {
+        reject(err);
+      }
+    });
+  };
+  if (navigator.clipboard && typeof navigator.clipboard.writeText === 'function') {
+    return navigator.clipboard.writeText(text).catch(function() {
+      return fallbackCopy();
+    });
+  }
+  return fallbackCopy();
+};
+
+window._formatAuthDiagnostics = function(data, warningState) {
+  data = data || {};
+  warningState = warningState || window._analyzeSettingsAuthWarnings(data);
+  var sourceMap = data.configuredSources || {};
+  var counts = data.counts || {};
+  var rateLimit = data.rateLimit || {};
+  var lines = [
+    'Auth Diagnostics',
+    'Origin: ' + window.location.origin,
+    'Source: /api/auth/status',
+    'Severity: ' + (warningState.badge || 'Unknown'),
+    'Summary: ' + (warningState.title || 'Auth health summary'),
+    'Auth enabled: ' + (data.authEnabled ? 'yes' : 'no'),
+    'Session secrets configured: ' + (data.sessionSecretsConfigured ? 'yes' : 'no'),
+    'Cookie name: ' + (data.cookieName || '—'),
+    'Login paths: ' + ((data.loginPaths || []).join(', ') || '—'),
+    'Logout path: ' + (data.logoutPath || '—'),
+    'Me path: ' + (data.mePath || '—'),
+    'Rate-limit bucket capacity: ' + (((rateLimit.bucketCapacity) != null) ? rateLimit.bucketCapacity : '—'),
+    'Rate-limit refill/sec: ' + (((rateLimit.refillPerSecond) != null) ? rateLimit.refillPerSecond : '—'),
+    'Proxy IP order: ' + ((rateLimit.ipSourceOrder || []).join(' → ') || '—'),
+    'Configured sources: break-glass env=' + (sourceMap.breakGlassEnv ? 'yes' : 'no')
+      + ', email alias=' + (sourceMap.breakGlassEmailAlias ? 'yes' : 'no')
+      + ', stage8 users=' + (sourceMap.stage8UsersEnv ? 'yes' : 'no')
+      + ', users.json=' + (sourceMap.usersJson ? 'yes' : 'no')
+      + ', supabase password=' + (sourceMap.supabasePassword ? 'yes' : 'no'),
+    'Counts: stage8 users=' + (((counts.stage8Users) != null) ? counts.stage8Users : '—') + ', users.json=' + (((counts.usersJson) != null) ? counts.usersJson : '—')
+  ];
+  if ((warningState.items || []).length) {
+    lines.push('Warnings:');
+    (warningState.items || []).forEach(function(item) {
+      lines.push('- ' + item);
+    });
+  } else {
+    lines.push('Warnings: none');
+  }
+  lines.push('Generated at: ' + new Date().toISOString());
+  return lines.join('\n');
+};
+
+window._showAuthDiagnosticsFallback = function(summary) {
+  var wrap = document.getElementById('settings-auth-copy-fallback');
+  var textEl = document.getElementById('settings-auth-copy-text');
+  if (!wrap || !textEl) return summary;
+  wrap.style.display = '';
+  textEl.value = summary;
+  textEl.focus();
+  textEl.select();
+  return summary;
+};
+
+window._hideAuthDiagnosticsFallback = function() {
+  var wrap = document.getElementById('settings-auth-copy-fallback');
+  var textEl = document.getElementById('settings-auth-copy-text');
+  if (wrap) wrap.style.display = 'none';
+  if (textEl) textEl.value = '';
+};
+
+window.copyAuthDiagnostics = function() {
+  var data = window._lastSettingsAuthHealth;
+  var warningState = window._lastSettingsAuthWarningState;
+  var msgEl = document.getElementById('settings-auth-msg');
+  var runCopy = function(payload) {
+    var summary = window._formatAuthDiagnostics(payload || {}, window._lastSettingsAuthWarningState || warningState);
+    return window._copyTextToClipboard(summary).then(function() {
+      window._hideAuthDiagnosticsFallback();
+      if (msgEl) msgEl.textContent = 'Auth diagnostics copied to clipboard. Safe runtime summary includes no secrets.';
+      if (window.toast && typeof window.toast.success === 'function') {
+        window.toast.success('Auth diagnostics copied');
+      }
+      return summary;
+    }).catch(function() {
+      window._showAuthDiagnosticsFallback(summary);
+      if (msgEl) msgEl.textContent = 'Clipboard access was blocked. Showing a manual-copy fallback with the diagnostics pre-selected.';
+      if (window.toast && typeof window.toast.info === 'function') {
+        window.toast.info('Clipboard blocked — manual copy fallback ready');
+      }
+      return summary;
+    });
+  };
+  if (data) {
+    return runCopy(data).catch(function(err) {
+      if (msgEl) msgEl.textContent = 'Could not prepare auth diagnostics: ' + (err && err.message ? err.message : 'unknown error');
+      if (window.toast && typeof window.toast.error === 'function') {
+        window.toast.error('Copy auth diagnostics failed');
+      }
+      throw err;
+    });
+  }
+  if (msgEl) msgEl.textContent = 'Loading auth health before copying diagnostics…';
+  return window.refreshAuthHealthPanel().then(function(fresh) {
+    return runCopy(fresh || window._lastSettingsAuthHealth || {});
+  }).catch(function(err) {
+    if (msgEl) msgEl.textContent = 'Could not prepare auth diagnostics: ' + (err && err.message ? err.message : 'unknown error');
+    if (window.toast && typeof window.toast.error === 'function') {
+      window.toast.error('Copy auth diagnostics failed');
+    }
+    throw err;
+  });
+};
+
 window.renderSettingsAuthHealth = function(data) {
   data = data || {};
   var enabled = !!data.authEnabled;
@@ -16157,6 +16298,8 @@ window.renderSettingsAuthHealth = function(data) {
   var alertBodyEl = document.getElementById('settings-auth-alert-body');
   var alertListEl = document.getElementById('settings-auth-alert-list');
   var warningState = window._analyzeSettingsAuthWarnings(data);
+  window._lastSettingsAuthHealth = data;
+  window._lastSettingsAuthWarningState = warningState;
   if (enabledEl) {
     enabledEl.className = 'settings-auth-badge ' + (enabled ? 'ok' : 'fail');
     enabledEl.textContent = enabled ? 'Auth enabled' : 'Auth disabled';
@@ -16206,6 +16349,7 @@ window.renderSettingsAuthHealth = function(data) {
 
 window.refreshAuthHealthPanel = function() {
   var msgEl = document.getElementById('settings-auth-msg');
+  window._hideAuthDiagnosticsFallback();
   if (msgEl) msgEl.textContent = 'Refreshing auth health…';
   return fetch('/api/auth/status').then(function(r){
     if (!r.ok) throw new Error('HTTP ' + r.status);
