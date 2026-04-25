@@ -236,6 +236,7 @@ a:hover{color:var(--gold-light)}
 .project-card:hover::before{opacity:1}
 .card-header{padding:22px 22px;display:flex;align-items:flex-start;gap:16px;cursor:pointer;transition:background 0.15s;flex-wrap:wrap}
 .card-header:hover{background:rgba(255,255,255,0.02)}
+.card-header[role="button"]:focus-visible{outline:2px solid rgba(113,112,255,0.75);outline-offset:3px;background:rgba(113,112,255,0.06)}
 .card-icon{width:50px;height:50px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:800;color:#fff;flex-shrink:0;position:relative;background:linear-gradient(135deg,rgba(113,112,255,0.88),rgba(94,106,210,0.55));box-shadow:0 12px 30px rgba(94,106,210,0.28);overflow:hidden}
 .card-icon img.favicon{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;border-radius:14px;opacity:0;transition:opacity 0.3s ease}
 .card-icon img.favicon.loaded{opacity:1}
@@ -10265,18 +10266,52 @@ function filterProjects(q){
   syncBulkToggleLabel();
 }
 
+function setProjectExpanded(card, expanded, opts){
+  if(!card) return;
+  const isExpanded=!!expanded;
+  card.classList.toggle('expanded',isExpanded);
+  const header=card.querySelector('.card-header[role="button"]');
+  const body=card.querySelector('.card-body');
+  if(header) header.setAttribute('aria-expanded',String(isExpanded));
+  if(body){
+    body.setAttribute('aria-hidden',String(!isExpanded));
+    if(isExpanded) body.removeAttribute('inert');
+    else body.setAttribute('inert','');
+  }
+  syncBulkToggleLabel();
+  if(isExpanded && opts && opts.scroll){
+    setTimeout(()=>card.scrollIntoView({behavior:'smooth',block:'nearest'}),300);
+  }
+}
+
+function toggleProjectCard(card, opts){
+  if(!card) return;
+  setProjectExpanded(card,!card.classList.contains('expanded'),opts||{scroll:true});
+}
+
+function handleProjectHeaderKeydown(ev, card){
+  if(ev.key==='Enter' || ev.key===' '){
+    ev.preventDefault();
+    toggleProjectCard(card,{scroll:true});
+  }
+}
+
 function syncBulkToggleLabel(){
   const btn=document.getElementById('bulk-toggle-projects');
   if(!btn)return;
   const cards=[...document.querySelectorAll('.project-card')].filter(c=>c.style.display!=='none');
   const allExpanded=cards.length>0&&cards.every(c=>c.classList.contains('expanded'));
-  btn.textContent=allExpanded?'Collapse all':'Expand all';
+  const label=btn.querySelector('#expand-all-label');
+  if(label) label.textContent=allExpanded?'Collapse all':'Expand all';
+  else btn.textContent=allExpanded?'Collapse all':'Expand all';
+  btn.setAttribute('aria-label',allExpanded?'Collapse all projects':'Expand all projects');
+  btn.setAttribute('title',allExpanded?'Collapse all project cards (shortcut: E)':'Expand all project cards (shortcut: E)');
 }
 
 function toggleAllProjects(btn){
   const cards=[...document.querySelectorAll('.project-card')].filter(c=>c.style.display!=='none');
   const allExpanded=cards.length>0&&cards.every(c=>c.classList.contains('expanded'));
-  cards.forEach(c=>c.classList.toggle('expanded',!allExpanded));
+  cards.forEach(c=>setProjectExpanded(c,!allExpanded));
   syncBulkToggleLabel();
   showToast(allExpanded?'All projects collapsed':'All projects expanded','info');
   if(!allExpanded&&cards[0])setTimeout(()=>cards[0].scrollIntoView({behavior:'smooth',block:'start'}),320);
@@ -10574,6 +10609,7 @@ async function loadDashboard(){
     const deployTooltip  = p.deployed ? 'Deployed to n8n' : 'Not deployed';
     const relTime = p.last_updated ? formatRelativeTime(p.last_updated) : latestLabel;
 
+    const cardId='project-body-'+(p.name||'project').replace(/[^a-z0-9]+/gi,'-').replace(/^-|-$/g,'').toLowerCase();
     const card=document.createElement('div');
     card.className='project-card';
     card.dataset.name=(p.name||'').toLowerCase();
@@ -10589,7 +10625,7 @@ async function loadDashboard(){
           <div class="action-menu-item danger" onclick="event.stopPropagation();deleteProject('${p.name}')">Delete</div>
         </div>
       </div>
-      <div class="card-header" onclick="(function(c){c.classList.toggle('expanded');syncBulkToggleLabel();if(c.classList.contains('expanded'))setTimeout(()=>c.scrollIntoView({behavior:'smooth',block:'nearest'}),300)})(this.parentElement)">
+      <div class="card-header" role="button" tabindex="0" aria-expanded="false" aria-controls="${cardId}" aria-label="Open project ${p.name}" onclick="event.stopPropagation();toggleProjectCard(this.parentElement,{scroll:true})" onkeydown="handleProjectHeaderKeydown(event,this.parentElement)">
         <div class="card-icon" id="icon-${p.name.replace(/[^a-z0-9]/gi,'-')}" style="background:linear-gradient(135deg,${color},${color}88)"><span class="icon-initials">${initials}</span><img class="favicon" src="https://www.google.com/s2/favicons?domain=${p.name}&sz=64" alt="" loading="lazy" onerror="this.onerror=null;this.removeAttribute('src');this.style.display='none';" onload="this.classList.add('loaded');this.closest('.card-icon').classList.add('has-logo')"></div>
         <div class="card-info">
           <h3>${p.name}</h3>
@@ -10609,7 +10645,7 @@ async function loadDashboard(){
           <div class="card-status-group"><span class="toggle-icon">&#9660;</span></div>
         </div>
       </div>
-      <div class="card-body"><div class="card-body-inner">${expandedTools}${versionsHTML}</div></div>`;
+      <div class="card-body" id="${cardId}" aria-hidden="true" inert><div class="card-body-inner">${expandedTools}${versionsHTML}</div></div>`;
     grid.appendChild(card);
   });
 
