@@ -26,6 +26,7 @@ class SettingsAuthIncidentHistoryTests(unittest.TestCase):
         self.assertIn("history.lastIncidentPackCopyAt = new Date().toISOString();", html)
         self.assertGreaterEqual(html.count("window._recordSettingsAuthIncidentAction('diagnostics-copy');"), 2)
         self.assertGreaterEqual(html.count("window._recordSettingsAuthIncidentAction('incident-pack-copy');"), 2)
+        self.assertGreaterEqual(html.count("window._renderSettingsAuthIncidentHistory('settings-auth-incident-history', updatedHistory);"), 4)
         self.assertIn('window.saveAuthIncidentHistoryNote = function() {', html)
 
     def test_auth_health_panel_renders_incident_history_from_live_state(self):

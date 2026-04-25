@@ -16629,14 +16629,16 @@ window.copyAuthIncidentPack = function() {
     var summary = window._formatAuthIncidentPack(payload || {}, window._lastSettingsAuthWarningState || warningState, checklistItems, runbookItems);
     return window._copyTextToClipboard(summary).then(function() {
       window._hideAuthDiagnosticsFallback();
-      window._recordSettingsAuthIncidentAction('incident-pack-copy');
+      var updatedHistory = window._recordSettingsAuthIncidentAction('incident-pack-copy');
+      window._renderSettingsAuthIncidentHistory('settings-auth-incident-history', updatedHistory);
       if (msgEl) msgEl.textContent = 'Auth incident pack copied to clipboard. Safe handoff summary includes no secrets.';
       if (window.toast && typeof window.toast.success === 'function') {
         window.toast.success('Auth incident pack copied');
       }
       return summary;
     }).catch(function() {
-      window._recordSettingsAuthIncidentAction('incident-pack-copy');
+      var updatedHistory = window._recordSettingsAuthIncidentAction('incident-pack-copy');
+      window._renderSettingsAuthIncidentHistory('settings-auth-incident-history', updatedHistory);
       window._showAuthDiagnosticsFallback(summary);
       if (msgEl) msgEl.textContent = 'Clipboard access was blocked. Showing a manual-copy fallback with the incident pack pre-selected.';
       if (window.toast && typeof window.toast.info === 'function') {
@@ -16692,14 +16694,16 @@ window.copyAuthDiagnostics = function() {
     var summary = window._formatAuthDiagnostics(payload || {}, window._lastSettingsAuthWarningState || warningState);
     return window._copyTextToClipboard(summary).then(function() {
       window._hideAuthDiagnosticsFallback();
-      window._recordSettingsAuthIncidentAction('diagnostics-copy');
+      var updatedHistory = window._recordSettingsAuthIncidentAction('diagnostics-copy');
+      window._renderSettingsAuthIncidentHistory('settings-auth-incident-history', updatedHistory);
       if (msgEl) msgEl.textContent = 'Auth diagnostics copied to clipboard. Safe runtime summary includes no secrets.';
       if (window.toast && typeof window.toast.success === 'function') {
         window.toast.success('Auth diagnostics copied');
       }
       return summary;
     }).catch(function() {
-      window._recordSettingsAuthIncidentAction('diagnostics-copy');
+      var updatedHistory = window._recordSettingsAuthIncidentAction('diagnostics-copy');
+      window._renderSettingsAuthIncidentHistory('settings-auth-incident-history', updatedHistory);
       window._showAuthDiagnosticsFallback(summary);
       if (msgEl) msgEl.textContent = 'Clipboard access was blocked. Showing a manual-copy fallback with the diagnostics pre-selected.';
       if (window.toast && typeof window.toast.info === 'function') {
