@@ -15586,6 +15586,69 @@ async function downloadPromptPreviewShot(){
       </div>
     </div>
   </div>
+  <!-- A-1. Auth Health -->
+  <div class="settings-section">
+    <h3 class="settings-section-title">Auth Health</h3>
+    <div class="settings-card">
+      <div class="settings-auth-toolbar">
+        <div>
+          <div class="settings-auth-title">Live auth runtime</div>
+          <div class="settings-auth-subtitle">Reads directly from <code>/api/auth/status</code> so operators can confirm auth wiring without leaving the dashboard.</div>
+        </div>
+        <button class="settings-btn" type="button" onclick="refreshAuthHealthPanel()">Refresh Auth Status</button>
+      </div>
+      <div class="settings-auth-grid">
+        <div class="settings-auth-card">
+          <div class="settings-auth-card-title">Runtime</div>
+          <div class="settings-auth-inline">
+            <span id="settings-auth-enabled" class="settings-auth-badge warn">Loading…</span>
+            <span id="settings-auth-secret" class="settings-auth-badge warn">Secrets pending</span>
+          </div>
+          <div>
+            <div class="settings-auth-card-title" style="font-size:11px;color:var(--muted)">Cookie</div>
+            <div id="settings-auth-cookie" class="settings-auth-code">—</div>
+          </div>
+        </div>
+        <div class="settings-auth-card">
+          <div class="settings-auth-card-title">Paths</div>
+          <div id="settings-auth-login-paths" class="settings-auth-list"></div>
+          <div class="settings-auth-inline" style="margin-top:auto">
+            <span id="settings-auth-logout-path" class="settings-auth-chip">Logout: —</span>
+            <span id="settings-auth-me-path" class="settings-auth-chip">Me: —</span>
+          </div>
+        </div>
+        <div class="settings-auth-card">
+          <div class="settings-auth-card-title">Proxy / rate-limit</div>
+          <div id="settings-auth-ip-order" class="settings-auth-list"></div>
+          <div class="settings-auth-metrics">
+            <div class="settings-auth-metric">
+              <span class="settings-auth-metric-label">Bucket capacity</span>
+              <span id="settings-auth-bucket" class="settings-auth-metric-value">—</span>
+            </div>
+            <div class="settings-auth-metric">
+              <span class="settings-auth-metric-label">Refill / sec</span>
+              <span id="settings-auth-refill" class="settings-auth-metric-value">—</span>
+            </div>
+          </div>
+        </div>
+        <div class="settings-auth-card">
+          <div class="settings-auth-card-title">Configured sources</div>
+          <div id="settings-auth-sources" class="settings-auth-list"></div>
+          <div class="settings-auth-metrics">
+            <div class="settings-auth-metric">
+              <span class="settings-auth-metric-label">Stage 8 users</span>
+              <span id="settings-auth-stage8-count" class="settings-auth-metric-value">—</span>
+            </div>
+            <div class="settings-auth-metric">
+              <span class="settings-auth-metric-label">users.json</span>
+              <span id="settings-auth-users-count" class="settings-auth-metric-value">—</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id="settings-auth-msg" class="settings-auth-footnote">Loading auth health…</div>
+    </div>
+  </div>
   <!-- B-0. User Management (admin only) -->
   <div class="settings-section" id="users-mgmt-section" style="display:none">
     <h3 class="settings-section-title">👥 User Management</h3>
@@ -15791,6 +15854,28 @@ async function downloadPromptPreviewShot(){
   background:#fff;border-radius:50%;transition:transform 0.2s;
 }
 .settings-toggle:checked::after { transform:translateX(16px); }
+.settings-auth-toolbar{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:16px}
+.settings-auth-title{font-size:14px;font-weight:700;color:var(--text);margin-bottom:4px}
+.settings-auth-subtitle{font-size:12px;color:var(--muted);line-height:1.45}
+.settings-auth-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.settings-auth-card{background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:10px;padding:14px;display:flex;flex-direction:column;gap:10px;min-width:0}
+.settings-auth-card-title{font-size:12px;font-weight:700;color:var(--text);text-transform:uppercase;letter-spacing:.06em}
+.settings-auth-inline{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.settings-auth-badge{display:inline-flex;align-items:center;gap:6px;padding:6px 10px;border-radius:999px;font-size:11px;font-weight:700;border:1px solid rgba(255,255,255,0.12)}
+.settings-auth-badge.ok{background:rgba(34,197,94,0.14);color:#86efac;border-color:rgba(34,197,94,0.28)}
+.settings-auth-badge.warn{background:rgba(250,204,21,0.12);color:#fde68a;border-color:rgba(250,204,21,0.28)}
+.settings-auth-badge.fail{background:rgba(248,113,113,0.12);color:#fca5a5;border-color:rgba(248,113,113,0.28)}
+.settings-auth-code{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;font-size:12px;color:var(--text-secondary);background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:8px;padding:6px 10px;overflow-wrap:anywhere}
+.settings-auth-list{display:flex;flex-wrap:wrap;gap:8px}
+.settings-auth-chip{display:inline-flex;align-items:center;gap:6px;padding:6px 10px;border-radius:999px;font-size:11px;font-weight:600;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);color:var(--text-secondary);overflow-wrap:anywhere}
+.settings-auth-chip.good{border-color:rgba(34,197,94,0.22);background:rgba(34,197,94,0.1);color:#bbf7d0}
+.settings-auth-chip.bad{border-color:rgba(248,113,113,0.22);background:rgba(248,113,113,0.1);color:#fecaca}
+.settings-auth-metrics{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.settings-auth-metric{display:flex;flex-direction:column;gap:4px;padding:10px 12px;border-radius:8px;background:rgba(255,255,255,0.025);border:1px solid rgba(255,255,255,0.06)}
+.settings-auth-metric-label{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;font-weight:700}
+.settings-auth-metric-value{font-size:14px;color:var(--text);font-weight:700}
+.settings-auth-footnote{margin-top:14px;font-size:12px;color:var(--muted);line-height:1.5}
+@media(max-width:900px){.settings-auth-grid{grid-template-columns:1fr}.settings-auth-metrics{grid-template-columns:1fr}}
 .api-key-row {
   display:flex;align-items:center;justify-content:space-between;
   padding:8px 0;border-bottom:1px solid var(--border);font-size:13px;
@@ -15951,6 +16036,94 @@ fetch('/api/radar/results?status=approved&limit=100').then(function(r){return r.
 }).catch(function(){});
 
 // ── Settings ──────────────────────────────────────────────────
+window._renderSettingsAuthChips = function(targetId, items, options) {
+  var el = document.getElementById(targetId);
+  if (!el) return;
+  var opts = options || {};
+  var list = Array.isArray(items) ? items : [];
+  if (!list.length) {
+    el.innerHTML = '<span class="settings-auth-chip">' + (opts.emptyText || 'None') + '</span>';
+    return;
+  }
+  el.innerHTML = list.map(function(item){
+    var label = '';
+    var cls = 'settings-auth-chip';
+    if (typeof item === 'string') {
+      label = item;
+    } else if (item && typeof item === 'object') {
+      label = item.label || item.text || item.name || item.key || '—';
+      if (item.good === true) cls += ' good';
+      else if (item.good === false) cls += ' bad';
+    }
+    return '<span class="' + cls + '">' + label + '</span>';
+  }).join('');
+};
+
+window.renderSettingsAuthHealth = function(data) {
+  data = data || {};
+  var enabled = !!data.authEnabled;
+  var secretsReady = !!data.sessionSecretsConfigured;
+  var enabledEl = document.getElementById('settings-auth-enabled');
+  var secretEl = document.getElementById('settings-auth-secret');
+  var cookieEl = document.getElementById('settings-auth-cookie');
+  var logoutEl = document.getElementById('settings-auth-logout-path');
+  var meEl = document.getElementById('settings-auth-me-path');
+  var bucketEl = document.getElementById('settings-auth-bucket');
+  var refillEl = document.getElementById('settings-auth-refill');
+  var stage8CountEl = document.getElementById('settings-auth-stage8-count');
+  var usersCountEl = document.getElementById('settings-auth-users-count');
+  var msgEl = document.getElementById('settings-auth-msg');
+  if (enabledEl) {
+    enabledEl.className = 'settings-auth-badge ' + (enabled ? 'ok' : 'fail');
+    enabledEl.textContent = enabled ? 'Auth enabled' : 'Auth disabled';
+  }
+  if (secretEl) {
+    secretEl.className = 'settings-auth-badge ' + (secretsReady ? 'ok' : 'warn');
+    secretEl.textContent = secretsReady ? 'Session secrets configured' : 'Session secrets missing';
+  }
+  if (cookieEl) cookieEl.textContent = data.cookieName || '—';
+  if (logoutEl) logoutEl.textContent = 'Logout: ' + (data.logoutPath || '—');
+  if (meEl) meEl.textContent = 'Me: ' + (data.mePath || '—');
+  if (bucketEl) bucketEl.textContent = String((data.rateLimit && data.rateLimit.bucketCapacity) != null ? data.rateLimit.bucketCapacity : '—');
+  if (refillEl) refillEl.textContent = String((data.rateLimit && data.rateLimit.refillPerSecond) != null ? data.rateLimit.refillPerSecond : '—');
+  if (stage8CountEl) stage8CountEl.textContent = String((data.counts && data.counts.stage8Users) != null ? data.counts.stage8Users : '—');
+  if (usersCountEl) usersCountEl.textContent = String((data.counts && data.counts.usersJson) != null ? data.counts.usersJson : '—');
+
+  window._renderSettingsAuthChips('settings-auth-login-paths', data.loginPaths, { emptyText:'No login paths reported' });
+  window._renderSettingsAuthChips('settings-auth-ip-order', (data.rateLimit && data.rateLimit.ipSourceOrder) || [], { emptyText:'No IP order reported' });
+
+  var sourceMap = data.configuredSources || {};
+  var sourceItems = [
+    { label:'Break-glass env', good:!!sourceMap.breakGlassEnv },
+    { label:'Email alias', good:!!sourceMap.breakGlassEmailAlias },
+    { label:'Stage 8 users', good:!!sourceMap.stage8UsersEnv },
+    { label:'users.json', good:!!sourceMap.usersJson },
+    { label:'Supabase password', good:!!sourceMap.supabasePassword }
+  ];
+  window._renderSettingsAuthChips('settings-auth-sources', sourceItems, { emptyText:'No auth sources reported' });
+
+  if (msgEl) {
+    msgEl.textContent = 'Live data from /api/auth/status. Refresh this card after auth or environment changes.';
+  }
+};
+
+window.refreshAuthHealthPanel = function() {
+  var msgEl = document.getElementById('settings-auth-msg');
+  if (msgEl) msgEl.textContent = 'Refreshing auth health…';
+  return fetch('/api/auth/status').then(function(r){
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    return r.json();
+  }).then(function(data){
+    window.renderSettingsAuthHealth(data || {});
+    return data;
+  }).catch(function(err){
+    if (msgEl) msgEl.textContent = 'Could not load auth health: ' + (err && err.message ? err.message : 'unknown error');
+    if (window.toast && typeof window.toast.error === 'function') {
+      window.toast.error('Auth health refresh failed');
+    }
+  });
+};
+
 window.initSettingsPage = function() {
   var currentRole = 'viewer';
   var currentUser = '';
@@ -16044,6 +16217,8 @@ window.initSettingsPage = function() {
       }
     };
   }).catch(function(){});
+
+  window.refreshAuthHealthPanel();
 };
 
 // ── User Management Functions ──────────────────────────────────
