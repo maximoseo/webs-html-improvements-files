@@ -17021,9 +17021,28 @@ table tbody td{border-color:rgba(198,212,231,0.08) !important}
     overflow:visible !important;
     border-right:none !important;
     border-bottom:1px solid rgba(255,255,255,0.06) !important;
+    padding-bottom:0 !important;
   }
   #prompt-modal .prompt-panel:last-child{
     border-bottom:none !important;
+  }
+  #prompt-modal #prompt-draft,
+  #prompt-modal #prompt-output,
+  #prompt-modal #prompt-tweak-output{
+    min-height:180px !important;
+    max-height:none !important;
+    height:auto !important;
+  }
+  #prompt-modal .checklist-header-left{
+    flex-wrap:wrap !important;
+    align-items:flex-start !important;
+  }
+  #prompt-modal .checklist-title{
+    white-space:normal !important;
+    line-height:1.25 !important;
+  }
+  #prompt-modal .checklist-count-badge{
+    max-width:100% !important;
   }
 
   #prompt-modal .prompt-panel:first-child > .prompt-actions,
@@ -17099,6 +17118,17 @@ table tbody td{border-color:rgba(198,212,231,0.08) !important}
     display:flex !important;
     flex-wrap:wrap !important;
     gap:8px !important;
+  }
+  #prompt-modal .ps-template-toolbar{
+    display:flex !important;
+    flex-direction:column !important;
+    align-items:stretch !important;
+    gap:8px !important;
+  }
+  #prompt-modal .ps-selection-note{
+    white-space:normal !important;
+    word-break:break-word !important;
+    line-height:1.45 !important;
   }
   #prompt-modal .prompt-preview-tools > *,
   #prompt-modal .ps-mini-actions > *{
