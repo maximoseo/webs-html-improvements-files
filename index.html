@@ -5449,6 +5449,15 @@ body.light .stat-card{background:rgba(0,0,0,0.03)}
 .prompt-preview-badge::before{content:'';width:8px;height:8px;border-radius:50%;background:#21ba82;box-shadow:0 0 0 4px rgba(33,186,130,0.12)}
 .prompt-preview-badge.is-original::before{background:#7f8aa3;box-shadow:0 0 0 4px rgba(127,138,163,0.12)}
 .prompt-preview-tools{display:flex;gap:6px;flex-wrap:wrap}
+.prompt-preview-device-bar{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;padding:0 0 10px}
+.prompt-preview-device-meta{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.prompt-preview-device-label{font-size:11px;color:var(--muted);font-weight:700;letter-spacing:.04em;text-transform:uppercase}
+.prompt-preview-frame-wrap{display:flex;align-items:center;justify-content:center;flex:1 1 auto;min-height:0;padding:14px;background:linear-gradient(180deg,rgba(8,10,14,.96),rgba(13,16,22,.92));overflow:auto}
+.prompt-preview-device-frame{width:100%;height:100%;min-height:260px;background:#fff;border:1px solid rgba(255,255,255,.08);border-radius:16px;box-shadow:0 18px 40px rgba(0,0,0,.28);overflow:hidden;transition:width .18s ease,border-radius .18s ease,box-shadow .18s ease}
+.prompt-preview-device-frame.mobile{width:min(375px,100%);max-width:100%;border-radius:24px;border:3px solid rgba(255,255,255,.14)}
+.prompt-preview-device-frame.tablet{width:min(768px,100%);max-width:100%;border-radius:18px;border:3px solid rgba(255,255,255,.12)}
+.prompt-preview-device-frame.desktop{width:100%;max-width:1280px;border-radius:16px}
+.prompt-preview-device-frame .prompt-preview-frame{display:block;width:100%;height:100%;min-height:260px;border:0;background:#fff}
 .prompt-preview-note{margin-top:8px;font-size:11px;color:var(--muted)}
 
 /* Prompt Studio hidden-controls fix — 2026-04-21 */
@@ -8175,8 +8184,23 @@ function showErrorToast(msg) {
           <button type="button" class="ps-mini-btn" onclick="downloadPromptPreviewShot()">Download screenshot</button>
         </div>
       </div>
+      <div class="prompt-preview-device-bar">
+        <div class="prompt-preview-device-meta">
+          <span class="prompt-preview-device-label">Device preview</span>
+          <span id="prompt-preview-device-label" class="prompt-preview-badge is-original">Desktop · 1280px</span>
+        </div>
+        <div class="device-tabs" id="prompt-preview-device-tabs" role="tablist" aria-label="Prompt Studio preview device sizes">
+          <button type="button" class="device-tab" onclick="setPromptPreviewDevice('mobile',this)" role="tab" aria-selected="false">Mobile</button>
+          <button type="button" class="device-tab" onclick="setPromptPreviewDevice('tablet',this)" role="tab" aria-selected="false">Tablet</button>
+          <button type="button" class="device-tab active" onclick="setPromptPreviewDevice('desktop',this)" role="tab" aria-selected="true">Desktop</button>
+        </div>
+      </div>
       <div class="prompt-preview-wrap">
-        <iframe id="prompt-preview-frame" class="prompt-preview-frame" sandbox="allow-same-origin"></iframe>
+        <div id="prompt-preview-frame-wrap" class="prompt-preview-frame-wrap">
+          <div id="prompt-preview-device-frame" class="prompt-preview-device-frame desktop">
+            <iframe id="prompt-preview-frame" class="prompt-preview-frame" sandbox="allow-same-origin"></iframe>
+          </div>
+        </div>
       </div>
       <div class="prompt-preview-note" id="prompt-preview-note">The preview starts with the active HTML file and switches live to the tweaked candidate after generation.</div>
     </div>
@@ -9093,6 +9117,7 @@ function openPromptStudio(projectName, agentName, versionName, htmlDownloadUrl, 
     originalPreviewHtml:'',
     currentPreviewHtml:'',
     previewMode:'original',
+    previewDeviceMode:'desktop',
     latestOnly:true,
   };
 
@@ -9112,6 +9137,7 @@ function openPromptStudio(projectName, agentName, versionName, htmlDownloadUrl, 
   psLoadHistory();
   loadPromptStudioBrainstormModels();
   updatePromptPreviewBadge('Original template', true);
+  setPromptPreviewDevice('desktop');
   const previewNote=document.getElementById('prompt-preview-note');
   if(previewNote) previewNote.textContent='The preview starts with the active HTML file and switches live to the tweaked candidate after generation.';
 
@@ -9283,6 +9309,24 @@ function updatePromptPreviewBadge(label,isOriginal){
   if(!badge) return;
   badge.textContent=label||'Live preview';
   badge.classList.toggle('is-original', !!isOriginal);
+}
+function setPromptPreviewDevice(mode,btn){
+  const normalized=(mode==='mobile' || mode==='tablet') ? mode : 'desktop';
+  promptStudioContext.previewDeviceMode=normalized;
+  const frame=document.getElementById('prompt-preview-device-frame');
+  if(frame){
+    frame.className='prompt-preview-device-frame '+normalized;
+  }
+  const label=document.getElementById('prompt-preview-device-label');
+  if(label){
+    const labels={mobile:'Mobile · 375px',tablet:'Tablet · 768px',desktop:'Desktop · 1280px'};
+    label.textContent=labels[normalized] || labels.desktop;
+  }
+  document.querySelectorAll('#prompt-preview-device-tabs .device-tab').forEach(function(tab){
+    const isActive = tab === btn || (!btn && tab.textContent && tab.textContent.trim().toLowerCase()===normalized);
+    tab.classList.toggle('active', !!isActive);
+    tab.setAttribute('aria-selected', isActive ? 'true' : 'false');
+  });
 }
 function setPromptPreviewHtml(html, mode){
   const safeHtml=(html||'').trim()||'<body style="font-family:Segoe UI,sans-serif;padding:24px;color:#666">Preview unavailable.</body>';
@@ -13944,7 +13988,8 @@ function _promptPreviewFileBase(){
   const domain=promptStudioContext.domain||'project';
   const version=String(promptStudioContext.versionName||'preview').replace(/[^a-z0-9_-]+/gi,'-');
   const mode=promptStudioContext.previewMode||'preview';
-  return `${domain}-${version}-${mode}-preview`;
+  const device=promptStudioContext.previewDeviceMode||'desktop';
+  return `${domain}-${version}-${mode}-${device}`;
 }
 async function ensureHtmlToImageLib(){
   if(window.htmlToImage) return window.htmlToImage;
@@ -15609,6 +15654,16 @@ async function downloadPromptPreviewShot(){
       <div style="color:var(--muted);font-size:13px">Loading…</div>
     </div>
   </div>
+  <!-- Recent audit events -->
+  <div style="margin-bottom:32px">
+    <h3 style="font-size:16px;font-weight:700;margin-bottom:14px;color:var(--text)">Recent Audit Events</h3>
+    <div class="analytics-chart" style="padding:16px">
+      <div id="analytics-audit-summary" style="font-size:12px;color:var(--muted);margin-bottom:12px">Loading audit events…</div>
+      <div id="analytics-audit-list" style="display:grid;gap:10px">
+        <div style="color:var(--muted);font-size:13px">Loading…</div>
+      </div>
+    </div>
+  </div>
   <!-- Projects breakdown -->
   <div style="margin-bottom:32px">
     <h3 style="font-size:16px;font-weight:700;margin-bottom:14px;color:var(--text)">Projects Breakdown</h3>
@@ -16677,6 +16732,10 @@ window.initAnalyticsPage = function() {
   var taskEl = document.getElementById('an-val-tasks');
   if (taskEl) taskEl.textContent = taskCount;
 
+  fetch('/api/audit?limit=25').then(function(r){return r.ok?r.json():null;}).then(function(d){
+    renderAnalyticsAuditEvents(d && d.events ? d.events : []);
+  }).catch(function(){ renderAnalyticsAuditEvents([]); });
+
   // Load KWR runs
   fetch('/api/kwr/list?limit=100').then(function(r){return r.ok?r.json():null;}).then(function(d){
     if (!d) return;
@@ -16788,6 +16847,38 @@ window.initAnalyticsPage = function() {
   // 7-day activity chart (CSS bars)
   _renderActivityChart();
 };
+
+function renderAnalyticsAuditEvents(events) {
+  var summaryEl = document.getElementById('analytics-audit-summary');
+  var listEl = document.getElementById('analytics-audit-list');
+  if (!summaryEl || !listEl) return;
+  events = Array.isArray(events) ? events : [];
+  if (!events.length) {
+    summaryEl.textContent = 'No audit events found yet.';
+    listEl.innerHTML = '<div style="color:var(--muted);font-size:13px">No audit events yet.</div>';
+    return;
+  }
+  var actions = {};
+  events.forEach(function(ev){
+    var action = (ev && ev.action) ? ev.action : 'unknown';
+    actions[action] = (actions[action] || 0) + 1;
+  });
+  var topAction = Object.keys(actions).sort(function(a,b){ return actions[b] - actions[a]; })[0] || 'unknown';
+  summaryEl.textContent = events.length + ' recent events · top action: ' + topAction;
+  listEl.innerHTML = events.slice(0, 8).map(function(ev){
+    var when = ev && ev.ts ? new Date(ev.ts * 1000).toLocaleString() : 'Unknown time';
+    var action = ev && ev.action ? ev.action : 'unknown';
+    var user = ev && ev.user ? ev.user : 'anon';
+    var target = ev && ev.target ? ev.target : '—';
+    return '<div style="display:grid;gap:4px;padding:12px;border:1px solid var(--border);border-radius:10px;background:rgba(255,255,255,0.03)">'
+      + '<div style="display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap">'
+      + '<span style="font-weight:600;color:var(--text)">' + action + '</span>'
+      + '<span style="font-size:12px;color:var(--muted)">' + when + '</span>'
+      + '</div>'
+      + '<div style="font-size:12px;color:var(--text-secondary)">User: ' + user + ' · Target: ' + target + '</div>'
+      + '</div>';
+  }).join('');
+}
 
 function _renderActivityChart() {
   var barsEl   = document.getElementById('an-chart-bars');
@@ -17803,9 +17894,28 @@ body.light .last-sync-meta{color:#64748B !important}
     overflow:visible !important;
     border-right:none !important;
     border-bottom:1px solid rgba(255,255,255,0.06) !important;
+    padding-bottom:0 !important;
   }
   #prompt-modal .prompt-panel:last-child{
     border-bottom:none !important;
+  }
+  #prompt-modal #prompt-draft,
+  #prompt-modal #prompt-output,
+  #prompt-modal #prompt-tweak-output{
+    min-height:180px !important;
+    max-height:none !important;
+    height:auto !important;
+  }
+  #prompt-modal .checklist-header-left{
+    flex-wrap:wrap !important;
+    align-items:flex-start !important;
+  }
+  #prompt-modal .checklist-title{
+    white-space:normal !important;
+    line-height:1.25 !important;
+  }
+  #prompt-modal .checklist-count-badge{
+    max-width:100% !important;
   }
 
   #prompt-modal .prompt-panel:first-child > .prompt-actions,
@@ -17881,6 +17991,17 @@ body.light .last-sync-meta{color:#64748B !important}
     display:flex !important;
     flex-wrap:wrap !important;
     gap:8px !important;
+  }
+  #prompt-modal .ps-template-toolbar{
+    display:flex !important;
+    flex-direction:column !important;
+    align-items:stretch !important;
+    gap:8px !important;
+  }
+  #prompt-modal .ps-selection-note{
+    white-space:normal !important;
+    word-break:break-word !important;
+    line-height:1.45 !important;
   }
   #prompt-modal .prompt-preview-tools > *,
   #prompt-modal .ps-mini-actions > *{
@@ -18105,7 +18226,6 @@ body.light .last-sync-meta{color:#64748B !important}
   #prompt-modal .ps-mini-actions > *{
     flex-basis:100% !important;
   }
->>>>>>> 6b67cd3 (fix: improve prompt studio mobile layout)
 }
 </style>
 
