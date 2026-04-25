@@ -1,7 +1,7 @@
 # HTML REDESIGN MEGA SKILL UPGRADE
 
 **Name:** HTML Template Redesign Mega Skill
-**Version:** 2.0.0
+**Version:** 2.1.0
 **Context:** This skill is MANDATORY when an agent is tasked with fixing, redesigning, or restructuring HTML templates, particularly for content-heavy, conversion-oriented, or WordPress-safe assets.
 
 ## CORE DIRECTIVES
@@ -65,5 +65,26 @@
 - **Rule:** Ensure WCAG AA compliance.
 - **Action:** No text over low-contrast backgrounds. Hover states must not drop contrast below minimum ratios. All interactive elements need `aria-label` or visible text. Enforce EXACTLY ONE `<h1>` tag in the document.
 
+### 14. Design Diversity & Anti-Mode-Collapse Engine
+- **Rule:** Do not default to the same layout pattern for every redesign. LLMs suffer from "mode collapse" — always converging on the stereotypical "Hero + 3 Features + CTA" structure. Real websites exhibit far more variety.
+- **Action:** Before generating any HTML template, execute the Distribution Awareness Protocol:
+  1. **Notice your first instinct** — it's probably the mode (e.g., hero section + feature grid). Name it, but don't let it monopolize.
+  2. **Enumerate at least 3 genuinely different layout candidates** across frequency strata:
+     - *Common (60-70% frequency):* Standard marketing page — hero, features, testimonials, CTA.
+     - *Moderate (20-30% frequency):* Magazine/editorial layout — asymmetric grid, large imagery, long-form storytelling.
+     - *Uncommon but valid (10-20% frequency):* Single-page narrative — full-screen sections, scroll-driven animations, minimal UI.
+  3. **Apply dimensional decomposition** — vary these axes independently, not just surface colors:
+     - *Layout structure:* single-column vs. two-column vs. grid vs. full-screen
+     - *Visual density:* minimal whitespace vs. information-dense vs. media-heavy
+     - *Navigation model:* sticky header vs. hidden hamburger vs. horizontal scroll tabs
+     - *Content flow:* problem→solution vs. story→conclusion vs. feature→benefit
+  4. **Calibrate to the actual industry** — match the real-world distribution of the client's sector:
+     - *Luxury/Design (e.g., caesarstone):* Gallery-centric, large imagery, editorial typography.
+     - *Academic (e.g., netanya.ac.il):* Information hierarchy, dense content, clear navigation.
+     - *E-commerce (e.g., dtapet):* Product grids, conversion CTAs, filtering, quick-view.
+     - *B2B SaaS (e.g., jacknows.ai):* Feature breakdowns, social proof, pricing comparison.
+  5. **Select proportionally, not by default** — if generating multiple template variants, use the String Seed of Thought (SSoT) principle: generate a random string, hash it, and use the result to select from your candidate pool. This breaks the bias of always picking the first idea that came to mind.
+- **Constraints:** Every candidate must be fully valid — no sacrificing usability for novelty. Common layouts are common for good reasons; the goal is recovering the *tails* of the distribution, not suppressing the *mode*.
+
 ---
-**Usage:** Load this skill whenever a user requests an HTML redesign, CSS fix, or WP/N8N template upgrade. Evaluate the output strictly against the 13 sub-skills above before finalizing.
+**Usage:** Load this skill whenever a user requests an HTML redesign, CSS fix, or WP/N8N template upgrade. Evaluate the output strictly against the 14 sub-skills above before finalizing.
