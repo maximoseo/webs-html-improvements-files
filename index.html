@@ -15597,6 +15597,14 @@ async function downloadPromptPreviewShot(){
         </div>
         <button class="settings-btn" type="button" onclick="refreshAuthHealthPanel()">Refresh Auth Status</button>
       </div>
+      <div id="settings-auth-alert" class="settings-auth-alert info">
+        <div class="settings-auth-alert-head">
+          <span id="settings-auth-alert-badge" class="settings-auth-badge warn">Loading checks…</span>
+          <div id="settings-auth-alert-title" class="settings-auth-alert-title-text">Auth drift analysis pending</div>
+        </div>
+        <div id="settings-auth-alert-body" class="settings-auth-alert-body">Comparing runtime auth sources, session secrets, and proxy metadata…</div>
+        <div id="settings-auth-alert-list" class="settings-auth-alert-list"></div>
+      </div>
       <div class="settings-auth-grid">
         <div class="settings-auth-card">
           <div class="settings-auth-card-title">Runtime</div>
@@ -15857,6 +15865,17 @@ async function downloadPromptPreviewShot(){
 .settings-auth-toolbar{display:flex;align-items:flex-start;justify-content:space-between;gap:14px;flex-wrap:wrap;margin-bottom:18px}
 .settings-auth-title{font-size:15px;font-weight:800;color:#f8fafc;margin-bottom:6px;letter-spacing:-0.02em}
 .settings-auth-subtitle{font-size:12px;color:#cbd5e1;line-height:1.55;max-width:68ch}
+.settings-auth-alert{margin-bottom:16px;padding:14px 15px;border-radius:12px;border:1px solid rgba(255,255,255,0.14);background:rgba(15,23,42,0.72);display:flex;flex-direction:column;gap:10px}
+.settings-auth-alert.info{background:rgba(37,99,235,0.12);border-color:rgba(96,165,250,0.26)}
+.settings-auth-alert.ok{background:rgba(22,101,52,0.18);border-color:rgba(74,222,128,0.26)}
+.settings-auth-alert.warn{background:rgba(146,64,14,0.18);border-color:rgba(251,191,36,0.28)}
+.settings-auth-alert.fail{background:rgba(127,29,29,0.22);border-color:rgba(248,113,113,0.3)}
+.settings-auth-alert-head{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.settings-auth-alert-title-text{font-size:13px;font-weight:800;color:#f8fafc;letter-spacing:-0.01em}
+.settings-auth-alert-body{font-size:12px;line-height:1.6;color:#e2e8f0}
+.settings-auth-alert-list{display:flex;flex-direction:column;gap:6px}
+.settings-auth-alert-item{font-size:12px;color:#f8fafc;line-height:1.55;display:flex;gap:8px;align-items:flex-start}
+.settings-auth-alert-item::before{content:'•';color:#fbbf24;font-weight:900;line-height:1.2}
 .settings-auth-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
 .settings-auth-card{background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.14);border-radius:10px;padding:15px;display:flex;flex-direction:column;gap:12px;min-width:0;box-shadow:inset 0 1px 0 rgba(255,255,255,0.04)}
 .settings-auth-card-title{font-size:12px;font-weight:800;color:#e2e8f0;text-transform:uppercase;letter-spacing:.08em}
@@ -16059,6 +16078,65 @@ window._renderSettingsAuthChips = function(targetId, items, options) {
   }).join('');
 };
 
+window._analyzeSettingsAuthWarnings = function(data) {
+  data = data || {};
+  var warnings = [];
+  var sourceMap = data.configuredSources || {};
+  var counts = data.counts || {};
+  var rateLimit = data.rateLimit || {};
+  var enabled = !!data.authEnabled;
+  var secretsReady = !!data.sessionSecretsConfigured;
+  var enabledSourceCount = [
+    !!sourceMap.breakGlassEnv,
+    !!sourceMap.breakGlassEmailAlias,
+    !!sourceMap.stage8UsersEnv,
+    !!sourceMap.usersJson,
+    !!sourceMap.supabasePassword
+  ].filter(Boolean).length;
+
+  if (!enabled) {
+    warnings.push('Authentication is disabled at runtime. Login gates are not currently protecting dashboard pages.');
+  }
+  if (!secretsReady) {
+    warnings.push('Session secrets are missing. Add DASHBOARD_AUTH_SECRET or DASHBOARD_JWT_SECRET so auth cookies are signed consistently.');
+  }
+  if (!enabledSourceCount) {
+    warnings.push('No auth source is configured. Add at least one source such as break-glass env, Stage 8 users, users.json, or Supabase password auth.');
+  } else if (enabledSourceCount === 1) {
+    warnings.push('Only one auth source is active. Add a secondary source to reduce drift and break-glass risk during env changes.');
+  }
+  if (sourceMap.breakGlassEnv && !sourceMap.breakGlassEmailAlias) {
+    warnings.push('Break-glass username/password exists without an email alias. This can confuse operator login expectations during incidents.');
+  }
+  if (!counts.stage8Users && !sourceMap.usersJson) {
+    warnings.push('No reusable operator user inventory is present in Stage 8 users or users.json. Access may rely entirely on env-only credentials.');
+  }
+  if (!Array.isArray(rateLimit.ipSourceOrder) || rateLimit.ipSourceOrder.length < 4) {
+    warnings.push('Proxy IP source order looks incomplete. Forwarded-IP rate limiting may drift behind Cloudflare or Render.');
+  }
+
+  if (warnings.length) {
+    var fail = (!enabled) || (!secretsReady) || (!enabledSourceCount);
+    return {
+      level: fail ? 'fail' : 'warn',
+      badge: fail ? 'Needs attention' : 'Warnings detected',
+      title: fail ? 'Auth health has blocking configuration gaps' : 'Auth health is running with caution flags',
+      body: fail
+        ? 'At least one runtime auth prerequisite is missing. Review the warnings below before treating this environment as fully hardened.'
+        : 'Runtime auth is available, but the dashboard detected drift signals worth fixing before they become an incident.',
+      items: warnings
+    };
+  }
+
+  return {
+    level: 'ok',
+    badge: 'No drift detected',
+    title: 'Auth health checks are clean',
+    body: 'Runtime auth, proxy-aware rate limiting, and configured sources look aligned for this environment.',
+    items: []
+  };
+};
+
 window.renderSettingsAuthHealth = function(data) {
   data = data || {};
   var enabled = !!data.authEnabled;
@@ -16073,6 +16151,12 @@ window.renderSettingsAuthHealth = function(data) {
   var stage8CountEl = document.getElementById('settings-auth-stage8-count');
   var usersCountEl = document.getElementById('settings-auth-users-count');
   var msgEl = document.getElementById('settings-auth-msg');
+  var alertEl = document.getElementById('settings-auth-alert');
+  var alertBadgeEl = document.getElementById('settings-auth-alert-badge');
+  var alertTitleEl = document.getElementById('settings-auth-alert-title');
+  var alertBodyEl = document.getElementById('settings-auth-alert-body');
+  var alertListEl = document.getElementById('settings-auth-alert-list');
+  var warningState = window._analyzeSettingsAuthWarnings(data);
   if (enabledEl) {
     enabledEl.className = 'settings-auth-badge ' + (enabled ? 'ok' : 'fail');
     enabledEl.textContent = enabled ? 'Auth enabled' : 'Auth disabled';
@@ -16102,8 +16186,21 @@ window.renderSettingsAuthHealth = function(data) {
   ];
   window._renderSettingsAuthChips('settings-auth-sources', sourceItems, { emptyText:'No auth sources reported' });
 
+  if (alertEl) alertEl.className = 'settings-auth-alert ' + (warningState.level || 'info');
+  if (alertBadgeEl) {
+    alertBadgeEl.className = 'settings-auth-badge ' + ((warningState.level === 'ok') ? 'ok' : (warningState.level === 'fail' ? 'fail' : 'warn'));
+    alertBadgeEl.textContent = warningState.badge || 'Runtime checks';
+  }
+  if (alertTitleEl) alertTitleEl.textContent = warningState.title || 'Auth drift analysis';
+  if (alertBodyEl) alertBodyEl.textContent = warningState.body || '';
+  if (alertListEl) {
+    alertListEl.innerHTML = (warningState.items || []).map(function(item){
+      return '<div class="settings-auth-alert-item">' + _escHtml(item) + '</div>';
+    }).join('');
+  }
+
   if (msgEl) {
-    msgEl.textContent = 'Live data from /api/auth/status. Refresh this card after auth or environment changes.';
+    msgEl.textContent = 'Live data from /api/auth/status. Refresh this card after auth or environment changes.' + ((warningState.items || []).length ? ' ' + warningState.items.length + ' warning signal(s) detected.' : ' No auth drift signals detected.');
   }
 };
 
