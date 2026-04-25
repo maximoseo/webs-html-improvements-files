@@ -78,6 +78,40 @@ class AuthToolingTests(unittest.TestCase):
         self.assertNotIn('Maximo2025!', body)
         self.assertNotIn('service@maximo-seo.com', body)
 
+    def test_auth_status_warns_when_break_glass_password_drifts_from_users_json(self):
+        users_path = server._USERS_JSON_PATH
+        original_users = None
+        if os.path.exists(users_path):
+            with open(users_path, 'r', encoding='utf-8') as fh:
+                original_users = fh.read()
+        try:
+            with open(users_path, 'w', encoding='utf-8') as fh:
+                json.dump([
+                    {
+                        'id': 'user-1',
+                        'username': 'admin',
+                        'email': 'service@maximo-seo.com',
+                        'role': 'admin',
+                        'password_hash': server._mu_hash_password('DifferentPass123!'),
+                    }
+                ], fh)
+            status, _, body = req('/api/auth/status')
+            data = json.loads(body)
+            self.assertEqual(status, 200)
+            warnings = data.get('driftWarnings') or []
+            self.assertTrue(any('users.json password hash does not match the configured break-glass password' in item for item in warnings), warnings)
+            self.assertNotIn('DifferentPass123!', body)
+            self.assertNotIn('Maximo2025!', body)
+        finally:
+            if original_users is None:
+                try:
+                    os.remove(users_path)
+                except FileNotFoundError:
+                    pass
+            else:
+                with open(users_path, 'w', encoding='utf-8') as fh:
+                    fh.write(original_users)
+
     def test_login_rate_limit_uses_forwarded_ip_headers(self):
         headers = {
             'Content-Type': 'application/json',

@@ -255,6 +255,22 @@ def _stage8_get_token(handler):
         return auth[7:].strip()
     return None
 
+def _dashboard_auth_drift_warnings(users, env_user, env_pass, env_email):
+    warnings = []
+    lookup_email = (env_email or '').strip().lower()
+    env_user = (env_user or '').strip()
+    env_pass = env_pass or ''
+    matched_user = None
+    for user in users or []:
+        username = (user.get('username') or '').strip()
+        email = (user.get('email') or '').strip().lower()
+        if (env_user and username == env_user) or (lookup_email and email == lookup_email):
+            matched_user = user
+            break
+    if matched_user and env_pass and not _mu_verify_password(env_pass, matched_user.get('password_hash', '')):
+        warnings.append('users.json password hash does not match the configured break-glass password. Operators may see invalid_credentials until Render env and local user inventory are re-aligned.')
+    return warnings
+
 def _dashboard_auth_status():
     try:
         users = _mu_users_load()
@@ -264,6 +280,7 @@ def _dashboard_auth_status():
     env_pass = os.getenv('DASHBOARD_PASSWORD', '')
     env_email = (os.getenv('DASHBOARD_EMAIL') or 'service@maximo-seo.com').strip()
     stage8_users = _stage8_users()
+    drift_warnings = _dashboard_auth_drift_warnings(users, env_user, env_pass, env_email)
     return {
         'ok': True,
         'authEnabled': _dashboard_auth_enabled(),
@@ -292,6 +309,7 @@ def _dashboard_auth_status():
             or os.getenv('DASHBOARD_JWT_SECRET')
             or os.getenv('DASHBOARD_USERS', '').strip()
         ),
+        'driftWarnings': drift_warnings,
     }
 
 def _stage8_check_auth(handler, parsed):

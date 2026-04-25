@@ -16271,6 +16271,7 @@ window._renderSettingsAuthChips = function(targetId, items, options) {
 window._analyzeSettingsAuthWarnings = function(data) {
   data = data || {};
   var warnings = [];
+  warnings = warnings.concat(data.driftWarnings || []);
   var sourceMap = data.configuredSources || {};
   var counts = data.counts || {};
   var rateLimit = data.rateLimit || {};
