@@ -129,6 +129,22 @@
   .fixer-tab-btn{padding:6px 7px !important}
 }
 
+/* Phase-2.4 mobile chrome hardening — remove glassy header + hide bottom deploy popup */
+@media (max-width:768px){
+  .header{
+    background:linear-gradient(180deg,rgba(10,11,13,0.985),rgba(10,11,13,0.96)) !important;
+    border-bottom:1px solid rgba(255,255,255,0.12) !important;
+    box-shadow:0 10px 28px rgba(0,0,0,0.28) !important;
+    backdrop-filter:none !important;
+    -webkit-backdrop-filter:none !important;
+  }
+  .deploy-status-panel,
+  #fixer-deploy-panel,
+  [class*="deployment-status"]{
+    display:none !important;
+  }
+}
+
 /* Phase-1.5 reusable page primitives (additive — opt-in by class) */
 .page-header{display:flex;flex-direction:column;gap:var(--space-2);margin-bottom:var(--space-6)}
 .page-header__breadcrumb{display:flex;align-items:center;gap:var(--space-2);font-size:var(--text-xs);color:var(--muted);text-transform:uppercase;letter-spacing:0.08em;font-weight:600}
@@ -4556,10 +4572,11 @@ body {
     -webkit-overflow-scrolling: touch !important;
     scrollbar-width: none !important;
     padding: 0 4px !important;
-    background: rgba(7,8,16,0.97) !important;
-    backdrop-filter: blur(16px) !important;
-    -webkit-backdrop-filter: blur(16px) !important;
-    border-bottom: 1px solid rgba(255,255,255,0.07) !important;
+    background: #0b0d10 !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    border-bottom: 1px solid rgba(255,255,255,0.12) !important;
+    box-shadow: 0 8px 18px rgba(0,0,0,0.22) !important;
     scroll-snap-type: x proximity !important;
   }
   .fixer-tab-nav::-webkit-scrollbar {
