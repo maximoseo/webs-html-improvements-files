@@ -15748,6 +15748,7 @@ async function downloadPromptPreviewShot(){
           <button class="settings-btn" type="button" onclick="refreshAuthHealthPanel()">Refresh Auth Status</button>
           <button class="settings-btn" type="button" onclick="copyAuthDiagnostics()">Copy Auth Diagnostics</button>
           <button class="settings-btn" type="button" onclick="copyAuthIncidentPack()">Copy Incident Pack</button>
+          <button class="settings-btn" type="button" onclick="copyAuthOperatorHandoffCard()">Copy Handoff Card</button>
         </div>
       </div>
       <div id="settings-auth-alert" class="settings-auth-alert info">
@@ -15778,6 +15779,10 @@ async function downloadPromptPreviewShot(){
         <div style="margin-top:10px;display:flex;justify-content:flex-end">
           <button class="settings-btn" type="button" onclick="saveAuthIncidentHistoryNote()">Save note</button>
         </div>
+      </div>
+      <div id="settings-auth-handoff-card" class="settings-auth-checklist settings-auth-runbook">
+        <div class="settings-auth-checklist-title">Auth operator handoff card</div>
+        <div class="settings-auth-checklist-body">Preparing a short operator handoff using live auth state, recent actions, and the latest note…</div>
       </div>
       <div class="settings-auth-grid">
         <div class="settings-auth-card">
@@ -16520,6 +16525,38 @@ window._formatAuthIncidentPack = function(data, warningState, checklistItems, ru
   return lines.join('\n');
 };
 
+window._formatAuthOperatorHandoffCard = function(data, warningState, history) {
+  data = data || {};
+  warningState = warningState || window._analyzeSettingsAuthWarnings(data);
+  history = Object.assign({
+    lastRefreshAt:'',
+    lastDiagnosticsCopyAt:'',
+    lastIncidentPackCopyAt:'',
+    lastHandoffCardCopyAt:'',
+    note:''
+  }, history || {});
+  var lines = [];
+  lines.push('Auth operator handoff card');
+  lines.push('Severity: ' + (warningState.badge || 'Runtime checks'));
+  lines.push('Summary: ' + (warningState.title || 'Auth drift analysis'));
+  lines.push('Runtime: auth ' + (data.authEnabled ? 'enabled' : 'disabled') + ', session secrets ' + (data.sessionSecretsConfigured ? 'configured' : 'missing'));
+  lines.push('Latest note: ' + ((history.note || '').trim() || 'No note saved'));
+  lines.push('Last refresh: ' + (history.lastRefreshAt || 'Not recorded yet'));
+  lines.push('Last diagnostics copy: ' + (history.lastDiagnosticsCopyAt || 'Not recorded yet'));
+  lines.push('Last incident pack copy: ' + (history.lastIncidentPackCopyAt || 'Not recorded yet'));
+  lines.push('Last handoff card copy: ' + (history.lastHandoffCardCopyAt || 'Not recorded yet'));
+  if ((warningState.items || []).length) {
+    lines.push('Top warnings:');
+    (warningState.items || []).slice(0, 3).forEach(function(item) {
+      lines.push('- ' + item);
+    });
+  } else {
+    lines.push('Top warnings: none');
+  }
+  lines.push('Generated at: ' + new Date().toISOString());
+  return lines.join('\n');
+};
+
 window._renderSettingsAuthIncidentPack = function(targetId, warningState, checklistItems, runbookItems) {
   var el = document.getElementById(targetId);
   if (!el) return;
@@ -16541,6 +16578,7 @@ window._getSettingsAuthIncidentHistory = function() {
     lastRefreshAt: '',
     lastDiagnosticsCopyAt: '',
     lastIncidentPackCopyAt: '',
+    lastHandoffCardCopyAt: '',
     note: '',
     updatedAt: ''
   };
@@ -16576,6 +16614,9 @@ window._recordSettingsAuthIncidentAction = function(actionType, detail) {
   if (actionType === 'incident-pack-copy') {
     history.lastIncidentPackCopyAt = new Date().toISOString();
   }
+  if (actionType === 'handoff-card-copy') {
+    history.lastHandoffCardCopyAt = new Date().toISOString();
+  }
   if (detail && typeof detail === 'object' && typeof detail.note === 'string') {
     history.note = detail.note;
   }
@@ -16591,6 +16632,7 @@ window._renderSettingsAuthIncidentHistory = function(targetId, history) {
     lastRefreshAt: '',
     lastDiagnosticsCopyAt: '',
     lastIncidentPackCopyAt: '',
+    lastHandoffCardCopyAt: '',
     note: ''
   }, history || {});
   var note = (history.note || '').trim();
@@ -16598,10 +16640,25 @@ window._renderSettingsAuthIncidentHistory = function(targetId, history) {
     + '<div class="settings-auth-checklist-item">Last refresh: ' + _escHtml(history.lastRefreshAt || 'Not recorded yet') + '</div>'
     + '<div class="settings-auth-checklist-item">Last diagnostics copy: ' + _escHtml(history.lastDiagnosticsCopyAt || 'Not recorded yet') + '</div>'
     + '<div class="settings-auth-checklist-item">Last incident pack copy: ' + _escHtml(history.lastIncidentPackCopyAt || 'Not recorded yet') + '</div>'
+    + '<div class="settings-auth-checklist-item">Last handoff card copy: ' + _escHtml(history.lastHandoffCardCopyAt || 'Not recorded yet') + '</div>'
     + '<div class="settings-auth-checklist-item">' + _escHtml(note || 'No auth incident note saved yet.') + '</div>'
     + '<div class="settings-auth-copy-fallback-title" style="margin-top:10px">Last action note</div>'
     + '<textarea id="settings-auth-history-note" class="settings-auth-copy-text" placeholder="Document what changed during the last auth incident or rotation.">' + _escHtml(history.note || '') + '</textarea>'
     + '<div style="margin-top:10px;display:flex;justify-content:flex-end"><button class="settings-btn" type="button" onclick="saveAuthIncidentHistoryNote()">Save note</button></div>'
+    + '</div>';
+};
+
+window._renderSettingsAuthOperatorHandoffCard = function(targetId, data, warningState, history) {
+  var el = document.getElementById(targetId);
+  if (!el) return;
+  warningState = warningState || { badge:'Runtime checks', items:[] };
+  history = Object.assign({ note:'', lastRefreshAt:'', lastDiagnosticsCopyAt:'', lastIncidentPackCopyAt:'', lastHandoffCardCopyAt:'' }, history || {});
+  var note = (history.note || '').trim();
+  el.innerHTML = '<div class="settings-auth-checklist-title">Auth operator handoff card</div><div class="settings-auth-checklist-body">'
+    + '<div class="settings-auth-checklist-item">Ready to export a short operator handoff using live auth state, recent actions, and the latest note.</div>'
+    + '<div class="settings-auth-checklist-item">Severity now: ' + _escHtml(warningState.badge || 'Runtime checks') + '</div>'
+    + '<div class="settings-auth-checklist-item">Latest note: ' + _escHtml(note || 'No note saved') + '</div>'
+    + '<div class="settings-auth-checklist-item">Last handoff card copy: ' + _escHtml(history.lastHandoffCardCopyAt || 'Not recorded yet') + '</div>'
     + '</div>';
 };
 
@@ -16616,6 +16673,57 @@ window.saveAuthIncidentHistoryNote = function() {
     window.toast.success('Auth incident note saved');
   }
   return history;
+};
+
+window.copyAuthOperatorHandoffCard = function() {
+  var data = window._lastSettingsAuthHealth;
+  var warningState = window._lastSettingsAuthWarningState;
+  var msgEl = document.getElementById('settings-auth-msg');
+  var runCopy = function(payload) {
+    var localWarningState = window._lastSettingsAuthWarningState || warningState || window._analyzeSettingsAuthWarnings(payload || {});
+    var history = window._getSettingsAuthIncidentHistory();
+    var summary = window._formatAuthOperatorHandoffCard(payload || {}, localWarningState, history);
+    return window._copyTextToClipboard(summary).then(function() {
+      window._hideAuthDiagnosticsFallback();
+      var updatedHistory = window._recordSettingsAuthIncidentAction('handoff-card-copy');
+      window._renderSettingsAuthIncidentHistory('settings-auth-incident-history', updatedHistory);
+      window._renderSettingsAuthOperatorHandoffCard('settings-auth-handoff-card', payload || {}, localWarningState, updatedHistory);
+      if (msgEl) msgEl.textContent = 'Auth operator handoff card copied to clipboard.';
+      if (window.toast && typeof window.toast.success === 'function') {
+        window.toast.success('Auth handoff card copied');
+      }
+      return summary;
+    }).catch(function() {
+      var updatedHistory = window._recordSettingsAuthIncidentAction('handoff-card-copy');
+      window._renderSettingsAuthIncidentHistory('settings-auth-incident-history', updatedHistory);
+      window._renderSettingsAuthOperatorHandoffCard('settings-auth-handoff-card', payload || {}, localWarningState, updatedHistory);
+      window._showAuthDiagnosticsFallback(summary);
+      if (msgEl) msgEl.textContent = 'Clipboard access was blocked. Showing a manual-copy fallback with the handoff card pre-selected.';
+      if (window.toast && typeof window.toast.info === 'function') {
+        window.toast.info('Clipboard blocked — handoff card fallback ready');
+      }
+      return summary;
+    });
+  };
+  if (data) {
+    return runCopy(data).catch(function(err) {
+      if (msgEl) msgEl.textContent = 'Could not prepare auth handoff card: ' + (err && err.message ? err.message : 'unknown error');
+      if (window.toast && typeof window.toast.error === 'function') {
+        window.toast.error('Copy auth handoff card failed');
+      }
+      throw err;
+    });
+  }
+  if (msgEl) msgEl.textContent = 'Loading auth health before copying handoff card…';
+  return window.refreshAuthHealthPanel().then(function(fresh) {
+    return runCopy(fresh || window._lastSettingsAuthHealth || {});
+  }).catch(function(err) {
+    if (msgEl) msgEl.textContent = 'Could not prepare auth handoff card: ' + (err && err.message ? err.message : 'unknown error');
+    if (window.toast && typeof window.toast.error === 'function') {
+      window.toast.error('Copy auth handoff card failed');
+    }
+    throw err;
+  });
 };
 
 window.copyAuthIncidentPack = function() {
@@ -16803,6 +16911,7 @@ window.renderSettingsAuthHealth = function(data) {
   window._renderSettingsAuthRunbook('settings-auth-runbook', runbookItems);
   window._renderSettingsAuthIncidentPack('settings-auth-incident-pack', warningState, checklistItems, runbookItems);
   window._renderSettingsAuthIncidentHistory('settings-auth-incident-history', history);
+  window._renderSettingsAuthOperatorHandoffCard('settings-auth-handoff-card', data, warningState, history);
 
   if (msgEl) {
     msgEl.textContent = 'Live data from /api/auth/status. Refresh this card after auth or environment changes.' + ((warningState.items || []).length ? ' ' + warningState.items.length + ' warning signal(s) detected.' : ' No auth drift signals detected.');
