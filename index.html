@@ -6027,6 +6027,60 @@ header.header > .header-inner,
 }
 /* END HEADER LAYOUT HOTFIX v1 */
 
+/* FINAL MOBILE HEADER STABILIZATION — 2026-04-25
+   Goal: make the mobile header fully opaque, reduce icon clutter,
+   and move secondary actions into the drawer so scroll states stay clean. */
+@media (max-width:768px){
+  .header,
+  .header .header-inner{
+    overflow:visible !important;
+  }
+  .header .theme-toggle-btn,
+  .header .hdr-overflow-wrap,
+  .header .hdr-logout-btn,
+  .header #hdr-role-badge{
+    display:none !important;
+  }
+  .header .hdr-sync-btn,
+  .header .hamburger-btn{
+    min-width:36px !important;
+    height:36px !important;
+    min-height:36px !important;
+    border-radius:10px !important;
+    border:1px solid rgba(255,255,255,0.14) !important;
+    background:#161a20 !important;
+    color:#f3f4f6 !important;
+    box-shadow:inset 0 1px 0 rgba(255,255,255,0.04),0 4px 12px rgba(0,0,0,0.22) !important;
+  }
+  .header .hdr-sync-btn{
+    padding:0 12px !important;
+  }
+  .header .hamburger-btn{
+    width:36px !important;
+    padding:0 !important;
+  }
+  .header .hdr-sync-btn svg,
+  .header .hamburger-btn svg{
+    opacity:1 !important;
+  }
+  .header .logo-icon{
+    background:#151922 !important;
+    border:1px solid rgba(255,255,255,0.12) !important;
+    box-shadow:inset 0 1px 0 rgba(255,255,255,0.04) !important;
+  }
+  .mobile-drawer{
+    width:min(320px,88vw) !important;
+    background:#101318 !important;
+    box-shadow:0 22px 48px rgba(0,0,0,0.42) !important;
+    padding:20px 16px calc(24px + env(safe-area-inset-bottom)) !important;
+  }
+  .mobile-nav-item{
+    background:rgba(255,255,255,0.03) !important;
+    border:1px solid rgba(255,255,255,0.08) !important;
+    margin-bottom:8px !important;
+  }
+}
+
 /* ============================================================
    PROMPT STUDIO ACTION BAR — v6 FINAL POLISH (2026-04-21)
    Enforce uniform pill height, padding, icon size, label truncation.
@@ -6740,6 +6794,8 @@ function showErrorToast(msg) {
   <button class="mobile-nav-item" onclick="showPage('tasks');closeMobileMenu()">Tasks</button>
   <button class="mobile-nav-item" onclick="showPage('analytics');closeMobileMenu()">Analytics</button>
   <button class="mobile-nav-item" onclick="showPage('settings');closeMobileMenu()">Settings</button>
+  <button class="mobile-nav-item" onclick="toggleTheme();closeMobileMenu()">Toggle theme</button>
+  <button class="mobile-nav-item" onclick="closeMobileMenu();doLogout()">Sign out</button>
 </div>
 
 
