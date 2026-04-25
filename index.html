@@ -15761,6 +15761,10 @@ async function downloadPromptPreviewShot(){
         <div class="settings-auth-checklist-title">Auth operator checklist</div>
         <div class="settings-auth-checklist-body">Building the safest next checks from live auth status…</div>
       </div>
+      <div id="settings-auth-runbook" class="settings-auth-checklist settings-auth-runbook">
+        <div class="settings-auth-checklist-title">Auth incident mini-runbook</div>
+        <div class="settings-auth-checklist-body">Preparing the fastest safe response steps for an auth incident…</div>
+      </div>
       <div class="settings-auth-grid">
         <div class="settings-auth-card">
           <div class="settings-auth-card-title">Runtime</div>
@@ -16440,6 +16444,34 @@ window._renderSettingsAuthChecklist = function(targetId, items) {
     + '</div>';
 };
 
+window._buildSettingsAuthRunbook = function(data, warningState) {
+  data = data || {};
+  warningState = warningState || window._analyzeSettingsAuthWarnings(data);
+  var steps = [
+    '1. Refresh /api/auth/status and confirm whether the issue is drift, missing secrets, or a bad credential rotation.',
+    '2. Test one real login via /api/auth/login before changing anything else.',
+    '3. If login fails, compare Render env, users.json, and the operator account shown in Settings before rotating passwords.',
+    '4. Copy Auth Diagnostics and hand that summary to the next operator before making a second auth change.'
+  ];
+  var items = warningState.items || [];
+  if (items.some(function(item){ return item.indexOf('users.json password hash does not match the configured break-glass password') !== -1; })) {
+    steps.splice(2, 0, '2b. Re-align the break-glass password first — mismatched env and users.json credentials create repeat invalid_credentials incidents.');
+  }
+  if (items.some(function(item){ return item.indexOf('Session secrets are missing') !== -1; })) {
+    steps.splice(1, 0, '1b. Restore DASHBOARD_AUTH_SECRET or DASHBOARD_JWT_SECRET before trusting any cookie-session conclusion.');
+  }
+  return steps;
+};
+
+window._renderSettingsAuthRunbook = function(targetId, items) {
+  var el = document.getElementById(targetId);
+  if (!el) return;
+  var list = Array.isArray(items) ? items : [];
+  el.innerHTML = '<div class="settings-auth-checklist-title">Auth incident mini-runbook</div><div class="settings-auth-checklist-body">'
+    + list.map(function(item){ return '<div class="settings-auth-checklist-item">' + _escHtml(item) + '</div>'; }).join('')
+    + '</div>';
+};
+
 window._showAuthDiagnosticsFallback = function(summary) {
   var wrap = document.getElementById('settings-auth-copy-fallback');
   var textEl = document.getElementById('settings-auth-copy-text');
@@ -16522,6 +16554,7 @@ window.renderSettingsAuthHealth = function(data) {
   var alertListEl = document.getElementById('settings-auth-alert-list');
   var warningState = window._analyzeSettingsAuthWarnings(data);
   var checklistItems = window._buildSettingsAuthChecklist(data, warningState);
+  var runbookItems = window._buildSettingsAuthRunbook(data, warningState);
   window._lastSettingsAuthHealth = data;
   window._lastSettingsAuthWarningState = warningState;
   if (enabledEl) {
@@ -16566,6 +16599,7 @@ window.renderSettingsAuthHealth = function(data) {
     }).join('');
   }
   window._renderSettingsAuthChecklist('settings-auth-checklist', checklistItems);
+  window._renderSettingsAuthRunbook('settings-auth-runbook', runbookItems);
 
   if (msgEl) {
     msgEl.textContent = 'Live data from /api/auth/status. Refresh this card after auth or environment changes.' + ((warningState.items || []).length ? ' ' + warningState.items.length + ' warning signal(s) detected.' : ' No auth drift signals detected.');
