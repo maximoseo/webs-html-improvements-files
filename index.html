@@ -15747,6 +15747,7 @@ async function downloadPromptPreviewShot(){
         <div class="settings-auth-actions">
           <button class="settings-btn" type="button" onclick="refreshAuthHealthPanel()">Refresh Auth Status</button>
           <button class="settings-btn" type="button" onclick="copyAuthDiagnostics()">Copy Auth Diagnostics</button>
+          <button class="settings-btn" type="button" onclick="copyAuthIncidentPack()">Copy Incident Pack</button>
         </div>
       </div>
       <div id="settings-auth-alert" class="settings-auth-alert info">
@@ -15764,6 +15765,10 @@ async function downloadPromptPreviewShot(){
       <div id="settings-auth-runbook" class="settings-auth-checklist settings-auth-runbook">
         <div class="settings-auth-checklist-title">Auth incident mini-runbook</div>
         <div class="settings-auth-checklist-body">Preparing the fastest safe response steps for an auth incident…</div>
+      </div>
+      <div id="settings-auth-incident-pack" class="settings-auth-checklist settings-auth-runbook">
+        <div class="settings-auth-checklist-title">Auth incident handoff pack</div>
+        <div class="settings-auth-checklist-body">Preparing a safe operator handoff summary from live auth state…</div>
       </div>
       <div class="settings-auth-grid">
         <div class="settings-auth-card">
@@ -16472,6 +16477,100 @@ window._renderSettingsAuthRunbook = function(targetId, items) {
     + '</div>';
 };
 
+window._formatAuthIncidentPack = function(data, warningState, checklistItems, runbookItems) {
+  data = data || {};
+  warningState = warningState || window._analyzeSettingsAuthWarnings(data);
+  checklistItems = Array.isArray(checklistItems) ? checklistItems : window._buildSettingsAuthChecklist(data, warningState);
+  runbookItems = Array.isArray(runbookItems) ? runbookItems : window._buildSettingsAuthRunbook(data, warningState);
+  var sourceMap = data.configuredSources || {};
+  var counts = data.counts || {};
+  var lines = [];
+  lines.push('Auth incident handoff pack');
+  lines.push('Severity: ' + (warningState.badge || 'Runtime checks'));
+  lines.push('Summary: ' + (warningState.title || 'Auth drift analysis'));
+  lines.push('Runtime: auth ' + (data.authEnabled ? 'enabled' : 'disabled') + ', session secrets ' + (data.sessionSecretsConfigured ? 'configured' : 'missing'));
+  lines.push('Sources: break-glass env=' + (!!sourceMap.breakGlassEnv) + ', email alias=' + (!!sourceMap.breakGlassEmailAlias) + ', users.json=' + (!!sourceMap.usersJson) + ', supabase password=' + (!!sourceMap.supabasePassword));
+  lines.push('Counts: stage8 users=' + (((counts.stage8Users) != null) ? counts.stage8Users : '—') + ', users.json=' + (((counts.usersJson) != null) ? counts.usersJson : '—'));
+  if ((warningState.items || []).length) {
+    lines.push('Warnings:');
+    (warningState.items || []).forEach(function(item) {
+      lines.push('- ' + item);
+    });
+  } else {
+    lines.push('Warnings: none');
+  }
+  lines.push('Immediate checklist:');
+  checklistItems.forEach(function(item) {
+    lines.push('- ' + item);
+  });
+  lines.push('Incident runbook:');
+  runbookItems.forEach(function(item) {
+    lines.push('- ' + item);
+  });
+  lines.push('Generated at: ' + new Date().toISOString());
+  return lines.join('\n');
+};
+
+window._renderSettingsAuthIncidentPack = function(targetId, warningState, checklistItems, runbookItems) {
+  var el = document.getElementById(targetId);
+  if (!el) return;
+  warningState = warningState || { badge:'Runtime checks', items:[] };
+  checklistItems = Array.isArray(checklistItems) ? checklistItems : [];
+  runbookItems = Array.isArray(runbookItems) ? runbookItems : [];
+  var warningCount = (warningState.items || []).length;
+  el.innerHTML = '<div class="settings-auth-checklist-title">Auth incident handoff pack</div><div class="settings-auth-checklist-body">'
+    + '<div class="settings-auth-checklist-item">Ready to copy a safe operator handoff with live auth state, warning summary, checklist, and incident runbook.</div>'
+    + '<div class="settings-auth-checklist-item">Severity now: ' + _escHtml(warningState.badge || 'Runtime checks') + ' · warning signals: ' + _escHtml(String(warningCount)) + '</div>'
+    + '<div class="settings-auth-checklist-item">Includes ' + _escHtml(String(checklistItems.length)) + ' checklist step(s) and ' + _escHtml(String(runbookItems.length)) + ' incident runbook step(s).</div>'
+    + '</div>';
+};
+
+window.copyAuthIncidentPack = function() {
+  var data = window._lastSettingsAuthHealth;
+  var warningState = window._lastSettingsAuthWarningState;
+  var msgEl = document.getElementById('settings-auth-msg');
+  var runCopy = function(payload) {
+    var localWarningState = window._lastSettingsAuthWarningState || warningState || window._analyzeSettingsAuthWarnings(payload || {});
+    var checklistItems = window._buildSettingsAuthChecklist(payload || {}, localWarningState);
+    var runbookItems = window._buildSettingsAuthRunbook(payload || {}, localWarningState);
+    var summary = window._formatAuthIncidentPack(payload || {}, window._lastSettingsAuthWarningState || warningState, checklistItems, runbookItems);
+    return window._copyTextToClipboard(summary).then(function() {
+      window._hideAuthDiagnosticsFallback();
+      if (msgEl) msgEl.textContent = 'Auth incident pack copied to clipboard. Safe handoff summary includes no secrets.';
+      if (window.toast && typeof window.toast.success === 'function') {
+        window.toast.success('Auth incident pack copied');
+      }
+      return summary;
+    }).catch(function() {
+      window._showAuthDiagnosticsFallback(summary);
+      if (msgEl) msgEl.textContent = 'Clipboard access was blocked. Showing a manual-copy fallback with the incident pack pre-selected.';
+      if (window.toast && typeof window.toast.info === 'function') {
+        window.toast.info('Clipboard blocked — incident pack fallback ready');
+      }
+      return summary;
+    });
+  };
+  if (data) {
+    return runCopy(data).catch(function(err) {
+      if (msgEl) msgEl.textContent = 'Could not prepare auth incident pack: ' + (err && err.message ? err.message : 'unknown error');
+      if (window.toast && typeof window.toast.error === 'function') {
+        window.toast.error('Copy auth incident pack failed');
+      }
+      throw err;
+    });
+  }
+  if (msgEl) msgEl.textContent = 'Loading auth health before copying incident pack…';
+  return window.refreshAuthHealthPanel().then(function(fresh) {
+    return runCopy(fresh || window._lastSettingsAuthHealth || {});
+  }).catch(function(err) {
+    if (msgEl) msgEl.textContent = 'Could not prepare auth incident pack: ' + (err && err.message ? err.message : 'unknown error');
+    if (window.toast && typeof window.toast.error === 'function') {
+      window.toast.error('Copy auth incident pack failed');
+    }
+    throw err;
+  });
+};
+
 window._showAuthDiagnosticsFallback = function(summary) {
   var wrap = document.getElementById('settings-auth-copy-fallback');
   var textEl = document.getElementById('settings-auth-copy-text');
@@ -16600,6 +16699,7 @@ window.renderSettingsAuthHealth = function(data) {
   }
   window._renderSettingsAuthChecklist('settings-auth-checklist', checklistItems);
   window._renderSettingsAuthRunbook('settings-auth-runbook', runbookItems);
+  window._renderSettingsAuthIncidentPack('settings-auth-incident-pack', warningState, checklistItems, runbookItems);
 
   if (msgEl) {
     msgEl.textContent = 'Live data from /api/auth/status. Refresh this card after auth or environment changes.' + ((warningState.items || []).length ? ' ' + warningState.items.length + ' warning signal(s) detected.' : ' No auth drift signals detected.');
