@@ -983,6 +983,25 @@ def _detect_preferred_provider(model: str) -> str | None:
     return None
 
 
+def _preferred_backup_provider(model: str, preferred: str | None) -> str | None:
+    """Return a preferred second-choice provider for models that have a strong twin route."""
+    model = (model or '').strip().lower()
+    if not preferred or not model:
+        return None
+    is_moonshot_family = (
+        model.startswith('moonshotai/')
+        or model.startswith('kimi')
+        or model.startswith('moonshot-')
+    )
+    if not is_moonshot_family:
+        return None
+    if preferred == 'openrouter':
+        return 'kimi'
+    if preferred == 'kimi':
+        return 'openrouter'
+    return None
+
+
 def call_with_fallback(messages, model, timeout=120):
     """
     Call the LLM with automatic provider fallback.
@@ -999,8 +1018,10 @@ def call_with_fallback(messages, model, timeout=120):
     preferred = _detect_preferred_provider(model)
     if preferred:
         preferred_providers = [p for p in chain if p['name'] == preferred]
-        other_providers    = [p for p in chain if p['name'] != preferred]
-        chain = preferred_providers + other_providers
+        buddy = _preferred_backup_provider(model, preferred)
+        buddy_providers = [p for p in chain if p['name'] == buddy and p['name'] != preferred]
+        other_providers = [p for p in chain if p['name'] not in {preferred, buddy}]
+        chain = preferred_providers + buddy_providers + other_providers
 
     errors = []
     for provider in chain:
@@ -1323,34 +1344,17 @@ BRAINSTORM_MODELS_BY_ID = {m["id"]: m for m in BRAINSTORM_MODELS}
 SYNTH_MODEL = os.getenv("PROMPT_SYNTH_MODEL", "anthropic/claude-sonnet-4.6")
 
 
-def _call_one_model(base, headers, model_id, system, user, timeout=180):
-    body = {
-        "model": model_id,
-        "messages": [
-            {"role": "system", "content": system},
-            {"role": "user",   "content": user},
-        ],
-    }
+def _call_one_model(model_id, system, user, timeout=180):
+    messages = [
+        {"role": "system", "content": system},
+        {"role": "user",   "content": user},
+    ]
     try:
-        r = fetch_json(f"{base}/chat/completions", headers=headers, method="POST", body=body, timeout=timeout)
-        choices = r.get("choices") or []
-        content = ""
-        if choices:
-            msg = choices[0].get("message") or {}
-            content = msg.get("content") or ""
-        if isinstance(content, list):
-            content = "".join(p.get("text","") for p in content if isinstance(p, dict))
+        content, provider_used = call_with_fallback(messages, model_id, timeout=timeout)
         content = str(content).strip()
         if not content:
             return {"model": model_id, "ok": False, "error": "empty response"}
-        return {"model": model_id, "ok": True, "content": content}
-    except urllib.error.HTTPError as e:
-        detail = ""
-        try:
-            detail = e.read().decode("utf-8", "replace")[:400]
-        except Exception:
-            pass
-        return {"model": model_id, "ok": False, "error": f"HTTP {e.code}", "detail": detail}
+        return {"model": model_id, "ok": True, "content": content, "provider": provider_used}
     except Exception as e:
         return {"model": model_id, "ok": False, "error": str(e)[:400]}
 
@@ -1360,9 +1364,8 @@ def brainstorm_prompt_multi_model(payload):
     draft = (payload.get("draftPrompt") or "").strip()
     if not draft:
         raise ValueError("Draft prompt is required")
-    base, headers = prompt_headers()
-    if not headers:
-        raise RuntimeError("OPENROUTER_API_KEY is not configured")
+    if not _get_provider_chain():
+        raise RuntimeError("No LLM provider configured")
 
     current_date = os.getenv("PROMPT_CURRENT_DATE", "2026-04-17")
     checklist_rules = _normalize_checklist(payload.get("checklist"))
@@ -1434,7 +1437,7 @@ def brainstorm_prompt_multi_model(payload):
     max_workers = max(1, min(6, len(selected_models)))
     with concurrent.futures.ThreadPoolExecutor(max_workers=max_workers) as pool:
         futures = {
-            pool.submit(_call_one_model, base, headers, m["id"], brain_system, brain_user, 180): m
+            pool.submit(_call_one_model, m["id"], brain_system, brain_user, 180): m
             for m in selected_models
         }
         for fut in concurrent.futures.as_completed(futures, timeout=240):
@@ -1486,7 +1489,7 @@ def brainstorm_prompt_multi_model(payload):
         "Produce the single synthesized final prompt now."
     )
 
-    synth = _call_one_model(base, headers, SYNTH_MODEL, synth_system, synth_user, timeout=240)
+    synth = _call_one_model(SYNTH_MODEL, synth_system, synth_user, timeout=240)
     if not synth.get("ok") or not synth.get("content"):
         raise RuntimeError(json.dumps({
             "code": "synthesis_failed",
@@ -1499,7 +1502,8 @@ def brainstorm_prompt_multi_model(payload):
         "ok": True,
         "finalPrompt": synth["content"],
         "synthModel": SYNTH_MODEL,
-        "modelsUsed": [{"model": r["model"], "label": r["label"], "chars": len(r["content"])} for r in successes],
+        "synthProvider": synth.get("provider"),
+        "modelsUsed": [{"model": r["model"], "label": r["label"], "chars": len(r["content"]), "provider": r.get("provider")} for r in successes],
         "modelsFailed": [{"model": r["model"], "label": r.get("label"), "error": r.get("error")} for r in results if not r.get("ok")],
         "requestedModels": [m["id"] for m in selected_models],
     }
@@ -1570,9 +1574,8 @@ def tweak_html_with_prompt(payload):
         raise ValueError('improvedPrompt is required')
     if not html_download_url:
         raise ValueError('htmlDownloadUrl is required')
-    base, headers = prompt_headers()
-    if not headers:
-        raise RuntimeError('OPENROUTER_API_KEY is not configured')
+    if not _get_provider_chain():
+        raise RuntimeError('No LLM provider configured')
     default_model = os.getenv('PROMPT_TWEAK_MODEL', 'anthropic/claude-sonnet-4.6')
     model = (payload.get('model') or '').strip() or default_model
     domain = payload.get('domain') or 'unknown'
@@ -1614,9 +1617,8 @@ def improve_prompt_with_model(payload):
     draft = (payload.get('draftPrompt') or '').strip()
     if not draft:
         raise ValueError('Draft prompt is required')
-    base, headers = prompt_headers()
-    if not headers:
-        raise RuntimeError('OPENROUTER_API_KEY is not configured')
+    if not _get_provider_chain():
+        raise RuntimeError('No LLM provider configured')
     # Accept model override from the browser payload; fall back to env / default
     default_model = os.getenv('PROMPT_IMPROVER_MODEL', 'anthropic/claude-sonnet-4.6')
     model = (payload.get('model') or '').strip() or default_model
