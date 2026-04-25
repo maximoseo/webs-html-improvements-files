@@ -118,6 +118,10 @@ def _cache_control_for(content_type: str, path: str = '') -> str:
 
 def json_response(handler, status, payload):
     body = json.dumps(payload, ensure_ascii=False).encode('utf-8')
+    try:
+        handler._r2_status = status
+    except Exception:
+        pass
     handler.send_response(status)
     handler.send_header('Content-Type', 'application/json; charset=utf-8')
     handler.send_header('Content-Length', str(len(body)))
@@ -127,6 +131,10 @@ def json_response(handler, status, payload):
 
 
 def text_response(handler, status, body: bytes, content_type: str):
+    try:
+        handler._r2_status = status
+    except Exception:
+        pass
     handler.send_response(status)
     handler.send_header('Content-Type', content_type)
     handler.send_header('Content-Length', str(len(body)))
@@ -150,7 +158,7 @@ import base64 as _b64
 import time as _time8
 
 _STAGE8_PUBLIC_PATHS = {
-    '/api/health', '/api/auth/login', '/api/auth/logout', '/api/auth/me',
+    '/api/health', '/api/auth/login', '/api/auth/logout', '/api/auth/me', '/api/auth/status',
     '/api/auth/request-reset', '/api/auth/reset',
     '/login', '/login.html', '/static/login.css', '/api/login', '/api/reset-password',
     '/api/csrf', '/api/version', '/healthz',
@@ -247,6 +255,45 @@ def _stage8_get_token(handler):
         return auth[7:].strip()
     return None
 
+def _dashboard_auth_status():
+    try:
+        users = _mu_users_load()
+    except Exception:
+        users = []
+    env_user = os.getenv('DASHBOARD_USER', '').strip()
+    env_pass = os.getenv('DASHBOARD_PASSWORD', '')
+    env_email = (os.getenv('DASHBOARD_EMAIL') or 'service@maximo-seo.com').strip()
+    stage8_users = _stage8_users()
+    return {
+        'ok': True,
+        'authEnabled': _dashboard_auth_enabled(),
+        'cookieName': 'dash_auth',
+        'loginPaths': ['/api/auth/login', '/api/login', '/login'],
+        'logoutPath': '/api/auth/logout',
+        'mePath': '/api/auth/me',
+        'rateLimit': {
+            'bucketCapacity': 10,
+            'refillPerSecond': 0.1,
+            'ipSourceOrder': ['CF-Connecting-IP', 'X-Forwarded-For', 'X-Real-IP', 'client_address'],
+        },
+        'configuredSources': {
+            'breakGlassEnv': bool(env_user and env_pass),
+            'breakGlassEmailAlias': bool(env_pass and env_email),
+            'stage8UsersEnv': bool(stage8_users),
+            'usersJson': any((u.get('username') or u.get('email')) for u in users),
+            'supabasePassword': bool(os.getenv('SUPABASE_URL') and os.getenv('SUPABASE_ANON_KEY')),
+        },
+        'counts': {
+            'stage8Users': len(stage8_users),
+            'usersJson': sum(1 for u in users if u.get('username') or u.get('email')),
+        },
+        'sessionSecretsConfigured': bool(
+            os.getenv('DASHBOARD_AUTH_SECRET')
+            or os.getenv('DASHBOARD_JWT_SECRET')
+            or os.getenv('DASHBOARD_USERS', '').strip()
+        ),
+    }
+
 def _stage8_check_auth(handler, parsed):
     """Return True if request is allowed; otherwise write a 401/redirect and return False."""
     path = parsed.path
@@ -292,7 +339,19 @@ def _stage8_login_rate_limit(handler):
     bucket['tokens'] = min(10.0, bucket['tokens'] + (now - bucket['last']) * 0.1)
     bucket['last'] = now
     if bucket['tokens'] < 1.0:
-        json_response(handler, 429, {'ok': False, 'error': 'rate_limited', 'retry_after': 60})
+        retry_after = 60
+        body = json.dumps({'ok': False, 'error': 'rate_limited', 'retry_after': retry_after}).encode('utf-8')
+        try:
+            handler._r2_status = 429
+        except Exception:
+            pass
+        handler.send_response(429)
+        handler.send_header('Content-Type', 'application/json; charset=utf-8')
+        handler.send_header('Content-Length', str(len(body)))
+        handler.send_header('Cache-Control', 'no-store, must-revalidate')
+        handler.send_header('Retry-After', str(retry_after))
+        handler.end_headers()
+        handler.wfile.write(body)
         return False
     bucket['tokens'] -= 1.0
     return True
@@ -1999,10 +2058,7 @@ if not _r2_log.handlers:
     _r2_log.propagate = False
 
 def _r2_log_request(handler, status, duration_ms):
-    try:
-        ip = handler.headers.get('X-Forwarded-For', handler.client_address[0]).split(',')[0].strip()
-    except Exception:
-        ip = '-'
+    ip = _stage8_client_ip(handler) or '-'
     try:
         path = handler.path
         method = handler.command
@@ -2204,7 +2260,7 @@ class DashboardHandler(BaseHTTPRequestHandler):
     def _r2_check_rate(self):
         """Call early in do_GET/do_POST. Returns True if request should proceed."""
         try:
-            ip = self.headers.get('X-Forwarded-For', self.client_address[0]).split(',')[0].strip()
+            ip = _stage8_client_ip(self)
             path = urllib.parse.urlparse(self.path).path
         except Exception:
             return True
@@ -2612,6 +2668,8 @@ body{{font-family:Arial;padding:24px}}h1{{color:#333}}pre{{background:#f4f4f4;pa
                 'role': session_user.get('role') if session_user else None,
                 'auth_enabled': _dashboard_auth_enabled()
             })
+        if parsed.path == '/api/auth/status':
+            return json_response(self, 200, _dashboard_auth_status())
         if parsed.path == '/api/auth/logout':
             self.send_response(200)
             self.send_header('Content-Type', 'application/json; charset=utf-8')
