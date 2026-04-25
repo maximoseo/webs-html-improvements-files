@@ -268,6 +268,8 @@ a:hover{color:var(--gold-light)}
 .project-card.expanded .card-body{max-height:20000px;overflow:visible}
 .card-body-inner{padding:4px 22px 22px;border-top:1px solid var(--border);overflow:visible}
 .card-tools-row{display:flex;flex-wrap:wrap;gap:10px;padding:14px 0 12px;border-bottom:1px solid rgba(255,255,255,0.06);margin-bottom:14px}
+.project-card.expanded .card-tools-row{position:sticky;top:76px;z-index:20;background:linear-gradient(180deg,rgba(16,18,24,.96),rgba(16,18,24,.9));backdrop-filter:blur(10px);border-radius:12px;padding:12px;margin:0 0 14px;border:1px solid rgba(255,255,255,.08);box-shadow:0 10px 24px rgba(0,0,0,.22)}
+@media(max-width:820px){.project-card.expanded .card-tools-row{position:static;backdrop-filter:none;margin:0 0 12px}}
 
 /* Version */
 .agent-group{margin-top:18px;padding:16px;border:1px solid rgba(255,255,255,0.06);border-radius:16px;background:rgba(255,255,255,0.02)}
@@ -8290,6 +8292,10 @@ function showErrorToast(msg) {
         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12l7-7 7 7"/></svg>
         Auto-Fill Fields
       </button>
+      <button class="kwr-btn kwr-btn-ghost" id="kwr-test-connection-btn" onclick="kwrTestConnection()" title="Verify the website, sitemap and about page before running">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+        Test Connection
+      </button>
     </div>
     <div id="kwr-autofill-hint" style="font-size:11px;color:var(--muted);margin-top:6px;min-height:14px"></div>
   </div>
@@ -8337,6 +8343,10 @@ function showErrorToast(msg) {
     <div class="kwr-field">
       <label class="kwr-label" for="kwr-target-market">Target Market <span class="req">*</span></label>
       <input class="kwr-input" id="kwr-target-market" type="text" placeholder="e.g. US, Israel, UK…" autocomplete="off">
+    </div>
+    <div class="kwr-field full">
+      <label class="kwr-label" for="kwr-sheet-target">Spreadsheet Target <span class="req">*</span></label>
+      <input class="kwr-input" id="kwr-sheet-target" type="text" placeholder="Google Sheet ID or URL for the final approved export" autocomplete="off">
     </div>
     <div class="kwr-field full">
       <label class="kwr-label" for="kwr-worksheet-prefix">Worksheet Name Prefix (optional)</label>
@@ -8418,7 +8428,7 @@ function showErrorToast(msg) {
     .kwr-report-card{background:linear-gradient(180deg,rgba(124,58,237,0.06),rgba(255,255,255,0.02));border:1px solid rgba(124,58,237,0.18);border-radius:12px;padding:12px 14px;display:flex;flex-direction:column;gap:8px;transition:all .15s}
     .kwr-report-card:hover{border-color:rgba(124,58,237,0.45);transform:translateY(-1px)}
     .kwr-report-head{display:flex;align-items:center;gap:8px}
-    .kwr-report-head img{width:20px;height:20px;border-radius:4px;flex-shrink:0}
+    .kwr-report-fallback-icon{width:20px;height:20px;border-radius:6px;flex-shrink:0;display:inline-flex;align-items:center;justify-content:center;background:rgba(124,58,237,.18);border:1px solid rgba(124,58,237,.28);color:#c4b5fd;font-size:11px;font-weight:800}
     .kwr-report-head .domain{font-weight:700;color:#fff;font-size:14px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
     .kwr-report-meta{font-size:11.5px;color:var(--muted);line-height:1.5}
     .kwr-report-meta .fname{color:#c4b5fd;word-break:break-all}
@@ -8455,13 +8465,12 @@ function showErrorToast(msg) {
         }
         grid.innerHTML = list.map(r=>{
           const host = r.domain || (r.website_url||'').replace(/^https?:\/\//,'').split('/')[0] || 'unknown';
-          const fav = host && host!=='unknown' ? `https://www.google.com/s2/favicons?domain=${encodeURIComponent(host)}&sz=32` : '';
           const ss = r.sync_status || {};
           const badge = (label, ok)=>`<span class="kwr-badge${ok?' ok':''}">${ok?'✓ ':'- '}${label}</span>`;
           return `
             <div class="kwr-report-card" data-rid="${escapeHtml(r.run_id)}">
               <div class="kwr-report-head">
-                ${fav?`<img src="${fav}" alt="" onerror="this.style.display='none'">`:''}
+                <div class="kwr-report-fallback-icon" aria-hidden="true">${escapeHtml((host||'K').slice(0,1).toUpperCase())}</div>
                 <div class="domain" title="${escapeHtml(host)}">${escapeHtml(host)}</div>
               </div>
               <div class="kwr-report-meta">
@@ -10626,7 +10635,7 @@ async function loadDashboard(){
         </div>
       </div>
       <div class="card-header" role="button" tabindex="0" aria-expanded="false" aria-controls="${cardId}" aria-label="Open project ${p.name}" onclick="event.stopPropagation();toggleProjectCard(this.parentElement,{scroll:true})" onkeydown="handleProjectHeaderKeydown(event,this.parentElement)">
-        <div class="card-icon" id="icon-${p.name.replace(/[^a-z0-9]/gi,'-')}" style="background:linear-gradient(135deg,${color},${color}88)"><span class="icon-initials">${initials}</span><img class="favicon" src="https://www.google.com/s2/favicons?domain=${p.name}&sz=64" alt="" loading="lazy" onerror="this.onerror=null;this.removeAttribute('src');this.style.display='none';" onload="this.classList.add('loaded');this.closest('.card-icon').classList.add('has-logo')"></div>
+        <div class="card-icon" id="icon-${p.name.replace(/[^a-z0-9]/gi,'-')}" style="background:linear-gradient(135deg,${color},${color}88)"><span class="icon-initials">${initials}</span></div>
         <div class="card-info">
           <h3>${p.name}</h3>
           <div class="card-meta">
@@ -12840,6 +12849,56 @@ function loadTopicsFromStatus(state) {
     if (btn) {
       btn.disabled = false;
       btn.innerHTML = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12l7-7 7 7"/></svg> Auto-Fill Fields';
+    }
+  };
+
+  window.kwrTestConnection = async function() {
+    const quickInput = document.getElementById('kwr-domain-quick');
+    const websiteInput = document.getElementById('kwr-website-url');
+    const btn = document.getElementById('kwr-test-connection-btn');
+    const hint = document.getElementById('kwr-autofill-hint');
+    const raw = ((quickInput && quickInput.value) || (websiteInput && websiteInput.value) || '').trim();
+    const d = kwrNormDomain(raw);
+    if (!d) {
+      if (hint) { hint.style.color = '#ef4444'; hint.textContent = 'Enter a valid domain or Website URL before testing the connection.'; }
+      (quickInput || websiteInput || {}).focus && (quickInput || websiteInput).focus();
+      return;
+    }
+
+    const original = btn ? btn.innerHTML : '';
+    if (btn) { btn.disabled = true; btn.textContent = 'Testing…'; }
+    if (hint) { hint.style.color = 'var(--muted)'; hint.textContent = 'Testing website, sitemap, about page and discovered metadata…'; }
+
+    try {
+      const resp = await (window.fetchWithRetry || fetch)('/api/kwr/probe', {
+        method: 'POST',
+        headers: {'Content-Type':'application/json'},
+        body: JSON.stringify({ domain: raw })
+      }, 1, 500);
+      let data = {};
+      try { data = await resp.json(); } catch(_) { data = {}; }
+      if (!resp.ok || data.ok === false) throw new Error(data.error || ('Probe failed with HTTP ' + resp.status));
+
+      const parts = [];
+      if (data.website_url) parts.push('website OK');
+      if (data.sitemap_url) parts.push('sitemap found');
+      if (data.about_url) parts.push('about page found');
+      if (data.brand_name) parts.push('brand: ' + data.brand_name);
+      if (Array.isArray(data.competitors) && data.competitors.length) parts.push(data.competitors.length + ' competitors');
+      if (hint) {
+        hint.style.color = '#22c55e';
+        hint.textContent = 'Connection OK for ' + d.host + (parts.length ? ' — ' + parts.join(' · ') : '') + '. You can Auto-Fill or run the selected model.';
+      }
+      if (typeof kwrSetStatus === 'function') kwrSetStatus('kwr-dot-idle', 'Connection OK — ready to run keyword research', '');
+    } catch (err) {
+      const msg = err && err.message ? err.message : 'Connection test failed';
+      if (hint) { hint.style.color = '#ef4444'; hint.textContent = 'Connection test failed for ' + d.host + ': ' + msg; }
+      if (typeof kwrSetStatus === 'function') kwrSetStatus('kwr-dot-error', 'Connection test failed: ' + msg, '');
+    } finally {
+      if (btn) {
+        btn.disabled = false;
+        btn.innerHTML = original || '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg> Test Connection';
+      }
     }
   };
 

@@ -10,10 +10,14 @@ from unittest import mock
 
 import server
 
-PORT = 18113
-BASE = f'http://127.0.0.1:{PORT}'
+PORT = 0
+BASE = ''
 REPO_ROOT = Path(server.__file__).resolve().parent
 INDEX_HTML = REPO_ROOT / 'index.html'
+
+
+class ReusableHTTPServer(HTTPServer):
+    allow_reuse_address = True
 
 
 def req(path, method='GET', headers=None, data=None):
@@ -28,9 +32,12 @@ def req(path, method='GET', headers=None, data=None):
 class KwResearchControlsTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
+        global PORT, BASE
         cls._orig_auth_enabled = server._dashboard_auth_enabled
         server._dashboard_auth_enabled = lambda: False
-        cls.httpd = HTTPServer(('127.0.0.1', PORT), server.DashboardHandler)
+        cls.httpd = ReusableHTTPServer(('127.0.0.1', 0), server.DashboardHandler)
+        PORT = cls.httpd.server_port
+        BASE = f'http://127.0.0.1:{PORT}'
         cls.thread = threading.Thread(target=cls.httpd.serve_forever, daemon=True)
         cls.thread.start()
         time.sleep(0.25)
@@ -45,6 +52,9 @@ class KwResearchControlsTests(unittest.TestCase):
         html = INDEX_HTML.read_text(encoding='utf-8')
         self.assertIn('Run Selected Model', html)
         self.assertIn('Best Text Swarm', html)
+        self.assertIn('Test Connection', html)
+        self.assertIn('window.kwrTestConnection', html)
+        self.assertIn('id="kwr-sheet-target"', html)
         self.assertIn('Used only for the selected-model run', html)
         self.assertNotIn('__ensemble__', html)
         self.assertIn("kwrSetButtons && kwrSetButtons(false);", html)

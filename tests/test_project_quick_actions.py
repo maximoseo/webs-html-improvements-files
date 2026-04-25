@@ -10,11 +10,15 @@ from pathlib import Path
 
 import server
 
-PORT = 18112
-BASE = f'http://127.0.0.1:{PORT}'
+PORT = 0
+BASE = ''
 REPO_ROOT = Path(server.__file__).resolve().parent
 STARS_PATH = REPO_ROOT / 'data' / 'stars.json'
 SETTINGS_PATH = REPO_ROOT / 'data' / 'settings.json'
+
+
+class ReusableHTTPServer(HTTPServer):
+    allow_reuse_address = True
 
 
 def req(path, method='GET', headers=None, data=None):
@@ -29,9 +33,12 @@ def req(path, method='GET', headers=None, data=None):
 class ProjectQuickActionsTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
+        global PORT, BASE
         cls._orig_auth_enabled = server._dashboard_auth_enabled
         server._dashboard_auth_enabled = lambda: False
-        cls.httpd = HTTPServer(('127.0.0.1', PORT), server.DashboardHandler)
+        cls.httpd = ReusableHTTPServer(('127.0.0.1', 0), server.DashboardHandler)
+        PORT = cls.httpd.server_port
+        BASE = f'http://127.0.0.1:{PORT}'
         cls.thread = threading.Thread(target=cls.httpd.serve_forever, daemon=True)
         cls.thread.start()
         time.sleep(0.25)
@@ -65,6 +72,12 @@ class ProjectQuickActionsTests(unittest.TestCase):
         self.assertTrue(data['ok'])
         saved = json.loads(SETTINGS_PATH.read_text(encoding='utf-8'))
         self.assertEqual(saved.get('theme_color'), 'blue')
+
+    def test_project_expanded_tools_stay_visible_and_keyboard_accessible(self):
+        html = (REPO_ROOT / 'index.html').read_text(encoding='utf-8')
+        self.assertIn('function toggleProjectCard', html)
+        self.assertIn('handleProjectHeaderKeydown(event,this.parentElement)', html)
+        self.assertIn('.project-card.expanded .card-tools-row{position:sticky', html)
 
 
 if __name__ == '__main__':

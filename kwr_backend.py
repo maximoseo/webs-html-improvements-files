@@ -551,11 +551,52 @@ def _worksheet_name(job: dict, sheet_prefix: str) -> str:
             if prefix else f"kwr-{safe_brand}-{date_str}")
 
 
-def build_excel(run_id: str) -> tuple:
+def _cached_excel_path(run_id: str) -> str:
+    return os.path.join(_run_dir(run_id), 'file.xlsx')
+
+
+def _read_cached_excel(run_id: str, job: dict | None = None) -> tuple:
+    xlsx_path = _cached_excel_path(run_id)
+    if not os.path.exists(xlsx_path):
+        return None, None, None
+    try:
+        with open(xlsx_path, 'rb') as f:
+            data = f.read()
+        disk = job or _load_job_from_disk(run_id) or {'inputs': {}}
+        ws_name = disk.get('worksheet_name') or _worksheet_name(disk, '')
+        return data, ws_name, None
+    except Exception as exc:
+        return None, None, f"Disk cache read failed: {exc}"
+
+
+def build_excel(run_id: str, force_rebuild: bool = False) -> tuple:
     """
-    Build an .xlsx file in memory from the current rows.
+    Build an .xlsx file from the current rows.
     Returns (bytes, worksheet_name, None) or (None, None, error_str).
+
+    Download requests should prefer the cached workbook so Render does not spend
+    memory/CPU rebuilding openpyxl workbooks for every click. Callers that just
+    changed rows pass force_rebuild=True to refresh the cache.
     """
+    with _lock:
+        job = _state.get(run_id)
+        if job is not None:
+            rows = list(job.get('rows') or [])
+            ws_name = _worksheet_name(job, '')
+            job_snapshot = dict(job)
+        else:
+            job = None
+            rows = None
+            ws_name = None
+            job_snapshot = None
+
+    if not force_rebuild:
+        cached_data, cached_ws, cached_err = _read_cached_excel(run_id, job_snapshot)
+        if cached_err:
+            return None, None, cached_err
+        if cached_data is not None:
+            return cached_data, cached_ws, None
+
     try:
         import openpyxl
         from openpyxl.styles import Font, PatternFill, Alignment, Border, Side
@@ -563,31 +604,8 @@ def build_excel(run_id: str) -> tuple:
     except ImportError:
         return None, None, "openpyxl not installed - cannot build Excel file"
 
-    with _lock:
-        job = _state.get(run_id)
-        if job is not None:
-            rows = list(job.get('rows') or [])
-            ws_name = _worksheet_name(job, '')
-        else:
-            job = None
-            rows = None
-            ws_name = None
-
     if job is None:
         # Try disk fallback (in-memory state gone after restart).
-        # First try cached xlsx.
-        rd = _run_dir(run_id)
-        xlsx_path = os.path.join(rd, 'file.xlsx')
-        if os.path.exists(xlsx_path):
-            try:
-                with open(xlsx_path, 'rb') as f:
-                    data = f.read()
-                # Recover worksheet name from job.json if present
-                disk = _load_job_from_disk(run_id) or {}
-                ws_name = disk.get('worksheet_name') or _worksheet_name(disk or {'inputs': {}}, '')
-                return data, ws_name, None
-            except Exception as exc:
-                return None, None, f"Disk cache read failed: {exc}"
         disk = _load_job_from_disk(run_id)
         if disk is None:
             return None, None, f"Run {run_id} not found"
@@ -755,7 +773,7 @@ def approve_and_save(run_id: str, edited_rows: list, sheet_prefix: str) -> tuple
         job['rows'] = edited_rows
         job['row_count'] = len(edited_rows)
 
-    excel_bytes, ws_name, err = build_excel(run_id)
+    excel_bytes, ws_name, err = build_excel(run_id, force_rebuild=True)
     if err:
         return None, None, err
 

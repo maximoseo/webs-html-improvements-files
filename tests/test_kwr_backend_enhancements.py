@@ -1,4 +1,7 @@
+import os
+import shutil
 import unittest
+from unittest import mock
 
 import kwr_backend
 
@@ -69,6 +72,34 @@ class KwResearchEnhancementTests(unittest.TestCase):
         self.assertEqual(summary[1]['model'], 'anthropic/claude-opus-4.7')
         self.assertEqual(summary[1]['kept_rows'], 1)
         self.assertEqual(summary[1]['total_rows'], 2)
+
+    def test_build_excel_prefers_cached_file_for_live_job_downloads(self):
+        run_id = 'test-cached-download'
+        run_dir = kwr_backend._run_dir(run_id)
+        shutil.rmtree(run_dir, ignore_errors=True)
+        os.makedirs(run_dir, exist_ok=True)
+        cached = b'cached-xlsx-bytes'
+        with open(os.path.join(run_dir, 'file.xlsx'), 'wb') as f:
+            f.write(cached)
+
+        with kwr_backend._lock:
+            kwr_backend._state[run_id] = {
+                'inputs': {'brand_name': 'Cache Brand'},
+                'rows': [{'existing_parent_page': '-', 'pillar': 'A', 'cluster': 'A', 'intent': 'pillar'}],
+                'status': 'ready',
+            }
+
+        try:
+            with mock.patch('openpyxl.Workbook', side_effect=AssertionError('should not rebuild cached workbook')):
+                data, ws_name, err = kwr_backend.build_excel(run_id)
+        finally:
+            with kwr_backend._lock:
+                kwr_backend._state.pop(run_id, None)
+            shutil.rmtree(run_dir, ignore_errors=True)
+
+        self.assertIsNone(err)
+        self.assertEqual(data, cached)
+        self.assertIn('cache-brand', ws_name)
 
 
 if __name__ == '__main__':
