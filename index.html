@@ -5304,6 +5304,8 @@ body.light .stat-card{background:rgba(0,0,0,0.03)}
 .mobile-drawer-x{background:none;border:none;color:var(--muted);cursor:pointer;font-size:22px;padding:0;line-height:1}
 .mobile-nav-item{display:flex;align-items:center;gap:10px;padding:11px 14px;border-radius:10px;border:none;background:transparent;color:var(--text-secondary,#d0d6e0);font-size:13px;font-weight:600;cursor:pointer;width:100%;text-align:left;transition:background 0.15s,color 0.15s}
 .mobile-nav-item:hover{background:var(--card-hover,rgba(255,255,255,0.045));color:var(--text)}
+.mobile-nav-item--danger{color:#fda4af}
+.mobile-nav-item--danger:hover{background:rgba(244,63,94,0.12);color:#ffe4e6}
 .hamburger-btn{display:none;align-items:center;justify-content:center;width:36px;height:36px;border-radius:10px;border:1px solid var(--border,rgba(255,255,255,0.08));background:transparent;cursor:pointer;color:var(--text-secondary);flex-shrink:0}
 @media(max-width:768px){.hamburger-btn{display:inline-flex}}
 
@@ -6035,33 +6037,41 @@ header.header > .header-inner,
   .header .header-inner{
     overflow:visible !important;
   }
+  .header .hdr-sync-btn,
   .header .theme-toggle-btn,
   .header .hdr-overflow-wrap,
   .header .hdr-logout-btn,
+  .header .hdr-expand-all-btn,
   .header #hdr-role-badge{
     display:none !important;
   }
-  .header .hdr-sync-btn,
+  .header .header-actions{
+    flex:0 0 auto !important;
+    width:auto !important;
+    justify-content:flex-end !important;
+    gap:0 !important;
+  }
   .header .hamburger-btn{
-    min-width:36px !important;
-    height:36px !important;
-    min-height:36px !important;
-    border-radius:10px !important;
+    display:inline-flex !important;
+    width:40px !important;
+    min-width:40px !important;
+    height:40px !important;
+    min-height:40px !important;
+    border-radius:12px !important;
     border:1px solid rgba(255,255,255,0.14) !important;
     background:#161a20 !important;
     color:#f3f4f6 !important;
     box-shadow:inset 0 1px 0 rgba(255,255,255,0.04),0 4px 12px rgba(0,0,0,0.22) !important;
-  }
-  .header .hdr-sync-btn{
-    padding:0 12px !important;
-  }
-  .header .hamburger-btn{
-    width:36px !important;
     padding:0 !important;
   }
-  .header .hdr-sync-btn svg,
   .header .hamburger-btn svg{
+    width:17px !important;
+    height:17px !important;
     opacity:1 !important;
+  }
+  .header .logo{
+    flex:1 1 auto !important;
+    min-width:0 !important;
   }
   .header .logo-icon{
     background:#151922 !important;
@@ -6794,8 +6804,9 @@ function showErrorToast(msg) {
   <button class="mobile-nav-item" onclick="showPage('tasks');closeMobileMenu()">Tasks</button>
   <button class="mobile-nav-item" onclick="showPage('analytics');closeMobileMenu()">Analytics</button>
   <button class="mobile-nav-item" onclick="showPage('settings');closeMobileMenu()">Settings</button>
+  <button class="mobile-nav-item" onclick="closeMobileMenu();fullSync(document.getElementById('hdr-sync-btn'))">Sync dashboard</button>
   <button class="mobile-nav-item" onclick="toggleTheme();closeMobileMenu()">Toggle theme</button>
-  <button class="mobile-nav-item" onclick="closeMobileMenu();doLogout()">Sign out</button>
+  <button class="mobile-nav-item mobile-nav-item--danger" onclick="closeMobileMenu();doLogout()">Sign out</button>
 </div>
 
 
