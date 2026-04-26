@@ -185,11 +185,20 @@ input[type="password"]{padding-right:44px}
   *,*::before,*::after{transition-duration:0.01ms !important;animation-duration:0.01ms !important}
 }
 @media (max-width:480px){
-  body{padding:16px}
+  body{padding:max(16px,env(safe-area-inset-top)) max(16px,env(safe-area-inset-left)) max(16px,env(safe-area-inset-bottom)) max(16px,env(safe-area-inset-right))}
   .card{padding:24px 20px;border-radius:14px}
   .brand{margin-bottom:18px}
   .card-head h2{font-size:18px}
+  input[type="text"],input[type="email"],input[type="password"]{height:50px;font-size:16px}
+  .btn{height:50px;font-size:15px}
+  .input-wrap button.toggle-pw{width:36px;height:36px}
 }
+*{-webkit-tap-highlight-color:transparent}
+.btn:active:not(:disabled){transform:scale(0.97)}
+
+/* Page load fade-in */
+.shell{animation:fadeInUp 0.4s var(--ease)}
+@keyframes fadeInUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
 </style>
 </head>
 <body>

@@ -13125,6 +13125,47 @@ document.addEventListener('click', function(ev){
     document.body.appendChild(menu);
   };
 
+  // ---- Pull-to-Refresh (mobile only) ----
+  window.initPullToRefresh = function() {
+    if (window.innerWidth > 768) return;
+    var el = document.getElementById('page-projects') || document.querySelector('.container');
+    if (!el) return;
+    var startY = 0, pulling = false, threshold = 80;
+    var indicator = document.createElement('div');
+    indicator.id = 'ptr-indicator';
+    indicator.style.cssText = 'position:fixed;top:0;left:0;right:0;height:0;display:flex;align-items:center;justify-content:center;color:#7170ff;font-size:13px;font-weight:600;z-index:850;overflow:hidden;transition:height 0.2s;pointer-events:none;';
+    indicator.innerHTML = '<span style="opacity:0;transition:opacity 0.2s">↻ Pull to sync</span>';
+    document.body.appendChild(indicator);
+    var label = indicator.querySelector('span');
+
+    el.addEventListener('touchstart', function(e) {
+      if (el.scrollTop <= 0) { startY = e.touches[0].clientY; pulling = true; }
+    }, {passive: true});
+
+    el.addEventListener('touchmove', function(e) {
+      if (!pulling) return;
+      var diff = e.touches[0].clientY - startY;
+      if (diff > 0 && diff < threshold * 2.5) {
+        indicator.style.height = Math.min(diff, threshold * 1.2) + 'px';
+        label.style.opacity = diff > threshold * 0.6 ? '1' : '0';
+        if (diff > threshold) label.textContent = '↻ Release to sync';
+        else label.textContent = '↻ Pull to sync';
+      }
+    }, {passive: true});
+
+    el.addEventListener('touchend', function() {
+      if (!pulling) return;
+      var diff = parseFloat(indicator.style.height) || 0;
+      if (diff > threshold) {
+        label.textContent = 'Syncing...';
+        fullSync();
+      }
+      indicator.style.height = '0';
+      label.style.opacity = '0';
+      pulling = false;
+    });
+  };
+
   // ---- Init ----
   window.initFixerPage = function() {
     loadWorkflowsDropdown();
@@ -15766,6 +15807,8 @@ document.addEventListener('DOMContentLoaded',function(){
     const el=document.getElementById(t.id);
     if(el&&el.textContent==='-')el.textContent=t.txt;
   });
+  // Init mobile pull-to-refresh
+  if(typeof initPullToRefresh==='function') initPullToRefresh();
 });
 
 // === DARK/LIGHT MODE ===
