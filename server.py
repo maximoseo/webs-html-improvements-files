@@ -2816,7 +2816,8 @@ body{{font-family:Arial;padding:24px}}h1{{color:#333}}pre{{background:#f4f4f4;pa
             domain = (query.get('domain') or [''])[0]
             configured = bool(os.getenv('N8N_API_KEY'))
             payload = {'configured': configured, 'domain': normalize_domain(domain), 'mappingFile': MAP_FILE.name}
-            if configured and domain:
+            # Always try local mapping regardless of API key
+            if domain:
                 try:
                     workflow_id, details = resolve_workflow_id(domain)
                     payload.update({'ok': True, 'workflowId': workflow_id, 'details': details})
@@ -2826,6 +2827,11 @@ body{{font-family:Arial;padding:24px}}h1{{color:#333}}pre{{background:#f4f4f4;pa
                     payload.update({'ok': False, 'error': json.loads(str(exc))})
                 except Exception as exc:
                     payload.update({'ok': False, 'error': {'code': 'unexpected_error', 'message': str(exc)}})
+            else:
+                # Return available mapped domains when no domain specified
+                n8n_map = load_json_file(MAP_FILE, {})
+                mapped = list((n8n_map.get('domains') or {}).keys())
+                payload.update({'ok': True, 'mappedDomains': mapped, 'totalMapped': len(mapped)})
             return json_response(self, 200, payload)
 
         if parsed.path == '/api/n8n/executions':
@@ -3001,7 +3007,9 @@ body{{font-family:Arial;padding:24px}}h1{{color:#333}}pre{{background:#f4f4f4;pa
                 return json_response(self, 200, {'ok': True, 'skills': rows, 'total': total})
             except urllib.error.HTTPError as exc:
                 if exc.code == 401:
-                    return json_response(self, 200, {'ok': True, 'skills': [], 'total': 0, 'configured': True, 'auth_error': 'Supabase credentials invalid or table has RLS enabled'})
+                    # Fallback to local skills when Supabase unavailable
+                    local_skills = _scan_local_skills(query=topic_filter, category=category, limit=limit)
+                    return json_response(self, 200, {'ok': True, 'skills': local_skills, 'total': len(local_skills), 'configured': True, 'auth_error': 'Supabase credentials invalid or table has RLS enabled — showing local skills fallback'})
                 return json_response(self, 502, {'ok': False, 'error': f'Supabase error {exc.code}'})
             except Exception as exc:
                 return json_response(self, 500, {'ok': False, 'error': str(exc)})
@@ -5401,3 +5409,60 @@ def main():
 
 if __name__ == '__main__':
     main()
+
+# ── Local Skill Discovery Fallback ─────────────────────────────
+def _scan_local_skills(query='', category='', limit=20):
+    """Scan local skill files when Supabase is unavailable."""
+    import fnmatch
+    skills = []
+    skill_dirs = [
+        Path(__file__).parent / 'skill_expansion_workspace',
+        Path(__file__).parent / '.agents' / 'skills',
+    ]
+    seen = set()
+    for base in skill_dirs:
+        if not base.exists():
+            continue
+        for md_file in base.rglob('*.md'):
+            if md_file.name.lower() != 'skill.md':
+                continue
+            rel = str(md_file.relative_to(base.parent if '.agents' in str(base) else base))
+            if rel in seen:
+                continue
+            seen.add(rel)
+            try:
+                content = md_file.read_text(encoding='utf-8', errors='ignore')[:2000]
+            except Exception:
+                content = ''
+            # Extract title from first heading
+            title = rel.split('/')[0] if '/' in rel else rel
+            for line in content.splitlines()[:10]:
+                if line.startswith('# ') or line.startswith('## '):
+                    title = line.lstrip('# ').strip()
+                    break
+            # Determine category from path or content
+            cat = category or 'general'
+            if 'design' in str(md_file).lower() or 'ui' in str(md_file).lower():
+                cat = 'design'
+            elif 'seo' in str(md_file).lower():
+                cat = 'seo'
+            elif 'code' in str(md_file).lower() or 'dev' in str(md_file).lower():
+                cat = 'development'
+            elif 'research' in str(md_file).lower():
+                cat = 'research'
+            skill = {
+                'id': rel.replace('/', '_').replace('.md', ''),
+                'title': title,
+                'category': cat,
+                'source_url': str(md_file),
+                'matched_topics': [cat],
+                'description': (content.split('\n')[0] if content else '')[:200],
+                'status': 'pending',
+                'created_at': datetime.datetime.utcnow().isoformat() + 'Z',
+            }
+            if query and query.lower() not in title.lower() and query.lower() not in str(md_file).lower():
+                continue
+            skills.append(skill)
+    # Sort and limit
+    skills = skills[:limit]
+    return skills
