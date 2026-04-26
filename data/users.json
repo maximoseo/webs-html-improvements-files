@@ -1,11 +1,11 @@
-[
-  {
-    "id": "9541dcc5-2bbf-452c-8c19-c8a0c18050c1",
-    "username": "admin",
-    "password_hash": "pbkdf2_sha256$260000$0418e97cd08e02d63cedbc98742ad068$3fdd014f148f20dabe84a2ff8035ffb0c90127f38be2a3555c0dd4481eb52dc9",
-    "role": "admin",
-    "email": "service@maximo-seo.com",
-    "created_at": "2026-04-24T06:16:28.706076Z",
-    "last_login": "2026-04-26T08:48:29.620601Z"
-  }
-]
+{
+  "users": [
+    {
+      "username": "maximo",
+      "email": "admin@maximo-seo.com",
+      "password_hash": "pbkdf2_sha256$260000$fce3db80cf28c9238d74c0aea8e66582$fd9e36817b4389708e4ceb47593a27b9121467865925ad9187e00ab091c622e7",
+      "role": "admin",
+      "created_at": "2025-01-01T00:00:00Z"
+    }
+  ]
+}

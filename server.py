@@ -3464,115 +3464,6 @@ body{{font-family:Arial;padding:24px}}h1{{color:#333}}pre{{background:#f4f4f4;pa
         return self.serve_static(parsed.path)
 
     
-def _generate_radar_excel(payload):
-    import io
-    try:
-        import openpyxl
-        from openpyxl.styles import Font, PatternFill
-    except ImportError:
-        return None, "openpyxl not installed"
-    
-    wb = openpyxl.Workbook()
-    
-    # Sheet 1: Summary
-    ws_summary = wb.active
-    ws_summary.title = "Summary"
-    ws_summary['A1'] = 'Skill Radar Report'
-    ws_summary['A1'].font = Font(bold=True, size=16)
-    ws_summary['A2'] = f"Subject: {payload.get('subject_name', 'Unknown')}"
-    ws_summary['A3'] = f"Date: {payload.get('report_date', 'Unknown')}"
-    ws_summary['A4'] = f"Overall Score: {payload.get('overall_score', 0)} / 100"
-    
-    # Sheet 2: Scores
-    ws_scores = wb.create_sheet("Scores")
-    headers = ['Dimension', 'Score', 'Target', 'Gap', 'Trend']
-    ws_scores.append(headers)
-    for col in range(1, 6):
-        ws_scores.cell(row=1, column=col).font = Font(bold=True)
-        
-    scores = payload.get('scores', {})
-    targets = payload.get('targets', {})
-    trends = payload.get('trends', {})
-    
-    for dim, score in scores.items():
-        target = targets.get(dim, 0)
-        gap = score - target
-        trend = trends.get(dim, 'N/A')
-        ws_scores.append([dim, score, target, gap, trend])
-        
-    # Sheet 3: AI Recommendations
-    ws_recs = wb.create_sheet("AI Recommendations")
-    ws_recs.append(['Priority', 'Area', 'Recommendation', 'Expected Impact'])
-    for col in range(1, 5):
-        ws_recs.cell(row=1, column=col).font = Font(bold=True)
-        
-    recs = payload.get('ai_recommendations', [])
-    for rec in recs:
-        ws_recs.append([rec.get('priority', ''), rec.get('area', ''), rec.get('recommendation', ''), rec.get('impact', '')])
-        
-    # Set column widths
-    ws_scores.column_dimensions['A'].width = 20
-    ws_recs.column_dimensions['B'].width = 20
-    ws_recs.column_dimensions['C'].width = 50
-    
-    buf = io.BytesIO()
-    wb.save(buf)
-    return buf.getvalue(), None
-
-    
-def _save_radar_report(payload):
-    import os, json
-    from datetime import datetime
-    try:
-        subject = payload.get('subject_name', 'Unknown').replace(' ', '_').replace('/', '_')
-        date_str = datetime.now().strftime('%Y-%m-%d')
-        base_dir = os.path.join(os.getcwd(), 'Reports', 'Skill-Radar', 'agents', subject)
-        os.makedirs(base_dir, exist_ok=True)
-        
-        # 1. Markdown for Obsidian
-        md_path = os.path.join(base_dir, f"{date_str}-radar.md")
-        score_rows = ""
-        for dim, score in payload.get('scores', {}).items():
-            target = payload.get('targets', {}).get(dim, 0)
-            gap = score - target
-            trend = payload.get('trends', {}).get(dim, '0')
-            score_rows += f"| {dim} | {score} | {target} | {gap} | {trend} |\n"
-            
-        recs_text = ""
-        for i, rec in enumerate(payload.get('ai_recommendations', [])):
-            recs_text += f"{i+1}. {rec.get('priority', '')}: {rec.get('area', '')} - {rec.get('recommendation', '')}\n"
-
-        md_content = f"""---
-type: agent_skills
-subject: {payload.get('subject_name', '')}
-date: {date_str}
-overall_score: {payload.get('overall_score', 0)}
----
-
-# Skill Radar: {payload.get('subject_name', '')} — {date_str}
-
-## Scores
-| Dimension | Score | Target | Gap | Trend |
-|---|---|---|---|---|
-{score_rows}
-
-## AI Analysis
-{payload.get('ai_summary', 'Automated radar analysis completed.')}
-
-## Recommendations
-{recs_text}
-"""
-        with open(md_path, 'w', encoding='utf-8') as f:
-            f.write(md_content)
-
-        # 2. JSON Backup for GitHub
-        json_path = os.path.join(base_dir, f"{date_str}.json")
-        with open(json_path, 'w', encoding='utf-8') as f:
-            json.dump(payload, f, indent=2)
-
-        return True, None
-    except Exception as e:
-        return False, str(e)
 
     def do_POST(self):
         if not self._r2_check_rate(): return
@@ -5648,6 +5539,118 @@ def main():
         print(f'[stage14] scheduler start failed: {_e}', flush=True)
     server.serve_forever()
 
+
+
+# ── RADAR HELPERS ──
+def _generate_radar_excel(payload):
+    import io
+    try:
+        import openpyxl
+        from openpyxl.styles import Font, PatternFill
+    except ImportError:
+        return None, "openpyxl not installed"
+    
+    wb = openpyxl.Workbook()
+    
+    # Sheet 1: Summary
+    ws_summary = wb.active
+    ws_summary.title = "Summary"
+    ws_summary['A1'] = 'Skill Radar Report'
+    ws_summary['A1'].font = Font(bold=True, size=16)
+    ws_summary['A2'] = f"Subject: {payload.get('subject_name', 'Unknown')}"
+    ws_summary['A3'] = f"Date: {payload.get('report_date', 'Unknown')}"
+    ws_summary['A4'] = f"Overall Score: {payload.get('overall_score', 0)} / 100"
+    
+    # Sheet 2: Scores
+    ws_scores = wb.create_sheet("Scores")
+    headers = ['Dimension', 'Score', 'Target', 'Gap', 'Trend']
+    ws_scores.append(headers)
+    for col in range(1, 6):
+        ws_scores.cell(row=1, column=col).font = Font(bold=True)
+        
+    scores = payload.get('scores', {})
+    targets = payload.get('targets', {})
+    trends = payload.get('trends', {})
+    
+    for dim, score in scores.items():
+        target = targets.get(dim, 0)
+        gap = score - target
+        trend = trends.get(dim, 'N/A')
+        ws_scores.append([dim, score, target, gap, trend])
+        
+    # Sheet 3: AI Recommendations
+    ws_recs = wb.create_sheet("AI Recommendations")
+    ws_recs.append(['Priority', 'Area', 'Recommendation', 'Expected Impact'])
+    for col in range(1, 5):
+        ws_recs.cell(row=1, column=col).font = Font(bold=True)
+        
+    recs = payload.get('ai_recommendations', [])
+    for rec in recs:
+        ws_recs.append([rec.get('priority', ''), rec.get('area', ''), rec.get('recommendation', ''), rec.get('impact', '')])
+        
+    # Set column widths
+    ws_scores.column_dimensions['A'].width = 20
+    ws_recs.column_dimensions['B'].width = 20
+    ws_recs.column_dimensions['C'].width = 50
+    
+    buf = io.BytesIO()
+    wb.save(buf)
+    return buf.getvalue(), None
+
+    
+def _save_radar_report(payload):
+    import os, json
+    from datetime import datetime
+    try:
+        subject = payload.get('subject_name', 'Unknown').replace(' ', '_').replace('/', '_')
+        date_str = datetime.now().strftime('%Y-%m-%d')
+        base_dir = os.path.join(os.getcwd(), 'Reports', 'Skill-Radar', 'agents', subject)
+        os.makedirs(base_dir, exist_ok=True)
+        
+        # 1. Markdown for Obsidian
+        md_path = os.path.join(base_dir, f"{date_str}-radar.md")
+        score_rows = ""
+        for dim, score in payload.get('scores', {}).items():
+            target = payload.get('targets', {}).get(dim, 0)
+            gap = score - target
+            trend = payload.get('trends', {}).get(dim, '0')
+            score_rows += f"| {dim} | {score} | {target} | {gap} | {trend} |\n"
+            
+        recs_text = ""
+        for i, rec in enumerate(payload.get('ai_recommendations', [])):
+            recs_text += f"{i+1}. {rec.get('priority', '')}: {rec.get('area', '')} - {rec.get('recommendation', '')}\n"
+
+        md_content = f"""---
+type: agent_skills
+subject: {payload.get('subject_name', '')}
+date: {date_str}
+overall_score: {payload.get('overall_score', 0)}
+---
+
+# Skill Radar: {payload.get('subject_name', '')} — {date_str}
+
+## Scores
+| Dimension | Score | Target | Gap | Trend |
+|---|---|---|---|---|
+{score_rows}
+
+## AI Analysis
+{payload.get('ai_summary', 'Automated radar analysis completed.')}
+
+## Recommendations
+{recs_text}
+"""
+        with open(md_path, 'w', encoding='utf-8') as f:
+            f.write(md_content)
+
+        # 2. JSON Backup for GitHub
+        json_path = os.path.join(base_dir, f"{date_str}.json")
+        with open(json_path, 'w', encoding='utf-8') as f:
+            json.dump(payload, f, indent=2)
+
+        return True, None
+    except Exception as e:
+        return False, str(e)
 
 if __name__ == '__main__':
     main()
