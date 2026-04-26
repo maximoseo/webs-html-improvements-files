@@ -21907,6 +21907,26 @@ body{padding-top:max(var(--header-safe-offset, 0px), calc(var(--header-h, 80px) 
 })();
 </script>
 
+<style id="project-preview-menu-overlap-fix-2026-04-26">
+/* ============================================================
+   PROJECT PREVIEW MENU OVERLAP FIX (2026-04-26)
+   PROJECT_PREVIEW_MENU_OVERLAP_FIX_2026_04_26
+   The dashboard main menu/header is fixed at z-index:9999. The
+   preview modal inherited the older modal z-index:1000, so the
+   menu could sit above the modal and hide the first part of the
+   rendered HTML preview. Keep the preview modal in the top layer
+   without disabling the header globally for other scroll-locked
+   states such as the mobile drawer.
+   ============================================================ */
+#preview-modal.modal-overlay.open{
+  z-index:20000 !important;
+}
+#preview-modal .modal{
+  position:relative !important;
+  z-index:1 !important;
+}
+</style>
+
 <style id="project-card-hover-flicker-fix-2026-04-26">
 /* ============================================================
    PROJECT CARD HOVER FLICKER FIX (2026-04-26)

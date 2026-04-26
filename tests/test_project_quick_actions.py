@@ -84,6 +84,13 @@ class ProjectQuickActionsTests(unittest.TestCase):
         self.assertIn('id="preview-iframe" sandbox="allow-same-origin allow-scripts"', html)
         self.assertIn('PROJECT_HTML_PREVIEW_SCRIPT_FIX_2026_04_26', html)
 
+    def test_project_preview_modal_sits_above_fixed_main_menu(self):
+        html = (REPO_ROOT / 'index.html').read_text(encoding='utf-8')
+        self.assertIn('id="project-preview-menu-overlap-fix-2026-04-26"', html)
+        self.assertRegex(html, r'#preview-modal\.modal-overlay\.open\s*\{[^}]*z-index:\s*20000\s*!important')
+        self.assertIn('PROJECT_PREVIEW_MENU_OVERLAP_FIX_2026_04_26', html)
+        self.assertNotRegex(html, r'body\.scroll-locked\s+\.header\s*\{[^}]*pointer-events:\s*none\s*!important')
+
 
 if __name__ == '__main__':
     unittest.main()
