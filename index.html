@@ -19316,5 +19316,42 @@ body.light .last-sync-meta{color:#64748B !important}
 .project-card .file-row .action-btn{transform:none !important;transition:background-color 120ms cubic-bezier(.2,0,0,1),border-color 120ms cubic-bezier(.2,0,0,1),color 120ms cubic-bezier(.2,0,0,1) !important;}
 </style>
 
+<style id="project-file-row-hover-blink-fix-v2-2026-04-26">
+/* ============================================================
+   PROJECT FILE ROW HOVER BLINK FIX V2 (2026-04-26)
+   User still saw row blinking in Incognito, so this removes the
+   remaining visual repaint triggers on expanded file rows and
+   nested action buttons: no motion, no animated shadows, no blur.
+   ============================================================ */
+.project-card.expanded .file-row,.project-card.expanded .file-row:hover,.project-card.expanded .file-row:focus-within{
+  background:rgba(255,255,255,0.025) !important;
+  border-color:rgba(255,255,255,0.10) !important;
+  transform:none !important;
+  animation:none !important;
+  transition:none !important;
+  box-shadow:none !important;
+  filter:none !important;
+  backdrop-filter:none !important;
+  -webkit-backdrop-filter:none !important;
+  will-change:auto !important;
+  contain:layout paint style !important;
+  content-visibility:visible !important;
+  contain-intrinsic-size:auto !important;
+  backface-visibility:hidden !important;
+}
+.project-card.expanded .file-row:hover{background:rgba(255,255,255,0.045) !important;border-color:rgba(147,197,253,0.18) !important;}
+.project-card.expanded .file-row .action-btn,.project-card.expanded .file-row .action-btn:hover,.project-card.expanded .file-row .action-btn:focus-visible{
+  transform:none !important;
+  animation:none !important;
+  transition:none !important;
+  box-shadow:none !important;
+  filter:none !important;
+  backdrop-filter:none !important;
+  -webkit-backdrop-filter:none !important;
+  will-change:auto !important;
+}
+.project-card.expanded .file-badge,.project-card.expanded .file-details,.project-card.expanded .file-name,.project-card.expanded .file-size{transition:none !important;animation:none !important;transform:none !important;}
+</style>
+
 </body>
 </html>

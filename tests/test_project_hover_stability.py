@@ -53,6 +53,28 @@ class ProjectHoverStabilityTests(unittest.TestCase):
         self.assertIn('.project-card .file-row *{animation:none !important;}', fix_css)
         self.assertIn('.project-card .file-row .action-btn{transform:none !important;', fix_css)
 
+    def test_file_rows_disable_all_nested_hover_motion_and_shadows(self):
+        html = INDEX_HTML.read_text(encoding='utf-8')
+
+        self.assertIn('PROJECT FILE ROW HOVER BLINK FIX V2', html)
+        self.assertIn('id="project-file-row-hover-blink-fix-v2-2026-04-26"', html)
+        fix_start = html.index('id="project-file-row-hover-blink-fix-v2-2026-04-26"')
+        fix_css = html[fix_start:html.index('</style>', fix_start)]
+
+        self.assertIn('.project-card.expanded .file-row,.project-card.expanded .file-row:hover,.project-card.expanded .file-row:focus-within{', fix_css)
+        self.assertIn('transition:none !important;', fix_css)
+        self.assertIn('box-shadow:none !important;', fix_css)
+        self.assertIn('filter:none !important;', fix_css)
+        self.assertIn('backdrop-filter:none !important;', fix_css)
+        self.assertIn('-webkit-backdrop-filter:none !important;', fix_css)
+        self.assertIn('background:rgba(255,255,255,0.025) !important;', fix_css)
+        self.assertIn('.project-card.expanded .file-row:hover{background:rgba(255,255,255,0.045) !important;', fix_css)
+        self.assertIn('.project-card.expanded .file-row .action-btn,.project-card.expanded .file-row .action-btn:hover,.project-card.expanded .file-row .action-btn:focus-visible{', fix_css)
+        self.assertIn('transition:none !important;', fix_css)
+        self.assertIn('transform:none !important;', fix_css)
+        self.assertIn('box-shadow:none !important;', fix_css)
+        self.assertIn('.project-card.expanded .file-badge,.project-card.expanded .file-details,.project-card.expanded .file-name,.project-card.expanded .file-size{transition:none !important;', fix_css)
+
 
 if __name__ == '__main__':
     unittest.main()
