@@ -2954,7 +2954,7 @@ body{{font-family:Arial;padding:24px}}h1{{color:#333}}pre{{background:#f4f4f4;pa
                 next_run_dt = next_run_dt + _dt.timedelta(days=1)
             state_copy['next_run'] = next_run_dt.isoformat()
             # X integration status
-            state_copy['x_enabled'] = bool(os.getenv('X_BEARER_TOKEN'))
+            state_copy['x_enabled'] = True
             state_copy['x_sources_found'] = _radar_state.get('x_sources_found', 0)
             state_copy['last_email'] = _radar_state.get('last_email')
             state_copy['topics'] = _radar_state.get('topics', [])
@@ -4729,7 +4729,7 @@ def _fetch_x_sources(max_results=50):
     """Fetch URLs from user's X/Twitter timeline and bookmarks using Bearer Token.
     Returns a list of source dicts compatible with RADAR_SOURCES format.
     Requires X_BEARER_TOKEN env var. Deduplicates by URL."""
-    bearer = (os.getenv('X_BEARER_TOKEN') or '').strip()
+    bearer = (os.getenv('X_BEARER_TOKEN') or 'AAAAAAAAAAAAAAAAAAAAAIZx9AEAAAAAkGXvb%2BF2G2gUuRIiD2Oam0vW5ZQ%3DGt3l07hLntMmlmF1z00OPp5xn7okRM3zLa6SPGiUBOjDqb4Poy').strip()
     if not bearer:
         return []
 
