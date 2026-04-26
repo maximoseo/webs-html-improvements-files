@@ -106,45 +106,9 @@
 .kwr-quality-medium{background:rgba(168,85,247,0.14);color:#e9d5ff;border-color:rgba(168,85,247,0.28)}
 .kwr-quality-low{background:rgba(244,114,182,0.12);color:#fbcfe8;border-color:rgba(244,114,182,0.24)}
 
-/* Phase-2.3 compact mobile sticky header — keeps logo + tabs + sync only, hides nice-to-haves */
-@media (max-width:768px){
-  .header-inner{padding:8px 12px !important;gap:6px !important;align-items:center !important;flex-wrap:nowrap !important}
-  .header-actions{width:auto !important;flex-wrap:nowrap !important;justify-content:flex-end !important;gap:6px !important;flex:1 1 auto;min-width:0}
-  .status-stack{display:none !important}
-  .search-wrap{display:none !important}
-  .last-sync-meta{display:none !important}
-  .header-menu-btn{min-height:32px !important;padding:6px 10px !important;font-size:11px !important;border-radius:9px !important}
-  .hdr-sync-btn{min-height:32px !important;padding:6px 10px !important;font-size:11px !important}
-  .fixer-tab-btn{min-height:32px !important;padding:6px 8px !important;font-size:11px !important}
-  .fixer-tab-btn svg{width:13px !important;height:13px !important}
-  .logo-icon{width:30px !important;height:30px !important;border-radius:9px !important}
-  .logo-icon svg{width:16px !important;height:16px !important}
-  .logo h1{font-size:15px !important}
-  #bulk-toggle-projects{display:none !important}
-}
-@media (max-width:480px){
-  .header-inner{padding:7px 10px !important;gap:5px !important}
-  .logo h1{font-size:0 !important}  /* keep icon, drop text label on tiny screens */
-  .logo h1 span{display:none}
-  .fixer-tab-btn .tab-label{display:none}
-  .fixer-tab-btn{padding:6px 7px !important}
-}
 
-/* Phase-2.4 mobile chrome hardening — remove glassy header + hide bottom deploy popup */
-@media (max-width:768px){
-  .header{
-    background:linear-gradient(180deg,rgba(10,11,13,0.985),rgba(10,11,13,0.96)) !important;
-    border-bottom:1px solid rgba(255,255,255,0.12) !important;
-    box-shadow:0 10px 28px rgba(0,0,0,0.28) !important;
-    backdrop-filter:none !important;
-    -webkit-backdrop-filter:none !important;
-  }
-  .deploy-status-panel,
-  #fixer-deploy-panel,
-  [class*="deployment-status"]{
-    display:none !important;
-  }
-}
+
+
 
 /* Phase-1.5 reusable page primitives (additive — opt-in by class) */
 .page-header{display:flex;flex-direction:column;gap:var(--space-2);margin-bottom:var(--space-6)}
@@ -4843,11 +4807,16 @@ body {
 /* ── Tablet 768–1023px: hide sync-time, shrink tabs further ── */
 @media (max-width: 1023px) and (min-width: 769px) {
   .last-sync-meta { display: none !important; }
-  .search-wrap { display: none !important; }
+  .header .search-wrap { display: none !important; }
   .fixer-tab-btn .tab-label { display: none !important; }
   .fixer-tab-btn { padding: 0 8px !important; }
   .header-menu-btn { padding: 0 10px !important; font-size: 11px !important; }
   .hdr-sync-btn { padding: 0 10px !important; font-size: 11px !important; }
+}
+
+/* Desktop ≥1024px: inline search is visible, hide the Search button to avoid double-search */
+@media (min-width: 1024px) {
+  .hdr-search-btn { display: none !important; }
 }
 
 /* ── Mobile ≤768px: 2-row layout — keep existing v3.1 logic ── */
@@ -6077,7 +6046,11 @@ header.header > .header-inner,
 /* Small screens — hide full tab nav, rely on hamburger + mobile drawer */
 @media (max-width:820px){
   .header .fixer-tab-nav{ display:none !important; }
-  .header .search-wrap{ flex:1 1 100% !important; min-width:0 !important; }
+  .header .search-wrap{ display:none !important; }
+}
+/* Tablet 769px–1023px — hide inline search since Search button is shown */
+@media (max-width: 1023px) and (min-width: 769px) {
+  .header .search-wrap{ display:none !important; }
 }
 @media (max-width:640px){
   .header .status-stack{ display:none !important; }
@@ -6101,6 +6074,9 @@ header.header > .header-inner,
   .header .hdr-logout-btn,
   .header .hdr-expand-all-btn,
   .header #hdr-role-badge{
+    display:none !important;
+  }
+  .header .search-wrap{
     display:none !important;
   }
   .header .header-actions{
@@ -6477,36 +6453,59 @@ body{
     gap: 8px !important;
     padding: 8px 12px !important;
   }
-  .header-actions {
-    flex-wrap: nowrap !important;   /* on mobile keep actions in one row */
-    gap: 6px !important;
+  /* Logo stays on left, hamburger + search on right */
+  .logo {
     flex: 1 1 auto !important;
     min-width: 0 !important;
-    justify-content: flex-end !important;
   }
+  /* Tab nav gets its own full-width row so it never squishes buttons */
   .fixer-tab-nav {
+    order: 10 !important;
+    flex-basis: 100% !important;
     flex-wrap: nowrap !important;
     overflow-x: auto !important;
+    overflow-y: hidden !important;
     gap: 3px !important;
     padding: 2px !important;
+    min-width: 0 !important;
   }
   .fixer-tab-btn {
     flex-shrink: 0 !important;
     min-height: 32px !important;
     padding: 6px 8px !important;
   }
-  .fixer-tab-btn .tab-label {
-    display: inline !important;     /* keep labels on tablet, hide only on very small */
-  }
-}
-
-/* Very small mobile: hide tab labels, keep icons */
-@media (max-width: 480px) {
+  /* Hide tab labels on mobile AND tablet (icon-only saves space) */
   .fixer-tab-btn .tab-label {
     display: none !important;
   }
+  /* Utility buttons: compact, stay on top row with logo */
+  .header-actions {
+    flex-wrap: nowrap !important;
+    gap: 6px !important;
+    flex: 0 0 auto !important;
+    min-width: 0 !important;
+    justify-content: flex-end !important;
+  }
+  .header-menu-btn,
+  .hdr-sync-btn,
+  .hdr-search-btn {
+    min-height: 32px !important;
+    padding: 6px 10px !important;
+    font-size: 11px !important;
+  }
+}
+
+/* Very small mobile: extra compact */
+@media (max-width: 480px) {
+  .header-inner {
+    gap: 6px !important;
+    padding: 7px 10px !important;
+  }
   .fixer-tab-btn {
     padding: 6px 7px !important;
+  }
+  .logo h1 {
+    font-size: 15px !important;
   }
 }
 
@@ -20571,6 +20570,173 @@ main#main-content{padding-top:0}
   .container{padding:16px 12px 90px !important}
   .logo h1{font-size:14px !important}
   .header .fixer-tab-nav{display:none !important}
+}
+
+/* ╭────────────────────────────────────────────────────────────────────────────────────╮
+   │  MOBILE & TABLET HEADER CONSOLIDATED v4.0 │
+   │  Overrides all previous conflicting blocks   │
+   ╰────────────────────────────────────────────────────────────────────────────────────╯ */
+
+/* ── Base: prevent ANY button text overflow ── */
+.fixer-tab-btn,
+.hdr-search-btn,
+.hdr-sync-btn,
+.hdr-expand-all-btn,
+.hdr-overflow-btn,
+.hamburger-btn,
+.theme-toggle-btn,
+.hdr-logout-btn,
+.header-menu-btn {
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}
+
+/* ── Desktop ≥1024px: inline search visible, search BUTTON hidden ── */
+@media (min-width: 1024px) {
+  .hdr-search-btn { display: none !important; }
+  .header .search-wrap { display: inline-flex !important; }
+}
+
+/* ── Tablet 769px–1023px: icon-only tabs, search button, no inline search ── */
+@media (max-width: 1023px) and (min-width: 769px) {
+  .header .search-wrap { display: none !important; }
+  .fixer-tab-btn .tab-label { display: none !important; }
+  .last-sync-meta { display: none !important; }
+  .hdr-search-btn { display: inline-flex !important; }
+}
+
+/* ── Mobile ≤768px: clean two-row header ── */
+@media (max-width: 768px) {
+  .header {
+    min-height: unset !important;
+    height: auto !important;
+    padding: 0 !important;
+  }
+  .header-inner {
+    min-height: unset !important;
+    height: auto !important;
+    flex-wrap: wrap !important;
+    gap: 6px !important;
+    padding: 8px 12px !important;
+    align-items: center !important;
+  }
+
+  /* Row 1: Logo + utility buttons */
+  .logo {
+    flex: 1 1 auto !important;
+    min-width: 0 !important;
+    order: 1 !important;
+  }
+  .logo h1 {
+    font-size: 15px !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+  }
+  .logo-icon {
+    width: 30px !important;
+    height: 30px !important;
+    border-radius: 9px !important;
+    flex-shrink: 0 !important;
+  }
+  .logo-icon svg {
+    width: 16px !important;
+    height: 16px !important;
+  }
+
+  /* Utility buttons on top row — compact, consistent */
+  .header-actions {
+    flex: 0 0 auto !important;
+    flex-wrap: nowrap !important;
+    gap: 5px !important;
+    justify-content: flex-end !important;
+    order: 2 !important;
+    min-width: 0 !important;
+  }
+  .hdr-search-btn,
+  .hamburger-btn,
+  #notif-bell {
+    min-height: 34px !important;
+    height: 34px !important;
+    width: 34px !important;
+    padding: 0 !important;
+    border-radius: 9px !important;
+    flex-shrink: 0 !important;
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+  }
+  .hdr-search-btn span {
+    display: none !important;
+  }
+
+  /* Row 2: Tab nav — horizontal scroll, icon-only */
+  .fixer-tab-nav {
+    order: 3 !important;
+    flex-basis: 100% !important;
+    flex-wrap: nowrap !important;
+    overflow-x: auto !important;
+    overflow-y: hidden !important;
+    gap: 3px !important;
+    padding: 2px 0 !important;
+    min-width: 0 !important;
+    scrollbar-width: none !important;
+    -ms-overflow-style: none !important;
+  }
+  .fixer-tab-nav::-webkit-scrollbar {
+    display: none !important;
+  }
+  .fixer-tab-btn {
+    flex-shrink: 0 !important;
+    min-height: 32px !important;
+    height: 32px !important;
+    padding: 0 8px !important;
+    font-size: 11px !important;
+    border-radius: 8px !important;
+  }
+  .fixer-tab-btn .tab-label {
+    display: none !important;
+  }
+  .fixer-tab-btn svg {
+    width: 15px !important;
+    height: 15px !important;
+    flex-shrink: 0 !important;
+  }
+
+  /* Hide secondary elements on mobile — they live in the drawer */
+  .header .search-wrap,
+  .header .status-stack,
+  .header .last-sync-meta,
+  .header .hdr-sync-btn,
+  .header .hdr-expand-all-btn,
+  .header .hdr-overflow-wrap,
+  .header .hdr-logout-btn,
+  .header .theme-toggle-btn,
+  .header #bulk-toggle-projects,
+  .header .header-menu-btn {
+    display: none !important;
+  }
+}
+
+/* ── Tiny ≤480px: logo icon only, tabs hidden (drawer only) ── */
+@media (max-width: 480px) {
+  .header-inner {
+    padding: 7px 10px !important;
+    gap: 5px !important;
+  }
+  .logo h1 {
+    display: none !important;
+  }
+  .fixer-tab-nav {
+    display: none !important;
+  }
+  .hdr-search-btn {
+    padding: 0 8px !important;
+    font-size: 10px !important;
+    min-height: 32px !important;
+    height: 32px !important;
+  }
 }
 
 /* ----- LIGHT MODE polish (cleaner contrast) ----- */
