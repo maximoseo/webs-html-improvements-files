@@ -5322,6 +5322,18 @@ body.light .stat-card{background:rgba(0,0,0,0.03)}
 .sk-line{height:11px;border-radius:6px}
 .sk-w50{width:50%}.sk-w70{width:70%}.sk-w35{width:35%}
 /* ============= TASK MANAGER ============= */
+
+/* TASK_MANAGER_REDESIGN_PROMPT_2026_04_26 */
+.tasks-redesign-prompt{margin:18px 0 22px;padding:18px;border:1px solid rgba(113,112,255,0.18);border-radius:16px;background:linear-gradient(180deg,rgba(113,112,255,0.10),rgba(255,255,255,0.025));box-shadow:0 16px 40px rgba(0,0,0,0.22)}
+.tasks-redesign-prompt-head{display:flex;align-items:flex-start;justify-content:space-between;gap:14px;margin-bottom:12px;flex-wrap:wrap}
+.tasks-redesign-kicker{font-size:11px;font-weight:800;color:var(--gold-light);text-transform:uppercase;letter-spacing:.09em;margin-bottom:5px}
+.tasks-redesign-title{font-size:16px;font-weight:750;color:var(--text);letter-spacing:-.02em;margin:0 0 5px}
+.tasks-redesign-desc{font-size:12px;color:var(--muted);line-height:1.5;max-width:78ch;margin:0}
+.tasks-redesign-actions{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.task-redesign-textarea{width:100%;min-height:320px;max-height:46vh;resize:vertical;background:rgba(0,0,0,0.26);border:1px solid rgba(255,255,255,0.10);border-radius:12px;color:var(--text-secondary);font:12px/1.55 ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;padding:14px;outline:none;white-space:pre;box-sizing:border-box}
+.task-redesign-textarea:focus{border-color:rgba(113,112,255,.45);box-shadow:0 0 0 3px rgba(113,112,255,.12)}
+@media(max-width:768px){.tasks-redesign-prompt{padding:14px}.tasks-redesign-actions{width:100%}.tasks-redesign-actions .task-btn-ghost,.tasks-redesign-actions .task-btn-primary{flex:1 1 100%;min-height:44px}.task-redesign-textarea{min-height:260px;font-size:11px}}
+
 .tasks-page{padding:0 0 80px}
 .tasks-header{margin-bottom:24px}
 .tasks-title-row{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:16px}
@@ -7725,6 +7737,958 @@ function showErrorToast(msg) {
       </select>
     </div>
   </div>
+  <!-- TASK_MANAGER_REDESIGN_PROMPT_2026_04_26 -->
+  <section class="tasks-redesign-prompt" id="task-manager-redesign-prompt-panel" aria-labelledby="task-manager-redesign-prompt-title">
+    <div class="tasks-redesign-prompt-head">
+      <div>
+        <div class="tasks-redesign-kicker">Implementation Prompt</div>
+        <h3 class="tasks-redesign-title" id="task-manager-redesign-prompt-title">Task Manager Tab Redesign Plan</h3>
+        <p class="tasks-redesign-desc">Full internal plan for upgrading this tab into a professional, full-featured task tracking system with status workflows, multiple views, automation, and integrations.</p>
+      </div>
+      <div class="tasks-redesign-actions">
+        <button type="button" class="task-btn-ghost" onclick="copyTaskManagerRedesignPrompt()">Copy prompt</button>
+        <button type="button" class="task-btn-primary" onclick="downloadTaskManagerRedesignPrompt()">Download .md</button>
+      </div>
+    </div>
+    <textarea class="task-redesign-textarea" id="task-manager-redesign-prompt" readonly aria-label="Task Manager redesign prompt"># Task Manager Tab Redesign Plan
+
+**Dashboard:** `https://html-redesign-dashboard.maximo-seo.ai/`
+**Tab:** Task Manager
+**Goal:** Redesign the Task Manager tab to be a professional, full-featured task tracking system with status workflows, multiple views, automation, and integrations.
+
+---
+
+## Current State (Based on Assessment)
+
+The Task Manager tab currently has:
+
+- Basic task list
+- Limited status tracking
+- No advanced filtering or sorting
+- No views (kanban, calendar, timeline)
+- No automation or recurring tasks
+- No integration with other dashboard tabs
+
+---
+
+## What Needs to Be Added
+
+### Core Requirements
+
+1. **Enhanced task cards** — Rich task cards with status, priority, assignee, due date, tags
+2. **Multiple views** — List, Kanban board, Calendar, Timeline
+3. **Status workflow** — Customizable status columns with drag-and-drop
+4. **Filtering &amp; sorting** — Filter by status, priority, assignee, tag, date range
+5. **Task detail panel** — Slide-out panel with full task info, subtasks, comments, activity log
+
+### Additional Features (Recommended)
+
+6. **Sub-tasks &amp; checklists** — Break tasks into smaller items
+7. **Agent integration** — Link tasks to Hermes sub-agents and KW research reports
+8. **Recurring tasks** — Auto-create tasks on schedule
+9. **Bulk actions** — Select multiple tasks, change status/priority/assignee at once
+10. **Time tracking** — Track time spent per task
+11. **Notifications** — Telegram bot alerts for due dates, status changes
+12. **Templates** — Pre-built task templates for common workflows
+13. **Dependencies** — Task A must complete before Task B starts
+14. **Custom fields** — Add custom fields per project type
+
+---
+
+## Data Architecture
+
+### Supabase Schema
+
+```sql
+-- Projects (group tasks by project)
+CREATE TABLE projects (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  name VARCHAR(255) NOT NULL,
+  description TEXT,
+  color VARCHAR(7) DEFAULT '#1a1a2e',
+  icon VARCHAR(50),
+  status VARCHAR(20) DEFAULT 'active',  -- active, archived
+  sort_order INTEGER DEFAULT 0,
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- Status columns (customizable per project)
+CREATE TABLE task_statuses (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  project_id UUID REFERENCES projects(id) ON DELETE CASCADE,
+  name VARCHAR(100) NOT NULL,
+  color VARCHAR(7) DEFAULT '#6c757d',
+  icon VARCHAR(50),
+  sort_order INTEGER DEFAULT 0,
+  is_done BOOLEAN DEFAULT FALSE,   -- marks task as completed
+  wip_limit INTEGER,               -- optional work-in-progress limit
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- Default statuses: Backlog, To Do, In Progress, Review, Done
+
+-- Tasks
+CREATE TABLE tasks (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  project_id UUID REFERENCES projects(id) ON DELETE CASCADE,
+  status_id UUID REFERENCES task_statuses(id),
+  parent_task_id UUID REFERENCES tasks(id),  -- for subtasks
+  title VARCHAR(500) NOT NULL,
+  description TEXT,
+  priority VARCHAR(20) DEFAULT 'medium',  -- urgent, high, medium, low
+  assignee VARCHAR(255),                   -- agent name or user
+  due_date DATE,
+  start_date DATE,
+  completed_at TIMESTAMPTZ,
+  estimated_hours DECIMAL(6,2),
+  actual_hours DECIMAL(6,2),
+  sort_order INTEGER DEFAULT 0,
+  is_recurring BOOLEAN DEFAULT FALSE,
+  recurrence_rule JSONB,  -- { frequency: 'weekly', day: 'monday', time: '09:00' }
+  tags TEXT[],
+  custom_fields JSONB,
+  linked_agent VARCHAR(50),        -- gpt-5.5, opus-4.7, gemini-3.1, etc.
+  linked_report_id UUID,           -- link to KW report
+  linked_template_id UUID,         -- link to HTML template version
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- Subtasks / Checklist items
+CREATE TABLE checklist_items (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  task_id UUID REFERENCES tasks(id) ON DELETE CASCADE,
+  title VARCHAR(500) NOT NULL,
+  is_completed BOOLEAN DEFAULT FALSE,
+  completed_at TIMESTAMPTZ,
+  sort_order INTEGER DEFAULT 0,
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- Comments / Activity
+CREATE TABLE task_comments (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  task_id UUID REFERENCES tasks(id) ON DELETE CASCADE,
+  author VARCHAR(255) NOT NULL,
+  content TEXT NOT NULL,
+  type VARCHAR(20) DEFAULT 'comment',  -- comment, status_change, assignment, system
+  metadata JSONB,  -- { from_status: 'todo', to_status: 'in_progress' }
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- Task dependencies
+CREATE TABLE task_dependencies (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  task_id UUID REFERENCES tasks(id) ON DELETE CASCADE,
+  depends_on_task_id UUID REFERENCES tasks(id) ON DELETE CASCADE,
+  type VARCHAR(20) DEFAULT 'blocks',  -- blocks, blocked_by, related
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  UNIQUE(task_id, depends_on_task_id)
+);
+
+-- Task templates
+CREATE TABLE task_templates (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  name VARCHAR(255) NOT NULL,
+  description TEXT,
+  template_data JSONB NOT NULL,  -- full task structure with subtasks
+  tags TEXT[],
+  use_count INTEGER DEFAULT 0,
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- Time entries
+CREATE TABLE time_entries (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  task_id UUID REFERENCES tasks(id) ON DELETE CASCADE,
+  started_at TIMESTAMPTZ NOT NULL,
+  ended_at TIMESTAMPTZ,
+  duration_minutes INTEGER,
+  note TEXT,
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- Indexes
+CREATE INDEX idx_tasks_project ON tasks(project_id, status_id);
+CREATE INDEX idx_tasks_assignee ON tasks(assignee);
+CREATE INDEX idx_tasks_due_date ON tasks(due_date);
+CREATE INDEX idx_tasks_priority ON tasks(priority);
+CREATE INDEX idx_tasks_parent ON tasks(parent_task_id);
+CREATE INDEX idx_checklist_task ON checklist_items(task_id);
+CREATE INDEX idx_comments_task ON task_comments(task_id, created_at DESC);
+CREATE INDEX idx_time_entries_task ON time_entries(task_id);
+```
+
+### Obsidian Vault Sync
+
+```
+obsidian-vault/
+└── Task-Manager/
+    ├── projects/
+    │   ├── html-redesign/
+    │   │   ├── _project.md           # Project overview
+    │   │   ├── backlog/
+    │   │   │   └── task-xxx.md
+    │   │   ├── in-progress/
+    │   │   │   └── task-yyy.md
+    │   │   └── done/
+    │   │       └── task-zzz.md
+    │   └── kw-research/
+    │       └── ...
+    ├── templates/
+    │   ├── html-redesign-pipeline.md
+    │   └── kw-audit.md
+    └── _overview.md                  # Cross-project task summary
+```
+
+**Task Markdown Format:**
+
+```markdown
+---
+id: task-uuid
+project: HTML Redesign
+status: In Progress
+priority: high
+assignee: Agent 2 (Opus 4.7)
+due_date: 2026-04-28
+tags: [design, visual, styling]
+linked_agent: opus-4.7
+---
+
+# Apply Dark Mode to Newsletter Template
+
+## Description
+Apply dark mode CSS to the latest newsletter template using prefers-color-scheme media query.
+
+## Checklist
+- [x] Analyze current color scheme
+- [x] Create dark mode color tokens
+- [ ] Apply to header/footer
+- [ ] Apply to body content
+- [ ] Test in email clients
+
+## Activity
+- 2026-04-26 14:30 — Status changed: To Do → In Progress
+- 2026-04-26 14:25 — Assigned to Agent 2 (Opus 4.7)
+- 2026-04-26 14:20 — Created by Hermes
+```
+
+### GitHub Repo Sync
+
+```
+task-manager-repo/
+├── projects/
+│   ├── html-redesign/
+│   │   └── tasks.json         # All tasks for project
+│   └── kw-research/
+│       └── tasks.json
+├── templates/
+│   └── templates.json
+├── exports/
+│   └── {date}-snapshot.json   # Daily state snapshot
+└── README.md
+```
+
+### Sync Flow
+
+```
+Task Created/Updated
+       │
+       ├──→ Supabase (primary, real-time queries, UI source)
+       │
+       ├──→ Obsidian Vault (human-readable notes, linked thinking)
+       │
+       └──→ GitHub Repo (versioned JSON, backup, audit trail)
+```
+
+---
+
+## Page Layout — Full Wireframe
+
+### Main View (List + Kanban Toggle)
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│  Navigation Bar                                 [Task Manager]   │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                  │
+│  ┌─ Header ───────────────────────────────────────────────────┐ │
+│  │                                                             │ │
+│  │  Project: [HTML Redesign ▾]     View: [☰ List] [▦ Kanban]  │ │
+│  │                                       [📅 Calendar] [═ Timeline]│
+│  │                                                             │ │
+│  │  [+ New Task]  [📋 From Template]  [⚡ Bulk Actions ▾]      │ │
+│  │                                                             │ │
+│  └─────────────────────────────────────────────────────────────┘ │
+│                                                                  │
+│  ┌─ Filters &amp; Search ────────────────────────────────────────┐  │
+│  │  🔍 Search tasks...                                         │  │
+│  │                                                             │  │
+│  │  Status: [All ▾]  Priority: [All ▾]  Assignee: [All ▾]     │  │
+│  │  Tags: [All ▾]    Due: [Any time ▾]  Sort: [Priority ▾]    │  │
+│  │                                                             │  │
+│  │  Active filters: [🔴 High Priority ✕] [🤖 Agent 2 ✕]  [Clear]│  │
+│  └─────────────────────────────────────────────────────────────┘  │
+│                                                                  │
+│  ┌─ Quick Stats ──────────────────────────────────────────────┐ │
+│  │  ┌────────┐ ┌────────┐ ┌────────┐ ┌────────┐ ┌────────┐   │ │
+│  │  │  24    │ │   5    │ │   8    │ │   3    │ │  12    │   │ │
+│  │  │ Total  │ │Backlog │ │ In Prog│ │ Review │ │  Done  │   │ │
+│  │  └────────┘ └────────┘ └────────┘ └────────┘ └────────┘   │ │
+│  │                                                             │ │
+│  │  Overdue: 2  |  Due today: 3  |  Due this week: 7          │ │
+│  └─────────────────────────────────────────────────────────────┘ │
+│                                                                  │
+│  ════════════════════════════════════════════════════════════════ │
+│                                                                  │
+│                     (View Content Below)                          │
+│                                                                  │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## View 1: List View
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│  ☰ List View                                                     │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                  │
+│  ── 🔴 Urgent ──────────────────────────────────────────────── │
+│                                                                  │
+│  ☐ │ 🔴 │ Fix Outlook rendering bug            │ Agent 4      │ │
+│    │    │ 🏷 performance, outlook               │ Due: Today    │ │
+│    │    │ ████░░░░ 2/5 subtasks                 │ ⏱ 2h 15m     │ │
+│                                                                  │
+│  ── 🟠 High ────────────────────────────────────────────────── │
+│                                                                  │
+│  ☐ │ 🟠 │ Apply dark mode to template          │ Agent 2      │ │
+│    │    │ 🏷 design, dark-mode                  │ Due: Apr 28   │ │
+│    │    │ ██████░░ 3/4 subtasks                 │ ⏱ 1h 30m     │ │
+│                                                                  │
+│  ☐ │ 🟠 │ Accessibility audit on v2026.04.26   │ Agent 3      │ │
+│    │    │ 🏷 accessibility, audit               │ Due: Apr 27   │ │
+│    │    │ ░░░░░░░░ 0/6 subtasks                 │ ⏱ —          │ │
+│                                                                  │
+│  ── 🟡 Medium ──────────────────────────────────────────────── │
+│                                                                  │
+│  ☐ │ 🟡 │ Add UTM tracking to all CTA links    │ Agent 5      │ │
+│    │    │ 🏷 analytics, tracking                │ Due: Apr 30   │ │
+│    │    │ ████████ 4/4 subtasks                 │ ⏱ 45m        │ │
+│                                                                  │
+│  ☐ │ 🟡 │ Redesign header component            │ Agent 1      │ │
+│    │    │ 🏷 layout, header                     │ Due: May 1    │ │
+│    │    │ ██░░░░░░ 1/5 subtasks                 │ ⏱ —          │ │
+│                                                                  │
+│  ── ✅ Done (collapsed) ───────────── 12 tasks ──── [Expand] ── │
+│                                                                  │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+### Task Row Component
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│ ☐ │ 🔴 │ Fix Outlook rendering bug            │ 🤖 Agent 4    │
+│   │    │ Tags: [performance] [outlook] [email] │ 📅 Due: Today │
+│   │    │ Subtasks: ████░░░░ 2/5                │ ⏱ 2h 15m      │
+│   │    │ Depends on: "Apply dark mode" (done)  │ 💬 3 comments  │
+└─────────────────────────────────────────────────────────────────┘
+
+Hover actions: [▶ Start Timer] [✏ Edit] [📋 Duplicate] [🗑 Delete]
+Click: Opens task detail panel (slide-out from right)
+```
+
+---
+
+## View 2: Kanban Board
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│  ▦ Kanban Board                                [+ Add Column]    │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                  │
+│ ┌─ Backlog (5) ──┐ ┌─ To Do (3) ────┐ ┌─ In Progress (4)─┐    │
+│ │                 │ │                 │ │    WIP: 4/6       │    │
+│ │ ┌─────────────┐│ │ ┌─────────────┐│ │ ┌─────────────┐   │    │
+│ │ │🟡 Redesign  ││ │ │🟠 Add dark  ││ │ │🔴 Fix Outlook│   │    │
+│ │ │   header    ││ │ │   mode      ││ │ │   rendering  │   │    │
+│ │ │ Agent 1     ││ │ │ Agent 2     ││ │ │ Agent 4      │   │    │
+│ │ │ May 1       ││ │ │ Apr 28      ││ │ │ Today ⚠️      │   │    │
+│ │ │ 1/5 ██░░░░  ││ │ │ 0/4 ░░░░░░ ││ │ │ 2/5 ████░░   │   │    │
+│ │ └─────────────┘│ │ └─────────────┘│ │ └─────────────┘   │    │
+│ │                 │ │                 │ │                    │    │
+│ │ ┌─────────────┐│ │ ┌─────────────┐│ │ ┌─────────────┐   │    │
+│ │ │🟢 Update    ││ │ │🟡 Optimize  ││ │ │🟠 Accessibility│  │    │
+│ │ │   footer    ││ │ │   images    ││ │ │   audit v26   │  │    │
+│ │ │ Agent 1     ││ │ │ Agent 4     ││ │ │ Agent 3       │  │    │
+│ │ │ May 3       ││ │ │ Apr 29      ││ │ │ Apr 27        │  │    │
+│ │ └─────────────┘│ │ └─────────────┘│ │ └─────────────┘   │    │
+│ │                 │ │                 │ │                    │    │
+│ │ [+ Add task]    │ │ [+ Add task]    │ │ [+ Add task]      │    │
+│ └─────────────────┘ └─────────────────┘ └──────────────────┘    │
+│                                                                  │
+│ ┌─ Review (2) ───┐ ┌─ Done (12) ────┐                          │
+│ │                 │ │                 │                          │
+│ │ ┌─────────────┐│ │ ┌─────────────┐│                          │
+│ │ │🟡 UTM       ││ │ │✅ Base layout││                          │
+│ │ │   tracking  ││ │ │   v26       ││                          │
+│ │ │ Agent 5     ││ │ │ Agent 1     ││                          │
+│ │ │ Apr 30      ││ │ │ Completed   ││                          │
+│ │ │ 4/4 ████████││ │ │ Apr 24      ││                          │
+│ │ └─────────────┘│ │ └─────────────┘│                          │
+│ │                 │ │                 │                          │
+│ │ [+ Add task]    │ │ 11 more...     │                          │
+│ └─────────────────┘ └─────────────────┘                          │
+│                                                                  │
+│  ← Drag &amp; drop cards between columns to change status →         │
+│                                                                  │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+**Kanban Features:**
+
+- Drag &amp; drop cards between columns
+- WIP (work-in-progress) limits per column — shows warning when exceeded
+- Column color coding
+- Collapse/expand columns
+- Quick-add task at bottom of each column
+- Card shows: priority dot, title, assignee, due date, subtask progress
+
+---
+
+## View 3: Calendar View
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│  📅 Calendar View                    [← Apr 2026 →]  [Month|Week]│
+├─────────────────────────────────────────────────────────────────┤
+│                                                                  │
+│  Mon      │  Tue      │  Wed      │  Thu      │  Fri            │
+│ ──────────┼───────────┼───────────┼───────────┼──────────       │
+│  21       │  22       │  23       │  24       │  25              │
+│           │           │           │ ✅ Base    │                  │
+│           │           │           │ layout    │                  │
+│ ──────────┼───────────┼───────────┼───────────┼──────────       │
+│  26       │  27       │  28       │  29       │  30              │
+│ 🔴 Fix    │ 🟠 A11y   │ 🟠 Dark   │ 🟡 Optimize│ 🟡 UTM         │
+│ Outlook   │ audit     │ mode      │ images   │ tracking        │
+│ ──────────┼───────────┼───────────┼───────────┼──────────       │
+│  May 1    │  2        │  3        │  4        │  5               │
+│ 🟡 Redesign│          │ 🟢 Update  │           │                  │
+│ header    │           │ footer    │           │                  │
+│ ──────────┼───────────┼───────────┼───────────┼──────────       │
+│                                                                  │
+│  Today: 3 tasks due  |  This week: 7  |  Overdue: 2 ⚠️          │
+│                                                                  │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## View 4: Timeline / Gantt View
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│  ═ Timeline View                              [Apr 21 — May 5]  │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                  │
+│  Task                    │ 21 22 23 24 25 26 27 28 29 30 1 2 3  │
+│  ─────────────────────── │ ── ── ── ── ── ── ── ── ── ── ── ── │
+│  🔴 Fix Outlook          │              ████████                  │
+│  🟠 Dark mode            │                    ██████████          │
+│  🟠 A11y audit           │                 ████████               │
+│  🟡 UTM tracking         │                          ████████     │
+│  🟡 Redesign header      │                                ██████ │
+│  🟡 Optimize images      │                       ██████          │
+│  🟢 Update footer        │                                  ████ │
+│                           │                                      │
+│  ──── Dependencies ─────  │                                      │
+│  Fix Outlook ──blocks──→ Dark mode                               │
+│  A11y audit ──blocks──→ UTM tracking                             │
+│                                                                  │
+│  Legend: ████ = duration  │→ = dependency                        │
+│                                                                  │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## Task Detail Panel (Slide-Out)
+
+When clicking a task, a panel slides in from the right:
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│  ← Back                     Fix Outlook rendering bug    [✕]    │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                  │
+│  Status: [🔵 In Progress ▾]     Priority: [🔴 Urgent ▾]         │
+│  Assignee: [🤖 Agent 4 — Kimi K2.6 ▾]                           │
+│  Project: [HTML Redesign ▾]                                      │
+│                                                                  │
+│  Due: [Apr 26, 2026 📅]         Start: [Apr 25, 2026 📅]        │
+│  Estimated: [3 hours]           Actual: [2h 15m ⏱ Running]      │
+│                                                                  │
+│  Tags: [performance] [outlook] [email] [+ Add]                   │
+│                                                                  │
+│  ─── Description ────────────────────────────────────────────── │
+│  Fix the rendering issues in Outlook 2019+ where the hero       │
+│  image section breaks out of its container and the CTA button   │
+│  loses its border-radius. Need VML fallback for rounded corners.│
+│  [Edit]                                                          │
+│                                                                  │
+│  ─── Checklist (2/5) ───────────────────────────────────────── │
+│  ☑ Identify all Outlook-specific rendering issues                │
+│  ☑ Create VML markup for rounded button                          │
+│  ☐ Add conditional comments for Outlook                          │
+│  ☐ Fix hero image container width                                │
+│  ☐ Test in Outlook 2019, 2021, and 365                           │
+│  [+ Add item]                                                    │
+│                                                                  │
+│  ─── Dependencies ───────────────────────────────────────────── │
+│  ⬆ Blocks: "Apply dark mode to template" (waiting)               │
+│  [+ Add dependency]                                              │
+│                                                                  │
+│  ─── Linked Items ───────────────────────────────────────────── │
+│  🤖 Agent: Kimi K2.6 — Performance Engineer                      │
+│  📄 Template: v2026.04.26.a (GPT 5.5 Agent)                     │
+│  📊 Report: Accessibility Audit #3 (Gemini 3.1)                  │
+│  [+ Link item]                                                   │
+│                                                                  │
+│  ─── Time Tracking ──────────────────────────────────────────── │
+│  Total: 2h 15m                                                   │
+│  │ Apr 26, 14:00-15:30 │ 1h 30m │ VML button fix              │ │
+│  │ Apr 26, 16:00-16:45 │ 45m    │ Hero image debugging        │ │
+│  [▶ Start Timer]  [+ Manual Entry]                               │
+│                                                                  │
+│  ─── Activity ───────────────────────────────────────────────── │
+│  💬 Agent 4: "VML button implemented. Testing in Outlook 365     │
+│     now. Border-radius renders correctly."                       │
+│     — 30 min ago                                                 │
+│                                                                  │
+│  🔄 Status changed: To Do → In Progress                          │
+│     — 2 hours ago                                                │
+│                                                                  │
+│  👤 Assigned to Agent 4 (Kimi K2.6)                              │
+│     — 2 hours ago                                                │
+│                                                                  │
+│  📝 Task created by Hermes                                       │
+│     — 3 hours ago                                                │
+│                                                                  │
+│  ┌───────────────────────────────────────────────────────────┐  │
+│  │ Add a comment...                                    [Send]│  │
+│  └───────────────────────────────────────────────────────────┘  │
+│                                                                  │
+│  ─── Actions ────────────────────────────────────────────────── │
+│  [📋 Duplicate]  [📁 Move to Project]  [📥 Export]  [🗑 Delete]  │
+│                                                                  │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## New Task / Quick Add
+
+### Quick Add (inline in list/kanban)
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│  + │ What needs to be done?                        │ [Enter ↵]  │
+│    │ #tag @agent !priority /due:date               │            │
+└─────────────────────────────────────────────────────────────────┘
+
+Smart syntax:
+  #performance     → adds tag "performance"
+  @agent-4         → assigns to Agent 4
+  !urgent          → sets priority to urgent
+  /due:tomorrow    → sets due date
+  /due:apr-30      → sets due date
+```
+
+### Full Task Creation Modal
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│  + New Task                                              [✕]    │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                  │
+│  Title:                                                          │
+│  [Implement responsive hero image section                   ]   │
+│                                                                  │
+│  Description:                                                    │
+│  ┌───────────────────────────────────────────────────────────┐  │
+│  │ Create a responsive hero image component that works       │  │
+│  │ across all email clients with proper fallbacks...         │  │
+│  └───────────────────────────────────────────────────────────┘  │
+│                                                                  │
+│  Project:  [HTML Redesign ▾]     Status: [To Do ▾]              │
+│  Priority: [🟡 Medium ▾]         Assignee: [🤖 Agent 1 ▾]       │
+│  Due:      [Apr 30 📅]           Start:    [Apr 28 📅]           │
+│  Estimate: [2 hours]                                             │
+│                                                                  │
+│  Tags: [layout] [responsive] [hero] [+ Add]                     │
+│                                                                  │
+│  Checklist:                                                      │
+│  ☐ Design mobile layout                                          │
+│  ☐ Design tablet layout                                          │
+│  ☐ Design desktop layout                                         │
+│  ☐ Add image fallback for Outlook                                │
+│  [+ Add item]                                                    │
+│                                                                  │
+│  Depends on: [Select task ▾]                                     │
+│  Link to agent: [GPT 5.5 — Layout Architect ▾]                  │
+│                                                                  │
+│  ☐ Recurring task                                                │
+│    Frequency: [Weekly ▾]  Day: [Monday ▾]  Time: [09:00]        │
+│                                                                  │
+│  [Create from Template ▾]                                        │
+│                                                                  │
+│                               [Cancel]  [Create Task]            │
+│                                                                  │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## Task Templates
+
+Pre-built templates for common workflows:
+
+### Template: HTML Redesign Pipeline
+
+```json
+{
+  "name": "HTML Redesign Pipeline",
+  "tasks": [
+    {
+      "title": "Create base HTML structure",
+      "assignee": "Agent 1 (GPT 5.5)",
+      "priority": "high",
+      "tags": ["layout", "structure"],
+      "checklist": [
+        "Define grid system",
+        "Create header component",
+        "Create content sections",
+        "Create footer component",
+        "Add responsive breakpoints"
+      ]
+    },
+    {
+      "title": "Apply visual design",
+      "assignee": "Agent 2 (Opus 4.7)",
+      "priority": "high",
+      "tags": ["design", "visual"],
+      "depends_on": "Create base HTML structure",
+      "checklist": [
+        "Apply color palette",
+        "Set typography",
+        "Style buttons and links",
+        "Add hover states",
+        "Dark mode support"
+      ]
+    },
+    {
+      "title": "Accessibility audit",
+      "assignee": "Agent 3 (Gemini 3.1)",
+      "priority": "high",
+      "tags": ["accessibility", "audit"],
+      "depends_on": "Apply visual design"
+    },
+    {
+      "title": "Performance optimization",
+      "assignee": "Agent 4 (Kimi K2.6)",
+      "priority": "medium",
+      "tags": ["performance", "optimization"],
+      "depends_on": "Accessibility audit"
+    },
+    {
+      "title": "Analytics integration",
+      "assignee": "Agent 5 (GLM 5.1)",
+      "priority": "medium",
+      "tags": ["analytics", "tracking"],
+      "depends_on": "Performance optimization"
+    }
+  ]
+}
+```
+
+### Template: KW Research Audit
+
+```json
+{
+  "name": "KW Research Audit",
+  "tasks": [
+    { "title": "Run initial KW report", "tags": ["research"] },
+    { "title": "Identify top opportunities", "depends_on": "Run initial KW report" },
+    { "title": "Cluster keywords by topic", "depends_on": "Identify top opportunities" },
+    { "title": "Create content plan", "depends_on": "Cluster keywords by topic" },
+    { "title": "Set up tracking schedule", "depends_on": "Create content plan" }
+  ]
+}
+```
+
+---
+
+## Automation &amp; Integrations
+
+### Built-in Automations
+
+```
+┌─ ⚡ Automations ───────────────────────────────────────────────┐
+│                                                                 │
+│  Active Rules:                                                  │
+│                                                                 │
+│  1. ⚡ When task status → "Done"                                │
+│     → Auto-log completion time                                  │
+│     → Notify via Telegram bot                                   │
+│     → If all subtasks done → mark parent done                  │
+│     [Edit] [Disable]                                            │
+│                                                                 │
+│  2. ⚡ When task overdue                                        │
+│     → Change priority to Urgent                                 │
+│     → Send Telegram alert                                       │
+│     → Post in activity feed                                     │
+│     [Edit] [Disable]                                            │
+│                                                                 │
+│  3. ⚡ When Agent completes HTML template                       │
+│     → Auto-create review task                                   │
+│     → Assign to next agent in pipeline                         │
+│     → Link template version                                     │
+│     [Edit] [Disable]                                            │
+│                                                                 │
+│  4. ⚡ When KW report generated                                 │
+│     → Auto-create "Review KW changes" task                     │
+│     → Tag with domain name                                      │
+│     → Set due date to +2 days                                   │
+│     [Edit] [Disable]                                            │
+│                                                                 │
+│  [+ New Automation Rule]                                        │
+│                                                                 │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+### Integration Points
+
+| Integration         | Direction       | What It Does                                                 |
+| ------------------- | --------------- | ------------------------------------------------------------ |
+| **Hermes Pipeline** | ↔ Bidirectional | Auto-create tasks when pipeline starts; update status when agents complete |
+| **KW Research Tab** | → Task Manager  | Auto-create tasks from KW insights ("Create content for X keyword") |
+| **HTML Templates**  | → Task Manager  | Auto-create review/audit tasks when new template versions appear |
+| **Telegram Bot**    | ← Task Manager  | Send notifications for due dates, status changes, overdue tasks |
+| **n8n Workflow**    | ↔ Bidirectional | Trigger n8n workflows from tasks; create tasks from n8n events |
+| **Obsidian Vault**  | → Obsidian      | Sync tasks as markdown notes with frontmatter                |
+| **GitHub**          | → GitHub        | Backup task state; create GitHub issues from tasks           |
+
+---
+
+## Bulk Actions
+
+```
+Selected: 3 tasks                                    [✕ Deselect]
+
+┌─────────────────────────────────────────────────────────────────┐
+│  [📊 Change Status ▾]  [🔴 Set Priority ▾]  [🤖 Assign To ▾]   │
+│  [🏷 Add Tags ▾]       [📅 Set Due Date]    [📁 Move Project ▾] │
+│  [📋 Duplicate All]    [📥 Export]           [🗑 Delete All]     │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## Notifications System
+
+```
+┌─ 🔔 Notification Settings ─────────────────────────────────────┐
+│                                                                 │
+│  Telegram Bot Notifications:                                    │
+│  ☑ Task assigned to you/agent                                   │
+│  ☑ Task due date approaching (24h before)                       │
+│  ☑ Task overdue                                                 │
+│  ☑ Task status changed                                          │
+│  ☐ New comment on your tasks                                    │
+│  ☑ Pipeline started/completed                                   │
+│                                                                 │
+│  Dashboard Notifications (in-app):                              │
+│  ☑ All of the above                                             │
+│  ☑ Dependency resolved (blocked task now unblocked)             │
+│  ☑ WIP limit reached on kanban column                           │
+│                                                                 │
+│  Email Notifications:                                           │
+│  ☐ Daily digest of task changes                                 │
+│  ☐ Weekly summary report                                        │
+│                                                                 │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## API Endpoints
+
+```
+-- Projects --
+GET    /api/tasks/projects                        — List projects
+POST   /api/tasks/projects                        — Create project
+PATCH  /api/tasks/projects/:id                    — Update project
+DELETE /api/tasks/projects/:id                    — Archive project
+
+-- Statuses --
+GET    /api/tasks/projects/:id/statuses           — List statuses
+POST   /api/tasks/projects/:id/statuses           — Create status column
+PATCH  /api/tasks/statuses/:id                    — Update status
+DELETE /api/tasks/statuses/:id                    — Remove status
+
+-- Tasks --
+GET    /api/tasks?project_id=x&amp;status=y&amp;...       — List/filter tasks
+POST   /api/tasks                                 — Create task
+GET    /api/tasks/:id                             — Get task detail
+PATCH  /api/tasks/:id                             — Update task
+DELETE /api/tasks/:id                             — Delete task
+POST   /api/tasks/:id/move                        — Change status (drag/drop)
+POST   /api/tasks/bulk                            — Bulk action on multiple tasks
+POST   /api/tasks/from-template/:template_id      — Create from template
+
+-- Checklist --
+GET    /api/tasks/:id/checklist                   — List checklist items
+POST   /api/tasks/:id/checklist                   — Add checklist item
+PATCH  /api/tasks/checklist/:id                   — Toggle/update item
+DELETE /api/tasks/checklist/:id                   — Remove item
+
+-- Comments --
+GET    /api/tasks/:id/comments                    — List comments/activity
+POST   /api/tasks/:id/comments                    — Add comment
+
+-- Dependencies --
+POST   /api/tasks/:id/dependencies                — Add dependency
+DELETE /api/tasks/dependencies/:id                — Remove dependency
+
+-- Time Tracking --
+POST   /api/tasks/:id/time/start                  — Start timer
+POST   /api/tasks/:id/time/stop                   — Stop timer
+POST   /api/tasks/:id/time                        — Manual entry
+GET    /api/tasks/:id/time                        — List time entries
+
+-- Templates --
+GET    /api/tasks/templates                       — List templates
+POST   /api/tasks/templates                       — Create template
+DELETE /api/tasks/templates/:id                   — Delete template
+
+-- Automations --
+GET    /api/tasks/automations                     — List rules
+POST   /api/tasks/automations                     — Create rule
+PATCH  /api/tasks/automations/:id                 — Update/toggle rule
+DELETE /api/tasks/automations/:id                 — Delete rule
+
+-- Sync --
+POST   /api/tasks/sync/obsidian                   — Sync tasks to Obsidian
+POST   /api/tasks/sync/github                     — Push tasks to GitHub
+
+-- Stats --
+GET    /api/tasks/stats?project_id=x              — Dashboard stats
+GET    /api/tasks/stats/burndown?project_id=x     — Burndown chart data
+```
+
+---
+
+## Implementation Roadmap
+
+### Phase 1: Core Data &amp; List View (Week 1)
+
+- [ ] Create Supabase tables (projects, statuses, tasks, checklist)
+- [ ] Set up RLS policies
+- [ ] Build task CRUD API endpoints
+- [ ] Create list view with grouping by priority
+- [ ] Build task row component with status, priority, assignee, due date
+- [ ] Add quick stats bar (total, per status, overdue)
+
+### Phase 2: Task Detail Panel (Week 2)
+
+- [ ] Build slide-out detail panel
+- [ ] Description editor with markdown support
+- [ ] Checklist component with add/toggle/reorder
+- [ ] Activity/comment feed
+- [ ] Status/priority/assignee dropdowns
+- [ ] Due date picker
+
+### Phase 3: Kanban Board (Week 2-3)
+
+- [ ] Build kanban columns with drag-and-drop (use dnd-kit or similar)
+- [ ] Add WIP limits per column
+- [ ] Card component with priority, assignee, subtask progress
+- [ ] Quick-add at bottom of each column
+- [ ] Customizable columns (add/rename/reorder/delete)
+
+### Phase 4: Filtering, Search &amp; Bulk (Week 3)
+
+- [ ] Build filter bar (status, priority, assignee, tags, due date)
+- [ ] Add search with smart syntax (#tag @agent !priority)
+- [ ] Sort options (priority, due date, created, name)
+- [ ] Multi-select and bulk actions
+- [ ] Active filter chips with clear button
+
+### Phase 5: Calendar &amp; Timeline (Week 4)
+
+- [ ] Build calendar view (month and week modes)
+- [ ] Build timeline/gantt view with task bars
+- [ ] Add dependency lines to timeline
+- [ ] Drag to reschedule on calendar
+
+### Phase 6: Templates, Dependencies &amp; Time (Week 5)
+
+- [ ] Task templates system (create, load, manage)
+- [ ] Task dependency tracking with blocking logic
+- [ ] Time tracking (start/stop timer, manual entries)
+- [ ] New task creation modal with full options
+- [ ] Quick-add with smart syntax
+
+### Phase 7: Automations &amp; Integrations (Week 6)
+
+- [ ] Build automation rules engine
+- [ ] Hermes pipeline integration (auto-create tasks from pipeline)
+- [ ] KW Research tab integration
+- [ ] Telegram bot notifications
+- [ ] n8n webhook triggers
+- [ ] Obsidian sync
+- [ ] GitHub sync
+
+### Phase 8: Polish (Week 7)
+
+- [ ] Responsive design for all views
+- [ ] Loading states, empty states, error handling
+- [ ] Keyboard shortcuts (n = new task, k/j = navigate, space = toggle)
+- [ ] Dark mode support
+- [ ] Performance optimization (virtual scroll for large lists)
+- [ ] Accessibility audit
+
+---
+
+## Feature Priority Matrix
+
+| Feature                     | Priority | Effort | Impact                       |
+| --------------------------- | -------- | ------ | ---------------------------- |
+| List view with task cards   | 🔴 P0     | Medium | High — core view             |
+| Task detail slide-out panel | 🔴 P0     | Medium | High — task management       |
+| Kanban board with drag-drop | 🔴 P0     | High   | High — visual workflow       |
+| Supabase storage            | 🔴 P0     | Low    | High — enables everything    |
+| Filtering &amp; search          | 🔴 P0     | Medium | High — findability           |
+| Quick stats bar             | 🟡 P1     | Low    | Medium — overview            |
+| Checklist/subtasks          | 🟡 P1     | Low    | High — task breakdown        |
+| Dependencies                | 🟡 P1     | Medium | Medium — workflow ordering   |
+| Task templates              | 🟡 P1     | Medium | Medium — speed up creation   |
+| Calendar view               | 🟡 P1     | Medium | Medium — deadline visibility |
+| Timeline/gantt view         | 🟢 P2     | High   | Medium — project planning    |
+| Time tracking               | 🟢 P2     | Medium | Low — productivity insight   |
+| Automations                 | 🟢 P2     | High   | High — workflow efficiency   |
+| Hermes integration          | 🟢 P2     | Medium | High — pipeline connection   |
+| KW Research integration     | 🟢 P2     | Low    | Medium — cross-tab linking   |
+| Telegram notifications      | 🟢 P2     | Low    | Medium — alerts              |
+| Obsidian sync               | 🟢 P2     | Low    | Medium — knowledge base      |
+| GitHub sync                 | 🔵 P3     | Low    | Low — backup                 |
+| Bulk actions                | 🔵 P3     | Low    | Low — power user feature     |
+| Recurring tasks             | 🔵 P3     | Medium | Medium — automation          |</textarea>
+  </section>
   <div id="tasks-list-view" class="tasks-list-view">
     <div id="tasks-list-container"></div>
     <div class="tasks-empty" id="tasks-empty" style="display:none">
@@ -13844,6 +14808,43 @@ function filterTasks(val) { _taskFilter.search=val; tasksRender(); }
 function filterTasksByStatus(val) { _taskFilter.status=val; tasksRender(); }
 function filterTasksByPriority(val) { _taskFilter.priority=val; tasksRender(); }
 function filterTasksByProject(val) { _taskFilter.project=val; tasksRender(); }
+
+
+function getTaskManagerRedesignPromptText() {
+  var el = document.getElementById('task-manager-redesign-prompt');
+  return el ? el.value : '';
+}
+function copyTaskManagerRedesignPrompt() {
+  var text = getTaskManagerRedesignPromptText();
+  if(!text) return;
+  var done = function(){ try{ showToast('Task Manager redesign prompt copied','success'); }catch(_){} };
+  if(navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(text).then(done).catch(function(){ fallbackCopyTaskManagerPrompt(text); });
+  else fallbackCopyTaskManagerPrompt(text);
+}
+function fallbackCopyTaskManagerPrompt(text) {
+  var ta = document.createElement('textarea');
+  ta.value = text;
+  ta.setAttribute('readonly','');
+  ta.style.position = 'fixed';
+  ta.style.left = '-9999px';
+  document.body.appendChild(ta);
+  ta.select();
+  try { document.execCommand('copy'); } catch(_) {}
+  ta.remove();
+  try{ showToast('Task Manager redesign prompt copied','success'); }catch(_){}
+}
+function downloadTaskManagerRedesignPrompt() {
+  var text = getTaskManagerRedesignPromptText();
+  if(!text) return;
+  var blob = new Blob([text], {type:'text/markdown;charset=utf-8'});
+  var a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'task-manager-tab-redesign-plan.md';
+  document.body.appendChild(a);
+  a.click();
+  setTimeout(function(){ try{ URL.revokeObjectURL(a.href); a.remove(); }catch(_){} }, 1000);
+  try{ showToast('Task Manager redesign prompt downloaded','success'); }catch(_){}
+}
 
 function initTasksTab() {
   if(!_tasks.length) tasksLoad();
