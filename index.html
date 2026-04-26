@@ -6955,6 +6955,7 @@ function showErrorToast(msg) {
 }
 </style>
 
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
 <a href="#main-content" class="skip-link">Skip to main content</a>
@@ -7533,309 +7534,479 @@ function showErrorToast(msg) {
 
 </div><!-- end #page-fixer -->
 
-<div id="page-radar" style="display:none">
+<div id="page-radar" class="fixer-page" style="display:none">
 <div class="radar-page">
 
   <!-- Header -->
   <div class="radar-header">
-    <div class="radar-title">
-      <div class="radar-title-icon">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="2"/><path d="M16.24 7.76a6 6 0 0 1 0 8.49m-8.48-.01a6 6 0 0 1 0-8.49m11.31-2.82a10 10 0 0 1 0 14.14m-14.14 0a10 10 0 0 1 0-14.14"/></svg>
-      </div>
-      <div>
-        <h1>Daily Skills Radar</h1>
-        <p>Automated discovery of new skills from trusted sources — GitHub, awesome lists, official docs, and your X feed</p>
-      </div>
-    </div>
-    <div class="radar-header-actions">
-      <span class="radar-x-badge" id="radar-x-badge">
-        <svg viewBox="0 0 24 24" fill="currentColor" width="11" height="11"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.733-8.835L1.254 2.25H8.08l4.253 5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
-        Checking X...
-      </span>
-      <button class="skill-action-btn prompt" onclick="openRadarWindow()" title="Open in separate window" style="gap:5px">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
-        Pop Out
-      </button>
-      <button class="header-menu-btn accent" id="radar-run-btn" onclick="radarRunNow()" style="padding:8px 18px;font-size:13px">
-        &#9654; Run Now
-      </button>
-      <span id="radar-bg-badge"><span class="bg-spin"></span> Running in background…</span>
-      <button class="skill-action-btn" onclick="radarSendTestEmail()" id="radar-test-email-btn" title="Send test digest email now" style="font-size:12px;gap:5px">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
-        Test Email
-      </button>
-    </div>
-  </div>
-
-  <!-- Status Bar -->
-  <div class="radar-status-bar" id="radar-status-bar">
-    <span class="radar-status-dot idle" id="radar-status-dot"></span>
-    <span class="radar-status-text" id="radar-status-text">Idle</span>
-    <span class="radar-status-stage" id="radar-status-stage"></span>
-    <div class="radar-progress-bar"><div class="radar-progress-fill" id="radar-progress-fill" style="width:0%"></div></div>
-    <span style="font-size:11px;color:var(--muted);white-space:nowrap" id="radar-next-run">Next run: —</span>
-    <span style="font-size:11px;white-space:nowrap" id="radar-email-status"></span>
-  </div>
-
-  <!-- Stats -->
-  <div class="radar-stat-grid" id="radar-stat-grid">
-    <div class="radar-stat">
-      <div class="radar-stat-label">Found Today</div>
-      <div class="radar-stat-value accent" id="radar-stat-found">—</div>
-      <div class="radar-stat-sub">skill candidates</div>
-    </div>
-    <div class="radar-stat">
-      <div class="radar-stat-label">Pending Review</div>
-      <div class="radar-stat-value amber" id="radar-stat-pending">—</div>
-      <div class="radar-stat-sub">awaiting action</div>
-    </div>
-    <div class="radar-stat">
-      <div class="radar-stat-label">Approved</div>
-      <div class="radar-stat-value green" id="radar-stat-approved">—</div>
-      <div class="radar-stat-sub">skills saved</div>
-    </div>
-    <div class="radar-stat">
-      <div class="radar-stat-label">X Sources</div>
-      <div class="radar-stat-value" id="radar-stat-x" style="color:#60a5fa">—</div>
-      <div class="radar-stat-sub">from your feed</div>
-    </div>
-    <div class="radar-stat">
-      <div class="radar-stat-label">Last Run</div>
-      <div class="radar-stat-value" id="radar-stat-lastrun" style="font-size:13px;padding-top:4px">—</div>
-      <div class="radar-stat-sub" id="radar-stat-lastrun-status"></div>
-    </div>
-  <!-- Trend Chart -->
-  <div class="radar-trend-section" id="radar-trend-section">
-    <div class="radar-trend-header">
-      <div class="radar-trend-title">📈 Skills Discovered Over Time</div>
-      <div class="radar-trend-total" id="radar-trend-total">— <span>last 30 days</span></div>
-    </div>
-    <div class="radar-chart-wrap" id="radar-chart-wrap">
-      <div style="color:var(--muted);font-size:13px;width:100%;text-align:center;padding-top:60px">Loading chart data…</div>
-    </div>
-    <div class="radar-chart-legend" id="radar-chart-legend"></div>
-  </div>
-
-  </div>
-
-  <!-- Controls -->
-  <div class="radar-section">
-    <div class="radar-section-head">
-      <div class="radar-section-title">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
-        Discovery Controls
-      </div>
-      <button class="skill-action-btn" onclick="toggleRadarSchedule()" id="radar-sched-btn" style="font-size:12px">Pause Schedule</button>
-    </div>
-    <div class="radar-controls">
-      <div class="radar-filter-group">
-        <div class="radar-filter-label">Source Types</div>
-        <select class="radar-filter-select" id="radar-filter-types" multiple style="height:80px">
-          <option value="github_repo" selected>GitHub Repos</option>
-          <option value="awesome_list" selected>Awesome Lists</option>
-          <option value="official_docs" selected>Official Docs</option>
-          <option value="x_timeline" selected>X Timeline</option>
-          <option value="x_bookmark" selected>X Bookmarks</option>
-          <option value="x_like" selected>X Likes</option>
-        </select>
-      </div>
-      <div class="radar-filter-group">
-        <div class="radar-filter-label">Target Agent</div>
-        <select class="radar-filter-select" id="radar-filter-agent">
-          <option value="">All Agents</option>
-          <option value="Hermes">Hermes</option>
-          <option value="Claude Code">Claude Code</option>
-          <option value="Manus">Manus</option>
-          <option value="Codex">Codex</option>
-          <option value="CTO">CTO</option>
-          <option value="CEO">CEO</option>
-          <option value="Prompt Studio">Prompt Studio</option>
-          <option value="General">General</option>
-        </select>
-      </div>
-      <div class="radar-filter-group">
-        <div class="radar-filter-label">Category</div>
-        <select class="radar-filter-select" id="radar-filter-category">
-          <option value="">All Categories</option>
-          <option value="automation">Automation</option>
-          <option value="coding">Coding</option>
-          <option value="ai_agents">AI Agents</option>
-          <option value="seo">SEO</option>
-          <option value="scraping">Scraping</option>
-          <option value="data">Data</option>
-          <option value="prompting">Prompting</option>
-          <option value="integration">Integration</option>
-          <option value="n8n">N8N</option>
-          <option value="research">Research</option>
-          <option value="ui_ux">UI/UX</option>
-          <option value="memory">Memory</option>
-        </select>
-      </div>
-      <div class="radar-filter-group" style="flex:1;min-width:220px">
-        <div class="radar-filter-label">Keywords (custom search)</div>
-        <input type="text" class="radar-filter-input" id="radar-filter-keywords" placeholder="Type keyword and press Enter..." onkeydown="if(event.key==='Enter')addCustomTopic(this.value)" />
-      </div>
-      <div class="radar-filter-group">
-        <div class="radar-filter-label">Min Quality</div>
-        <select class="radar-filter-select" id="radar-filter-quality">
-          <option value="0">Any</option>
-          <option value="0.7">0.7+</option>
-          <option value="0.8" selected>0.8+</option>
-          <option value="0.9">0.9+</option>
-        </select>
-      </div>
-      <div class="radar-filter-group">
-        <div class="radar-filter-label">Run Hour (daily)</div>
-        <select class="radar-filter-select" id="radar-sched-hour" onchange="saveRadarConfig()">
-          <option value="0">00:00</option><option value="1">01:00</option><option value="2" selected>02:00</option>
-          <option value="3">03:00</option><option value="6">06:00</option><option value="8">08:00</option>
-          <option value="12">12:00</option><option value="18">18:00</option><option value="22">22:00</option>
-        </select>
-      </div>
-      <!-- Limits Row -->
-      <div class="radar-limits-row">
-        <div class="radar-filter-group">
-          <div class="radar-filter-label">Max Skills / Run</div>
-          <input type="number" class="radar-filter-input" id="radar-limit-count" min="5" max="200" value="50" style="width:80px" title="Max total skill candidates to return per run">
-        </div>
-        <div class="radar-filter-group">
-          <div class="radar-filter-label">Sources / Topic</div>
-          <input type="number" class="radar-filter-input" id="radar-sources-per-topic" min="1" max="20" value="5" style="width:80px" title="How many sources to scan per focus topic">
-        </div>
-        <div class="radar-filter-group">
-          <div class="radar-filter-label">Search Depth</div>
-          <select class="radar-filter-select" id="radar-search-depth">
-            <option value="shallow">Shallow (fast)</option>
-            <option value="standard" selected>Standard</option>
-            <option value="deep">Deep (thorough)</option>
+    <div class="radar-header-top" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:16px;">
+      <div class="radar-selectors" style="display:flex; gap:12px; align-items:center; flex-wrap:wrap;">
+        <div style="display:flex; flex-direction:column; gap:4px;">
+          <label style="font-size:11px; color:var(--muted); font-weight:600; text-transform:uppercase;">Radar Type</label>
+          <select id="radar-type-select" class="search-box" style="width:180px !important;">
+            <option value="agent">🤖 Agent Skills</option>
+            <option value="domain">🌐 Domain Health</option>
+            <option value="template">📄 Template Quality</option>
+            <option value="custom">⚙ Custom</option>
           </select>
         </div>
-        <div class="radar-filter-group" style="align-self:flex-end">
-          <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:12px;color:var(--text-secondary)">
-            <input type="checkbox" id="radar-dedup-enabled" checked style="accent-color:#7c3aed;cursor:pointer">
-            <span>Deduplicate (skip seen URLs)</span>
-          </label>
-          <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:12px;color:var(--text-secondary);margin-top:6px">
-            <input type="checkbox" id="radar-only-new" checked style="accent-color:#7c3aed;cursor:pointer">
-            <span>Only show new skills</span>
-          </label>
-        </div>
-        <div style="margin-left:auto;align-self:flex-end">
-          <button class="radar-export-btn" onclick="radarExportAllUrls()" title="Export all discovered skill URLs as CSV">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-            Export All URLs
-          </button>
+        <div style="display:flex; flex-direction:column; gap:4px;">
+          <label style="font-size:11px; color:var(--muted); font-weight:600; text-transform:uppercase;">Subject</label>
+          <select id="radar-subject-select" class="search-box" style="width:240px !important;">
+            <option value="gpt55">GPT 5.5 — Layout Architect</option>
+            <option value="opus47">Opus 4.7</option>
+            <option value="gemini31">Gemini 3.1</option>
+            <option value="kimik26">Kimi K2.6</option>
+          </select>
         </div>
       </div>
-
-      <div style="flex:100%;margin-top:12px">
-        <div class="radar-filter-label" style="margin-bottom:8px">Focus Topics <span style="color:var(--muted);font-weight:400;font-size:10px">— LLM will prioritize skills matching these topics</span></div>
-        <div id="radar-topic-chips" style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px"></div>
-        <div style="display:flex;gap:6px;flex-wrap:wrap">
-          <span style="font-size:11px;color:var(--muted);align-self:center">Add preset:</span>
-          <button class="skill-action-btn" style="font-size:11px" onclick="addPresetTopic('n8n')">+ n8n</button>
-          <button class="skill-action-btn" style="font-size:11px" onclick="addPresetTopic('automation')">+ Automation</button>
-          <button class="skill-action-btn" style="font-size:11px" onclick="addPresetTopic('seo')">+ SEO</button>
-          <button class="skill-action-btn" style="font-size:11px" onclick="addPresetTopic('local seo')">+ Local SEO</button>
-          <button class="skill-action-btn" style="font-size:11px" onclick="addPresetTopic('claude code')">+ Claude Code</button>
-          <button class="skill-action-btn" style="font-size:11px" onclick="addPresetTopic('coding')">+ Coding</button>
-          <button class="skill-action-btn" style="font-size:11px" onclick="addPresetTopic('ai agents')">+ AI Agents</button>
-          <button class="skill-action-btn" style="font-size:11px" onclick="addPresetTopic('scraping')">+ Scraping</button>
-          <button class="skill-action-btn" style="font-size:11px" onclick="addPresetTopic('wordpress')">+ WordPress</button>
-          <button class="skill-action-btn" style="font-size:11px" onclick="addPresetTopic('prompt engineering')">+ Prompts</button>
-          <button class="skill-action-btn" style="font-size:11px" onclick="addPresetTopic('mcp')">+ MCP</button>
-          <button class="skill-action-btn" style="font-size:11px" onclick="addPresetTopic('research')">+ Research</button>
-          <input type="text" class="radar-filter-input" id="radar-custom-topic-input" placeholder="Custom topic..." style="width:140px" onkeydown="if(event.key==='Enter'){addCustomTopic(this.value);this.value=''}">
-          <button class="skill-action-btn prompt" style="font-size:11px" onclick="addCustomTopic(document.getElementById('radar-custom-topic-input').value);document.getElementById('radar-custom-topic-input').value=''">+ Add</button>
-          <button class="skill-action-btn" style="font-size:11px;margin-left:auto" onclick="clearAllTopics()">Clear All</button>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Skill Results -->
-  <div class="radar-section">
-    <div class="radar-section-head">
-      <div class="radar-section-title">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
-        Discovered Skills
-      </div>
-      <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
-        <button class="skill-action-btn prompt" onclick="generateBatchPrompt()" id="radar-gen-prompt-btn" style="display:none">Generate Prompt</button>
-        <span id="radar-dedup-live-badge" class="radar-dedup-badge" title="Dedup active — already-seen URLs are skipped"></span>
-        <button class="radar-export-btn" onclick="radarExportAllUrls()" title="Export all skill URLs as CSV" style="padding:5px 11px;font-size:11px">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-          Export URLs
+      
+      <div class="radar-header-actions" style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
+        <button class="task-btn-primary" style="padding:0 16px; height:36px;" onclick="runRadarScan()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14" style="margin-right:6px;"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          Run Scan
         </button>
-        <button class="skill-action-btn" onclick="loadRadarResults(radarActiveTab)">Refresh</button>
-      </div>
-    </div>
-    <div class="radar-tabs">
-      <button class="radar-tab active" id="rtab-pending" onclick="switchRadarTab('pending')">Pending <span class="radar-count-badge" id="rbadge-pending">0</span></button>
-      <button class="radar-tab" id="rtab-approved" onclick="switchRadarTab('approved')">Approved <span class="radar-count-badge" id="rbadge-approved">0</span></button>
-      <button class="radar-tab" id="rtab-saved_later" onclick="switchRadarTab('saved_later')">Saved <span class="radar-count-badge" id="rbadge-saved">0</span></button>
-      <button class="radar-tab" id="rtab-rejected" onclick="switchRadarTab('rejected')">Rejected <span class="radar-count-badge" id="rbadge-rejected">0</span></button>
-    </div>
-    <div id="radar-results-list">
-      <div class="radar-empty">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="2"/><path d="M16.24 7.76a6 6 0 0 1 0 8.49m-8.48-.01a6 6 0 0 1 0-8.49m11.31-2.82a10 10 0 0 1 0 14.14m-14.14 0a10 10 0 0 1 0-14.14"/></svg>
-        <h3>No skills discovered yet</h3>
-        <p>Click "Run Now" to start discovering new skills from trusted sources</p>
-      </div>
-    </div>
-    <div id="radar-results-pagination" style="display:flex;gap:8px;justify-content:center;margin-top:16px"></div>
-  </div>
-
-  <!-- Prompt Generator -->
-  <div class="radar-section" id="radar-prompt-section" style="display:none">
-    <div class="radar-section-head">
-      <div class="radar-section-title">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-        Generated Prompt
-      </div>
-      <div style="display:flex;gap:8px">
-        <select class="radar-filter-select" id="radar-prompt-style">
-          <option value="standard">Standard</option>
-          <option value="strict">Strict</option>
-          <option value="god_mode">GOD MODE</option>
-        </select>
-        <select class="radar-filter-select" id="radar-prompt-agent">
-          <option value="Hermes">Hermes</option>
-          <option value="Claude Code">Claude Code</option>
-          <option value="Manus">Manus</option>
-          <option value="CTO">CTO</option>
-          <option value="General">General</option>
-        </select>
-        <button class="header-menu-btn accent" onclick="generateSelectedPrompt()" style="padding:7px 14px;font-size:12px">Generate</button>
-      </div>
-    </div>
-    <textarea class="prompt-textarea" id="radar-prompt-output" placeholder="Select skills below and click Generate Prompt..."></textarea>
-    <div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap">
-      <button class="skill-action-btn prompt" onclick="copyRadarPrompt()">Copy Prompt</button>
-      <button class="skill-action-btn" onclick="downloadRadarPrompt()">Download</button>
-      <button class="skill-action-btn approve" onclick="savePromptRecord()">Save Record</button>
-    </div>
-  </div>
-
-  <!-- Run History -->
-  <div class="radar-section">
-    <div class="radar-section-head">
-      <div class="radar-section-title">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-        Run History
-        <span id="radar-history-count-badge" class="radar-count-badge" style="display:none"></span>
-      </div>
-      <button class="skill-action-btn" onclick="loadRadarHistory()" style="font-size:11px">Refresh History</button>
-    </div>
-    <div id="radar-history-list">
-      <div class="radar-empty" style="padding:24px">
-        <p>No run history yet — click Run Now to start</p>
+        <button class="task-btn-ghost" style="padding:0 12px; height:36px;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14" style="margin-right:6px;"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+          Compare
+        </button>
+        <button class="task-btn-ghost" style="padding:0 12px; height:36px;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14" style="margin-right:6px;"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
+          Targets
+        </button>
+        <button class="task-btn-ghost" style="padding:0 12px; height:36px;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14" style="margin-right:6px;"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+          Config
+        </button>
       </div>
     </div>
   </div>
 
-</div><!-- end .radar-page -->
-</div><!-- end #page-radar -->
+  <!-- Quick Stats -->
+  <div class="stats" style="margin-bottom:20px;">
+    <div class="stat-card" style="padding:16px;">
+      <div class="stat-number" style="font-size:28px;">88.5</div>
+      <div class="stat-label">Overall Score</div>
+      <span class="stat-trend positive">▲ +3.2</span>
+    </div>
+    <div class="stat-card" style="padding:16px;">
+      <div class="stat-number" style="font-size:28px;">6/8</div>
+      <div class="stat-label">On Target Dims</div>
+      <span class="stat-trend positive">Strong</span>
+    </div>
+    <div class="stat-card" style="padding:16px;">
+      <div class="stat-number" style="font-size:28px;">2</div>
+      <div class="stat-label">Below Target</div>
+      <span class="stat-trend negative">Needs focus</span>
+    </div>
+    <div class="stat-card" style="padding:16px;">
+      <div class="stat-number" style="font-size:28px; color:var(--text);">GPT 5.5</div>
+      <div class="stat-label">Top Agent</div>
+      <span class="stat-trend neutral">vs 4 others</span>
+    </div>
+  </div>
+
+  <!-- Main Split View: Chart + Tabs -->
+  <div style="display:flex; gap:20px; flex-wrap:wrap;">
+    
+    <!-- Radar Chart Section -->
+    <div class="radar-chart-container" style="flex:1 1 400px; background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:24px; display:flex; flex-direction:column; align-items:center; min-height:450px;">
+      <h3 style="font-size:14px; color:var(--text); font-weight:600; align-self:flex-start; margin:0 0 20px 0;">Performance Radar</h3>
+      
+      <div style="width:100%; max-width:380px; position:relative; display:flex; align-items:center; justify-content:center;">
+        <canvas id="radarChartCanvas" width="380" height="380"></canvas>
+      </div>
+      
+      <div class="radar-chart-legend" style="display:flex; gap:16px; margin-top:24px; font-size:12px; color:var(--muted);">
+        <span style="display:flex; align-items:center; gap:6px;"><span style="width:12px; height:12px; border-radius:3px; background:rgba(113,112,255,0.6);"></span> Current</span>
+        <span style="display:flex; align-items:center; gap:6px;"><span style="width:12px; height:12px; border-radius:3px; border:2px dashed rgba(255,255,255,0.4); background:transparent;"></span> Previous</span>
+        <span style="display:flex; align-items:center; gap:6px;"><span style="width:12px; height:12px; border-radius:3px; border:2px dotted rgba(255,255,255,0.8); background:transparent;"></span> Target</span>
+      </div>
+      
+      <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            setTimeout(function() {
+                var ctx = document.getElementById('radarChartCanvas');
+                if(!ctx) return;
+                
+                // Set defaults for dark theme
+                Chart.defaults.color = 'rgba(255,255,255,0.6)';
+                Chart.defaults.font.family = 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
+                
+                new Chart(ctx, {
+                    type: 'radar',
+                    data: {
+                        labels: ['Code Quality', 'Speed', 'Accuracy', 'Creativity', 'Consistency', 'Compatibility', 'Accessibility', 'Optimization'],
+                        datasets: [
+                            {
+                                label: 'Current',
+                                data: [92, 85, 90, 82, 75, 88, 95, 80],
+                                backgroundColor: 'rgba(113,112,255, 0.2)',
+                                borderColor: 'rgba(113,112,255, 1)',
+                                pointBackgroundColor: 'rgba(113,112,255, 1)',
+                                borderWidth: 2,
+                                fill: true
+                            },
+                            {
+                                label: 'Previous',
+                                data: [88, 85, 88, 75, 77, 85, 94, 75],
+                                backgroundColor: 'transparent',
+                                borderColor: 'rgba(255,255,255, 0.4)',
+                                borderDash: [5, 5],
+                                pointBackgroundColor: 'rgba(255,255,255, 0.4)',
+                                borderWidth: 2,
+                                fill: false
+                            },
+                            {
+                                label: 'Target',
+                                data: [95, 90, 92, 85, 85, 90, 95, 85],
+                                backgroundColor: 'transparent',
+                                borderColor: 'rgba(255,255,255, 0.8)',
+                                borderDash: [2, 2],
+                                pointBackgroundColor: 'transparent',
+                                pointBorderColor: 'transparent',
+                                borderWidth: 1,
+                                fill: false
+                            }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: true,
+                        plugins: {
+                            legend: {
+                                display: false // Using custom HTML legend below
+                            },
+                            tooltip: {
+                                backgroundColor: 'rgba(20,22,30,0.9)',
+                                titleColor: '#fff',
+                                bodyColor: 'rgba(255,255,255,0.7)',
+                                borderColor: 'rgba(255,255,255,0.1)',
+                                borderWidth: 1,
+                                padding: 12,
+                                cornerRadius: 8,
+                                displayColors: true
+                            }
+                        },
+                        scales: {
+                            r: {
+                                min: 40,
+                                max: 100,
+                                ticks: {
+                                    stepSize: 20,
+                                    color: 'rgba(255,255,255,0.4)',
+                                    backdropColor: 'transparent',
+                                    z: 10
+                                },
+                                grid: {
+                                    color: 'rgba(255,255,255,0.1)',
+                                    circular: true
+                                },
+                                angleLines: {
+                                    color: 'rgba(255,255,255,0.1)'
+                                },
+                                pointLabels: {
+                                    font: {
+                                        size: 11,
+                                        weight: '600'
+                                    },
+                                    color: 'rgba(255,255,255,0.8)'
+                                }
+                            }
+                        }
+                    }
+                });
+            }, 500); // slight delay to ensure Chart.js is loaded and canvas is ready
+        });
+      </script>
+    </div>
+
+    <!-- Tabs & Data Section -->
+    <div class="radar-data-container" style="flex:2 1 600px; background:var(--surface); border:1px solid var(--border); border-radius:12px; display:flex; flex-direction:column;">
+      
+      <!-- Tab Nav -->
+      <div style="display:flex; border-bottom:1px solid var(--border); padding:0 16px; overflow-x:auto; gap:8px;">
+        <button class="fixer-tab-btn radar-inner-tab-btn active" onclick="switchRadarTab('radar-tab-scores', this)" style="border-radius:0; border-bottom:2px solid var(--accent); padding:16px 16px; height:auto; background:transparent;">📊 Scores</button>
+        <button class="fixer-tab-btn radar-inner-tab-btn" onclick="switchRadarTab('radar-tab-trends', this)" style="border-radius:0; border-bottom:2px solid transparent; padding:16px 16px; height:auto; background:transparent;">📈 Trends</button>
+        <button class="fixer-tab-btn radar-inner-tab-btn" onclick="switchRadarTab('radar-tab-ai', this)" style="border-radius:0; border-bottom:2px solid transparent; padding:16px 16px; height:auto; background:transparent;">🤖 AI Insights</button>
+        <button class="fixer-tab-btn radar-inner-tab-btn" onclick="switchRadarTab('radar-tab-reports', this)" style="border-radius:0; border-bottom:2px solid transparent; padding:16px 16px; height:auto; background:transparent;">📋 Reports</button>
+        <button class="fixer-tab-btn radar-inner-tab-btn" onclick="switchRadarTab('radar-tab-export', this)" style="border-radius:0; border-bottom:2px solid transparent; padding:16px 16px; height:auto; background:transparent;">⬇ Export</button>
+      </div>
+
+      <!-- Scores Tab Content -->
+      <div id="radar-tab-scores" class="radar-tab-content" style="padding:20px; overflow-y:auto; display:block;">
+        <table style="width:100%; text-align:left; border-collapse:collapse; font-size:13px;">
+          <thead>
+            <tr style="border-bottom:1px solid var(--border); color:var(--muted);">
+              <th style="padding:10px; font-weight:600;">Dimension</th>
+              <th style="padding:10px; font-weight:600;">Score</th>
+              <th style="padding:10px; font-weight:600;">Target</th>
+              <th style="padding:10px; font-weight:600;">Gap</th>
+              <th style="padding:10px; font-weight:600;">Trend</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr style="border-bottom:1px solid var(--border-light); cursor:pointer;">
+              <td style="padding:12px 10px; color:var(--text);">🟢 Accessibility</td>
+              <td style="padding:12px 10px; font-weight:700;">95</td>
+              <td style="padding:12px 10px; color:var(--muted);">95</td>
+              <td style="padding:12px 10px; color:var(--muted);">0</td>
+              <td style="padding:12px 10px; color:#22c55e;">▲ +1</td>
+            </tr>
+            <tr style="border-bottom:1px solid var(--border-light); cursor:pointer;">
+              <td style="padding:12px 10px; color:var(--text);">🟢 Code Quality</td>
+              <td style="padding:12px 10px; font-weight:700;">92</td>
+              <td style="padding:12px 10px; color:var(--muted);">95</td>
+              <td style="padding:12px 10px; color:#ef4444;">-3</td>
+              <td style="padding:12px 10px; color:#22c55e;">▲ +4</td>
+            </tr>
+            <tr style="border-bottom:1px solid var(--border-light); cursor:pointer;">
+              <td style="padding:12px 10px; color:var(--text);">🟢 Accuracy</td>
+              <td style="padding:12px 10px; font-weight:700;">90</td>
+              <td style="padding:12px 10px; color:var(--muted);">92</td>
+              <td style="padding:12px 10px; color:#ef4444;">-2</td>
+              <td style="padding:12px 10px; color:#22c55e;">▲ +2</td>
+            </tr>
+            <tr style="border-bottom:1px solid var(--border-light); cursor:pointer;">
+              <td style="padding:12px 10px; color:var(--text);">🟢 Compatibility</td>
+              <td style="padding:12px 10px; font-weight:700;">88</td>
+              <td style="padding:12px 10px; color:var(--muted);">90</td>
+              <td style="padding:12px 10px; color:#ef4444;">-2</td>
+              <td style="padding:12px 10px; color:#22c55e;">▲ +3</td>
+            </tr>
+            <tr style="border-bottom:1px solid var(--border-light); cursor:pointer;">
+              <td style="padding:12px 10px; color:var(--text);">🟡 Speed</td>
+              <td style="padding:12px 10px; font-weight:700;">85</td>
+              <td style="padding:12px 10px; color:var(--muted);">90</td>
+              <td style="padding:12px 10px; color:#ef4444;">-5</td>
+              <td style="padding:12px 10px; color:var(--muted);">── 0</td>
+            </tr>
+            <tr style="border-bottom:1px solid var(--border-light); cursor:pointer;">
+              <td style="padding:12px 10px; color:var(--text);">🟡 Creativity</td>
+              <td style="padding:12px 10px; font-weight:700;">82</td>
+              <td style="padding:12px 10px; color:var(--muted);">85</td>
+              <td style="padding:12px 10px; color:#ef4444;">-3</td>
+              <td style="padding:12px 10px; color:#22c55e;">▲ +7</td>
+            </tr>
+            <tr style="border-bottom:1px solid var(--border-light); cursor:pointer;">
+              <td style="padding:12px 10px; color:var(--text);">🟡 Optimization</td>
+              <td style="padding:12px 10px; font-weight:700;">80</td>
+              <td style="padding:12px 10px; color:var(--muted);">85</td>
+              <td style="padding:12px 10px; color:#ef4444;">-5</td>
+              <td style="padding:12px 10px; color:#22c55e;">▲ +5</td>
+            </tr>
+            <tr style="border-bottom:1px solid var(--border-light); cursor:pointer; background:rgba(239,68,68,0.05);">
+              <td style="padding:12px 10px; color:var(--text);">🔴 Consistency</td>
+              <td style="padding:12px 10px; font-weight:700; color:#ef4444;">75</td>
+              <td style="padding:12px 10px; color:var(--muted);">85</td>
+              <td style="padding:12px 10px; color:#ef4444; font-weight:700;">-10</td>
+              <td style="padding:12px 10px; color:#ef4444;">▼ -2</td>
+            </tr>
+          </tbody>
+        </table>
+        <div style="margin-top:16px; font-size:11px; color:var(--muted);">
+          Color code: 🟢 On/above target &nbsp;|&nbsp; 🟡 Within 5 of target &nbsp;|&nbsp; 🔴 Below
+          <div style="margin-top:4px; font-style:italic;">Click any dimension for detailed sub-metrics breakdown →</div>
+        </div>
+      </div>
+
+      <!-- Trends Tab Content -->
+      <div id="radar-tab-trends" class="radar-tab-content" style="padding:20px; overflow-y:auto; display:none;">
+        <h3 style="font-size:15px; margin-bottom:16px; font-weight:600;">Overall Score Trend</h3>
+        <div style="width:100%; height:200px; background:rgba(255,255,255,0.02); border:1px dashed var(--border); border-radius:8px; display:flex; align-items:center; justify-content:center; color:var(--muted); font-size:13px; margin-bottom:24px;">
+          [ Line Chart Visualization (Chart.js) ]
+        </div>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
+            <div style="padding:16px; background:rgba(255,255,255,0.02); border-radius:8px; border:1px solid var(--border-light);">
+                <div style="font-size:11px; color:var(--muted); text-transform:uppercase; margin-bottom:4px;">Fastest Improving</div>
+                <div style="font-size:15px; font-weight:600;">Creativity <span style="color:#22c55e; font-size:13px; font-weight:500;">+7/report avg</span></div>
+            </div>
+            <div style="padding:16px; background:rgba(255,255,255,0.02); border-radius:8px; border:1px solid var(--border-light);">
+                <div style="font-size:11px; color:var(--muted); text-transform:uppercase; margin-bottom:4px;">Declining</div>
+                <div style="font-size:15px; font-weight:600;">Consistency <span style="color:#ef4444; font-size:13px; font-weight:500;">-2/report avg</span></div>
+            </div>
+        </div>
+      </div>
+
+      <!-- AI Insights Tab Content -->
+      <div id="radar-tab-ai" class="radar-tab-content" style="padding:20px; overflow-y:auto; display:none;">
+        <div style="padding:16px; background:rgba(113,112,255,0.05); border:1px solid rgba(113,112,255,0.2); border-radius:12px; margin-bottom:20px;">
+            <h3 style="font-size:14px; font-weight:600; margin-bottom:8px; display:flex; align-items:center; gap:8px;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg> Executive Summary</h3>
+            <p style="font-size:13px; color:var(--text); line-height:1.5; margin:0;">GPT 5.5 Agent scores 88.5/100 overall, placing it as the strongest agent in accessibility and code quality.<br><br>Compared to last report: +3.2 overall improvement. 6 of 8 dimensions on or above target.</p>
+        </div>
+        
+        <h3 style="font-size:14px; font-weight:600; margin-bottom:12px;">Recommendations</h3>
+        <div style="display:flex; flex-direction:column; gap:12px;">
+            <div style="padding:16px; background:var(--card); border:1px solid var(--border-light); border-radius:8px;">
+                <div style="display:flex; justify-content:space-between; margin-bottom:8px;">
+                    <span style="font-size:13px; font-weight:600; color:#ef4444;">🔴 HIGH Priority</span>
+                    <span style="font-size:12px; color:var(--muted);">Impact: +8-12 pts</span>
+                </div>
+                <div style="font-size:14px; font-weight:600; margin-bottom:8px;">Fix Consistency (75 → target: 85)</div>
+                <ul style="font-size:13px; color:var(--text); padding-left:20px; margin:0 0 12px 0;">
+                    <li>Add strict output format templates to Agent 1 memo</li>
+                    <li>Reduce LLM temperature from 0.7 to 0.4</li>
+                </ul>
+                <button class="task-btn-ghost" style="padding:6px 12px; font-size:12px; height:auto;">Create Task</button>
+            </div>
+            <div style="padding:16px; background:var(--card); border:1px solid var(--border-light); border-radius:8px;">
+                <div style="display:flex; justify-content:space-between; margin-bottom:8px;">
+                    <span style="font-size:13px; font-weight:600; color:#eab308;">🟡 MEDIUM Priority</span>
+                    <span style="font-size:12px; color:var(--muted);">Impact: +5-8 pts</span>
+                </div>
+                <div style="font-size:14px; font-weight:600; margin-bottom:8px;">Improve Optimization (80 → target: 85)</div>
+                <ul style="font-size:13px; color:var(--text); padding-left:20px; margin:0 0 12px 0;">
+                    <li>Implement CSS shorthand consolidation rules</li>
+                    <li>Cache common HTML patterns for reuse</li>
+                </ul>
+                <button class="task-btn-ghost" style="padding:6px 12px; font-size:12px; height:auto;">Create Task</button>
+            </div>
+        </div>
+      </div>
+
+      <!-- Reports Tab Content -->
+      <div id="radar-tab-reports" class="radar-tab-content" style="padding:20px; overflow-y:auto; display:none;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; flex-wrap:wrap; gap:12px;">
+            <h3 style="font-size:14px; font-weight:600; margin:0;">Saved Reports</h3>
+            <div style="display:flex; gap:8px;">
+                <select class="search-box" style="height:32px!important; width:120px!important;"><option>All Types</option></select>
+                <select class="search-box" style="height:32px!important; width:140px!important;"><option>Newest First</option></select>
+            </div>
+        </div>
+        
+        <div style="display:flex; flex-direction:column; gap:12px;">
+            <div style="padding:16px; border:1px solid var(--border-light); border-radius:8px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;">
+                <div>
+                    <div style="font-size:14px; font-weight:600; margin-bottom:4px;">📊 Agent Skills — GPT 5.5</div>
+                    <div style="font-size:12px; color:var(--muted);">Apr 26, 2026 | Overall: 88.5 | Strongest: Accessibility (95)</div>
+                </div>
+                <div style="display:flex; gap:6px;">
+                    <button class="task-btn-ghost" style="padding:4px 10px; font-size:11px; height:auto;">View</button>
+                    <button class="task-btn-ghost" style="padding:4px 10px; font-size:11px; height:auto;">Excel</button>
+                </div>
+            </div>
+            <div style="padding:16px; border:1px solid var(--border-light); border-radius:8px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;">
+                <div>
+                    <div style="font-size:14px; font-weight:600; margin-bottom:4px;">📊 Agent Skills — Opus 4.7</div>
+                    <div style="font-size:12px; color:var(--muted);">Apr 26, 2026 | Overall: 91.2 | Strongest: Design (96)</div>
+                </div>
+                <div style="display:flex; gap:6px;">
+                    <button class="task-btn-ghost" style="padding:4px 10px; font-size:11px; height:auto;">View</button>
+                    <button class="task-btn-ghost" style="padding:4px 10px; font-size:11px; height:auto;">Excel</button>
+                </div>
+            </div>
+            <div style="padding:16px; border:1px solid var(--border-light); border-radius:8px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;">
+                <div>
+                    <div style="font-size:14px; font-weight:600; margin-bottom:4px;">🌐 Domain Health — maximo-seo.ai</div>
+                    <div style="font-size:12px; color:var(--muted);">Apr 25, 2026 | Overall: 76.3 | Strongest: Content (88)</div>
+                </div>
+                <div style="display:flex; gap:6px;">
+                    <button class="task-btn-ghost" style="padding:4px 10px; font-size:11px; height:auto;">View</button>
+                    <button class="task-btn-ghost" style="padding:4px 10px; font-size:11px; height:auto;">Excel</button>
+                </div>
+            </div>
+        </div>
+      </div>
+
+      <!-- Export Tab Content -->
+      <div id="radar-tab-export" class="radar-tab-content" style="padding:20px; overflow-y:auto; display:none;">
+        <h3 style="font-size:14px; font-weight:600; margin-bottom:16px;">Export Report</h3>
+        <p style="font-size:13px; color:var(--muted); margin-bottom:24px;">Download the current radar analysis in various formats. Excel format includes multi-sheet data (Summary, Scores, Trends, AI Recs).</p>
+        
+        <div style="display:grid; grid-template-columns:repeat(auto-fill, minmax(200px, 1fr)); gap:16px;">
+            <div class="stat-card" style="padding:20px; text-align:center; cursor:pointer;" onclick="exportRadarExcel()">
+                <div style="font-size:24px; margin-bottom:12px;">📊</div>
+                <div style="font-size:14px; font-weight:600; margin-bottom:4px;">Excel Workbook</div>
+                <div style="font-size:11px; color:var(--muted);">.xlsx format</div>
+            </div>
+            <div class="stat-card" style="padding:20px; text-align:center; cursor:pointer;" onclick="exportRadarCSV()">
+                <div style="font-size:24px; margin-bottom:12px;">📝</div>
+                <div style="font-size:14px; font-weight:600; margin-bottom:4px;">CSV Data</div>
+                <div style="font-size:11px; color:var(--muted);">Flat tables</div>
+            </div>
+            <div class="stat-card" style="padding:20px; text-align:center; cursor:pointer;" onclick="exportRadarPDF()">
+                <div style="font-size:24px; margin-bottom:12px;">📄</div>
+                <div style="font-size:14px; font-weight:600; margin-bottom:4px;">PDF Report</div>
+                <div style="font-size:11px; color:var(--muted);">Print ready</div>
+            </div>
+            <div class="stat-card" style="padding:20px; text-align:center; cursor:pointer;" onclick="exportRadarPNG()">
+                <div style="font-size:24px; margin-bottom:12px;">🖼️</div>
+                <div style="font-size:14px; font-weight:600; margin-bottom:4px;">PNG Image</div>
+                <div style="font-size:11px; color:var(--muted);">Chart visual only</div>
+            </div>
+        </div>
+        
+        <script>
+            function switchRadarTab(tabId, btnElement) {
+                document.querySelectorAll('.radar-tab-content').forEach(el => el.style.display = 'none');
+                document.querySelectorAll('.radar-inner-tab-btn').forEach(el => {
+                    el.classList.remove('active');
+                    el.style.borderBottomColor = 'transparent';
+                    el.style.color = 'var(--muted)';
+                });
+                document.getElementById(tabId).style.display = 'block';
+                btnElement.classList.add('active');
+                btnElement.style.borderBottomColor = 'var(--accent)';
+                btnElement.style.color = 'var(--text)';
+            }
+            
+            function exportRadarPNG() {
+                const canvas = document.getElementById('radarChartCanvas');
+                if(!canvas) return alert('Chart not ready');
+                const url = canvas.toDataURL('image/png');
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'skill-radar-' + new Date().toISOString().slice(0,10) + '.png';
+                a.click();
+            }
+            
+            function exportRadarCSV() {
+                // simple client-side CSV export of the current scores table
+                const rows = [
+                    ['Dimension', 'Score', 'Target', 'Gap', 'Trend'],
+                    ['Accessibility', '95', '95', '0', '+1'],
+                    ['Code Quality', '92', '95', '-3', '+4'],
+                    ['Accuracy', '90', '92', '-2', '+2'],
+                    ['Compatibility', '88', '90', '-2', '+3'],
+                    ['Speed', '85', '90', '-5', '0'],
+                    ['Creativity', '82', '85', '-3', '+7'],
+                    ['Optimization', '80', '85', '-5', '+5'],
+                    ['Consistency', '75', '85', '-10', '-2']
+                ];
+                let csvContent = "data:text/csv;charset=utf-8," + rows.map(e => e.join(",")).join("\n");
+                const encodedUri = encodeURI(csvContent);
+                const a = document.createElement("a");
+                a.setAttribute("href", encodedUri);
+                a.setAttribute("download", "skill-radar-scores.csv");
+                document.body.appendChild(a);
+                a.click();
+                a.remove();
+            }
+            
+            function exportRadarExcel() {
+                // Placeholder - triggers an alert and sends a mock request
+                alert("Excel Generation requested. In production, this generates a multi-sheet XLSX file from the backend.");
+                // We'll add real API interaction here for the next phase
+            }
+            
+            function exportRadarPDF() {
+                alert("PDF Generation requested.");
+            }
+            
+            function runRadarScan() {
+                const btn = document.querySelector('.radar-header-actions .task-btn-primary');
+                const origText = btn.innerHTML;
+                btn.innerHTML = 'Scanning...';
+                setTimeout(() => {
+                    btn.innerHTML = origText;
+                    alert('Radar scan completed! New data loaded.');
+                }, 1500);
+            }
+        </script>
+      </div></div>
+  </div>
+
+</div>
 <div id="page-tasks" class="tasks-page" style="display:none">
   <div class="tasks-header">
     <div class="tasks-title-row">
