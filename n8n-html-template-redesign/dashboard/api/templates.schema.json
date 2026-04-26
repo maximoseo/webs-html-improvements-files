@@ -1,0 +1,14 @@
+{
+  "type": "object",
+  "required": [
+    "agents"
+  ],
+  "properties": {
+    "agents": {
+      "type": "array"
+    },
+    "final": {
+      "type": "object"
+    }
+  }
+}
