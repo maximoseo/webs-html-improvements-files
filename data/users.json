@@ -1,6 +1,6 @@
 [
   {
-    "username": "maximo",
+    "username": "maximoseo",
     "email": "admin@maximo-seo.com",
     "password_hash": "pbkdf2_sha256$260000$a7b155c5538ddbb6c55b48f5702e5124$e0d018cd4f8eea5b9116d73dab35fd110c466a89828d85f21e1b65b964c13108",
     "role": "admin",
