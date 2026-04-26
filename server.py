@@ -491,7 +491,8 @@ _USERS_JSON_LOCK = _threading_mu.Lock()
 def _mu_users_load():
     try:
         with open(_USERS_JSON_PATH, encoding='utf-8') as _f:
-            return json.load(_f)
+            data = json.load(_f)
+            return data.get('users', []) if isinstance(data, dict) else data
     except Exception:
         return []
 
