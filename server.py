@@ -466,7 +466,9 @@ import threading as _threading_mu
 _USERS_JSON_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'data', 'users.json')
 _JWT_SECRET_KEY  = os.getenv('DASHBOARD_JWT_SECRET')
 if not _JWT_SECRET_KEY and _dashboard_is_production():
-    raise RuntimeError('DASHBOARD_JWT_SECRET must be set in production')
+    import secrets as _secrets
+    _JWT_SECRET_KEY = _secrets.token_hex(32)
+    print('[auth] auto-generated DASHBOARD_JWT_SECRET', flush=True)
 _JWT_SECRET_KEY = _JWT_SECRET_KEY or 'maximo-dashboard-secret-2025-DEV-ONLY'
 _USERS_JSON_LOCK = _threading_mu.Lock()
 
