@@ -6956,7 +6956,30 @@ function showErrorToast(msg) {
 </style>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<style id="mobile-settings-btn-fix">
+/* Force Settings tab and all tabs to be visible in mobile scrolling container */
+@media (max-width: 1024px) {
+  .header .fixer-tab-nav .fixer-tab-btn,
+  .header .fixer-tab-nav #tab-settings {
+    display: inline-flex !important;
+    min-width: 44px !important;
+    width: 44px !important;
+    height: 44px !important;
+    padding: 0 !important;
+    justify-content: center !important;
+    align-items: center !important;
+    flex-shrink: 0 !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+  }
+  .header .fixer-tab-nav .fixer-tab-btn svg {
+    margin: 0 !important;
+  }
+}
+</style>
 </head>
+
 <body>
 <a href="#main-content" class="skip-link">Skip to main content</a>
 <div class="mobile-overlay" id="mobile-overlay" onclick="closeMobileMenu()"></div>
