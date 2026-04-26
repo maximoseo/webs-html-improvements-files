@@ -21864,6 +21864,49 @@ body.light .last-sync-meta{color:#64748B !important}
 @media (max-width:820px){.header{top:0 !important;left:0 !important;right:0 !important;border-radius:0 !important;}.header .fixer-tab-nav.main-menu{display:none !important;}}
 </style>
 
+<style id="main-menu-safe-top-spacing-v2-2026-04-26">
+/* ============================================================
+   MAIN MENU SAFE TOP SPACING V2 (2026-04-26)
+   The desktop header is fixed, inset from the viewport top, and
+   can wrap to a taller height. Static body padding (108px/102px)
+   allowed content to slide 36px under the header on production.
+   Keep a measured safe offset in sync and force it late in cascade.
+   ============================================================ */
+:root{--header-safe-gap:24px;--page-safe-top:calc(var(--header-h,80px) + var(--header-safe-gap));}
+html{scroll-padding-top: var(--page-safe-top) !important;}
+body{padding-top:max(var(--header-safe-offset, 0px), calc(var(--header-h, 80px) + 36px)) !important;}
+@media (min-width:821px){.container{padding-top:24px !important;}}
+@media (max-width:820px){body{padding-top:max(var(--header-safe-offset, 0px), calc(var(--header-h, 62px) + 14px)) !important;}}
+</style>
+
+<script id="header-safe-top-spacing-sync-2026-04-26">
+(function(){
+  function syncHeaderHeight(){
+    var h = document.querySelector('header.header') || document.querySelector('.header');
+    if(!h || !document.body) return;
+    var r = h.getBoundingClientRect();
+    var headerHeight = Math.ceil(r.height || h.offsetHeight || 0);
+    var topInset = Math.max(0, Math.ceil(r.top || 0));
+    var bottom = Math.ceil(r.bottom || (topInset + headerHeight));
+    var gap = window.matchMedia && window.matchMedia('(max-width:820px)').matches ? 14 : 24;
+    var safeOffset = Math.max(headerHeight + gap, bottom + gap);
+    document.documentElement.style.setProperty('--header-h', headerHeight + 'px');
+    document.documentElement.style.setProperty('--header-safe-offset', safeOffset + 'px');
+    document.documentElement.style.setProperty('--page-safe-top', safeOffset + 'px');
+    document.body.style.setProperty('padding-top', safeOffset + 'px', 'important');
+  }
+  syncHeaderHeight();
+  window.addEventListener('resize', syncHeaderHeight, {passive:true});
+  window.addEventListener('load', syncHeaderHeight, {once:false});
+  if(window.ResizeObserver){
+    var target = document.querySelector('header.header') || document.querySelector('.header');
+    if(target) new ResizeObserver(syncHeaderHeight).observe(target);
+  }
+  setTimeout(syncHeaderHeight, 0);
+  setTimeout(syncHeaderHeight, 250);
+})();
+</script>
+
 <style id="project-card-hover-flicker-fix-2026-04-26">
 /* ============================================================
    PROJECT CARD HOVER FLICKER FIX (2026-04-26)
