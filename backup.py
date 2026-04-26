@@ -302,6 +302,7 @@ def _supa_prune() -> None:
     url = _supa_url(f"object/list/{SUPABASE_BUCKET}")
     try:
         body = json.dumps({"limit": 1000, "offset": 0,
+                           "prefix": "",
                            "sortBy": {"column": "name", "order": "desc"}}).encode()
         r = _http(url, method="POST",
                   headers={**h, "Content-Type": "application/json"}, data=body)
@@ -328,6 +329,7 @@ def list_supabase() -> list[dict]:
     url = _supa_url(f"object/list/{SUPABASE_BUCKET}")
     try:
         body = json.dumps({"limit": 200, "offset": 0,
+                           "prefix": "",
                            "sortBy": {"column": "name", "order": "desc"}}).encode()
         r = _http(url, method="POST",
                   headers={**h, "Content-Type": "application/json"}, data=body)
