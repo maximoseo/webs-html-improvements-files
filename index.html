@@ -2531,10 +2531,9 @@ img,svg,video,canvas{max-width:100%;height:auto}
   transform: rotate(180deg) !important;
 }
 
-/* 3) Demote secondary buttons (correct IDs this time) */
-/* Generate HTML candidate = #prompt-tweak-btn → hide; flow lives in col 2 already */
-#prompt-modal #prompt-tweak-btn {
-  display: none !important;
+/* 3) Keep the pipeline launcher visible in the primary action row */
+#prompt-modal #prompt-tweak-btn.ps-pipeline-launcher {
+  display: inline-flex !important;
 }
 /* Compare ideas (brainstorm) = #prompt-brainstorm-btn → keep but reshape */
 
@@ -2542,7 +2541,7 @@ img,svg,video,canvas{max-width:100%;height:auto}
 #prompt-modal .prompt-panel > .prompt-actions:first-of-type,
 #prompt-modal .prompt-panel:first-child .prompt-actions {
   display: grid !important;
-  grid-template-columns: 1fr auto !important;
+  grid-template-columns: minmax(0, 1fr) auto auto !important;
   grid-auto-rows: auto !important;
   gap: 10px !important;
   padding: 14px 20px 16px !important;
@@ -2571,8 +2570,29 @@ img,svg,video,canvas{max-width:100%;height:auto}
   transform: translateY(-1px) !important;
   box-shadow: 0 4px 14px rgba(108,99,255,0.35), inset 0 1px 0 rgba(255,255,255,0.18) !important;
 }
-#prompt-modal #prompt-brainstorm-btn {
+#prompt-modal #prompt-tweak-btn.ps-pipeline-launcher {
   grid-column: 2 / 3 !important;
+  grid-row: 1 !important;
+  height: 48px !important;
+  padding: 0 16px !important;
+  font-size: 13px !important;
+  font-weight: 600 !important;
+  background: rgba(25,169,116,0.14) !important;
+  color: #baf7dc !important;
+  border: 1px solid rgba(25,169,116,0.38) !important;
+  border-radius: 10px !important;
+  white-space: nowrap !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 8px !important;
+}
+#prompt-modal #prompt-tweak-btn.ps-pipeline-launcher:hover:not(:disabled) {
+  color: #e4fff3 !important;
+  border-color: rgba(39,201,136,0.7) !important;
+  background: rgba(25,169,116,0.22) !important;
+}
+#prompt-modal #prompt-brainstorm-btn {
+  grid-column: 3 / 4 !important;
   grid-row: 1 !important;
   height: 48px !important;
   padding: 0 16px !important;
@@ -6320,6 +6340,7 @@ table tbody tr[tabindex]:focus-visible{outline:2px solid #3b82f6;outline-offset:
 .theme-pink{background:#db2777}
 
 /* 2026-04-24 focused design polish: denser operator UI, calmer surfaces, clearer actions */
+/* Prompt Studio — explicit pipeline launcher marker 2026-04-26 */
 :root{
   --radius:12px;
   --radius-sm:8px;
@@ -9114,7 +9135,7 @@ GET    /api/tasks/stats/burndown?project_id=x     — Burndown chart data
       </div>
       <div class="prompt-actions">
         <button id="prompt-improve-btn" class="action-btn success" onclick="improvePrompt(this)" data-tooltip="Build a single high-quality prompt with the selected model. Uses your instructions plus the project context to produce one polished, ready-to-run prompt." title="Build a single high-quality prompt with the selected model"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg><span class="ps-btn-label">Build prompt</span></button>
-        <button id="prompt-tweak-btn" class="action-btn" onclick="tweakTemplate(this)" data-tooltip="Generate the required HTML fixes directly from the improved prompt — runs the dashboard's HTML pipeline and streams the candidate into the live preview." title="Use the improved prompt to produce the required HTML fixes via the dashboard itself"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 13.5V20h6.5L20 10.5 13.5 4 4 13.5Z"/><path d="M12 6l6 6"/></svg><span class="ps-btn-label">Generate HTML</span></button>
+        <button id="prompt-tweak-btn" class="action-btn ps-pipeline-launcher" onclick="tweakTemplate(this)" data-tooltip="Launch the HTML pipeline from the improved prompt, generate a candidate, and stream it into the live preview before any GitHub replacement." title="Launch the HTML pipeline from the improved prompt and preview the candidate before replacing the active file"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M13 2L3 14h8l-1 8 11-13h-8l0-7Z"/><path d="M6 14h5"/></svg><span class="ps-btn-label">Launch pipeline</span></button>
         <button id="prompt-brainstorm-btn" class="action-btn brainstorm" onclick="brainstormPrompt(this)" data-tooltip="Run the selected leading models in parallel and synthesize the single best prompt from all their answers." title="Run the selected leading models in parallel and synthesize the best possible prompt"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="3"/><circle cx="5" cy="5" r="2"/><circle cx="19" cy="5" r="2"/><circle cx="5" cy="19" r="2"/><circle cx="19" cy="19" r="2"/><line x1="7" y1="6" x2="10" y2="10"/><line x1="17" y1="6" x2="14" y2="10"/><line x1="7" y1="18" x2="10" y2="14"/><line x1="17" y1="18" x2="14" y2="14"/></svg><span class="ps-btn-label">Brainstorm</span></button>
         <span id="prompt-status" class="prompt-status">Step 1: write instructions. Step 2: build with one model or brainstorm with selected leaders. Step 3: generate and live-preview an HTML candidate before replacing the active file.</span>
         <button id="prompt-stop-all-btn" class="action-btn" onclick="stopAllPromptStudio()" title="Cancel any running action" style="background:rgba(217,43,43,0.18);border-color:rgba(217,43,43,0.55);color:#ffb7b7"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:12px;height:12px;margin-right:4px;vertical-align:-1px"><rect x="6" y="6" width="12" height="12" rx="1"/></svg>Stop all</button>
@@ -9146,7 +9167,7 @@ GET    /api/tasks/stats/burndown?project_id=x     — Burndown chart data
             <button id="prompt-copy-html-obs-btn" class="action-btn" onclick="copyTweakedHtmlInstructions()" style="display:none">Copy sync payload</button>
           <span id="prompt-tweak-status" class="prompt-status"></span>
         </div>
-        <div class="prompt-sync-note" id="prompt-tweak-note">Tweaking generates one updated HTML example from the improved prompt. Review it, then use Apply to replace the current active HTML file in the same version path so the dashboard keeps only the active deliverable visible.</div>
+        <div class="prompt-sync-note" id="prompt-tweak-note">The pipeline generates one updated HTML candidate from the improved prompt. Review it in the live preview, then use Apply only when you are ready to replace the current active HTML file in the same version path.</div>
       </div>
       <div id="prompt-sync-panel" class="prompt-sync-panel">
         <div class="prompt-sync-title"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px"><path d="M21 12a9 9 0 0 1-9 9m9-9a9 9 0 0 0-9-9m9 9H3m9 9a9 9 0 0 1-9-9m9 9c2.5-2.5 3.75-5.75 3.75-9S14.5 5.5 12 3m0 18c-2.5-2.5-3.75-5.75-3.75-9S9.5 5.5 12 3"/></svg>Sync destinations</div>
@@ -11375,17 +11396,17 @@ async function tweakTemplate(btn){
     showToast('Tweaking cancelled','warn'); _syncPromptModalRunningState();
     return;
   }
-  if(!improved){status.textContent='Run Improve or Brainstorm first so Tweaking has a prompt to apply.';return;}
+  if(!improved){status.textContent='Build or brainstorm a prompt first so the pipeline has instructions to apply.';return;}
   const htmlFile=_htmlFileInfo();
   if(!htmlFile || !htmlFile.download){status.textContent='No HTML template found in the selected version.';return;}
   const modelEl=document.getElementById('prompt-model-select');
   const selectedModel=modelEl?modelEl.value:'anthropic/claude-sonnet-4.6';
   const original=btn.innerHTML;
   btn.classList.add('is-running');
-  btn.innerHTML='<span class="btn-spinner" aria-hidden="true"></span>Stop';
-  btn.title='Click to cancel the current Tweaking request';
+  btn.innerHTML='<span class="btn-spinner" aria-hidden="true"></span>Stop pipeline';
+  btn.title='Click to cancel the current pipeline request';
   tweakOut.value='';
-  tweakStatus.textContent='Generating tweaked HTML example from the improved prompt...';
+  tweakStatus.textContent='Launching HTML pipeline from the improved prompt...';
   window._tweakAbort=new AbortController(); _syncPromptModalRunningState();
   try{
     const res=await fetch('/api/prompt/tweak',{method:'POST',signal:window._tweakAbort.signal,headers:{'Content-Type':'application/json'},body:JSON.stringify({domain:promptStudioContext.domain,agentName:promptStudioContext.agentName,versionName:promptStudioContext.versionName,htmlDownloadUrl:htmlFile.download,htmlFileName:htmlFile.name,htmlFilePath:htmlFile.path,fileManifest:promptStudioContext.fileManifest,improvedPrompt:improved,model:selectedModel||'anthropic/claude-opus-4.7',latestOnly:true})});
@@ -11394,7 +11415,7 @@ async function tweakTemplate(btn){
     tweakOut.value=data.html||'';
     promptStudioContext.lastTweakedHtml=tweakOut.value;
     promptStudioContext.lastTweakedSummary=data.summary||'';
-    tweakStatus.textContent=`Tweaked example ready - ${data.model||selectedModel}. If approved, apply it to replace the current active HTML file.`;
+    tweakStatus.textContent=`Pipeline candidate ready - ${data.model||selectedModel}. Review the live preview, then apply it to replace the current active HTML file if approved.`;
     document.getElementById('prompt-apply-html-btn').style.display='';
     document.getElementById('prompt-copy-html-obs-btn').style.display='';
     setPromptPreviewHtml(tweakOut.value||'', 'candidate');
@@ -21181,6 +21202,24 @@ body.light .last-sync-meta{color:#64748B !important}
 .project-card.expanded .card-body{max-height:none !important;overflow:visible !important;transition:none !important;animation:none !important;}
 .project-card.expanded .card-body-inner,.project-card.expanded .agent-group,.project-card.expanded .version-section,.project-card.expanded .card-tools-row{transition:none !important;animation:none !important;box-shadow:none !important;filter:none !important;backdrop-filter:none !important;-webkit-backdrop-filter:none !important;}
 .project-card.expanded .progress-bar,.project-card.expanded .toggle-icon,.project-card.expanded .preview-cta{transition:none !important;animation:none !important;transform:none !important;box-shadow:none !important;filter:none !important;}
+</style>
+
+
+<style id="ps-pipeline-launcher-final-2026-04-26">
+/* Prompt Studio pipeline launcher final override — 2026-04-26 */
+#prompt-modal .prompt-panel:first-child > .prompt-actions > #prompt-tweak-btn.ps-pipeline-launcher{
+  display:inline-flex !important;
+  visibility:visible !important;
+  opacity:1 !important;
+  background:rgba(25,169,116,0.16) !important;
+  border:1px solid rgba(25,169,116,0.48) !important;
+  color:#c9fbe4 !important;
+}
+#prompt-modal .prompt-panel:first-child > .prompt-actions > #prompt-tweak-btn.ps-pipeline-launcher:hover:not(:disabled){
+  background:rgba(25,169,116,0.26) !important;
+  border-color:rgba(39,201,136,0.78) !important;
+  color:#ffffff !important;
+}
 </style>
 
 </body>
