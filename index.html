@@ -10297,7 +10297,8 @@ function setProjectExpanded(card, expanded, opts){
   }
   syncBulkToggleLabel();
   if(isExpanded && opts && opts.scroll){
-    setTimeout(()=>card.scrollIntoView({behavior:'smooth',block:'nearest'}),300);
+    // PROJECT_OPEN_SCROLL_FIX_2026_04_26: avoid smooth-scroll repaint shimmer after opening.
+    setTimeout(()=>card.scrollIntoView({behavior:'auto',block:'nearest'}),0);
   }
 }
 
@@ -19351,6 +19352,32 @@ body.light .last-sync-meta{color:#64748B !important}
   will-change:auto !important;
 }
 .project-card.expanded .file-badge,.project-card.expanded .file-details,.project-card.expanded .file-name,.project-card.expanded .file-size{transition:none !important;animation:none !important;transform:none !important;}
+</style>
+
+<style id="project-open-blink-fix-2026-04-26">
+/* ============================================================
+   PROJECT OPEN BLINK FIX (2026-04-26)
+   Opening a project should reveal details immediately, without
+   max-height animation, smooth-scroll shimmer, glow/blur repaint,
+   or animated header/progress/icon/button transitions.
+   ============================================================ */
+.project-card.expanded,.project-card.expanded:hover,.project-card.expanded:focus-within{
+  transform:none !important;
+  animation:none !important;
+  transition:none !important;
+  box-shadow:none !important;
+  filter:none !important;
+  backdrop-filter:none !important;
+  -webkit-backdrop-filter:none !important;
+  will-change:auto !important;
+  contain:layout paint style !important;
+  content-visibility:visible !important;
+  contain-intrinsic-size:auto !important;
+}
+.project-card.expanded::before,.project-card.expanded::after{display:none !important;}
+.project-card.expanded .card-body{max-height:none !important;overflow:visible !important;transition:none !important;animation:none !important;}
+.project-card.expanded .card-body-inner,.project-card.expanded .agent-group,.project-card.expanded .version-section,.project-card.expanded .card-tools-row{transition:none !important;animation:none !important;box-shadow:none !important;filter:none !important;backdrop-filter:none !important;-webkit-backdrop-filter:none !important;}
+.project-card.expanded .progress-bar,.project-card.expanded .toggle-icon,.project-card.expanded .preview-cta{transition:none !important;animation:none !important;transform:none !important;box-shadow:none !important;filter:none !important;}
 </style>
 
 </body>

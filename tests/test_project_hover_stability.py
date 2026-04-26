@@ -75,6 +75,27 @@ class ProjectHoverStabilityTests(unittest.TestCase):
         self.assertIn('box-shadow:none !important;', fix_css)
         self.assertIn('.project-card.expanded .file-badge,.project-card.expanded .file-details,.project-card.expanded .file-name,.project-card.expanded .file-size{transition:none !important;', fix_css)
 
+    def test_open_project_cards_disable_open_animation_blink_triggers(self):
+        html = INDEX_HTML.read_text(encoding='utf-8')
+
+        self.assertIn('PROJECT OPEN BLINK FIX', html)
+        self.assertIn('id="project-open-blink-fix-2026-04-26"', html)
+        fix_start = html.index('id="project-open-blink-fix-2026-04-26"')
+        fix_css = html[fix_start:html.index('</style>', fix_start)]
+
+        self.assertIn('.project-card.expanded,.project-card.expanded:hover,.project-card.expanded:focus-within{', fix_css)
+        self.assertIn('transition:none !important;', fix_css)
+        self.assertIn('box-shadow:none !important;', fix_css)
+        self.assertIn('filter:none !important;', fix_css)
+        self.assertIn('backdrop-filter:none !important;', fix_css)
+        self.assertIn('contain:layout paint style !important;', fix_css)
+        self.assertIn('.project-card.expanded::before,.project-card.expanded::after{display:none !important;', fix_css)
+        self.assertIn('.project-card.expanded .card-body{max-height:none !important;', fix_css)
+        self.assertIn('overflow:visible !important;', fix_css)
+        self.assertIn('.project-card.expanded .progress-bar,.project-card.expanded .toggle-icon,.project-card.expanded .preview-cta{transition:none !important;', fix_css)
+        self.assertIn('PROJECT_OPEN_SCROLL_FIX_2026_04_26', html)
+        self.assertIn("card.scrollIntoView({behavior:'auto',block:'nearest'})", html)
+
 
 if __name__ == '__main__':
     unittest.main()
