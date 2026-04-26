@@ -2107,7 +2107,7 @@ _R3_CSRF_ENABLED = os.environ.get('DASH_CSRF', '1') not in ('0','false','False',
 _R3_CSRF_EXEMPT = (
     '/api/auth/login', '/api/auth/request-reset', '/api/auth/reset',
     '/api/n8n/webhook', '/login', '/api/csrf', '/metrics', '/api/login', '/api/reset-password',
-    '/api/fixer/analyze', '/api/kwr/ensemble', '/api/delete-agent', '/api/kwr/save-obsidian', '/api/kwr/update-rows'
+    '/api/fixer/analyze', '/api/kwr/ensemble', '/api/delete-agent', '/api/kwr/save-obsidian', '/api/kwr/update-rows', '/api/radar/run'
 )
 
 def _r3_csrf_token():
