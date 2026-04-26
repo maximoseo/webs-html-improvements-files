@@ -6403,6 +6403,115 @@ body{
   .card-header{padding:16px}
 }
 
+/* ╔══════════════════════════════════════════════════════════════════╗
+   ║  REDESIGN QUICK WIN #1 — Nav Cut-Off Fix (2026-04-26)           ║
+   ║  Consolidated override for scattered polish-pass conflicts       ║
+   ║  Principle: min-height instead of fixed height, wrap gracefully  ║
+   ╚══════════════════════════════════════════════════════════════════╝ */
+
+/* Core header: allow natural height expansion */
+.header {
+  min-height: 62px !important;
+  height: auto !important;
+  overflow: visible !important;
+}
+
+/* Header inner: wrap content gracefully instead of cutting off */
+.header-inner {
+  min-height: 62px !important;
+  height: auto !important;
+  flex-wrap: wrap !important;
+  align-items: center !important;
+  padding-top: 12px !important;
+  padding-bottom: 12px !important;
+}
+
+/* Header actions: wrap sub-elements (tabs, buttons, search, status) */
+.header-actions {
+  flex-wrap: wrap !important;
+  gap: 10px !important;
+  min-width: 0 !important;
+}
+
+/* Tab nav: stay horizontal, scroll if needed instead of wrapping or cutting off */
+.fixer-tab-nav {
+  display: flex !important;
+  align-items: center !important;
+  flex-wrap: nowrap !important;
+  overflow-x: auto !important;
+  overflow-y: hidden !important;
+  min-width: 0 !important;
+  max-width: 100% !important;
+  -webkit-overflow-scrolling: touch !important;
+  scrollbar-width: none !important;           /* Firefox */
+}
+.fixer-tab-nav::-webkit-scrollbar {
+  display: none !important;                   /* Chrome/Safari */
+}
+
+/* Ensure tab buttons don't shrink too much */
+.fixer-tab-btn {
+  flex-shrink: 0 !important;
+}
+
+/* Tablet: keep wrapping, allow slightly more compact sizing */
+@media (max-width: 1024px) {
+  .header-inner {
+    gap: 10px !important;
+  }
+  .header-actions {
+    gap: 8px !important;
+  }
+}
+
+/* Mobile: keep horizontal tab scroll, compact header */
+@media (max-width: 768px) {
+  .header {
+    min-height: 52px !important;
+    height: auto !important;
+  }
+  .header-inner {
+    min-height: 52px !important;
+    height: auto !important;
+    flex-wrap: wrap !important;
+    gap: 8px !important;
+    padding: 8px 12px !important;
+  }
+  .header-actions {
+    flex-wrap: nowrap !important;   /* on mobile keep actions in one row */
+    gap: 6px !important;
+    flex: 1 1 auto !important;
+    min-width: 0 !important;
+    justify-content: flex-end !important;
+  }
+  .fixer-tab-nav {
+    flex-wrap: nowrap !important;
+    overflow-x: auto !important;
+    gap: 3px !important;
+    padding: 2px !important;
+  }
+  .fixer-tab-btn {
+    flex-shrink: 0 !important;
+    min-height: 32px !important;
+    padding: 6px 8px !important;
+  }
+  .fixer-tab-btn .tab-label {
+    display: inline !important;     /* keep labels on tablet, hide only on very small */
+  }
+}
+
+/* Very small mobile: hide tab labels, keep icons */
+@media (max-width: 480px) {
+  .fixer-tab-btn .tab-label {
+    display: none !important;
+  }
+  .fixer-tab-btn {
+    padding: 6px 7px !important;
+  }
+}
+
+/* END REDESIGN QUICK WIN #1 */
+
 </style>
 <script>
 // ── Global Error Handler (added) ──────────────────────────────────────────
