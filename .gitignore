@@ -3,6 +3,8 @@ __pycache__/
 .env.*
 !.env.example
 data/users.json
+data/tasks.json
+data/activity/
 *.pyc
 .pytest_cache/
 index.html.bak*

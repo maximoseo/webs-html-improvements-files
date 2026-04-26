@@ -29,6 +29,7 @@ ROOT = Path(__file__).resolve().parent
 INDEX = ROOT / 'index.html'
 DATA = ROOT / 'data.json'
 MAP_FILE = ROOT / 'n8n-workflow-map.json'
+TASKS_FILE = ROOT / 'data' / 'tasks.json'
 REPO = 'maximoseo/webs-html-improvements-files'
 RAW_BASE = f'https://raw.githubusercontent.com/{REPO}/main'
 DEFAULT_N8N_BASE = 'https://websiseo.app.n8n.cloud'
@@ -98,6 +99,21 @@ def load_json_file(path: Path, default):
         return json.loads(path.read_text(encoding='utf-8'))
     except Exception:
         return default
+
+
+def _tasks_load() -> list:
+    try:
+        if not TASKS_FILE.exists():
+            return []
+        data = json.loads(TASKS_FILE.read_text(encoding='utf-8'))
+        return data if isinstance(data, list) else []
+    except Exception:
+        return []
+
+
+def _tasks_save(tasks: list) -> None:
+    TASKS_FILE.parent.mkdir(parents=True, exist_ok=True)
+    TASKS_FILE.write_text(json.dumps(tasks, ensure_ascii=False, indent=2), encoding='utf-8')
 
 
 def _cache_control_for(content_type: str, path: str = '') -> str:
@@ -3124,6 +3140,10 @@ body{{font-family:Arial;padding:24px}}h1{{color:#333}}pre{{background:#f4f4f4;pa
             jobs = kwr_backend.list_recent(limit)
             return json_response(self, 200, {'ok': True, 'runs': jobs})
 
+        if parsed.path == '/api/tasks':
+            tasks = _tasks_load()
+            return json_response(self, 200, {'ok': True, 'tasks': tasks})
+
         if parsed.path.startswith('/api/kwr/download/'):
             run_id = parsed.path.split('/')[-1].strip()
             if not run_id:
@@ -3468,9 +3488,7 @@ body{{font-family:Arial;padding:24px}}h1{{color:#333}}pre{{background:#f4f4f4;pa
             except Exception:
                 payload = {}
             return _stage8_login(self, payload)
-        # Stage 8: password-reset request — canonical endpoint plus legacy alias.
-        if parsed.path in ('/api/auth/request-reset', '/api/reset-password',
-    '/api/fixer/analyze', '/api/kwr/ensemble', '/api/delete-agent', '/api/kwr/save-obsidian', '/api/kwr/update-rows'):
+        if parsed.path in ('/api/auth/request-reset', '/api/reset-password'):
             try:
                 payload = read_request_json(self) or {}
             except Exception:
@@ -3522,6 +3540,13 @@ body{{font-family:Arial;padding:24px}}h1{{color:#333}}pre{{background:#f4f4f4;pa
             payload = read_request_json(self)
         except Exception:
             return json_response(self, 400, {'ok': False, 'error': 'Invalid JSON body'})
+
+        if parsed.path == '/api/tasks':
+            tasks = payload.get('tasks')
+            if not isinstance(tasks, list):
+                return json_response(self, 400, {'ok': False, 'error': 'tasks must be an array'})
+            _tasks_save(tasks)
+            return json_response(self, 200, {'ok': True, 'count': len(tasks)})
 
         if parsed.path == '/api/tasks/sync-github':
             tasks = payload.get('tasks')
@@ -4309,6 +4334,36 @@ body{{font-family:Arial;padding:24px}}h1{{color:#333}}pre{{background:#f4f4f4;pa
             run_id = parsed.path.split('/')[-1].strip()
             if not run_id:
                 return json_response(self, 400, {'ok': False, 'error': 'run_id required'})
+            # Flat reports synced from GitHub (outputs/kwr_<slug>.xlsx)
+            if run_id.startswith('flat:'):
+                slug = run_id[5:]
+                fp = os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                                  'outputs', f'kwr_{slug}.xlsx')
+                if not os.path.isfile(fp):
+                    return json_response(self, 404, {'ok': False, 'error': 'flat report not found'})
+                with open(fp, 'rb') as f:
+                    excel_bytes = f.read()
+                ws_name = f'kwr_{slug}'
+                safe_ascii = re.sub(r'[^A-Za-z0-9._-]+', '-', ws_name).strip('-') or 'kwr'
+                filename_ascii = f"{safe_ascii}.xlsx"
+                filename_utf8 = urllib.parse.quote(f"{ws_name}.xlsx", safe='')
+                self.send_response(200)
+                self.send_header('Content-Type',
+                                 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+                self.send_header(
+                    'Content-Disposition',
+                    f"attachment; filename=\"{filename_ascii}\"; filename*=UTF-8''{filename_utf8}"
+                )
+                self.send_header('Content-Length', str(len(excel_bytes)))
+                self.end_headers()
+                try:
+                    mv = memoryview(excel_bytes)
+                    CHUNK = 65536
+                    for i in range(0, len(mv), CHUNK):
+                        self.wfile.write(mv[i:i+CHUNK])
+                except (BrokenPipeError, ConnectionResetError):
+                    return
+                return
             excel_bytes, ws_name, err = kwr_backend.build_excel(run_id)
             if err:
                 return json_response(self, 500, {'ok': False, 'error': err})
@@ -4324,7 +4379,13 @@ body{{font-family:Arial;padding:24px}}h1{{color:#333}}pre{{background:#f4f4f4;pa
             )
             self.send_header('Content-Length', str(len(excel_bytes)))
             self.end_headers()
-            self.wfile.write(excel_bytes)
+            try:
+                mv = memoryview(excel_bytes)
+                CHUNK = 65536
+                for i in range(0, len(mv), CHUNK):
+                    self.wfile.write(mv[i:i+CHUNK])
+            except (BrokenPipeError, ConnectionResetError):
+                return
             return
 
         if parsed.path == '/api/kwr/push-sheets':

@@ -8362,8 +8362,13 @@ function showErrorToast(msg) {
   <div class="kwr-section-title">Optional</div>
   <div class="kwr-grid">
     <div class="kwr-field">
-      <label class="kwr-label" for="kwr-competitor-urls">Competitor URLs</label>
-      <input class="kwr-input" id="kwr-competitor-urls" type="text" placeholder="https://comp1.com, https://comp2.com" autocomplete="off">
+      <label class="kwr-label" for="kwr-competitor-urls" style="display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap">
+        <span>Competitor URLs</span>
+        <button type="button" class="kwr-btn kwr-btn-ghost" id="kwr-find-competitors-btn" onclick="kwrFindCompetitors()" style="padding:6px 10px;font-size:11px" title="Auto-discover competitors from Google & Bing by primary site">
+          🔎 Find competitors (Google + Bing)
+        </button>
+      </label>
+      <textarea class="kwr-textarea" id="kwr-competitor-urls" placeholder="https://comp1.com\nhttps://comp2.com" autocomplete="off" style="min-height:78px"></textarea>
     </div>
     <div class="kwr-field full">
       <label class="kwr-label" for="kwr-exclusions">Exclusions / Notes</label>
@@ -8715,7 +8720,7 @@ function showErrorToast(msg) {
     opts.headers = opts.headers || {};
     var tok = '';
     try { tok = localStorage.getItem('dashboard_token') || ''; } catch(_e) {}
-    if (tok) _setHeader(opts.headers, 'Authorization', 'Bearer ' + tok);
+    if (tok && _sameOrigin(url)) _setHeader(opts.headers, 'Authorization', 'Bearer ' + tok);
     if (opts.credentials == null) opts.credentials = 'same-origin';
     function send(){
       var p = _origFetch.call(self, url, opts);
@@ -12773,6 +12778,49 @@ function loadTopicsFromStatus(state) {
     hint.innerHTML = `Will fill: <strong>${esc(d.origin)}</strong> &nbsp;·&nbsp; sitemap: ${esc(d.origin)}/sitemap.xml &nbsp;·&nbsp; about: ${esc(d.origin)}/about`;
   };
 
+  window.kwrFindCompetitors = async function() {
+    const websiteInput = document.getElementById('kwr-website-url');
+    const quickInput = document.getElementById('kwr-domain-quick');
+    const compEl = document.getElementById('kwr-competitor-urls');
+    const hint = document.getElementById('kwr-autofill-hint');
+    const btn = document.getElementById('kwr-find-competitors-btn');
+    const raw = ((websiteInput && websiteInput.value) || (quickInput && quickInput.value) || '').trim();
+    const d = kwrNormDomain(raw);
+    if (!d) {
+      if (hint) { hint.style.color = '#ef4444'; hint.textContent = 'Enter website/domain first, then find competitors.'; }
+      return;
+    }
+    const prevText = btn ? btn.textContent : '';
+    if (btn) { btn.disabled = true; btn.textContent = 'Finding…'; }
+    if (hint) { hint.style.color = 'var(--muted)'; hint.textContent = 'Searching Google + Bing competitor candidates…'; }
+    try {
+      const resp = await fetch('/api/kwr/probe', {
+        method: 'POST',
+        headers: {'Content-Type':'application/json'},
+        body: JSON.stringify({ domain: d.origin })
+      });
+      let data = {};
+      try { data = await resp.json(); } catch(_) { data = {}; }
+      if (!resp.ok || data.ok === false) throw new Error(data.error || ('HTTP ' + resp.status));
+      const competitors = Array.isArray(data.competitors) ? data.competitors : [];
+      const urls = competitors.map(c => c && c.url).filter(Boolean);
+      if (compEl) compEl.value = urls.join('\n');
+      if (hint) {
+        if (urls.length) {
+          hint.style.color = '#22c55e';
+          hint.textContent = 'Found ' + urls.length + ' competitors from Google/Bing signals. Review before run.';
+        } else {
+          hint.style.color = '#f59e0b';
+          hint.textContent = 'No strong competitors found automatically. You can enter them manually.';
+        }
+      }
+    } catch (err) {
+      if (hint) { hint.style.color = '#ef4444'; hint.textContent = 'Competitor discovery failed: ' + (err && err.message ? err.message : 'Unknown error'); }
+    } finally {
+      if (btn) { btn.disabled = false; btn.textContent = prevText || '🔎 Find competitors (Google + Bing)'; }
+    }
+  };
+
   window.kwrAutoFill = async function() {
     const quickInput = document.getElementById('kwr-domain-quick');
     const btn = document.getElementById('kwr-autofill-btn');
@@ -13494,56 +13542,62 @@ function showSkeletons(n){
 }
 // ============= TASK MANAGER JS =============
 const TASKS_KEY = 'dashboard-tasks';
-const SUPABASE_URL = 'https://wtpczvyupmavzrxisvcm.supabase.co';
-const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Ind0cGN6dnl1cG1hdnpyeGlzdmNtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njg3MjEyOTgsImV4cCI6MjA4NDI5NzI5OH0.-_AP23-lVz_v3HPrqp4HfN4_QJZ_0zklfyRb9tSeTk4';
 
 let _tasks = [];
 let _editingTaskId = null;
 let _taskView = 'list';
 let _taskFilter = {search:'', status:'', priority:'', project:''};
 
+function _tasksNormalizeRows(rows) {
+  if(!Array.isArray(rows)) return [];
+  return rows.map(function(r){
+    var t = Object.assign({}, r || {});
+    if(!Array.isArray(t.subtasks)) {
+      try {
+        t.subtasks = JSON.parse(t.subtasks || '[]');
+      } catch(e) {
+        t.subtasks = [];
+      }
+    }
+    return t;
+  });
+}
+
 function tasksLoad() {
   try { _tasks = JSON.parse(localStorage.getItem(TASKS_KEY)||'[]'); } catch(e) { _tasks = []; }
+  _tasks = _tasksNormalizeRows(_tasks);
   tasksRender();
-  tasksLoadFromSupabase().catch(function(){});
+  tasksLoadFromApi().catch(function(){});
 }
 
 function tasksSave() {
   localStorage.setItem(TASKS_KEY, JSON.stringify(_tasks));
-  tasksSyncToSupabase().catch(function(){});
+  tasksSyncToApi().catch(function(){});
   tasksSyncToGitHub().catch(function(){});
 }
 
-async function tasksLoadFromSupabase() {
+async function tasksLoadFromApi() {
   try {
-    const res = await fetch(SUPABASE_URL+'/rest/v1/tasks?order=created_at.desc', {
-      headers: {'apikey': SUPABASE_ANON, 'Authorization': 'Bearer '+SUPABASE_ANON}
-    });
+    const res = await fetch('/api/tasks');
     if(!res.ok) return;
     const data = await res.json();
-    if(Array.isArray(data) && data.length > 0) {
-      _tasks = data.map(function(r){ return Object.assign({}, r, {subtasks: JSON.parse(r.subtasks||'[]')}); });
+    const rows = _tasksNormalizeRows((data && data.tasks) || []);
+    if(Array.isArray(rows) && rows.length > 0) {
+      _tasks = rows;
       localStorage.setItem(TASKS_KEY, JSON.stringify(_tasks));
       tasksRender();
     }
   } catch(e) {}
 }
 
-async function tasksSyncToSupabase() {
-  for(var i=0; i<_tasks.length; i++) {
-    var task = _tasks[i];
-    var payload = Object.assign({}, task, {subtasks: JSON.stringify(task.subtasks||[])});
-    fetch(SUPABASE_URL+'/rest/v1/tasks', {
+async function tasksSyncToApi() {
+  try {
+    await fetch('/api/tasks', {
       method: 'POST',
-      headers: {
-        'apikey': SUPABASE_ANON,
-        'Authorization': 'Bearer '+SUPABASE_ANON,
-        'Content-Type': 'application/json',
-        'Prefer': 'resolution=merge-duplicates'
-      },
-      body: JSON.stringify(payload)
-    }).catch(function(){});
-  }
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({tasks: _tasks})
+    });
+  } catch(e) {}
 }
 
 async function tasksSyncToGitHub() {
@@ -16140,7 +16194,10 @@ async function downloadPromptPreviewShot(){
   font-size:13px;align-items:center;
 }
 .analytics-proj-row:last-child { border-bottom:0; }
-.analytics-proj-row.header { font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.04em; }
+.analytics-proj-row-head{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.04em;position:static !important;top:auto !important;z-index:auto !important;}
+/* Legacy safety-net: if an old bundle still renders class="analytics-proj-row header",
+   force it to behave as a table row and never as the global fixed page header. */
+.analytics-proj-row.header{position:static !important;top:auto !important;left:auto !important;right:auto !important;width:auto !important;z-index:auto !important;backdrop-filter:none !important;-webkit-backdrop-filter:none !important;}
 
 /* Settings styles */
 .settings-section { margin-bottom:28px; }
@@ -17483,7 +17540,7 @@ window.initAnalyticsPage = function() {
     // Projects breakdown table
     var tableEl = document.getElementById('analytics-projects-table');
     if (tableEl) {
-      var html = '<div class="analytics-proj-row header"><span>Domain</span><span>Files</span><span>Status</span></div>';
+      var html = '<div class="analytics-proj-row analytics-proj-row-head"><span>Domain</span><span>Files</span><span>Status</span></div>';
       if (!projects.length) {
         tableEl.innerHTML = '<div class="analytics-panel-empty">No projects available yet.</div>';
       } else {
@@ -18330,7 +18387,7 @@ select:focus,
 
 /* Tables and loading states */
 .kwr-table th,
-.analytics-proj-row.header,
+.analytics-proj-row-head,
 table thead th{
   color:var(--ops-muted) !important;
   background:rgba(255,255,255,0.035) !important;
