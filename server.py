@@ -5408,8 +5408,3 @@ if __name__ == '__main__':
     main()
 
 # ── Local Skill Discovery Fallback ─────────────────────────────
-                continue
-            skills.append(skill)
-    # Sort and limit
-    skills = skills[:limit]
-    return skills
