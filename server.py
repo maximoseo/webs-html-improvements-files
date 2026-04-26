@@ -2520,6 +2520,8 @@ body{{font-family:Arial;padding:24px}}h1{{color:#333}}pre{{background:#f4f4f4;pa
         self.end_headers()
 
     def do_GET(self):
+        if not self._r2_check_rate(): return
+        parsed = urllib.parse.urlparse(self.path)
         if parsed.path == '/api/radar/data':
             try:
                 qs = urllib.parse.parse_qs(parsed.query)
@@ -2560,8 +2562,6 @@ body{{font-family:Arial;padding:24px}}h1{{color:#333}}pre{{background:#f4f4f4;pa
                 return json_response(self, 200, {'ok': True, 'data': payload})
             except Exception as e:
                 return json_response(self, 500, {'ok': False, 'error': str(e)})
-        if not self._r2_check_rate(): return
-        parsed = urllib.parse.urlparse(self.path)
         if _dashboard_auth_enabled() and not _stage8_check_auth(self, parsed):
             return
         # ---- Round 3: New endpoints ----
