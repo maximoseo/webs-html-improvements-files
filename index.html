@@ -9603,9 +9603,9 @@ GET    /api/tasks/stats/burndown?project_id=x     — Burndown chart data
         <div id="ps-brainstorm-models" class="ps-model-pills"></div>
       </div>
       <div class="prompt-actions">
-        <button id="prompt-improve-btn" class="action-btn success" onclick="improvePrompt(this)" data-tooltip="Build a single high-quality prompt with the selected model. Uses your instructions plus the project context to produce one polished, ready-to-run prompt." title="Build a single high-quality prompt with the selected model"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg><span class="ps-btn-label">Build prompt</span></button>
-        <button id="prompt-tweak-btn" class="action-btn ps-pipeline-launcher" onclick="tweakTemplate(this)" data-tooltip="Launch the HTML pipeline from the improved prompt, generate a candidate, and stream it into the live preview before any GitHub replacement." title="Launch the HTML pipeline from the improved prompt and preview the candidate before replacing the active file"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M13 2L3 14h8l-1 8 11-13h-8l0-7Z"/><path d="M6 14h5"/></svg><span class="ps-btn-label">Launch pipeline</span></button>
-        <button id="prompt-brainstorm-btn" class="action-btn brainstorm" onclick="brainstormPrompt(this)" data-tooltip="Run the selected leading models in parallel and synthesize the single best prompt from all their answers." title="Run the selected leading models in parallel and synthesize the best possible prompt"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="3"/><circle cx="5" cy="5" r="2"/><circle cx="19" cy="5" r="2"/><circle cx="5" cy="19" r="2"/><circle cx="19" cy="19" r="2"/><line x1="7" y1="6" x2="10" y2="10"/><line x1="17" y1="6" x2="14" y2="10"/><line x1="7" y1="18" x2="10" y2="14"/><line x1="17" y1="18" x2="14" y2="14"/></svg><span class="ps-btn-label">Brainstorm</span></button>
+        <button id="prompt-improve-btn" type="button" class="action-btn success" onclick="improvePrompt(this)" data-tooltip="Build a single high-quality prompt with the selected model. Uses your instructions plus the project context to produce one polished, ready-to-run prompt." title="Build a single high-quality prompt with the selected model"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg><span class="ps-btn-label">Build prompt</span></button>
+        <button id="prompt-tweak-btn" type="button" class="action-btn ps-pipeline-launcher" onclick="tweakTemplate(this)" data-tooltip="Launch the HTML pipeline from the improved prompt, generate a candidate, and stream it into the live preview before any GitHub replacement." title="Launch the HTML pipeline from the improved prompt and preview the candidate before replacing the active file"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M13 2L3 14h8l-1 8 11-13h-8l0-7Z"/><path d="M6 14h5"/></svg><span class="ps-btn-label">Launch pipeline</span></button>
+        <button id="prompt-brainstorm-btn" type="button" class="action-btn brainstorm" onclick="brainstormPrompt(this)" data-tooltip="Run the selected leading models in parallel and synthesize the single best prompt from all their answers." title="Run the selected leading models in parallel and synthesize the best possible prompt"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="3"/><circle cx="5" cy="5" r="2"/><circle cx="19" cy="5" r="2"/><circle cx="5" cy="19" r="2"/><circle cx="19" cy="19" r="2"/><line x1="7" y1="6" x2="10" y2="10"/><line x1="17" y1="6" x2="14" y2="10"/><line x1="7" y1="18" x2="10" y2="14"/><line x1="17" y1="18" x2="14" y2="14"/></svg><span class="ps-btn-label">Brainstorm</span></button>
         <span id="prompt-status" class="prompt-status">Step 1: write instructions. Step 2: build with one model or brainstorm with selected leaders. Step 3: generate and live-preview an HTML candidate before replacing the active file.</span>
         <button id="prompt-stop-all-btn" class="action-btn" onclick="stopAllPromptStudio()" title="Cancel any running action" style="background:rgba(217,43,43,0.18);border-color:rgba(217,43,43,0.55);color:#ffb7b7"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:12px;height:12px;margin-right:4px;vertical-align:-1px"><rect x="6" y="6" width="12" height="12" rx="1"/></svg>Stop all</button>
         <span class="esc-hint" aria-hidden="true"><kbd style="font:inherit;background:transparent;border:0;padding:0">Esc</kbd> to cancel</span>
@@ -11854,18 +11854,23 @@ function _htmlFileInfo(){
   return f||null;
 }
 async function tweakTemplate(btn){
-  const improved=(document.getElementById('prompt-output').value||'').trim();
+  const improvedOutput=(document.getElementById('prompt-output').value||'').trim();
+  const draftFallback=(document.getElementById('prompt-draft').value||'').trim();
+  const improved=improvedOutput||draftFallback;
   const status=document.getElementById('prompt-status');
   const tweakOut=document.getElementById('prompt-tweak-output');
   const tweakStatus=document.getElementById('prompt-tweak-status');
   if(window._tweakAbort){
     try{ window._tweakAbort.abort('user_cancel'); }catch(e){}
     window._tweakAbort=null;
-    tweakStatus.textContent='Tweaking cancelled.';
-    showToast('Tweaking cancelled','warn'); _syncPromptModalRunningState();
+    tweakStatus.textContent='Pipeline cancelled.';
+    showToast('Pipeline cancelled','warn'); _syncPromptModalRunningState();
     return;
   }
-  if(!improved){status.textContent='Build or brainstorm a prompt first so the pipeline has instructions to apply.';return;}
+  if(!improved){status.textContent='Write instructions or build/brainstorm a prompt first so the pipeline has instructions to apply.';return;}
+  if(!improvedOutput){
+    status.textContent='Launching pipeline directly from the draft instructions. You can still Build prompt first for a more structured prompt.';
+  }
   const htmlFile=_htmlFileInfo();
   if(!htmlFile || !htmlFile.download){status.textContent='No HTML template found in the selected version.';return;}
   const modelEl=document.getElementById('prompt-model-select');
@@ -11875,12 +11880,17 @@ async function tweakTemplate(btn){
   btn.innerHTML='<span class="btn-spinner" aria-hidden="true"></span>Stop pipeline';
   btn.title='Click to cancel the current pipeline request';
   tweakOut.value='';
-  tweakStatus.textContent='Launching HTML pipeline from the improved prompt...';
+  tweakStatus.textContent='Launching HTML pipeline...';
   window._tweakAbort=new AbortController(); _syncPromptModalRunningState();
   try{
     const res=await fetch('/api/prompt/tweak',{method:'POST',signal:window._tweakAbort.signal,headers:{'Content-Type':'application/json'},body:JSON.stringify({domain:promptStudioContext.domain,agentName:promptStudioContext.agentName,versionName:promptStudioContext.versionName,htmlDownloadUrl:htmlFile.download,htmlFileName:htmlFile.name,htmlFilePath:htmlFile.path,fileManifest:promptStudioContext.fileManifest,improvedPrompt:improved,model:selectedModel||'anthropic/claude-opus-4.7',latestOnly:true})});
-    const data=await res.json();
-    if(!res.ok||!data.ok) throw new Error(data.error||'Tweaking failed');
+    let data={};
+    try{data=await res.json();}catch(parseErr){data={ok:false,error:'Pipeline returned a non-JSON response'};}
+    if(!res.ok||!data.ok){
+      const errorDetail=data&&data.details?(' - '+data.details):'';
+      const errorText=(data&&data.error&&typeof data.error==='object')?JSON.stringify(data.error).slice(0,400):(data.error||('HTTP '+res.status));
+      throw new Error(errorText+errorDetail);
+    }
     tweakOut.value=data.html||'';
     promptStudioContext.lastTweakedHtml=tweakOut.value;
     promptStudioContext.lastTweakedSummary=data.summary||'';
@@ -11888,15 +11898,16 @@ async function tweakTemplate(btn){
     document.getElementById('prompt-apply-html-btn').style.display='';
     document.getElementById('prompt-copy-html-obs-btn').style.display='';
     setPromptPreviewHtml(tweakOut.value||'', 'candidate');
-    showToast('Tweaked HTML example ready','success');
+    showToast('HTML pipeline candidate ready','success');
   }catch(err){
-    if(err && (err.name==='AbortError' || String(err).includes('user_cancel'))){tweakStatus.textContent='Tweaking cancelled.';}else{tweakStatus.textContent=(err&&err.message)||'Tweaking failed.';showToast('Tweaking failed','error');}
+    if(err && (err.name==='AbortError' || String(err).includes('user_cancel'))){tweakStatus.textContent='Pipeline cancelled.';}else{tweakStatus.textContent=(err&&err.message)||'Pipeline failed.';showToast('Pipeline failed','error');}
   }finally{
     window._tweakAbort=null;
     btn.disabled=false;
     btn.innerHTML=original;
     btn.classList.remove('is-running');
     btn.title='';
+    _syncPromptModalRunningState();
   }
 }
 async function copyTweakedHtml(){
@@ -22028,10 +22039,12 @@ body{padding-top:max(var(--header-safe-offset, 0px), calc(var(--header-h, 80px) 
 
 <style id="ps-pipeline-launcher-final-2026-04-26">
 /* Prompt Studio pipeline launcher final override — 2026-04-26 */
-#prompt-modal .prompt-panel:first-child > .prompt-actions > #prompt-tweak-btn.ps-pipeline-launcher{
+#prompt-modal #prompt-tweak-btn.ps-pipeline-launcher{
   display:inline-flex !important;
   visibility:visible !important;
   opacity:1 !important;
+  pointer-events:auto !important;
+  cursor:pointer !important;
   background:rgba(25,169,116,0.16) !important;
   border:1px solid rgba(25,169,116,0.48) !important;
   color:#c9fbe4 !important;
@@ -22042,6 +22055,40 @@ body{padding-top:max(var(--header-safe-offset, 0px), calc(var(--header-h, 80px) 
   color:#ffffff !important;
 }
 </style>
+
+<script id="prompt-studio-actions-hardening-2026-04-26">
+/* PROMPT_STUDIO_ACTIONS_HARDENING_2026_04_26
+   Keep Prompt Studio action buttons explicitly wired even if later
+   dashboard scripts rewrite inline handlers or restore cached markup. */
+(function(){
+  function ensurePromptStudioActionBindings(){
+    if(!document.getElementById('prompt-modal')) return;
+    function bind(id, handler){
+      var el=document.getElementById(id);
+      if(!el || typeof handler!=='function') return;
+      el.type='button';
+      el.style.pointerEvents='auto';
+      el.onclick=function(ev){
+        if(ev){
+          ev.preventDefault();
+        }
+        handler(el);
+      };
+      el.dataset.psBindingReady='1';
+    }
+    bind('prompt-improve-btn', window.improvePrompt);
+    bind('prompt-tweak-btn', window.tweakTemplate);
+    bind('prompt-brainstorm-btn', window.brainstormPrompt);
+  }
+  window.ensurePromptStudioActionBindings=ensurePromptStudioActionBindings;
+  if(document.readyState==='loading'){
+    document.addEventListener('DOMContentLoaded', ensurePromptStudioActionBindings, {once:true});
+  }else{
+    ensurePromptStudioActionBindings();
+  }
+  window.addEventListener('load', ensurePromptStudioActionBindings, {once:true});
+})();
+</script>
 
 <!-- Bottom Navigation Bar -->
 <nav class="bottom-nav" id="bottom-nav" aria-label="Main navigation">
