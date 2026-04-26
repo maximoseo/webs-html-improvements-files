@@ -683,12 +683,12 @@ img,svg,video,canvas{max-width:100%;height:auto}
 }
 
 /* iOS momentum scrolling + safe area */
-html{-webkit-text-size-adjust:100%;touch-action:manipulation;-webkit-tap-highlight-color:transparent}
-body{overscroll-behavior-y:none}
+html{-webkit-text-size-adjust:100%;-webkit-tap-highlight-color:transparent}
+body{overscroll-behavior-y:auto}
 
 /* iOS input zoom prevention + overscroll containment */
 input,select,textarea{ font-size:16px !important }
-body,.modal,.drawer,.mobile-drawer{ overscroll-behavior-y:contain }
+.modal,.drawer,.mobile-drawer{ overscroll-behavior-y:contain }
 .scrollable{ -webkit-overflow-scrolling:touch }
 
 /* iOS safe-area + dynamic viewport */
@@ -13138,32 +13138,40 @@ document.addEventListener('click', function(ev){
   // ---- Pull-to-Refresh (mobile only) ----
   window.initPullToRefresh = function() {
     if (window.innerWidth > 768) return;
-    var el = document.getElementById('page-projects') || document.querySelector('.container');
-    if (!el) return;
+    if (window.__ptrInitialized) return;
+    window.__ptrInitialized = true;
+
+    var scrollEl = document.scrollingElement || document.documentElement || document.body;
     var startY = 0, pulling = false, threshold = 80;
-    var indicator = document.createElement('div');
-    indicator.id = 'ptr-indicator';
-    indicator.style.cssText = 'position:fixed;top:0;left:0;right:0;height:0;display:flex;align-items:center;justify-content:center;color:#7170ff;font-size:13px;font-weight:600;z-index:850;overflow:hidden;transition:height 0.2s;pointer-events:none;';
-    indicator.innerHTML = '<span style="opacity:0;transition:opacity 0.2s">↻ Pull to sync</span>';
-    document.body.appendChild(indicator);
+    var indicator = document.getElementById('ptr-indicator');
+    if (!indicator) {
+      indicator = document.createElement('div');
+      indicator.id = 'ptr-indicator';
+      indicator.style.cssText = 'position:fixed;top:0;left:0;right:0;height:0;display:flex;align-items:center;justify-content:center;color:#7170ff;font-size:13px;font-weight:600;z-index:850;overflow:hidden;transition:height 0.2s;pointer-events:none;';
+      indicator.innerHTML = '<span style="opacity:0;transition:opacity 0.2s">↻ Pull to sync</span>';
+      document.body.appendChild(indicator);
+    }
     var label = indicator.querySelector('span');
 
-    el.addEventListener('touchstart', function(e) {
-      if (el.scrollTop <= 0) { startY = e.touches[0].clientY; pulling = true; }
+    window.addEventListener('touchstart', function(e) {
+      if (!e.touches || !e.touches[0]) return;
+      if ((scrollEl.scrollTop || window.scrollY || 0) <= 0) {
+        startY = e.touches[0].clientY;
+        pulling = true;
+      }
     }, {passive: true});
 
-    el.addEventListener('touchmove', function(e) {
-      if (!pulling) return;
+    window.addEventListener('touchmove', function(e) {
+      if (!pulling || !e.touches || !e.touches[0]) return;
       var diff = e.touches[0].clientY - startY;
       if (diff > 0 && diff < threshold * 2.5) {
         indicator.style.height = Math.min(diff, threshold * 1.2) + 'px';
         label.style.opacity = diff > threshold * 0.6 ? '1' : '0';
-        if (diff > threshold) label.textContent = '↻ Release to sync';
-        else label.textContent = '↻ Pull to sync';
+        label.textContent = diff > threshold ? '↻ Release to sync' : '↻ Pull to sync';
       }
     }, {passive: true});
 
-    el.addEventListener('touchend', function() {
+    window.addEventListener('touchend', function() {
       if (!pulling) return;
       var diff = parseFloat(indicator.style.height) || 0;
       if (diff > threshold) {
@@ -13173,7 +13181,7 @@ document.addEventListener('click', function(ev){
       indicator.style.height = '0';
       label.style.opacity = '0';
       pulling = false;
-    });
+    }, {passive: true});
   };
 
   // ---- Init ----
