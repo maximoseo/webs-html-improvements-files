@@ -35,6 +35,21 @@ class MainMenuDesignTests(unittest.TestCase):
         self.assertIn('@media (max-width:820px)', html)
         self.assertIn('.header .fixer-tab-nav{ display:none !important; }', html)
 
+    def test_desktop_main_menu_has_safe_top_spacing(self):
+        html = INDEX_HTML.read_text(encoding='utf-8')
+
+        self.assertIn('DESKTOP MAIN MENU SAFE TOP SPACING', html)
+        self.assertIn('id="main-menu-safe-top-spacing-2026-04-26"', html)
+        safe_spacing_start = html.index('id="main-menu-safe-top-spacing-2026-04-26"')
+        safe_spacing = html[safe_spacing_start:html.index('</style>', safe_spacing_start)]
+        self.assertIn('@media (min-width:821px){', safe_spacing)
+        self.assertIn('header.header,.header{top:12px !important;', safe_spacing)
+        self.assertIn('left:16px !important;', safe_spacing)
+        self.assertIn('right:16px !important;', safe_spacing)
+        self.assertIn('body{padding-top:108px !important;}', safe_spacing)
+        self.assertIn('.header .fixer-tab-nav.main-menu{transform:none !important;', safe_spacing)
+        self.assertIn('@media (max-width:820px){.header{top:0 !important;left:0 !important;right:0 !important;border-radius:0 !important;}.header .fixer-tab-nav.main-menu{display:none !important;}}', safe_spacing)
+
 
 if __name__ == '__main__':
     unittest.main()

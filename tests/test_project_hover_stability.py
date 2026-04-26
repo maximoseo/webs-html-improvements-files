@@ -18,6 +18,23 @@ class ProjectHoverStabilityTests(unittest.TestCase):
             msg='Project card hover must keep transform:none for stable pointer hover',
         )
 
+    def test_expanded_project_cards_disable_hover_repaint_flicker(self):
+        html = INDEX_HTML.read_text(encoding='utf-8')
+
+        self.assertIn('PROJECT CARD HOVER FLICKER FIX', html)
+        self.assertIn('id="project-card-hover-flicker-fix-2026-04-26"', html)
+        fix_start = html.index('id="project-card-hover-flicker-fix-2026-04-26"')
+        fix_css = html[fix_start:html.index('</style>', fix_start)]
+
+        self.assertIn('.project-card.expanded,.project-card:hover,.project-card:focus-within{', fix_css)
+        self.assertIn('content-visibility:visible !important;', fix_css)
+        self.assertIn('contain-intrinsic-size:auto !important;', fix_css)
+        self.assertIn('contain:layout paint !important;', fix_css)
+        self.assertIn('will-change:auto !important;', fix_css)
+        self.assertIn('transition:border-color 120ms', fix_css)
+        self.assertIn('transform:none !important;', fix_css)
+        self.assertIn('.project-card.expanded .card-body{transition:none !important;}', fix_css)
+
 
 if __name__ == '__main__':
     unittest.main()
