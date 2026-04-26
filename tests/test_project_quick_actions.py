@@ -79,6 +79,11 @@ class ProjectQuickActionsTests(unittest.TestCase):
         self.assertIn('handleProjectHeaderKeydown(event,this.parentElement)', html)
         self.assertIn('.project-card.expanded .card-tools-row{position:sticky', html)
 
+    def test_project_preview_iframe_allows_same_origin_scripts(self):
+        html = (REPO_ROOT / 'index.html').read_text(encoding='utf-8')
+        self.assertIn('id="preview-iframe" sandbox="allow-same-origin allow-scripts"', html)
+        self.assertIn('PROJECT_HTML_PREVIEW_SCRIPT_FIX_2026_04_26', html)
+
 
 if __name__ == '__main__':
     unittest.main()

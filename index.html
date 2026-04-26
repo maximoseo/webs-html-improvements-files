@@ -9364,7 +9364,8 @@ GET    /api/tasks/stats/burndown?project_id=x     — Burndown chart data
   <div class="preview-container">
     <div class="device-frame desktop" id="device-frame">
       <span class="device-label" id="device-label">Desktop — 1280px</span>
-      <iframe id="preview-iframe" sandbox="allow-same-origin"></iframe>
+      <!-- PROJECT_HTML_PREVIEW_SCRIPT_FIX_2026_04_26: allow template scripts to run inside the same-origin preview iframe, matching the previous interactive preview behavior. -->
+      <iframe id="preview-iframe" sandbox="allow-same-origin allow-scripts"></iframe>
     </div>
   </div>
 </div>
