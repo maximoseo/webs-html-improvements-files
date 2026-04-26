@@ -3423,6 +3423,62 @@ body{{font-family:Arial;padding:24px}}h1{{color:#333}}pre{{background:#f4f4f4;pa
 
         return self.serve_static(parsed.path)
 
+    
+def _generate_radar_excel(payload):
+    import io
+    try:
+        import openpyxl
+        from openpyxl.styles import Font, PatternFill
+    except ImportError:
+        return None, "openpyxl not installed"
+    
+    wb = openpyxl.Workbook()
+    
+    # Sheet 1: Summary
+    ws_summary = wb.active
+    ws_summary.title = "Summary"
+    ws_summary['A1'] = 'Skill Radar Report'
+    ws_summary['A1'].font = Font(bold=True, size=16)
+    ws_summary['A2'] = f"Subject: {payload.get('subject_name', 'Unknown')}"
+    ws_summary['A3'] = f"Date: {payload.get('report_date', 'Unknown')}"
+    ws_summary['A4'] = f"Overall Score: {payload.get('overall_score', 0)} / 100"
+    
+    # Sheet 2: Scores
+    ws_scores = wb.create_sheet("Scores")
+    headers = ['Dimension', 'Score', 'Target', 'Gap', 'Trend']
+    ws_scores.append(headers)
+    for col in range(1, 6):
+        ws_scores.cell(row=1, column=col).font = Font(bold=True)
+        
+    scores = payload.get('scores', {})
+    targets = payload.get('targets', {})
+    trends = payload.get('trends', {})
+    
+    for dim, score in scores.items():
+        target = targets.get(dim, 0)
+        gap = score - target
+        trend = trends.get(dim, 'N/A')
+        ws_scores.append([dim, score, target, gap, trend])
+        
+    # Sheet 3: AI Recommendations
+    ws_recs = wb.create_sheet("AI Recommendations")
+    ws_recs.append(['Priority', 'Area', 'Recommendation', 'Expected Impact'])
+    for col in range(1, 5):
+        ws_recs.cell(row=1, column=col).font = Font(bold=True)
+        
+    recs = payload.get('ai_recommendations', [])
+    for rec in recs:
+        ws_recs.append([rec.get('priority', ''), rec.get('area', ''), rec.get('recommendation', ''), rec.get('impact', '')])
+        
+    # Set column widths
+    ws_scores.column_dimensions['A'].width = 20
+    ws_recs.column_dimensions['B'].width = 20
+    ws_recs.column_dimensions['C'].width = 50
+    
+    buf = io.BytesIO()
+    wb.save(buf)
+    return buf.getvalue(), None
+
     def do_POST(self):
         if not self._r2_check_rate(): return
         parsed = urllib.parse.urlparse(self.path)
@@ -3440,6 +3496,24 @@ body{{font-family:Arial;padding:24px}}h1{{color:#333}}pre{{background:#f4f4f4;pa
                 return json_response(self, 200, {'ok': True, 'files_backed_up': ok, 'errors': err})
             except Exception as e:
                 return json_response(self, 500, {'ok': False, 'error': str(e)})
+        
+        if parsed.path == '/api/radar/export/excel':
+            try:
+                ln = int(self.headers.get('Content-Length', 0))
+                payload = json.loads(self.rfile.read(ln) or b'{}')
+                excel_bytes, err = _generate_radar_excel(payload)
+                if err:
+                    return json_response(self, 500, {'ok': False, 'error': err})
+                
+                self.send_response(200)
+                self.send_header('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+                self.send_header('Content-Disposition', 'attachment; filename="skill-radar.xlsx"')
+                self.end_headers()
+                self.wfile.write(excel_bytes)
+                return
+            except Exception as e:
+                return json_response(self, 500, {'ok': False, 'error': str(e)})
+
         # ---- Round 5: New POST endpoints ----
         if parsed.path == '/api/bulk':
             try:

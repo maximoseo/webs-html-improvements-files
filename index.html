@@ -8007,9 +8007,69 @@ function showErrorToast(msg) {
             }
             
             function exportRadarExcel() {
-                // Placeholder - triggers an alert and sends a mock request
-                alert("Excel Generation requested. In production, this generates a multi-sheet XLSX file from the backend.");
-                // We'll add real API interaction here for the next phase
+                const payload = {
+                    subject_name: "GPT 5.5 Agent",
+                    report_date: "2026-04-26",
+                    overall_score: 88.5,
+                    scores: {
+                        "Accessibility": 95,
+                        "Code Quality": 92,
+                        "Accuracy": 90,
+                        "Compatibility": 88,
+                        "Speed": 85,
+                        "Creativity": 82,
+                        "Optimization": 80,
+                        "Consistency": 75
+                    },
+                    targets: {
+                        "Accessibility": 95,
+                        "Code Quality": 95,
+                        "Accuracy": 92,
+                        "Compatibility": 90,
+                        "Speed": 90,
+                        "Creativity": 85,
+                        "Optimization": 85,
+                        "Consistency": 85
+                    },
+                    trends: {
+                        "Accessibility": "+1",
+                        "Code Quality": "+4",
+                        "Accuracy": "+2",
+                        "Compatibility": "+3",
+                        "Speed": "0",
+                        "Creativity": "+7",
+                        "Optimization": "+5",
+                        "Consistency": "-2"
+                    },
+                    ai_recommendations: [
+                        { priority: "HIGH", area: "Consistency", recommendation: "Add strict output format templates to Agent 1 memo", impact: "+8-12 pts" },
+                        { priority: "MEDIUM", area: "Optimization", recommendation: "Implement CSS shorthand consolidation rules", impact: "+5-8 pts" }
+                    ]
+                };
+
+                fetch('/api/radar/export/excel', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                })
+                .then(res => {
+                    if (!res.ok) throw new Error('Failed to generate Excel');
+                    return res.blob();
+                })
+                .then(blob => {
+                    const url = window.URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = 'skill-radar.xlsx';
+                    document.body.appendChild(a);
+                    a.click();
+                    a.remove();
+                    window.URL.revokeObjectURL(url);
+                })
+                .catch(err => {
+                    console.error(err);
+                    alert("Error exporting Excel: " + err.message);
+                });
             }
             
             function exportRadarPDF() {
