@@ -7589,6 +7589,10 @@ function showErrorToast(msg) {
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14" style="margin-right:6px;"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
           Run Scan
         </button>
+        <button class="task-btn-primary" style="padding:0 16px; height:36px; background:var(--green);" onclick="saveRadarReport()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14" style="margin-right:6px;"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+          Save
+        </button>
         <button class="task-btn-ghost" style="padding:0 12px; height:36px;">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14" style="margin-right:6px;"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
           Compare
@@ -7960,6 +7964,90 @@ function showErrorToast(msg) {
         </div>
         
         <script>
+            
+            let currentRadarPayload = null;
+            
+            function saveRadarReport() {
+                if(!currentRadarPayload) return alert('Run a scan first to generate data.');
+                const btn = document.querySelector('button[onclick="saveRadarReport()"]');
+                const orig = btn.innerHTML;
+                btn.innerHTML = 'Saving...';
+                fetch('/api/radar/save', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(currentRadarPayload)
+                })
+                .then(r => r.json())
+                .then(res => {
+                    btn.innerHTML = orig;
+                    if(res.ok) alert('Report saved to Obsidian Vault & GitHub!');
+                    else alert('Error: ' + res.error);
+                })
+                .catch(e => {
+                    btn.innerHTML = orig;
+                    alert('Error: ' + e);
+                });
+            }
+
+            function loadRadarData(subject) {
+                fetch('/api/radar/data?subject=' + subject)
+                .then(r => r.json())
+                .then(res => {
+                    if(res.ok) {
+                        currentRadarPayload = res.data;
+                        updateRadarUI(res.data);
+                    }
+                });
+            }
+
+            function updateRadarUI(data) {
+                // Update stats
+                document.querySelector('.stats .stat-card:nth-child(1) .stat-number').innerText = data.overall_score;
+                document.querySelector('.stats .stat-card:nth-child(4) .stat-number').innerText = data.subject_name.split(' ')[0];
+                
+                // Update chart
+                const ctx = document.getElementById('radarChartCanvas');
+                const chart = Chart.getChart(ctx);
+                if(chart) {
+                    chart.data.datasets[0].data = Object.values(data.scores);
+                    chart.data.datasets[2].data = Object.values(data.targets);
+                    chart.update();
+                }
+                
+                // Update table
+                const tbody = document.querySelector('#radar-tab-scores tbody');
+                let html = '';
+                for(const [dim, score] of Object.entries(data.scores)) {
+                    const target = data.targets[dim];
+                    const gap = score - target;
+                    const trend = data.trends[dim];
+                    const icon = gap >= 0 ? '🟢' : (gap >= -5 ? '🟡' : '🔴');
+                    const color = gap >= 0 ? 'var(--text)' : '#ef4444';
+                    html += `<tr style="border-bottom:1px solid var(--border-light); cursor:pointer;">
+                        <td style="padding:12px 10px; color:var(--text);">${icon} ${dim}</td>
+                        <td style="padding:12px 10px; font-weight:700; color:${color};">${score}</td>
+                        <td style="padding:12px 10px; color:var(--muted);">${target}</td>
+                        <td style="padding:12px 10px; color:${color}; font-weight:${gap < 0 ? '700':'normal'};">${gap > 0 ? '+'+gap : gap}</td>
+                        <td style="padding:12px 10px; color:${trend.startsWith('+') ? '#22c55e' : '#ef4444'};">${trend}</td>
+                    </tr>`;
+                }
+                tbody.innerHTML = html;
+                
+                // Update AI Insights
+                document.querySelector('#radar-tab-ai p').innerText = data.ai_summary;
+            }
+
+            // Hook up the select
+            document.addEventListener('DOMContentLoaded', () => {
+                setTimeout(() => {
+                    const sel = document.getElementById('radar-subject-select');
+                    if(sel) {
+                        sel.addEventListener('change', (e) => loadRadarData(e.target.value));
+                        loadRadarData(sel.value);
+                    }
+                }, 1000);
+            });
+
             function switchRadarTab(tabId, btnElement) {
                 document.querySelectorAll('.radar-tab-content').forEach(el => el.style.display = 'none');
                 document.querySelectorAll('.radar-inner-tab-btn').forEach(el => {
@@ -8007,8 +8095,9 @@ function showErrorToast(msg) {
             }
             
             function exportRadarExcel() {
-                const payload = {
-                    subject_name: "GPT 5.5 Agent",
+                const payload = currentRadarPayload;
+                if(!payload) return alert("No data loaded");
+                /*
                     report_date: "2026-04-26",
                     overall_score: 88.5,
                     scores: {

@@ -2520,6 +2520,46 @@ body{{font-family:Arial;padding:24px}}h1{{color:#333}}pre{{background:#f4f4f4;pa
         self.end_headers()
 
     def do_GET(self):
+        if parsed.path == '/api/radar/data':
+            try:
+                qs = urllib.parse.parse_qs(parsed.query)
+                subject = qs.get('subject', ['gpt55'])[0]
+                
+                # Mock live data based on subject
+                base_data = {
+                    'gpt55': {'Accessibility': 95, 'Code Quality': 92, 'Accuracy': 90, 'Compatibility': 88, 'Speed': 85, 'Creativity': 82, 'Optimization': 80, 'Consistency': 75},
+                    'opus47': {'Accessibility': 90, 'Code Quality': 89, 'Accuracy': 93, 'Compatibility': 84, 'Speed': 78, 'Creativity': 96, 'Consistency': 88, 'Optimization': 82},
+                    'gemini31': {'Accessibility': 88, 'Code Quality': 85, 'Accuracy': 88, 'Compatibility': 90, 'Speed': 92, 'Creativity': 72, 'Consistency': 85, 'Optimization': 95},
+                    'kimik26': {'Accessibility': 71, 'Code Quality': 82, 'Accuracy': 85, 'Compatibility': 80, 'Speed': 95, 'Creativity': 88, 'Consistency': 90, 'Optimization': 94},
+                }
+                
+                names = {
+                    'gpt55': 'GPT 5.5 — Layout Architect',
+                    'opus47': 'Opus 4.7',
+                    'gemini31': 'Gemini 3.1',
+                    'kimik26': 'Kimi K2.6'
+                }
+                
+                scores = base_data.get(subject, base_data['gpt55'])
+                overall = sum(scores.values()) / len(scores)
+                
+                payload = {
+                    'subject_name': names.get(subject, 'Unknown'),
+                    'overall_score': round(overall, 1),
+                    'scores': scores,
+                    'targets': {k: 85 for k in scores.keys()},
+                    'trends': {k: "+1" if v > 85 else "-1" for k, v in scores.items()},
+                    'ai_summary': f"{names.get(subject, 'Unknown')} analysis. Overall score is {round(overall, 1)}. Strengths are evident in metrics above 85.",
+                    'ai_recommendations': [
+                        { "priority": "HIGH", "area": "Low Metrics", "recommendation": "Focus on improving metrics below 85", "impact": "+5-10 pts" }
+                    ]
+                }
+                payload['targets']['Code Quality'] = 90
+                payload['targets']['Accessibility'] = 90
+                
+                return json_response(self, 200, {'ok': True, 'data': payload})
+            except Exception as e:
+                return json_response(self, 500, {'ok': False, 'error': str(e)})
         if not self._r2_check_rate(): return
         parsed = urllib.parse.urlparse(self.path)
         if _dashboard_auth_enabled() and not _stage8_check_auth(self, parsed):
@@ -3478,6 +3518,61 @@ def _generate_radar_excel(payload):
     buf = io.BytesIO()
     wb.save(buf)
     return buf.getvalue(), None
+
+    
+def _save_radar_report(payload):
+    import os, json
+    from datetime import datetime
+    try:
+        subject = payload.get('subject_name', 'Unknown').replace(' ', '_').replace('/', '_')
+        date_str = datetime.now().strftime('%Y-%m-%d')
+        base_dir = os.path.join(os.getcwd(), 'Reports', 'Skill-Radar', 'agents', subject)
+        os.makedirs(base_dir, exist_ok=True)
+        
+        # 1. Markdown for Obsidian
+        md_path = os.path.join(base_dir, f"{date_str}-radar.md")
+        score_rows = ""
+        for dim, score in payload.get('scores', {}).items():
+            target = payload.get('targets', {}).get(dim, 0)
+            gap = score - target
+            trend = payload.get('trends', {}).get(dim, '0')
+            score_rows += f"| {dim} | {score} | {target} | {gap} | {trend} |\n"
+            
+        recs_text = ""
+        for i, rec in enumerate(payload.get('ai_recommendations', [])):
+            recs_text += f"{i+1}. {rec.get('priority', '')}: {rec.get('area', '')} - {rec.get('recommendation', '')}\n"
+
+        md_content = f"""---
+type: agent_skills
+subject: {payload.get('subject_name', '')}
+date: {date_str}
+overall_score: {payload.get('overall_score', 0)}
+---
+
+# Skill Radar: {payload.get('subject_name', '')} — {date_str}
+
+## Scores
+| Dimension | Score | Target | Gap | Trend |
+|---|---|---|---|---|
+{score_rows}
+
+## AI Analysis
+{payload.get('ai_summary', 'Automated radar analysis completed.')}
+
+## Recommendations
+{recs_text}
+"""
+        with open(md_path, 'w', encoding='utf-8') as f:
+            f.write(md_content)
+
+        # 2. JSON Backup for GitHub
+        json_path = os.path.join(base_dir, f"{date_str}.json")
+        with open(json_path, 'w', encoding='utf-8') as f:
+            json.dump(payload, f, indent=2)
+
+        return True, None
+    except Exception as e:
+        return False, str(e)
 
     def do_POST(self):
         if not self._r2_check_rate(): return
