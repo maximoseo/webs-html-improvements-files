@@ -3232,6 +3232,19 @@ body{{font-family:Arial;padding:24px}}h1{{color:#333}}pre{{background:#f4f4f4;pa
                 'telegram':   bool(os.getenv('TELEGRAM_BOT_TOKEN')),
             })
 
+        # ── NEW: /api/prompt/palette ──────────────────────────────────
+        if parsed.path == '/api/prompt/palette':
+            palette = [
+                {'id': 'html-redesign', 'name': 'HTML Redesign Prompt', 'category': 'html', 'description': 'Generate improved HTML templates for websites'},
+                {'id': 'kwr-analysis', 'name': 'Keyword Research', 'category': 'seo', 'description': 'Analyze keywords and generate SEO reports'},
+                {'id': 'n8n-workflow', 'name': 'N8N Workflow', 'category': 'automation', 'description': 'Build and fix n8n automation workflows'},
+                {'id': 'skills-radar', 'name': 'Skills Discovery', 'category': 'research', 'description': 'Discover new AI skills and techniques'},
+                {'id': 'content-rewrite', 'name': 'Content Rewrite', 'category': 'content', 'description': 'Rewrite and improve website content'},
+                {'id': 'meta-optimization', 'name': 'Meta Optimization', 'category': 'seo', 'description': 'Optimize title tags and meta descriptions'},
+                {'id': 'deploy-checklist', 'name': 'Deploy Checklist', 'category': 'devops', 'description': 'Pre-deployment verification checklist'},
+            ]
+            return json_response(self, 200, {'ok': True, 'palette': palette})
+
         if parsed.path == '/api/projects/list':
             try:
                 data_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'data.json')

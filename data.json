@@ -1,1390 +1,500 @@
-{
-  "sha": "latest",
-  "url": "",
-  "tree": [
-    {
-      "path": "galoz-redesign-summary-qwen-code-2026-04-15.md",
-      "mode": "100644",
-      "type": "blob",
-      "sha": "local",
-      "size": 5754,
-      "url": ""
-    },
-    {
-      "path": "galoz-source-mapping-2026-04-15.md",
-      "mode": "100644",
-      "type": "blob",
-      "sha": "local",
-      "size": 2729,
-      "url": ""
-    },
-    {
-      "path": "docker-compose.yml",
-      "mode": "100644",
-      "type": "blob",
-      "sha": "local",
-      "size": 419,
-      "url": ""
-    },
-    {
-      "path": "galoz-validation-report-qwen-code-2026-04-15.md",
-      "mode": "100644",
-      "type": "blob",
-      "sha": "local",
-      "size": 6813,
-      "url": ""
-    },
-    {
-      "path": "Dockerfile",
-      "mode": "100644",
-      "type": "blob",
-      "sha": "local",
-      "size": 549,
-      "url": ""
-    },
-    {
-      "path": "CODE_REVIEW_REPORT.md",
-      "mode": "100644",
-      "type": "blob",
-      "sha": "local",
-      "size": 5907,
-      "url": ""
-    },
-    {
-      "path": "AGENTS.md",
-      "mode": "100644",
-      "type": "blob",
-      "sha": "local",
-      "size": 6383,
-      "url": ""
-    },
-    {
-      "path": "galoz-article-template-2026-04-15.html",
-      "mode": "100644",
-      "type": "blob",
-      "sha": "local",
-      "size": 12395,
-      "url": ""
-    },
-    {
-      "path": "openapi.yaml",
-      "mode": "100644",
-      "type": "blob",
-      "sha": "local",
-      "size": 2891,
-      "url": ""
-    },
-    {
-      "path": ".env.example",
-      "mode": "100644",
-      "type": "blob",
-      "sha": "local",
-      "size": 803,
-      "url": ""
-    },
-    {
-      "path": "n8n-workflow-map.json",
-      "mode": "100644",
-      "type": "blob",
-      "sha": "local",
-      "size": 715,
-      "url": ""
-    },
-    {
-      "path": "dashboard-rebuilt.html",
-      "mode": "100644",
-      "type": "blob",
-      "sha": "local",
-      "size": 555044,
-      "url": ""
-    },
-    {
-      "path": ".gitignore",
-      "mode": "100644",
-      "type": "blob",
-      "sha": "local",
-      "size": 92,
-      "url": ""
-    },
-    {
-      "path": "backup.py",
-      "mode": "100644",
-      "type": "blob",
-      "sha": "local",
-      "size": 13456,
-      "url": ""
-    },
-    {
-      "path": "index.html",
-      "mode": "100644",
-      "type": "blob",
-      "sha": "local",
-      "size": 820079,
-      "url": ""
-    },
-    {
-      "path": "r5_features.py",
-      "mode": "100644",
-      "type": "blob",
-      "sha": "local",
-      "size": 11876,
-      "url": ""
-    },
-    {
-      "path": "kwr_backend.py",
-      "mode": "100644",
-      "type": "blob",
-      "sha": "local",
-      "size": 86138,
-      "url": ""
-    },
-    {
-      "path": "galoz-article-template-qwen-code-2026-04-15.html",
-      "mode": "100644",
-      "type": "blob",
-      "sha": "local",
-      "size": 12637,
-      "url": ""
-    },
-    {
-      "path": "r6_features.py",
-      "mode": "100644",
-      "type": "blob",
-      "sha": "local",
-      "size": 7084,
-      "url": ""
-    },
-    {
-      "path": "login-page.html",
-      "mode": "100644",
-      "type": "blob",
-      "sha": "local",
-      "size": 7027,
-      "url": ""
-    },
-    {
-      "path": "data.json",
-      "mode": "100644",
-      "type": "blob",
-      "sha": "local",
-      "size": 23725,
-      "url": ""
-    },
-    {
-      "path": "validation-report-2026-04-15.md",
-      "mode": "100644",
-      "type": "blob",
-      "sha": "local",
-      "size": 4160,
-      "url": ""
-    },
-    {
-      "path": "server.py",
-      "mode": "100644",
-      "type": "blob",
-      "sha": "local",
-      "size": 231388,
-      "url": ""
-    },
-    {
-      "path": "galoz-source-mapping-qwen-code-2026-04-15.md",
-      "mode": "100644",
-      "type": "blob",
-      "sha": "local",
-      "size": 2796,
-      "url": ""
-    },
-    {
-      "path": "GALOZ-REDESIGN-SUMMARY.md",
-      "mode": "100644",
-      "type": "blob",
-      "sha": "local",
-      "size": 5701,
-      "url": ""
-    },
-    {
-      "path": "CHANGELOG.md",
-      "mode": "100644",
-      "type": "blob",
-      "sha": "local",
-      "size": 2023,
-      "url": ""
-    },
-    {
-      "path": "galoz-validation-report-2026-04-15.md",
-      "mode": "100644",
-      "type": "blob",
-      "sha": "local",
-      "size": 6780,
-      "url": ""
-    },
-    {
-      "path": ".dockerignore",
-      "mode": "100644",
-      "type": "blob",
-      "sha": "local",
-      "size": 143,
-      "url": ""
-    },
-    {
-      "path": "test-article-2026-04-15.html",
-      "mode": "100644",
-      "type": "blob",
-      "sha": "local",
-      "size": 9477,
-      "url": ""
-    },
-    {
-      "path": "UX_UI_ANALYSIS_REPORT.md",
-      "mode": "100644",
-      "type": "blob",
-      "sha": "local",
-      "size": 10707,
-      "url": ""
-    },
-    {
-      "path": "dashboard/dashboard-rebuilt.html",
-      "mode": "100644",
-      "type": "blob",
-      "sha": "local",
-      "size": 564514,
-      "url": ""
-    },
-    {
-      "path": "powerplug.ai/OpenClaw/2026-04-20/Improved_N8N_Prompt.txt",
-      "mode": "100644",
-      "type": "blob",
-      "sha": "local",
-      "size": 13385,
-      "url": ""
-    },
-    {
-      "path": "powerplug.ai/OpenClaw/2026-04-20/Improved_N8N_Workflow.json",
-      "mode": "100644",
-      "type": "blob",
-      "sha": "local",
-      "size": 126202,
-      "url": ""
-    },
-    {
-      "path": "powerplug.ai/OpenClaw/2026-04-20/Improved_HTML_Template.html",
-      "mode": "100644",
-      "type": "blob",
-      "sha": "local",
-      "size": 43988,
-      "url": ""
-    },
-    {
-      "path": "powerplug.ai/Hermes Agent/2026-04-16/Improved_N8N_Prompt.txt",
-      "mode": "100644",
-      "type": "blob",
-      "sha": "local",
-      "size": 13385,
-      "url": ""
-    },
-    {
-      "path": "powerplug.ai/Hermes Agent/2026-04-16/Improved_N8N_Workflow.json",
-      "mode": "100644",
-      "type": "blob",
-      "sha": "local",
-      "size": 126202,
-      "url": ""
-    },
-    {
-      "path": "powerplug.ai/Hermes Agent/2026-04-16/Improved_HTML_Template.html",
-      "mode": "100644",
-      "type": "blob",
-      "sha": "local",
-      "size": 43988,
-      "url": ""
-    },
-    {
-      "path": "powerplug.ai/Copilot/2026-04-17/Improved_N8N_Workflow-copilot-2026-04-17.json",
-      "mode": "100644",
-      "type": "blob",
-      "sha": "local",
-      "size": 129113,
-      "url": ""
-    },
-    {
-      "path": "powerplug.ai/Copilot/2026-04-17/Improved_N8N_Prompt-copilot-2026-04-17.txt",
-      "mode": "100644",
-      "type": "blob",
-      "sha": "local",
-      "size": 17427,
-      "url": ""
-    },
-    {
-      "path": "powerplug.ai/Copilot/2026-04-17/Improved_HTML_Template-copilot-2026-04-17.html",
-      "mode": "100644",
-      "type": "blob",
-      "sha": "local",
-      "size": 44444,
-      "url": ""
-    },
-    {
-      "path": "powerplug.ai/agent-zero/2026-04-16/Improved_N8N_Prompt.txt",
-      "mode": "100644",
-      "type": "blob",
-      "sha": "local",
-      "size": 25456,
-      "url": ""
-    },
-    {
-      "path": "powerplug.ai/agent-zero/2026-04-16/Improved_N8N_Workflow.json",
-      "mode": "100644",
-      "type": "blob",
-      "sha": "local",
-      "size": 42689,
-      "url": ""
-    },
-    {
-      "path": "powerplug.ai/agent-zero/2026-04-16/Improved_HTML_Template.html",
-      "mode": "100644",
-      "type": "blob",
-      "sha": "local",
-      "size": 67808,
-      "url": ""
-    },
-    {
-      "path": "powerplug.ai/CLAUDE CODE (Tim Claw Max)/2026-04-16/Improved_N8N_Prompt.txt",
-      "mode": "100644",
-      "type": "blob",
-      "sha": "local",
-      "size": 13577,
-      "url": ""
-    },
-    {
-      "path": "powerplug.ai/CLAUDE CODE (Tim Claw Max)/2026-04-16/Improved_N8N_Workflow.json",
-      "mode": "100644",
-      "type": "blob",
-      "sha": "local",
-      "size": 16335,
-      "url": ""
-    },
-    {
-      "path": "powerplug.ai/CLAUDE CODE (Tim Claw Max)/2026-04-16/Improved_HTML_Template.html",
-      "mode": "100644",
-      "type": "blob",
-      "sha": "local",
-      "size": 57234,
-      "url": ""
-    },
-    {
-      "path": "powerplug.ai/Claude Code/2026-04-16/Improved_N8N_Prompt.txt",
-      "mode": "100644",
-      "type": "blob",
-      "sha": "local",
-      "size": 18688,
-      "url": ""
-    },
-    {
-      "path": "powerplug.ai/Claude Code/2026-04-16/Improved_N8N_Workflow.json",
-      "mode": "100644",
-      "type": "blob",
-      "sha": "local",
-      "size": 20768,
-      "url": ""
-    },
-    {
-      "path": "powerplug.ai/Claude Code/2026-04-16/Improved_HTML_Template.html",
-      "mode": "100644",
-      "type": "blob",
-      "sha": "local",
-      "size": 49175,
-      "url": ""
-    },
-    {
-      "path": "powerplug.ai/gemini/2026-04-17/Improved_HTML_Template-gemini-2026-04-17.html",
-      "mode": "100644",
-      "type": "blob",
-      "sha": "local",
-      "size": 13546,
-      "url": ""
-    },
-    {
-      "path": "powerplug.ai/gemini/2026-04-17/Improved_N8N_Prompt-gemini-2026-04-17.txt",
-      "mode": "100644",
-      "type": "blob",
-      "sha": "local",
-      "size": 17425,
-      "url": ""
-    },
-    {
-      "path": "powerplug.ai/gemini/2026-04-17/Improved_N8N_Workflow-gemini-2026-04-17.json",
-      "mode": "100644",
-      "type": "blob",
-      "sha": "local",
-      "size": 129110,
-      "url": ""
-    },
-    {
-      "path": "tests/test_auth_smoke.py",
-      "mode": "100644",
-      "type": "blob",
-      "sha": "local",
-      "size": 4057,
-      "url": ""
-    },
-    {
-      "path": "tests/smoke_boot.py",
-      "mode": "100644",
-      "type": "blob",
-      "sha": "local",
-      "size": 1633,
-      "url": ""
-    },
-    {
-      "path": "hondabike.co.il/Improved Files (12.4.26) \u2726 Latest/Improved_N8N_Prompt.txt",
-      "mode": "100644",
-      "type": "blob",
-      "sha": "local",
-      "size": 31069,
-      "url": ""
-    },
-    {
-      "path": "hondabike.co.il/Improved Files (12.4.26) \u2726 Latest/Improved_N8N_Workflow.json",
-      "mode": "100644",
-      "type": "blob",
-      "sha": "local",
-      "size": 164749,
-      "url": ""
-    },
-    {
-      "path": "hondabike.co.il/Improved Files (12.4.26) \u2726 Latest/Improved_HTML_Template.html",
-      "mode": "100644",
-      "type": "blob",
-      "sha": "local",
-      "size": 72389,
-      "url": ""
-    },
-    {
-      "path": "prompts/claude-code-15.4.26/deploy-to-n8n-button-request-claude-code-15.4.26.md",
-      "mode": "100644",
-      "type": "blob",
-      "sha": "local",
-      "size": 1113,
-      "url": ""
-    },
-    {
-      "path": "prompts/kwr/KWR-OPEN-QUESTIONS.md",
-      "mode": "100644",
-      "type": "blob",
-      "sha": "local",
-      "size": 1958,
-      "url": ""
-    },
-    {
-      "path": "prompts/kwr/KWR-AGENT-PROMPT.md",
-      "mode": "100644",
-      "type": "blob",
-      "sha": "local",
-      "size": 3941,
-      "url": ""
-    },
-    {
-      "path": "plans/reports/ingestion-memo-260420-0508.md",
-      "mode": "100644",
-      "type": "blob",
-      "sha": "local",
-      "size": 2814,
-      "url": ""
-    },
-    {
-      "path": "plans/reports/top-10-design-finds-260420-0508.md",
-      "mode": "100644",
-      "type": "blob",
-      "sha": "local",
-      "size": 4448,
-      "url": ""
-    },
-    {
-      "path": "plans/reports/workflow-map-260420-0508-ingestion.md",
-      "mode": "100644",
-      "type": "blob",
-      "sha": "local",
-      "size": 8667,
-      "url": ""
-    },
-    {
-      "path": "plans/reports/risk-report-260420-0508-ingestion.md",
-      "mode": "100644",
-      "type": "blob",
-      "sha": "local",
-      "size": 3218,
-      "url": ""
-    },
-    {
-      "path": "plans/reports/deployment-260423-0053-supabase-auth-ready.md",
-      "mode": "100644",
-      "type": "blob",
-      "sha": "local",
-      "size": 4372,
-      "url": ""
-    },
-    {
-      "path": "plans/reports/design-tier-registry-260420-0508-ingestion-v2.md",
-      "mode": "100644",
-      "type": "blob",
-      "sha": "local",
-      "size": 8312,
-      "url": ""
-    },
-    {
-      "path": "plans/reports/examples-260420-0508-ingestion.md",
-      "mode": "100644",
-      "type": "blob",
-      "sha": "local",
-      "size": 2435,
-      "url": ""
-    },
-    {
-      "path": "plans/reports/master-skill-registry-260420-0508-ingestion.md",
-      "mode": "100644",
-      "type": "blob",
-      "sha": "local",
-      "size": 4160,
-      "url": ""
-    },
-    {
-      "path": "plans/reports/html-redesign-mega-skill-upgrade-260420-0508.md",
-      "mode": "100644",
-      "type": "blob",
-      "sha": "local",
-      "size": 4483,
-      "url": ""
-    },
-    {
-      "path": "plans/reports/active-skill-set-260420-0508-ingestion.md",
-      "mode": "100644",
-      "type": "blob",
-      "sha": "local",
-      "size": 2868,
-      "url": ""
-    },
-    {
-      "path": "plans/reports/skills-index-260420-0508-ingestion-v2.md",
-      "mode": "100644",
-      "type": "blob",
-      "sha": "local",
-      "size": 2839,
-      "url": ""
-    },
-    {
-      "path": "plans/reports/cto-260423-0035-dashboard-login-fix-and-redesign.md",
-      "mode": "100644",
-      "type": "blob",
-      "sha": "local",
-      "size": 20075,
-      "url": ""
-    },
-    {
-      "path": "plans/reports/merge-report-260420-0508-ingestion.md",
-      "mode": "100644",
-      "type": "blob",
-      "sha": "local",
-      "size": 4061,
-      "url": ""
-    },
-    {
-      "path": "plans/260423-0035-dashboard-login-fix-and-redesign/phase-04-dashboard-modularization-and-ux.md",
-      "mode": "100644",
-      "type": "blob",
-      "sha": "local",
-      "size": 4505,
-      "url": ""
-    },
-    {
-      "path": "plans/260423-0035-dashboard-login-fix-and-redesign/phase-02-server-auth-hardening.md",
-      "mode": "100644",
-      "type": "blob",
-      "sha": "local",
-      "size": 3262,
-      "url": ""
-    },
-    {
-      "path": "plans/260423-0035-dashboard-login-fix-and-redesign/phase-06-future-features-backlog.md",
-      "mode": "100644",
-      "type": "blob",
-      "sha": "local",
-      "size": 1704,
-      "url": ""
-    },
-    {
-      "path": "plans/260423-0035-dashboard-login-fix-and-redesign/phase-01-supabase-auth-migration.md",
-      "mode": "100644",
-      "type": "blob",
-      "sha": "local",
-      "size": 5781,
-      "url": ""
-    },
-    {
-      "path": "plans/260423-0035-dashboard-login-fix-and-redesign/phase-03-design-system-and-login-redesign.md",
-      "mode": "100644",
-      "type": "blob",
-      "sha": "local",
-      "size": 2681,
-      "url": ""
-    },
-    {
-      "path": "plans/260423-0035-dashboard-login-fix-and-redesign/phase-05-verification-and-deploy.md",
-      "mode": "100644",
-      "type": "blob",
-      "sha": "local",
-      "size": 2478,
-      "url": ""
-    },
-    {
-      "path": "plans/260423-0035-dashboard-login-fix-and-redesign/plan.md",
-      "mode": "100644",
-      "type": "blob",
-      "sha": "local",
-      "size": 1460,
-      "url": ""
-    },
-    {
-      "path": "caesarstone.co.il/Claude Code/2026-04-13/Improved_N8N_Prompt.txt",
-      "mode": "100644",
-      "type": "blob",
-      "sha": "local",
-      "size": 40498,
-      "url": ""
-    },
-    {
-      "path": "caesarstone.co.il/Claude Code/2026-04-13/Improved_N8N_Workflow.json",
-      "mode": "100644",
-      "type": "blob",
-      "sha": "local",
-      "size": 175069,
-      "url": ""
-    },
-    {
-      "path": "caesarstone.co.il/Claude Code/2026-04-13/Improved_HTML_Template.html",
-      "mode": "100644",
-      "type": "blob",
-      "sha": "local",
-      "size": 88530,
-      "url": ""
-    },
-    {
-      "path": "agent-zero/skills-2026-04-20/SKILLS/SKILLS-INDEX.md",
-      "mode": "100644",
-      "type": "blob",
-      "sha": "local",
-      "size": 7184,
-      "url": ""
-    },
-    {
-      "path": "agent-zero/skills-2026-04-20/SKILLS/html-redesign-mega-skill.SKILL.md",
-      "mode": "100644",
-      "type": "blob",
-      "sha": "local",
-      "size": 38432,
-      "url": ""
-    },
-    {
-      "path": "agent-zero/skills-2026-04-20/OUTPUT/EXAMPLES-2026-04-20.md",
-      "mode": "100644",
-      "type": "blob",
-      "sha": "local",
-      "size": 3467,
-      "url": ""
-    },
-    {
-      "path": "agent-zero/skills-2026-04-20/OUTPUT/WORKFLOW-MAP-2026-04-20.md",
-      "mode": "100644",
-      "type": "blob",
-      "sha": "local",
-      "size": 3447,
-      "url": ""
-    },
-    {
-      "path": "agent-zero/skills-2026-04-20/OUTPUT/MERGE-REPORT-2026-04-20.md",
-      "mode": "100644",
-      "type": "blob",
-      "sha": "local",
-      "size": 1894,
-      "url": ""
-    },
-    {
-      "path": "agent-zero/skills-2026-04-20/OUTPUT/RISK-REPORT-2026-04-20.md",
-      "mode": "100644",
-      "type": "blob",
-      "sha": "local",
-      "size": 2596,
-      "url": ""
-    },
-    {
-      "path": "agent-zero/skills-2026-04-20/OUTPUT/MEMO-2026-04-20.md",
-      "mode": "100644",
-      "type": "blob",
-      "sha": "local",
-      "size": 3748,
-      "url": ""
-    },
-    {
-      "path": "agent-zero/skills-2026-04-20/OUTPUT/MASTER-SKILL-REGISTRY.md",
-      "mode": "100644",
-      "type": "blob",
-      "sha": "local",
-      "size": 9788,
-      "url": ""
-    },
-    {
-      "path": "jacknows.ai/Improved Files (31.3.26) \u2726 Latest/Improved_N8N_Prompt.txt",
-      "mode": "100644",
-      "type": "blob",
-      "sha": "local",
-      "size": 20037,
-      "url": ""
-    },
-    {
-      "path": "jacknows.ai/Improved Files (31.3.26) \u2726 Latest/Improved_N8N_Workflow.json",
-      "mode": "100644",
-      "type": "blob",
-      "sha": "local",
-      "size": 142686,
-      "url": ""
-    },
-    {
-      "path": "jacknows.ai/Improved Files (31.3.26) \u2726 Latest/Improved_HTML_Template.html",
-      "mode": "100644",
-      "type": "blob",
-      "sha": "local",
-      "size": 49584,
-      "url": ""
-    },
-    {
-      "path": "skill_expansion_workspace/MERGE_REPORT.md",
-      "mode": "100644",
-      "type": "blob",
-      "sha": "local",
-      "size": 1972,
-      "url": ""
-    },
-    {
-      "path": "skill_expansion_workspace/append_skills_p6.js",
-      "mode": "100644",
-      "type": "blob",
-      "sha": "local",
-      "size": 20855,
-      "url": ""
-    },
-    {
-      "path": "skill_expansion_workspace/append_skills_p3.js",
-      "mode": "100644",
-      "type": "blob",
-      "sha": "local",
-      "size": 19395,
-      "url": ""
-    },
-    {
-      "path": "skill_expansion_workspace/code-ingest-report.md",
-      "mode": "100644",
-      "type": "blob",
-      "sha": "local",
-      "size": 12992,
-      "url": ""
-    },
-    {
-      "path": "skill_expansion_workspace/ACTIVE-SKILL-SET.md",
-      "mode": "100644",
-      "type": "blob",
-      "sha": "local",
-      "size": 6327,
-      "url": ""
-    },
-    {
-      "path": "skill_expansion_workspace/SKILLS-INDEX.md",
-      "mode": "100644",
-      "type": "blob",
-      "sha": "local",
-      "size": 51364,
-      "url": ""
-    },
-    {
-      "path": "skill_expansion_workspace/RISK_REPORT.md",
-      "mode": "100644",
-      "type": "blob",
-      "sha": "local",
-      "size": 1645,
-      "url": ""
-    },
-    {
-      "path": "skill_expansion_workspace/WORKFLOW_MAP.md",
-      "mode": "100644",
-      "type": "blob",
-      "sha": "local",
-      "size": 1525,
-      "url": ""
-    },
-    {
-      "path": "skill_expansion_workspace/html-redesign-mega-SKILL.md",
-      "mode": "100644",
-      "type": "blob",
-      "sha": "local",
-      "size": 24364,
-      "url": ""
-    },
-    {
-      "path": "skill_expansion_workspace/MERGE-REPORT.md",
-      "mode": "100644",
-      "type": "blob",
-      "sha": "local",
-      "size": 5862,
-      "url": ""
-    },
-    {
-      "path": "skill_expansion_workspace/MASTER_SKILL_REGISTRY.md",
-      "mode": "100644",
-      "type": "blob",
-      "sha": "local",
-      "size": 4443,
-      "url": ""
-    },
-    {
-      "path": "skill_expansion_workspace/EXAMPLES.md",
-      "mode": "100644",
-      "type": "blob",
-      "sha": "local",
-      "size": 2353,
-      "url": ""
-    },
-    {
-      "path": "skill_expansion_workspace/RISK-REPORT.md",
-      "mode": "100644",
-      "type": "blob",
-      "sha": "local",
-      "size": 3063,
-      "url": ""
-    },
-    {
-      "path": "skill_expansion_workspace/ACTIVE_SKILL_SET.md",
-      "mode": "100644",
-      "type": "blob",
-      "sha": "local",
-      "size": 2042,
-      "url": ""
-    },
-    {
-      "path": "skill_expansion_workspace/marketing-ingest-report.md",
-      "mode": "100644",
-      "type": "blob",
-      "sha": "local",
-      "size": 7340,
-      "url": ""
-    },
-    {
-      "path": "skill_expansion_workspace/MEMO.md",
-      "mode": "100644",
-      "type": "blob",
-      "sha": "local",
-      "size": 1713,
-      "url": ""
-    },
-    {
-      "path": "skill_expansion_workspace/append_skills_p5.js",
-      "mode": "100644",
-      "type": "blob",
-      "sha": "local",
-      "size": 3,
-      "url": ""
-    },
-    {
-      "path": "skill_expansion_workspace/MASTER-SKILL-REGISTRY.md",
-      "mode": "100644",
-      "type": "blob",
-      "sha": "local",
-      "size": 6721,
-      "url": ""
-    },
-    {
-      "path": "skill_expansion_workspace/expand_skills.js",
-      "mode": "100644",
-      "type": "blob",
-      "sha": "local",
-      "size": 19056,
-      "url": ""
-    },
-    {
-      "path": "skill_expansion_workspace/WORKFLOW-MAP.md",
-      "mode": "100644",
-      "type": "blob",
-      "sha": "local",
-      "size": 2558,
-      "url": ""
-    },
-    {
-      "path": "skill_expansion_workspace/HTML_REDESIGN_MEGA_SKILL.md",
-      "mode": "100644",
-      "type": "blob",
-      "sha": "local",
-      "size": 4635,
-      "url": ""
-    },
-    {
-      "path": "skill_expansion_workspace/append_skills_p4.js",
-      "mode": "100644",
-      "type": "blob",
-      "sha": "local",
-      "size": 10613,
-      "url": ""
-    },
-    {
-      "path": "skill_expansion_workspace/design-ingest-report.md",
-      "mode": "100644",
-      "type": "blob",
-      "sha": "local",
-      "size": 8753,
-      "url": ""
-    },
-    {
-      "path": "outputs/kwr_galoz_co_il.xlsx",
-      "mode": "100644",
-      "type": "blob",
-      "sha": "local",
-      "size": 7978,
-      "url": ""
-    },
-    {
-      "path": "outputs/kwr_wwwgalozcoil.xlsx",
-      "mode": "100644",
-      "type": "blob",
-      "sha": "local",
-      "size": 17584,
-      "url": ""
-    },
-    {
-      "path": "netanya.ac.il/claude-code/06.04.26/Improved_N8N_Prompt.txt",
-      "mode": "100644",
-      "type": "blob",
-      "sha": "local",
-      "size": 26172,
-      "url": ""
-    },
-    {
-      "path": "netanya.ac.il/claude-code/06.04.26/Improved_N8N_Workflow.json",
-      "mode": "100644",
-      "type": "blob",
-      "sha": "local",
-      "size": 154138,
-      "url": ""
-    },
-    {
-      "path": "netanya.ac.il/claude-code/06.04.26/Improved_HTML_Template.html",
-      "mode": "100644",
-      "type": "blob",
-      "sha": "local",
-      "size": 80700,
-      "url": ""
-    },
-    {
-      "path": "netanya.ac.il/Improved Files (6.4.26)/Improved_N8N_Prompt.txt",
-      "mode": "100644",
-      "type": "blob",
-      "sha": "local",
-      "size": 26172,
-      "url": ""
-    },
-    {
-      "path": "netanya.ac.il/Improved Files (6.4.26)/Improved_N8N_Workflow.json",
-      "mode": "100644",
-      "type": "blob",
-      "sha": "local",
-      "size": 154138,
-      "url": ""
-    },
-    {
-      "path": "netanya.ac.il/Improved Files (6.4.26)/Improved_HTML_Template.html",
-      "mode": "100644",
-      "type": "blob",
-      "sha": "local",
-      "size": 80700,
-      "url": ""
-    },
-    {
-      "path": "netanya.ac.il/Improved Files (5.4.26)/Improved_N8N_Prompt.txt",
-      "mode": "100644",
-      "type": "blob",
-      "sha": "local",
-      "size": 17821,
-      "url": ""
-    },
-    {
-      "path": "netanya.ac.il/Improved Files (5.4.26)/Improved_N8N_Workflow.json",
-      "mode": "100644",
-      "type": "blob",
-      "sha": "local",
-      "size": 16596,
-      "url": ""
-    },
-    {
-      "path": "netanya.ac.il/Improved Files (5.4.26)/Improved_HTML_Template.html",
-      "mode": "100644",
-      "type": "blob",
-      "sha": "local",
-      "size": 75510,
-      "url": ""
-    },
-    {
-      "path": "dtapet.com/Improved Files (6.4.26) \u2726 Latest/N8N_Workflow.json",
-      "mode": "100644",
-      "type": "blob",
-      "sha": "local",
-      "size": 191804,
-      "url": ""
-    },
-    {
-      "path": "dtapet.com/Improved Files (6.4.26) \u2726 Latest/Improved_N8N_Prompt.txt",
-      "mode": "100644",
-      "type": "blob",
-      "sha": "local",
-      "size": 51034,
-      "url": ""
-    },
-    {
-      "path": "dtapet.com/Improved Files (6.4.26) \u2726 Latest/Improved_HTML_Template.html",
-      "mode": "100644",
-      "type": "blob",
-      "sha": "local",
-      "size": 60885,
-      "url": ""
-    },
-    {
-      "path": "Tim_Claw_Max/NTN/NTN-Landing-Page.html",
-      "mode": "100644",
-      "type": "blob",
-      "sha": "local",
-      "size": 27285,
-      "url": ""
-    },
-    {
-      "path": "Tim_Claw_Max/NTN/N8N-Workflow-NTN.md",
-      "mode": "100644",
-      "type": "blob",
-      "sha": "local",
-      "size": 7675,
-      "url": ""
-    },
-    {
-      "path": "dtapet-project/original/html_template.txt",
-      "mode": "100644",
-      "type": "blob",
-      "sha": "local",
-      "size": 80919,
-      "url": ""
-    },
-    {
-      "path": "dtapet-project/original/n8n_workflow.json",
-      "mode": "100644",
-      "type": "blob",
-      "sha": "local",
-      "size": 188414,
-      "url": ""
-    },
-    {
-      "path": "dtapet-project/original/n8n_prompt.txt",
-      "mode": "100644",
-      "type": "blob",
-      "sha": "local",
-      "size": 42127,
-      "url": ""
-    },
-    {
-      "path": "dtapet-project/improved/FINAL/dtapet_improved_v2.tar.gz",
-      "mode": "100644",
-      "type": "blob",
-      "sha": "local",
-      "size": 18519,
-      "url": ""
-    },
-    {
-      "path": "dtapet-project/improved/FINAL/N8N_Generate_Product_HTML.js",
-      "mode": "100644",
-      "type": "blob",
-      "sha": "local",
-      "size": 6200,
-      "url": ""
-    },
-    {
-      "path": "dtapet-project/improved/FINAL/PRODUCT_CARD_HTML_Reference.html",
-      "mode": "100644",
-      "type": "blob",
-      "sha": "local",
-      "size": 9519,
-      "url": ""
-    },
-    {
-      "path": "dtapet-project/improved/FINAL/N8N_Prompt_v2.md",
-      "mode": "100644",
-      "type": "blob",
-      "sha": "local",
-      "size": 46928,
-      "url": ""
-    },
-    {
-      "path": "dtapet-project/improved/FINAL/N8N_Product_Grid_Fix.md",
-      "mode": "100644",
-      "type": "blob",
-      "sha": "local",
-      "size": 6605,
-      "url": ""
-    },
-    {
-      "path": "dtapet-project/improved/FINAL/HTML_Template_V2_With_Products.html",
-      "mode": "100644",
-      "type": "blob",
-      "sha": "local",
-      "size": 15680,
-      "url": ""
-    },
-    {
-      "path": "dtapet-project/improved/FINAL/HTML_Template_V2_Sample.html",
-      "mode": "100644",
-      "type": "blob",
-      "sha": "local",
-      "size": 13613,
-      "url": ""
-    },
-    {
-      "path": "dtapet-project/improved/FINAL/DTAPET_WORDPRESS_FIXED_V4.html",
-      "mode": "100644",
-      "type": "blob",
-      "sha": "local",
-      "size": 10450,
-      "url": ""
-    },
-    {
-      "path": "dtapet-project/improved/FINAL/ROOT_CAUSE_REPORT.md",
-      "mode": "100644",
-      "type": "blob",
-      "sha": "local",
-      "size": 7452,
-      "url": ""
-    },
-    {
-      "path": "dtapet-project/improved/FINAL/HTML_Template_V3_WP_SAFE.html",
-      "mode": "100644",
-      "type": "blob",
-      "sha": "local",
-      "size": 15680,
-      "url": ""
-    },
-    {
-      "path": "dtapet-project/improved/FINAL/N8N_Prompt_v3_FIXED.txt",
-      "mode": "100644",
-      "type": "blob",
-      "sha": "local",
-      "size": 12132,
-      "url": ""
-    },
-    {
-      "path": "dtapet-project/improved/FINAL/IMPROVEMENTS_SUMMARY.md",
-      "mode": "100644",
-      "type": "blob",
-      "sha": "local",
-      "size": 2530,
-      "url": ""
-    },
-    {
-      "path": "dtapet-project/improved/FINAL/WORKFLOW_IMPROVEMENTS.md",
-      "mode": "100644",
-      "type": "blob",
-      "sha": "local",
-      "size": 2814,
-      "url": ""
-    },
-    {
-      "path": "Reports/locksmithsanantonio-247-SEO-Growth-Blueprint.pdf",
-      "mode": "100644",
-      "type": "blob",
-      "sha": "local",
-      "size": 198242,
-      "url": ""
-    },
-    {
-      "path": "galoz.co.il/Hermes Agent/2026-04-15/Improved_N8N_Prompt.txt",
-      "mode": "100644",
-      "type": "blob",
-      "sha": "local",
-      "size": 15549,
-      "url": ""
-    },
-    {
-      "path": "galoz.co.il/Hermes Agent/2026-04-15/Improved_N8N_Workflow.json",
-      "mode": "100644",
-      "type": "blob",
-      "sha": "local",
-      "size": 135447,
-      "url": ""
-    },
-    {
-      "path": "galoz.co.il/Hermes Agent/2026-04-15/Improved_HTML_Template.html",
-      "mode": "100644",
-      "type": "blob",
-      "sha": "local",
-      "size": 44592,
-      "url": ""
-    },
-    {
-      "path": "galoz.co.il/claude-code-15.4.26/Improved_N8N_Prompt.txt",
-      "mode": "100644",
-      "type": "blob",
-      "sha": "local",
-      "size": 33306,
-      "url": ""
-    },
-    {
-      "path": "galoz.co.il/claude-code-15.4.26/Improved_N8N_Workflow.json",
-      "mode": "100644",
-      "type": "blob",
-      "sha": "local",
-      "size": 181886,
-      "url": ""
-    },
-    {
-      "path": "galoz.co.il/claude-code-15.4.26/Improved_HTML_Template.html",
-      "mode": "100644",
-      "type": "blob",
-      "sha": "local",
-      "size": 56283,
-      "url": ""
-    },
-    {
-      "path": "galoz.co.il/Copilot/2026-04-15/Improved_N8N_Prompt.txt",
-      "mode": "100644",
-      "type": "blob",
-      "sha": "local",
-      "size": 59484,
-      "url": ""
-    },
-    {
-      "path": "galoz.co.il/Copilot/2026-04-15/Improved_N8N_Workflow.json",
-      "mode": "100644",
-      "type": "blob",
-      "sha": "local",
-      "size": 181839,
-      "url": ""
-    },
-    {
-      "path": "galoz.co.il/Copilot/2026-04-15/Improved_HTML_Template.html",
-      "mode": "100644",
-      "type": "blob",
-      "sha": "local",
-      "size": 69755,
-      "url": ""
-    },
-    {
-      "path": "galoz.co.il/myclaw/Updated Files 15.4.26/galoz.co.il_Improved_HTML_Template-myclaw-15.4.26.html",
-      "mode": "100644",
-      "type": "blob",
-      "sha": "local",
-      "size": 55436,
-      "url": ""
-    },
-    {
-      "path": "galoz.co.il/myclaw/Updated Files 15.4.26/galoz.co.il_Improved_N8N_Workflow-myclaw-15.4.26.json",
-      "mode": "100644",
-      "type": "blob",
-      "sha": "local",
-      "size": 55712,
-      "url": ""
-    },
-    {
-      "path": "galoz.co.il/myclaw/Updated Files 15.4.26/galoz.co.il_Improved_N8N_Prompt-myclaw-15.4.26.txt",
-      "mode": "100644",
-      "type": "blob",
-      "sha": "local",
-      "size": 49663,
-      "url": ""
-    },
-    {
-      "path": "galoz.co.il/Codex/2026-04-15/Improved_N8N_Prompt.txt",
-      "mode": "100644",
-      "type": "blob",
-      "sha": "local",
-      "size": 14827,
-      "url": ""
-    },
-    {
-      "path": "galoz.co.il/Codex/2026-04-15/Improved_N8N_Workflow.json",
-      "mode": "100644",
-      "type": "blob",
-      "sha": "local",
-      "size": 135512,
-      "url": ""
-    },
-    {
-      "path": "galoz.co.il/Codex/2026-04-15/Improved_HTML_Template.html",
-      "mode": "100644",
-      "type": "blob",
-      "sha": "local",
-      "size": 47851,
-      "url": ""
-    },
-    {
-      "path": "galoz.co.il/Kimi/2026-04-19/Improved_N8N_Prompt.txt",
-      "mode": "100644",
-      "type": "blob",
-      "sha": "local",
-      "size": 21430,
-      "url": ""
-    },
-    {
-      "path": "galoz.co.il/Kimi/2026-04-19/Improved_N8N_Workflow.json",
-      "mode": "100644",
-      "type": "blob",
-      "sha": "local",
-      "size": 181844,
-      "url": ""
-    },
-    {
-      "path": "galoz.co.il/Kimi/2026-04-19/Improved_HTML_Template.html",
-      "mode": "100644",
-      "type": "blob",
-      "sha": "local",
-      "size": 54933,
-      "url": ""
-    },
-    {
-      "path": "galoz.co.il/Gemini/2026-04-15/Improved_N8N_Workflow_Gemini.json",
-      "mode": "100644",
-      "type": "blob",
-      "sha": "local",
-      "size": 179597,
-      "url": ""
-    },
-    {
-      "path": "galoz.co.il/Gemini/2026-04-15/Improved_N8N_Prompt_Gemini.txt",
-      "mode": "100644",
-      "type": "blob",
-      "sha": "local",
-      "size": 55717,
-      "url": ""
-    },
-    {
-      "path": "galoz.co.il/Gemini/2026-04-15/Improved_HTML_Template_Gemini.html",
-      "mode": "100644",
-      "type": "blob",
-      "sha": "local",
-      "size": 70502,
-      "url": ""
-    },
-    {
-      "path": "scripts/seed-supabase-admin.sh",
-      "mode": "100644",
-      "type": "blob",
-      "sha": "local",
-      "size": 5088,
-      "url": ""
-    },
-    {
-      "path": "scripts/cron_backup.sh",
-      "mode": "100644",
-      "type": "blob",
-      "sha": "local",
-      "size": 556,
-      "url": ""
-    }
-  ]
-}
+[
+  {
+    "domain": "powerplug.ai",
+    "name": "powerplug.ai",
+    "agents": [
+      {
+        "name": "OpenClaw",
+        "files": [
+          {
+            "name": "Improved_N8N_Prompt.txt",
+            "path": "powerplug.ai/OpenClaw/2026-04-20/Improved_N8N_Prompt.txt",
+            "size": 13385
+          },
+          {
+            "name": "Improved_N8N_Workflow.json",
+            "path": "powerplug.ai/OpenClaw/2026-04-20/Improved_N8N_Workflow.json",
+            "size": 126202
+          },
+          {
+            "name": "Improved_HTML_Template.html",
+            "path": "powerplug.ai/OpenClaw/2026-04-20/Improved_HTML_Template.html",
+            "size": 43988
+          }
+        ]
+      },
+      {
+        "name": "Hermes Agent",
+        "files": [
+          {
+            "name": "Improved_N8N_Prompt.txt",
+            "path": "powerplug.ai/Hermes Agent/2026-04-16/Improved_N8N_Prompt.txt",
+            "size": 13385
+          },
+          {
+            "name": "Improved_N8N_Workflow.json",
+            "path": "powerplug.ai/Hermes Agent/2026-04-16/Improved_N8N_Workflow.json",
+            "size": 126202
+          },
+          {
+            "name": "Improved_HTML_Template.html",
+            "path": "powerplug.ai/Hermes Agent/2026-04-16/Improved_HTML_Template.html",
+            "size": 43988
+          }
+        ]
+      },
+      {
+        "name": "Copilot",
+        "files": [
+          {
+            "name": "Improved_N8N_Workflow-copilot-2026-04-17.json",
+            "path": "powerplug.ai/Copilot/2026-04-17/Improved_N8N_Workflow-copilot-2026-04-17.json",
+            "size": 129113
+          },
+          {
+            "name": "Improved_N8N_Prompt-copilot-2026-04-17.txt",
+            "path": "powerplug.ai/Copilot/2026-04-17/Improved_N8N_Prompt-copilot-2026-04-17.txt",
+            "size": 17427
+          },
+          {
+            "name": "Improved_HTML_Template-copilot-2026-04-17.html",
+            "path": "powerplug.ai/Copilot/2026-04-17/Improved_HTML_Template-copilot-2026-04-17.html",
+            "size": 44444
+          }
+        ]
+      },
+      {
+        "name": "agent-zero",
+        "files": [
+          {
+            "name": "Improved_N8N_Prompt.txt",
+            "path": "powerplug.ai/agent-zero/2026-04-16/Improved_N8N_Prompt.txt",
+            "size": 25456
+          },
+          {
+            "name": "Improved_N8N_Workflow.json",
+            "path": "powerplug.ai/agent-zero/2026-04-16/Improved_N8N_Workflow.json",
+            "size": 42689
+          },
+          {
+            "name": "Improved_HTML_Template.html",
+            "path": "powerplug.ai/agent-zero/2026-04-16/Improved_HTML_Template.html",
+            "size": 67808
+          }
+        ]
+      },
+      {
+        "name": "CLAUDE CODE (Tim Claw Max)",
+        "files": [
+          {
+            "name": "Improved_N8N_Prompt.txt",
+            "path": "powerplug.ai/CLAUDE CODE (Tim Claw Max)/2026-04-16/Improved_N8N_Prompt.txt",
+            "size": 13577
+          },
+          {
+            "name": "Improved_N8N_Workflow.json",
+            "path": "powerplug.ai/CLAUDE CODE (Tim Claw Max)/2026-04-16/Improved_N8N_Workflow.json",
+            "size": 16335
+          },
+          {
+            "name": "Improved_HTML_Template.html",
+            "path": "powerplug.ai/CLAUDE CODE (Tim Claw Max)/2026-04-16/Improved_HTML_Template.html",
+            "size": 57234
+          }
+        ]
+      },
+      {
+        "name": "Claude Code",
+        "files": [
+          {
+            "name": "Improved_N8N_Prompt.txt",
+            "path": "powerplug.ai/Claude Code/2026-04-16/Improved_N8N_Prompt.txt",
+            "size": 18688
+          },
+          {
+            "name": "Improved_N8N_Workflow.json",
+            "path": "powerplug.ai/Claude Code/2026-04-16/Improved_N8N_Workflow.json",
+            "size": 20768
+          },
+          {
+            "name": "Improved_HTML_Template.html",
+            "path": "powerplug.ai/Claude Code/2026-04-16/Improved_HTML_Template.html",
+            "size": 49175
+          }
+        ]
+      },
+      {
+        "name": "gemini",
+        "files": [
+          {
+            "name": "Improved_HTML_Template-gemini-2026-04-17.html",
+            "path": "powerplug.ai/gemini/2026-04-17/Improved_HTML_Template-gemini-2026-04-17.html",
+            "size": 13546
+          },
+          {
+            "name": "Improved_N8N_Prompt-gemini-2026-04-17.txt",
+            "path": "powerplug.ai/gemini/2026-04-17/Improved_N8N_Prompt-gemini-2026-04-17.txt",
+            "size": 17425
+          },
+          {
+            "name": "Improved_N8N_Workflow-gemini-2026-04-17.json",
+            "path": "powerplug.ai/gemini/2026-04-17/Improved_N8N_Workflow-gemini-2026-04-17.json",
+            "size": 129110
+          }
+        ]
+      }
+    ],
+    "updated_at": null,
+    "status": "completed",
+    "deployed": false,
+    "progress": 100,
+    "starred": false,
+    "last_updated": "2026-04-25T19:18:27Z"
+  },
+  {
+    "domain": "hondabike.co.il",
+    "name": "hondabike.co.il",
+    "agents": [
+      {
+        "name": "Improved Files (12.4.26) \u2726 Latest",
+        "files": [
+          {
+            "name": "Improved_N8N_Prompt.txt",
+            "path": "hondabike.co.il/Improved Files (12.4.26) \u2726 Latest/Improved_N8N_Prompt.txt",
+            "size": 31069
+          },
+          {
+            "name": "Improved_N8N_Workflow.json",
+            "path": "hondabike.co.il/Improved Files (12.4.26) \u2726 Latest/Improved_N8N_Workflow.json",
+            "size": 164749
+          },
+          {
+            "name": "Improved_HTML_Template.html",
+            "path": "hondabike.co.il/Improved Files (12.4.26) \u2726 Latest/Improved_HTML_Template.html",
+            "size": 72389
+          }
+        ]
+      }
+    ],
+    "updated_at": null,
+    "status": "completed",
+    "deployed": false,
+    "progress": 100,
+    "starred": false
+  },
+  {
+    "domain": "caesarstone.co.il",
+    "name": "caesarstone.co.il",
+    "agents": [
+      {
+        "name": "Claude Code",
+        "files": [
+          {
+            "name": "Improved_N8N_Prompt.txt",
+            "path": "caesarstone.co.il/Claude Code/2026-04-13/Improved_N8N_Prompt.txt",
+            "size": 40498
+          },
+          {
+            "name": "Improved_N8N_Workflow.json",
+            "path": "caesarstone.co.il/Claude Code/2026-04-13/Improved_N8N_Workflow.json",
+            "size": 175069
+          },
+          {
+            "name": "Improved_HTML_Template.html",
+            "path": "caesarstone.co.il/Claude Code/2026-04-13/Improved_HTML_Template.html",
+            "size": 88530
+          }
+        ]
+      }
+    ],
+    "updated_at": null,
+    "status": "completed",
+    "deployed": true,
+    "progress": 100,
+    "starred": false
+  },
+  {
+    "domain": "jacknows.ai",
+    "name": "jacknows.ai",
+    "agents": [
+      {
+        "name": "Improved Files (31.3.26) \u2726 Latest",
+        "files": [
+          {
+            "name": "Improved_N8N_Prompt.txt",
+            "path": "jacknows.ai/Improved Files (31.3.26) \u2726 Latest/Improved_N8N_Prompt.txt",
+            "size": 20037
+          },
+          {
+            "name": "Improved_N8N_Workflow.json",
+            "path": "jacknows.ai/Improved Files (31.3.26) \u2726 Latest/Improved_N8N_Workflow.json",
+            "size": 142686
+          },
+          {
+            "name": "Improved_HTML_Template.html",
+            "path": "jacknows.ai/Improved Files (31.3.26) \u2726 Latest/Improved_HTML_Template.html",
+            "size": 49584
+          }
+        ]
+      }
+    ],
+    "updated_at": null,
+    "status": "completed",
+    "deployed": false,
+    "progress": 100,
+    "starred": false
+  },
+  {
+    "domain": "netanya.ac.il",
+    "name": "netanya.ac.il",
+    "agents": [
+      {
+        "name": "claude-code",
+        "files": [
+          {
+            "name": "Improved_N8N_Prompt.txt",
+            "path": "netanya.ac.il/claude-code/06.04.26/Improved_N8N_Prompt.txt",
+            "size": 26172
+          },
+          {
+            "name": "Improved_N8N_Workflow.json",
+            "path": "netanya.ac.il/claude-code/06.04.26/Improved_N8N_Workflow.json",
+            "size": 154138
+          },
+          {
+            "name": "Improved_HTML_Template.html",
+            "path": "netanya.ac.il/claude-code/06.04.26/Improved_HTML_Template.html",
+            "size": 80700
+          }
+        ]
+      },
+      {
+        "name": "Improved Files (6.4.26)",
+        "files": [
+          {
+            "name": "Improved_N8N_Prompt.txt",
+            "path": "netanya.ac.il/Improved Files (6.4.26)/Improved_N8N_Prompt.txt",
+            "size": 26172
+          },
+          {
+            "name": "Improved_N8N_Workflow.json",
+            "path": "netanya.ac.il/Improved Files (6.4.26)/Improved_N8N_Workflow.json",
+            "size": 154138
+          },
+          {
+            "name": "Improved_HTML_Template.html",
+            "path": "netanya.ac.il/Improved Files (6.4.26)/Improved_HTML_Template.html",
+            "size": 80700
+          }
+        ]
+      },
+      {
+        "name": "Improved Files (5.4.26)",
+        "files": [
+          {
+            "name": "Improved_N8N_Prompt.txt",
+            "path": "netanya.ac.il/Improved Files (5.4.26)/Improved_N8N_Prompt.txt",
+            "size": 17821
+          },
+          {
+            "name": "Improved_N8N_Workflow.json",
+            "path": "netanya.ac.il/Improved Files (5.4.26)/Improved_N8N_Workflow.json",
+            "size": 16596
+          },
+          {
+            "name": "Improved_HTML_Template.html",
+            "path": "netanya.ac.il/Improved Files (5.4.26)/Improved_HTML_Template.html",
+            "size": 75510
+          }
+        ]
+      }
+    ],
+    "updated_at": null,
+    "status": "completed",
+    "deployed": false,
+    "progress": 100,
+    "starred": false
+  },
+  {
+    "domain": "dtapet.com",
+    "name": "dtapet.com",
+    "agents": [
+      {
+        "name": "Improved Files (6.4.26) \u2726 Latest",
+        "files": [
+          {
+            "name": "N8N_Workflow.json",
+            "path": "dtapet.com/Improved Files (6.4.26) \u2726 Latest/N8N_Workflow.json",
+            "size": 191804
+          },
+          {
+            "name": "Improved_N8N_Prompt.txt",
+            "path": "dtapet.com/Improved Files (6.4.26) \u2726 Latest/Improved_N8N_Prompt.txt",
+            "size": 51034
+          },
+          {
+            "name": "Improved_HTML_Template.html",
+            "path": "dtapet.com/Improved Files (6.4.26) \u2726 Latest/Improved_HTML_Template.html",
+            "size": 60885
+          }
+        ]
+      }
+    ],
+    "updated_at": null,
+    "status": "completed",
+    "deployed": false,
+    "progress": 100,
+    "starred": false
+  },
+  {
+    "domain": "galoz.co.il",
+    "name": "galoz.co.il",
+    "agents": [
+      {
+        "name": "Hermes Agent",
+        "files": [
+          {
+            "name": "Improved_N8N_Prompt.txt",
+            "path": "galoz.co.il/Hermes Agent/2026-04-15/Improved_N8N_Prompt.txt",
+            "size": 15549
+          },
+          {
+            "name": "Improved_N8N_Workflow.json",
+            "path": "galoz.co.il/Hermes Agent/2026-04-15/Improved_N8N_Workflow.json",
+            "size": 135447
+          },
+          {
+            "name": "Improved_HTML_Template.html",
+            "path": "galoz.co.il/Hermes Agent/2026-04-15/Improved_HTML_Template.html",
+            "size": 44592
+          }
+        ]
+      },
+      {
+        "name": "claude-code-15.4.26",
+        "files": [
+          {
+            "name": "Improved_N8N_Prompt.txt",
+            "path": "galoz.co.il/claude-code-15.4.26/Improved_N8N_Prompt.txt",
+            "size": 33306
+          },
+          {
+            "name": "Improved_N8N_Workflow.json",
+            "path": "galoz.co.il/claude-code-15.4.26/Improved_N8N_Workflow.json",
+            "size": 181886
+          },
+          {
+            "name": "Improved_HTML_Template.html",
+            "path": "galoz.co.il/claude-code-15.4.26/Improved_HTML_Template.html",
+            "size": 56283
+          }
+        ]
+      },
+      {
+        "name": "Copilot",
+        "files": [
+          {
+            "name": "Improved_N8N_Prompt.txt",
+            "path": "galoz.co.il/Copilot/2026-04-15/Improved_N8N_Prompt.txt",
+            "size": 59484
+          },
+          {
+            "name": "Improved_N8N_Workflow.json",
+            "path": "galoz.co.il/Copilot/2026-04-15/Improved_N8N_Workflow.json",
+            "size": 181839
+          },
+          {
+            "name": "Improved_HTML_Template.html",
+            "path": "galoz.co.il/Copilot/2026-04-15/Improved_HTML_Template.html",
+            "size": 69755
+          }
+        ]
+      },
+      {
+        "name": "myclaw",
+        "files": [
+          {
+            "name": "galoz.co.il_Improved_HTML_Template-myclaw-15.4.26.html",
+            "path": "galoz.co.il/myclaw/Updated Files 15.4.26/galoz.co.il_Improved_HTML_Template-myclaw-15.4.26.html",
+            "size": 55436
+          },
+          {
+            "name": "galoz.co.il_Improved_N8N_Workflow-myclaw-15.4.26.json",
+            "path": "galoz.co.il/myclaw/Updated Files 15.4.26/galoz.co.il_Improved_N8N_Workflow-myclaw-15.4.26.json",
+            "size": 55712
+          },
+          {
+            "name": "galoz.co.il_Improved_N8N_Prompt-myclaw-15.4.26.txt",
+            "path": "galoz.co.il/myclaw/Updated Files 15.4.26/galoz.co.il_Improved_N8N_Prompt-myclaw-15.4.26.txt",
+            "size": 49663
+          }
+        ]
+      },
+      {
+        "name": "Codex",
+        "files": [
+          {
+            "name": "Improved_N8N_Prompt.txt",
+            "path": "galoz.co.il/Codex/2026-04-15/Improved_N8N_Prompt.txt",
+            "size": 14827
+          },
+          {
+            "name": "Improved_N8N_Workflow.json",
+            "path": "galoz.co.il/Codex/2026-04-15/Improved_N8N_Workflow.json",
+            "size": 135512
+          },
+          {
+            "name": "Improved_HTML_Template.html",
+            "path": "galoz.co.il/Codex/2026-04-15/Improved_HTML_Template.html",
+            "size": 47851
+          }
+        ]
+      },
+      {
+        "name": "Kimi",
+        "files": [
+          {
+            "name": "Improved_N8N_Prompt.txt",
+            "path": "galoz.co.il/Kimi/2026-04-19/Improved_N8N_Prompt.txt",
+            "size": 21430
+          },
+          {
+            "name": "Improved_N8N_Workflow.json",
+            "path": "galoz.co.il/Kimi/2026-04-19/Improved_N8N_Workflow.json",
+            "size": 181844
+          },
+          {
+            "name": "Improved_HTML_Template.html",
+            "path": "galoz.co.il/Kimi/2026-04-19/Improved_HTML_Template.html",
+            "size": 54933
+          }
+        ]
+      },
+      {
+        "name": "Gemini",
+        "files": [
+          {
+            "name": "Improved_N8N_Workflow_Gemini.json",
+            "path": "galoz.co.il/Gemini/2026-04-15/Improved_N8N_Workflow_Gemini.json",
+            "size": 179597
+          },
+          {
+            "name": "Improved_N8N_Prompt_Gemini.txt",
+            "path": "galoz.co.il/Gemini/2026-04-15/Improved_N8N_Prompt_Gemini.txt",
+            "size": 55717
+          },
+          {
+            "name": "Improved_HTML_Template_Gemini.html",
+            "path": "galoz.co.il/Gemini/2026-04-15/Improved_HTML_Template_Gemini.html",
+            "size": 70502
+          }
+        ]
+      }
+    ],
+    "updated_at": null,
+    "status": "completed",
+    "deployed": true,
+    "progress": 100,
+    "starred": false
+  }
+]
