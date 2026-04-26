@@ -655,6 +655,9 @@ img,svg,video,canvas{max-width:100%;height:auto}
   /* Toast positioning clear of safe area */
   .action-toast{left:12px;right:12px;bottom:calc(12px + env(safe-area-inset-bottom));transform:translateY(20px) !important;width:auto;max-width:none}
   .action-toast.open{transform:translateY(0) !important}
+  /* Typography: prevent orphans, improve readability */
+  h1,h2,h3,h4{text-wrap:pretty}
+  p,li{line-height:1.65}
 }
 
 /* Tiny phones (<=380) — iPhone SE 1st gen, older Androids */
