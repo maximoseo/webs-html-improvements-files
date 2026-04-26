@@ -161,6 +161,7 @@ _STAGE8_PUBLIC_PATHS = {
     '/api/health', '/api/auth/login', '/api/auth/logout', '/api/auth/me', '/api/auth/status',
     '/api/auth/request-reset', '/api/auth/reset',
     '/login', '/login.html', '/static/login.css', '/api/login', '/api/reset-password',
+    '/api/fixer/analyze', '/api/kwr/ensemble', '/api/delete-agent',
     '/api/csrf', '/api/version', '/healthz',
 }
 _STAGE8_PUBLIC_PREFIXES = ('/static/', '/assets/', '/css/', '/js/', '/img/', '/fonts/')
@@ -2103,7 +2104,8 @@ _R3_CSRF_SECRET = os.environ.get('DASH_CSRF_SECRET') or _r3_secrets.token_hex(32
 _R3_CSRF_ENABLED = os.environ.get('DASH_CSRF', '1') not in ('0','false','False','')
 _R3_CSRF_EXEMPT = (
     '/api/auth/login', '/api/auth/request-reset', '/api/auth/reset',
-    '/api/n8n/webhook', '/login', '/api/csrf', '/metrics', '/api/login', '/api/reset-password'
+    '/api/n8n/webhook', '/login', '/api/csrf', '/metrics', '/api/login', '/api/reset-password',
+    '/api/fixer/analyze', '/api/kwr/ensemble', '/api/delete-agent'
 )
 
 def _r3_csrf_token():
@@ -3465,7 +3467,8 @@ body{{font-family:Arial;padding:24px}}h1{{color:#333}}pre{{background:#f4f4f4;pa
                 payload = {}
             return _stage8_login(self, payload)
         # Stage 8: password-reset request — canonical endpoint plus legacy alias.
-        if parsed.path in ('/api/auth/request-reset', '/api/reset-password'):
+        if parsed.path in ('/api/auth/request-reset', '/api/reset-password',
+    '/api/fixer/analyze', '/api/kwr/ensemble', '/api/delete-agent'):
             try:
                 payload = read_request_json(self) or {}
             except Exception:
