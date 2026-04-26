@@ -19298,5 +19298,23 @@ body.light .last-sync-meta{color:#64748B !important}
 .project-card.expanded .card-body{transition:none !important;}
 </style>
 
+<style id="project-file-row-hover-blink-fix-2026-04-26">
+/* ============================================================
+   PROJECT FILE ROW HOVER BLINK FIX (2026-04-26)
+   File/artifact rows inside expanded projects must not flicker
+   when the pointer crosses rows or nested action buttons.
+   ============================================================ */
+.project-card .file-row,.project-card .file-row:hover,.project-card .file-row:focus-within{
+  transform:none !important;
+  animation:none !important;
+  will-change:auto !important;
+  contain:paint !important;
+  backface-visibility:hidden !important;
+  transition:background-color 120ms cubic-bezier(.2,0,0,1),border-color 120ms cubic-bezier(.2,0,0,1) !important;
+}
+.project-card .file-row *{animation:none !important;}
+.project-card .file-row .action-btn{transform:none !important;transition:background-color 120ms cubic-bezier(.2,0,0,1),border-color 120ms cubic-bezier(.2,0,0,1),color 120ms cubic-bezier(.2,0,0,1) !important;}
+</style>
+
 </body>
 </html>

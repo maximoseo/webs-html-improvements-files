@@ -35,6 +35,24 @@ class ProjectHoverStabilityTests(unittest.TestCase):
         self.assertIn('transform:none !important;', fix_css)
         self.assertIn('.project-card.expanded .card-body{transition:none !important;}', fix_css)
 
+    def test_file_rows_inside_projects_disable_hover_blink_triggers(self):
+        html = INDEX_HTML.read_text(encoding='utf-8')
+
+        self.assertIn('PROJECT FILE ROW HOVER BLINK FIX', html)
+        self.assertIn('id="project-file-row-hover-blink-fix-2026-04-26"', html)
+        fix_start = html.index('id="project-file-row-hover-blink-fix-2026-04-26"')
+        fix_css = html[fix_start:html.index('</style>', fix_start)]
+
+        self.assertIn('.project-card .file-row,.project-card .file-row:hover,.project-card .file-row:focus-within{', fix_css)
+        self.assertIn('transform:none !important;', fix_css)
+        self.assertIn('animation:none !important;', fix_css)
+        self.assertIn('will-change:auto !important;', fix_css)
+        self.assertIn('contain:paint !important;', fix_css)
+        self.assertIn('backface-visibility:hidden !important;', fix_css)
+        self.assertIn('transition:background-color 120ms cubic-bezier(.2,0,0,1),border-color 120ms cubic-bezier(.2,0,0,1) !important;', fix_css)
+        self.assertIn('.project-card .file-row *{animation:none !important;}', fix_css)
+        self.assertIn('.project-card .file-row .action-btn{transform:none !important;', fix_css)
+
 
 if __name__ == '__main__':
     unittest.main()
