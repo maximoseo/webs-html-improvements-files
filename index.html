@@ -176,6 +176,8 @@ a:hover{color:var(--gold-light)}
 /* Header */
 .header{background:rgba(8,9,10,0.92);border-bottom:1px solid rgba(255,255,255,0.08);position:fixed;top:0;left:0;right:0;width:100%;z-index:9999;backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px)}
 .header-inner{max-width:1320px;margin:0 auto;padding:18px 28px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:14px}
+/* Desktop: slightly more padding for professional look */
+@media (min-width:1025px){.header-inner{padding:22px 28px 20px}}
 .logo{display:flex;align-items:center;gap:12px}
 .logo-link{display:flex;align-items:center;gap:12px;color:var(--text);text-decoration:none}
 .logo-link:hover{color:var(--text)}
@@ -10635,7 +10637,7 @@ async function loadDashboard(){
         </div>
       </div>
       <div class="card-header" role="button" tabindex="0" aria-expanded="false" aria-controls="${cardId}" aria-label="Open project ${p.name}" onclick="event.stopPropagation();toggleProjectCard(this.parentElement,{scroll:true})" onkeydown="handleProjectHeaderKeydown(event,this.parentElement)">
-        <div class="card-icon" id="icon-${p.name.replace(/[^a-z0-9]/gi,'-')}" style="background:linear-gradient(135deg,${color},${color}88)"><span class="icon-initials">${initials}</span></div>
+        <div class="card-icon" id="icon-${p.name.replace(/[^a-z0-9]/gi,'-')}" style="background:linear-gradient(135deg,${color},${color}88)"><img class="favicon" src="https://www.google.com/s2/favicons?domain=${encodeURIComponent(p.domain||p.name)}&sz=64" alt="" onload="this.classList.add('loaded');this.parentElement.classList.add('has-logo')"><span class="icon-initials">${initials}</span></div>
         <div class="card-info">
           <h3>${p.name}</h3>
           <div class="card-meta">
