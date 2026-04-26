@@ -5426,6 +5426,17 @@ body.light .stat-card{background:rgba(0,0,0,0.03)}
 .kwr-history-panel{margin-top:28px;border-top:1px solid rgba(255,255,255,0.06);padding-top:20px}
 .kwr-history-title{font-size:12px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;margin-bottom:12px}
 .kwr-history-list{display:flex;flex-direction:column;gap:6px}
+
+/* KW_RESEARCH_REDESIGN_PROMPT_2026_04_26 */
+.kwr-redesign-prompt{margin:18px 0 22px;padding:18px;border:1px solid rgba(124,58,237,0.22);border-radius:16px;background:linear-gradient(180deg,rgba(124,58,237,0.11),rgba(255,255,255,0.025));box-shadow:0 16px 40px rgba(0,0,0,0.22)}
+.kwr-redesign-prompt-head{display:flex;align-items:flex-start;justify-content:space-between;gap:14px;margin-bottom:12px;flex-wrap:wrap}
+.kwr-redesign-kicker{font-size:11px;font-weight:800;color:#c4b5fd;text-transform:uppercase;letter-spacing:.09em;margin-bottom:5px}
+.kwr-redesign-title{font-size:16px;font-weight:750;color:var(--text);letter-spacing:-.02em;margin:0 0 5px}
+.kwr-redesign-desc{font-size:12px;color:var(--muted);line-height:1.5;max-width:78ch;margin:0}
+.kwr-redesign-actions{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.kwr-redesign-textarea{width:100%;min-height:320px;max-height:46vh;resize:vertical;background:rgba(0,0,0,0.26);border:1px solid rgba(255,255,255,0.10);border-radius:12px;color:var(--text-secondary);font:12px/1.55 ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;padding:14px;outline:none;white-space:pre;box-sizing:border-box}
+.kwr-redesign-textarea:focus{border-color:rgba(124,58,237,.48);box-shadow:0 0 0 3px rgba(124,58,237,.12)}
+@media(max-width:768px){.kwr-redesign-prompt{padding:14px}.kwr-redesign-actions{width:100%}.kwr-redesign-actions .kwr-btn{flex:1 1 100%;min-height:44px}.kwr-redesign-textarea{min-height:260px;font-size:11px}}
 .kwr-history-item{display:flex;align-items:center;gap:10px;padding:8px 12px;border-radius:9px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);font-size:12px;cursor:pointer;transition:all .15s}
 .kwr-history-item:hover{background:rgba(255,255,255,0.05);border-color:rgba(124,58,237,.3)}
 .kwr-history-badge{font-size:10px;padding:2px 7px;border-radius:4px;font-weight:700}
@@ -9242,6 +9253,747 @@ GET    /api/tasks/stats/burndown?project_id=x     — Burndown chart data
     </div>
     <div class="kwr-desc">Generate a structured keyword research plan for any website. Fill in the site details below, run the analysis, review and edit the preview, then approve to deploy to Google Sheets.</div>
   </div>
+
+  <!-- KW_RESEARCH_REDESIGN_PROMPT_2026_04_26 -->
+  <section class="kwr-redesign-prompt" id="kw-research-redesign-prompt-panel" aria-labelledby="kw-research-redesign-prompt-title">
+    <div class="kwr-redesign-prompt-head">
+      <div>
+        <div class="kwr-redesign-kicker">Implementation Prompt</div>
+        <h3 class="kwr-redesign-title" id="kw-research-redesign-prompt-title">KW Research Page Redesign Plan</h3>
+        <p class="kwr-redesign-desc">Full internal plan for adding domain history, a searchable domain dropdown, report history under the form, persistent storage, smart insights, exports, clustering and integrations.</p>
+      </div>
+      <div class="kwr-redesign-actions">
+        <button type="button" class="kwr-btn kwr-btn-ghost" onclick="copyKwResearchRedesignPrompt()">Copy prompt</button>
+        <button type="button" class="kwr-btn kwr-btn-primary" onclick="downloadKwResearchRedesignPrompt()">Download .md</button>
+      </div>
+    </div>
+    <textarea class="kwr-redesign-textarea" id="kw-research-redesign-prompt" readonly aria-label="KW Research redesign prompt"># KW Research Page Redesign Plan
+
+**Dashboard:** `https://html-redesign-dashboard.maximo-seo.ai/`
+**Tab:** KW Research
+**Goal:** Add domain report history, domain dropdown with previously researched sites, report list under the form, persistent storage, and additional smart features.
+
+---
+
+## Current State (Based on Description)
+
+The KW Research tab currently has:
+- A form to input a domain and run keyword research reports
+- Basic keyword data output
+- No history of previously researched domains
+- No dropdown of past domains
+- No saved reports below the form
+
+---
+
+## What Needs to Be Added
+
+### Core Requirements
+1. **Domain dropdown** — Shows all previously researched domains in a searchable dropdown
+2. **Report history under the form** — Shows past reports for the selected domain
+3. **Persistent storage** — Save domain + report data to Supabase, sync to Obsidian &amp; GitHub
+
+### Additional Features (Recommended)
+4. **Report comparison** — Compare KW metrics across different dates for same domain
+5. **Competitor tracking** — Track multiple domains and compare side-by-side
+6. **Auto-schedule** — Set up recurring reports (weekly/monthly) per domain
+7. **KW clustering** — Group related keywords by topic/intent
+8. **Export options** — CSV, PDF, Obsidian note, n8n webhook
+9. **Quick insights** — AI-generated summary of KW changes since last report
+10. **Favorite keywords** — Pin important KWs to track separately
+
+---
+
+## Data Architecture
+
+### Supabase Schema (Primary Storage)
+
+```sql
+-- Domains table: all researched domains
+CREATE TABLE domains (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  domain VARCHAR(255) NOT NULL UNIQUE,
+  display_name VARCHAR(255),
+  logo_url TEXT,
+  first_researched_at TIMESTAMPTZ DEFAULT NOW(),
+  last_researched_at TIMESTAMPTZ DEFAULT NOW(),
+  total_reports INTEGER DEFAULT 0,
+  is_favorite BOOLEAN DEFAULT FALSE,
+  notes TEXT,
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- Reports table: each KW research run
+CREATE TABLE kw_reports (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  domain_id UUID REFERENCES domains(id) ON DELETE CASCADE,
+  report_date DATE NOT NULL DEFAULT CURRENT_DATE,
+  status VARCHAR(20) DEFAULT 'completed',  -- completed, running, failed
+  total_keywords INTEGER DEFAULT 0,
+  avg_position DECIMAL(5,2),
+  total_search_volume BIGINT DEFAULT 0,
+  top_10_count INTEGER DEFAULT 0,
+  top_30_count INTEGER DEFAULT 0,
+  top_100_count INTEGER DEFAULT 0,
+  visibility_score DECIMAL(5,2),
+  report_data JSONB,  -- full keyword data
+  ai_summary TEXT,    -- AI-generated insight summary
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- Individual keywords per report
+CREATE TABLE kw_entries (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  report_id UUID REFERENCES kw_reports(id) ON DELETE CASCADE,
+  keyword VARCHAR(500) NOT NULL,
+  position INTEGER,
+  previous_position INTEGER,
+  position_change INTEGER,  -- positive = improved, negative = dropped
+  search_volume INTEGER,
+  difficulty DECIMAL(5,2),
+  cpc DECIMAL(10,4),
+  url TEXT,                 -- ranking URL
+  intent VARCHAR(50),       -- informational, transactional, navigational, commercial
+  cluster_id UUID,          -- for KW clustering
+  is_favorite BOOLEAN DEFAULT FALSE,
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- KW clusters (topic grouping)
+CREATE TABLE kw_clusters (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  domain_id UUID REFERENCES domains(id) ON DELETE CASCADE,
+  name VARCHAR(255) NOT NULL,
+  keywords_count INTEGER DEFAULT 0,
+  avg_position DECIMAL(5,2),
+  total_volume BIGINT DEFAULT 0,
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- Scheduled reports
+CREATE TABLE scheduled_reports (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  domain_id UUID REFERENCES domains(id) ON DELETE CASCADE,
+  frequency VARCHAR(20) NOT NULL,  -- daily, weekly, monthly
+  day_of_week INTEGER,             -- 0-6 for weekly
+  day_of_month INTEGER,            -- 1-31 for monthly
+  time_of_day TIME DEFAULT '06:00',
+  is_active BOOLEAN DEFAULT TRUE,
+  last_run_at TIMESTAMPTZ,
+  next_run_at TIMESTAMPTZ,
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- Indexes for performance
+CREATE INDEX idx_kw_reports_domain ON kw_reports(domain_id, report_date DESC);
+CREATE INDEX idx_kw_entries_report ON kw_entries(report_id);
+CREATE INDEX idx_kw_entries_keyword ON kw_entries(keyword);
+CREATE INDEX idx_domains_last_researched ON domains(last_researched_at DESC);
+```
+
+### Obsidian Vault Sync
+
+Every report is also saved as a markdown note in Obsidian:
+
+```
+obsidian-vault/
+└── KW-Research/
+    ├── domains/
+    │   ├── maximo-seo-ai/
+    │   │   ├── _domain-profile.md        # Domain info, notes
+    │   │   ├── 2026-04-26-report.md      # Daily reports
+    │   │   ├── 2026-04-25-report.md
+    │   │   └── clusters/
+    │   │       ├── seo-keywords.md
+    │   │       └── ai-marketing.md
+    │   ├── competitor-1-com/
+    │   │   └── ...
+    │   └── competitor-2-com/
+    │       └── ...
+    └── _overview.md                      # Cross-domain summary
+```
+
+**Report Markdown Format:**
+```markdown
+---
+domain: maximo-seo.ai
+date: 2026-04-26
+total_keywords: 342
+avg_position: 18.4
+top_10: 47
+top_30: 128
+visibility: 34.5
+---
+
+# KW Report: maximo-seo.ai — 2026-04-26
+
+## Summary
+AI-generated insight: "Visibility improved 4.2% since last report.
+12 keywords entered top 10. Main growth in 'AI SEO' cluster (+8 positions avg)."
+
+## Top Movers
+| Keyword | Position | Change | Volume |
+|---|---|---|---|
+| ai seo tools | 3 | +12 ▲ | 4,400 |
+| seo automation | 7 | +8 ▲ | 2,900 |
+| ...
+
+## All Keywords
+(full table)
+```
+
+### GitHub Repo Sync
+
+```
+kw-research-repo/
+├── domains/
+│   ├── maximo-seo-ai/
+│   │   ├── profile.json
+│   │   ├── reports/
+│   │   │   ├── 2026-04-26.json
+│   │   │   └── 2026-04-25.json
+│   │   └── latest.json
+│   └── ...
+├── exports/
+│   └── {domain}/{date}.csv
+└── README.md
+```
+
+### Sync Flow
+
+```
+KW Report Generated
+       │
+       ├──→ Supabase (primary, real-time queries)
+       │
+       ├──→ Obsidian Vault (human-readable notes, linked research)
+       │
+       └──→ GitHub Repo (versioned JSON/CSV, backup, CI/CD triggers)
+```
+
+---
+
+## Page Layout Redesign
+
+### Full Page Wireframe
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│  Navigation Bar                                    [KW Research] │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                  │
+│  ┌─ Research Form ────────────────────────────────────────────┐ │
+│  │                                                             │ │
+│  │  Domain:                                                    │ │
+│  │  ┌──────────────────────────────────────────┐ [🔍 Research] │ │
+│  │  │ maximo-seo.ai                        ▾   │               │ │
+│  │  └──────────────────────────────────────────┘               │ │
+│  │  ┌─ Dropdown (when open) ───────────────────┐               │ │
+│  │  │ 🔍 Search domains...                      │               │ │
+│  │  │ ─── Recent ──────────────────────────────│               │ │
+│  │  │ 🌐 maximo-seo.ai          3 reports      │               │ │
+│  │  │ 🌐 competitor-one.com     7 reports      │               │ │
+│  │  │ 🌐 competitor-two.io      2 reports      │               │ │
+│  │  │ ─── All Domains ─────────────────────────│               │ │
+│  │  │ 🌐 another-site.com       1 report       │               │ │
+│  │  │ 🌐 client-site.org        5 reports      │               │ │
+│  │  │ ─────────────────────────────────────────│               │ │
+│  │  │ + Add new domain                          │               │ │
+│  │  └──────────────────────────────────────────┘               │ │
+│  │                                                             │ │
+│  │  ┌─ Filters (collapsible) ─────────────────────────────┐   │ │
+│  │  │  Country: [🇺🇸 United States ▾]  Language: [English ▾]│   │ │
+│  │  │  Device:  [○ Desktop  ● Mobile  ○ All]               │   │ │
+│  │  │  Depth:   [○ Top 10  ○ Top 50  ● Top 100]           │   │ │
+│  │  └─────────────────────────────────────────────────────┘   │ │
+│  │                                                             │ │
+│  └─────────────────────────────────────────────────────────────┘ │
+│                                                                  │
+│  ┌─ Quick Stats (for selected domain) ────────────────────────┐ │
+│  │                                                             │ │
+│  │  ┌─────────┐ ┌─────────┐ ┌─────────┐ ┌─────────┐          │ │
+│  │  │   342   │ │  18.4   │ │   47    │ │  34.5%  │          │ │
+│  │  │Keywords │ │Avg Pos  │ │Top 10   │ │Visibility│          │ │
+│  │  │ +23 ▲   │ │ -1.2 ▲  │ │ +12 ▲   │ │ +4.2% ▲ │          │ │
+│  │  └─────────┘ └─────────┘ └─────────┘ └─────────┘          │ │
+│  │                                                             │ │
+│  └─────────────────────────────────────────────────────────────┘ │
+│                                                                  │
+│  ┌─ Tabs ─────────────────────────────────────────────────────┐ │
+│  │  [📊 Reports]  [📈 Trends]  [🏷 Clusters]  [⚔ Competitors] │ │
+│  └─────────────────────────────────────────────────────────────┘ │
+│                                                                  │
+│  ════════════════════════════════════════════════════════════════ │
+│                                                                  │
+│                     (Tab Content Below)                           │
+│                                                                  │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## Domain Dropdown Component (Detailed)
+
+### States
+
+**Empty (first time user):**
+```
+┌──────────────────────────────────────────┐
+│ Enter a domain to research...            │
+└──────────────────────────────────────────┘
+```
+
+**With history (dropdown open):**
+```
+┌──────────────────────────────────────────┐
+│ maximo-seo.ai                        ▾   │
+├──────────────────────────────────────────┤
+│ 🔍 Search domains...                      │
+│                                          │
+│ ── ⭐ Favorites ──────────────────────── │
+│ 🌐 maximo-seo.ai                         │
+│    Last: Apr 26 · 3 reports · ⭐          │
+│                                          │
+│ ── 🕐 Recent ─────────────────────────── │
+│ 🌐 competitor-one.com                     │
+│    Last: Apr 25 · 7 reports              │
+│ 🌐 competitor-two.io                      │
+│    Last: Apr 24 · 2 reports              │
+│                                          │
+│ ── 📋 All Domains (12) ──────────────── │
+│ 🌐 another-site.com        1 report      │
+│ 🌐 client-site.org         5 reports     │
+│ 🌐 blog-example.net        3 reports     │
+│                                          │
+│ ──────────────────────────────────────── │
+│ + Add new domain                          │
+│ 📥 Import domains from CSV                │
+└──────────────────────────────────────────┘
+```
+
+**Searching:**
+```
+┌──────────────────────────────────────────┐
+│ 🔍 comp                                  │
+├──────────────────────────────────────────┤
+│ 🌐 competitor-one.com       7 reports    │
+│ 🌐 competitor-two.io        2 reports    │
+│                                          │
+│ + Add "comp" as new domain                │
+└──────────────────────────────────────────┘
+```
+
+### Features
+- **Searchable** — Type to filter domains
+- **Grouped** — Favorites at top, then recent, then all
+- **Report count** — Shows how many reports exist per domain
+- **Last researched date** — When the domain was last analyzed
+- **Favorite toggle** — Star/unstar domains
+- **Add new** — Type a new domain and add it
+- **Import CSV** — Bulk import domains
+
+---
+
+## Report History Section (Under the Form)
+
+### Reports Tab Content
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│  📊 Reports for maximo-seo.ai                [📥 Export All]    │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                  │
+│  ┌─ Latest Report — Apr 26, 2026 ─────────────────────────────┐│
+│  │                                                             ││
+│  │  342 keywords · Avg pos: 18.4 · Top 10: 47 · Vis: 34.5%   ││
+│  │                                                             ││
+│  │  🤖 AI Summary:                                              ││
+│  │  "Visibility improved 4.2% since last report. 12 keywords   ││
+│  │   entered top 10. Main growth in 'AI SEO' cluster."         ││
+│  │                                                             ││
+│  │  Top Movers:                                                ││
+│  │  ▲ +12  ai seo tools           → #3    (vol: 4,400)       ││
+│  │  ▲ +8   seo automation         → #7    (vol: 2,900)       ││
+│  │  ▲ +5   ai content marketing   → #11   (vol: 1,800)       ││
+│  │  ▼ -3   website optimization   → #15   (vol: 3,200)       ││
+│  │  ▼ -7   seo agency             → #28   (vol: 5,100)       ││
+│  │                                                             ││
+│  │  [View Full Report]  [Compare with Previous]  [📥 Export]  ││
+│  └─────────────────────────────────────────────────────────────┘│
+│                                                                  │
+│  ┌─ Report History ───────────────────────────────────────────┐ │
+│  │                                                             │ │
+│  │  Date         │ Keywords │ Avg Pos │ Top 10 │ Vis    │     │ │
+│  │  ─────────────┼──────────┼─────────┼────────┼────────┤     │ │
+│  │  Apr 26, 2026 │   342    │  18.4   │   47   │ 34.5%  │ 📊  │ │
+│  │  Apr 25, 2026 │   335    │  19.6   │   35   │ 30.3%  │ 📊  │ │
+│  │  Apr 24, 2026 │   330    │  20.1   │   32   │ 28.7%  │ 📊  │ │
+│  │                                                             │ │
+│  │  [Load more]                                                │ │
+│  │                                                             │ │
+│  └─────────────────────────────────────────────────────────────┘ │
+│                                                                  │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+### Trends Tab Content
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│  📈 Trends for maximo-seo.ai              [7d] [30d] [90d] [1y]│
+├─────────────────────────────────────────────────────────────────┤
+│                                                                  │
+│  Visibility Over Time                                            │
+│  40% ┤                                                           │
+│  35% ┤                                          ●────●          │
+│  30% ┤                              ●────●────●                  │
+│  25% ┤                  ●────●────●                              │
+│  20% ┤      ●────●────●                                         │
+│  15% ┤──●──●                                                     │
+│      └──┬────┬────┬────┬────┬────┬────┬────┬────┬────┬──        │
+│        Mar 1  Mar 8 Mar 15 Mar 22 Mar 29 Apr 5 Apr 12 Apr 19 Apr 26│
+│                                                                  │
+│  Keyword Position Distribution                                   │
+│  ┌──────────────────────────────────────────┐                    │
+│  │  Top 3:    ████████░░░░░░░░░░░░  12      │                    │
+│  │  Top 10:   █████████████░░░░░░░  47      │                    │
+│  │  Top 30:   ██████████████████░░  128     │                    │
+│  │  Top 100:  ████████████████████  342     │                    │
+│  └──────────────────────────────────────────┘                    │
+│                                                                  │
+│  Top Growing Keywords (30 days)                                  │
+│  1. ai seo tools         #3   (+32 positions)   vol: 4,400      │
+│  2. seo automation        #7   (+21 positions)   vol: 2,900      │
+│  3. ai marketing          #11  (+18 positions)   vol: 6,100      │
+│                                                                  │
+│  Top Declining Keywords (30 days)                                │
+│  1. seo agency            #28  (-12 positions)   vol: 5,100      │
+│  2. website optimization  #15  (-5 positions)    vol: 3,200      │
+│                                                                  │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+### Clusters Tab Content
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│  🏷 Keyword Clusters for maximo-seo.ai         [+ Create Cluster]│
+├─────────────────────────────────────────────────────────────────┤
+│                                                                  │
+│  ┌───────────────────┐ ┌───────────────────┐ ┌────────────────┐ │
+│  │ 🏷 AI SEO          │ │ 🏷 Content Mktg   │ │ 🏷 Technical   │ │
+│  │ 45 keywords        │ │ 38 keywords        │ │ 28 keywords    │ │
+│  │ Avg pos: 12.3      │ │ Avg pos: 22.1      │ │ Avg pos: 15.8  │ │
+│  │ Vol: 24,500        │ │ Vol: 18,200        │ │ Vol: 12,300    │ │
+│  │ Trend: ▲ +8.2%     │ │ Trend: ▲ +3.1%     │ │ Trend: ▼ -1.2% │ │
+│  │ [View Keywords]    │ │ [View Keywords]    │ │ [View Keywords]│ │
+│  └───────────────────┘ └───────────────────┘ └────────────────┘ │
+│                                                                  │
+│  ┌───────────────────┐ ┌───────────────────┐                    │
+│  │ 🏷 Local SEO       │ │ 🏷 Link Building   │                    │
+│  │ 22 keywords        │ │ 15 keywords        │                    │
+│  │ Avg pos: 31.5      │ │ Avg pos: 28.7      │                    │
+│  │ Vol: 8,900         │ │ Vol: 6,400         │                    │
+│  │ Trend: ▲ +12.1%    │ │ Trend: ── 0.0%     │                    │
+│  │ [View Keywords]    │ │ [View Keywords]    │                    │
+│  └───────────────────┘ └───────────────────┘                    │
+│                                                                  │
+│  Unclustered: 194 keywords  [Auto-Cluster with AI]               │
+│                                                                  │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+### Competitors Tab Content
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│  ⚔ Competitor Comparison                    [+ Add Competitor]   │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                  │
+│  Comparing: maximo-seo.ai vs competitor-one.com vs comp-two.io  │
+│                                                                  │
+│  ┌────────────────┬──────────────┬──────────────┬─────────────┐ │
+│  │ Metric          │ maximo-seo   │ comp-one     │ comp-two    │ │
+│  ├────────────────┼──────────────┼──────────────┼─────────────┤ │
+│  │ Total KWs       │ 342          │ 589          │ 215         │ │
+│  │ Avg Position    │ 18.4         │ 14.2         │ 24.7        │ │
+│  │ Top 10          │ 47           │ 89           │ 22          │ │
+│  │ Visibility      │ 34.5%        │ 48.2%        │ 19.8%       │ │
+│  │ Search Volume   │ 124,500      │ 312,000      │ 67,200      │ │
+│  └────────────────┴──────────────┴──────────────┴─────────────┘ │
+│                                                                  │
+│  Keyword Overlap                                                 │
+│  ┌──────────────────────────────────────────────────┐           │
+│  │       maximo-seo       competitor-one             │           │
+│  │         (342)      ┌──────┐  (589)               │           │
+│  │     ┌────────┐     │  87  │   ┌────────┐         │           │
+│  │     │  198   │     │shared│   │  412   │         │           │
+│  │     │ unique │     └──────┘   │ unique │         │           │
+│  │     └────────┘         57      └────────┘         │           │
+│  │                    ┌──────┐                        │           │
+│  │                    │shared│    competitor-two      │           │
+│  │                    │ all 3│      (215)            │           │
+│  │                    └──────┘   ┌────────┐         │           │
+│  │                               │  121   │         │           │
+│  │                               │ unique │         │           │
+│  │                               └────────┘         │           │
+│  └──────────────────────────────────────────────────┘           │
+│                                                                  │
+│  Keyword Gaps (they rank, you don't):  [View 312 keywords]      │
+│  Keyword Opportunities (you rank better): [View 45 keywords]     │
+│                                                                  │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## Additional Features
+
+### 1. AI-Powered Insights
+
+After each report, an AI generates a summary highlighting:
+- Biggest position changes
+- New keywords discovered
+- Keywords about to enter top 10 (positions 11-15)
+- Recommended actions
+
+```
+┌─ 🤖 AI Insights ──────────────────────────────────────────────┐
+│                                                                 │
+│  📊 Report Summary for maximo-seo.ai (Apr 26, 2026)            │
+│                                                                 │
+│  ✅ Good news:                                                   │
+│  • 12 keywords moved into top 10 this week                     │
+│  • "AI SEO" cluster is your fastest growing topic (+8.2%)      │
+│  • Total visibility up 4.2% — consistent upward trend          │
+│                                                                 │
+│  ⚠️ Watch out:                                                   │
+│  • "seo agency" dropped 12 positions — check for lost backlinks│
+│  • 5 keywords at position 11-15 — close to top 10 breakthrough │
+│                                                                 │
+│  💡 Recommendations:                                             │
+│  • Create content targeting "ai seo tools" cluster — high ROI  │
+│  • Build internal links to pages ranking 11-15                  │
+│  • Investigate "seo agency" ranking drop — possible algorithm   │
+│                                                                 │
+│  [Generate Detailed Strategy]  [Send to n8n]                    │
+│                                                                 │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+### 2. Scheduled Reports
+
+```
+┌─ ⏰ Scheduled Reports ─────────────────────────────────────────┐
+│                                                                 │
+│  🌐 maximo-seo.ai      Weekly (Monday 6:00 AM)     🟢 Active   │
+│  🌐 competitor-one.com  Weekly (Monday 6:00 AM)     🟢 Active   │
+│  🌐 competitor-two.io   Monthly (1st, 6:00 AM)     🟢 Active   │
+│                                                                 │
+│  [+ Add Schedule]                                               │
+│                                                                 │
+│  Notification settings:                                         │
+│  ☑ Email when report completes                                  │
+│  ☑ Telegram notification via bot                                │
+│  ☐ n8n webhook trigger                                          │
+│                                                                 │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+### 3. Quick Actions Bar
+
+```
+┌─ Quick Actions ────────────────────────────────────────────────┐
+│                                                                 │
+│  [🔄 Re-run Report]  [📊 Compare Dates]  [📥 Export CSV]       │
+│  [🤖 AI Analysis]    [📧 Share Report]    [📋 Copy to Obsidian] │
+│  [🔗 Send to n8n]    [⭐ Favorite KWs]    [🏷 Auto-Cluster]    │
+│                                                                 │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+### 4. Keyword Detail Modal
+
+When clicking a keyword in any table:
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│  🔍 "ai seo tools"                                      [✕]    │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                  │
+│  Position: #3          Search Volume: 4,400/mo                   │
+│  Change: ▲ +12         Difficulty: 42/100                        │
+│  CPC: $3.20            Intent: Commercial                        │
+│  Ranking URL: /blog/ai-seo-tools-guide                           │
+│                                                                  │
+│  Position History (30 days)                                      │
+│  #1  ┤                                                           │
+│  #5  ┤                                          ●                │
+│  #10 ┤                              ●────●────●                  │
+│  #15 ┤──●────●────●────●────●────●                               │
+│      └──┬────┬────┬────┬────┬────┬────┬────┬────┬──              │
+│                                                                  │
+│  SERP Competitors for this keyword:                              │
+│  #1  semrush.com/blog/ai-seo                                     │
+│  #2  searchengineland.com/ai-seo-tools                           │
+│  #3  maximo-seo.ai/blog/ai-seo-tools-guide  ← You               │
+│  #4  ahrefs.com/blog/ai-seo                                      │
+│                                                                  │
+│  [Track this KW ⭐]  [View Ranking Page]  [SERP Analysis]        │
+│                                                                  │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+### 5. Domain Import &amp; Bulk Operations
+
+```
+┌─ Import Domains ───────────────────────────────────────────────┐
+│                                                                 │
+│  ┌───────────────────────────────────────────────────────────┐ │
+│  │  Paste domains (one per line) or upload CSV:              │ │
+│  │                                                           │ │
+│  │  maximo-seo.ai                                            │ │
+│  │  competitor-one.com                                       │ │
+│  │  competitor-two.io                                        │ │
+│  │                                                           │ │
+│  └───────────────────────────────────────────────────────────┘ │
+│                                                                 │
+│  [📁 Upload CSV]  [Import &amp; Run Reports]                        │
+│                                                                 │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## API Endpoints
+
+```
+GET    /api/kw/domains                     — List all domains
+POST   /api/kw/domains                     — Add new domain
+GET    /api/kw/domains/:id                 — Get domain details
+DELETE /api/kw/domains/:id                 — Remove domain
+PATCH  /api/kw/domains/:id/favorite        — Toggle favorite
+
+POST   /api/kw/reports                     — Run new KW report
+GET    /api/kw/reports?domain_id=xxx       — List reports for domain
+GET    /api/kw/reports/:id                 — Get full report data
+GET    /api/kw/reports/:id/export/csv      — Export as CSV
+GET    /api/kw/reports/:id/export/pdf      — Export as PDF
+
+GET    /api/kw/keywords?report_id=xxx      — List keywords in report
+PATCH  /api/kw/keywords/:id/favorite       — Toggle favorite keyword
+
+GET    /api/kw/clusters?domain_id=xxx      — List clusters
+POST   /api/kw/clusters/auto               — AI auto-cluster keywords
+
+GET    /api/kw/compare?domain_ids=a,b,c    — Compare domains
+GET    /api/kw/trends?domain_id=xxx&amp;days=30 — Trend data
+
+POST   /api/kw/schedules                   — Create scheduled report
+GET    /api/kw/schedules                   — List schedules
+DELETE /api/kw/schedules/:id               — Cancel schedule
+
+POST   /api/kw/sync/obsidian               — Sync report to Obsidian
+POST   /api/kw/sync/github                 — Push report to GitHub
+```
+
+---
+
+## Supabase Row-Level Security
+
+```sql
+-- Enable RLS
+ALTER TABLE domains ENABLE ROW LEVEL SECURITY;
+ALTER TABLE kw_reports ENABLE ROW LEVEL SECURITY;
+ALTER TABLE kw_entries ENABLE ROW LEVEL SECURITY;
+
+-- Policies (user can only see their own data)
+CREATE POLICY "Users see own domains"
+  ON domains FOR ALL
+  USING (auth.uid() = user_id);
+
+CREATE POLICY "Users see own reports"
+  ON kw_reports FOR ALL
+  USING (domain_id IN (SELECT id FROM domains WHERE user_id = auth.uid()));
+```
+
+---
+
+## Implementation Roadmap
+
+### Phase 1: Data Layer (Week 1)
+- [ ] Create Supabase tables and indexes
+- [ ] Set up RLS policies
+- [ ] Build API endpoints for domains and reports
+- [ ] Create Obsidian sync function
+- [ ] Create GitHub sync function
+- [ ] Test data flow: report → Supabase → Obsidian → GitHub
+
+### Phase 2: Domain Dropdown (Week 2)
+- [ ] Build searchable dropdown component
+- [ ] Add favorites, recent, all groups
+- [ ] Show report count and last researched date per domain
+- [ ] Add "new domain" and "import CSV" options
+- [ ] Wire to Supabase domains table
+
+### Phase 3: Report History (Week 2-3)
+- [ ] Build report list under the form
+- [ ] Create latest report card with AI summary and top movers
+- [ ] Build report history table with pagination
+- [ ] Add export buttons (CSV, PDF, Obsidian, GitHub)
+- [ ] Create full report detail view
+
+### Phase 4: Trends &amp; Charts (Week 3)
+- [ ] Build visibility trend chart (Chart.js or Recharts)
+- [ ] Create position distribution bars
+- [ ] Add top growing/declining keyword lists
+- [ ] Time range selector (7d, 30d, 90d, 1y)
+
+### Phase 5: Clusters &amp; Competitors (Week 4)
+- [ ] Build keyword cluster cards
+- [ ] Add AI auto-clustering feature
+- [ ] Create competitor comparison table
+- [ ] Build keyword overlap Venn diagram
+- [ ] Add keyword gap analysis
+
+### Phase 6: AI &amp; Automation (Week 5)
+- [ ] Integrate AI insights generation (after each report)
+- [ ] Build scheduled reports system
+- [ ] Add Telegram notifications (via your bot)
+- [ ] Connect n8n webhook triggers
+- [ ] Build keyword detail modal
+
+### Phase 7: Polish (Week 6)
+- [ ] Responsive design for all new components
+- [ ] Loading states, error handling, empty states
+- [ ] Keyboard shortcuts
+- [ ] Dark mode support
+- [ ] Performance optimization (lazy loading, pagination)
+- [ ] Full testing and QA
+
+---
+
+## Feature Priority Matrix
+
+| Feature | Priority | Effort | Impact |
+|---|---|---|---|
+| Domain dropdown with history | 🔴 P0 | Medium | High — core UX improvement |
+| Report history under form | 🔴 P0 | Medium | High — core requirement |
+| Supabase storage | 🔴 P0 | Low | High — enables everything |
+| Obsidian sync | 🟡 P1 | Low | Medium — knowledge base |
+| GitHub sync | 🟡 P1 | Low | Medium — versioning &amp; backup |
+| Quick stats cards | 🟡 P1 | Low | High — instant overview |
+| AI insights summary | 🟡 P1 | Medium | High — actionable intelligence |
+| Trends charts | 🟡 P1 | Medium | High — visual progress tracking |
+| KW clusters | 🟢 P2 | Medium | Medium — content strategy |
+| Competitor comparison | 🟢 P2 | High | High — strategic planning |
+| Scheduled reports | 🟢 P2 | Medium | Medium — automation |
+| Keyword detail modal | 🟢 P2 | Low | Medium — deep dive capability |
+| Bulk domain import | 🟢 P2 | Low | Low — convenience |
+| SERP analysis per KW | 🔵 P3 | High | Medium — advanced research |
+</textarea>
+  </section>
 
   <!-- Last run status bar -->
   <div class="kwr-status-bar" id="kwr-status-bar">
@@ -14844,6 +15596,43 @@ function downloadTaskManagerRedesignPrompt() {
   a.click();
   setTimeout(function(){ try{ URL.revokeObjectURL(a.href); a.remove(); }catch(_){} }, 1000);
   try{ showToast('Task Manager redesign prompt downloaded','success'); }catch(_){}
+}
+
+
+function getKwResearchRedesignPromptText() {
+  var el = document.getElementById('kw-research-redesign-prompt');
+  return el ? el.value : '';
+}
+function copyKwResearchRedesignPrompt() {
+  var text = getKwResearchRedesignPromptText();
+  if(!text) return;
+  var done = function(){ try{ showToast('KW Research redesign prompt copied','success'); }catch(_){} };
+  if(navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(text).then(done).catch(function(){ fallbackCopyKwResearchPrompt(text); });
+  else fallbackCopyKwResearchPrompt(text);
+}
+function fallbackCopyKwResearchPrompt(text) {
+  var ta = document.createElement('textarea');
+  ta.value = text;
+  ta.setAttribute('readonly','');
+  ta.style.position = 'fixed';
+  ta.style.left = '-9999px';
+  document.body.appendChild(ta);
+  ta.select();
+  try { document.execCommand('copy'); } catch(_) {}
+  ta.remove();
+  try{ showToast('KW Research redesign prompt copied','success'); }catch(_){}
+}
+function downloadKwResearchRedesignPrompt() {
+  var text = getKwResearchRedesignPromptText();
+  if(!text) return;
+  var blob = new Blob([text], {type:'text/markdown;charset=utf-8'});
+  var a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'kw-research-page-redesign-plan.md';
+  document.body.appendChild(a);
+  a.click();
+  setTimeout(function(){ try{ URL.revokeObjectURL(a.href); a.remove(); }catch(_){} }, 1000);
+  try{ showToast('KW Research redesign prompt downloaded','success'); }catch(_){}
 }
 
 function initTasksTab() {
