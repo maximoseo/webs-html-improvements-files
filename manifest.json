@@ -1,0 +1,19 @@
+{
+  "name": "HTML Redesign Dashboard",
+  "short_name": "Dashboard",
+  "description": "Manage HTML redesign projects and workflows",
+  "start_url": "/index.html",
+  "display": "standalone",
+  "background_color": "#08090A",
+  "theme_color": "#0a0b0d",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'%3E%3Crect width='192' height='192' rx='46' fill='%237170FF'/%3E%3Cpath d='M96 40L40 68l56 28 56-28-56-28z' fill='none' stroke='white' stroke-width='14' stroke-linejoin='round'/%3E%3Cpath d='M40 104l56 28 56-28' fill='none' stroke='white' stroke-width='14' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='M40 140l56 28 56-28' fill='none' stroke='white' stroke-width='14' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E",
+      "sizes": "192x192",
+      "type": "image/svg+xml"
+    }
+  ],
+  "categories": ["productivity", "developer tools"],
+  "lang": "en"
+}
