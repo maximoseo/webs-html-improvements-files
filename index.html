@@ -15855,15 +15855,30 @@ function toggleTheme(){
 })();
 
 // === MOBILE DRAWER ===
+function _syncMobileMenuButton(isOpen){
+  var btn = document.querySelector('.hamburger-btn');
+  if(btn) btn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+}
 function openMobileMenu(){
-  document.getElementById('mobile-drawer').classList.add('open');
-  document.getElementById('mobile-overlay').classList.add('active');
+  var drawer = document.getElementById('mobile-drawer');
+  var overlay = document.getElementById('mobile-overlay');
+  var isOpen = drawer && drawer.classList.contains('open');
+  if(isOpen){
+    closeMobileMenu();
+    return;
+  }
+  if(drawer) drawer.classList.add('open');
+  if(overlay) overlay.classList.add('active');
   document.body.classList.add('scroll-locked');
+  _syncMobileMenuButton(true);
 }
 function closeMobileMenu(){
-  document.getElementById('mobile-drawer').classList.remove('open');
-  document.getElementById('mobile-overlay').classList.remove('active');
+  var drawer = document.getElementById('mobile-drawer');
+  var overlay = document.getElementById('mobile-overlay');
+  if(drawer) drawer.classList.remove('open');
+  if(overlay) overlay.classList.remove('active');
   document.body.classList.remove('scroll-locked');
+  _syncMobileMenuButton(false);
 }
 document.addEventListener('keydown', function(e){ if(e.key==='Escape') closeMobileMenu(); });
 
