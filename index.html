@@ -669,7 +669,29 @@ img,svg,video,canvas{max-width:100%;height:auto}
 
 /* Minimum touch targets (WCAG 2.5.8) on touch devices */
 @media (hover:none) and (pointer:coarse){
-  button,.action-btn,a.action-btn,.header-menu-btn,.hdr-sync-btn,input[type="button"],input[type="submit"]{min-height:40px}
+  button,.action-btn,a.action-btn,.header-menu-btn,.hdr-sync-btn,input[type="button"],input[type="submit"],.bottom-nav-item,.bn-fab-btn{min-height:44px;min-width:44px}
+}
+
+/* Universal tap highlight removal + active feedback */
+*{ -webkit-tap-highlight-color:transparent }
+button:active,.action-btn:active,.bottom-nav-item:active,.bn-fab-btn:active,.card-actions .action-btn:active{ transform:scale(0.96); transition:transform 0.08s }
+
+/* iOS input zoom prevention + overscroll containment */
+input,select,textarea{ font-size:16px !important }
+body,.modal,.drawer,.mobile-drawer{ overscroll-behavior-y:contain }
+.scrollable{ -webkit-overflow-scrolling:touch }
+
+/* iOS safe-area + dynamic viewport */
+@supports (height:100svh){
+  .modal,.fullscreen{ height:100svh; max-height:100dvh }
+}
+
+/* Touch-friendly card actions on mobile */
+@media(max-width:640px){
+  .card-actions{ display:grid !important; grid-template-columns:repeat(3,1fr) !important; gap:8px !important; padding:0 16px 14px !important }
+  .card-actions .action-btn{ justify-content:center !important; min-height:44px !important; font-size:13px !important }
+  .project-card{ border-radius:16px !important; margin-bottom:12px !important }
+  .card-header{ padding:14px 16px !important }
 }
 
 /* Make horizontally scrollable rows actually safe (tabs, long chips) */
@@ -5303,6 +5325,23 @@ body.light .stat-card{background:rgba(0,0,0,0.03)}
 .mobile-nav-item--danger:hover{background:rgba(244,63,94,0.12);color:#ffe4e6}
 .hamburger-btn{display:none;align-items:center;justify-content:center;width:36px;height:36px;border-radius:10px;border:1px solid var(--border,rgba(255,255,255,0.08));background:transparent;cursor:pointer;color:var(--text-secondary);flex-shrink:0}
 @media(max-width:768px){.hamburger-btn{display:inline-flex}}
+
+/* === BOTTOM NAVIGATION BAR === */
+.bottom-nav{display:none;position:fixed;bottom:0;left:0;right:0;height:64px;padding-bottom:env(safe-area-inset-bottom);background:rgba(11,12,16,0.92);backdrop-filter:blur(20px) saturate(150%);-webkit-backdrop-filter:blur(20px) saturate(150%);border-top:1px solid rgba(255,255,255,0.07);z-index:900}
+.bottom-nav-inner{display:flex;align-items:stretch;height:64px;max-width:480px;margin:0 auto}
+.bottom-nav-item{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;min-height:48px;color:var(--muted,#8e95a3);background:transparent;border:none;font-size:10px;font-weight:600;cursor:pointer;position:relative;transition:color 0.15s}
+.bottom-nav-item.active{color:#7170ff}
+.bottom-nav-item svg{width:22px;height:22px;stroke-width:2}
+.bottom-nav-item .bn-label{font-size:10px;font-weight:600;letter-spacing:0.2px}
+.bottom-nav-fab{position:relative;flex:0 0 64px;display:flex;align-items:center;justify-content:center}
+.bn-fab-btn{width:52px;height:52px;border-radius:50%;border:none;background:linear-gradient(135deg,#7170ff,#5b5aee);color:#fff;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 16px rgba(113,112,255,0.35);cursor:pointer;transition:transform 0.15s,box-shadow 0.15s;position:relative;top:-10px}
+.bn-fab-btn:active{transform:scale(0.9)}
+.bn-fab-btn svg{width:22px;height:22px}
+@media(max-width:768px){
+  .bottom-nav{display:block}
+  .footer{padding-bottom:calc(80px + env(safe-area-inset-bottom))}
+  body{padding-bottom:calc(64px + env(safe-area-inset-bottom))}
+}
 
 /* === SKELETON LOADING === */
 @keyframes skeleton-shimmer{0%{background-position:-200% 0}100%{background-position:200% 0}}
@@ -13036,6 +13075,54 @@ document.addEventListener('click', function(ev){
     if (isFixer) runPageInit('fixer', window.initFixerPage);
     if (isRadar) runPageInit('radar', window.initRadarPage);
     if (isTask) runPageInit('tasks', window.initTasksTab, 50);
+    // Update mobile bottom nav active state
+    if (typeof updateBottomNav === 'function') updateBottomNav(name);
+  };
+
+  // ---- Mobile Bottom Navigation ----
+  window.updateBottomNav = function(page) {
+    const nav = document.getElementById('bottom-nav');
+    if (!nav) return;
+    const items = nav.querySelectorAll('.bottom-nav-item');
+    items.forEach(function(item) {
+      var isActive = item.dataset.page === page;
+      item.classList.toggle('active', isActive);
+    });
+  };
+
+  window.toggleFabMenu = function() {
+    // Quick actions: sync, global search, expand all
+    var actions = [
+      {label:'Sync', icon:'↻', run:function(){ fullSync(); }},
+      {label:'Search', icon:'⌕', run:function(){ openGlobalSearch(); }},
+      {label:'Expand All', icon:'■', run:function(){ var btn=document.getElementById('bulk-toggle-projects'); if(btn) toggleAllProjects(btn); }}
+    ];
+    showActionMenu(actions);
+  };
+
+  window.showActionMenu = function(actions) {
+    // Remove existing
+    var existing = document.getElementById('fab-action-menu');
+    if (existing) { existing.remove(); return; }
+    var menu = document.createElement('div');
+    menu.id = 'fab-action-menu';
+    menu.style.cssText = 'position:fixed;bottom:calc(90px + env(safe-area-inset-bottom));left:50%;transform:translateX(-50%);background:rgba(22,24,33,0.96);backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,0.1);border-radius:16px;padding:8px;z-index:920;display:flex;gap:8px;box-shadow:0 8px 32px rgba(0,0,0,0.5);';
+    actions.forEach(function(a){
+      var b = document.createElement('button');
+      b.style.cssText = 'display:flex;flex-direction:column;align-items:center;gap:4px;min-width:64px;min-height:64px;padding:8px;border-radius:12px;border:none;background:transparent;color:#c4cad4;font-size:11px;font-weight:600;cursor:pointer;transition:background 0.15s;';
+      b.innerHTML = '<span style="font-size:20px;line-height:1">'+a.icon+'</span><span>'+a.label+'</span>';
+      b.onmouseenter = function(){ this.style.background='rgba(255,255,255,0.06)'; };
+      b.onmouseleave = function(){ this.style.background='transparent'; };
+      b.onclick = function(){ a.run(); menu.remove(); };
+      menu.appendChild(b);
+    });
+    // Close on outside click
+    setTimeout(function(){
+      document.addEventListener('click', function closeMenu(e){
+        if (!menu.contains(e.target)) { menu.remove(); document.removeEventListener('click', closeMenu); }
+      });
+    }, 10);
+    document.body.appendChild(menu);
   };
 
   // ---- Init ----
@@ -21839,6 +21926,33 @@ body.light .last-sync-meta{color:#64748B !important}
   color:#ffffff !important;
 }
 </style>
+
+<!-- Bottom Navigation Bar -->
+<nav class="bottom-nav" id="bottom-nav" aria-label="Main navigation">
+  <div class="bottom-nav-inner">
+    <button class="bottom-nav-item active" data-page="projects" onclick="showPage('projects');updateBottomNav('projects')" aria-label="Projects">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+      <span class="bn-label">Projects</span>
+    </button>
+    <button class="bottom-nav-item" data-page="fixer" onclick="showPage('fixer');updateBottomNav('fixer')" aria-label="N8N Fixer">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+      <span class="bn-label">Fixer</span>
+    </button>
+    <div class="bottom-nav-fab">
+      <button class="bn-fab-btn" onclick="toggleFabMenu()" aria-label="Quick actions">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+      </button>
+    </div>
+    <button class="bottom-nav-item" data-page="radar" onclick="showPage('radar');updateBottomNav('radar')" aria-label="Skills Radar">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
+      <span class="bn-label">Radar</span>
+    </button>
+    <button class="bottom-nav-item" data-page="more" onclick="openMobileMenu();updateBottomNav('more')" aria-label="More">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg>
+      <span class="bn-label">More</span>
+    </button>
+  </div>
+</nav>
 
 </body>
 </html>
