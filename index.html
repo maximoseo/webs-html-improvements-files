@@ -14676,6 +14676,11 @@ async function downloadPromptPreviewShot(){
     applySort(sel.value);
     // Re-apply when grid mutates (new cards added)
     var mo = new MutationObserver(function(){
+      // PROJECT_SORT_SELF_MUTATION_GUARD_2026_04_26: ignore childList
+      // mutations caused by applySort() itself. Re-appending cards triggers
+      // this observer; without the guard it schedules repeated reorders and
+      // makes opened project cards blink.
+      if (window.__projectSortApplying) return;
       clearTimeout(window.__sortDebounce);
       window.__sortDebounce = setTimeout(function(){ applySort(sel.value); }, 200);
     });
@@ -14684,6 +14689,7 @@ async function downloadPromptPreviewShot(){
   function applySort(mode){
     var grid = document.getElementById('projects-grid');
     if (!grid) return;
+    if (window.__projectSortApplying) return;
     var cards = Array.from(grid.children).filter(function(c){ return c.nodeType === 1 && !c.classList.contains('skel-row'); });
     if (cards.length < 2) return;
     var keyName = function(el){
@@ -14709,7 +14715,14 @@ async function downloadPromptPreviewShot(){
         default:       return keyDate(b) - keyDate(a);
       }
     });
-    sorted.forEach(function(c){ grid.appendChild(c); });
+    var orderChanged = sorted.some(function(c,i){ return cards[i] !== c; });
+    if (!orderChanged) return;
+    try {
+      window.__projectSortApplying = true;
+      sorted.forEach(function(c){ grid.appendChild(c); });
+    } finally {
+      window.__projectSortApplying = false;
+    }
   }
 
   /* ───────── R8: KWR ETA ───────── */
