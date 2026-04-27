@@ -3178,6 +3178,37 @@ body{{font-family:Arial;padding:24px}}h1{{color:#333}}pre{{background:#f4f4f4;pa
             run_id = (qs.get('run_id') or [''])[0].strip()
             if not run_id:
                 return json_response(self, 400, {'ok': False, 'error': 'run_id required'})
+            # SAFE_UI_API_FIXES_2026_04_26: flat reports are completed persisted
+            # artifacts from outputs/kwr_<slug>.xlsx, not live jobs. Surface a
+            # stable completed status instead of a misleading 404.
+            if run_id.startswith('flat:'):
+                slug = run_id[5:]
+                if not re.fullmatch(r'[A-Za-z0-9._-]+', slug or ''):
+                    return json_response(self, 400, {'ok': False, 'error': 'invalid flat report id'})
+                base_dir = os.path.realpath(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'outputs'))
+                fp = os.path.realpath(os.path.join(base_dir, f'kwr_{slug}.xlsx'))
+                if not (fp.startswith(base_dir + os.sep) and os.path.isfile(fp)):
+                    return json_response(self, 404, {'ok': False, 'error': 'flat report not found'})
+                try:
+                    size_kb = round(os.path.getsize(fp) / 1024.0, 1)
+                except Exception:
+                    size_kb = 0
+                try:
+                    updated_at = datetime.datetime.utcfromtimestamp(os.path.getmtime(fp)).isoformat() + 'Z'
+                except Exception:
+                    updated_at = ''
+                return json_response(self, 200, {
+                    'ok': True,
+                    'run_id': run_id,
+                    'status': 'completed',
+                    'stage': 'persisted_report',
+                    'progress': 100,
+                    'message': 'Flat KWR report is available for download.',
+                    'worksheet_name': f'kwr_{slug}',
+                    'file_size_kb': size_kb,
+                    'updated_at': updated_at,
+                    'flat_file': f'kwr_{slug}.xlsx',
+                })
             job = kwr_backend.get_status(run_id)
             if job is None:
                 return json_response(self, 404, {'ok': False, 'error': f'run {run_id} not found'})

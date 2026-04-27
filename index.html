@@ -7033,6 +7033,97 @@ function showErrorToast(msg) {
     margin: 0 !important;
   }
 }
+
+/* SAFE_UI_API_FIXES_2026_04_26: non-destructive tour/responsive/contrast hardening */
+html,body{
+  max-width:100%;
+  overflow-x:clip;
+}
+@supports not (overflow-x:clip){
+  html,body{overflow-x:hidden;}
+}
+.mobile-drawer:not(.open){
+  right:auto !important;
+  left:100% !important;
+  transform:none !important;
+  visibility:hidden !important;
+  pointer-events:none !important;
+  contain:layout paint style !important;
+}
+.mobile-drawer.open{
+  right:0 !important;
+  left:auto !important;
+  visibility:visible !important;
+  pointer-events:auto !important;
+}
+.mobile-overlay:not(.active){
+  visibility:hidden !important;
+  pointer-events:none !important;
+}
+.radar-drawer:not(.open){
+  right:auto !important;
+  left:100% !important;
+  transform:none !important;
+  visibility:hidden !important;
+  pointer-events:none !important;
+  contain:layout paint style !important;
+}
+.radar-drawer.open{
+  right:0 !important;
+  left:auto !important;
+  transform:translateX(0) !important;
+  visibility:visible !important;
+}
+.deploy-status-panel.collapsed{
+  width:auto !important;
+  max-width:min(220px,calc(100vw - 24px)) !important;
+  opacity:.72;
+}
+.deploy-status-panel.collapsed .deploy-status-header{
+  padding:6px 8px !important;
+  border-bottom:0 !important;
+}
+.deploy-status-panel.collapsed .deploy-status-title{
+  max-width:128px;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+@media(max-width:900px){
+  .deploy-status-panel{display:none !important;}
+}
+body.light .project-card h3,
+body.light .project-card .project-title,
+body.light .project-card [class*="project-name"],
+body.light .stat-number,
+body.light .section-title,
+body.light .review-notes,
+body.light .comments-body,
+body.light .kwr-report-head .domain{
+  color:#111827 !important;
+}
+body.light .view-btn,
+body.light .header-menu-btn,
+body.light .action-btn,
+body.light .preview-cta,
+body.light .deploy-status-toggle,
+body.light .comments-meta,
+body.light .project-meta,
+body.light .meta-tag,
+body.light .file-size,
+body.light .kwr-report-meta,
+body.light .kwr-badge{
+  color:#374151 !important;
+  border-color:rgba(17,24,39,.18) !important;
+}
+body.light .view-btn.active,
+body.light .action-btn.primary{
+  color:#fff !important;
+}
+#tour-backdrop.open{display:block;max-width:100vw;overflow:hidden}
+.tour-tooltip{box-sizing:border-box;max-height:calc(100vh - 32px);overflow:auto}
+/* END SAFE_UI_API_FIXES_2026_04_26 */
+
 </style>
 </head>
 
@@ -17584,20 +17675,34 @@ async function downloadPromptPreviewShot(){
       els.sp.style.cssText = 'display:none';
     } else {
       var pad = 8;
-      els.sp.style.cssText = 'position:fixed;top:'+(r.top-pad)+'px;left:'+(r.left-pad)+'px;width:'+(r.width+pad*2)+'px;height:'+(r.height+pad*2)+'px;border-radius:12px;box-shadow:0 0 0 9999px rgba(0,0,0,0.65),0 0 0 3px var(--gold,#7170ff);transition:all .3s ease;pointer-events:none;z-index:10501';
+      var spotTop = Math.max(8, Math.min(window.innerHeight - 8, r.top - pad));
+      var spotLeft = Math.max(8, Math.min(window.innerWidth - 8, r.left - pad));
+      var spotWidth = Math.max(0, Math.min(window.innerWidth - spotLeft - 8, r.width + pad * 2));
+      var spotHeight = Math.max(0, Math.min(window.innerHeight - spotTop - 8, r.height + pad * 2));
+      if (spotWidth < 8 || spotHeight < 8) {
+        els.sp.style.cssText = 'display:none';
+      } else {
+        els.sp.style.cssText = 'position:fixed;top:'+spotTop+'px;left:'+spotLeft+'px;width:'+spotWidth+'px;height:'+spotHeight+'px;border-radius:12px;box-shadow:0 0 0 9999px rgba(0,0,0,0.65),0 0 0 3px var(--gold,#7170ff);transition:all .3s ease;pointer-events:none;z-index:10501';
+      }
     }
-    // Tooltip: prefer below anchor; if would overflow, show above
-    var ttW = 320, ttH = 160;
-    var top = r.bottom + 14, left = Math.min(window.innerWidth - ttW - 16, Math.max(16, r.left));
-    if (top + ttH > window.innerHeight) top = Math.max(16, r.top - ttH - 14);
-    if (r.width === 0) { top = window.innerHeight/2 - ttH/2; left = window.innerWidth/2 - ttW/2; }
-    els.tt.style.cssText = 'position:fixed;top:'+top+'px;left:'+left+'px;width:'+ttW+'px';
+    // Tooltip: prefer below anchor; clamp all edges so it never clips off-screen.
+    var margin = Math.min(16, Math.max(8, Math.floor(window.innerWidth / 24)));
+    var availW = Math.max(1, window.innerWidth - margin * 2);
+    var availH = Math.max(1, window.innerHeight - margin * 2);
+    var ttW = Math.min(320, availW);
+    var ttH = Math.min(180, Math.max(120, availH));
+    var top = r.bottom + 14;
+    var left = r.left;
+    if (top + ttH > window.innerHeight - margin) top = r.top - ttH - 14;
+    if (r.width === 0 || top < margin) top = Math.max(margin, Math.min(window.innerHeight - ttH - margin, (window.innerHeight - ttH) / 2));
+    left = Math.max(margin, Math.min(window.innerWidth - ttW - margin, left));
+    els.tt.style.cssText = 'position:fixed;top:'+top+'px;left:'+left+'px;width:'+ttW+'px;max-width:calc(100vw - '+(margin*2)+'px);max-height:calc(100vh - '+(margin*2)+'px);overflow:auto;box-sizing:border-box';
     els.tt.innerHTML = '<h4>'+step.title+'</h4><p>'+step.body+'</p>'
       + '<div class="tour-actions">'
       +   '<span class="tour-step">'+(idx+1)+' / '+total+'</span>'
       +   '<div style="display:flex;gap:6px">'
-      +     '<button data-act="skip">Skip</button>'
-      +     '<button data-act="next" class="primary">'+(idx === total-1 ? 'Done' : 'Next →')+'</button>'
+      +     '<button type="button" data-act="skip">Skip</button>'
+      +     '<button type="button" data-act="next" class="primary">'+(idx === total-1 ? 'Done' : 'Next →')+'</button>'
       +   '</div></div>';
     return true;
   }
@@ -17606,33 +17711,38 @@ async function downloadPromptPreviewShot(){
     var els = buildTour();
     var i = 0;
     var onResize = null;
+    var esc = null;
     window.__tourActive = true;
+    var end = function(markDone){
+      window.__tourActive = false;
+      if (markDone !== false) setTourDone();
+      try { els.bd.classList.remove('open'); } catch(_){}
+      try { els.tt.innerHTML = ''; } catch(_){}
+      try { if (onResize) window.removeEventListener('resize', onResize); } catch(_){}
+      try { if (esc) document.removeEventListener('keydown', esc); } catch(_){}
+      try { window.toast && window.toast.info('Tour dismissed · Press Ctrl+K anytime'); } catch(_){}
+      setTimeout(function(){ try{ els.bd.remove(); }catch(_){} }, 30);
+    };
     var render = function(){
       var ok = positionTour(els, STEPS[i], i, STEPS.length);
       if (!ok && i < STEPS.length - 1){ i++; return render(); }
       els.bd.classList.add('open');
       els.tt.querySelectorAll('button').forEach(function(b){
-        b.addEventListener('click', function(){
+        b.addEventListener('click', function(e){
+          try { e.preventDefault(); e.stopPropagation(); } catch(_){}
           var act = b.getAttribute('data-act');
-          if (act === 'skip'){ end(); }
+          if (act === 'skip'){ end(true); }
           else if (act === 'next'){
             i++;
-            if (i >= STEPS.length){ end(); } else { render(); }
+            if (i >= STEPS.length){ end(true); } else { render(); }
           }
         });
       });
     };
-    var end = function(markDone){
-      window.__tourActive = false;
-      els.bd.classList.remove('open');
-      if (markDone !== false) setTourDone();
-      try { window.toast && window.toast.info('Tour complete · Press Ctrl+K anytime'); } catch(_){}
-      if (onResize) window.removeEventListener('resize', onResize);
-      setTimeout(function(){ try{ els.bd.remove(); }catch(_){} }, 300);
-    };
     window.dismissTour = end;
-    // Esc closes
-    document.addEventListener('keydown', function esc(e){ if (e.key==='Escape'){ end(); document.removeEventListener('keydown', esc); } });
+    // Esc closes and persists dismissal for returning users.
+    esc = function(e){ if (e.key==='Escape'){ end(true); } };
+    document.addEventListener('keydown', esc);
     // Reposition on resize
     onResize = function(){ positionTour(els, STEPS[i], i, STEPS.length); };
     window.addEventListener('resize', onResize);
