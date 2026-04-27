@@ -41,3 +41,17 @@ def test_dropdown_readability_selectors_are_in_final_qa_block():
     qa_block = HTML.split('<style id="dashboard-qa-fix-pass-2026-04-27">', 1)[1].split('</style>', 1)[0]
     for selector in ['select option', '[role="listbox"]', '[role="option"]', '[role="menuitem"]']:
         assert selector in qa_block
+
+
+def test_task_page_body_state_is_used_by_css_not_dead_state():
+    qa_block = HTML.split('<style id="dashboard-qa-fix-pass-2026-04-27">', 1)[1].split('</style>', 1)[0]
+    assert "document.body.classList.toggle('page-tasks-active', isTask);" in HTML
+    assert 'body.page-tasks-active #page-tasks' in qa_block
+
+
+def test_dropdown_readability_selectors_are_dashboard_scoped():
+    qa_block = HTML.split('<style id="dashboard-qa-fix-pass-2026-04-27">', 1)[1].split('</style>', 1)[0]
+    assert '[role="menuitem"]' in qa_block
+    assert '#main-content [role="menuitem"]' in qa_block or '.header [role="menuitem"]' in qa_block
+    assert '\n[role="menuitem"],' not in qa_block
+    assert '\n[role="option"],' not in qa_block

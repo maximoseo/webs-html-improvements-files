@@ -26,9 +26,9 @@ def test_kwr_history_panel_is_scoped_to_kwr_page_only():
 
 def test_task_manager_page_has_forced_visible_active_layout():
     assert 'DASHBOARD_QA_FIX_TASKS_VISIBLE_2026_04_27' in HTML
-    assert re.search(r'#page-tasks\.active\s*\{[^}]*display\s*:\s*block\s*!important', HTML, re.S)
-    assert re.search(r'#page-tasks\.active\s*\{[^}]*width\s*:\s*auto\s*!important', HTML, re.S)
-    assert re.search(r'#page-tasks\.active\s*\{[^}]*min-height\s*:\s*', HTML, re.S)
+    assert re.search(r'#page-tasks\.active\s*,\s*body\.page-tasks-active\s+#page-tasks\s*\{[^}]*display\s*:\s*block\s*!important', HTML, re.S)
+    assert re.search(r'#page-tasks\.active\s*,\s*body\.page-tasks-active\s+#page-tasks\s*\{[^}]*width\s*:\s*auto\s*!important', HTML, re.S)
+    assert re.search(r'#page-tasks\.active\s*,\s*body\.page-tasks-active\s+#page-tasks\s*\{[^}]*min-height\s*:\s*', HTML, re.S)
     assert 'DASHBOARD_QA_FIX_TASKS_REPARENT_2026_04_27' in HTML
     assert 'mainContent.insertBefore(tasksPage' in HTML or 'mainContent.appendChild(tasksPage' in HTML
 
