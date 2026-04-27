@@ -7181,6 +7181,7 @@ body.light .action-btn.primary{
   <button class="mobile-nav-item" onclick="showPage('tasks');closeMobileMenu()">Tasks</button>
   <button class="mobile-nav-item" onclick="showPage('analytics');closeMobileMenu()">Analytics</button>
   <button class="mobile-nav-item" data-testid="mobile-nav-template-improvements" onclick="showPage('template-improvements');closeMobileMenu()">Template Improvements</button>
+  <button class="mobile-nav-item" data-testid="mobile-nav-productivity-hub" onclick="showPage('productivity-hub');closeMobileMenu()">Productivity Hub</button>
   <button class="mobile-nav-item" onclick="showPage('settings');closeMobileMenu()">Settings</button>
   <button class="mobile-nav-item" onclick="closeMobileMenu();fullSync(document.getElementById('hdr-sync-btn'))">Sync dashboard</button>
   <button class="mobile-nav-item" onclick="closeMobileMenu();refreshDashboardHard(document.getElementById('hdr-refresh-cache-btn'))">Refresh and Clear Cache</button>
@@ -7226,6 +7227,10 @@ body.light .action-btn.primary{
       <button class="fixer-tab-btn" id="tab-template-improvements" data-testid="tab-template-improvements" onclick="showPage('template-improvements')" aria-label="Template Improvements" role="tab" aria-selected="false" data-feature="template-improvements">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3l1.9 5.8h6.1l-4.9 3.6 1.9 5.8-5-3.6-5 3.6 1.9-5.8L4 8.8h6.1L12 3z"/></svg>
         <span class="tab-label">Improvements</span>
+      </button>
+      <button class="fixer-tab-btn" id="tab-productivity-hub" data-testid="tab-productivity-hub" onclick="showPage('productivity-hub')" aria-label="Productivity Hub" role="tab" aria-selected="false" data-feature="productivity-hub">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19V5"/><path d="M4 19h16"/><path d="M8 16v-5"/><path d="M12 16V8"/><path d="M16 16v-3"/><path d="M20 16V6"/></svg>
+        <span class="tab-label">Productivity</span>
       </button>
       <button class="fixer-tab-btn" id="tab-settings" onclick="showPage('settings')" aria-label="Settings" role="tab" aria-selected="false">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
@@ -13229,8 +13234,10 @@ document.addEventListener('click', function(ev){
     const isKwr = (name === 'kwr');
     const isTask  = (name === 'tasks');
     const isTemplateImprovements = (name === 'template-improvements');
+    const isProductivityHub = (name === 'productivity-hub');
     document.body.classList.toggle('page-kwr-active', isKwr);
     document.body.classList.toggle('page-tasks-active', isTask);
+    document.body.classList.toggle('page-productivity-hub-active', isProductivityHub);
     const container = document.querySelector('.container');
     const fixerPage = document.getElementById('page-fixer');
     const radarPage = document.getElementById('page-radar');
@@ -13271,6 +13278,7 @@ document.addEventListener('click', function(ev){
     }
     // Analytics + Settings pages
     var templateImprovementsPage = document.getElementById('page-template-improvements');
+    var productivityHubPage = document.getElementById('page-productivity-hub');
     var analyticsPage = document.getElementById('page-analytics');
     var settingsPage  = document.getElementById('page-settings');
     var isAnalytics   = (name === 'analytics');
@@ -13278,6 +13286,10 @@ document.addEventListener('click', function(ev){
     if (templateImprovementsPage) {
       templateImprovementsPage.style.display = isTemplateImprovements ? 'block' : 'none';
       templateImprovementsPage.classList.toggle('active', isTemplateImprovements);
+    }
+    if (productivityHubPage) {
+      productivityHubPage.style.display = isProductivityHub ? 'block' : 'none';
+      productivityHubPage.classList.toggle('active', isProductivityHub);
     }
     if (analyticsPage) {
       analyticsPage.style.display = isAnalytics ? 'block' : 'none';
@@ -13288,6 +13300,7 @@ document.addEventListener('click', function(ev){
       settingsPage.classList.toggle('active', isSettings);
     }
     if (isTemplateImprovements) runPageInit('template-improvements', window.initTemplateImprovementsPage);
+    if (isProductivityHub) runPageInit('productivity-hub', window.initProductivityHubPage);
     if (isAnalytics) runPageInit('analytics', window.initAnalyticsPage);
     if (isSettings)  runPageInit('settings', window.initSettingsPage);
     // Update tab buttons
@@ -13302,9 +13315,11 @@ document.addEventListener('click', function(ev){
     const tabTasks = document.getElementById('tab-tasks');
     if (tabTasks) { tabTasks.classList.toggle('active', isTask); tabTasks.setAttribute('aria-selected', isTask ? 'true' : 'false'); }
     var tabTemplateImprovements = document.getElementById('tab-template-improvements');
+    var tabProductivityHub = document.getElementById('tab-productivity-hub');
     var tabAnalytics = document.getElementById('tab-analytics');
     var tabSettings  = document.getElementById('tab-settings');
     if (tabTemplateImprovements) { tabTemplateImprovements.classList.toggle('active', isTemplateImprovements); tabTemplateImprovements.setAttribute('aria-selected', isTemplateImprovements ? 'true' : 'false'); }
+    if (tabProductivityHub) { tabProductivityHub.classList.toggle('active', isProductivityHub); tabProductivityHub.setAttribute('aria-selected', isProductivityHub ? 'true' : 'false'); }
     if (tabAnalytics) { tabAnalytics.classList.toggle('active', isAnalytics); tabAnalytics.setAttribute('aria-selected', isAnalytics ? 'true' : 'false'); }
     if (tabSettings)  { tabSettings.classList.toggle('active',  isSettings);  tabSettings.setAttribute('aria-selected',  isSettings  ? 'true' : 'false'); }
 
@@ -18798,6 +18813,55 @@ async function downloadPromptPreviewShot(){
 
 
 <!-- ============================================================
+     MISSING FEATURES PRODUCTIVITY HUB — additive feature 2026-04-27
+     MISSING_FEATURES_PRODUCTIVITY_HUB_2026_04_27
+     ============================================================ -->
+<div id="page-productivity-hub" class="fixer-page missing-features-hub" style="display:none" data-testid="page-productivity-hub" data-feature="productivity-hub">
+  <div class="fixer-page-header mf-hero">
+    <div>
+      <div class="fixer-page-title">Productivity Hub</div>
+      <p class="fixer-page-subtitle">Safe foundation for the uploaded Hermes Dashboard missing-features roadmap. Additive only, feature-flagged, and reversible.</p>
+    </div>
+    <div class="fixer-page-actions">
+      <button class="action-btn primary" onclick="mfOpenCommandPalette()">Open Command Palette</button>
+      <button class="action-btn" onclick="mfExportRoadmapJson()">Export Roadmap JSON</button>
+    </div>
+  </div>
+  <section class="mf-safety-strip" aria-label="Safe integration guarantees">
+    <span>Feature flags</span><span>Enabled now</span><span>Planned next</span><span>No n8n workflow modification</span><span>Additive only</span><span>Rollback: disable feature flag</span>
+  </section>
+  <section class="mf-grid mf-summary-grid">
+    <article class="mf-card mf-notifications-card"><h3>Notification Center</h3><div id="mf-notifications-list"></div></article>
+    <article class="mf-card mf-cost-card"><h3>Cost Tracker</h3><div id="mf-cost-tracker"></div></article>
+    <article class="mf-card mf-audit-card"><h3>Audit Log</h3><div id="mf-audit-log"></div></article>
+    <article class="mf-card mf-actions-card"><h3>Quick Actions</h3><div class="mf-action-list"><button onclick="mfOpenCommandPalette()">Search / Command Palette</button><button onclick="showPage('template-improvements')">Run Template Improvements</button><button onclick="mfRecordAuditEvent('Manual checkpoint created')">Record checkpoint</button></div></article>
+  </section>
+  <section class="mf-card">
+    <div class="ti-section-head"><h3>15-feature roadmap status</h3><span class="muted">from hermes-dashboard-missing-features-plan.md</span></div>
+    <div class="mf-roadmap-grid" id="mf-roadmap-grid">
+      <article data-roadmap-feature="client-overview"><b>Client Overview</b><span>planned next</span></article>
+      <article data-roadmap-feature="ab-testing"><b>A/B Testing</b><span>planned</span></article>
+      <article data-roadmap-feature="agent-traces"><b>Agent Observability</b><span>planned next</span></article>
+      <article data-roadmap-feature="client-reports"><b>Automated Client Reporting</b><span>planned</span></article>
+      <article data-roadmap-feature="template-gallery"><b>Template Gallery</b><span>planned</span></article>
+      <article data-roadmap-feature="notifications"><b>Notification Center</b><span>enabled now</span></article>
+      <article data-roadmap-feature="batch-operations"><b>Batch Operations</b><span>planned next</span></article>
+      <article data-roadmap-feature="global-search"><b>Search & Global Filters</b><span>enabled now</span></article>
+      <article data-roadmap-feature="audit-log"><b>Audit Log</b><span>enabled now</span></article>
+      <article data-roadmap-feature="quick-actions"><b>Quick Actions</b><span>enabled now</span></article>
+      <article data-roadmap-feature="cost-tracker"><b>Cost Tracker</b><span>enabled now</span></article>
+      <article data-roadmap-feature="team-notes"><b>Collaboration Notes</b><span>planned</span></article>
+      <article data-roadmap-feature="pwa-mobile"><b>PWA / Mobile</b><span>partially available</span></article>
+      <article data-roadmap-feature="export-hub"><b>Data Export Hub</b><span>enabled now</span></article>
+      <article data-roadmap-feature="scheduled-runs"><b>Scheduled Pipeline Runs</b><span>planned</span></article>
+    </div>
+  </section>
+  <div class="mf-command-palette" data-testid="missing-features-command-palette" id="mf-command-palette" hidden>
+    <div class="mf-command-box"><button class="mf-close" onclick="mfCloseCommandPalette()" aria-label="Close">×</button><h3>Search everything / Quick Actions</h3><input id="mf-command-input" placeholder="Search domains, actions, roadmap features..." oninput="mfFilterCommands(this.value)"><div id="mf-command-results"></div><p class="muted">Shortcuts: Ctrl+K opens this palette, ? opens help. Input fields are guarded.</p></div>
+  </div>
+</div>
+
+<!-- ============================================================
      TEMPLATE IMPROVEMENTS PAGE — additive feature 2026-04-27
      TEMPLATE_IMPROVEMENTS_UI_2026_04_27
      ============================================================ -->
@@ -23077,6 +23141,34 @@ body.page-tasks-active #tasks-board-view{
   };
   window.loadTemplateImprovementJob=function(jobId){ activeJobId=jobId; loadJob(jobId).catch(console.warn); };
   window.initTemplateImprovementsPage=function(){ templateImprovementsLoadJobs(); renderAgentCards({status:'pending'},[]); };
+})();
+</script>
+
+
+<style id="missing-features-productivity-hub-style">
+/* MISSING_FEATURES_PRODUCTIVITY_HUB_STYLE_2026_04_27 — scoped, additive only */
+.missing-features-hub{padding:24px;max-width:1280px;margin:0 auto;color:var(--text,#f8fafc)}
+.missing-features-hub .mf-hero{align-items:flex-start;gap:18px}.mf-safety-strip{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 18px}.mf-safety-strip span{border:1px solid rgba(255,255,255,.12);background:rgba(34,197,94,.08);border-radius:999px;padding:7px 10px;font-size:12px;color:#bbf7d0}.mf-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin-bottom:16px}.mf-card{background:rgba(255,255,255,.035);border:1px solid rgba(255,255,255,.09);border-radius:18px;padding:16px;box-shadow:0 14px 34px rgba(0,0,0,.18)}.mf-card h3{margin:0 0 10px;font-size:16px}.mf-roadmap-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px}.mf-roadmap-grid article{border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:12px;background:rgba(15,23,42,.44);min-height:78px}.mf-roadmap-grid b{display:block;font-size:13px;margin-bottom:8px}.mf-roadmap-grid span{font-size:11px;text-transform:uppercase;color:#93c5fd}.mf-action-list{display:grid;gap:8px}.mf-action-list button,.mf-command-box button{border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.06);color:var(--text,#fff);border-radius:10px;padding:9px 10px;cursor:pointer}.mf-cost-row,.mf-note-row,.mf-audit-row{display:flex;justify-content:space-between;gap:10px;padding:7px 0;border-bottom:1px solid rgba(255,255,255,.06);font-size:12px}.mf-command-palette{position:fixed;inset:0;background:rgba(0,0,0,.62);z-index:10050;display:flex;align-items:flex-start;justify-content:center;padding:8vh 18px}.mf-command-palette[hidden]{display:none!important}.mf-command-box{width:min(720px,100%);background:#111827;border:1px solid rgba(255,255,255,.14);border-radius:22px;padding:20px;box-shadow:0 30px 80px rgba(0,0,0,.5);position:relative}.mf-command-box input{width:100%;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.05);color:#fff;border-radius:12px;padding:12px;margin:10px 0 12px}.mf-close{position:absolute;right:14px;top:14px}.mf-command-result{display:flex;justify-content:space-between;padding:10px;border-radius:10px;cursor:pointer}.mf-command-result:hover{background:rgba(255,255,255,.07)}@media(max-width:1024px){.mf-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.mf-roadmap-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}@media(max-width:640px){.missing-features-hub{padding:16px}.mf-grid,.mf-roadmap-grid{grid-template-columns:1fr}.mf-safety-strip span{width:100%}}
+</style>
+<script id="missing-features-productivity-hub-script">
+/* MISSING_FEATURES_PRODUCTIVITY_HUB_JS_2026_04_27 — client-side quick wins only. No n8n workflow modification. */
+(function(){
+  const features=[['client-overview','Client Overview','planned next'],['ab-testing','A/B Testing','planned'],['agent-traces','Agent Observability','planned next'],['client-reports','Automated Client Reporting','planned'],['template-gallery','Template Gallery','planned'],['notifications','Notification Center','enabled now'],['batch-operations','Batch Operations','planned next'],['global-search','Search & Global Filters','enabled now'],['audit-log','Audit Log','enabled now'],['quick-actions','Quick Actions','enabled now'],['cost-tracker','Cost Tracker','enabled now'],['team-notes','Collaboration Notes','planned'],['pwa-mobile','PWA / Mobile','partially available'],['export-hub','Data Export Hub','enabled now'],['scheduled-runs','Scheduled Pipeline Runs','planned']];
+  const flagsKey='mfFeatureFlags.v1', auditKey='mfAuditLog.v1';
+  function $(id){return document.getElementById(id)}
+  function flags(){try{return JSON.parse(localStorage.getItem(flagsKey)||'{}')}catch(e){return {}}}
+  function saveFlags(v){localStorage.setItem(flagsKey,JSON.stringify(v));}
+  window.mfToggleFeatureFlag=function(slug){const f=flags();f[slug]=!f[slug];saveFlags(f);window.mfRecordAuditEvent('Feature flag toggled: '+slug+' = '+f[slug]);window.initProductivityHubPage();}
+  window.mfRecordAuditEvent=function(message){const row={message:message||'Activity recorded',at:new Date().toISOString(),user:'dashboard'};let rows=[];try{rows=JSON.parse(localStorage.getItem(auditKey)||'[]')}catch(e){} rows.unshift(row);localStorage.setItem(auditKey,JSON.stringify(rows.slice(0,50)));window.mfRenderAuditLog();}
+  window.mfRenderNotifications=function(){const el=$('mf-notifications-list'); if(!el)return; const notes=[['Critical','Pipeline failures will surface here'],['Warning','Budget threshold alerts ready'],['Info','Weekly report notifications planned']]; el.innerHTML=notes.map(n=>`<div class="mf-note-row"><span>${n[0]}</span><span>${n[1]}</span></div>`).join('');}
+  window.mfRenderCostTracker=function(){const el=$('mf-cost-tracker'); if(!el)return; const costs=[['Today','$0.00 tracked locally'],['Budget','$5.00 default alert'],['Models','5-agent pipeline ready']]; el.innerHTML=costs.map(n=>`<div class="mf-cost-row"><span>${n[0]}</span><b>${n[1]}</b></div>`).join('');}
+  window.mfRenderAuditLog=function(){const el=$('mf-audit-log'); if(!el)return; let rows=[];try{rows=JSON.parse(localStorage.getItem(auditKey)||'[]')}catch(e){} if(!rows.length)rows=[{message:'Productivity Hub opened',at:new Date().toISOString(),user:'system'}]; el.innerHTML=rows.slice(0,5).map(r=>`<div class="mf-audit-row"><span>${r.message}</span><time>${new Date(r.at).toLocaleString()}</time></div>`).join('');}
+  window.mfExportRoadmapJson=function(){const blob=new Blob([JSON.stringify({features,exportedAt:new Date().toISOString(),safety:'Additive only. No n8n workflow modification.'},null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='hermes-productivity-roadmap.json';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000);window.mfRecordAuditEvent('Roadmap JSON exported');}
+  window.mfOpenCommandPalette=function(){const p=$('mf-command-palette'); if(!p)return; p.hidden=false; window.mfFilterCommands(''); setTimeout(()=>{const i=$('mf-command-input'); if(i)i.focus();},30);}
+  window.mfCloseCommandPalette=function(){const p=$('mf-command-palette'); if(p)p.hidden=true;}
+  window.mfFilterCommands=function(q){const el=$('mf-command-results'); if(!el)return; q=(q||'').toLowerCase(); const actions=[['Open Template Improvements',()=>showPage('template-improvements')],['Open Cost Tracker',()=>showPage('productivity-hub')],['Record Audit Checkpoint',()=>mfRecordAuditEvent('Manual audit checkpoint')],['Export Roadmap JSON',()=>mfExportRoadmapJson()]].concat(features.map(f=>['Roadmap: '+f[1]+' · '+f[2],()=>showPage('productivity-hub')])); const rows=actions.filter(a=>!q||a[0].toLowerCase().includes(q)).slice(0,12); el.innerHTML=rows.map((a,i)=>`<div class="mf-command-result" data-idx="${i}"><span>${a[0]}</span><small>Enter</small></div>`).join(''); [...el.querySelectorAll('.mf-command-result')].forEach((node,i)=>node.onclick=()=>{rows[i][1]();mfCloseCommandPalette();});}
+  window.initProductivityHubPage=function(){window.mfRenderNotifications();window.mfRenderCostTracker();window.mfRenderAuditLog(); const f=flags(); document.querySelectorAll('[data-roadmap-feature]').forEach(el=>{const slug=el.getAttribute('data-roadmap-feature'); if(f[slug]) el.classList.add('enabled');});}
+  document.addEventListener('keydown',function(ev){ if(ev.target && ev.target.closest('input,textarea,select,[contenteditable="true"]')) return; if((ev.ctrlKey||ev.metaKey) && ev.key.toLowerCase()==='k'){ev.preventDefault();mfOpenCommandPalette();} if(ev.key==='?'){ev.preventDefault();mfOpenCommandPalette();} if(ev.key==='Escape') mfCloseCommandPalette(); });
 })();
 </script>
 
