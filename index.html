@@ -9688,7 +9688,7 @@ GET    /api/tasks/stats/burndown?project_id=x     — Burndown chart data
         <select id="prompt-model-select" class="model-select" aria-label="Select model for prompt improvement">
           <!-- Anthropic (Direct) -->
           <optgroup label="Anthropic (Direct)">
-            <option value="claude-opus-4-7" selected>Claude Opus 4.7 (Flagship)</option>
+            <option value="claude-opus-4-7">Claude Opus 4.7 (Flagship)</option>
             <option value="claude-sonnet-4-6">Claude Sonnet 4.6</option>
             <option value="claude-opus-4-5">Claude Opus 4.5</option>
             <option value="claude-opus-4">Claude Opus 4</option>
@@ -9702,6 +9702,7 @@ GET    /api/tasks/stats/burndown?project_id=x     — Burndown chart data
             <option value="anthropic/claude-opus-4.7">Claude Opus 4.7 (OR)</option>
             <option value="openai/gpt-5.4">GPT-5.4</option>
             <option value="openai/gpt-4o">GPT-4o</option>
+            <option value="google/gemini-2.5-flash" selected>Gemini 2.5 Flash (OpenRouter default)</option>
             <option value="google/gemini-3.1-pro-preview">Gemini 3.1 Pro</option>
             <option value="google/gemini-2.5-pro">Gemini 2.5 Pro</option>
             <option value="moonshotai/kimi-k2-thinking">Kimi K2 Thinking</option>
@@ -11777,7 +11778,7 @@ async function improvePrompt(btn){
   }
   output.value='';
   const modelEl=document.getElementById('prompt-model-select');
-  const selectedModel=modelEl?modelEl.value:'anthropic/claude-sonnet-4.6';
+  const selectedModel=modelEl?modelEl.value:'google/gemini-2.5-flash';
   const modelLabel=modelEl?modelEl.options[modelEl.selectedIndex].text:selectedModel;
   const original=btn.innerHTML;
   const selected=getSelectedChecklistItems();
@@ -12063,7 +12064,7 @@ async function tweakTemplate(btn){
     return;
   }
   const modelEl=document.getElementById('prompt-model-select');
-  const selectedModel=modelEl?modelEl.value:'anthropic/claude-sonnet-4.6';
+  const selectedModel=modelEl?modelEl.value:'google/gemini-2.5-flash';
   const original=btn.innerHTML;
   btn.classList.add('is-running');
   btn.innerHTML='<span class="btn-spinner" aria-hidden="true"></span>Stop pipeline';
@@ -12072,7 +12073,7 @@ async function tweakTemplate(btn){
   tweakStatus.textContent='Launching HTML pipeline...';
   window._tweakAbort=new AbortController(); _syncPromptModalRunningState();
   try{
-    const res=await fetch('/api/prompt/tweak',{method:'POST',signal:window._tweakAbort.signal,headers:{'Content-Type':'application/json'},body:JSON.stringify({domain:promptStudioContext.domain,agentName:promptStudioContext.agentName,versionName:promptStudioContext.versionName,htmlDownloadUrl:htmlFile.download,htmlFileName:htmlFile.name,htmlFilePath:htmlFile.path,fileManifest:promptStudioContext.fileManifest,improvedPrompt:improved,model:selectedModel||'anthropic/claude-opus-4.7',latestOnly:true})});
+    const res=await fetch('/api/prompt/tweak',{method:'POST',signal:window._tweakAbort.signal,headers:{'Content-Type':'application/json'},body:JSON.stringify({domain:promptStudioContext.domain,agentName:promptStudioContext.agentName,versionName:promptStudioContext.versionName,htmlDownloadUrl:htmlFile.download,htmlFileName:htmlFile.name,htmlFilePath:htmlFile.path,fileManifest:promptStudioContext.fileManifest,improvedPrompt:improved,model:selectedModel||'google/gemini-2.5-flash',latestOnly:true})});
     let data={};
     try{data=await res.json();}catch(parseErr){data={ok:false,error:'Pipeline returned a non-JSON response'};}
     if(!res.ok||!data.ok){
@@ -23361,38 +23362,53 @@ body.page-tasks-active #tasks-board-view{
 
 <style id="prompt-studio-mobile-polish-2026-04-27">
 /* PROMPT_STUDIO_MOBILE_POLISH_2026_04_27
-   Scoped mobile polish for Prompt Studio: readable modal, stacked panels/actions, safe scrolling. */
+   Scoped mobile polish for the real Prompt Studio DOM (.modal.prompt-modal): readable modal,
+   stacked panels/actions, safe scrolling, and high-specificity overrides for older flex rules. */
 @media(max-width:768px){
-  #prompt-modal{
+  #prompt-modal.modal-overlay,
+  #prompt-modal.modal-overlay.open{
     align-items:flex-start !important;
     justify-content:center !important;
     padding:8px !important;
     overflow:auto !important;
   }
+  #prompt-modal .modal.prompt-modal,
+  #prompt-modal .prompt-modal,
   #prompt-modal .prompt-dialog{
     width:100% !important;
     max-width:100% !important;
     height:auto !important;
     max-height:calc(100vh - 16px) !important;
+    max-height:calc(100dvh - 16px) !important;
     margin:0 !important;
     border-radius:18px !important;
     overflow:auto !important;
   }
+  #prompt-modal .modal.prompt-modal > .prompt-container,
+  #prompt-modal .prompt-modal > .prompt-container,
   #prompt-modal .prompt-modal-body,
   #prompt-modal .prompt-container{
     display:grid !important;
     grid-template-columns:1fr !important;
+    grid-template-rows:none !important;
+    grid-auto-rows:auto !important;
     gap:12px !important;
     padding:12px !important;
     overflow:visible !important;
+    min-width:0 !important;
+    width:100% !important;
   }
+  #prompt-modal .prompt-container > .prompt-panel,
   #prompt-modal .prompt-panel,
   #prompt-modal .prompt-tweak-panel,
   #prompt-modal .prompt-sync-panel{
+    grid-column:1 / -1 !important;
     min-width:0 !important;
     width:100% !important;
     max-width:100% !important;
     border-radius:14px !important;
+    overflow:visible !important;
+    padding-bottom:12px !important;
   }
   #prompt-modal textarea,
   #prompt-modal select,
@@ -23400,6 +23416,7 @@ body.page-tasks-active #tasks-board-view{
     width:100% !important;
     max-width:100% !important;
     font-size:16px !important;
+    min-width:0 !important;
   }
   #prompt-modal #prompt-draft,
   #prompt-modal #prompt-output,
@@ -23408,29 +23425,79 @@ body.page-tasks-active #tasks-board-view{
     height:160px !important;
     max-height:260px !important;
   }
+  #prompt-modal .modal.prompt-modal .prompt-container > .prompt-panel:first-child > .prompt-actions,
+  #prompt-modal .modal.prompt-modal .prompt-container > .prompt-panel:nth-child(1) > .prompt-actions,
+  #prompt-modal .modal.prompt-modal .prompt-panel > .prompt-actions,
+  #prompt-modal .modal.prompt-modal .prompt-panel + .prompt-panel > .prompt-actions,
+  #prompt-modal .modal.prompt-modal .prompt-actions,
+  #prompt-modal .prompt-panel > .prompt-actions,
+  #prompt-modal .prompt-panel + .prompt-panel > .prompt-actions,
   #prompt-modal .prompt-actions{
     display:grid !important;
     grid-template-columns:1fr !important;
     gap:8px !important;
     position:static !important;
+    inset:auto !important;
+    margin:0 !important;
+    padding:10px 0 !important;
     width:100% !important;
+    background:transparent !important;
+    border-top:0 !important;
+    box-shadow:none !important;
+    backdrop-filter:none !important;
+    -webkit-backdrop-filter:none !important;
   }
+
+  #prompt-modal.modal-overlay.open .modal.prompt-modal .prompt-container > .prompt-panel:first-child > .prompt-actions,
+  #prompt-modal.modal-overlay.open .modal.prompt-modal .prompt-container > .prompt-panel:nth-child(2) > .prompt-actions,
+  #prompt-modal.modal-overlay.open .modal.prompt-modal .prompt-container > .prompt-panel .prompt-actions{
+    display:flex !important;
+    flex-direction:column !important;
+    grid-template-columns:none !important;
+    grid-auto-flow:row !important;
+    align-items:stretch !important;
+    justify-items:stretch !important;
+    flex-wrap:nowrap !important;
+  }
+  #prompt-modal.modal-overlay.open .modal.prompt-modal .prompt-container > .prompt-panel:first-child > .prompt-actions > .action-btn,
+  #prompt-modal.modal-overlay.open .modal.prompt-modal .prompt-container > .prompt-panel:nth-child(2) > .prompt-actions > .action-btn,
+  #prompt-modal.modal-overlay.open .modal.prompt-modal .prompt-container > .prompt-panel .prompt-actions > .action-btn{
+    grid-column:1 / -1 !important;
+    width:100% !important;
+    min-width:0 !important;
+    max-width:100% !important;
+  }
+  #prompt-modal .modal.prompt-modal .prompt-actions .action-btn,
   #prompt-modal .prompt-actions .action-btn,
   #prompt-modal #prompt-improve-btn,
   #prompt-modal #prompt-tweak-btn,
-  #prompt-modal #prompt-brainstorm-btn{
+  #prompt-modal #prompt-brainstorm-btn,
+  #prompt-modal #prompt-save-btn,
+  #prompt-modal #prompt-copy-btn{
     width:100% !important;
-    min-height:42px !important;
+    max-width:100% !important;
+    min-height:44px !important;
     justify-content:center !important;
+    white-space:normal !important;
+  }
+  #prompt-modal #prompt-tweak-btn.ps-pipeline-launcher{
+    display:inline-flex !important;
+    visibility:visible !important;
+    opacity:1 !important;
+    pointer-events:auto !important;
+    cursor:pointer !important;
   }
   #prompt-modal #prompt-status,
   #prompt-modal #prompt-tweak-status,
-  #prompt-modal #prompt-sync-status{
+  #prompt-modal #prompt-sync-status,
+  #prompt-modal .prompt-status{
     display:block !important;
     width:100% !important;
     white-space:normal !important;
     line-height:1.45 !important;
+    min-width:0 !important;
   }
+  #prompt-modal .prompt-preview,
   #prompt-modal .prompt-preview-frame-wrap{
     min-height:260px !important;
     padding:8px !important;

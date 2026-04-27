@@ -4,6 +4,18 @@ from unittest import mock
 import server
 
 
+def test_prompt_studio_defaults_are_openrouter_gemini_flash():
+    with mock.patch.dict(os.environ, {}, clear=True):
+        assert server.prompt_default_model('PROMPT_TWEAK_MODEL') == 'google/gemini-2.5-flash'
+        assert server.prompt_default_model('PROMPT_IMPROVER_MODEL') == 'google/gemini-2.5-flash'
+        assert server.prompt_default_model('PROMPT_SYNTH_MODEL') == 'google/gemini-2.5-flash'
+
+
+def test_prompt_studio_env_model_override_still_wins():
+    with mock.patch.dict(os.environ, {'PROMPT_TWEAK_MODEL': 'openai/gpt-5.4'}, clear=True):
+        assert server.prompt_default_model('PROMPT_TWEAK_MODEL') == 'openai/gpt-5.4'
+
+
 def test_gemini_native_429_falls_through_to_next_provider():
     calls = []
 

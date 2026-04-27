@@ -1138,6 +1138,19 @@ def _preferred_backup_provider(model: str, preferred: str | None) -> str | None:
     return None
 
 
+PROMPT_STUDIO_DEFAULT_MODEL = 'google/gemini-2.5-flash'
+
+
+def prompt_default_model(env_name: str) -> str:
+    """Return the safe Prompt Studio default model unless explicitly overridden.
+
+    The dashboard should not silently default Prompt Studio actions to direct Anthropic/Copilot
+    short slugs on Render. OpenRouter-style Gemini Flash is the most portable default here;
+    native Gemini remains available as fallback when GEMINI_API_KEY is set.
+    """
+    return (os.getenv(env_name) or PROMPT_STUDIO_DEFAULT_MODEL).strip() or PROMPT_STUDIO_DEFAULT_MODEL
+
+
 def call_with_fallback(messages, model, timeout=120):
     """
     Call the LLM with automatic provider fallback.
@@ -1477,7 +1490,7 @@ BRAINSTORM_MODELS = [
     {"id": "z-ai/glm-4.6",                    "label": "GLM 4.6"},
 ]
 BRAINSTORM_MODELS_BY_ID = {m["id"]: m for m in BRAINSTORM_MODELS}
-SYNTH_MODEL = os.getenv("PROMPT_SYNTH_MODEL", "anthropic/claude-sonnet-4.6")
+SYNTH_MODEL = prompt_default_model("PROMPT_SYNTH_MODEL")
 
 
 def _call_one_model(model_id, system, user, timeout=180):
@@ -1787,7 +1800,7 @@ def tweak_html_with_prompt(payload):
         raise ValueError('htmlDownloadUrl is required')
     if not _get_provider_chain():
         raise RuntimeError('No LLM provider configured')
-    default_model = os.getenv('PROMPT_TWEAK_MODEL', 'anthropic/claude-sonnet-4.6')
+    default_model = prompt_default_model('PROMPT_TWEAK_MODEL')
     model = (payload.get('model') or '').strip() or default_model
     domain = payload.get('domain') or 'unknown'
     agent_name = payload.get('agentName') or 'unknown'
@@ -1831,7 +1844,7 @@ def improve_prompt_with_model(payload):
     if not _get_provider_chain():
         raise RuntimeError('No LLM provider configured')
     # Accept model override from the browser payload; fall back to env / default
-    default_model = os.getenv('PROMPT_IMPROVER_MODEL', 'anthropic/claude-sonnet-4.6')
+    default_model = prompt_default_model('PROMPT_IMPROVER_MODEL')
     model = (payload.get('model') or '').strip() or default_model
     current_date = os.getenv('PROMPT_CURRENT_DATE', '2026-04-15')
     checklist_rules = _normalize_checklist(payload.get('checklist'))
@@ -2944,8 +2957,8 @@ body{{font-family:Arial;padding:24px}}h1{{color:#333}}pre{{background:#f4f4f4;pa
                 'githubCommitConfigured': bool(os.getenv('GITHUB_TOKEN')),
                 'brainstormModels': [{'id': m['id'], 'label': m['label']} for m in BRAINSTORM_MODELS],
                 'synthModel': SYNTH_MODEL,
-                'promptImproveDefaultModel': os.getenv('PROMPT_IMPROVER_MODEL', 'anthropic/claude-sonnet-4.6'),
-                'promptTweakDefaultModel': os.getenv('PROMPT_TWEAK_MODEL', 'anthropic/claude-sonnet-4.6'),
+                'promptImproveDefaultModel': prompt_default_model('PROMPT_IMPROVER_MODEL'),
+                'promptTweakDefaultModel': prompt_default_model('PROMPT_TWEAK_MODEL'),
                 'promptSynthDefaultModel': SYNTH_MODEL,
                 'paletteExtractorConfigured': True,
                 'tweakConfigured': bool(os.getenv('OPENROUTER_API_KEY') or os.getenv('COPILOT_API_KEY') or os.getenv('ANTHROPIC_API_KEY') or os.getenv('GEMINI_API_KEY')),
