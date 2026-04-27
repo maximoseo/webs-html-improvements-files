@@ -12646,8 +12646,11 @@ renderChecklist();
 
 function setView(mode,btn){
   /* DASHBOARD_QA_FIX_VIEW_TOGGLE_SCOPE_2026_04_27 */
+  /* PROJECTS_LIST_VIEW_COMPACT_FIX_2026_04_27 */
   const grid=document.getElementById('projects-grid');
-  if(grid) grid.className='projects-grid'+(mode==='list'?' list-view':'');
+  if(grid) grid.className='projects-grid'+(mode === 'list'?' list-view':'');
+  document.body.classList.toggle('projects-list-view-active', mode === 'list');
+  document.body.classList.toggle('projects-grid-view-active', mode !== 'list');
   const toggle=btn&&btn.closest?btn.closest('.view-toggle'):null;
   const buttons=toggle?toggle.querySelectorAll('.view-btn'):document.querySelectorAll('.view-btn');
   buttons.forEach(b=>b.classList.remove('active'));
@@ -23256,6 +23259,88 @@ body.page-tasks-active #tasks-board-view{
   };
 })();
 </script>
+
+
+<style id="projects-list-view-compact-fix-2026-04-27">
+/* PROJECTS_LIST_VIEW_COMPACT_FIX_2026_04_27
+   Root cause: previous List mode only changed grid columns. On tablet/mobile Grid was already one column, so List looked unchanged.
+   This late scoped block makes list mode a true compact row layout while keeping grid cards unchanged. */
+#projects-grid.projects-grid.list-view{
+  display:grid !important;
+  grid-template-columns:1fr !important;
+  width:min(1040px,100%) !important;
+  max-width:1040px !important;
+  margin-left:auto !important;
+  margin-right:auto !important;
+  gap:12px !important;
+}
+#projects-grid.projects-grid.list-view .project-card{
+  width:100% !important;
+  max-width:100% !important;
+  min-height:auto !important;
+  border-radius:14px !important;
+  overflow:visible !important;
+}
+#projects-grid.projects-grid.list-view .project-card:not(.expanded) .card-header{
+  display:flex !important;
+  flex-direction:row !important;
+  align-items:center !important;
+  justify-content:space-between !important;
+  gap:16px !important;
+  min-height:auto !important;
+  padding:14px 16px !important;
+}
+#projects-grid.projects-grid.list-view .project-card:not(.expanded) .card-info{
+  display:flex !important;
+  align-items:center !important;
+  gap:14px !important;
+  min-width:0 !important;
+  flex:1 1 auto !important;
+}
+#projects-grid.projects-grid.list-view .project-card:not(.expanded) .card-title,
+#projects-grid.projects-grid.list-view .project-card:not(.expanded) .project-title{
+  margin:0 !important;
+  white-space:nowrap !important;
+  overflow:hidden !important;
+  text-overflow:ellipsis !important;
+}
+#projects-grid.projects-grid.list-view .project-card:not(.expanded) .card-meta,
+#projects-grid.projects-grid.list-view .project-card:not(.expanded) .project-meta{
+  white-space:nowrap !important;
+  overflow:hidden !important;
+  text-overflow:ellipsis !important;
+}
+#projects-grid.projects-grid.list-view .project-card:not(.expanded) .card-actions{
+  display:flex !important;
+  align-items:center !important;
+  justify-content:flex-end !important;
+  gap:8px !important;
+  flex:0 0 auto !important;
+  padding:0 !important;
+}
+#projects-grid.projects-grid.list-view .project-card:not(.expanded) .card-body{
+  display:none !important;
+}
+@media(max-width:768px){
+  #projects-grid.projects-grid.list-view{width:100% !important;max-width:100% !important;gap:10px !important;}
+  #projects-grid.projects-grid.list-view .project-card:not(.expanded) .card-header{
+    display:flex !important;
+    flex-direction:column !important;
+    align-items:stretch !important;
+    gap:10px !important;
+    padding:12px !important;
+  }
+  #projects-grid.projects-grid.list-view .project-card:not(.expanded) .card-info{
+    display:block !important;
+    min-width:0 !important;
+  }
+  #projects-grid.projects-grid.list-view .project-card:not(.expanded) .card-actions{
+    display:grid !important;
+    grid-template-columns:repeat(3,minmax(0,1fr)) !important;
+    width:100% !important;
+  }
+}
+</style>
 
 </body>
 </html>
