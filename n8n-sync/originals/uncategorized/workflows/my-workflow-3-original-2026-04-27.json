@@ -1,0 +1,65 @@
+{
+  "active": false,
+  "activeVersion": null,
+  "activeVersionId": null,
+  "connections": {},
+  "createdAt": "2026-03-17T18:30:52.778Z",
+  "description": null,
+  "id": "08XglDYrhWwxMtUL",
+  "isArchived": false,
+  "meta": null,
+  "name": "My workflow 3",
+  "nodes": [
+    {
+      "id": "ae9a0d28-047d-4424-9c98-9ce8b3862d07",
+      "name": "Schedule Trigger",
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "daysInterval": 5,
+              "triggerAtHour": 2,
+              "triggerAtMinute": 21
+            }
+          ]
+        }
+      },
+      "position": [
+        -160,
+        32
+      ],
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.3
+    }
+  ],
+  "pinData": {},
+  "settings": {
+    "binaryMode": "separate",
+    "executionOrder": "v1"
+  },
+  "shared": [
+    {
+      "createdAt": "2026-03-17T18:30:52.780Z",
+      "project": {
+        "createdAt": "2025-09-28T14:22:52.439Z",
+        "creatorId": "95003bb0-e7e7-412b-a318-1ce7ab588a04",
+        "description": null,
+        "icon": null,
+        "id": "xvTweQkI7DmZGb8D",
+        "name": "Gilad Kamer <gilad@webs.co.il>",
+        "type": "personal",
+        "updatedAt": "2025-09-28T14:22:55.850Z"
+      },
+      "projectId": "xvTweQkI7DmZGb8D",
+      "role": "workflow:owner",
+      "updatedAt": "2026-03-17T18:30:52.780Z",
+      "workflowId": "08XglDYrhWwxMtUL"
+    }
+  ],
+  "staticData": null,
+  "tags": [],
+  "triggerCount": 0,
+  "updatedAt": "2026-03-17T18:30:52.778Z",
+  "versionCounter": 1,
+  "versionId": "f66c9949-cb42-469f-a740-7f3c0540b141"
+}

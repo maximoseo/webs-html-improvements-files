@@ -8,3 +8,8 @@ data/activity/
 *.pyc
 .pytest_cache/
 index.html.bak*
+config/.env.n8n
+config/*.env
+*.secret
+*.key
+*.pem

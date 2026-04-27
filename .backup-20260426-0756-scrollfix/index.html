@@ -683,12 +683,12 @@ img,svg,video,canvas{max-width:100%;height:auto}
 }
 
 /* iOS momentum scrolling + safe area */
-html{-webkit-text-size-adjust:100%;-webkit-tap-highlight-color:transparent}
-body{overscroll-behavior-y:auto}
+html{-webkit-text-size-adjust:100%;touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+body{overscroll-behavior-y:none}
 
 /* iOS input zoom prevention + overscroll containment */
 input,select,textarea{ font-size:16px !important }
-.modal,.drawer,.mobile-drawer{ overscroll-behavior-y:contain }
+body,.modal,.drawer,.mobile-drawer{ overscroll-behavior-y:contain }
 .scrollable{ -webkit-overflow-scrolling:touch }
 
 /* iOS safe-area + dynamic viewport */
@@ -1231,30 +1231,8 @@ input,select,textarea{ font-size:16px !important }
   overflow: hidden !important;
 }
 
-/* ── Fixer responsive ── */
-@media (max-width: 768px) {
-  .fixer-section-cols{flex-direction:column}
-  .fixer-meta-grid{grid-template-columns:1fr 1fr}
-  .fixer-model-cards{grid-template-columns:1fr 1fr}
-  .fixer-preservation-grid{grid-template-columns:1fr 1fr}
-  .fixer-tab{flex-direction:column;align-items:flex-start;gap:6px}
-  .fixer-tab-badge{margin-left:0}
-  .fixer-diff-panels{flex-direction:column}
-  .fixer-diff-panel{min-width:auto}
-  .fixer-history-grid{grid-template-columns:1fr}
-}
-@media (max-width: 480px) {
-  .fixer-meta-grid{grid-template-columns:1fr}
-  .fixer-model-cards{grid-template-columns:1fr}
-  .fixer-preservation-grid{grid-template-columns:1fr}
-  .fixer-action-buttons{flex-direction:column}
-  .fixer-action-buttons .action-btn{width:100%;justify-content:center}
-  .fixer-json-actions{flex-direction:column}
-  .fixer-json-actions .action-btn{width:100%;justify-content:center}
-}
-
-/* ── Fixer ── */
-.fixer
+/* ── Header ── */
+#prompt-modal .modal-header {
   background: var(--ps-surface) !important;
   border-bottom: 1px solid var(--ps-border) !important;
   padding: 0 24px !important;
@@ -2951,22 +2929,8 @@ body {
 .fixer-textarea{width:100%;border:1px solid rgba(255,255,255,0.1);border-radius:12px;background:rgba(255,255,255,0.03);color:var(--text);padding:12px 14px;font:13px/1.6 'Inter',system-ui,sans-serif;outline:none;resize:vertical;transition:border-color 0.15s,box-shadow 0.15s}
 .fixer-textarea:focus{border-color:rgba(113,112,255,0.4);box-shadow:0 0 0 3px rgba(113,112,255,0.12)}
 .fixer-textarea::placeholder{color:rgba(255,255,255,0.22)}
-/* ── Model selector block ── */
-/* 6. Model select block — slightly stronger label */
-
-/* ── Model cards ── */
-.fixer-model-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px;margin-top:10px}
-.fixer-model-card{padding:14px;border-radius:14px;background:linear-gradient(180deg,rgba(255,255,255,0.04),rgba(255,255,255,0.015));border:2px solid rgba(255,255,255,0.06);cursor:pointer;transition:all 0.2s;position:relative;overflow:hidden}
-.fixer-model-card:hover{border-color:rgba(113,112,255,0.25);background:linear-gradient(180deg,rgba(113,112,255,0.06),rgba(255,255,255,0.02))}
-.fixer-model-card.selected{border-color:rgba(113,112,255,0.7);background:linear-gradient(180deg,rgba(113,112,255,0.1),rgba(113,112,255,0.03));box-shadow:0 0 0 3px rgba(113,112,255,0.1)}
-.fixer-model-card .card-name{font-size:13px;font-weight:700;color:var(--text);margin-bottom:4px;display:flex;align-items:center;gap:6px}
-.fixer-model-card .card-provider{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:0.03em}
-.fixer-model-card .card-badge{position:absolute;top:8px;right:8px;font-size:10px;font-weight:700;padding:2px 8px;border-radius:999px;background:rgba(17,217,124,0.12);color:#11d97c;border:1px solid rgba(17,217,124,0.2)}
-.fixer-model-card .card-star{font-size:12px;color:#ffd700}
-.fixer-model-card .card-check{position:absolute;bottom:10px;right:10px;width:20px;height:20px;border-radius:50%;background:rgba(113,112,255,0.9);color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;opacity:0;transform:scale(0.5);transition:all 0.2s}
-.fixer-model-card.selected .card-check{opacity:1;transform:scale(1)}
-@media (max-width:600px){.fixer-model-grid{grid-template-columns:1fr}}
-
+.fixer-input{width:100%;border:1px solid rgba(255,255,255,0.1);border-radius:10px;background:rgba(255,255,255,0.03);color:var(--text);padding:9px 12px;font-size:13px;font-family:inherit;outline:none;transition:border-color 0.15s,box-shadow 0.15s}
+.fixer-input:focus{border-color:rgba(113,112,255,0.4);box-shadow:0 0 0 3px rgba(113,112,255,0.12)}
 .fixer-select{width:100%;border:1px solid rgba(255,255,255,0.1);border-radius:10px;background:rgba(255,255,255,0.03);color:var(--text);padding:9px 12px;font-size:13px;font-family:inherit;outline:none;cursor:pointer;transition:border-color 0.15s}
 .fixer-select:focus{border-color:rgba(113,112,255,0.4)}
 .fixer-select option{background:#0f1011;color:#f0f1f3}
@@ -2974,10 +2938,7 @@ body {
 .fixer-analyze-btn{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;padding:16px 24px;border-radius:14px;border:none;background:linear-gradient(135deg,var(--gold),var(--gold-dim));color:#fff;font-size:15px;font-weight:800;cursor:pointer;transition:all 0.2s;box-shadow:0 12px 30px rgba(94,106,210,0.25);letter-spacing:-0.01em;font-family:inherit}
 .fixer-analyze-btn:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 18px 40px rgba(94,106,210,0.32)}
 .fixer-analyze-btn:disabled{opacity:0.55;cursor:not-allowed;transform:none}
-.fixer-triple-btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:14px 24px;border-radius:14px;border:2px solid rgba(255,215,0,0.3);background:linear-gradient(135deg,rgba(255,215,0,0.08),rgba(255,165,0,0.05));color:var(--gold);font-size:15px;font-weight:700;cursor:pointer;transition:all 0.2s;box-shadow:0 4px 15px rgba(255,215,0,0.08);letter-spacing:-0.01em;font-family:inherit;flex-wrap:wrap}
-.fixer-triple-btn:hover:not(:disabled){transform:translateY(-2px);border-color:rgba(255,215,0,0.6);box-shadow:0 8px 25px rgba(255,215,0,0.15)}
-.fixer-triple-btn:disabled{opacity:0.45;cursor:not-allowed;transform:none}
-.fixer-triple-btn svg{flex-shrink:0}
+.fixer-analyze-btn svg{width:18px;height:18px;flex-shrink:0}
 
 .fixer-progress{margin-top:18px;display:none}
 .fixer-progress.active{display:block}
@@ -6190,13 +6151,6 @@ header.header > .header-inner,
     width:17px !important;
     height:17px !important;
     opacity:1 !important;
-    transition:transform .18s ease, opacity .18s ease !important;
-  }
-  .header .hamburger-btn[aria-expanded="true"]{
-    background:#1d2230 !important;
-    border-color:rgba(113,112,255,0.34) !important;
-    color:#a8a6ff !important;
-    box-shadow:inset 0 1px 0 rgba(255,255,255,0.05),0 6px 16px rgba(71,74,255,0.18) !important;
   }
   .header .logo{
     flex:1 1 auto !important;
@@ -7072,97 +7026,6 @@ function showErrorToast(msg) {
     margin: 0 !important;
   }
 }
-
-/* SAFE_UI_API_FIXES_2026_04_26: non-destructive tour/responsive/contrast hardening */
-html,body{
-  max-width:100%;
-  overflow-x:clip;
-}
-@supports not (overflow-x:clip){
-  html,body{overflow-x:hidden;}
-}
-.mobile-drawer:not(.open){
-  right:auto !important;
-  left:100% !important;
-  transform:none !important;
-  visibility:hidden !important;
-  pointer-events:none !important;
-  contain:layout paint style !important;
-}
-.mobile-drawer.open{
-  right:0 !important;
-  left:auto !important;
-  visibility:visible !important;
-  pointer-events:auto !important;
-}
-.mobile-overlay:not(.active){
-  visibility:hidden !important;
-  pointer-events:none !important;
-}
-.radar-drawer:not(.open){
-  right:auto !important;
-  left:100% !important;
-  transform:none !important;
-  visibility:hidden !important;
-  pointer-events:none !important;
-  contain:layout paint style !important;
-}
-.radar-drawer.open{
-  right:0 !important;
-  left:auto !important;
-  transform:translateX(0) !important;
-  visibility:visible !important;
-}
-.deploy-status-panel.collapsed{
-  width:auto !important;
-  max-width:min(220px,calc(100vw - 24px)) !important;
-  opacity:.72;
-}
-.deploy-status-panel.collapsed .deploy-status-header{
-  padding:6px 8px !important;
-  border-bottom:0 !important;
-}
-.deploy-status-panel.collapsed .deploy-status-title{
-  max-width:128px;
-  overflow:hidden;
-  text-overflow:ellipsis;
-  white-space:nowrap;
-}
-@media(max-width:900px){
-  .deploy-status-panel{display:none !important;}
-}
-body.light .project-card h3,
-body.light .project-card .project-title,
-body.light .project-card [class*="project-name"],
-body.light .stat-number,
-body.light .section-title,
-body.light .review-notes,
-body.light .comments-body,
-body.light .kwr-report-head .domain{
-  color:#111827 !important;
-}
-body.light .view-btn,
-body.light .header-menu-btn,
-body.light .action-btn,
-body.light .preview-cta,
-body.light .deploy-status-toggle,
-body.light .comments-meta,
-body.light .project-meta,
-body.light .meta-tag,
-body.light .file-size,
-body.light .kwr-report-meta,
-body.light .kwr-badge{
-  color:#374151 !important;
-  border-color:rgba(17,24,39,.18) !important;
-}
-body.light .view-btn.active,
-body.light .action-btn.primary{
-  color:#fff !important;
-}
-#tour-backdrop.open{display:block;max-width:100vw;overflow:hidden}
-.tour-tooltip{box-sizing:border-box;max-height:calc(100vh - 32px);overflow:auto}
-/* END SAFE_UI_API_FIXES_2026_04_26 */
-
 </style>
 </head>
 
@@ -7182,7 +7045,6 @@ body.light .action-btn.primary{
   <button class="mobile-nav-item" onclick="showPage('analytics');closeMobileMenu()">Analytics</button>
   <button class="mobile-nav-item" onclick="showPage('settings');closeMobileMenu()">Settings</button>
   <button class="mobile-nav-item" onclick="closeMobileMenu();fullSync(document.getElementById('hdr-sync-btn'))">Sync dashboard</button>
-  <button class="mobile-nav-item" onclick="closeMobileMenu();refreshDashboardHard(document.getElementById('hdr-refresh-cache-btn'))">Refresh and Clear Cache</button>
   <button class="mobile-nav-item" onclick="toggleTheme();closeMobileMenu()">Toggle theme</button>
   <button class="mobile-nav-item mobile-nav-item--danger" onclick="closeMobileMenu();doLogout()">Sign out</button>
 </div>
@@ -7258,11 +7120,7 @@ body.light .action-btn.primary{
       <svg id="hdr-sync-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" style="width:13px;height:13px;flex-shrink:0"><path d="M1 4v6h6"/><path d="M23 20v-6h-6"/><path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 0 1 3.51 15"/></svg>
       <span id="hdr-sync-label">Sync</span>
     </button>
-    <button class="hdr-sync-btn hdr-refresh-cache-btn" id="hdr-refresh-cache-btn" onclick="refreshDashboardHard(this)" title="Refresh: clear browser cache, ask backend to refresh cache state, and reload file lists" aria-label="Refresh and clear cache">
-      <svg id="hdr-refresh-cache-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" style="width:13px;height:13px;flex-shrink:0"><path d="M21 12a9 9 0 1 1-2.64-6.36"/><path d="M21 3v6h-6"/><path d="M12 7v5l3 2"/></svg>
-      <span id="hdr-refresh-cache-label">Refresh</span>
-    </button>
-  <button class="hamburger-btn" onclick="openMobileMenu()" aria-label="Open navigation menu" aria-expanded="false" title="Menu"><svg id="hamburger-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg></button>
+  <button class="hamburger-btn" onclick="openMobileMenu()" aria-label="Open navigation menu" title="Menu"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg></button>
   <button class="theme-toggle-btn" onclick="toggleTheme()" id="theme-toggle-btn" aria-label="Toggle dark/light mode" title="Toggle theme"><svg id="theme-icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg><svg id="theme-icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg></button>
   <span id="hdr-role-badge" style="display:none"></span>
   <button id="logout-btn" class="hdr-logout-btn" onclick="doLogout()" title="Sign out"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg><span>Sign out</span></button>
@@ -7365,8 +7223,6 @@ body.light .action-btn.primary{
 
 <!-- ============================================================
      N8N WORKFLOW FIXER PAGE
-     N8N_FIXER_READ_ONLY_UI_2026_04_27
-     MANUAL IMPORT ONLY — this dashboard never writes fixed JSON back to n8n.
      ============================================================ -->
 <div id="page-fixer" class="fixer-page" style="display:none">
 
@@ -7377,7 +7233,7 @@ body.light .action-btn.primary{
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
         N8N Workflow Fixer
       </div>
-      <div class="fixer-page-desc">Upload a broken N8N workflow JSON, describe the issue, and AI will analyze it for a safe fixed JSON download. MANUAL IMPORT ONLY — n8n fetch is read-only and this dashboard never overwrites workflows.</div>
+      <div class="fixer-page-desc">Upload a broken N8N workflow JSON, describe the issue, and AI will analyze and fix it automatically. Then deploy directly to your N8N account.</div>
     </div>
     <div class="fixer-page-actions">
       <button class="action-btn" onclick="loadStuckWorkflows()" title="Load live executions from N8N">
@@ -7388,9 +7244,9 @@ body.light .action-btn.primary{
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:13px;height:13px"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
         Load from N8N
       </button>
-      <button class="action-btn accent" id="auto-import-btn" onclick="openAutoImportModal()" title="Fetch workflow JSON from your N8N account using GET only">
+      <button class="action-btn accent" id="auto-import-btn" onclick="openAutoImportModal()" title="Auto-import workflow JSON + fields from your N8N account">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:13px;height:13px"><path d="M4 16v1a3 3 0 0 0 3 3h10a3 3 0 0 0 3-3v-1"/><polyline points="4 12 12 8 20 12"/><line x1="12" y1="2" x2="12" y2="15"/></svg>
-        Fetch from N8N (read-only)
+        Auto-Import from N8N
       </button>
     </div>
   </div>
@@ -7509,8 +7365,7 @@ body.light .action-btn.primary{
       </div>
       <div class="fixer-field">
         <label class="fixer-label" for="fixer-site-url">Site / Project URL</label>
-        <input class="fixer-input" type="text" id="fixer-site-url" list="fixer-domain-list" placeholder="https://example.com or select existing" oninput="updateFixerMeta()">
-        <datalist id="fixer-domain-list"></datalist>
+        <input class="fixer-input" type="text" id="fixer-site-url" placeholder="https://example.com" oninput="updateFixerMeta()">
       </div>
       <div class="fixer-field">
         <label class="fixer-label" for="fixer-suspected-node">Suspected Node (optional)</label>
@@ -7523,77 +7378,82 @@ body.light .action-btn.primary{
         </select>
       </div>
       <div class="fixer-field">
-        <label class="fixer-label">AI Model</label>
-        <div class="fixer-model-grid" id="fixer-model-grid">
-          <!-- Anthropic -->
-          <div class="fixer-model-card selected" data-value="claude-opus-4-7" onclick="selectModelCard(this)">
-            <div class="card-name"><span class="card-star">★</span> Claude Opus 4.7</div>
-            <div class="card-provider">Anthropic — Flagship</div>
-            <div class="card-badge">Best</div>
-            <div class="card-check">✓</div>
-          </div>
-          <div class="fixer-model-card" data-value="claude-sonnet-4-6" onclick="selectModelCard(this)">
-            <div class="card-name">Claude Sonnet 4.6</div>
-            <div class="card-provider">Anthropic</div>
-            <div class="card-check">✓</div>
-          </div>
-          <div class="fixer-model-card" data-value="anthropic/claude-opus-4.7" onclick="selectModelCard(this)">
-            <div class="card-name">Claude Opus 4.7</div>
-            <div class="card-provider">OpenRouter</div>
-            <div class="card-check">✓</div>
-          </div>
-          <div class="fixer-model-card" data-value="anthropic/claude-sonnet-4.6" onclick="selectModelCard(this)">
-            <div class="card-name">Claude Sonnet 4.6</div>
-            <div class="card-provider">OpenRouter</div>
-            <div class="card-check">✓</div>
-          </div>
-          <!-- OpenAI -->
-          <div class="fixer-model-card" data-value="gpt-4o" onclick="selectModelCard(this)">
-            <div class="card-name"><span class="card-star">★</span> GPT-4o</div>
-            <div class="card-provider">OpenAI Direct</div>
-            <div class="card-check">✓</div>
-          </div>
-          <div class="fixer-model-card" data-value="openai/gpt-5.4" onclick="selectModelCard(this)">
-            <div class="card-name">GPT-5.4</div>
-            <div class="card-provider">OpenRouter</div>
-            <div class="card-check">✓</div>
-          </div>
-          <!-- Gemini -->
-          <div class="fixer-model-card" data-value="gemini-3.1-pro-preview" onclick="selectModelCard(this)">
-            <div class="card-name"><span class="card-star">★</span> Gemini 3.1 Pro</div>
-            <div class="card-provider">Google Direct</div>
-            <div class="card-check">✓</div>
-          </div>
-          <div class="fixer-model-card" data-value="google/gemini-3.1-pro-preview" onclick="selectModelCard(this)">
-            <div class="card-name">Gemini 3.1 Pro</div>
-            <div class="card-provider">OpenRouter</div>
-            <div class="card-check">✓</div>
-          </div>
-          <!-- Kimi -->
-          <div class="fixer-model-card" data-value="kimi-k2.6-code-preview" onclick="selectModelCard(this)">
-            <div class="card-name"><span class="card-star">★</span> Kimi K2.6</div>
-            <div class="card-provider">Moonshot — Code</div>
-            <div class="card-check">✓</div>
-          </div>
-          <div class="fixer-model-card" data-value="moonshotai/kimi-k2.5" onclick="selectModelCard(this)">
-            <div class="card-name">Kimi K2.5</div>
-            <div class="card-provider">OpenRouter</div>
-            <div class="card-check">✓</div>
-          </div>
-          <!-- Copilot -->
-          <div class="fixer-model-card" data-value="claude-sonnet-4.6" onclick="selectModelCard(this)">
-            <div class="card-name">Claude Sonnet 4.6</div>
-            <div class="card-provider">GitHub Copilot</div>
-            <div class="card-check">✓</div>
-          </div>
-          <div class="fixer-model-card" data-value="gpt-4.1" onclick="selectModelCard(this)">
-            <div class="card-name">GPT-4.1</div>
-            <div class="card-provider">GitHub Copilot</div>
-            <div class="card-check">✓</div>
-          </div>
-        </div>
-        <input type="hidden" id="fixer-model" value="claude-opus-4-7">
-      </div>
+        <label class="fixer-label" for="fixer-model">AI Model</label>
+        <select class="fixer-select" id="fixer-model" onchange="updateFixerMeta()">
+          <optgroup label="Anthropic (Direct)">
+            <option value="claude-opus-4-7" selected>Claude Opus 4.7 (Flagship)</option>
+            <option value="claude-sonnet-4-6">Claude Sonnet 4.6</option>
+            <option value="claude-opus-4-5">Claude Opus 4.5</option>
+            <option value="claude-opus-4">Claude Opus 4</option>
+            <option value="claude-3-7-sonnet-20250219">Claude 3.7 Sonnet</option>
+            <option value="claude-3-5-sonnet-20241022">Claude 3.5 Sonnet</option>
+            <option value="claude-3-5-haiku-20241022">Claude 3.5 Haiku</option>
+          </optgroup>
+          <optgroup label="OpenRouter">
+            <option value="anthropic/claude-opus-4.7">Claude Opus 4.7 (OR)</option>
+            <option value="anthropic/claude-sonnet-4.6">Claude Sonnet 4.6 (OR)</option>
+            <option value="openai/gpt-5.4">GPT-5.4</option>
+            <option value="google/gemini-3.1-pro-preview">Gemini 3.1 Pro</option>
+            <option value="google/gemini-2.5-pro">Gemini 2.5 Pro</option>
+            <option value="moonshotai/kimi-k2.5">Kimi K2.5</option>
+            <option value="minimax/minimax-m2.7">MiniMax M2.7</option>
+            <option value="z-ai/glm-5.1">GLM 5.1</option>
+          </optgroup>
+          <optgroup label="OpenAI (Direct)">
+            <option value="gpt-4o">GPT-4o ★</option>
+            <option value="gpt-4.5-preview">GPT-4.5 Preview</option>
+            <option value="gpt-4o-mini">GPT-4o Mini</option>
+            <option value="o1">o1</option>
+            <option value="o3-mini">o3-mini</option>
+          </optgroup>
+          <optgroup label="GitHub Copilot">
+            <option value="claude-sonnet-4.6">Claude Sonnet 4.6 (Copilot)</option>
+            <option value="claude-opus-4.5">Claude Opus 4.5 (Copilot)</option>
+            <option value="claude-opus-4">Claude Opus 4 (Copilot)</option>
+            <option value="gpt-4.1">GPT-4.1 (Copilot)</option>
+            <option value="gpt-4.1-mini">GPT-4.1 Mini (Copilot)</option>
+            <option value="gpt-4.1-nano">GPT-4.1 Nano (Copilot)</option>
+            <option value="gpt-4o">GPT-4o (Copilot)</option>
+            <option value="o4-mini">o4-mini (Copilot)</option>
+            <option value="o3">o3 (Copilot)</option>
+            <option value="o3-mini">o3-mini (Copilot)</option>
+            <option value="gemini-2.5-pro">Gemini 2.5 Pro (Copilot)</option>
+            <option value="gemini-2.0-flash">Gemini 2.0 Flash (Copilot)</option>
+          </optgroup>
+          <optgroup label="Google Gemini (Direct)">
+            <option value="gemini-3.1-pro-preview">Gemini 3.1 Pro Preview ★</option>
+            <option value="gemini-3-pro-preview">Gemini 3 Pro Preview</option>
+            <option value="gemini-3.1-flash-lite-preview">Gemini 3.1 Flash Lite Preview ★</option>
+            <option value="gemini-3-flash-preview">Gemini 3 Flash Preview</option>
+            <option value="gemini-flash-latest">Gemini Flash Latest (alias)</option>
+            <option value="gemini-2.5-pro-direct">Gemini 2.5 Pro (Direct)</option>
+            <option value="gemini-2.5-flash">Gemini 2.5 Flash</option>
+            <option value="gemini-2.5-flash-lite">Gemini 2.5 Flash Lite</option>
+            <option value="gemini-2.0-flash-direct">Gemini 2.0 Flash (Direct)</option>
+            <option value="gemini-2.0-flash-lite">Gemini 2.0 Flash Lite</option>
+          </optgroup>
+          <optgroup label="Kimi Code (Moonshot AI)">
+            <option value="kimi-k2.6-code-preview">K2.6 Code Preview ★ (Flagship)</option>
+            <option value="kimi-latest">Kimi Latest</option>
+            <option value="kimi-k2">Kimi K2</option>
+            <option value="kimi-k1.5">Kimi K1.5</option>
+            <option value="moonshot-v1-128k">Moonshot v1 128K</option>
+            <option value="moonshot-v1-32k">Moonshot v1 32K</option>
+          </optgroup>
+          <optgroup label="Venice AI">
+            <option value="llama-3.3-70b">Llama 3.3 70B</option>
+            <option value="llama-3.1-405b">Llama 3.1 405B</option>
+            <option value="mistral-31-24b">Mistral 3.1 24B</option>
+            <option value="qwen-2.5-72b">Qwen 2.5 72B</option>
+            <option value="deepseek-r1-671b">DeepSeek R1 671B</option>
+            <option value="deepseek-v3-0324">DeepSeek V3 0324</option>
+          </optgroup>
+          <optgroup label="Fireworks AI">
+            <option value="accounts/fireworks/models/llama-v3p3-70b-instruct">Llama 3.3 70B</option>
+            <option value="accounts/fireworks/models/llama-v3p1-405b-instruct">Llama 3.1 405B</option>
+            <option value="accounts/fireworks/models/deepseek-r1">DeepSeek R1</option>
+            <option value="accounts/fireworks/models/deepseek-v3">DeepSeek V3</option>
+            <option value="accounts/fireworks/models/qwen2p5-72b-instruct">Qwen 2.5 72B</option>
             <option value="accounts/fireworks/models/mixtral-8x22b-instruct">Mixtral 8x22B</option>
           </optgroup>
         </select>
@@ -7601,16 +7461,11 @@ body.light .action-btn.primary{
     </div>
   </div>
 
-  <!-- Primary Action Buttons -->
-  <div style="margin-bottom:18px;display:flex;flex-direction:column;gap:10px">
-    <button class="fixer-analyze-btn" id="fixer-analyze-btn" onclick="runAnalysis()" disabled data-tooltip="Ctrl+Enter to run">
+  <!-- Primary Action Button -->
+  <div style="margin-bottom:18px">
+    <button class="fixer-analyze-btn" id="fixer-analyze-btn" onclick="runAnalysis()" disabled>
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12l2 2 4-4"/><path d="M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0z"/></svg>
       <span id="fixer-analyze-btn-label">Analyze &amp; Fix Workflow</span>
-    </button>
-    <button class="fixer-triple-btn" id="fixer-triple-btn" onclick="runTripleAnalysis()" disabled title="Send to GPT 5.5 + Opus 4.7 + Gemini 3.1 simultaneously for highest accuracy">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:18px;height:18px"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
-      <span>⚡ Triple AI Verdict</span>
-      <small style="opacity:0.8;font-weight:400;font-size:11px">GPT 5.5 + Opus 4.7 + Gemini 3.1</small>
     </button>
   </div>
 
@@ -7658,33 +7513,6 @@ body.light .action-btn.primary{
       </div>
     </div>
 
-    <!-- Content Preservation Report -->
-    <div class="fixer-result-card" style="margin-bottom:14px">
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;flex-wrap:wrap;gap:8px">
-        <div class="fixer-result-label" style="margin-bottom:0">📋 Content Preservation Report</div>
-        <span id="preservation-status-badge" style="display:none;font-size:10px;font-weight:800;padding:3px 9px;border-radius:999px;background:rgba(39,166,68,0.16);color:#4ade80;border:1px solid rgba(39,166,68,0.3)">All Preserved</span>
-      </div>
-      <div class="fixer-preservation-grid" id="preservation-grid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px">
-        <div class="fixer-preservation-item" style="padding:12px;border-radius:10px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06)">
-          <div style="font-size:11px;color:var(--muted);margin-bottom:4px">Nodes</div>
-          <div style="font-size:16px;font-weight:700;color:var(--text)" id="preservation-nodes">—</div>
-        </div>
-        <div class="fixer-preservation-item" style="padding:12px;border-radius:10px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06)">
-          <div style="font-size:11px;color:var(--muted);margin-bottom:4px">Connections</div>
-          <div style="font-size:16px;font-weight:700;color:var(--text)" id="preservation-connections">—</div>
-        </div>
-        <div class="fixer-preservation-item" style="padding:12px;border-radius:10px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06)">
-          <div style="font-size:11px;color:var(--muted);margin-bottom:4px">Parameters Preserved</div>
-          <div style="font-size:16px;font-weight:700;color:var(--text)" id="preservation-params">—</div>
-        </div>
-        <div class="fixer-preservation-item" style="padding:12px;border-radius:10px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06)">
-          <div style="font-size:11px;color:var(--muted);margin-bottom:4px">Structural Changes</div>
-          <div style="font-size:16px;font-weight:700;color:var(--text)" id="preservation-structural">—</div>
-        </div>
-      </div>
-      <div id="preservation-details" style="margin-top:10px;font-size:12px;color:var(--muted);line-height:1.6"></div>
-    </div>
-
     <!-- Fixed JSON Viewer -->
     <div class="fixer-result-card">
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;flex-wrap:wrap;gap:8px">
@@ -7711,32 +7539,35 @@ body.light .action-btn.primary{
       </div>
     </div>
 
-    <!-- Manual Import Section — n8n remains read-only -->
-    <div id="fixer-manual-import-section" style="margin-top:24px;background:linear-gradient(135deg,rgba(113,112,255,0.08),rgba(113,112,255,0.03));border:1.5px solid rgba(113,112,255,0.25);border-radius:18px;padding:22px 24px">
+    <!-- Deploy Section — visually distinct from Analyze -->
+    <div id="fixer-deploy-section" style="margin-top:24px;background:linear-gradient(135deg,rgba(39,166,68,0.06),rgba(28,130,54,0.03));border:1.5px solid rgba(39,166,68,0.25);border-radius:18px;padding:22px 24px">
       <div style="display:flex;align-items:flex-start;gap:16px;flex-wrap:wrap">
-        <div style="flex:1;min-width:220px">
-          <div style="font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:0.08em;color:#c4c2ff;margin-bottom:6px;display:flex;align-items:center;gap:6px">
-            MANUAL IMPORT ONLY
+        <div style="flex:1;min-width:200px">
+          <div style="font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:0.08em;color:rgba(39,166,68,0.9);margin-bottom:6px;display:flex;align-items:center;gap:6px">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:13px;height:13px"><path d="M22 2L11 13"/><path d="M22 2L15 22 11 13 2 9l20-7z"/></svg>
+            Ready to Deploy
           </div>
-          <div style="font-size:13px;color:var(--text-secondary);line-height:1.55" id="manual-import-summary-text">
-            Review the fixed JSON above, download or copy it, and manually import it into a duplicated/safe n8n workflow only after human review. This dashboard does not overwrite n8n workflows.
+          <div style="font-size:13px;color:var(--text-secondary);line-height:1.55" id="deploy-summary-text">
+            Review the fixed JSON above, then deploy to your N8N account.
           </div>
         </div>
         <div style="display:flex;flex-direction:column;gap:10px;align-items:flex-end;flex-shrink:0">
-          <button class="action-btn success" id="fixer-manual-download-btn" onclick="downloadFixedJson()">
-            Download Fixed .json
+          <button class="fixer-deploy-btn" id="fixer-deploy-btn" onclick="deployFixed()" disabled>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 2L11 13"/><path d="M22 2L15 22 11 13 2 9l20-7z"/></svg>
+            Deploy to N8N
           </button>
-          <span style="font-size:11px;color:var(--muted);text-align:right">n8n API writes are disabled</span>
+          <span style="font-size:11px;color:var(--muted);text-align:right">Overwrites the selected workflow</span>
         </div>
       </div>
     </div>
 
-    <!-- Manual Import Notice -->
+    <!-- Deploy Result -->
     <div class="fixer-deploy-result" id="fixer-deploy-result">
       <div class="fixer-deploy-result-title" id="fixer-deploy-result-title">
-        Manual import required
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:15px;height:15px"><path d="m9 12 2 2 4-4"/><circle cx="12" cy="12" r="10"/></svg>
+        Deployed successfully
       </div>
-      <div class="fixer-deploy-result-meta" id="fixer-deploy-result-meta">Download the fixed JSON and import it manually after review.</div>
+      <div class="fixer-deploy-result-meta" id="fixer-deploy-result-meta"></div>
     </div>
 
   </div><!-- end .fixer-result -->
@@ -8315,6 +8146,45 @@ body.light .action-btn.primary{
             function exportRadarExcel() {
                 const payload = currentRadarPayload;
                 if(!payload) return alert("No data loaded");
+                /*
+                    report_date: "2026-04-26",
+                    overall_score: 88.5,
+                    scores: {
+                        "Accessibility": 95,
+                        "Code Quality": 92,
+                        "Accuracy": 90,
+                        "Compatibility": 88,
+                        "Speed": 85,
+                        "Creativity": 82,
+                        "Optimization": 80,
+                        "Consistency": 75
+                    },
+                    targets: {
+                        "Accessibility": 95,
+                        "Code Quality": 95,
+                        "Accuracy": 92,
+                        "Compatibility": 90,
+                        "Speed": 90,
+                        "Creativity": 85,
+                        "Optimization": 85,
+                        "Consistency": 85
+                    },
+                    trends: {
+                        "Accessibility": "+1",
+                        "Code Quality": "+4",
+                        "Accuracy": "+2",
+                        "Compatibility": "+3",
+                        "Speed": "0",
+                        "Creativity": "+7",
+                        "Optimization": "+5",
+                        "Consistency": "-2"
+                    },
+                    ai_recommendations: [
+                        { priority: "HIGH", area: "Consistency", recommendation: "Add strict output format templates to Agent 1 memo", impact: "+8-12 pts" },
+                        { priority: "MEDIUM", area: "Optimization", recommendation: "Implement CSS shorthand consolidation rules", impact: "+5-8 pts" }
+                    ]
+                };
+
                 fetch('/api/radar/export/excel', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -9465,7 +9335,7 @@ GET    /api/tasks/stats/burndown?project_id=x     — Burndown chart data
 </div>
 
 
-<!-- Fetch from N8N Modal (READ-ONLY) -->
+<!-- Auto-Import from N8N Modal -->
 <div class="modal-overlay" id="auto-import-modal" role="dialog" aria-modal="true" onclick="if(event.target===this)closeAutoImportModal()" style="display:none;align-items:center;justify-content:center">
   <div class="modal-panel" style="max-width:580px;width:100%;background:var(--bg-elevated);border:1px solid rgba(255,255,255,0.1);border-radius:20px;padding:28px;max-height:85vh;overflow:auto">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px">
@@ -9474,8 +9344,8 @@ GET    /api/tasks/stats/burndown?project_id=x     — Burndown chart data
           <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" style="width:15px;height:15px"><path d="M4 16v1a3 3 0 0 0 3 3h10a3 3 0 0 0 3-3v-1"/><polyline points="4 12 12 8 20 12"/><line x1="12" y1="2" x2="12" y2="15"/></svg>
         </div>
         <div>
-          <div style="font-size:15px;font-weight:700;color:var(--text)">Fetch from N8N (read-only)</div>
-          <div style="font-size:11px;color:var(--muted)">Select a workflow to fill fields using GET only — MANUAL IMPORT ONLY</div>
+          <div style="font-size:15px;font-weight:700;color:var(--text)">Auto-Import from N8N</div>
+          <div style="font-size:11px;color:var(--muted)">Select a workflow to auto-fill all fields</div>
         </div>
       </div>
         <button class="modal-close" onclick="closeAutoImportModal()" aria-label="Close auto-import dialog" style="flex-shrink:0">&times;</button>
@@ -9505,7 +9375,7 @@ GET    /api/tasks/stats/burndown?project_id=x     — Burndown chart data
     </div>
 
     <div style="margin-top:16px;padding-top:14px;border-top:1px solid rgba(255,255,255,0.06);font-size:11px;color:var(--muted);line-height:1.5">
-      Selecting a workflow will fill: workflow name, target ID, JSON content, and any detectable site URL. This is READ-ONLY; fixed JSON must be downloaded and manually imported after review.
+      Selecting a workflow will auto-fill: workflow name, target ID, JSON content, and any detectable site URL. You can edit anything after import.
     </div>
   </div>
 </div>
@@ -9526,8 +9396,7 @@ GET    /api/tasks/stats/burndown?project_id=x     — Burndown chart data
   <div class="preview-container">
     <div class="device-frame desktop" id="device-frame">
       <span class="device-label" id="device-label">Desktop — 1280px</span>
-      <!-- PROJECT_HTML_PREVIEW_SCRIPT_FIX_2026_04_26: allow template scripts to run inside the same-origin preview iframe, matching the previous interactive preview behavior. -->
-      <iframe id="preview-iframe" sandbox="allow-same-origin allow-scripts"></iframe>
+      <iframe id="preview-iframe" sandbox="allow-same-origin"></iframe>
     </div>
   </div>
 </div>
@@ -9765,9 +9634,9 @@ GET    /api/tasks/stats/burndown?project_id=x     — Burndown chart data
         <div id="ps-brainstorm-models" class="ps-model-pills"></div>
       </div>
       <div class="prompt-actions">
-        <button id="prompt-improve-btn" type="button" class="action-btn success" onclick="improvePrompt(this)" data-tooltip="Build a single high-quality prompt with the selected model. Uses your instructions plus the project context to produce one polished, ready-to-run prompt." title="Build a single high-quality prompt with the selected model"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg><span class="ps-btn-label">Build prompt</span></button>
-        <button id="prompt-tweak-btn" type="button" class="action-btn ps-pipeline-launcher" onclick="tweakTemplate(this)" data-tooltip="Launch the HTML pipeline from the improved prompt, generate a candidate, and stream it into the live preview before any GitHub replacement." title="Launch the HTML pipeline from the improved prompt and preview the candidate before replacing the active file"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M13 2L3 14h8l-1 8 11-13h-8l0-7Z"/><path d="M6 14h5"/></svg><span class="ps-btn-label">Launch pipeline</span></button>
-        <button id="prompt-brainstorm-btn" type="button" class="action-btn brainstorm" onclick="brainstormPrompt(this)" data-tooltip="Run the selected leading models in parallel and synthesize the single best prompt from all their answers." title="Run the selected leading models in parallel and synthesize the best possible prompt"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="3"/><circle cx="5" cy="5" r="2"/><circle cx="19" cy="5" r="2"/><circle cx="5" cy="19" r="2"/><circle cx="19" cy="19" r="2"/><line x1="7" y1="6" x2="10" y2="10"/><line x1="17" y1="6" x2="14" y2="10"/><line x1="7" y1="18" x2="10" y2="14"/><line x1="17" y1="18" x2="14" y2="14"/></svg><span class="ps-btn-label">Brainstorm</span></button>
+        <button id="prompt-improve-btn" class="action-btn success" onclick="improvePrompt(this)" data-tooltip="Build a single high-quality prompt with the selected model. Uses your instructions plus the project context to produce one polished, ready-to-run prompt." title="Build a single high-quality prompt with the selected model"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg><span class="ps-btn-label">Build prompt</span></button>
+        <button id="prompt-tweak-btn" class="action-btn ps-pipeline-launcher" onclick="tweakTemplate(this)" data-tooltip="Launch the HTML pipeline from the improved prompt, generate a candidate, and stream it into the live preview before any GitHub replacement." title="Launch the HTML pipeline from the improved prompt and preview the candidate before replacing the active file"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M13 2L3 14h8l-1 8 11-13h-8l0-7Z"/><path d="M6 14h5"/></svg><span class="ps-btn-label">Launch pipeline</span></button>
+        <button id="prompt-brainstorm-btn" class="action-btn brainstorm" onclick="brainstormPrompt(this)" data-tooltip="Run the selected leading models in parallel and synthesize the single best prompt from all their answers." title="Run the selected leading models in parallel and synthesize the best possible prompt"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="3"/><circle cx="5" cy="5" r="2"/><circle cx="19" cy="5" r="2"/><circle cx="5" cy="19" r="2"/><circle cx="19" cy="19" r="2"/><line x1="7" y1="6" x2="10" y2="10"/><line x1="17" y1="6" x2="14" y2="10"/><line x1="7" y1="18" x2="10" y2="14"/><line x1="17" y1="18" x2="14" y2="14"/></svg><span class="ps-btn-label">Brainstorm</span></button>
         <span id="prompt-status" class="prompt-status">Step 1: write instructions. Step 2: build with one model or brainstorm with selected leaders. Step 3: generate and live-preview an HTML candidate before replacing the active file.</span>
         <button id="prompt-stop-all-btn" class="action-btn" onclick="stopAllPromptStudio()" title="Cancel any running action" style="background:rgba(217,43,43,0.18);border-color:rgba(217,43,43,0.55);color:#ffb7b7"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:12px;height:12px;margin-right:4px;vertical-align:-1px"><rect x="6" y="6" width="12" height="12" rx="1"/></svg>Stop all</button>
         <span class="esc-hint" aria-hidden="true"><kbd style="font:inherit;background:transparent;border:0;padding:0">Esc</kbd> to cancel</span>
@@ -11083,7 +10952,6 @@ CREATE POLICY "Users see own reports"
       .finally(function(){ _csrfPromise = null; });
     return _csrfPromise;
   }
-  window.dashboardEnsureCsrf = _ensureCsrf;
   window.fetch = function(url, opts){
     var self = this;
     opts = opts || {};
@@ -12017,23 +11885,18 @@ function _htmlFileInfo(){
   return f||null;
 }
 async function tweakTemplate(btn){
-  const improvedOutput=(document.getElementById('prompt-output').value||'').trim();
-  const draftFallback=(document.getElementById('prompt-draft').value||'').trim();
-  const improved=improvedOutput||draftFallback;
+  const improved=(document.getElementById('prompt-output').value||'').trim();
   const status=document.getElementById('prompt-status');
   const tweakOut=document.getElementById('prompt-tweak-output');
   const tweakStatus=document.getElementById('prompt-tweak-status');
   if(window._tweakAbort){
     try{ window._tweakAbort.abort('user_cancel'); }catch(e){}
     window._tweakAbort=null;
-    tweakStatus.textContent='Pipeline cancelled.';
-    showToast('Pipeline cancelled','warn'); _syncPromptModalRunningState();
+    tweakStatus.textContent='Tweaking cancelled.';
+    showToast('Tweaking cancelled','warn'); _syncPromptModalRunningState();
     return;
   }
-  if(!improved){status.textContent='Write instructions or build/brainstorm a prompt first so the pipeline has instructions to apply.';return;}
-  if(!improvedOutput){
-    status.textContent='Launching pipeline directly from the draft instructions. You can still Build prompt first for a more structured prompt.';
-  }
+  if(!improved){status.textContent='Build or brainstorm a prompt first so the pipeline has instructions to apply.';return;}
   const htmlFile=_htmlFileInfo();
   if(!htmlFile || !htmlFile.download){status.textContent='No HTML template found in the selected version.';return;}
   const modelEl=document.getElementById('prompt-model-select');
@@ -12043,17 +11906,12 @@ async function tweakTemplate(btn){
   btn.innerHTML='<span class="btn-spinner" aria-hidden="true"></span>Stop pipeline';
   btn.title='Click to cancel the current pipeline request';
   tweakOut.value='';
-  tweakStatus.textContent='Launching HTML pipeline...';
+  tweakStatus.textContent='Launching HTML pipeline from the improved prompt...';
   window._tweakAbort=new AbortController(); _syncPromptModalRunningState();
   try{
     const res=await fetch('/api/prompt/tweak',{method:'POST',signal:window._tweakAbort.signal,headers:{'Content-Type':'application/json'},body:JSON.stringify({domain:promptStudioContext.domain,agentName:promptStudioContext.agentName,versionName:promptStudioContext.versionName,htmlDownloadUrl:htmlFile.download,htmlFileName:htmlFile.name,htmlFilePath:htmlFile.path,fileManifest:promptStudioContext.fileManifest,improvedPrompt:improved,model:selectedModel||'anthropic/claude-opus-4.7',latestOnly:true})});
-    let data={};
-    try{data=await res.json();}catch(parseErr){data={ok:false,error:'Pipeline returned a non-JSON response'};}
-    if(!res.ok||!data.ok){
-      const errorDetail=data&&data.details?(' - '+data.details):'';
-      const errorText=(data&&data.error&&typeof data.error==='object')?JSON.stringify(data.error).slice(0,400):(data.error||('HTTP '+res.status));
-      throw new Error(errorText+errorDetail);
-    }
+    const data=await res.json();
+    if(!res.ok||!data.ok) throw new Error(data.error||'Tweaking failed');
     tweakOut.value=data.html||'';
     promptStudioContext.lastTweakedHtml=tweakOut.value;
     promptStudioContext.lastTweakedSummary=data.summary||'';
@@ -12061,16 +11919,15 @@ async function tweakTemplate(btn){
     document.getElementById('prompt-apply-html-btn').style.display='';
     document.getElementById('prompt-copy-html-obs-btn').style.display='';
     setPromptPreviewHtml(tweakOut.value||'', 'candidate');
-    showToast('HTML pipeline candidate ready','success');
+    showToast('Tweaked HTML example ready','success');
   }catch(err){
-    if(err && (err.name==='AbortError' || String(err).includes('user_cancel'))){tweakStatus.textContent='Pipeline cancelled.';}else{tweakStatus.textContent=(err&&err.message)||'Pipeline failed.';showToast('Pipeline failed','error');}
+    if(err && (err.name==='AbortError' || String(err).includes('user_cancel'))){tweakStatus.textContent='Tweaking cancelled.';}else{tweakStatus.textContent=(err&&err.message)||'Tweaking failed.';showToast('Tweaking failed','error');}
   }finally{
     window._tweakAbort=null;
     btn.disabled=false;
     btn.innerHTML=original;
     btn.classList.remove('is-running');
     btn.title='';
-    _syncPromptModalRunningState();
   }
 }
 async function copyTweakedHtml(){
@@ -12635,13 +12492,9 @@ function restoreChecklistState(){
 renderChecklist();
 
 function setView(mode,btn){
-  /* DASHBOARD_QA_FIX_VIEW_TOGGLE_SCOPE_2026_04_27 */
-  const grid=document.getElementById('projects-grid');
-  if(grid) grid.className='projects-grid'+(mode==='list'?' list-view':'');
-  const toggle=btn&&btn.closest?btn.closest('.view-toggle'):null;
-  const buttons=toggle?toggle.querySelectorAll('.view-btn'):document.querySelectorAll('.view-btn');
-  buttons.forEach(b=>b.classList.remove('active'));
-  if(btn) btn.classList.add('active');
+  document.getElementById('projects-grid').className='projects-grid'+(mode==='list'?' list-view':'');
+  document.querySelectorAll('.view-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
 }
 
 function filterProjects(q){
@@ -12815,21 +12668,19 @@ function formatRelativeTime(isoString) {
   return then.toLocaleDateString();
 }
 
-async function loadDashboard(opts){
-  opts = opts || {};
-  const forceRefresh = !!opts.forceRefresh;
+async function loadDashboard(){
   const grid=document.getElementById('projects-grid');
   // Strategy: load static data.json first (no API call), then try live API
   let tree=null;
 
   // 1. Try static data.json (always works, no rate limit)
-  const snapshotResult=await fetchJSON('./data.json' + (forceRefresh ? ('?refresh=' + Date.now()) : ''));
+  const snapshotResult=await fetchJSON('./data.json');
   tree=snapshotResult&&snapshotResult.ok?snapshotResult.data:null;
   let source='static';
   let sourceDetail='Source: bundled snapshot';
 
   // 2. Try live GitHub API for fresh data (may fail if rate-limited)
-  const liveTree=await fetchJSON(`${API}/git/trees/main?recursive=1${forceRefresh ? '&refresh=' + Date.now() : ''}`);
+  const liveTree=await fetchJSON(`${API}/git/trees/main?recursive=1`);
   if(liveTree&&liveTree.ok&&liveTree.data&&liveTree.data.tree){tree=liveTree.data;source='live';sourceDetail='Source: Live GitHub'}
 
   // 3. Fallback to localStorage cache
@@ -12878,7 +12729,7 @@ async function loadDashboard(opts){
   // Fetch enriched project metadata from local server
   let apiProjects = {};
   try {
-    const apiRes = await fetchJSON('/api/projects/list' + (forceRefresh ? ('?refresh=' + Date.now()) : ''));
+    const apiRes = await fetchJSON('/api/projects/list');
     if (apiRes && apiRes.ok && apiRes.projects) {
       apiRes.projects.forEach(proj => { apiProjects[proj.name] = proj; });
     }
@@ -13078,7 +12929,7 @@ async function fullSync(btnEl){
 
   // Step 1 - reload data from GitHub API + data.json (loadDashboard handles both)
   if(label) label.textContent='GitHub...';
-  await loadDashboard({forceRefresh:true});
+  await loadDashboard();
 
   // Step 2 - update last-sync timestamp
   updateLastSync();
@@ -13096,67 +12947,6 @@ async function fullSync(btnEl){
   document.getElementById('data-source-detail').textContent='Source: Live GitHub';
   showToast('Dashboard synced from GitHub','success');
 }
-
-async function refreshDashboardHard(btnEl){
-  // DASHBOARD_REFRESH_CACHE_BUTTON_2026_04_26
-  // Non-destructive refresh: clears frontend caches, asks backend to clear/confirm
-  // cache state, then reloads file/project lists from their sources.
-  const btn=btnEl||document.getElementById('hdr-refresh-cache-btn');
-  const label=document.getElementById('hdr-refresh-cache-label');
-  const statusEl=document.getElementById('sync-status');
-  const detailEl=document.getElementById('data-source-detail');
-  const dot=document.querySelector('.status-dot');
-  const oldLabel=label?label.textContent:'Refresh';
-  if(btn){btn.classList.add('syncing');btn.disabled=true;}
-  if(label)label.textContent='Clearing...';
-  if(statusEl)statusEl.textContent='Refreshing...';
-  if(detailEl)detailEl.textContent='Source: clearing frontend/backend cache…';
-  if(dot)dot.style.background='var(--gold)';
-  try{
-    try{localStorage.removeItem('dashboard_cache');}catch(_){}
-    try{sessionStorage.removeItem('dashboard_cache');}catch(_){}
-    try{localStorage.removeItem('dashboard_projects_cache');}catch(_){}
-    try{sessionStorage.removeItem('dashboard_projects_cache');}catch(_){}
-    if(window.__fetchMemoClear && typeof window.__fetchMemoClear==='function'){
-      try{window.__fetchMemoClear();}catch(_){}
-    }
-    let backend=null;
-    try{
-      const headers={'Content-Type':'application/json'};
-      if(window.dashboardEnsureCsrf && typeof window.dashboardEnsureCsrf==='function'){
-        const csrf=await window.dashboardEnsureCsrf();
-        if(csrf)headers['X-CSRF-Token']=csrf;
-      }
-      const r=await fetch('/api/dashboard/clear-cache',{method:'POST',headers:headers,body:JSON.stringify({scope:'dashboard'})});
-      backend=await r.json().catch(()=>({ok:false,error:'bad_json'}));
-      if(!r.ok||!backend.ok)throw new Error((backend&&backend.error)||('HTTP '+r.status));
-    }catch(err){
-      console.warn('[refresh-cache] backend clear failed',err);
-      if(window.toast)window.toast.warning('Backend cache refresh warning: '+(err.message||err));
-    }
-    if(label)label.textContent='Files...';
-    await loadDashboard({forceRefresh:true});
-    try{ if(typeof kwrFetchReports==='function') kwrFetchReports(); }catch(_){}
-    try{ if(typeof refreshRelativeTimes==='function') refreshRelativeTimes(); }catch(_){}
-    updateLastSync();
-    if(statusEl)statusEl.textContent='Refreshed';
-    if(detailEl)detailEl.textContent='Source: refreshed live files + backend cache check';
-    if(dot)dot.style.background='var(--green)';
-    if(window.toast)window.toast.success('Refreshed: cache cleared and file list reloaded');
-    return backend||{ok:true};
-  }catch(err){
-    if(statusEl)statusEl.textContent='Refresh failed';
-    if(detailEl)detailEl.textContent='Source: refresh failed';
-    if(dot)dot.style.background='var(--red)';
-    if(window.toast)window.toast.error('Refresh failed: '+(err.message||err));
-    throw err;
-  }finally{
-    if(label)label.textContent=oldLabel||'Refresh';
-    if(btn){btn.classList.remove('syncing');btn.disabled=false;btn.classList.add('done');setTimeout(()=>btn.classList.remove('done'),1800);}
-  }
-}
-window.refreshDashboardHard = refreshDashboardHard;
-
 function manualRefresh(){fullSync();}
 
 loadDashboard().then(()=>updateLastSync());
@@ -13223,21 +13013,11 @@ document.addEventListener('click', function(ev){
     const isRadar = (name === 'radar');
     const isKwr = (name === 'kwr');
     const isTask  = (name === 'tasks');
-    document.body.classList.toggle('page-kwr-active', isKwr);
-    document.body.classList.toggle('page-tasks-active', isTask);
     const container = document.querySelector('.container');
     const fixerPage = document.getElementById('page-fixer');
     const radarPage = document.getElementById('page-radar');
     const kwrPage   = document.getElementById('page-kwr');
     const tasksPage = document.getElementById('page-tasks');
-    /* DASHBOARD_QA_FIX_TASKS_REPARENT_2026_04_27
-       Some legacy markup leaves #page-tasks inside the hidden #page-radar
-       subtree, so showPage('tasks') can set the task page to block while an
-       ancestor remains display:none. Move it once to the main content root. */
-    const mainContent = document.getElementById('main-content');
-    if (tasksPage && mainContent && tasksPage.parentElement && tasksPage.parentElement.id === 'page-radar') {
-      mainContent.appendChild(tasksPage);
-    }
     const statsGrid = document.getElementById('stats-grid');
     const sectionHeads = document.querySelectorAll('.section-head');
     const projectsGrid = document.getElementById('projects-grid');
@@ -13358,40 +13138,32 @@ document.addEventListener('click', function(ev){
   // ---- Pull-to-Refresh (mobile only) ----
   window.initPullToRefresh = function() {
     if (window.innerWidth > 768) return;
-    if (window.__ptrInitialized) return;
-    window.__ptrInitialized = true;
-
-    var scrollEl = document.scrollingElement || document.documentElement || document.body;
+    var el = document.getElementById('page-projects') || document.querySelector('.container');
+    if (!el) return;
     var startY = 0, pulling = false, threshold = 80;
-    var indicator = document.getElementById('ptr-indicator');
-    if (!indicator) {
-      indicator = document.createElement('div');
-      indicator.id = 'ptr-indicator';
-      indicator.style.cssText = 'position:fixed;top:0;left:0;right:0;height:0;display:flex;align-items:center;justify-content:center;color:#7170ff;font-size:13px;font-weight:600;z-index:850;overflow:hidden;transition:height 0.2s;pointer-events:none;';
-      indicator.innerHTML = '<span style="opacity:0;transition:opacity 0.2s">↻ Pull to sync</span>';
-      document.body.appendChild(indicator);
-    }
+    var indicator = document.createElement('div');
+    indicator.id = 'ptr-indicator';
+    indicator.style.cssText = 'position:fixed;top:0;left:0;right:0;height:0;display:flex;align-items:center;justify-content:center;color:#7170ff;font-size:13px;font-weight:600;z-index:850;overflow:hidden;transition:height 0.2s;pointer-events:none;';
+    indicator.innerHTML = '<span style="opacity:0;transition:opacity 0.2s">↻ Pull to sync</span>';
+    document.body.appendChild(indicator);
     var label = indicator.querySelector('span');
 
-    window.addEventListener('touchstart', function(e) {
-      if (!e.touches || !e.touches[0]) return;
-      if ((scrollEl.scrollTop || window.scrollY || 0) <= 0) {
-        startY = e.touches[0].clientY;
-        pulling = true;
-      }
+    el.addEventListener('touchstart', function(e) {
+      if (el.scrollTop <= 0) { startY = e.touches[0].clientY; pulling = true; }
     }, {passive: true});
 
-    window.addEventListener('touchmove', function(e) {
-      if (!pulling || !e.touches || !e.touches[0]) return;
+    el.addEventListener('touchmove', function(e) {
+      if (!pulling) return;
       var diff = e.touches[0].clientY - startY;
       if (diff > 0 && diff < threshold * 2.5) {
         indicator.style.height = Math.min(diff, threshold * 1.2) + 'px';
         label.style.opacity = diff > threshold * 0.6 ? '1' : '0';
-        label.textContent = diff > threshold ? '↻ Release to sync' : '↻ Pull to sync';
+        if (diff > threshold) label.textContent = '↻ Release to sync';
+        else label.textContent = '↻ Pull to sync';
       }
     }, {passive: true});
 
-    window.addEventListener('touchend', function() {
+    el.addEventListener('touchend', function() {
       if (!pulling) return;
       var diff = parseFloat(indicator.style.height) || 0;
       if (diff > threshold) {
@@ -13401,25 +13173,13 @@ document.addEventListener('click', function(ev){
       indicator.style.height = '0';
       label.style.opacity = '0';
       pulling = false;
-    }, {passive: true});
+    });
   };
 
   // ---- Init ----
   window.initFixerPage = function() {
     loadWorkflowsDropdown();
     loadFixHistory();
-    loadFixerDomains();
-  };
-
-  // ---- Model card selection ----
-  window.selectModelCard = function(card) {
-    const grid = document.getElementById('fixer-model-grid');
-    if (!grid) return;
-    grid.querySelectorAll('.fixer-model-card').forEach(c => c.classList.remove('selected'));
-    card.classList.add('selected');
-    const hidden = document.getElementById('fixer-model');
-    if (hidden) hidden.value = card.dataset.value || '';
-    updateFixerMeta();
   };
 
   // ---- Meta strip update ----
@@ -13428,8 +13188,8 @@ document.addEventListener('click', function(ev){
     const siteUrl = (document.getElementById('fixer-site-url') || {}).value || '-';
     const targetSel = document.getElementById('fixer-target-wf-id');
     const targetId = targetSel ? (targetSel.options[targetSel.selectedIndex] || {}).text || targetSel.value || '-' : '-';
-    const modelHidden = document.getElementById('fixer-model');
-    const modelVal = modelHidden ? modelHidden.value : 'claude-opus-4.7';
+    const modelSel = document.getElementById('fixer-model');
+    const modelVal = modelSel ? modelSel.value : 'claude-opus-4.7';
     const modelShort = modelVal.split('/').pop();
 
     setText('meta-wf-name', wfName || '-');
@@ -13726,75 +13486,6 @@ document.addEventListener('click', function(ev){
       }
     }
 
-    // Preservation Report
-    try {
-      const orig = typeof data.originalJson === 'string' ? JSON.parse(data.originalJson) : (data.originalJson || {});
-      const fixed = typeof data.fixedWorkflowJson === 'string' ? JSON.parse(data.fixedWorkflowJson) : (data.fixedWorkflowJson || {});
-      const origNodes = (orig.nodes || []).length;
-      const fixedNodes = (fixed.nodes || []).length;
-      const origConns = Object.keys(orig.connections || {}).length;
-      const fixedConns = Object.keys(fixed.connections || {}).length;
-      const nodeDiff = fixedNodes - origNodes;
-      const connDiff = fixedConns - origConns;
-
-      const nodesEl = document.getElementById('preservation-nodes');
-      const connsEl = document.getElementById('preservation-connections');
-      const paramsEl = document.getElementById('preservation-params');
-      const structEl = document.getElementById('preservation-structural');
-      const statusBadge = document.getElementById('preservation-status-badge');
-      const detailsEl = document.getElementById('preservation-details');
-
-      if (nodesEl) nodesEl.innerHTML = origNodes + (nodeDiff !== 0 ? ' <span style="font-size:12px;color:' + (nodeDiff > 0 ? '#4ade80' : '#f87171') + '">' + (nodeDiff > 0 ? '+' : '') + nodeDiff + '</span>' : ' <span style="font-size:12px;color:var(--muted)">✓</span>');
-      if (connsEl) connsEl.innerHTML = origConns + (connDiff !== 0 ? ' <span style="font-size:12px;color:' + (connDiff > 0 ? '#4ade80' : '#f87171') + '">' + (connDiff > 0 ? '+' : '') + connDiff + '</span>' : ' <span style="font-size:12px;color:var(--muted)">✓</span>');
-
-      // Count preserved parameters by comparing node names/types
-      const origNodeMap = {};
-      (orig.nodes || []).forEach(n => { origNodeMap[n.id || n.name] = n; });
-      let preservedCount = 0, modifiedCount = 0;
-      (fixed.nodes || []).forEach(n => {
-        const key = n.id || n.name;
-        if (origNodeMap[key]) {
-          if (JSON.stringify(origNodeMap[key]) === JSON.stringify(n)) preservedCount++;
-          else modifiedCount++;
-        }
-      });
-      const totalNodes = origNodes || 1;
-      const preservePct = Math.round((preservedCount / totalNodes) * 100);
-      if (paramsEl) paramsEl.innerHTML = preservePct + '% <span style="font-size:12px;color:var(--muted)">(' + preservedCount + '/' + totalNodes + ')</span>';
-
-      if (structEl) structEl.innerHTML = (nodeDiff === 0 && connDiff === 0 ? 'None' : (Math.abs(nodeDiff) + Math.abs(connDiff)) + ' change' + (Math.abs(nodeDiff) + Math.abs(connDiff) !== 1 ? 's' : ''));
-
-      if (statusBadge) {
-        if (preservePct >= 90 && nodeDiff === 0 && connDiff === 0) {
-          statusBadge.style.display = 'inline-flex';
-          statusBadge.textContent = 'All Preserved';
-          statusBadge.style.background = 'rgba(39,166,68,0.16)';
-          statusBadge.style.color = '#4ade80';
-        } else if (preservePct >= 70) {
-          statusBadge.style.display = 'inline-flex';
-          statusBadge.textContent = 'Mostly Preserved';
-          statusBadge.style.background = 'rgba(212,168,74,0.16)';
-          statusBadge.style.color = '#facc15';
-        } else {
-          statusBadge.style.display = 'inline-flex';
-          statusBadge.textContent = 'Significant Changes';
-          statusBadge.style.background = 'rgba(248,113,113,0.16)';
-          statusBadge.style.color = '#f87171';
-        }
-      }
-
-      if (detailsEl) {
-        const details = [];
-        if (nodeDiff !== 0) details.push((nodeDiff > 0 ? 'Added ' : 'Removed ') + Math.abs(nodeDiff) + ' node' + (Math.abs(nodeDiff) !== 1 ? 's' : ''));
-        if (connDiff !== 0) details.push((connDiff > 0 ? 'Added ' : 'Removed ') + Math.abs(connDiff) + ' connection' + (Math.abs(connDiff) !== 1 ? 's' : ''));
-        if (modifiedCount > 0) details.push(modifiedCount + ' node' + (modifiedCount !== 1 ? 's' : '') + ' modified');
-        if (details.length === 0) details.push('All nodes and connections preserved with no structural changes.');
-        detailsEl.textContent = details.join(' · ');
-      }
-    } catch(e) {
-      // graceful fail
-    }
-
     // JSON viewer
     const viewer = document.getElementById('fixer-json-viewer');
     if (viewer) {
@@ -13826,7 +13517,7 @@ document.addEventListener('click', function(ev){
       deploySum.innerHTML =
         '<strong style="color:var(--text)">' + data.changesMade.length + ' fix' + (data.changesMade.length!==1?'es':'') + ' applied</strong> to <em>' + escapeHtml(wfName) + '</em>. ' +
         'Confidence: <strong style="color:' + (conf>=75?'#4ade80':conf>=50?'#facc15':'#f87171') + '">' + conf + '%</strong>. ' +
-        'Review the JSON above, then download or copy it for manual import.';
+        'Review the JSON above, then click Deploy.';
     }
 
     // Enable deploy button if JSON is valid
@@ -13941,15 +13632,85 @@ document.addEventListener('click', function(ev){
     }
   }
 
-  // ---- Manual Import Guard ----
-  window.deployFixed = function() {
-    showToast('MANUAL IMPORT ONLY: download the fixed JSON and import it manually after review. n8n API writes are disabled.', 'info');
+  // ---- Deploy ----
+window.deployFixed = function() {
+    if (!_fixerResultData || !_fixerResultData.fixedWorkflowJson) {
+      showToast('No fixed workflow to deploy', 'error');
+      return;
+    }
+    const targetSel = document.getElementById('fixer-target-wf-id');
+    const targetId = (targetSel && targetSel.value) || '';
+    const targetName = (targetSel && targetSel.selectedOptions[0]) ? targetSel.selectedOptions[0].text : (targetId || 'auto-detect');
+    const wfNameForConfirm = (document.getElementById('fixer-wf-name') || {}).value
+      || (_fixerJsonObj && _fixerJsonObj.name) || 'this workflow';
+    const issueSummary = _fixerResultData.issueSummary || '';
+    const rootCause    = _fixerResultData.rootCause    || '';
+    const changes      = _fixerResultData.changesMade  || [];
+    const conf         = Math.round((parseFloat(_fixerResultData.confidence)||0)*100);
+
+    // Build rich explanation
+    let msg = '⚠️  DEPLOY CONFIRMATION\n';
+    msg += '─────────────────────────────\n';
+    msg += 'Workflow: ' + wfNameForConfirm + '\n';
+    msg += 'Target in N8N: ' + targetName + '\n\n';
+    if (issueSummary) { msg += '🔍 Issue found:\n' + issueSummary + '\n\n'; }
+    if (rootCause)    { msg += '🎯 Root cause:\n' + rootCause + '\n\n'; }
+    if (changes.length) {
+      msg += '✅ Fixes applied (' + changes.length + '):\n';
+      changes.slice(0,8).forEach((c,i) => { msg += '  ' + (i+1) + '. ' + c + '\n'; });
+      if (changes.length > 8) msg += '  … and ' + (changes.length-8) + ' more\n';
+      msg += '\n';
+    }
+    msg += '📊 Confidence: ' + conf + '%\n\n';
+    msg += 'This will OVERWRITE the existing workflow in your live N8N account.\nThis cannot be undone.\n\nProceed?';
+
+    if (!confirm(msg)) { return; }
+
+    const btn = document.getElementById('fixer-deploy-btn');
     const deployResult = document.getElementById('fixer-deploy-result');
     const deployTitle = document.getElementById('fixer-deploy-result-title');
     const deployMeta = document.getElementById('fixer-deploy-result-meta');
-    if (deployResult) deployResult.classList.add('active');
-    if (deployTitle) deployTitle.textContent = 'Manual import required';
-    if (deployMeta) deployMeta.textContent = 'This dashboard does not write fixed JSON back to n8n. Use Download Fixed .json and import manually into a duplicate workflow.';
+
+    if (btn) { btn.disabled = true; btn.innerHTML = '<span class="btn-spinner"></span> Deploying…'; }
+    if (deployResult) deployResult.classList.remove('active', 'error');
+
+    fetch('/api/fixer/deploy', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({
+        fixedWorkflowJson: _fixerResultData.fixedWorkflowJson,
+        targetWorkflowId: targetId,
+      }),
+    })
+    .then(r => r.json())
+    .then(data => {
+      if (btn) {
+        btn.disabled = false;
+        btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 2L11 13"/><path d="M22 2L15 22 11 13 2 9l20-7z"/></svg> Deploy Fixed Workflow to N8N';
+      }
+      if (!data.ok) {
+        if (deployResult) deployResult.classList.add('active', 'error');
+        if (deployTitle) deployTitle.innerHTML = '❌ Deploy failed';
+        if (deployMeta) deployMeta.textContent = data.error || 'Unknown error';
+        showToast('Deploy failed: ' + (data.error || 'unknown error'), 'error');
+        return;
+      }
+      if (deployResult) deployResult.classList.add('active');
+      if (deployTitle) deployTitle.innerHTML = '✅ Deployed successfully to N8N';
+      if (deployMeta) deployMeta.textContent = 'Workflow "' + data.workflowName + '" (ID: ' + data.workflowId + ') updated at ' + (data.deployedAt || new Date().toISOString());
+      showToast('Workflow deployed to N8N!', 'success');
+      // Auto-save record with deployed status
+      if (_fixerResultData) {
+        saveFixRecord({deployStatus: 'deployed', deployedAt: data.deployedAt});
+      }
+    })
+    .catch(err => {
+      if (btn) { btn.disabled = false; btn.textContent = 'Deploy Fixed Workflow to N8N'; }
+      if (deployResult) deployResult.classList.add('active', 'error');
+      if (deployTitle) deployTitle.textContent = '❌ Deploy failed';
+      if (deployMeta) deployMeta.textContent = err.message;
+      showToast('Deploy error: ' + err.message, 'error');
+    });
   };
 
   // ---- Save Record ----
@@ -14361,25 +14122,6 @@ document.addEventListener('click', function(ev){
     return '';
   }
 
-  window.loadFixerDomains = function() {
-    const datalist = document.getElementById('fixer-domain-list');
-    if (!datalist) return;
-    fetch('/api/fixer/domains')
-    .then(r => r.json())
-    .then(data => {
-      const domains = data.domains || [];
-      datalist.innerHTML = '';
-      domains.forEach(domain => {
-        const option = document.createElement('option');
-        option.value = domain;
-        datalist.appendChild(option);
-      });
-    })
-    .catch(() => {
-      // graceful fail — keep empty datalist
-    });
-  };
-
   window.loadFixHistory = function() {
     const grid = document.getElementById('fixer-history-grid');
     if (!grid) return;
@@ -14393,80 +14135,23 @@ document.addEventListener('click', function(ev){
         grid.innerHTML = '<div class="fixer-history-empty">No fix records yet. Run your first analysis to see history here.</div>';
         return;
       }
-
-      // Group by domain (site_url)
-      const byDomain = {};
-      records.forEach(rec => {
-        const domain = rec.site_url || 'No domain';
-        if (!byDomain[domain]) byDomain[domain] = [];
-        byDomain[domain].push(rec);
-      });
-
       grid.innerHTML = '';
-
-      // Sort domains by most recent record
-      const sortedDomains = Object.keys(byDomain).sort((a, b) => {
-        const aLatest = new Date(byDomain[a][0].created_at || 0);
-        const bLatest = new Date(byDomain[b][0].created_at || 0);
-        return bLatest - aLatest;
-      });
-
-      sortedDomains.forEach(domain => {
-        const domainRecs = byDomain[domain];
-        const domainSlug = domain.replace(/^https?:\/\//, '').replace(/[^a-zA-Z0-9]/g, '-');
-        const sectionId = 'fixer-domain-' + domainSlug;
-
-        // Domain header
-        const header = document.createElement('div');
-        header.className = 'fixer-domain-header';
-        header.style.cssText = 'display:flex;align-items:center;justify-content:space-between;padding:12px 16px;margin-top:8px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);border-radius:13px;cursor:pointer;transition:background 0.15s';
-        header.innerHTML = `
-          <div style="display:flex;align-items:center;gap:10px;flex:1;min-width:0">
-            <span style="font-size:16px">🌐</span>
-            <div style="min-width:0">
-              <div style="font-weight:700;font-size:13px;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${escHtml(domain)}</div>
-              <div style="font-size:11px;color:var(--muted)">${domainRecs.length} fix${domainRecs.length !== 1 ? 'es' : ''}</div>
-            </div>
+      records.forEach(rec => {
+        const item = document.createElement('div');
+        item.className = 'fixer-history-item';
+        const conf = parseFloat(rec.confidence_score || 0);
+        const date = rec.created_at ? new Date(rec.created_at).toLocaleDateString('en-GB') : '-';
+        item.innerHTML = `
+          <div style="min-width:0;flex:1">
+            <div class="fixer-history-name">${escHtml(rec.workflow_name || '-')}</div>
+            <div class="fixer-history-summary">${escHtml(rec.issue_summary || rec.workflow_id || '-')}</div>
           </div>
-          <svg class="fixer-domain-chevron" style="width:16px;height:16px;transition:transform 0.2s;flex-shrink:0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
-        `;
-        grid.appendChild(header);
-
-        // Domain records container
-        const container = document.createElement('div');
-        container.id = sectionId;
-        container.className = 'fixer-domain-records';
-        container.style.cssText = 'display:flex;flex-direction:column;gap:6px;padding:6px 0 6px 12px;margin-left:8px;border-left:2px solid rgba(113,112,255,0.15)';
-
-        domainRecs.forEach(rec => {
-          const item = document.createElement('div');
-          item.className = 'fixer-history-item';
-          const conf = parseFloat(rec.confidence_score || 0);
-          const date = rec.created_at ? new Date(rec.created_at).toLocaleDateString('en-GB') : '-';
-          const model = rec.model_used || '-';
-          item.innerHTML = `
-            <div style="min-width:0;flex:1">
-              <div class="fixer-history-name">${escHtml(rec.workflow_name || '-')}</div>
-              <div class="fixer-history-summary">${escHtml(rec.issue_summary || rec.workflow_id || '-')}</div>
-            </div>
-            <div class="fixer-history-meta">
-              <span class="fixer-history-conf">${Math.round(conf*100)}%</span>
-              <span style="font-size:11px;color:var(--muted);background:rgba(255,255,255,0.04);padding:2px 8px;border-radius:6px">${escHtml(model)}</span>
-              <span class="stuck-status-badge ${rec.deploy_status || 'pending'}">${escHtml(rec.deploy_status || 'pending')}</span>
-              <span class="fixer-history-date">${date}</span>
-            </div>`;
-          container.appendChild(item);
-        });
-
-        grid.appendChild(container);
-
-        // Toggle functionality
-        header.onclick = function() {
-          const isOpen = container.style.display !== 'none';
-          container.style.display = isOpen ? 'none' : 'flex';
-          const chevron = header.querySelector('.fixer-domain-chevron');
-          if (chevron) chevron.style.transform = isOpen ? 'rotate(-90deg)' : 'rotate(0deg)';
-        };
+          <div class="fixer-history-meta">
+            <span class="fixer-history-conf">${Math.round(conf*100)}%</span>
+            <span class="stuck-status-badge ${rec.deploy_status || 'pending'}">${escHtml(rec.deploy_status || 'pending')}</span>
+            <span class="fixer-history-date">${date}</span>
+          </div>`;
+        grid.appendChild(item);
       });
     })
     .catch(err => {
@@ -14490,249 +14175,6 @@ document.addEventListener('click', function(ev){
 
   // ---- Init model selector from health ----
   // (No-op: models are hardcoded in the select, consistent with Prompt Studio)
-
-  window.runTripleAnalysis = function() {
-    if (!_fixerJsonStr) { showToast('Please upload a workflow JSON first', 'error'); return; }
-    const problem = (document.getElementById('fixer-problem') || {}).value || '';
-    if (!problem.trim()) { showToast('Please describe the issue before running Triple AI Verdict', 'error'); return; }
-
-    const btn = document.getElementById('fixer-triple-btn');
-    const analyzeBtn = document.getElementById('fixer-analyze-btn');
-    const label = document.getElementById('fixer-analyze-btn-label');
-    const progressEl = document.getElementById('fixer-progress');
-    const resultEl = document.getElementById('fixer-result');
-
-    if (btn) { btn.disabled = true; }
-    if (analyzeBtn) { analyzeBtn.disabled = true; }
-    if (label) { label.textContent = 'Triple AI Verdict in progress...'; }
-    if (progressEl) { progressEl.classList.add('active'); }
-    if (resultEl) { resultEl.classList.remove('active'); }
-
-    // Reset stages for triple: Upload, Validate, GPT 5.5, Opus 4.7, Gemini 3.1, Consensus, Done
-    const TRIPLE_STAGES = ['Upload', 'Validate', 'GPT 5.5', 'Opus 4.7', 'Gemini 3.1', 'Consensus', 'Done'];
-    const stagesWrap = document.getElementById('fixer-stages');
-    if (stagesWrap) {
-      stagesWrap.innerHTML = '';
-      TRIPLE_STAGES.forEach((name, i) => {
-        const div = document.createElement('div');
-        div.className = 'fixer-stage';
-        div.id = 'fstage-' + i;
-        div.innerHTML = '<span class="fixer-stage-dot"></span>' + name;
-        stagesWrap.appendChild(div);
-      });
-    }
-
-    const bar = document.getElementById('fixer-progress-bar');
-    if (bar) { bar.style.width = '0%'; }
-
-    // Animate stages
-    let stageIdx = 0;
-    function setTripleStage(idx, state) {
-      const el = document.getElementById('fstage-' + idx);
-      if (el) { el.className = 'fixer-stage ' + state; }
-    }
-    setTripleStage(0, 'active');
-    setTimeout(() => setTripleStage(0, 'done'), 400);
-    setTimeout(() => setTripleStage(1, 'active'), 500);
-    setTimeout(() => setTripleStage(1, 'done'), 900);
-    setTimeout(() => setTripleStage(2, 'active'), 1000);
-
-    const workflowName = (document.getElementById('fixer-wf-name') || {}).value || (_fixerJsonObj && _fixerJsonObj.name) || '';
-    const siteUrl = (document.getElementById('fixer-site-url') || {}).value || '';
-    const suspectedNode = (document.getElementById('fixer-suspected-node') || {}).value || '';
-    const targetSel = document.getElementById('fixer-target-wf-id');
-    const targetWorkflowId = targetSel ? targetSel.value : '';
-    const comments = (document.getElementById('fixer-comments') || {}).value || '';
-    const notes = (document.getElementById('fixer-notes') || {}).value || '';
-
-    const body = {
-      workflowJson: _fixerJsonStr,
-      problemDescription: problem,
-      comments,
-      notes,
-      workflowName,
-      siteUrl,
-      suspectedNode,
-      targetWorkflowId,
-    };
-
-    const stageTimers = [];
-    stageTimers.push(setTimeout(() => setTripleStage(3, 'active'), 8000));
-    stageTimers.push(setTimeout(() => setTripleStage(4, 'active'), 16000));
-    stageTimers.push(setTimeout(() => setTripleStage(5, 'active'), 24000));
-
-    fetch('/api/fixer/analyze/triple', {
-      method: 'POST',
-      headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify(body),
-    })
-    .then(r => r.json())
-    .then(data => {
-      stageTimers.forEach(t => clearTimeout(t));
-      if (!data.ok) {
-        setTripleStage(6, 'error');
-        setText('meta-status', 'Error');
-        if (btn) { btn.disabled = false; }
-        if (analyzeBtn) { analyzeBtn.disabled = false; }
-        if (label) { label.textContent = 'Analyze & Fix Workflow'; }
-        showToast('Triple AI Verdict failed: ' + (data.error || 'unknown error'), 'error');
-        return;
-      }
-      setTripleStage(5, 'done');
-      setTripleStage(6, 'active');
-      setTimeout(() => {
-        setTripleStage(6, 'done');
-        _fixerResultData = data;
-        showFixerResults(data);
-        showTripleBreakdown(data);
-        if (btn) { btn.disabled = false; }
-        if (analyzeBtn) { analyzeBtn.disabled = false; }
-        if (label) { label.textContent = 'Analyze & Fix Workflow'; }
-        setText('meta-status', 'Triple Verdict Ready');
-        showToast('Triple AI Verdict complete', 'success');
-      }, 600);
-    })
-    .catch(err => {
-      stageTimers.forEach(t => clearTimeout(t));
-      setTripleStage(6, 'error');
-      setText('meta-status', 'Error');
-      if (btn) { btn.disabled = false; }
-      if (analyzeBtn) { analyzeBtn.disabled = false; }
-      if (label) { label.textContent = 'Analyze & Fix Workflow'; }
-      showToast('Network error: ' + err.message, 'error');
-    });
-  };
-
-  // ---- Show Triple AI Breakdown ----
-  window.showTripleBreakdown = function(data) {
-    if (!data.individualResults || !data.individualResults.length) return;
-    const resultEl = document.getElementById('fixer-result');
-    if (!resultEl) return;
-
-    // Add individual results section after existing result content
-    let tripleSection = document.getElementById('triple-breakdown');
-    if (!tripleSection) {
-      tripleSection = document.createElement('div');
-      tripleSection.id = 'triple-breakdown';
-      tripleSection.className = 'fixer-section';
-      tripleSection.style.marginTop = '24px';
-      resultEl.appendChild(tripleSection);
-    }
-
-    const consensus = data.consensus || {};
-    const agreement = consensus.agreementLevel || '?';
-    const confPct = Math.round((consensus.confidence || 0) * 100);
-
-    let html = '<div style="padding:20px;border:1px solid rgba(255,215,0,0.2);border-radius:14px;background:rgba(255,215,0,0.03);margin-bottom:16px">';
-    html += '<div style="font-size:16px;font-weight:700;color:var(--gold);margin-bottom:8px">⚡ Triple AI Verdict Consensus</div>';
-    html += '<div style="display:flex;gap:16px;flex-wrap:wrap;margin-bottom:12px">';
-    html += '<div>Confidence: <strong>' + confPct + '%</strong></div>';
-    html += '<div>Agreement: <strong>' + agreement + '</strong></div>';
-    html += '</div>';
-    html += '<div style="font-size:13px;color:var(--muted)">Best result selected from highest-confidence model. All three models analyzed the workflow in parallel.</div>';
-    html += '</div>';
-
-    html += '<div style="font-size:14px;font-weight:600;margin-bottom:12px">🤖 Individual Model Results</div>';
-    html += '<div style="display:flex;flex-direction:column;gap:10px">';
-
-    data.individualResults.forEach(function(r) {
-      const statusIcon = r.ok ? '✅' : '❌';
-      const conf = r.ok ? (Math.round((parseFloat(r.confidence) || 0) * 100) + '%') : 'N/A';
-      const dur = r.duration_ms ? (Math.round(r.duration_ms / 1000) + 's') : 'N/A';
-      const summary = r.ok ? (r.issue_summary || 'No issues found') : (r.error || 'Failed');
-
-      html += '<div style="padding:14px;border-radius:10px;border:1px solid rgba(255,255,255,0.06);background:rgba(255,255,255,0.02)">';
-      html += '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">';
-      html += '<div style="font-weight:600;font-size:13px">' + statusIcon + ' ' + r.model + '</div>';
-      html += '<div style="font-size:12px;color:var(--muted);display:flex;gap:12px">';
-      if (r.ok) { html += '<span>Confidence: ' + conf + '</span>'; }
-      html += '<span>Duration: ' + dur + '</span>';
-      html += '</div></div>';
-      html += '<div style="font-size:12px;color:var(--text);opacity:0.85">' + escHtml(summary.substring(0, 200)) + (summary.length > 200 ? '...' : '') + '</div>';
-      html += '</div>';
-    });
-
-    html += '</div>';
-    tripleSection.innerHTML = html;
-  };
-
-  // Helper for triple button enable/disable
-  function updateTripleBtnState() {
-    const btn = document.getElementById('fixer-triple-btn');
-    if (!btn) return;
-    btn.disabled = !(_fixerJsonStr && _fixerJsonStr.trim());
-  }
-
-  // Hook into existing JSON handlers
-  const _origHandleJsonParse = window.handleJsonParse || function(){};
-  window.handleJsonParse = function(jsonStr) {
-    _origHandleJsonParse(jsonStr);
-    updateTripleBtnState();
-  };
-
-  // Hook into clear
-  const _origClearFixerJson = window.clearFixerJson;
-  window.clearFixerJson = function() {
-    _origClearFixerJson();
-    updateTripleBtnState();
-  };
-
-  // Update on initial load
-  updateTripleBtnState();
-
-  // ---- Keyboard shortcuts ----
-  document.addEventListener('keydown', function(e) {
-    // Ctrl/Cmd + Enter = Run Analysis
-    if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
-      const activeTab = document.querySelector('.fixer-tab.active');
-      if (activeTab && activeTab.dataset.tab === 'fixer') {
-        e.preventDefault();
-        if (document.getElementById('fixer-triple-btn') && !document.getElementById('fixer-triple-btn').disabled) {
-          runTripleAnalysis();
-        } else {
-          runAnalysis();
-        }
-      }
-    }
-    // Escape = close modals / clear selection
-    if (e.key === 'Escape') {
-      closeFixerFilePreview();
-      closeFixerModal();
-    }
-  });
-
-  // ---- Tooltips ----
-  function attachTooltips() {
-    const tooltipEls = document.querySelectorAll('[data-tooltip]');
-    tooltipEls.forEach(function(el) {
-      el.addEventListener('mouseenter', function() {
-        let tip = document.getElementById('fixer-tooltip');
-        if (!tip) {
-          tip = document.createElement('div');
-          tip.id = 'fixer-tooltip';
-          tip.style.cssText = 'position:fixed;z-index:10000;background:#0f0f23;color:#e2e2e2;padding:6px 10px;border-radius:6px;font-size:11px;white-space:nowrap;pointer-events:none;opacity:0;transition:opacity 0.15s;box-shadow:0 4px 12px rgba(0,0,0,0.3);border:1px solid rgba(255,255,255,0.1)';
-          document.body.appendChild(tip);
-        }
-        tip.textContent = el.dataset.tooltip;
-        const rect = el.getBoundingClientRect();
-        tip.style.left = (rect.left + rect.width/2) + 'px';
-        tip.style.top = (rect.top - 32) + 'px';
-        tip.style.transform = 'translateX(-50%)';
-        tip.style.opacity = '1';
-      });
-      el.addEventListener('mouseleave', function() {
-        const tip = document.getElementById('fixer-tooltip');
-        if (tip) tip.style.opacity = '0';
-      });
-    });
-  }
-  // Attach after page init
-  window.initFixerPage = (function(orig) {
-    return function() {
-      orig && orig();
-      setTimeout(attachTooltips, 500);
-    };
-  })(window.initFixerPage);
 
 })(); // end N8N Fixer IIFE
 
@@ -16405,38 +15847,15 @@ function toggleTheme(){
 })();
 
 // === MOBILE DRAWER ===
-function _syncMobileMenuButton(isOpen){
-  var btn = document.querySelector('.hamburger-btn');
-  if(btn) btn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
-  var icon = document.getElementById('hamburger-icon');
-  if(icon){
-    if(isOpen){
-      icon.innerHTML = '<line x1="6" y1="6" x2="18" y2="18"></line><line x1="18" y1="6" x2="6" y2="18"></line>';
-    } else {
-      icon.innerHTML = '<line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="18" x2="21" y2="18"></line>';
-    }
-  }
-}
 function openMobileMenu(){
-  var drawer = document.getElementById('mobile-drawer');
-  var overlay = document.getElementById('mobile-overlay');
-  var isOpen = drawer && drawer.classList.contains('open');
-  if(isOpen){
-    closeMobileMenu();
-    return;
-  }
-  if(drawer) drawer.classList.add('open');
-  if(overlay) overlay.classList.add('active');
+  document.getElementById('mobile-drawer').classList.add('open');
+  document.getElementById('mobile-overlay').classList.add('active');
   document.body.classList.add('scroll-locked');
-  _syncMobileMenuButton(true);
 }
 function closeMobileMenu(){
-  var drawer = document.getElementById('mobile-drawer');
-  var overlay = document.getElementById('mobile-overlay');
-  if(drawer) drawer.classList.remove('open');
-  if(overlay) overlay.classList.remove('active');
+  document.getElementById('mobile-drawer').classList.remove('open');
+  document.getElementById('mobile-overlay').classList.remove('active');
   document.body.classList.remove('scroll-locked');
-  _syncMobileMenuButton(false);
 }
 document.addEventListener('keydown', function(e){ if(e.key==='Escape') closeMobileMenu(); });
 
@@ -16739,11 +16158,8 @@ function toggleTaskDone(id) {
 }
 
 function setTaskView(view, btn) {
-  /* DASHBOARD_QA_FIX_TASK_VIEW_TOGGLE_SCOPE_2026_04_27 */
   _taskView = view;
-  var toggle = btn && btn.closest ? btn.closest('.tasks-view-toggle') : null;
-  var buttons = toggle ? toggle.querySelectorAll('.tasks-view-btn') : document.querySelectorAll('.tasks-view-btn');
-  buttons.forEach(function(b){b.classList.remove('active');});
+  document.querySelectorAll('.tasks-view-btn').forEach(function(b){b.classList.remove('active');});
   if(btn) btn.classList.add('active');
   var lv = document.getElementById('tasks-list-view');
   var bv = document.getElementById('tasks-board-view');
@@ -18157,34 +17573,20 @@ async function downloadPromptPreviewShot(){
       els.sp.style.cssText = 'display:none';
     } else {
       var pad = 8;
-      var spotTop = Math.max(8, Math.min(window.innerHeight - 8, r.top - pad));
-      var spotLeft = Math.max(8, Math.min(window.innerWidth - 8, r.left - pad));
-      var spotWidth = Math.max(0, Math.min(window.innerWidth - spotLeft - 8, r.width + pad * 2));
-      var spotHeight = Math.max(0, Math.min(window.innerHeight - spotTop - 8, r.height + pad * 2));
-      if (spotWidth < 8 || spotHeight < 8) {
-        els.sp.style.cssText = 'display:none';
-      } else {
-        els.sp.style.cssText = 'position:fixed;top:'+spotTop+'px;left:'+spotLeft+'px;width:'+spotWidth+'px;height:'+spotHeight+'px;border-radius:12px;box-shadow:0 0 0 9999px rgba(0,0,0,0.65),0 0 0 3px var(--gold,#7170ff);transition:all .3s ease;pointer-events:none;z-index:10501';
-      }
+      els.sp.style.cssText = 'position:fixed;top:'+(r.top-pad)+'px;left:'+(r.left-pad)+'px;width:'+(r.width+pad*2)+'px;height:'+(r.height+pad*2)+'px;border-radius:12px;box-shadow:0 0 0 9999px rgba(0,0,0,0.65),0 0 0 3px var(--gold,#7170ff);transition:all .3s ease;pointer-events:none;z-index:10501';
     }
-    // Tooltip: prefer below anchor; clamp all edges so it never clips off-screen.
-    var margin = Math.min(16, Math.max(8, Math.floor(window.innerWidth / 24)));
-    var availW = Math.max(1, window.innerWidth - margin * 2);
-    var availH = Math.max(1, window.innerHeight - margin * 2);
-    var ttW = Math.min(320, availW);
-    var ttH = Math.min(180, Math.max(120, availH));
-    var top = r.bottom + 14;
-    var left = r.left;
-    if (top + ttH > window.innerHeight - margin) top = r.top - ttH - 14;
-    if (r.width === 0 || top < margin) top = Math.max(margin, Math.min(window.innerHeight - ttH - margin, (window.innerHeight - ttH) / 2));
-    left = Math.max(margin, Math.min(window.innerWidth - ttW - margin, left));
-    els.tt.style.cssText = 'position:fixed;top:'+top+'px;left:'+left+'px;width:'+ttW+'px;max-width:calc(100vw - '+(margin*2)+'px);max-height:calc(100vh - '+(margin*2)+'px);overflow:auto;box-sizing:border-box';
+    // Tooltip: prefer below anchor; if would overflow, show above
+    var ttW = 320, ttH = 160;
+    var top = r.bottom + 14, left = Math.min(window.innerWidth - ttW - 16, Math.max(16, r.left));
+    if (top + ttH > window.innerHeight) top = Math.max(16, r.top - ttH - 14);
+    if (r.width === 0) { top = window.innerHeight/2 - ttH/2; left = window.innerWidth/2 - ttW/2; }
+    els.tt.style.cssText = 'position:fixed;top:'+top+'px;left:'+left+'px;width:'+ttW+'px';
     els.tt.innerHTML = '<h4>'+step.title+'</h4><p>'+step.body+'</p>'
       + '<div class="tour-actions">'
       +   '<span class="tour-step">'+(idx+1)+' / '+total+'</span>'
       +   '<div style="display:flex;gap:6px">'
-      +     '<button type="button" data-act="skip">Skip</button>'
-      +     '<button type="button" data-act="next" class="primary">'+(idx === total-1 ? 'Done' : 'Next →')+'</button>'
+      +     '<button data-act="skip">Skip</button>'
+      +     '<button data-act="next" class="primary">'+(idx === total-1 ? 'Done' : 'Next →')+'</button>'
       +   '</div></div>';
     return true;
   }
@@ -18193,38 +17595,33 @@ async function downloadPromptPreviewShot(){
     var els = buildTour();
     var i = 0;
     var onResize = null;
-    var esc = null;
     window.__tourActive = true;
-    var end = function(markDone){
-      window.__tourActive = false;
-      if (markDone !== false) setTourDone();
-      try { els.bd.classList.remove('open'); } catch(_){}
-      try { els.tt.innerHTML = ''; } catch(_){}
-      try { if (onResize) window.removeEventListener('resize', onResize); } catch(_){}
-      try { if (esc) document.removeEventListener('keydown', esc); } catch(_){}
-      try { window.toast && window.toast.info('Tour dismissed · Press Ctrl+K anytime'); } catch(_){}
-      setTimeout(function(){ try{ els.bd.remove(); }catch(_){} }, 30);
-    };
     var render = function(){
       var ok = positionTour(els, STEPS[i], i, STEPS.length);
       if (!ok && i < STEPS.length - 1){ i++; return render(); }
       els.bd.classList.add('open');
       els.tt.querySelectorAll('button').forEach(function(b){
-        b.addEventListener('click', function(e){
-          try { e.preventDefault(); e.stopPropagation(); } catch(_){}
+        b.addEventListener('click', function(){
           var act = b.getAttribute('data-act');
-          if (act === 'skip'){ end(true); }
+          if (act === 'skip'){ end(); }
           else if (act === 'next'){
             i++;
-            if (i >= STEPS.length){ end(true); } else { render(); }
+            if (i >= STEPS.length){ end(); } else { render(); }
           }
         });
       });
     };
+    var end = function(markDone){
+      window.__tourActive = false;
+      els.bd.classList.remove('open');
+      if (markDone !== false) setTourDone();
+      try { window.toast && window.toast.info('Tour complete · Press Ctrl+K anytime'); } catch(_){}
+      if (onResize) window.removeEventListener('resize', onResize);
+      setTimeout(function(){ try{ els.bd.remove(); }catch(_){} }, 300);
+    };
     window.dismissTour = end;
-    // Esc closes and persists dismissal for returning users.
-    esc = function(e){ if (e.key==='Escape'){ end(true); } };
-    document.addEventListener('keydown', esc);
+    // Esc closes
+    document.addEventListener('keydown', function esc(e){ if (e.key==='Escape'){ end(); document.removeEventListener('keydown', esc); } });
     // Reposition on resize
     onResize = function(){ positionTour(els, STEPS[i], i, STEPS.length); };
     window.addEventListener('resize', onResize);
@@ -18298,7 +17695,6 @@ async function downloadPromptPreviewShot(){
     var TTL_MS = 4000; // 4s - safe for status polls
     var SAFE_PATTERNS = [/\/api\/projects\/list/i, /\/api\/radar\/status/i, /\/api\/health/i];
     var cache = new Map();
-    window.__fetchMemoClear = function(){ try{ cache.clear(); }catch(_){} };
     window.fetch = function(input, init){
       try {
         var method = (init && init.method) ? String(init.method).toUpperCase() : 'GET';
@@ -22468,69 +21864,6 @@ body.light .last-sync-meta{color:#64748B !important}
 @media (max-width:820px){.header{top:0 !important;left:0 !important;right:0 !important;border-radius:0 !important;}.header .fixer-tab-nav.main-menu{display:none !important;}}
 </style>
 
-<style id="main-menu-safe-top-spacing-v2-2026-04-26">
-/* ============================================================
-   MAIN MENU SAFE TOP SPACING V2 (2026-04-26)
-   The desktop header is fixed, inset from the viewport top, and
-   can wrap to a taller height. Static body padding (108px/102px)
-   allowed content to slide 36px under the header on production.
-   Keep a measured safe offset in sync and force it late in cascade.
-   ============================================================ */
-:root{--header-safe-gap:24px;--page-safe-top:calc(var(--header-h,80px) + var(--header-safe-gap));}
-html{scroll-padding-top: var(--page-safe-top) !important;}
-body{padding-top:max(var(--header-safe-offset, 0px), calc(var(--header-h, 80px) + 36px)) !important;}
-@media (min-width:821px){.container{padding-top:24px !important;}}
-@media (max-width:820px){body{padding-top:max(var(--header-safe-offset, 0px), calc(var(--header-h, 62px) + 14px)) !important;}}
-</style>
-
-<script id="header-safe-top-spacing-sync-2026-04-26">
-(function(){
-  function syncHeaderHeight(){
-    var h = document.querySelector('header.header') || document.querySelector('.header');
-    if(!h || !document.body) return;
-    var r = h.getBoundingClientRect();
-    var headerHeight = Math.ceil(r.height || h.offsetHeight || 0);
-    var topInset = Math.max(0, Math.ceil(r.top || 0));
-    var bottom = Math.ceil(r.bottom || (topInset + headerHeight));
-    var gap = window.matchMedia && window.matchMedia('(max-width:820px)').matches ? 14 : 24;
-    var safeOffset = Math.max(headerHeight + gap, bottom + gap);
-    document.documentElement.style.setProperty('--header-h', headerHeight + 'px');
-    document.documentElement.style.setProperty('--header-safe-offset', safeOffset + 'px');
-    document.documentElement.style.setProperty('--page-safe-top', safeOffset + 'px');
-    document.body.style.setProperty('padding-top', safeOffset + 'px', 'important');
-  }
-  syncHeaderHeight();
-  window.addEventListener('resize', syncHeaderHeight, {passive:true});
-  window.addEventListener('load', syncHeaderHeight, {once:false});
-  if(window.ResizeObserver){
-    var target = document.querySelector('header.header') || document.querySelector('.header');
-    if(target) new ResizeObserver(syncHeaderHeight).observe(target);
-  }
-  setTimeout(syncHeaderHeight, 0);
-  setTimeout(syncHeaderHeight, 250);
-})();
-</script>
-
-<style id="project-preview-menu-overlap-fix-2026-04-26">
-/* ============================================================
-   PROJECT PREVIEW MENU OVERLAP FIX (2026-04-26)
-   PROJECT_PREVIEW_MENU_OVERLAP_FIX_2026_04_26
-   The dashboard main menu/header is fixed at z-index:9999. The
-   preview modal inherited the older modal z-index:1000, so the
-   menu could sit above the modal and hide the first part of the
-   rendered HTML preview. Keep the preview modal in the top layer
-   without disabling the header globally for other scroll-locked
-   states such as the mobile drawer.
-   ============================================================ */
-#preview-modal.modal-overlay.open{
-  z-index:20000 !important;
-}
-#preview-modal .modal{
-  position:relative !important;
-  z-index:1 !important;
-}
-</style>
-
 <style id="project-card-hover-flicker-fix-2026-04-26">
 /* ============================================================
    PROJECT CARD HOVER FLICKER FIX (2026-04-26)
@@ -22632,12 +21965,10 @@ body{padding-top:max(var(--header-safe-offset, 0px), calc(var(--header-h, 80px) 
 
 <style id="ps-pipeline-launcher-final-2026-04-26">
 /* Prompt Studio pipeline launcher final override — 2026-04-26 */
-#prompt-modal #prompt-tweak-btn.ps-pipeline-launcher{
+#prompt-modal .prompt-panel:first-child > .prompt-actions > #prompt-tweak-btn.ps-pipeline-launcher{
   display:inline-flex !important;
   visibility:visible !important;
   opacity:1 !important;
-  pointer-events:auto !important;
-  cursor:pointer !important;
   background:rgba(25,169,116,0.16) !important;
   border:1px solid rgba(25,169,116,0.48) !important;
   color:#c9fbe4 !important;
@@ -22648,244 +21979,6 @@ body{padding-top:max(var(--header-safe-offset, 0px), calc(var(--header-h, 80px) 
   color:#ffffff !important;
 }
 </style>
-
-<script id="prompt-studio-actions-hardening-2026-04-26">
-/* PROMPT_STUDIO_ACTIONS_HARDENING_2026_04_26
-   Keep Prompt Studio action buttons explicitly wired even if later
-   dashboard scripts rewrite inline handlers or restore cached markup. */
-(function(){
-  function ensurePromptStudioActionBindings(){
-    if(!document.getElementById('prompt-modal')) return;
-    function bind(id, handler){
-      var el=document.getElementById(id);
-      if(!el || typeof handler!=='function') return;
-      el.type='button';
-      el.style.pointerEvents='auto';
-      el.onclick=function(ev){
-        if(ev){
-          ev.preventDefault();
-        }
-        handler(el);
-      };
-      el.dataset.psBindingReady='1';
-    }
-    bind('prompt-improve-btn', window.improvePrompt);
-    bind('prompt-tweak-btn', window.tweakTemplate);
-    bind('prompt-brainstorm-btn', window.brainstormPrompt);
-  }
-  window.ensurePromptStudioActionBindings=ensurePromptStudioActionBindings;
-  if(document.readyState==='loading'){
-    document.addEventListener('DOMContentLoaded', ensurePromptStudioActionBindings, {once:true});
-  }else{
-    ensurePromptStudioActionBindings();
-  }
-  window.addEventListener('load', ensurePromptStudioActionBindings, {once:true});
-})();
-</script>
-
-<style id="dashboard-qa-fix-pass-2026-04-27">
-/* ============================================================
-   DASHBOARD_QA_FIX_PASS_2026_04_27
-   Small additive UI fixes based on the 2026-04-27 baseline audit.
-   Keep this block near the end so it safely overrides older menu/page rules.
-   ============================================================ */
-
-/* DASHBOARD_QA_FIX_NAV_NO_CLIP_2026_04_27 */
-#fixer-tab-nav{overflow-x:auto !important;}
-#fixer-tab-nav,
-.header .fixer-tab-nav.main-menu{
-  overflow-x:auto !important;
-  overflow-y:hidden !important;
-  max-width:100% !important;
-  min-width:0 !important;
-  flex:0 1 auto !important;
-  scrollbar-width:none !important;
-  -webkit-overflow-scrolling:touch !important;
-}
-#fixer-tab-nav::-webkit-scrollbar,
-.header .fixer-tab-nav.main-menu::-webkit-scrollbar{display:none !important;}
-#fixer-tab-nav .fixer-tab-btn,
-.header .main-menu .fixer-tab-btn,
-#tab-settings{
-  display:inline-flex !important;
-  flex:0 0 auto !important;
-}
-#tab-settings{
-  display:inline-flex !important;
-  scroll-margin-inline-end:16px !important;
-}
-
-/* DASHBOARD_QA_FIX_KWR_HISTORY_SCOPE_2026_04_27 */
-body:not(.page-kwr-active) #kwr-history-panel{display:none !important;}
-body.page-kwr-active #kwr-history-panel{
-  display:block !important;
-  width:min(960px,calc(100vw - 32px)) !important;
-  max-width:960px !important;
-  margin:24px auto 0 !important;
-  box-sizing:border-box !important;
-  padding:18px 20px 0 !important;
-}
-
-/* DASHBOARD_QA_FIX_TASKS_VISIBLE_2026_04_27 */
-#page-tasks.active,
-body.page-tasks-active #page-tasks{
-  display:block !important;
-  width:auto !important;
-  min-height:60vh !important;
-  max-width:1180px !important;
-  margin:0 auto !important;
-  padding:0 16px 80px !important;
-  box-sizing:border-box !important;
-}
-#page-tasks.active .tasks-page,
-#page-tasks.active .tasks-header,
-#page-tasks.active #tasks-list-container,
-#page-tasks.active #tasks-board-container,
-body.page-tasks-active #page-tasks .tasks-header,
-body.page-tasks-active #page-tasks #tasks-list-container,
-body.page-tasks-active #page-tasks #tasks-board-container{min-width:0 !important;}
-
-/* DASHBOARD_QA_FIX_DROPDOWN_READABILITY_2026_04_27 */
-#main-content select,
-.header select,
-#main-content select option,
-.header select option,
-#main-content [role="listbox"],
-.header [role="listbox"],
-#main-content [role="option"],
-.header [role="option"],
-#main-content [role="menuitem"],
-.header [role="menuitem"],
-#main-content .dropdown-menu,
-.header .dropdown-menu,
-#main-content .dropdown-option,
-.header .dropdown-option,
-#main-content .select-menu,
-.header .select-menu,
-#main-content .select-option,
-.header .select-option,
-#main-content .action-menu button,
-.header .action-menu button{
-  color:var(--text,#eef4ff) !important;
-  background:var(--surface-strong,#131a24) !important;
-}
-
-/* DASHBOARD_QA_FIX_NATIVE_SELECT_OPTION_READABILITY_2026_04_27 */
-#main-content select optgroup,
-.header select optgroup,
-#main-content select option,
-.header select option,
-.fixer-select option,
-.tasks-filter-sel option,
-.task-select option,
-.search-box option,
-.settings-input option,
-.kwr-select option,
-.kwr-model-select option,
-.model-select option,
-#projects-sort option{
-  background:#111827 !important;
-  color:#f8fafc !important;
-}
-#main-content select:focus,
-.header select:focus{
-  border-color:rgba(74,163,255,0.7) !important;
-  box-shadow:0 0 0 3px rgba(74,163,255,0.16) !important;
-  outline:none !important;
-}
-
-/* DASHBOARD_QA_FIX_VIEW_TOGGLE_ACTIVE_VISUAL_2026_04_27 */
-/* DASHBOARD_QA_FIX_PROJECTS_LIST_VIEW_LAYOUT_2026_04_27 */
-#projects-grid.projects-grid.list-view{
-  display:grid !important;
-  grid-template-columns:1fr !important;
-  max-width:960px !important;
-  margin-left:auto !important;
-  margin-right:auto !important;
-}
-#projects-grid.projects-grid.list-view .project-card{
-  grid-column:auto !important;
-  width:100% !important;
-  max-width:100% !important;
-}
-
-/* DASHBOARD_QA_FIX_TASK_VIEW_LAYOUT_SWITCH_2026_04_27 */
-body.page-tasks-active #tasks-list-view{
-  width:100% !important;
-}
-body.page-tasks-active #tasks-board-view{
-  width:100% !important;
-}
-
-.view-toggle .view-btn,
-.tasks-view-toggle .tasks-view-btn{
-  border:1px solid rgba(148,163,184,0.22) !important;
-}
-.view-toggle .view-btn:not(.active),
-.tasks-view-toggle .tasks-view-btn:not(.active){
-  background:rgba(15,23,42,0.28) !important;
-  color:rgba(226,232,240,0.78) !important;
-  box-shadow:none !important;
-}
-.view-toggle .view-btn.active,
-.tasks-view-toggle .tasks-view-btn.active{
-  background:rgba(74,163,255,0.28) !important;
-  border-color:rgba(125,211,252,0.72) !important;
-  color:#fff !important;
-  box-shadow:0 0 0 1px rgba(125,211,252,0.22) inset,0 8px 22px rgba(14,165,233,0.18) !important;
-}
-#main-content [role="option"]:hover,
-.header [role="option"]:hover,
-#main-content [role="option"][aria-selected="true"],
-.header [role="option"][aria-selected="true"],
-#main-content [role="menuitem"]:hover,
-.header [role="menuitem"]:hover,
-#main-content .dropdown-option:hover,
-.header .dropdown-option:hover,
-#main-content .select-option:hover,
-.header .select-option:hover,
-#main-content .action-menu button:hover,
-.header .action-menu button:hover{
-  color:#fff !important;
-  background:rgba(74,163,255,0.18) !important;
-}
-</style>
-
-<script id="dashboard-qa-fix-tour-cleanup-2026-04-27">
-/* DASHBOARD_QA_FIX_TOUR_CLEANUP_2026_04_27 */
-(function(){
-  function forceDismissDashboardTour(markDone){
-    try { window.__tourActive = false; } catch(_) {}
-    try {
-      if (markDone !== false) {
-        localStorage.setItem('dashboard_tour_done','1');
-        localStorage.setItem('tourDone','1');
-      }
-    } catch(_) {}
-    document.querySelectorAll('.tour-spotlight,.tour-tooltip').forEach(function(el){
-      try { el.classList.remove('open'); el.remove(); } catch(_) {}
-    });
-    document.querySelectorAll('#tour-backdrop,.tour-backdrop,.tour-overlay').forEach(function(el){
-      try { el.classList.remove('open'); el.remove(); } catch(_) {}
-    });
-    try { document.body.classList.remove('scroll-locked','tour-active'); } catch(_) {}
-  }
-  window.forceDismissDashboardTour = forceDismissDashboardTour;
-  var previousDismissTour = window.dismissTour;
-  window.dismissTour = function(markDone){
-    try {
-      if (typeof previousDismissTour === 'function') previousDismissTour(markDone);
-    } catch(_) {}
-    forceDismissDashboardTour(markDone);
-  };
-  document.addEventListener('click', function(e){
-    var btn = e.target && e.target.closest ? e.target.closest('.tour-tooltip button,[data-act="skip"]') : null;
-    if (btn && ((btn.getAttribute('data-act') || '').toLowerCase() === 'skip' || (btn.textContent || '').trim().toLowerCase() === 'skip')) {
-      setTimeout(function(){ forceDismissDashboardTour(true); }, 0);
-    }
-  }, true);
-})();
-</script>
 
 <!-- Bottom Navigation Bar -->
 <nav class="bottom-nav" id="bottom-nav" aria-label="Main navigation">

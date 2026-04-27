@@ -1,0 +1,29 @@
+{
+  "ok": true,
+  "date": "2026-04-27",
+  "workflow_count": 2,
+  "html_node_count": 0,
+  "indexes": {
+    "workflow_index": "n8n-sync/indexes/_index.md",
+    "html_index": "n8n-sync/indexes/_html-templates-index.md"
+  },
+  "records": [
+    {
+      "workflow_id": "08XglDYrhWwxMtUL",
+      "workflow_name": "My workflow 3",
+      "domain": "uncategorized",
+      "workflow_path": "n8n-sync/originals/uncategorized/workflows/my-workflow-3-original-2026-04-27.json",
+      "html_node_paths": [],
+      "html_nodes": []
+    },
+    {
+      "workflow_id": "0B6eKH71Jn2L2Me2",
+      "workflow_name": "WEBSITE -ללא H1 copy - Tomer",
+      "domain": "api.kie.ai",
+      "workflow_path": "n8n-sync/originals/api.kie.ai/workflows/website-h1-copy-tomer-original-2026-04-27.json",
+      "html_node_paths": [],
+      "html_nodes": []
+    }
+  ],
+  "safety": "n8n API GET-only; originals stored as additive reference copies"
+}

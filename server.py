@@ -841,6 +841,13 @@ def read_request_json(handler):
 
 
 def fetch_json(url, headers=None, method='GET', body=None, timeout=60):
+    method = (method or 'GET').upper()
+    if _is_n8n_api_url(url):
+        parsed = urllib.parse.urlparse(url)
+        path = (parsed.path or '').lower()
+        forbidden = ('/activate', '/deactivate', '/import', '/delete')
+        if method != 'GET' or any(token in path for token in forbidden):
+            raise ValueError('Unsafe n8n API call blocked: n8n access is read-only GET only')
     req = urllib.request.Request(url, headers=headers or {}, method=method)
     if body is not None:
         data = json.dumps(body, ensure_ascii=False).encode('utf-8')
@@ -857,8 +864,17 @@ def fetch_text(url, headers=None, timeout=60):
         return resp.read().decode('utf-8')
 
 
+def _is_n8n_api_url(url):
+    try:
+        parsed = urllib.parse.urlparse(url)
+        base = urllib.parse.urlparse((os.getenv('N8N_BASE_URL') or DEFAULT_N8N_BASE).rstrip('/'))
+        return parsed.scheme in ('http', 'https') and parsed.netloc == base.netloc and parsed.path.startswith('/api/v1/')
+    except Exception:
+        return False
+
+
 def n8n_headers():
-    key = os.getenv('N8N_API_KEY') or 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI5OGE3MmVjNi01YjAyLTQ1N2EtYWJiYy04OTU3MDI5NGRlZjkiLCJpc3MiOiJuOG4iLCJhdWQiOiJwdWJsaWMtYXBpIiwianRpIjoiODdkNmZhMzctMTY3OC00NDY5LThlNjAtNWJmZjFjZmExMzc5IiwiaWF0IjoxNzc2MDU5NDA0fQ.kWRwb7IEcrzq0GRBK-JyAHs4sgj8JV9BTJ1knwr4cig'
+    key = os.getenv('N8N_API_KEY')
     if not key:
         return None
     return {'X-N8N-API-KEY': key, 'Accept': 'application/json'}
@@ -1683,6 +1699,81 @@ def commit_prompt_to_github(payload):
         "commitUrl": commit.get("html_url"),
         "fileUrl": contentInfo.get("html_url"),
         "downloadUrl": contentInfo.get("download_url"),
+    }
+
+
+def commit_fixer_to_github(wf_name, site_url, issue_summary, changes_made, fixed_json, model_used, confidence):
+    """Commit a fixed n8n workflow JSON to the GitHub repo and update CHANGELOG."""
+    token = os.getenv("GITHUB_TOKEN")
+    if not token:
+        raise RuntimeError("GITHUB_TOKEN is not configured on the server")
+    if not fixed_json:
+        raise ValueError("fixed_json is required")
+
+    import datetime as _dt
+    date_str = _dt.datetime.now().strftime('%Y-%m-%d')
+    safe_domain = re.sub(r'[^a-zA-Z0-9_\-]', '-', (site_url or 'unknown').replace('https://', '').replace('http://', ''))[:50]
+    safe_wf = re.sub(r'[^a-zA-Z0-9_\-]', '-', wf_name)[:50]
+
+    # 1. Commit the fixed JSON
+    json_path = f"n8n-fixes/{safe_domain}/{date_str}-{safe_wf}.json"
+    json_content = json.dumps(fixed_json, indent=2, ensure_ascii=False) if isinstance(fixed_json, dict) else str(fixed_json)
+
+    api_base = f"https://api.github.com/repos/{REPO}/contents/"
+    gh_headers = {
+        "Authorization": f"Bearer {token}",
+        "Accept": "application/vnd.github+json",
+        "X-GitHub-Api-Version": "2022-11-28",
+        "User-Agent": "dashboard-fix-bot",
+    }
+
+    def _commit_file(repo_path, content, message):
+        api_url = api_base + "/".join(urllib.parse.quote(p) for p in repo_path.split("/"))
+        sha = None
+        try:
+            existing = fetch_json(f"{api_url}?ref=main", headers=gh_headers, timeout=30)
+            if isinstance(existing, dict) and existing.get("sha"):
+                sha = existing["sha"]
+        except urllib.error.HTTPError as e:
+            if e.code != 404:
+                raise
+        body = {
+            "message": message,
+            "content": base64.b64encode(content.encode("utf-8")).decode("ascii"),
+            "branch": "main",
+        }
+        if sha:
+            body["sha"] = sha
+        return fetch_json(api_url, headers=gh_headers, method="PUT", body=body, timeout=60)
+
+    json_result = _commit_file(json_path, json_content, f"fix(n8n): {wf_name} — {issue_summary or 'workflow fix'} [{model_used}]")
+
+    # 2. Update CHANGELOG.md
+    changelog_path = "n8n-fixes/CHANGELOG.md"
+    changelog_entry = f"\n### {date_str} — {wf_name}\n- **Domain:** {site_url or 'N/A'}\n- **Model:** {model_used or 'N/A'}\n- **Confidence:** {round(float(confidence)*100, 1)}%\n- **Summary:** {issue_summary or 'N/A'}\n- **Changes:** {', '.join(changes_made) if changes_made else 'N/A'}\n- **File:** `{json_path}`\n"
+
+    # Try to read existing changelog
+    existing_changelog = "# N8N Workflow Fixer Changelog\n\n"
+    try:
+        cl_url = api_base + "/".join(urllib.parse.quote(p) for p in changelog_path.split("/"))
+        cl_existing = fetch_json(f"{cl_url}?ref=main", headers=gh_headers, timeout=30)
+        if isinstance(cl_existing, dict) and cl_existing.get("content"):
+            import base64 as _b64
+            existing_changelog = _b64.b64decode(cl_existing["content"]).decode("utf-8")
+    except Exception:
+        pass
+
+    new_changelog = existing_changelog.rstrip() + "\n" + changelog_entry
+    _commit_file(changelog_path, new_changelog, f"docs: update n8n fixer changelog — {wf_name}")
+
+    commit = json_result.get("commit") or {}
+    contentInfo = json_result.get("content") or {}
+    return {
+        "ok": True,
+        "jsonPath": json_path,
+        "commitSha": commit.get("sha"),
+        "commitUrl": commit.get("html_url"),
+        "fileUrl": contentInfo.get("html_url"),
     }
 
 
@@ -3157,20 +3248,47 @@ body{{font-family:Arial;padding:24px}}h1{{color:#333}}pre{{background:#f4f4f4;pa
             try:
                 supabase_url = (os.getenv('SUPABASE_URL') or '').rstrip('/')
                 supabase_key = (os.getenv('SUPABASE_SERVICE_ROLE_KEY') or os.getenv('SUPABASE_ANON_KEY') or '').strip()
-                if not (supabase_url and supabase_key):
-                    return json_response(self, 200, {'ok': True, 'records': []})
+                if not supabase_url or not supabase_key:
+                    return json_response(self, 200, {'ok': True, 'records': [], 'warning': 'Supabase not configured'})
                 sb_headers = {
                     'apikey': supabase_key,
                     'Authorization': f'Bearer {supabase_key}',
-                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
                 }
-                url = f'{supabase_url}/rest/v1/n8n_fixer_records?select=id,created_at,workflow_name,workflow_id,site_url,model_used,confidence_score,deploy_status,issue_summary&order=created_at.desc&limit=10'
+                url = f"{supabase_url}/rest/v1/n8n_fixer_records?select=*&order=created_at.desc&limit=100"
                 rows = fetch_json(url, headers=sb_headers, timeout=20)
                 if not isinstance(rows, list):
                     rows = []
                 return json_response(self, 200, {'ok': True, 'records': rows})
             except Exception as exc:
                 return json_response(self, 200, {'ok': True, 'records': [], 'warning': str(exc)[:200]})
+
+        # GET /api/fixer/domains — list unique domains from fixer records
+        if parsed.path == '/api/fixer/domains':
+            try:
+                supabase_url = (os.getenv('SUPABASE_URL') or '').rstrip('/')
+                supabase_key = (os.getenv('SUPABASE_SERVICE_ROLE_KEY') or os.getenv('SUPABASE_ANON_KEY') or '').strip()
+                if not supabase_url or not supabase_key:
+                    return json_response(self, 200, {'ok': True, 'domains': [], 'warning': 'Supabase not configured'})
+                sb_headers = {
+                    'apikey': supabase_key,
+                    'Authorization': f'Bearer {supabase_key}',
+                    'Content-Type': 'application/json',
+                }
+                # Get unique site_url values from n8n_fixer_records
+                url = f"{supabase_url}/rest/v1/n8n_fixer_records?select=site_url&order=created_at.desc&limit=1000"
+                rows = fetch_json(url, headers=sb_headers, timeout=20)
+                domains = []
+                seen = set()
+                if isinstance(rows, list):
+                    for r in rows:
+                        d = r.get('site_url')
+                        if d and d not in seen:
+                            seen.add(d)
+                            domains.append(d)
+                return json_response(self, 200, {'ok': True, 'domains': domains})
+            except Exception as exc:
+                return json_response(self, 200, {'ok': True, 'domains': [], 'warning': str(exc)[:200]})
 
         # ── KWR GET routes ──────────────────────────────────────────────────
         if parsed.path == '/api/kwr/status':
@@ -3764,41 +3882,11 @@ body{{font-family:Arial;padding:24px}}h1{{color:#333}}pre{{background:#f4f4f4;pa
                 return json_response(self, 500, {'ok': False, 'error': str(exc)})
 
         if parsed.path == '/api/n8n/deploy':
-            domain = normalize_domain(payload.get('domain', ''))
-            file_path = (payload.get('filePath') or '').strip().lstrip('/')
-            if not domain or not file_path:
-                return json_response(self, 400, {'ok': False, 'error': 'domain and filePath are required'})
-            if not file_path.lower().endswith('.json'):
-                return json_response(self, 400, {'ok': False, 'error': 'Only workflow JSON files can be deployed'})
-            if False:  # N8N_API_KEY has built-in fallback
-                return json_response(self, 503, {'ok': False, 'error': 'N8N_API_KEY is not configured on the server'})
-            try:
-                workflow_id, details = resolve_workflow_id(domain, payload.get('workflowId'))
-                raw_url = f"{RAW_BASE}/{'/'.join(urllib.parse.quote(part) for part in file_path.split('/'))}"
-                source = json.loads(fetch_text(raw_url))
-                base = (os.getenv('N8N_BASE_URL') or 'https://websiseo.app.n8n.cloud').rstrip('/')
-                headers = n8n_headers()
-                live = fetch_json(f'{base}/api/v1/workflows/{workflow_id}', headers=headers)
-                update_payload = build_workflow_payload(source, live)
-                updated = fetch_json(f'{base}/api/v1/workflows/{workflow_id}', headers=headers, method='PUT', body=update_payload, timeout=120)
-                return json_response(self, 200, {
-                    'ok': True,
-                    'domain': domain,
-                    'filePath': file_path,
-                    'workflowId': workflow_id,
-                    'workflowName': updated.get('name') or live.get('name'),
-                    'active': updated.get('active', live.get('active')),
-                    'resolution': details,
-                })
-            except ValueError as exc:
-                return json_response(self, 409, {'ok': False, 'error': json.loads(str(exc))})
-            except LookupError as exc:
-                return json_response(self, 404, {'ok': False, 'error': json.loads(str(exc)), 'mappingFile': MAP_FILE.name})
-            except urllib.error.HTTPError as exc:
-                body = exc.read().decode('utf-8', 'replace')[:1500]
-                return json_response(self, 502, {'ok': False, 'error': f'n8n API error {exc.code}', 'details': body})
-            except Exception as exc:
-                return json_response(self, 500, {'ok': False, 'error': str(exc)})
+            return json_response(self, 403, {
+                'ok': False,
+                'error': 'n8n deployment is disabled by read-only safety policy',
+                'safety': 'MANUAL IMPORT ONLY — this dashboard must not modify existing n8n workflows',
+            })
 
         # ===== RADAR POST ENDPOINTS =====
 
@@ -4109,6 +4197,56 @@ body{{font-family:Arial;padding:24px}}h1{{color:#333}}pre{{background:#f4f4f4;pa
 
         # ===== END RADAR POST ENDPOINTS =====
 
+        if parsed.path == '/api/n8n-fixer/validate':
+            try:
+                wf_raw = payload.get('workflowJson')
+                if wf_raw is None:
+                    return json_response(self, 400, {'ok': False, 'validJson': False, 'error': 'workflowJson is required'})
+                if isinstance(wf_raw, str):
+                    try:
+                        wf_obj = json.loads(wf_raw)
+                    except Exception as exc:
+                        return json_response(self, 400, {'ok': False, 'validJson': False, 'error': str(exc)})
+                else:
+                    wf_obj = wf_raw
+                if not isinstance(wf_obj, dict):
+                    return json_response(self, 400, {'ok': False, 'validJson': False, 'error': 'workflowJson must be an object'})
+
+                nodes = wf_obj.get('nodes')
+                connections = wf_obj.get('connections')
+                node_count = len(nodes) if isinstance(nodes, list) else 0
+                connection_count = len(connections) if isinstance(connections, dict) else 0
+                warnings = []
+                if not isinstance(nodes, list):
+                    warnings.append('Expected n8n workflow "nodes" array was not found')
+                if not isinstance(connections, dict):
+                    warnings.append('Expected n8n workflow "connections" object was not found')
+                looks_like = isinstance(nodes, list) and isinstance(connections, dict)
+                workflow_name = str(wf_obj.get('name') or '')
+                validation = {
+                    'allNodesPreserved': True,
+                    'allConnectionsPreserved': True,
+                    'noContentLoss': True,
+                    'originalNodeCount': node_count,
+                    'fixedNodeCount': node_count,
+                    'originalConnectionCount': connection_count,
+                    'fixedConnectionCount': connection_count,
+                    'manualImportOnly': True,
+                }
+                return json_response(self, 200, {
+                    'ok': True,
+                    'validJson': True,
+                    'looksLikeN8N': looks_like,
+                    'workflowName': workflow_name,
+                    'nodeCount': node_count,
+                    'connectionCount': connection_count,
+                    'warnings': warnings,
+                    'validation': validation,
+                    'safety': 'MANUAL IMPORT ONLY — validation performs no n8n writes',
+                })
+            except Exception as exc:
+                return json_response(self, 500, {'ok': False, 'validJson': False, 'error': str(exc)})
+
         if parsed.path == '/api/fixer/analyze':
             try:
                 wf_json_str = (payload.get('workflowJson') or '').strip()
@@ -4250,6 +4388,189 @@ body{{font-family:Arial;padding:24px}}h1{{color:#333}}pre{{background:#f4f4f4;pa
             except Exception as exc:
                 return json_response(self, 500, {'ok': False, 'error': str(exc)})
 
+        if parsed.path == '/api/fixer/analyze/triple':
+            try:
+                import concurrent.futures
+                wf_json_str = (payload.get('workflowJson') or '').strip()
+                if not wf_json_str:
+                    return json_response(self, 400, {'ok': False, 'error': 'workflowJson is required'})
+                try:
+                    wf_obj = json.loads(wf_json_str)
+                except Exception:
+                    return json_response(self, 400, {'ok': False, 'error': 'workflowJson is not valid JSON'})
+                if not isinstance(wf_obj, dict):
+                    return json_response(self, 400, {'ok': False, 'error': 'workflowJson must be a JSON object'})
+
+                problem = (payload.get('problemDescription') or '').strip()
+                comments = (payload.get('comments') or '').strip()
+                notes = (payload.get('notes') or '').strip()
+                wf_name = (payload.get('workflowName') or wf_obj.get('name') or 'unnamed').strip()
+                site_url = (payload.get('siteUrl') or '').strip()
+                suspected_node = (payload.get('suspectedNode') or '').strip()
+                target_id = (payload.get('targetWorkflowId') or '').strip()
+
+                # Save backup
+                date_str = datetime.datetime.now().strftime('%Y%m%d_%H%M%S')
+                safe_name = re.sub(r'[^a-zA-Z0-9_-]', '_', wf_name)[:40]
+                backup_dir = Path(f'/tmp/fixer_backups/{date_str}_{safe_name}')
+                try:
+                    backup_dir.mkdir(parents=True, exist_ok=True)
+                    (backup_dir / 'original.json').write_text(json.dumps(wf_obj, indent=2, ensure_ascii=False), encoding='utf-8')
+                except Exception:
+                    pass
+
+                # Triple AI models
+                TRIPLE_MODELS = [
+                    {'name': 'GPT 5.5', 'id': 'openai/gpt-5.5'},
+                    {'name': 'Opus 4.7', 'id': 'anthropic/claude-opus-4.7'},
+                    {'name': 'Gemini 3.1 Pro', 'id': 'google/gemini-3.1-pro-preview'},
+                ]
+
+                system_prompt = (
+                    "You are an expert N8N workflow debugger and repair engineer. Analyze the provided N8N workflow JSON and fix all issues.\n\n"
+                    "Your analysis must cover:\n"
+                    "- Malformed or disconnected nodes\n"
+                    "- Broken node connections/references\n"
+                    "- Invalid N8N expressions ({{ }}) with syntax errors\n"
+                    "- Credential misconfiguration patterns (wrong IDs, missing credentials)\n"
+                    "- Loop traps (SplitInBatches nodes that never reach 'done' output)\n"
+                    "- Dead-end execution paths (nodes with no output connections)\n"
+                    "- Wait nodes with missing webhook configurations\n"
+                    "- Code nodes with JavaScript errors or corrupted output structures\n"
+                    "- HTTP Request nodes with authentication issues (401, 403 patterns)\n"
+                    "- Merge node input count mismatches\n"
+                    "- Schedule triggers with invalid cron expressions\n"
+                    "- Missing required node parameters\n\n"
+                    "Use the problem description, comments, notes, and screenshots context provided.\n"
+                    "Preserve original workflow intent. Fix only what is necessary.\n"
+                    "Return a JSON response in this EXACT structure (no markdown, raw JSON only):\n"
+                    "{\n"
+                    '  "issue_summary": "...",\n'
+                    '  "root_cause": "...",\n'
+                    '  "changes_made": ["change 1", "change 2"],\n'
+                    '  "confidence": 0.85,\n'
+                    '  "warnings": ["warning if any"],\n'
+                    '  "fixed_workflow": { ...complete corrected N8N workflow JSON... }\n'
+                    "}"
+                )
+
+                context_parts = [f"WORKFLOW JSON:\n{json.dumps(wf_obj, indent=2)}"]
+                if problem:
+                    context_parts.append(f"\nPROBLEM DESCRIPTION:\n{problem}")
+                if comments:
+                    context_parts.append(f"\nCOMMENTS:\n{comments}")
+                if notes:
+                    context_parts.append(f"\nNOTES:\n{notes}")
+                if suspected_node:
+                    context_parts.append(f"\nSUSPECTED NODE: {suspected_node}")
+                if site_url:
+                    context_parts.append(f"\nSITE URL: {site_url}")
+                if target_id:
+                    context_parts.append(f"\nTARGET WORKFLOW ID: {target_id}")
+                user_message = '\n'.join(context_parts)
+
+                fixer_messages = [
+                    {'role': 'system', 'content': system_prompt},
+                    {'role': 'user', 'content': user_message},
+                ]
+
+                def _analyze_single(model_info):
+                    start = time.time()
+                    try:
+                        raw, provider = call_with_fallback(fixer_messages, model_info['id'], timeout=300)
+                        if isinstance(raw, list):
+                            raw = ''.join(p.get('text', '') for p in raw if isinstance(p, dict))
+                        raw = str(raw).strip()
+                        if raw.startswith('```'):
+                            raw = re.sub(r'^```[a-z]*\n?', '', raw)
+                            raw = re.sub(r'\n?```$', '', raw.rstrip())
+                        try:
+                            result = json.loads(raw)
+                        except Exception:
+                            m = re.search(r'\{.*\}', raw, re.DOTALL)
+                            if m:
+                                try:
+                                    result = json.loads(m.group(0))
+                                except Exception:
+                                    return {'model': model_info['name'], 'ok': False, 'error': 'Non-JSON response', 'raw': raw[:500], 'duration_ms': int((time.time()-start)*1000)}
+                            else:
+                                return {'model': model_info['name'], 'ok': False, 'error': 'Non-JSON response', 'raw': raw[:500], 'duration_ms': int((time.time()-start)*1000)}
+                        return {
+                            'model': model_info['name'],
+                            'ok': True,
+                            'issue_summary': result.get('issue_summary', ''),
+                            'root_cause': result.get('root_cause', ''),
+                            'changes_made': result.get('changes_made', []),
+                            'confidence': result.get('confidence', 0),
+                            'warnings': result.get('warnings', []),
+                            'fixed_workflow': result.get('fixed_workflow'),
+                            'raw': raw[:500],
+                            'duration_ms': int((time.time()-start)*1000),
+                        }
+                    except Exception as exc:
+                        return {'model': model_info['name'], 'ok': False, 'error': str(exc), 'duration_ms': int((time.time()-start)*1000)}
+
+                # Run all 3 in parallel
+                individual_results = []
+                with concurrent.futures.ThreadPoolExecutor(max_workers=3) as executor:
+                    futures = {executor.submit(_analyze_single, m): m for m in TRIPLE_MODELS}
+                    for future in concurrent.futures.as_completed(futures):
+                        res = future.result()
+                        individual_results.append(res)
+
+                # Sort by model order
+                individual_results.sort(key=lambda x: [m['name'] for m in TRIPLE_MODELS].index(x['model']))
+
+                # Consensus: use the highest-confidence model's fixed_workflow
+                successful = [r for r in individual_results if r['ok']]
+                if not successful:
+                    return json_response(self, 502, {'ok': False, 'error': 'All 3 models failed', 'individualResults': individual_results})
+
+                best = max(successful, key=lambda r: float(r['confidence']))
+                fixed_wf = best.get('fixed_workflow') or wf_obj
+                fixed_str = json.dumps(fixed_wf, indent=2, ensure_ascii=False)
+
+                # Save fixed backup
+                try:
+                    (backup_dir / 'fixed.json').write_text(fixed_str, encoding='utf-8')
+                except Exception:
+                    pass
+
+                # Calculate agreement level
+                issue_summaries = [r.get('issue_summary', '') for r in successful]
+                agreement_count = sum(1 for s in issue_summaries if s and s == issue_summaries[0]) if issue_summaries else 0
+                agreement_level = f"{agreement_count}/{len(successful)}"
+                avg_confidence = sum(float(r['confidence']) for r in successful) / len(successful) if successful else 0
+
+                # Build consensus diagnosis
+                consensus = {
+                    'problem': best.get('issue_summary', ''),
+                    'rootCause': best.get('root_cause', ''),
+                    'severity': 'breaking' if avg_confidence >= 0.7 else 'degraded' if avg_confidence >= 0.4 else 'minor',
+                    'confidence': round(avg_confidence, 2),
+                    'agreementLevel': agreement_level,
+                    'modelAgreement': {r['model']: r['ok'] for r in individual_results},
+                    'affectedNodes': [],  # extracted from best result
+                    'changes': [{'description': c} for c in best.get('changes_made', [])],
+                }
+
+                return json_response(self, 200, {
+                    'ok': True,
+                    'consensus': consensus,
+                    'individualResults': individual_results,
+                    'issueSummary': best.get('issue_summary', ''),
+                    'rootCause': best.get('root_cause', ''),
+                    'changesMade': best.get('changes_made', []),
+                    'confidence': best.get('confidence', 0),
+                    'warnings': best.get('warnings', []),
+                    'fixedWorkflowJson': fixed_str,
+                    'originalJson': json.dumps(wf_obj, indent=2, ensure_ascii=False),
+                    'backupDir': str(backup_dir),
+                    'providerUsed': 'triple-verdict',
+                })
+            except Exception as exc:
+                return json_response(self, 500, {'ok': False, 'error': str(exc)})
+
         if parsed.path == '/api/fixer/save':
             try:
                 import datetime as _datetime_local
@@ -4342,45 +4663,36 @@ body{{font-family:Arial;padding:24px}}h1{{color:#333}}pre{{background:#f4f4f4;pa
                     except Exception:
                         pass
 
-                return json_response(self, 200, {'ok': True, 'supabaseId': supabase_id, 'obsidianPath': obsidian_path})
+                # Save to GitHub
+                github_result = None
+                try:
+                    github_result = commit_fixer_to_github(
+                        wf_name=wf_name,
+                        site_url=site_url,
+                        issue_summary=issue_summary,
+                        changes_made=changes_made,
+                        fixed_json=fixed_json,
+                        model_used=model_used,
+                        confidence=confidence,
+                    )
+                except Exception:
+                    pass  # graceful fail
+
+                return json_response(self, 200, {
+                    'ok': True,
+                    'supabaseId': supabase_id,
+                    'obsidianPath': obsidian_path,
+                    'github': github_result,
+                })
             except Exception as exc:
                 return json_response(self, 500, {'ok': False, 'error': str(exc)})
 
         if parsed.path == '/api/fixer/deploy':
-            fixed_json_str = (payload.get('fixedWorkflowJson') or '').strip()
-            target_workflow_id = (payload.get('targetWorkflowId') or '').strip()
-            if not fixed_json_str:
-                return json_response(self, 400, {'ok': False, 'error': 'fixedWorkflowJson is required'})
-            if False:  # N8N_API_KEY has built-in fallback
-                return json_response(self, 503, {'ok': False, 'error': 'N8N_API_KEY is not configured'})
-            try:
-                source = json.loads(fixed_json_str)
-            except Exception:
-                return json_response(self, 400, {'ok': False, 'error': 'fixedWorkflowJson is not valid JSON'})
-            if not isinstance(source, dict):
-                return json_response(self, 400, {'ok': False, 'error': 'fixedWorkflowJson must be an object'})
-            if not target_workflow_id:
-                target_workflow_id = source.get('id') or ''
-            if not target_workflow_id:
-                return json_response(self, 400, {'ok': False, 'error': 'targetWorkflowId is required (no id in JSON)'})
-            try:
-                import datetime as _datetime_local
-                base = (os.getenv('N8N_BASE_URL') or 'https://websiseo.app.n8n.cloud').rstrip('/')
-                headers = n8n_headers()
-                live = fetch_json(f'{base}/api/v1/workflows/{target_workflow_id}', headers=headers)
-                update_payload = build_workflow_payload(source, live)
-                updated = fetch_json(f'{base}/api/v1/workflows/{target_workflow_id}', headers=headers, method='PUT', body=update_payload, timeout=120)
-                return json_response(self, 200, {
-                    'ok': True,
-                    'workflowId': target_workflow_id,
-                    'workflowName': updated.get('name') or live.get('name'),
-                    'deployedAt': datetime.datetime.utcnow().isoformat() + 'Z',
-                })
-            except urllib.error.HTTPError as exc:
-                body_bytes = exc.read().decode('utf-8', 'replace')[:1500]
-                return json_response(self, 502, {'ok': False, 'error': f'n8n API error {exc.code}', 'details': body_bytes})
-            except Exception as exc:
-                return json_response(self, 500, {'ok': False, 'error': str(exc)})
+            return json_response(self, 403, {
+                'ok': False,
+                'error': 'n8n fixer deployment is disabled by read-only safety policy',
+                'safety': 'MANUAL IMPORT ONLY — this dashboard must not modify existing n8n workflows',
+            })
 
         # ── KWR POST routes ─────────────────────────────────────────────────
         if parsed.path == '/api/kwr/start':
