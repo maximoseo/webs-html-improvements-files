@@ -2658,6 +2658,22 @@ body{{font-family:Arial;padding:24px}}h1{{color:#333}}pre{{background:#f4f4f4;pa
                 return json_response(self, 500, {'ok': False, 'error': str(e)})
         if _dashboard_auth_enabled() and not _stage8_check_auth(self, parsed):
             return
+        # PRODUCTIVITY_HUB_API_2026_04_27 - additive backend foundation routes.
+        if parsed.path == '/api/productivity/summary':
+            return json_response(self, 200, _productivity_summary())
+        if parsed.path == '/api/productivity/notifications':
+            with _PRODUCTIVITY_HUB_LOCK:
+                rows = list(_productivity_load().get('notifications', []))
+            return json_response(self, 200, {'ok': True, 'notifications': rows})
+        if parsed.path == '/api/productivity/audit':
+            with _PRODUCTIVITY_HUB_LOCK:
+                rows = list(_productivity_load().get('audit', []))
+            return json_response(self, 200, {'ok': True, 'events': rows})
+        if parsed.path == '/api/productivity/search':
+            qs = urllib.parse.parse_qs(parsed.query)
+            query = qs.get('q', [''])[0]
+            return json_response(self, 200, {'ok': True, 'query': query, 'results': _productivity_search(query)})
+
         # TEMPLATE_IMPROVEMENTS_API_2026_04_27 - additive routes, existing APIs untouched.
         if parsed.path == '/api/improve/jobs':
             with _TEMPLATE_IMPROVEMENTS_LOCK:
@@ -3654,6 +3670,22 @@ body{{font-family:Arial;padding:24px}}h1{{color:#333}}pre{{background:#f4f4f4;pa
             return
         if not _r3_check_csrf_or_warn(self, parsed):
             return
+
+        # PRODUCTIVITY_HUB_API_POST_2026_04_27 - additive persisted notifications/audit.
+        if parsed.path == '/api/productivity/notifications':
+            try:
+                payload = read_request_json(self) or {}
+                row = _productivity_add_notification(payload)
+                return json_response(self, 200, {'ok': True, 'notification': row})
+            except Exception as exc:
+                return json_response(self, 500, {'ok': False, 'error': str(exc)})
+        if parsed.path == '/api/productivity/audit':
+            try:
+                payload = read_request_json(self) or {}
+                row = _productivity_add_audit(payload)
+                return json_response(self, 200, {'ok': True, 'event': row})
+            except Exception as exc:
+                return json_response(self, 500, {'ok': False, 'error': str(exc)})
 
         # TEMPLATE_IMPROVEMENTS_API_POST_2026_04_27 - additive POST routes.
         if parsed.path == '/api/improve/start':
@@ -6237,6 +6269,130 @@ def _template_improvement_start_job(payload):
     threading.Thread(target=_template_improvement_run_job, args=(job_id,), daemon=True).start()
     return job
 
+
+
+# ===== PRODUCTIVITY HUB — additive backend foundation (2026-04-27) =====
+# Local JSON persistence only. No n8n workflow modification. No destructive DB migration.
+PRODUCTIVITY_HUB_FILE = ROOT / 'data' / 'productivity_hub.json'
+_PRODUCTIVITY_HUB_LOCK = threading.RLock()
+_PRODUCTIVITY_FEATURES = [
+    {'slug': 'client-overview', 'title': 'Client Overview', 'status': 'planned next', 'priority': 2},
+    {'slug': 'ab-testing', 'title': 'A/B Testing', 'status': 'planned', 'priority': 3},
+    {'slug': 'agent-traces', 'title': 'Agent Observability', 'status': 'planned next', 'priority': 2},
+    {'slug': 'client-reports', 'title': 'Automated Client Reporting', 'status': 'planned', 'priority': 3},
+    {'slug': 'template-gallery', 'title': 'Template Gallery', 'status': 'planned', 'priority': 3},
+    {'slug': 'notifications', 'title': 'Notification Center', 'status': 'enabled now', 'priority': 1},
+    {'slug': 'batch-operations', 'title': 'Batch Operations', 'status': 'planned next', 'priority': 2},
+    {'slug': 'global-search', 'title': 'Search & Global Filters', 'status': 'enabled now', 'priority': 1},
+    {'slug': 'audit-log', 'title': 'Audit Log', 'status': 'enabled now', 'priority': 2},
+    {'slug': 'quick-actions', 'title': 'Quick Actions', 'status': 'enabled now', 'priority': 1},
+    {'slug': 'cost-tracker', 'title': 'Cost Tracker', 'status': 'enabled now', 'priority': 1},
+    {'slug': 'team-notes', 'title': 'Collaboration Notes', 'status': 'planned', 'priority': 4},
+    {'slug': 'pwa-mobile', 'title': 'PWA / Mobile', 'status': 'partially available', 'priority': 4},
+    {'slug': 'export-hub', 'title': 'Data Export Hub', 'status': 'enabled now', 'priority': 3},
+    {'slug': 'scheduled-runs', 'title': 'Scheduled Pipeline Runs', 'status': 'planned', 'priority': 3},
+]
+
+def _productivity_load():
+    data = load_json_file(PRODUCTIVITY_HUB_FILE, {})
+    if not isinstance(data, dict):
+        data = {}
+    data.setdefault('notifications', [])
+    data.setdefault('audit', [])
+    data.setdefault('feature_flags', {})
+    return data
+
+def _productivity_save(data):
+    PRODUCTIVITY_HUB_FILE.parent.mkdir(parents=True, exist_ok=True)
+    tmp = PRODUCTIVITY_HUB_FILE.with_suffix(PRODUCTIVITY_HUB_FILE.suffix + '.tmp')
+    tmp.write_text(json.dumps(data, ensure_ascii=False, indent=2), encoding='utf-8')
+    os.replace(tmp, PRODUCTIVITY_HUB_FILE)
+
+def _productivity_summary():
+    with _PRODUCTIVITY_HUB_LOCK:
+        data = _productivity_load()
+        flags = data.get('feature_flags', {}) if isinstance(data.get('feature_flags'), dict) else {}
+        notifications = list(data.get('notifications', []))
+        audit = list(data.get('audit', []))
+    features = []
+    for row in _PRODUCTIVITY_FEATURES:
+        item = dict(row)
+        item['is_enabled'] = bool(flags.get(row['slug']) or row.get('status') in ('enabled now', 'partially available'))
+        item['rollback'] = 'disable feature flag'
+        features.append(item)
+    return {
+        'ok': True,
+        'generated_at': datetime.datetime.utcnow().isoformat() + 'Z',
+        'features': features,
+        'safety': {
+            'additive_only': True,
+            'no_n8n_workflow_modification': True,
+            'destructive_db_migrations': False,
+            'existing_routes_changed': False,
+        },
+        'signals': {
+            'notifications_count': len(notifications),
+            'unread_notifications': sum(1 for n in notifications if not n.get('is_read')),
+            'audit_count': len(audit),
+            'enabled_features': sum(1 for f in features if f.get('is_enabled')),
+        }
+    }
+
+def _productivity_add_notification(payload):
+    now = datetime.datetime.utcnow().isoformat() + 'Z'
+    row = {
+        'id': str(uuid.uuid4()),
+        'type': (payload.get('type') or 'info').strip()[:32],
+        'title': (payload.get('title') or 'Notification').strip()[:180],
+        'message': (payload.get('message') or '').strip()[:1000],
+        'link': (payload.get('link') or '').strip()[:500],
+        'is_read': bool(payload.get('is_read', False)),
+        'created_at': now,
+    }
+    with _PRODUCTIVITY_HUB_LOCK:
+        data = _productivity_load()
+        data.setdefault('notifications', []).insert(0, row)
+        data['notifications'] = data['notifications'][:200]
+        _productivity_save(data)
+    return row
+
+def _productivity_add_audit(payload):
+    now = datetime.datetime.utcnow().isoformat() + 'Z'
+    row = {
+        'id': str(uuid.uuid4()),
+        'message': (payload.get('message') or 'Activity recorded').strip()[:500],
+        'entity_type': (payload.get('entity_type') or payload.get('entityType') or '').strip()[:80],
+        'entity_id': (payload.get('entity_id') or payload.get('entityId') or '').strip()[:180],
+        'user_id': (payload.get('user_id') or payload.get('userId') or 'dashboard').strip()[:120],
+        'created_at': now,
+    }
+    with _PRODUCTIVITY_HUB_LOCK:
+        data = _productivity_load()
+        data.setdefault('audit', []).insert(0, row)
+        data['audit'] = data['audit'][:500]
+        _productivity_save(data)
+    return row
+
+def _productivity_search(query):
+    q = (query or '').strip().lower()
+    out = []
+    for f in _PRODUCTIVITY_FEATURES:
+        hay = ' '.join([f.get('slug',''), f.get('title',''), f.get('status','')]).lower()
+        if not q or q in hay:
+            out.append({'type': 'feature', 'title': f['title'], 'slug': f['slug'], 'status': f['status']})
+    with _PRODUCTIVITY_HUB_LOCK:
+        data = _productivity_load()
+        notifications = list(data.get('notifications', []))
+        audit = list(data.get('audit', []))
+    for n in notifications:
+        hay = ' '.join([n.get('title',''), n.get('message',''), n.get('type','')]).lower()
+        if q and q in hay:
+            out.append({'type': 'notification', 'title': n.get('title'), 'id': n.get('id'), 'status': n.get('type')})
+    for a in audit:
+        hay = ' '.join([a.get('message',''), a.get('entity_type',''), a.get('entity_id','')]).lower()
+        if q and q in hay:
+            out.append({'type': 'audit', 'title': a.get('message'), 'id': a.get('id'), 'entity_id': a.get('entity_id')})
+    return out[:50]
 
 def main():
     port = int(os.getenv('PORT', '8000'))

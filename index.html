@@ -23172,5 +23172,90 @@ body.page-tasks-active #tasks-board-view{
 })();
 </script>
 
+
+<script id="productivity-hub-backend-sync-script">
+/* PRODUCTIVITY_HUB_BACKEND_SYNC_2026_04_27 — fetch persisted backend data with client-side fallback. */
+(function(){
+  window.mfBackendAvailable = false;
+  function $(id){return document.getElementById(id)}
+  function esc(v){return String(v||'').replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+  async function mfApi(path, opts){
+    opts = opts || {};
+    opts.headers = opts.headers || {};
+    const method = String(opts.method || 'GET').toUpperCase();
+    if(['POST','PUT','PATCH','DELETE'].includes(method) && window.dashboardEnsureCsrf){
+      const csrf = await window.dashboardEnsureCsrf();
+      if(csrf) opts.headers['X-CSRF-Token'] = csrf;
+    }
+    const r = await fetch(path, opts);
+    const j = await r.json().catch(()=>({ok:false,error:'Invalid JSON'}));
+    if(!r.ok || j.ok===false) throw new Error(j.error || ('HTTP '+r.status));
+    return j;
+  }
+  window.mfRenderBackendSummary = function(data){
+    if(!data || !Array.isArray(data.features)) return;
+    window.mfBackendAvailable = true;
+    data.features.forEach(function(f){
+      var card = document.querySelector('[data-roadmap-feature="'+f.slug+'"]');
+      if(card){
+        var status = card.querySelector('span');
+        if(status) status.textContent = f.status || status.textContent;
+        card.dataset.backendEnabled = f.is_enabled ? 'true' : 'false';
+      }
+    });
+    var cost = $('mf-cost-tracker');
+    if(cost && data.signals){
+      cost.innerHTML = '<div class="mf-cost-row"><span>Enabled features</span><b>'+esc(data.signals.enabled_features)+'</b></div>'+
+        '<div class="mf-cost-row"><span>Notifications</span><b>'+esc(data.signals.notifications_count)+'</b></div>'+
+        '<div class="mf-cost-row"><span>Audit events</span><b>'+esc(data.signals.audit_count)+'</b></div>';
+    }
+  };
+  window.mfLoadBackendSummary = async function(){
+    try{ window.mfRenderBackendSummary(await mfApi('/api/productivity/summary')); }
+    catch(e){ window.mfBackendAvailable = false; if(window.mfRenderCostTracker) window.mfRenderCostTracker(); }
+  };
+  window.mfRenderNotifications = async function(){
+    const el=$('mf-notifications-list'); if(!el) return;
+    try{
+      const j = await mfApi('/api/productivity/notifications');
+      const rows = j.notifications || [];
+      el.innerHTML = rows.length ? rows.slice(0,6).map(n=>'<div class="mf-note-row"><span>'+esc(n.type||'info')+'</span><span>'+esc(n.title||'Notification')+'</span></div>').join('') : '<div class="mf-note-row"><span>Info</span><span>No notifications yet</span></div>';
+    }catch(e){ el.innerHTML = '<div class="mf-note-row"><span>Info</span><span>Notification Center fallback active</span></div>'; }
+  };
+  window.mfRenderAuditLog = async function(){
+    const el=$('mf-audit-log'); if(!el) return;
+    try{
+      const j = await mfApi('/api/productivity/audit');
+      const rows = j.events || [];
+      el.innerHTML = rows.length ? rows.slice(0,6).map(r=>'<div class="mf-audit-row"><span>'+esc(r.message)+'</span><time>'+esc(new Date(r.created_at).toLocaleString())+'</time></div>').join('') : '<div class="mf-audit-row"><span>Backend audit ready</span><time>now</time></div>';
+    }catch(e){ el.innerHTML = '<div class="mf-audit-row"><span>Audit fallback active</span><time>local</time></div>'; }
+  };
+  window.mfRecordAuditEvent = async function(message){
+    try{ await mfApi('/api/productivity/audit',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({message:message||'Activity recorded',entity_type:'dashboard',entity_id:'productivity-hub'})}); }
+    catch(e){ try{ const key='mfAuditLog.v1'; let rows=JSON.parse(localStorage.getItem(key)||'[]'); rows.unshift({message:message||'Activity recorded',at:new Date().toISOString(),user:'dashboard'}); localStorage.setItem(key,JSON.stringify(rows.slice(0,50))); }catch(_){} }
+    if(window.mfRenderAuditLog) window.mfRenderAuditLog();
+  };
+  const previousFilter = window.mfFilterCommands;
+  window.mfFilterCommands = async function(q){
+    const el=$('mf-command-results');
+    try{
+      const j=await mfApi('/api/productivity/search?q='+encodeURIComponent(q||''));
+      if(el && (j.results||[]).length){
+        el.innerHTML=(j.results||[]).slice(0,12).map(r=>'<div class="mf-command-result"><span>'+esc(r.type)+': '+esc(r.title)+'</span><small>'+esc(r.status||'open')+'</small></div>').join('');
+        return;
+      }
+    }catch(e){}
+    if(typeof previousFilter==='function') return previousFilter(q);
+  };
+  const previousInit = window.initProductivityHubPage;
+  window.initProductivityHubPage = function(){
+    if(typeof previousInit === 'function') previousInit();
+    window.mfLoadBackendSummary();
+    window.mfRenderNotifications();
+    window.mfRenderAuditLog();
+  };
+})();
+</script>
+
 </body>
 </html>
