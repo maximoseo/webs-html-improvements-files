@@ -7143,7 +7143,7 @@ body.light .action-btn.primary{
   <button class="mobile-nav-item" onclick="showPage('analytics');closeMobileMenu()">Analytics</button>
   <button class="mobile-nav-item" onclick="showPage('settings');closeMobileMenu()">Settings</button>
   <button class="mobile-nav-item" onclick="closeMobileMenu();fullSync(document.getElementById('hdr-sync-btn'))">Sync dashboard</button>
-  <button class="mobile-nav-item" onclick="closeMobileMenu();refreshDashboardHard(document.getElementById('hdr-refresh-cache-btn'))">רענן ונקה Cache</button>
+  <button class="mobile-nav-item" onclick="closeMobileMenu();refreshDashboardHard(document.getElementById('hdr-refresh-cache-btn'))">Refresh and Clear Cache</button>
   <button class="mobile-nav-item" onclick="toggleTheme();closeMobileMenu()">Toggle theme</button>
   <button class="mobile-nav-item mobile-nav-item--danger" onclick="closeMobileMenu();doLogout()">Sign out</button>
 </div>
@@ -7219,9 +7219,9 @@ body.light .action-btn.primary{
       <svg id="hdr-sync-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" style="width:13px;height:13px;flex-shrink:0"><path d="M1 4v6h6"/><path d="M23 20v-6h-6"/><path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 0 1 3.51 15"/></svg>
       <span id="hdr-sync-label">Sync</span>
     </button>
-    <button class="hdr-sync-btn hdr-refresh-cache-btn" id="hdr-refresh-cache-btn" onclick="refreshDashboardHard(this)" title="רענן: נקה cache בדפדפן, בקש ניקוי backend, ורענן את רשימת הקבצים" aria-label="רענן ונקה cache">
+    <button class="hdr-sync-btn hdr-refresh-cache-btn" id="hdr-refresh-cache-btn" onclick="refreshDashboardHard(this)" title="Refresh: clear browser cache, ask backend to refresh cache state, and reload file lists" aria-label="Refresh and clear cache">
       <svg id="hdr-refresh-cache-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" style="width:13px;height:13px;flex-shrink:0"><path d="M21 12a9 9 0 1 1-2.64-6.36"/><path d="M21 3v6h-6"/><path d="M12 7v5l3 2"/></svg>
-      <span id="hdr-refresh-cache-label">רענן</span>
+      <span id="hdr-refresh-cache-label">Refresh</span>
     </button>
   <button class="hamburger-btn" onclick="openMobileMenu()" aria-label="Open navigation menu" aria-expanded="false" title="Menu"><svg id="hamburger-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg></button>
   <button class="theme-toggle-btn" onclick="toggleTheme()" id="theme-toggle-btn" aria-label="Toggle dark/light mode" title="Toggle theme"><svg id="theme-icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg><svg id="theme-icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg></button>
@@ -13036,9 +13036,9 @@ async function refreshDashboardHard(btnEl){
   const statusEl=document.getElementById('sync-status');
   const detailEl=document.getElementById('data-source-detail');
   const dot=document.querySelector('.status-dot');
-  const oldLabel=label?label.textContent:'רענן';
+  const oldLabel=label?label.textContent:'Refresh';
   if(btn){btn.classList.add('syncing');btn.disabled=true;}
-  if(label)label.textContent='מנקה...';
+  if(label)label.textContent='Clearing...';
   if(statusEl)statusEl.textContent='Refreshing...';
   if(detailEl)detailEl.textContent='Source: clearing frontend/backend cache…';
   if(dot)dot.style.background='var(--gold)';
@@ -13064,7 +13064,7 @@ async function refreshDashboardHard(btnEl){
       console.warn('[refresh-cache] backend clear failed',err);
       if(window.toast)window.toast.warning('Backend cache refresh warning: '+(err.message||err));
     }
-    if(label)label.textContent='קבצים...';
+    if(label)label.textContent='Files...';
     await loadDashboard({forceRefresh:true});
     try{ if(typeof kwrFetchReports==='function') kwrFetchReports(); }catch(_){}
     try{ if(typeof refreshRelativeTimes==='function') refreshRelativeTimes(); }catch(_){}
@@ -13072,16 +13072,16 @@ async function refreshDashboardHard(btnEl){
     if(statusEl)statusEl.textContent='Refreshed';
     if(detailEl)detailEl.textContent='Source: refreshed live files + backend cache check';
     if(dot)dot.style.background='var(--green)';
-    if(window.toast)window.toast.success('רוענן: cache נוקה ורשימת הקבצים נטענה מחדש');
+    if(window.toast)window.toast.success('Refreshed: cache cleared and file list reloaded');
     return backend||{ok:true};
   }catch(err){
     if(statusEl)statusEl.textContent='Refresh failed';
     if(detailEl)detailEl.textContent='Source: refresh failed';
     if(dot)dot.style.background='var(--red)';
-    if(window.toast)window.toast.error('רענון נכשל: '+(err.message||err));
+    if(window.toast)window.toast.error('Refresh failed: '+(err.message||err));
     throw err;
   }finally{
-    if(label)label.textContent=oldLabel||'רענן';
+    if(label)label.textContent=oldLabel||'Refresh';
     if(btn){btn.classList.remove('syncing');btn.disabled=false;btn.classList.add('done');setTimeout(()=>btn.classList.remove('done'),1800);}
   }
 }

@@ -54,6 +54,8 @@ class DashboardRefreshCacheTests(unittest.TestCase):
         html = INDEX_HTML.read_text(encoding='utf-8')
         self.assertIn('DASHBOARD_REFRESH_CACHE_BUTTON_2026_04_26', html)
         self.assertIn('id="hdr-refresh-cache-btn"', html)
+        self.assertIn('<span id="hdr-refresh-cache-label">Refresh</span>', html)
+        self.assertIn('Refresh and Clear Cache', html)
         self.assertIn('onclick="refreshDashboardHard(this)"', html)
         self.assertIn('window.refreshDashboardHard = refreshDashboardHard', html)
         self.assertIn('window.dashboardEnsureCsrf = _ensureCsrf', html)
