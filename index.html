@@ -12022,9 +12022,19 @@ async function copyObsidianInstructions(){
 }
 
 function _htmlFileInfo(){
+  /* PROMPT_STUDIO_FILE_URL_FALLBACK_2026_04_27 */
   const files=promptStudioContext.fileManifest||[];
   let f=files.find(x=>/\.html$/i.test(x.name||''));
-  return f||null;
+  if(f) return f;
+  if(promptStudioContext.htmlDownloadUrl){
+    return {
+      name: promptStudioContext.htmlFileName||'active-template.html',
+      path: promptStudioContext.htmlFilePath||'',
+      download: promptStudioContext.htmlDownloadUrl,
+      url: promptStudioContext.htmlDownloadUrl
+    };
+  }
+  return null;
 }
 async function tweakTemplate(btn){
   const improvedOutput=(document.getElementById('prompt-output').value||'').trim();
@@ -12045,7 +12055,13 @@ async function tweakTemplate(btn){
     status.textContent='Launching pipeline directly from the draft instructions. You can still Build prompt first for a more structured prompt.';
   }
   const htmlFile=_htmlFileInfo();
-  if(!htmlFile || !htmlFile.download){status.textContent='No HTML template found in the selected version.';return;}
+  if(!htmlFile || !htmlFile.download){
+    const noHtmlMessage='No HTML template found in the selected version.';
+    status.textContent=noHtmlMessage;
+    tweakStatus.textContent=noHtmlMessage;
+    showToast(noHtmlMessage,'warn');
+    return;
+  }
   const modelEl=document.getElementById('prompt-model-select');
   const selectedModel=modelEl?modelEl.value:'anthropic/claude-sonnet-4.6';
   const original=btn.innerHTML;
@@ -23338,6 +23354,86 @@ body.page-tasks-active #tasks-board-view{
     display:grid !important;
     grid-template-columns:repeat(3,minmax(0,1fr)) !important;
     width:100% !important;
+  }
+}
+</style>
+
+
+<style id="prompt-studio-mobile-polish-2026-04-27">
+/* PROMPT_STUDIO_MOBILE_POLISH_2026_04_27
+   Scoped mobile polish for Prompt Studio: readable modal, stacked panels/actions, safe scrolling. */
+@media(max-width:768px){
+  #prompt-modal{
+    align-items:flex-start !important;
+    justify-content:center !important;
+    padding:8px !important;
+    overflow:auto !important;
+  }
+  #prompt-modal .prompt-dialog{
+    width:100% !important;
+    max-width:100% !important;
+    height:auto !important;
+    max-height:calc(100vh - 16px) !important;
+    margin:0 !important;
+    border-radius:18px !important;
+    overflow:auto !important;
+  }
+  #prompt-modal .prompt-modal-body,
+  #prompt-modal .prompt-container{
+    display:grid !important;
+    grid-template-columns:1fr !important;
+    gap:12px !important;
+    padding:12px !important;
+    overflow:visible !important;
+  }
+  #prompt-modal .prompt-panel,
+  #prompt-modal .prompt-tweak-panel,
+  #prompt-modal .prompt-sync-panel{
+    min-width:0 !important;
+    width:100% !important;
+    max-width:100% !important;
+    border-radius:14px !important;
+  }
+  #prompt-modal textarea,
+  #prompt-modal select,
+  #prompt-modal input{
+    width:100% !important;
+    max-width:100% !important;
+    font-size:16px !important;
+  }
+  #prompt-modal #prompt-draft,
+  #prompt-modal #prompt-output,
+  #prompt-modal #prompt-tweak-output{
+    min-height:150px !important;
+    height:160px !important;
+    max-height:260px !important;
+  }
+  #prompt-modal .prompt-actions{
+    display:grid !important;
+    grid-template-columns:1fr !important;
+    gap:8px !important;
+    position:static !important;
+    width:100% !important;
+  }
+  #prompt-modal .prompt-actions .action-btn,
+  #prompt-modal #prompt-improve-btn,
+  #prompt-modal #prompt-tweak-btn,
+  #prompt-modal #prompt-brainstorm-btn{
+    width:100% !important;
+    min-height:42px !important;
+    justify-content:center !important;
+  }
+  #prompt-modal #prompt-status,
+  #prompt-modal #prompt-tweak-status,
+  #prompt-modal #prompt-sync-status{
+    display:block !important;
+    width:100% !important;
+    white-space:normal !important;
+    line-height:1.45 !important;
+  }
+  #prompt-modal .prompt-preview-frame-wrap{
+    min-height:260px !important;
+    padding:8px !important;
   }
 }
 </style>
