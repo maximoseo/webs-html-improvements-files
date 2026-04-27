@@ -7981,11 +7981,11 @@ body.light .action-btn.primary{
       
       <!-- Tab Nav -->
       <div style="display:flex; border-bottom:1px solid var(--border); padding:0 16px; overflow-x:auto; gap:8px;">
-        <button class="fixer-tab-btn radar-inner-tab-btn active" onclick="switchRadarTab('radar-tab-scores', this)" style="border-radius:0; border-bottom:2px solid var(--accent); padding:16px 16px; height:auto; background:transparent;">📊 Scores</button>
-        <button class="fixer-tab-btn radar-inner-tab-btn" onclick="switchRadarTab('radar-tab-trends', this)" style="border-radius:0; border-bottom:2px solid transparent; padding:16px 16px; height:auto; background:transparent;">📈 Trends</button>
-        <button class="fixer-tab-btn radar-inner-tab-btn" onclick="switchRadarTab('radar-tab-ai', this)" style="border-radius:0; border-bottom:2px solid transparent; padding:16px 16px; height:auto; background:transparent;">🤖 AI Insights</button>
-        <button class="fixer-tab-btn radar-inner-tab-btn" onclick="switchRadarTab('radar-tab-reports', this)" style="border-radius:0; border-bottom:2px solid transparent; padding:16px 16px; height:auto; background:transparent;">📋 Reports</button>
-        <button class="fixer-tab-btn radar-inner-tab-btn" onclick="switchRadarTab('radar-tab-export', this)" style="border-radius:0; border-bottom:2px solid transparent; padding:16px 16px; height:auto; background:transparent;">⬇ Export</button>
+        <button class="fixer-tab-btn radar-inner-tab-btn active" onclick="switchPerformanceRadarTab('radar-tab-scores', this)" style="border-radius:0; border-bottom:2px solid var(--accent); padding:16px 16px; height:auto; background:transparent;">📊 Scores</button>
+        <button class="fixer-tab-btn radar-inner-tab-btn" onclick="switchPerformanceRadarTab('radar-tab-trends', this)" style="border-radius:0; border-bottom:2px solid transparent; padding:16px 16px; height:auto; background:transparent;">📈 Trends</button>
+        <button class="fixer-tab-btn radar-inner-tab-btn" onclick="switchPerformanceRadarTab('radar-tab-ai', this)" style="border-radius:0; border-bottom:2px solid transparent; padding:16px 16px; height:auto; background:transparent;">🤖 AI Insights</button>
+        <button class="fixer-tab-btn radar-inner-tab-btn" onclick="switchPerformanceRadarTab('radar-tab-reports', this)" style="border-radius:0; border-bottom:2px solid transparent; padding:16px 16px; height:auto; background:transparent;">📋 Reports</button>
+        <button class="fixer-tab-btn radar-inner-tab-btn" onclick="switchPerformanceRadarTab('radar-tab-export', this)" style="border-radius:0; border-bottom:2px solid transparent; padding:16px 16px; height:auto; background:transparent;">⬇ Export</button>
       </div>
 
       <!-- Scores Tab Content -->
@@ -8276,14 +8276,18 @@ body.light .action-btn.primary{
                 }, 1000);
             });
 
-            function switchRadarTab(tabId, btnElement) {
+            /* DASHBOARD_FILTER_FIX_PERFORMANCE_RADAR_TAB_SCOPE_2026_04_27: keep the visible Performance Radar tabs scoped away from the Daily Skills Radar results switchRadarTab(status) handler below. */
+            function switchPerformanceRadarTab(tabId, btnElement) {
                 document.querySelectorAll('.radar-tab-content').forEach(el => el.style.display = 'none');
                 document.querySelectorAll('.radar-inner-tab-btn').forEach(el => {
                     el.classList.remove('active');
                     el.style.borderBottomColor = 'transparent';
                     el.style.color = 'var(--muted)';
                 });
-                document.getElementById(tabId).style.display = 'block';
+                var targetTab = document.getElementById(tabId);
+                if (!targetTab) return;
+                targetTab.style.display = 'block';
+                if (!btnElement) return;
                 btnElement.classList.add('active');
                 btnElement.style.borderBottomColor = 'var(--accent)';
                 btnElement.style.color = 'var(--text)';
