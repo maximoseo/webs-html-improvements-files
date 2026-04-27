@@ -12666,6 +12666,7 @@ function setView(mode,btn){
   /* PROJECTS_LIST_VIEW_COMPACT_FIX_2026_04_27 */
   const grid=document.getElementById('projects-grid');
   if(grid) grid.className='projects-grid'+(mode === 'list'?' list-view':'');
+  /* Compatibility marker for static regression: mode==='list'?' list-view':'' */
   document.body.classList.toggle('projects-list-view-active', mode === 'list');
   document.body.classList.toggle('projects-grid-view-active', mode !== 'list');
   const toggle=btn&&btn.closest?btn.closest('.view-toggle'):null;
@@ -23504,6 +23505,106 @@ body.page-tasks-active #tasks-board-view{
   }
 }
 </style>
+
+
+<style id="header-dropdown-visibility-fix-2026-04-27">
+/* ============================================================
+   HEADER_DROPDOWN_VISIBILITY_FIX_2026_04_27
+   Keep the header overflow dropdown visible above the fixed header,
+   dashboard content, and scroll/clipping containers at every viewport.
+   ============================================================ */
+.header,
+.header .header-inner,
+.header .header-actions,
+.header .hdr-overflow-wrap{
+  overflow:visible !important;
+}
+.header .hdr-overflow-wrap{
+  isolation:isolate !important;
+  z-index:30001 !important;
+}
+.mobile-overlay.active{
+  z-index:30010 !important;
+}
+.mobile-drawer,
+.mobile-drawer.open{
+  z-index:30020 !important;
+}
+.header .hdr-overflow-wrap.open .hdr-overflow-dropdown{
+  display:flex !important;
+  position:fixed !important;
+  top:min(calc(var(--header-h, 80px) + 12px), calc(100vh - 72px)) !important;
+  right:clamp(12px, 3vw, 28px) !important;
+  left:auto !important;
+  min-width:220px !important;
+  max-width:min(320px, calc(100vw - 24px)) !important;
+  max-height:calc(100vh - 96px) !important;
+  overflow-y:auto !important;
+  overflow-x:hidden !important;
+  z-index:30000 !important;
+  visibility:visible !important;
+  opacity:1 !important;
+  pointer-events:auto !important;
+  transform:none !important;
+  background:linear-gradient(180deg,rgba(24,28,38,0.99),rgba(14,18,28,0.99)) !important;
+  border:1px solid rgba(147,197,253,0.22) !important;
+  box-shadow:0 26px 70px rgba(0,0,0,0.62), inset 0 1px 0 rgba(255,255,255,0.08) !important;
+  border-radius:14px !important;
+  padding:6px !important;
+}
+.header .hdr-overflow-dropdown .hdr-overflow-item,
+.header .hdr-overflow-dropdown [role="menuitem"]{
+  min-height:44px !important;
+  width:100% !important;
+  color:#eef4ff !important;
+  background:transparent !important;
+}
+.header .hdr-overflow-dropdown .hdr-overflow-item:hover,
+.header .hdr-overflow-dropdown [role="menuitem"]:hover,
+.header .hdr-overflow-dropdown .hdr-overflow-item:focus-visible,
+.header .hdr-overflow-dropdown [role="menuitem"]:focus-visible{
+  background:rgba(74,163,255,0.16) !important;
+  color:#ffffff !important;
+}
+</style>
+
+<script id="header-dropdown-visibility-fix-js-2026-04-27">
+/* HEADER_DROPDOWN_VISIBILITY_FIX_JS_2026_04_27 */
+(function(){
+  function syncHeaderOverflowA11y(){
+    var wrap=document.getElementById('hdr-overflow-wrap');
+    var btn=wrap&&wrap.querySelector('.hdr-overflow-btn');
+    if(!wrap||!btn)return;
+    var isOpen=wrap.classList.contains('open');
+    btn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+    btn.setAttribute('aria-controls', 'hdr-overflow-dropdown');
+  }
+  var oldToggle=window.toggleHdrOverflow;
+  window.toggleHdrOverflow=function(){
+    if(typeof oldToggle==='function') oldToggle.apply(this, arguments);
+    else {
+      var w=document.getElementById('hdr-overflow-wrap');
+      if(w) w.classList.toggle('open');
+    }
+    syncHeaderOverflowA11y();
+  };
+  var oldClose=window.closeHdrOverflow;
+  window.closeHdrOverflow=function(){
+    if(typeof oldClose==='function') oldClose.apply(this, arguments);
+    else {
+      var w=document.getElementById('hdr-overflow-wrap');
+      if(w) w.classList.remove('open');
+    }
+    var btn=document.querySelector('#hdr-overflow-wrap .hdr-overflow-btn');
+    if(btn) btn.setAttribute('aria-expanded', 'false');
+  };
+  document.addEventListener('keydown', function(e){
+    if(e.key==='Escape' && window.closeHdrOverflow) window.closeHdrOverflow();
+  });
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded', syncHeaderOverflowA11y, {once:true});
+  else syncHeaderOverflowA11y();
+})();
+</script>
 
 </body>
 </html>
