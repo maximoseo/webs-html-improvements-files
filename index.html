@@ -7180,7 +7180,7 @@ body.light .action-btn.primary{
   <button class="mobile-nav-item" onclick="showPage('kwr');closeMobileMenu()">KW Research</button>
   <button class="mobile-nav-item" onclick="showPage('tasks');closeMobileMenu()">Tasks</button>
   <button class="mobile-nav-item" onclick="showPage('analytics');closeMobileMenu()">Analytics</button>
-  <button class="mobile-nav-item" onclick="showPage('template-improvements');closeMobileMenu()">Template Improvements</button>
+  <button class="mobile-nav-item" data-testid="mobile-nav-template-improvements" onclick="showPage('template-improvements');closeMobileMenu()">Template Improvements</button>
   <button class="mobile-nav-item" onclick="showPage('settings');closeMobileMenu()">Settings</button>
   <button class="mobile-nav-item" onclick="closeMobileMenu();fullSync(document.getElementById('hdr-sync-btn'))">Sync dashboard</button>
   <button class="mobile-nav-item" onclick="closeMobileMenu();refreshDashboardHard(document.getElementById('hdr-refresh-cache-btn'))">Refresh and Clear Cache</button>
@@ -7223,7 +7223,7 @@ body.light .action-btn.primary{
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
         <span class="tab-label">Analytics</span>
       </button>
-      <button class="fixer-tab-btn" id="tab-template-improvements" onclick="showPage('template-improvements')" aria-label="Template Improvements" role="tab" aria-selected="false" data-feature="template-improvements">
+      <button class="fixer-tab-btn" id="tab-template-improvements" data-testid="tab-template-improvements" onclick="showPage('template-improvements')" aria-label="Template Improvements" role="tab" aria-selected="false" data-feature="template-improvements">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3l1.9 5.8h6.1l-4.9 3.6 1.9 5.8-5-3.6-5 3.6 1.9-5.8L4 8.8h6.1L12 3z"/></svg>
         <span class="tab-label">Improvements</span>
       </button>
@@ -18801,7 +18801,7 @@ async function downloadPromptPreviewShot(){
      TEMPLATE IMPROVEMENTS PAGE — additive feature 2026-04-27
      TEMPLATE_IMPROVEMENTS_UI_2026_04_27
      ============================================================ -->
-<div id="page-template-improvements" class="fixer-page template-improvements" style="display:none" data-feature="template-improvements">
+<div id="page-template-improvements" class="fixer-page template-improvements" style="display:none" data-feature="template-improvements" data-testid="page-template-improvements">
   <div class="fixer-page-header">
     <div>
       <div class="fixer-page-title">

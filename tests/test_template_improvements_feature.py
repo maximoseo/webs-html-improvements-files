@@ -1,6 +1,7 @@
 from pathlib import Path
 import json
 import os
+import re
 import tempfile
 import threading
 import time
@@ -67,7 +68,10 @@ class TemplateImprovementsFeatureTests(unittest.TestCase):
         html = INDEX_HTML.read_text(encoding='utf-8')
         self.assertIn('TEMPLATE_IMPROVEMENTS_UI_2026_04_27', html)
         self.assertIn('tab-template-improvements', html)
+        self.assertIn('data-testid="tab-template-improvements"', html)
+        self.assertIn('data-testid="mobile-nav-template-improvements"', html)
         self.assertIn('page-template-improvements', html)
+        self.assertIn('data-testid="page-template-improvements"', html)
         self.assertIn('TEMPLATE_IMPROVEMENTS_STYLE_2026_04_27', html)
         self.assertIn('.template-improvements .ti-panel', html)
         self.assertIn('TEMPLATE_IMPROVEMENTS_JS_2026_04_27', html)
@@ -76,6 +80,33 @@ class TemplateImprovementsFeatureTests(unittest.TestCase):
         # Ensure the script/style were appended to the real document, not inside an earlier JS doc.write('</body>') string.
         self.assertGreater(html.rfind('<script id="template-improvements-script">'), html.find('<nav class="bottom-nav"'))
         self.assertGreater(html.rfind('<style id="template-improvements-style">'), html.find('<nav class="bottom-nav"'))
+
+    def test_template_improvements_navigation_hooks_are_unique_and_stable(self):
+        html = INDEX_HTML.read_text(encoding='utf-8')
+        self.assertEqual(len(re.findall(r'<button[^>]*id="tab-template-improvements"', html)), 1)
+        self.assertEqual(len(re.findall(r'<button[^>]*data-testid="tab-template-improvements"', html)), 1)
+        self.assertEqual(len(re.findall(r'<button[^>]*data-testid="mobile-nav-template-improvements"', html)), 1)
+        self.assertEqual(len(re.findall(r'<div[^>]*id="page-template-improvements"', html)), 1)
+        self.assertEqual(len(re.findall(r'<div[^>]*data-testid="page-template-improvements"', html)), 1)
+        self.assertRegex(html, r'id="tab-template-improvements"[^>]+onclick="showPage\(\'template-improvements\'\)"')
+        self.assertRegex(html, r'data-testid="mobile-nav-template-improvements"[^>]+onclick="showPage\(\'template-improvements\'\);closeMobileMenu\(\)"')
+        show_page_pos = html.find('window.showPage = function(name)')
+        template_page_pos = html.find("var templateImprovementsPage = document.getElementById('page-template-improvements')")
+        self.assertGreater(show_page_pos, -1)
+        self.assertGreater(template_page_pos, show_page_pos)
+        self.assertIn("templateImprovementsPage.style.display = isTemplateImprovements ? 'block' : 'none'", html)
+        self.assertIn("templateImprovementsPage.classList.toggle('active', isTemplateImprovements)", html)
+
+    def test_playwright_qa_script_is_committed_without_embedded_secrets(self):
+        script = ROOT / 'scripts' / 'qa_template_improvements_playwright.py'
+        self.assertTrue(script.exists())
+        code = script.read_text(encoding='utf-8')
+        self.assertIn('REQUIRED_AGENTS', code)
+        self.assertIn('data-testid="tab-template-improvements"', code)
+        self.assertIn('--use-render-env', code)
+        self.assertNotRegex(code, r'sk-proj-[A-Za-z0-9_-]{20,}')
+        self.assertNotRegex(code, r'ghp_[A-Za-z0-9]{20,}')
+        self.assertNotRegex(code, r'Bearer\s+[A-Za-z0-9_-]{20,}')
 
     def test_backend_markers_exist(self):
         code = (ROOT / 'server.py').read_text(encoding='utf-8')
