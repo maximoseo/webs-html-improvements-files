@@ -7180,6 +7180,7 @@ body.light .action-btn.primary{
   <button class="mobile-nav-item" onclick="showPage('kwr');closeMobileMenu()">KW Research</button>
   <button class="mobile-nav-item" onclick="showPage('tasks');closeMobileMenu()">Tasks</button>
   <button class="mobile-nav-item" onclick="showPage('analytics');closeMobileMenu()">Analytics</button>
+  <button class="mobile-nav-item" onclick="showPage('template-improvements');closeMobileMenu()">Template Improvements</button>
   <button class="mobile-nav-item" onclick="showPage('settings');closeMobileMenu()">Settings</button>
   <button class="mobile-nav-item" onclick="closeMobileMenu();fullSync(document.getElementById('hdr-sync-btn'))">Sync dashboard</button>
   <button class="mobile-nav-item" onclick="closeMobileMenu();refreshDashboardHard(document.getElementById('hdr-refresh-cache-btn'))">Refresh and Clear Cache</button>
@@ -7221,6 +7222,10 @@ body.light .action-btn.primary{
       <button class="fixer-tab-btn" id="tab-analytics" onclick="showPage('analytics')" aria-label="Analytics" role="tab" aria-selected="false">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
         <span class="tab-label">Analytics</span>
+      </button>
+      <button class="fixer-tab-btn" id="tab-template-improvements" onclick="showPage('template-improvements')" aria-label="Template Improvements" role="tab" aria-selected="false" data-feature="template-improvements">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3l1.9 5.8h6.1l-4.9 3.6 1.9 5.8-5-3.6-5 3.6 1.9-5.8L4 8.8h6.1L12 3z"/></svg>
+        <span class="tab-label">Improvements</span>
       </button>
       <button class="fixer-tab-btn" id="tab-settings" onclick="showPage('settings')" aria-label="Settings" role="tab" aria-selected="false">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
@@ -13223,6 +13228,7 @@ document.addEventListener('click', function(ev){
     const isRadar = (name === 'radar');
     const isKwr = (name === 'kwr');
     const isTask  = (name === 'tasks');
+    const isTemplateImprovements = (name === 'template-improvements');
     document.body.classList.toggle('page-kwr-active', isKwr);
     document.body.classList.toggle('page-tasks-active', isTask);
     const container = document.querySelector('.container');
@@ -13264,10 +13270,15 @@ document.addEventListener('click', function(ev){
       tasksPage.classList.toggle('active', isTask);
     }
     // Analytics + Settings pages
+    var templateImprovementsPage = document.getElementById('page-template-improvements');
     var analyticsPage = document.getElementById('page-analytics');
     var settingsPage  = document.getElementById('page-settings');
     var isAnalytics   = (name === 'analytics');
     var isSettings    = (name === 'settings');
+    if (templateImprovementsPage) {
+      templateImprovementsPage.style.display = isTemplateImprovements ? 'block' : 'none';
+      templateImprovementsPage.classList.toggle('active', isTemplateImprovements);
+    }
     if (analyticsPage) {
       analyticsPage.style.display = isAnalytics ? 'block' : 'none';
       analyticsPage.classList.toggle('active', isAnalytics);
@@ -13276,6 +13287,7 @@ document.addEventListener('click', function(ev){
       settingsPage.style.display  = isSettings  ? 'block' : 'none';
       settingsPage.classList.toggle('active', isSettings);
     }
+    if (isTemplateImprovements) runPageInit('template-improvements', window.initTemplateImprovementsPage);
     if (isAnalytics) runPageInit('analytics', window.initAnalyticsPage);
     if (isSettings)  runPageInit('settings', window.initSettingsPage);
     // Update tab buttons
@@ -13289,8 +13301,10 @@ document.addEventListener('click', function(ev){
     if (tabKwr)   { tabKwr.classList.toggle('active', isKwr);       tabKwr.setAttribute('aria-selected', isKwr ? 'true' : 'false'); }
     const tabTasks = document.getElementById('tab-tasks');
     if (tabTasks) { tabTasks.classList.toggle('active', isTask); tabTasks.setAttribute('aria-selected', isTask ? 'true' : 'false'); }
+    var tabTemplateImprovements = document.getElementById('tab-template-improvements');
     var tabAnalytics = document.getElementById('tab-analytics');
     var tabSettings  = document.getElementById('tab-settings');
+    if (tabTemplateImprovements) { tabTemplateImprovements.classList.toggle('active', isTemplateImprovements); tabTemplateImprovements.setAttribute('aria-selected', isTemplateImprovements ? 'true' : 'false'); }
     if (tabAnalytics) { tabAnalytics.classList.toggle('active', isAnalytics); tabAnalytics.setAttribute('aria-selected', isAnalytics ? 'true' : 'false'); }
     if (tabSettings)  { tabSettings.classList.toggle('active',  isSettings);  tabSettings.setAttribute('aria-selected',  isSettings  ? 'true' : 'false'); }
 
@@ -18781,6 +18795,59 @@ async function downloadPromptPreviewShot(){
 </script>
 
 <!-- ===== ANALYTICS PAGE ===== -->
+
+
+<!-- ============================================================
+     TEMPLATE IMPROVEMENTS PAGE — additive feature 2026-04-27
+     TEMPLATE_IMPROVEMENTS_UI_2026_04_27
+     ============================================================ -->
+<div id="page-template-improvements" class="fixer-page template-improvements" style="display:none" data-feature="template-improvements">
+  <div class="fixer-page-header">
+    <div>
+      <div class="fixer-page-title">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3l1.9 5.8h6.1l-4.9 3.6 1.9 5.8-5-3.6-5 3.6 1.9-5.8L4 8.8h6.1L12 3z"/></svg>
+        Template Improvements
+      </div>
+      <p class="fixer-page-subtitle">Run the 5-agent HTML improvement pipeline with live status tracking. Additive only — original templates stay untouched.</p>
+    </div>
+    <div class="fixer-page-actions">
+      <button class="action-btn" onclick="templateImprovementsLoadJobs()">Refresh Jobs</button>
+    </div>
+  </div>
+
+  <div class="ti-layout">
+    <section class="ti-panel">
+      <h3>Start New Improvement</h3>
+      <div class="ti-grid">
+        <label>Domain<input id="ti-domain" type="text" placeholder="example.com"></label>
+        <label>Subdomain<input id="ti-subdomain" type="text" placeholder="blog"></label>
+        <label>Template Name<input id="ti-template-name" type="text" value="template.html"></label>
+      </div>
+      <label>Original HTML<textarea id="ti-original-html" rows="8" placeholder="Paste the original HTML template here. It will not be overwritten."></textarea></label>
+      <label>Change Instructions<textarea id="ti-change-instructions" rows="6" placeholder="Describe what each agent should improve: layout, design, accessibility, performance, tracking..."></textarea></label>
+      <div class="ti-actions">
+        <button class="action-btn primary" onclick="templateImprovementsStartJob()">Run Improvement Pipeline</button>
+        <button class="action-btn" onclick="templateImprovementsSaveInstruction()">Save Global Instructions</button>
+      </div>
+    </section>
+
+    <section class="ti-panel">
+      <h3>Live Status</h3>
+      <div class="ti-progress"><div id="ti-progress-bar"></div></div>
+      <div id="ti-status-message" class="ti-status-message">No job running.</div>
+      <div id="ti-agent-cards" class="ti-agent-cards"></div>
+    </section>
+  </div>
+
+  <section class="ti-panel ti-results-panel">
+    <div class="ti-section-head">
+      <h3>Results by Job</h3>
+      <button class="action-btn" onclick="templateImprovementsLoadJobs()">Reload</button>
+    </div>
+    <div id="ti-jobs-list" class="ti-jobs-list">Loading jobs…</div>
+  </section>
+</div>
+
 <div id="page-analytics" class="fixer-page" style="display:none">
   <div class="fixer-page-header">
     <div>
@@ -22913,6 +22980,105 @@ body.page-tasks-active #tasks-board-view{
     </button>
   </div>
 </nav>
+
+
+<style id="template-improvements-style">
+/* TEMPLATE_IMPROVEMENTS_STYLE_2026_04_27 — scoped only under .template-improvements */
+.template-improvements{padding:24px;max-width:1280px;margin:0 auto;color:var(--text,#f8fafc)}
+.template-improvements .ti-layout{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(320px,.95fr);gap:18px;align-items:start}
+.template-improvements .ti-panel{background:rgba(255,255,255,.035);border:1px solid rgba(255,255,255,.08);border-radius:18px;padding:18px;box-shadow:0 12px 30px rgba(0,0,0,.18)}
+.template-improvements h3{margin:0 0 14px;font-size:18px;font-weight:800}
+.template-improvements label{display:flex;flex-direction:column;gap:7px;font-size:12px;font-weight:700;color:var(--muted,#a5adba);margin-bottom:12px}
+.template-improvements input,.template-improvements textarea{width:100%;box-sizing:border-box;border:1px solid rgba(255,255,255,.12);border-radius:12px;background:rgba(0,0,0,.22);color:var(--text,#f8fafc);padding:11px 12px;font:inherit;resize:vertical}
+.template-improvements .ti-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.template-improvements .ti-actions,.template-improvements .ti-section-head{display:flex;gap:10px;align-items:center;justify-content:space-between;flex-wrap:wrap}
+.template-improvements .action-btn.primary{background:linear-gradient(135deg,#7170ff,#9b5cff);color:#fff;border-color:rgba(255,255,255,.16)}
+.template-improvements .ti-progress{height:12px;border-radius:999px;background:rgba(255,255,255,.08);overflow:hidden;margin-bottom:10px}
+.template-improvements #ti-progress-bar{height:100%;width:0%;background:linear-gradient(90deg,#22c55e,#7170ff);transition:width .25s ease}
+.template-improvements .ti-status-message{font-size:13px;color:var(--muted,#a5adba);margin-bottom:12px}
+.template-improvements .ti-agent-card,.template-improvements .ti-job-card{border:1px solid rgba(255,255,255,.08);background:rgba(0,0,0,.16);border-radius:14px;padding:13px;margin:10px 0}
+.template-improvements .ti-agent-card strong,.template-improvements .ti-job-card strong{display:block;margin-bottom:5px}
+.template-improvements .ti-meta{font-size:12px;color:var(--muted,#a5adba);line-height:1.5}
+.template-improvements pre{white-space:pre-wrap;max-height:320px;overflow:auto;background:rgba(0,0,0,.28);border-radius:12px;padding:12px;font-size:12px}
+@media(max-width:900px){.template-improvements{padding:14px}.template-improvements .ti-layout,.template-improvements .ti-grid{grid-template-columns:1fr}}
+</style>
+
+<script id="template-improvements-script">
+/* TEMPLATE_IMPROVEMENTS_JS_2026_04_27 — additive feature only */
+(function(){
+  const agents = [
+    ['gpt-5.4-agent','GPT 5.4','Layout Architect'],
+    ['opus-4.7-agent','Opus 4.7','Visual Designer'],
+    ['gemini-3.1-agent','Gemini 3.1','Accessibility Auditor'],
+    ['kimi-k2.6-agent','Kimi K2.6','Performance Engineer'],
+    ['glm-4.6-agent','GLM 4.6','Analytics Integrator']
+  ];
+  let activeJobId = null;
+  let pollTimer = null;
+  function $(id){ return document.getElementById(id); }
+  function esc(s){ return String(s||'').replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+  function statusIcon(status){ if(/done|completed/.test(status)) return '✅'; if(/running|preparing|queued/.test(status)) return '⏳'; if(/failed/.test(status)) return '❌'; if(/cancelled/.test(status)) return '⏹'; return '⏸'; }
+  function renderAgentCards(job, outputs){
+    const box=$('ti-agent-cards'); if(!box) return;
+    const byKey={}; (outputs||[]).forEach(o=>{byKey[o.agent_key]=o});
+    const status=job&&job.status||'';
+    box.innerHTML = agents.map((a,i)=>{
+      const out=byKey[a[0]]||{};
+      const running=status===`agent-${i+1}-running`;
+      const done=status===`agent-${i+1}-done` || out.status==='completed' || status==='completed';
+      const state=out.status || (running?'running':done?'completed':'pending');
+      const changes=(out.changelog||[]).map(c=>`<li>${esc(c)}</li>`).join('');
+      return `<div class="ti-agent-card"><strong>${statusIcon(state)} Agent ${i+1} — ${esc(a[1])} — ${esc(a[2])}</strong><div class="ti-meta">Status: ${esc(state)}${out.duration_seconds?` · ${out.duration_seconds}s`:''}${out.quality_score?` · Score ${out.quality_score}`:''}</div>${changes?`<ul>${changes}</ul>`:''}${out.output_html?`<details><summary>View output HTML</summary><pre>${esc(out.output_html.slice(0,12000))}</pre></details>`:''}</div>`;
+    }).join('');
+  }
+  async function fetchJson(url, opts){
+    opts = opts || {};
+    const method = String(opts.method || 'GET').toUpperCase();
+    opts.headers = opts.headers || {};
+    if(['POST','PUT','PATCH','DELETE'].includes(method) && window.dashboardEnsureCsrf){
+      const csrf = await window.dashboardEnsureCsrf();
+      if(csrf && !opts.headers['X-CSRF-Token']) opts.headers['X-CSRF-Token'] = csrf;
+    }
+    const r=await fetch(url, opts);
+    const j=await r.json().catch(()=>({ok:false,error:'Invalid JSON'}));
+    if(!r.ok||j.ok===false) throw new Error(j.error||('HTTP '+r.status));
+    return j;
+  }
+  async function loadJob(jobId){
+    const j=await fetchJson('/api/improve/jobs/'+encodeURIComponent(jobId));
+    const job=j.job||{}; const p=job.progress_percent||0;
+    if($('ti-progress-bar')) $('ti-progress-bar').style.width=p+'%';
+    if($('ti-status-message')) $('ti-status-message').textContent=`${job.status||'unknown'} · ${p}%`;
+    renderAgentCards(job,j.outputs||[]);
+    if(['completed','failed','cancelled'].includes(job.status)){ clearInterval(pollTimer); pollTimer=null; templateImprovementsLoadJobs(); }
+  }
+  window.templateImprovementsStartJob = async function(){
+    try{
+      const payload={domain:$('ti-domain').value.trim(),subdomain:$('ti-subdomain').value.trim(),template_name:$('ti-template-name').value.trim(),original_html:$('ti-original-html').value,change_instructions:$('ti-change-instructions').value};
+      const j=await fetchJson('/api/improve/start',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
+      activeJobId=j.job.id; if($('ti-status-message')) $('ti-status-message').textContent='Job queued: '+activeJobId;
+      clearInterval(pollTimer); pollTimer=setInterval(()=>loadJob(activeJobId).catch(console.warn),2000); loadJob(activeJobId);
+    }catch(e){ if($('ti-status-message')) $('ti-status-message').textContent='Error: '+e.message; }
+  };
+  window.templateImprovementsSaveInstruction = async function(){
+    try{
+      const payload={domain:$('ti-domain').value.trim(),subdomain:$('ti-subdomain').value.trim(),instructions:$('ti-change-instructions').value};
+      await fetchJson('/api/improve/instructions',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
+      if($('ti-status-message')) $('ti-status-message').textContent='Instructions saved.';
+    }catch(e){ if($('ti-status-message')) $('ti-status-message').textContent='Save failed: '+e.message; }
+  };
+  window.templateImprovementsLoadJobs = async function(){
+    const box=$('ti-jobs-list'); if(!box) return;
+    try{
+      const j=await fetchJson('/api/improve/jobs');
+      const jobs=j.jobs||[];
+      box.innerHTML=jobs.length?jobs.map(job=>`<div class="ti-job-card"><strong>${statusIcon(job.status)} ${esc(job.domain)} / ${esc(job.subdomain||'root')}</strong><div class="ti-meta">${esc(job.template_name)} · ${esc(job.status)} · ${job.progress_percent||0}% · ${esc(job.created_at||'')}</div><button class="action-btn" onclick="activeJobId='${esc(job.id)}';loadTemplateImprovementJob('${esc(job.id)}')">Open</button></div>`).join(''):'No improvement jobs yet.';
+    }catch(e){ box.textContent='Failed to load jobs: '+e.message; }
+  };
+  window.loadTemplateImprovementJob=function(jobId){ activeJobId=jobId; loadJob(jobId).catch(console.warn); };
+  window.initTemplateImprovementsPage=function(){ templateImprovementsLoadJobs(); renderAgentCards({status:'pending'},[]); };
+})();
+</script>
 
 </body>
 </html>

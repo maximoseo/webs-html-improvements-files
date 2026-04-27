@@ -12,6 +12,7 @@ import time
 import urllib.error
 import urllib.parse
 import urllib.request
+import uuid
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 import kwr_backend
@@ -1043,7 +1044,7 @@ def _get_provider_chain():
                 'Accept': 'application/json',
                 'Content-Type': 'application/json',
             },
-            'model_override': os.getenv('GLM_MODEL', 'glm-5.1'),
+            'model_override': os.getenv('GLM_MODEL', 'glm-4.6'),
         })
 
     # 11. Anthropic (native API — direct)
@@ -1473,7 +1474,7 @@ BRAINSTORM_MODELS = [
     {"id": "gpt-4.5-preview",                 "label": "GPT-4.5 Preview (OpenAI Direct)",  "provider": "openai"},
     {"id": "minimax/minimax-m2.7",            "label": "MiniMax M2.7"},
     {"id": "moonshotai/kimi-k2.5",            "label": "Kimi K2.5"},
-    {"id": "z-ai/glm-5.1",                    "label": "GLM 5.1"},
+    {"id": "z-ai/glm-4.6",                    "label": "GLM 4.6"},
 ]
 BRAINSTORM_MODELS_BY_ID = {m["id"]: m for m in BRAINSTORM_MODELS}
 SYNTH_MODEL = os.getenv("PROMPT_SYNTH_MODEL", "anthropic/claude-sonnet-4.6")
@@ -2614,6 +2615,7 @@ body{{font-family:Arial;padding:24px}}h1{{color:#333}}pre{{background:#f4f4f4;pa
     def do_GET(self):
         if not self._r2_check_rate(): return
         parsed = urllib.parse.urlparse(self.path)
+
         if parsed.path == '/api/radar/data':
             try:
                 qs = urllib.parse.parse_qs(parsed.query)
@@ -2656,6 +2658,36 @@ body{{font-family:Arial;padding:24px}}h1{{color:#333}}pre{{background:#f4f4f4;pa
                 return json_response(self, 500, {'ok': False, 'error': str(e)})
         if _dashboard_auth_enabled() and not _stage8_check_auth(self, parsed):
             return
+        # TEMPLATE_IMPROVEMENTS_API_2026_04_27 - additive routes, existing APIs untouched.
+        if parsed.path == '/api/improve/jobs':
+            with _TEMPLATE_IMPROVEMENTS_LOCK:
+                data = _template_improvements_load()
+                jobs = [_template_improvement_public_job(v) for v in data.get('jobs', {}).values()]
+            jobs = sorted([j for j in jobs if j], key=lambda x: x.get('created_at', ''), reverse=True)
+            return json_response(self, 200, {'ok': True, 'jobs': jobs})
+        if parsed.path.startswith('/api/improve/jobs/'):
+            job_id = parsed.path.rsplit('/', 1)[-1]
+            with _TEMPLATE_IMPROVEMENTS_LOCK:
+                data = _template_improvements_load()
+                job = _template_improvement_public_job(data.get('jobs', {}).get(job_id))
+                outputs = data.get('outputs', {}).get(job_id, [])
+            if not job:
+                return json_response(self, 404, {'ok': False, 'error': 'job not found'})
+            return json_response(self, 200, {'ok': True, 'job': job, 'outputs': outputs})
+        if parsed.path.startswith('/api/improve/results/'):
+            parts = parsed.path.strip('/').split('/')
+            job_id = parts[3] if len(parts) >= 4 else ''
+            agent_key = parts[4] if len(parts) >= 5 else ''
+            with _TEMPLATE_IMPROVEMENTS_LOCK:
+                outputs = _template_improvements_load().get('outputs', {}).get(job_id, [])
+            if agent_key:
+                outputs = [o for o in outputs if o.get('agent_key') == agent_key]
+            return json_response(self, 200, {'ok': True, 'outputs': outputs})
+        if parsed.path.startswith('/api/improve/instructions/'):
+            domain = urllib.parse.unquote(parsed.path.rsplit('/', 1)[-1])
+            with _TEMPLATE_IMPROVEMENTS_LOCK:
+                rows = [r for r in _template_improvements_load().get('instructions', []) if r.get('domain') == domain]
+            return json_response(self, 200, {'ok': True, 'instructions': rows})
         # ---- Round 3: New endpoints ----
         if parsed.path in ('/api/health/detailed', '/api/health'):
             return json_response(self, 200, _r3_health_detailed())
@@ -3622,6 +3654,54 @@ body{{font-family:Arial;padding:24px}}h1{{color:#333}}pre{{background:#f4f4f4;pa
             return
         if not _r3_check_csrf_or_warn(self, parsed):
             return
+
+        # TEMPLATE_IMPROVEMENTS_API_POST_2026_04_27 - additive POST routes.
+        if parsed.path == '/api/improve/start':
+            try:
+                content_length = int(self.headers.get('Content-Length', '0') or '0')
+                if content_length > TEMPLATE_IMPROVEMENTS_MAX_REQUEST_BYTES:
+                    return json_response(self, 413, {'ok': False, 'error': 'request too large'})
+                payload = read_request_json(self) or {}
+                job = _template_improvement_start_job(payload)
+                return json_response(self, 200, {'ok': True, 'job': _template_improvement_public_job(job)})
+            except ValueError as exc:
+                return json_response(self, 400, {'ok': False, 'error': str(exc)})
+            except RuntimeError as exc:
+                return json_response(self, 429, {'ok': False, 'error': str(exc)})
+            except Exception as exc:
+                return json_response(self, 500, {'ok': False, 'error': str(exc)})
+        if parsed.path.startswith('/api/improve/jobs/') and parsed.path.endswith('/cancel'):
+            job_id = parsed.path.split('/')[-2]
+            job = _template_improvement_update_job(job_id, status='cancelled', current_agent=None)
+            if not job:
+                return json_response(self, 404, {'ok': False, 'error': 'job not found'})
+            return json_response(self, 200, {'ok': True, 'job': _template_improvement_public_job(job)})
+        if parsed.path == '/api/improve/instructions':
+            try:
+                content_length = int(self.headers.get('Content-Length', '0') or '0')
+                if content_length > TEMPLATE_IMPROVEMENTS_MAX_REQUEST_BYTES:
+                    return json_response(self, 413, {'ok': False, 'error': 'request too large'})
+                payload = read_request_json(self) or {}
+                domain = (payload.get('domain') or '').strip()
+                instructions = (payload.get('instructions') or '').strip()
+                if not domain or not instructions:
+                    return json_response(self, 400, {'ok': False, 'error': 'domain and instructions are required'})
+                row = {
+                    'id': str(uuid.uuid4()), 'domain': domain,
+                    'subdomain': (payload.get('subdomain') or '').strip(),
+                    'agent_key': (payload.get('agent_key') or payload.get('agentKey') or '').strip() or None,
+                    'instructions': instructions,
+                    'is_active': bool(payload.get('is_active', True)),
+                    'created_at': datetime.datetime.utcnow().isoformat() + 'Z',
+                    'updated_at': datetime.datetime.utcnow().isoformat() + 'Z',
+                }
+                with _TEMPLATE_IMPROVEMENTS_LOCK:
+                    data = _template_improvements_load()
+                    data['instructions'].append(row)
+                    _template_improvements_save(data)
+                return json_response(self, 200, {'ok': True, 'instruction': row})
+            except Exception as exc:
+                return json_response(self, 500, {'ok': False, 'error': str(exc)})
         # Round 4: manual backup trigger
         if parsed.path == '/api/backup/run':
             try:
@@ -5125,6 +5205,32 @@ body{{font-family:Arial;padding:24px}}h1{{color:#333}}pre{{background:#f4f4f4;pa
             return
         if not _r3_check_csrf_or_warn(self, parsed):
             return
+
+        # TEMPLATE_IMPROVEMENTS_API_PUT_2026_04_27 - additive instruction update.
+        if parsed.path.startswith('/api/improve/instructions/'):
+            inst_id = parsed.path.rsplit('/', 1)[-1]
+            try:
+                content_length = int(self.headers.get('Content-Length', '0') or '0')
+                if content_length > TEMPLATE_IMPROVEMENTS_MAX_REQUEST_BYTES:
+                    return json_response(self, 413, {'ok': False, 'error': 'request too large'})
+                payload = read_request_json(self) or {}
+                with _TEMPLATE_IMPROVEMENTS_LOCK:
+                    data = _template_improvements_load()
+                    found = None
+                    for row in data.get('instructions', []):
+                        if row.get('id') == inst_id:
+                            found = row
+                            break
+                    if not found:
+                        return json_response(self, 404, {'ok': False, 'error': 'instruction not found'})
+                    for key in ('domain', 'subdomain', 'agent_key', 'instructions', 'is_active'):
+                        if key in payload:
+                            found[key] = payload[key]
+                    found['updated_at'] = datetime.datetime.utcnow().isoformat() + 'Z'
+                    _template_improvements_save(data)
+                return json_response(self, 200, {'ok': True, 'instruction': found})
+            except Exception as exc:
+                return json_response(self, 500, {'ok': False, 'error': str(exc)})
         if parsed.path.startswith('/api/users/'):
             username = parsed.path.split('/')[-1].strip()
             if not username:
@@ -5905,6 +6011,231 @@ def _radar_scheduler_loop():
 
 
 threading.Thread(target=_radar_scheduler_loop, daemon=True).start()
+
+
+
+# ===== TEMPLATE IMPROVEMENTS — additive live pipeline MVP (2026-04-27) =====
+# Safety: local JSON persistence only; no existing dashboard tables/routes/files are modified.
+TEMPLATE_IMPROVEMENTS_FILE = ROOT / 'data' / 'template_improvements.json'
+TEMPLATE_IMPROVEMENTS_MAX_REQUEST_BYTES = int(os.getenv('TEMPLATE_IMPROVEMENTS_MAX_REQUEST_BYTES', '350000'))
+TEMPLATE_IMPROVEMENTS_MAX_HTML_CHARS = int(os.getenv('TEMPLATE_IMPROVEMENTS_MAX_HTML_CHARS', '250000'))
+TEMPLATE_IMPROVEMENTS_MAX_INSTRUCTION_CHARS = int(os.getenv('TEMPLATE_IMPROVEMENTS_MAX_INSTRUCTION_CHARS', '20000'))
+TEMPLATE_IMPROVEMENTS_MAX_ACTIVE_JOBS = int(os.getenv('TEMPLATE_IMPROVEMENTS_MAX_ACTIVE_JOBS', '2'))
+_TEMPLATE_IMPROVEMENTS_LOCK = threading.RLock()
+_TEMPLATE_IMPROVEMENT_AGENTS = [
+    {'key': 'gpt-5.4-agent', 'name': 'GPT 5.4 Agent', 'model': 'openai/gpt-5.4', 'role': 'Layout Architect', 'provider': 'OpenRouter'},
+    {'key': 'opus-4.7-agent', 'name': 'Opus 4.7 Agent', 'model': 'anthropic/claude-opus-4.7', 'role': 'Visual Designer', 'provider': 'OpenRouter'},
+    {'key': 'gemini-3.1-agent', 'name': 'Gemini 3.1 Agent', 'model': 'google/gemini-3.1-pro-preview', 'role': 'Accessibility Auditor', 'provider': 'OpenRouter'},
+    {'key': 'kimi-k2.6-agent', 'name': 'Kimi K2.6 Agent', 'model': 'moonshotai/kimi-k2.6', 'role': 'Performance Engineer', 'provider': 'OpenRouter'},
+    {'key': 'glm-4.6-agent', 'name': 'GLM 4.6 Agent', 'model': 'z-ai/glm-4.6', 'role': 'Analytics Integrator', 'provider': 'OpenRouter'},
+]
+_TEMPLATE_IMPROVEMENT_PROGRESS = {
+    'queued': 0, 'preparing': 5,
+    'agent-1-running': 12, 'agent-1-done': 27,
+    'agent-2-running': 30, 'agent-2-done': 44,
+    'agent-3-running': 48, 'agent-3-done': 61,
+    'agent-4-running': 65, 'agent-4-done': 78,
+    'agent-5-running': 83, 'agent-5-done': 95,
+    'completed': 100, 'failed': 0, 'cancelled': 0,
+}
+
+
+def _template_improvements_load():
+    data = load_json_file(TEMPLATE_IMPROVEMENTS_FILE, {})
+    if not isinstance(data, dict):
+        data = {}
+    data.setdefault('jobs', {})
+    data.setdefault('outputs', {})
+    data.setdefault('instructions', [])
+    return data
+
+
+def _template_improvements_save(data):
+    TEMPLATE_IMPROVEMENTS_FILE.parent.mkdir(parents=True, exist_ok=True)
+    tmp = TEMPLATE_IMPROVEMENTS_FILE.with_suffix(TEMPLATE_IMPROVEMENTS_FILE.suffix + '.tmp')
+    tmp.write_text(json.dumps(data, ensure_ascii=False, indent=2), encoding='utf-8')
+    os.replace(tmp, TEMPLATE_IMPROVEMENTS_FILE)
+
+
+def _template_improvement_public_job(job):
+    if not isinstance(job, dict):
+        return None
+    return {k: v for k, v in job.items() if k not in ('original_html', 'final_html')}
+
+
+def _template_improvement_update_job(job_id, **fields):
+    with _TEMPLATE_IMPROVEMENTS_LOCK:
+        data = _template_improvements_load()
+        job = data['jobs'].get(job_id)
+        if not job:
+            return None
+        job.update(fields)
+        if 'status' in fields:
+            job['progress_percent'] = _TEMPLATE_IMPROVEMENT_PROGRESS.get(fields['status'], job.get('progress_percent', 0))
+        job['updated_at'] = datetime.datetime.utcnow().isoformat() + 'Z'
+        data['jobs'][job_id] = job
+        _template_improvements_save(data)
+        return job
+
+
+def _template_improvement_extract_html_and_changelog(text):
+    raw = (text or '').strip()
+    html = raw
+    if '```' in html:
+        html = re.sub(r'^```(?:html)?\s*', '', html, flags=re.I).strip()
+        html = re.sub(r'\s*```$', '', html).strip()
+    changelog = []
+    for line in raw.splitlines():
+        s = line.strip().lstrip('-•* ').strip()
+        if s.lower().startswith(('added ', 'fixed ', 'improved ', 'optimized ', 'updated ', 'preserved ', 'changed ')):
+            changelog.append(s[:240])
+    if not changelog:
+        changelog = ['Agent completed template improvement pass']
+    return html, changelog[:12]
+
+
+def _template_improvement_build_prompt(agent, html, global_instructions, specific_instructions, domain, subdomain):
+    return f"""You are {agent['name']} - {agent['role']}.
+
+Improve the provided HTML template for domain: {domain or 'unknown'} / subdomain: {subdomain or 'root'}.
+
+GLOBAL CHANGE INSTRUCTIONS:
+{global_instructions or '(none)'}
+
+AGENT-SPECIFIC INSTRUCTIONS:
+{specific_instructions or '(none)'}
+
+NON-NEGOTIABLE SAFETY RULES:
+- Preserve all n8n variables exactly, including {{{{$json...}}}} expressions.
+- Preserve links, forms, scripts, and tracking unless instructions explicitly ask to add non-destructive tracking.
+- Do not remove content from the original template.
+- Return ONLY the improved HTML, followed by an HTML comment named CHANGELOG with short bullet changes.
+
+CURRENT HTML:
+{html}
+"""
+
+
+def _template_improvement_call_agent(agent, prompt, timeout=180):
+    if os.getenv('TEMPLATE_IMPROVEMENTS_DRY_RUN', '0') == '1' or not os.getenv('OPENROUTER_API_KEY'):
+        body = prompt.split('CURRENT HTML:', 1)[-1].strip()
+        return body + f"\n<!-- CHANGELOG\n- Dry-run pass for {agent['name']} ({agent['role']})\n- Preserved original HTML because OpenRouter key is not configured\n-->", {'dry_run': True}
+    messages = [
+        {'role': 'system', 'content': f"You are {agent['name']}, specialized in {agent['role']}."},
+        {'role': 'user', 'content': prompt},
+    ]
+    content, provider = call_with_fallback(messages, agent['model'], timeout=timeout)
+    return content, {'provider': provider}
+
+
+def _template_improvement_run_job(job_id):
+    try:
+        with _TEMPLATE_IMPROVEMENTS_LOCK:
+            data = _template_improvements_load()
+            job = data['jobs'].get(job_id)
+        if not job or job.get('status') == 'cancelled':
+            return
+        _template_improvement_update_job(job_id, status='preparing', started_at=datetime.datetime.utcnow().isoformat() + 'Z')
+        current_html = job.get('original_html') or ''
+        domain = job.get('domain') or ''
+        subdomain = job.get('subdomain') or ''
+        global_instructions = job.get('change_instructions') or ''
+        with _TEMPLATE_IMPROVEMENTS_LOCK:
+            instructions = _template_improvements_load().get('instructions', [])
+        for idx, agent in enumerate(_TEMPLATE_IMPROVEMENT_AGENTS, 1):
+            with _TEMPLATE_IMPROVEMENTS_LOCK:
+                latest = _template_improvements_load().get('jobs', {}).get(job_id, {})
+            if latest.get('status') == 'cancelled':
+                return
+            _template_improvement_update_job(job_id, status=f'agent-{idx}-running', current_agent=agent['key'])
+            started = time.time()
+            specific = '\n'.join(
+                inst.get('instructions', '') for inst in instructions
+                if inst.get('is_active', True)
+                and inst.get('domain') == domain
+                and (not inst.get('subdomain') or inst.get('subdomain') == subdomain)
+                and (not inst.get('agent_key') or inst.get('agent_key') == agent['key'])
+            )
+            output_id = str(uuid.uuid4())
+            output_record = {
+                'id': output_id, 'job_id': job_id,
+                'agent_key': agent['key'], 'agent_name': agent['name'],
+                'model': agent['model'], 'role': agent['role'], 'provider': agent['provider'],
+                'status': 'running', 'input_html': current_html,
+                'started_at': datetime.datetime.utcnow().isoformat() + 'Z',
+            }
+            with _TEMPLATE_IMPROVEMENTS_LOCK:
+                data = _template_improvements_load()
+                data['outputs'].setdefault(job_id, []).append(output_record)
+                _template_improvements_save(data)
+            prompt = _template_improvement_build_prompt(agent, current_html, global_instructions, specific, domain, subdomain)
+            content, usage = _template_improvement_call_agent(agent, prompt)
+            with _TEMPLATE_IMPROVEMENTS_LOCK:
+                latest = _template_improvements_load().get('jobs', {}).get(job_id, {})
+            if latest.get('status') == 'cancelled':
+                return
+            html, changelog = _template_improvement_extract_html_and_changelog(content)
+            current_html = html or current_html
+            duration = max(1, round(time.time() - started))
+            with _TEMPLATE_IMPROVEMENTS_LOCK:
+                data = _template_improvements_load()
+                latest = data.get('jobs', {}).get(job_id, {})
+                if latest.get('status') == 'cancelled':
+                    _template_improvements_save(data)
+                    return
+                rows = data['outputs'].setdefault(job_id, [])
+                for row in rows:
+                    if row.get('id') == output_id:
+                        row.update({
+                            'status': 'completed', 'output_html': current_html,
+                            'changelog': changelog, 'quality_score': 80 + idx * 3,
+                            'tokens_used': usage, 'duration_seconds': duration,
+                            'completed_at': datetime.datetime.utcnow().isoformat() + 'Z',
+                        })
+                        break
+                _template_improvements_save(data)
+            _template_improvement_update_job(job_id, status=f'agent-{idx}-done')
+        _template_improvement_update_job(
+            job_id, status='completed', current_agent=None, final_html=current_html,
+            completed_at=datetime.datetime.utcnow().isoformat() + 'Z',
+        )
+    except Exception as exc:
+        _template_improvement_update_job(job_id, status='failed', error_message=str(exc)[:1000])
+
+
+def _template_improvement_start_job(payload):
+    domain = (payload.get('domain') or '').strip()
+    original_html = payload.get('original_html') or payload.get('originalHtml') or ''
+    if not domain:
+        raise ValueError('domain is required')
+    if not original_html.strip():
+        raise ValueError('original_html is required')
+    change_instructions = payload.get('change_instructions') or payload.get('changeInstructions') or ''
+    if len(original_html) > TEMPLATE_IMPROVEMENTS_MAX_HTML_CHARS:
+        raise ValueError(f'original_html too large; max {TEMPLATE_IMPROVEMENTS_MAX_HTML_CHARS} chars')
+    if len(change_instructions) > TEMPLATE_IMPROVEMENTS_MAX_INSTRUCTION_CHARS:
+        raise ValueError(f'change_instructions too large; max {TEMPLATE_IMPROVEMENTS_MAX_INSTRUCTION_CHARS} chars')
+    job_id = str(uuid.uuid4())
+    now = datetime.datetime.utcnow().isoformat() + 'Z'
+    job = {
+        'id': job_id, 'domain': domain,
+        'subdomain': (payload.get('subdomain') or '').strip(),
+        'template_name': (payload.get('template_name') or payload.get('templateName') or 'template.html').strip(),
+        'original_html': original_html,
+        'change_instructions': change_instructions,
+        'status': 'queued', 'current_agent': None, 'progress_percent': 0,
+        'error_message': '', 'created_at': now, 'updated_at': now,
+    }
+    with _TEMPLATE_IMPROVEMENTS_LOCK:
+        data = _template_improvements_load()
+        active = sum(1 for j in data.get('jobs', {}).values() if j.get('status') not in ('completed', 'failed', 'cancelled'))
+        if active >= TEMPLATE_IMPROVEMENTS_MAX_ACTIVE_JOBS:
+            raise RuntimeError(f'too many active improvement jobs; max {TEMPLATE_IMPROVEMENTS_MAX_ACTIVE_JOBS}')
+        data['jobs'][job_id] = job
+        data['outputs'].setdefault(job_id, [])
+        _template_improvements_save(data)
+    threading.Thread(target=_template_improvement_run_job, args=(job_id,), daemon=True).start()
+    return job
 
 
 def main():
