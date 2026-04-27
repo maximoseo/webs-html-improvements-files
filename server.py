@@ -4400,6 +4400,40 @@ body{{font-family:Arial;padding:24px}}h1{{color:#333}}pre{{background:#f4f4f4;pa
                 return json_response(self, 400, {'ok': False, 'error': err})
             return json_response(self, 200, {'ok': True, 'run_id': run_id})
 
+
+        if parsed.path == '/api/dashboard/clear-cache':
+            # DASHBOARD_REFRESH_CACHE_BUTTON_2026_04_26
+            # Non-destructive refresh endpoint: no files are deleted. It tells the
+            # browser to drop frontend caches and reports server-side file/cache
+            # targets so operators can confirm where dashboard data is read from.
+            targets = []
+            def add_target(name, path_obj):
+                try:
+                    p = Path(path_obj)
+                    exists = p.exists()
+                    targets.append({
+                        'name': name,
+                        'path': str(p),
+                        'exists': bool(exists),
+                        'is_dir': bool(p.is_dir()) if exists else False,
+                        'mtime': datetime.datetime.utcfromtimestamp(p.stat().st_mtime).isoformat() + 'Z' if exists else '',
+                    })
+                except Exception as exc:
+                    targets.append({'name': name, 'path': str(path_obj), 'exists': False, 'error': str(exc)[:160]})
+            add_target('data.json', ROOT / 'data.json')
+            add_target('outputs', ROOT / 'outputs')
+            add_target('n8n-workflow-map.json', MAP_FILE)
+            add_target('index.html', INDEX)
+            return json_response(self, 200, {
+                'ok': True,
+                'acknowledged': ['backend-cache-check', 'file-targets-reported', 'no-store-response'],
+                'client_should_clear': ['frontend', 'fetch-memo', 'localStorage:dashboard_cache', 'sessionStorage:dashboard_cache'],
+                'server_cache_control': 'no-store',
+                'message': 'Refresh requested. Server caches are header-only/no-store; no project files were modified.',
+                'targets': targets,
+                'ts': datetime.datetime.utcnow().isoformat() + 'Z',
+            })
+
         if parsed.path == '/api/kwr/cancel':
             body = payload
             run_id = (body.get('run_id') or '').strip()

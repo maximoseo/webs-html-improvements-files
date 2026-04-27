@@ -7143,6 +7143,7 @@ body.light .action-btn.primary{
   <button class="mobile-nav-item" onclick="showPage('analytics');closeMobileMenu()">Analytics</button>
   <button class="mobile-nav-item" onclick="showPage('settings');closeMobileMenu()">Settings</button>
   <button class="mobile-nav-item" onclick="closeMobileMenu();fullSync(document.getElementById('hdr-sync-btn'))">Sync dashboard</button>
+  <button class="mobile-nav-item" onclick="closeMobileMenu();refreshDashboardHard(document.getElementById('hdr-refresh-cache-btn'))">רענן ונקה Cache</button>
   <button class="mobile-nav-item" onclick="toggleTheme();closeMobileMenu()">Toggle theme</button>
   <button class="mobile-nav-item mobile-nav-item--danger" onclick="closeMobileMenu();doLogout()">Sign out</button>
 </div>
@@ -7217,6 +7218,10 @@ body.light .action-btn.primary{
     <button class="hdr-sync-btn" id="hdr-sync-btn" onclick="fullSync(this)" title="Sync latest files from GitHub and refresh dashboard" aria-label="Sync dashboard">
       <svg id="hdr-sync-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" style="width:13px;height:13px;flex-shrink:0"><path d="M1 4v6h6"/><path d="M23 20v-6h-6"/><path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 0 1 3.51 15"/></svg>
       <span id="hdr-sync-label">Sync</span>
+    </button>
+    <button class="hdr-sync-btn hdr-refresh-cache-btn" id="hdr-refresh-cache-btn" onclick="refreshDashboardHard(this)" title="רענן: נקה cache בדפדפן, בקש ניקוי backend, ורענן את רשימת הקבצים" aria-label="רענן ונקה cache">
+      <svg id="hdr-refresh-cache-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" style="width:13px;height:13px;flex-shrink:0"><path d="M21 12a9 9 0 1 1-2.64-6.36"/><path d="M21 3v6h-6"/><path d="M12 7v5l3 2"/></svg>
+      <span id="hdr-refresh-cache-label">רענן</span>
     </button>
   <button class="hamburger-btn" onclick="openMobileMenu()" aria-label="Open navigation menu" aria-expanded="false" title="Menu"><svg id="hamburger-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg></button>
   <button class="theme-toggle-btn" onclick="toggleTheme()" id="theme-toggle-btn" aria-label="Toggle dark/light mode" title="Toggle theme"><svg id="theme-icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg><svg id="theme-icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg></button>
@@ -11012,6 +11017,7 @@ CREATE POLICY "Users see own reports"
       .finally(function(){ _csrfPromise = null; });
     return _csrfPromise;
   }
+  window.dashboardEnsureCsrf = _ensureCsrf;
   window.fetch = function(url, opts){
     var self = this;
     opts = opts || {};
@@ -12739,19 +12745,21 @@ function formatRelativeTime(isoString) {
   return then.toLocaleDateString();
 }
 
-async function loadDashboard(){
+async function loadDashboard(opts){
+  opts = opts || {};
+  const forceRefresh = !!opts.forceRefresh;
   const grid=document.getElementById('projects-grid');
   // Strategy: load static data.json first (no API call), then try live API
   let tree=null;
 
   // 1. Try static data.json (always works, no rate limit)
-  const snapshotResult=await fetchJSON('./data.json');
+  const snapshotResult=await fetchJSON('./data.json' + (forceRefresh ? ('?refresh=' + Date.now()) : ''));
   tree=snapshotResult&&snapshotResult.ok?snapshotResult.data:null;
   let source='static';
   let sourceDetail='Source: bundled snapshot';
 
   // 2. Try live GitHub API for fresh data (may fail if rate-limited)
-  const liveTree=await fetchJSON(`${API}/git/trees/main?recursive=1`);
+  const liveTree=await fetchJSON(`${API}/git/trees/main?recursive=1${forceRefresh ? '&refresh=' + Date.now() : ''}`);
   if(liveTree&&liveTree.ok&&liveTree.data&&liveTree.data.tree){tree=liveTree.data;source='live';sourceDetail='Source: Live GitHub'}
 
   // 3. Fallback to localStorage cache
@@ -12800,7 +12808,7 @@ async function loadDashboard(){
   // Fetch enriched project metadata from local server
   let apiProjects = {};
   try {
-    const apiRes = await fetchJSON('/api/projects/list');
+    const apiRes = await fetchJSON('/api/projects/list' + (forceRefresh ? ('?refresh=' + Date.now()) : ''));
     if (apiRes && apiRes.ok && apiRes.projects) {
       apiRes.projects.forEach(proj => { apiProjects[proj.name] = proj; });
     }
@@ -13000,7 +13008,7 @@ async function fullSync(btnEl){
 
   // Step 1 - reload data from GitHub API + data.json (loadDashboard handles both)
   if(label) label.textContent='GitHub...';
-  await loadDashboard();
+  await loadDashboard({forceRefresh:true});
 
   // Step 2 - update last-sync timestamp
   updateLastSync();
@@ -13018,6 +13026,67 @@ async function fullSync(btnEl){
   document.getElementById('data-source-detail').textContent='Source: Live GitHub';
   showToast('Dashboard synced from GitHub','success');
 }
+
+async function refreshDashboardHard(btnEl){
+  // DASHBOARD_REFRESH_CACHE_BUTTON_2026_04_26
+  // Non-destructive refresh: clears frontend caches, asks backend to clear/confirm
+  // cache state, then reloads file/project lists from their sources.
+  const btn=btnEl||document.getElementById('hdr-refresh-cache-btn');
+  const label=document.getElementById('hdr-refresh-cache-label');
+  const statusEl=document.getElementById('sync-status');
+  const detailEl=document.getElementById('data-source-detail');
+  const dot=document.querySelector('.status-dot');
+  const oldLabel=label?label.textContent:'רענן';
+  if(btn){btn.classList.add('syncing');btn.disabled=true;}
+  if(label)label.textContent='מנקה...';
+  if(statusEl)statusEl.textContent='Refreshing...';
+  if(detailEl)detailEl.textContent='Source: clearing frontend/backend cache…';
+  if(dot)dot.style.background='var(--gold)';
+  try{
+    try{localStorage.removeItem('dashboard_cache');}catch(_){}
+    try{sessionStorage.removeItem('dashboard_cache');}catch(_){}
+    try{localStorage.removeItem('dashboard_projects_cache');}catch(_){}
+    try{sessionStorage.removeItem('dashboard_projects_cache');}catch(_){}
+    if(window.__fetchMemoClear && typeof window.__fetchMemoClear==='function'){
+      try{window.__fetchMemoClear();}catch(_){}
+    }
+    let backend=null;
+    try{
+      const headers={'Content-Type':'application/json'};
+      if(window.dashboardEnsureCsrf && typeof window.dashboardEnsureCsrf==='function'){
+        const csrf=await window.dashboardEnsureCsrf();
+        if(csrf)headers['X-CSRF-Token']=csrf;
+      }
+      const r=await fetch('/api/dashboard/clear-cache',{method:'POST',headers:headers,body:JSON.stringify({scope:'dashboard'})});
+      backend=await r.json().catch(()=>({ok:false,error:'bad_json'}));
+      if(!r.ok||!backend.ok)throw new Error((backend&&backend.error)||('HTTP '+r.status));
+    }catch(err){
+      console.warn('[refresh-cache] backend clear failed',err);
+      if(window.toast)window.toast.warning('Backend cache refresh warning: '+(err.message||err));
+    }
+    if(label)label.textContent='קבצים...';
+    await loadDashboard({forceRefresh:true});
+    try{ if(typeof kwrFetchReports==='function') kwrFetchReports(); }catch(_){}
+    try{ if(typeof refreshRelativeTimes==='function') refreshRelativeTimes(); }catch(_){}
+    updateLastSync();
+    if(statusEl)statusEl.textContent='Refreshed';
+    if(detailEl)detailEl.textContent='Source: refreshed live files + backend cache check';
+    if(dot)dot.style.background='var(--green)';
+    if(window.toast)window.toast.success('רוענן: cache נוקה ורשימת הקבצים נטענה מחדש');
+    return backend||{ok:true};
+  }catch(err){
+    if(statusEl)statusEl.textContent='Refresh failed';
+    if(detailEl)detailEl.textContent='Source: refresh failed';
+    if(dot)dot.style.background='var(--red)';
+    if(window.toast)window.toast.error('רענון נכשל: '+(err.message||err));
+    throw err;
+  }finally{
+    if(label)label.textContent=oldLabel||'רענן';
+    if(btn){btn.classList.remove('syncing');btn.disabled=false;btn.classList.add('done');setTimeout(()=>btn.classList.remove('done'),1800);}
+  }
+}
+window.refreshDashboardHard = refreshDashboardHard;
+
 function manualRefresh(){fullSync();}
 
 loadDashboard().then(()=>updateLastSync());
@@ -17816,6 +17885,7 @@ async function downloadPromptPreviewShot(){
     var TTL_MS = 4000; // 4s - safe for status polls
     var SAFE_PATTERNS = [/\/api\/projects\/list/i, /\/api\/radar\/status/i, /\/api\/health/i];
     var cache = new Map();
+    window.__fetchMemoClear = function(){ try{ cache.clear(); }catch(_){} };
     window.fetch = function(input, init){
       try {
         var method = (init && init.method) ? String(init.method).toUpperCase() : 'GET';
