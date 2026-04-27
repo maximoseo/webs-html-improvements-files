@@ -13153,11 +13153,21 @@ document.addEventListener('click', function(ev){
     const isRadar = (name === 'radar');
     const isKwr = (name === 'kwr');
     const isTask  = (name === 'tasks');
+    document.body.classList.toggle('page-kwr-active', isKwr);
+    document.body.classList.toggle('page-tasks-active', isTask);
     const container = document.querySelector('.container');
     const fixerPage = document.getElementById('page-fixer');
     const radarPage = document.getElementById('page-radar');
     const kwrPage   = document.getElementById('page-kwr');
     const tasksPage = document.getElementById('page-tasks');
+    /* DASHBOARD_QA_FIX_TASKS_REPARENT_2026_04_27
+       Some legacy markup leaves #page-tasks inside the hidden #page-radar
+       subtree, so showPage('tasks') can set the task page to block while an
+       ancestor remains display:none. Move it once to the main content root. */
+    const mainContent = document.getElementById('main-content');
+    if (tasksPage && mainContent && tasksPage.parentElement && tasksPage.parentElement.id === 'page-radar') {
+      mainContent.appendChild(tasksPage);
+    }
     const statsGrid = document.getElementById('stats-grid');
     const sectionHeads = document.querySelectorAll('.section-head');
     const projectsGrid = document.getElementById('projects-grid');
@@ -22267,6 +22277,124 @@ body{padding-top:max(var(--header-safe-offset, 0px), calc(var(--header-h, 80px) 
     ensurePromptStudioActionBindings();
   }
   window.addEventListener('load', ensurePromptStudioActionBindings, {once:true});
+})();
+</script>
+
+<style id="dashboard-qa-fix-pass-2026-04-27">
+/* ============================================================
+   DASHBOARD_QA_FIX_PASS_2026_04_27
+   Small additive UI fixes based on the 2026-04-27 baseline audit.
+   Keep this block near the end so it safely overrides older menu/page rules.
+   ============================================================ */
+
+/* DASHBOARD_QA_FIX_NAV_NO_CLIP_2026_04_27 */
+#fixer-tab-nav{overflow-x:auto !important;}
+#fixer-tab-nav,
+.header .fixer-tab-nav.main-menu{
+  overflow-x:auto !important;
+  overflow-y:hidden !important;
+  max-width:100% !important;
+  min-width:0 !important;
+  flex:0 1 auto !important;
+  scrollbar-width:none !important;
+  -webkit-overflow-scrolling:touch !important;
+}
+#fixer-tab-nav::-webkit-scrollbar,
+.header .fixer-tab-nav.main-menu::-webkit-scrollbar{display:none !important;}
+#fixer-tab-nav .fixer-tab-btn,
+.header .main-menu .fixer-tab-btn,
+#tab-settings{
+  display:inline-flex !important;
+  flex:0 0 auto !important;
+}
+#tab-settings{
+  display:inline-flex !important;
+  scroll-margin-inline-end:16px !important;
+}
+
+/* DASHBOARD_QA_FIX_KWR_HISTORY_SCOPE_2026_04_27 */
+body:not(.page-kwr-active) #kwr-history-panel{display:none !important;}
+body.page-kwr-active #kwr-history-panel{
+  display:block !important;
+  width:min(960px,calc(100vw - 32px)) !important;
+  max-width:960px !important;
+  margin:24px auto 0 !important;
+  box-sizing:border-box !important;
+  padding:18px 20px 0 !important;
+}
+
+/* DASHBOARD_QA_FIX_TASKS_VISIBLE_2026_04_27 */
+#page-tasks.active{
+  display:block !important;
+  width:auto !important;
+  min-height:60vh !important;
+  max-width:1180px !important;
+  margin:0 auto !important;
+  padding:0 16px 80px !important;
+  box-sizing:border-box !important;
+}
+#page-tasks.active .tasks-page,
+#page-tasks.active .tasks-header,
+#page-tasks.active #tasks-list-container,
+#page-tasks.active #tasks-board-container{min-width:0 !important;}
+
+/* DASHBOARD_QA_FIX_DROPDOWN_READABILITY_2026_04_27 */
+select option,
+[role="listbox"],
+[role="option"],
+[role="menuitem"],
+.dropdown-menu,
+.dropdown-option,
+.select-menu,
+.select-option,
+.action-menu button{
+  color:var(--text,#eef4ff) !important;
+  background:var(--surface-strong,#131a24) !important;
+}
+[role="option"]:hover,
+[role="option"][aria-selected="true"],
+[role="menuitem"]:hover,
+.dropdown-option:hover,
+.select-option:hover,
+.action-menu button:hover{
+  color:#fff !important;
+  background:rgba(74,163,255,0.18) !important;
+}
+</style>
+
+<script id="dashboard-qa-fix-tour-cleanup-2026-04-27">
+/* DASHBOARD_QA_FIX_TOUR_CLEANUP_2026_04_27 */
+(function(){
+  function forceDismissDashboardTour(markDone){
+    try { window.__tourActive = false; } catch(_) {}
+    try {
+      if (markDone !== false) {
+        localStorage.setItem('dashboard_tour_done','1');
+        localStorage.setItem('tourDone','1');
+      }
+    } catch(_) {}
+    document.querySelectorAll('.tour-spotlight,.tour-tooltip').forEach(function(el){
+      try { el.classList.remove('open'); el.remove(); } catch(_) {}
+    });
+    document.querySelectorAll('#tour-backdrop,.tour-backdrop,.tour-overlay').forEach(function(el){
+      try { el.classList.remove('open'); el.remove(); } catch(_) {}
+    });
+    try { document.body.classList.remove('scroll-locked','tour-active'); } catch(_) {}
+  }
+  window.forceDismissDashboardTour = forceDismissDashboardTour;
+  var previousDismissTour = window.dismissTour;
+  window.dismissTour = function(markDone){
+    try {
+      if (typeof previousDismissTour === 'function') previousDismissTour(markDone);
+    } catch(_) {}
+    forceDismissDashboardTour(markDone);
+  };
+  document.addEventListener('click', function(e){
+    var btn = e.target && e.target.closest ? e.target.closest('.tour-tooltip button,[data-act="skip"]') : null;
+    if (btn && ((btn.getAttribute('data-act') || '').toLowerCase() === 'skip' || (btn.textContent || '').trim().toLowerCase() === 'skip')) {
+      setTimeout(function(){ forceDismissDashboardTour(true); }, 0);
+    }
+  }, true);
 })();
 </script>
 
