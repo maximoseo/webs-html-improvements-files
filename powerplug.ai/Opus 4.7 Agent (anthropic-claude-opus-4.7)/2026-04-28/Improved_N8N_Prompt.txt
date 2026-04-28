@@ -1,0 +1,36 @@
+# PowerPlug.ai HTML Template Improvement Prompt
+
+## Agent
+- Sub-agent: Opus 4.7 Agent
+- Model: anthropic/claude-opus-4.7
+- Locked design identity: Elegant Minimalist
+- Visual direction: luxury whitespace, muted navy and PowerPlug green, refined typography, calm enterprise credibility, soft borders, premium editorial rhythm
+- Domain: powerplug.ai
+- Language: English / LTR
+- Date: 2026-04-28
+
+## Objective
+Create a production-ready WordPress HTML block for PowerPlug.ai that can be injected by n8n into WordPress content. The output must preserve brand accuracy, include real PowerPlug content, use real image URLs, and visually follow this agent's locked design identity.
+
+## Business Context
+PowerPlug Pro is enterprise PC power management software for organizations with 100 to 50,000 PCs. It helps IT teams reduce endpoint energy waste, wake PCs securely for users and maintenance, integrate with Active Directory/SCCM/attendance systems, and report savings/carbon impact.
+
+## Required Proof Points
+- Save up to 60% of PC energy use.
+- ROI/payback in under 4 months.
+- Scale from 100 to 50,000 PCs.
+- Clalit Health Services saves over $1.2M annually across a large healthcare fleet.
+- Rambam Healthcare Campus achieved 60% reduction in participating PCs and ROI under 4 months.
+- Ben-Gurion University is positioned as a green-campus proof point.
+
+## WordPress/n8n Compatibility Rules
+- Wrap output in `<!-- wp:html --> ... <!-- /wp:html -->`.
+- Root wrapper must use `all: initial`, system fonts, explicit color/line-height/width, and px units.
+- Inline fallback styles are required on every visible element.
+- Include scoped style block for hover/focus/responsive states; no external CSS/JS/CDN.
+- No scripts, no inline event handlers, no `javascript:` URLs.
+- Include INJECT markers: TITLE, META_DESCRIPTION, HERO, SECTIONS, CTA_TEXT, CTA_URL.
+- Use only real image URLs from powerplug.ai and meaningful alt text.
+
+## Delivery
+Export exactly three files in this agent folder: `Improved_HTML_Template.html`, `Improved_N8N_Prompt.txt`, and `Improved_N8N_Workflow.json`. Do not add extra files.
