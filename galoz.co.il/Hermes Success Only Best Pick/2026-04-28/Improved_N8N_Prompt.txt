@@ -1,0 +1,8 @@
+SUCCESS-ONLY BEST PICK — GALOZ.CO.IL
+
+Chosen source: Hermes GPT 5.5 / openai/gpt-5.5.
+Policy: only validated OpenRouter outputs are eligible. Failed/fallback models are excluded from the public report and from winner selection.
+
+Use the attached Improved_HTML_Template.html as the WordPress-ready final HTML. Keep RTL Hebrew, scoped CSS, inline styles, no scripts/CDN/fonts, and preserve the galoz.co.il image/CTA structure.
+
+If N8N regenerates content, keep the same Bold Creative layout identity and replace only text/image variables after validation.

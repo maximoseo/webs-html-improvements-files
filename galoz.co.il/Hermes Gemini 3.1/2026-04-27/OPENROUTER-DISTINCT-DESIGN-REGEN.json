@@ -160,5 +160,134 @@
     "sha256": "4ad0901ad87c9be1"
   },
   "dashboard_html_restored_from_commit": "fd7d629",
-  "reason": "OpenRouter retry did not produce a valid finished HTML within allowed attempts; broken output was not published."
+  "reason": "OpenRouter retry did not produce a valid finished HTML within allowed attempts; broken output was not published.",
+  "success_only_rerun": {
+    "attempts": [
+      {
+        "attempt": 1,
+        "ok": false,
+        "checks": {
+          "wp_wrapper": false,
+          "has_style": false,
+          "has_all_initial": true,
+          "no_script": true,
+          "no_cdn_fonts": true,
+          "rtl": true,
+          "has_img": false,
+          "has_h1": false,
+          "inline_style_count": 1,
+          "bytes": 250,
+          "wrapper": "galoz-encoder-tpl",
+          "sha256": "3493a64afb54adf7"
+        },
+        "usage": {
+          "prompt_tokens": 458,
+          "completion_tokens": 2296,
+          "total_tokens": 2754,
+          "cost": 0.028468,
+          "is_byok": false,
+          "prompt_tokens_details": {
+            "cached_tokens": 0,
+            "cache_write_tokens": 0,
+            "audio_tokens": 0,
+            "video_tokens": 0
+          },
+          "cost_details": {
+            "upstream_inference_cost": 0.028468,
+            "upstream_inference_prompt_cost": 0.000916,
+            "upstream_inference_completions_cost": 0.027552
+          },
+          "completion_tokens_details": {
+            "reasoning_tokens": 2207,
+            "image_tokens": 0,
+            "audio_tokens": 0
+          }
+        }
+      },
+      {
+        "attempt": 2,
+        "ok": false,
+        "checks": {
+          "wp_wrapper": false,
+          "has_style": false,
+          "has_all_initial": false,
+          "no_script": true,
+          "no_cdn_fonts": true,
+          "rtl": false,
+          "has_img": false,
+          "has_h1": false,
+          "inline_style_count": 0,
+          "bytes": 182,
+          "wrapper": null,
+          "sha256": "6b40b9884f4727d7"
+        },
+        "usage": {
+          "prompt_tokens": 458,
+          "completion_tokens": 2296,
+          "total_tokens": 2754,
+          "cost": 0.028468,
+          "is_byok": false,
+          "prompt_tokens_details": {
+            "cached_tokens": 0,
+            "cache_write_tokens": 0,
+            "audio_tokens": 0,
+            "video_tokens": 0
+          },
+          "cost_details": {
+            "upstream_inference_cost": 0.028468,
+            "upstream_inference_prompt_cost": 0.000916,
+            "upstream_inference_completions_cost": 0.027552
+          },
+          "completion_tokens_details": {
+            "reasoning_tokens": 2206,
+            "image_tokens": 0,
+            "audio_tokens": 0
+          }
+        }
+      },
+      {
+        "attempt": 3,
+        "ok": false,
+        "checks": {
+          "wp_wrapper": false,
+          "has_style": false,
+          "has_all_initial": true,
+          "no_script": true,
+          "no_cdn_fonts": true,
+          "rtl": true,
+          "has_img": false,
+          "has_h1": false,
+          "inline_style_count": 1,
+          "bytes": 236,
+          "wrapper": "galoz-encoder-wrap",
+          "sha256": "e35248c6f6b953d1"
+        },
+        "usage": {
+          "prompt_tokens": 458,
+          "completion_tokens": 2296,
+          "total_tokens": 2754,
+          "cost": 0.028468,
+          "is_byok": false,
+          "prompt_tokens_details": {
+            "cached_tokens": 0,
+            "cache_write_tokens": 0,
+            "audio_tokens": 0,
+            "video_tokens": 0
+          },
+          "cost_details": {
+            "upstream_inference_cost": 0.028468,
+            "upstream_inference_prompt_cost": 0.000916,
+            "upstream_inference_completions_cost": 0.027552
+          },
+          "completion_tokens_details": {
+            "reasoning_tokens": 2206,
+            "image_tokens": 0,
+            "audio_tokens": 0
+          }
+        }
+      }
+    ],
+    "success": false,
+    "final_checks": null
+  }
 }

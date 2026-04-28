@@ -51,5 +51,134 @@
     "bytes": 7968,
     "wrapper": "galoz-kimi-data-20260428",
     "sha256": "2372f3d3d9642b8a"
+  },
+  "success_only_rerun": {
+    "attempts": [
+      {
+        "attempt": 1,
+        "ok": false,
+        "checks": {
+          "wp_wrapper": false,
+          "has_style": true,
+          "has_all_initial": true,
+          "no_script": true,
+          "no_cdn_fonts": true,
+          "rtl": true,
+          "has_img": true,
+          "has_h1": true,
+          "inline_style_count": 6,
+          "bytes": 3620,
+          "wrapper": "unique-id",
+          "sha256": "b87ce9dadbd47edd"
+        },
+        "usage": {
+          "prompt_tokens": 444,
+          "completion_tokens": 2300,
+          "total_tokens": 2744,
+          "cost": 0.01106396,
+          "is_byok": false,
+          "prompt_tokens_details": {
+            "cached_tokens": 0,
+            "cache_write_tokens": 0,
+            "audio_tokens": 0,
+            "video_tokens": 0
+          },
+          "cost_details": {
+            "upstream_inference_cost": 0.01106396,
+            "upstream_inference_prompt_cost": 0.00048396,
+            "upstream_inference_completions_cost": 0.01058
+          },
+          "completion_tokens_details": {
+            "reasoning_tokens": 1115,
+            "image_tokens": 0,
+            "audio_tokens": 0
+          }
+        }
+      },
+      {
+        "attempt": 2,
+        "ok": false,
+        "checks": {
+          "wp_wrapper": false,
+          "has_style": false,
+          "has_all_initial": false,
+          "no_script": true,
+          "no_cdn_fonts": true,
+          "rtl": false,
+          "has_img": false,
+          "has_h1": false,
+          "inline_style_count": 0,
+          "bytes": 0,
+          "wrapper": null,
+          "sha256": "e3b0c44298fc1c14"
+        },
+        "usage": {
+          "prompt_tokens": 443,
+          "completion_tokens": 2300,
+          "total_tokens": 2743,
+          "cost": 0.00962085,
+          "is_byok": false,
+          "prompt_tokens_details": {
+            "cached_tokens": 0,
+            "cache_write_tokens": 0,
+            "audio_tokens": 0,
+            "video_tokens": 0
+          },
+          "cost_details": {
+            "upstream_inference_cost": 0.00962085,
+            "upstream_inference_prompt_cost": 0.00042085,
+            "upstream_inference_completions_cost": 0.0092
+          },
+          "completion_tokens_details": {
+            "reasoning_tokens": 2347,
+            "image_tokens": 0,
+            "audio_tokens": 0
+          }
+        }
+      },
+      {
+        "attempt": 3,
+        "ok": false,
+        "checks": {
+          "wp_wrapper": false,
+          "has_style": false,
+          "has_all_initial": false,
+          "no_script": true,
+          "no_cdn_fonts": true,
+          "rtl": false,
+          "has_img": false,
+          "has_h1": false,
+          "inline_style_count": 0,
+          "bytes": 0,
+          "wrapper": null,
+          "sha256": "e3b0c44298fc1c14"
+        },
+        "usage": {
+          "prompt_tokens": 444,
+          "completion_tokens": 2300,
+          "total_tokens": 2744,
+          "cost": 0.0084052,
+          "is_byok": false,
+          "prompt_tokens_details": {
+            "cached_tokens": 0,
+            "cache_write_tokens": 0,
+            "audio_tokens": 0,
+            "video_tokens": 0
+          },
+          "cost_details": {
+            "upstream_inference_cost": 0.0084052,
+            "upstream_inference_prompt_cost": 0.0003552,
+            "upstream_inference_completions_cost": 0.00805
+          },
+          "completion_tokens_details": {
+            "reasoning_tokens": 2389,
+            "image_tokens": 0,
+            "audio_tokens": 0
+          }
+        }
+      }
+    ],
+    "success": false,
+    "final_checks": null
   }
 }
