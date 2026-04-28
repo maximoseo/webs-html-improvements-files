@@ -11375,15 +11375,35 @@ function setDevice(mode,btn){
   document.querySelectorAll('#device-tabs .device-tab').forEach(t=>t.classList.remove('active'));
   btn.classList.add('active');
 }
+function extractVersionDate(versionName){
+  const v=versionName||'';
+  const iso=v.match(/(20\d{2}-\d{2}-\d{2})/);
+  if(iso) return iso[1];
+  const dotted=v.match(/(\d{1,2}\.\d{1,2}\.20\d{2}|20\d{2}\.\d{1,2}\.\d{1,2})/);
+  return dotted?dotted[1]:'';
+}
+function versionDateSortKey(date){
+  if(!date) return '';
+  const iso=date.match(/^(20\d{2})-(\d{2})-(\d{2})$/);
+  if(iso) return iso[1]+iso[2]+iso[3];
+  const parts=date.split('.');
+  if(parts.length===3){
+    if(parts[0].length===4) return parts[0].padStart(4,'0')+parts[1].padStart(2,'0')+parts[2].padStart(2,'0');
+    return parts[2].padStart(4,'0')+parts[1].padStart(2,'0')+parts[0].padStart(2,'0');
+  }
+  return date;
+}
 function detectAgent(versionName){
   const v=(versionName||'').toLowerCase();
   // DASHBOARD_QA_FIX_HERMES_MODEL_AGENT_DETECTION_2026_04_27
   // Keep model-specific Hermes sub-agent runs visible as separate dashboard agents.
-  if(v.includes('hermes gpt')) return 'Hermes GPT 5.5';
-  if(v.includes('hermes opus')) return 'Hermes Opus 4.7';
-  if(v.includes('hermes gemini')) return 'Hermes Gemini 3.1';
-  if(v.includes('hermes kimi')) return 'Hermes Kimi K2.6';
-  if(v.includes('hermes glm')) return 'Hermes GLM 5.1';
+  // DASHBOARD_FIX_AGENT_MODEL_FOLDERS_2026_04_28
+  // Also recognize generated folder names like "Opus 4.7 Agent (...)/2026-04-28".
+  if(v.includes('hermes gpt')||v.includes('gpt 5.5')||v.includes('openai-gpt-5.5')) return 'GPT 5.5';
+  if(v.includes('hermes opus')||v.includes('opus 4.7')||v.includes('claude-opus-4.7')) return 'Opus 4.7';
+  if(v.includes('hermes gemini')||v.includes('gemini 3.1')||v.includes('/gemini/')||v==='gemini'||v.startsWith('gemini/')) return 'Gemini 3.1';
+  if(v.includes('hermes kimi')||v.includes('kimi k2.6')||v.includes('moonshotai-kimi-k2.6')) return 'Kimi K2.6';
+  if(v.includes('hermes glm')||v.includes('glm 5.1')) return 'GLM 5.1';
   if(v.includes('myclaw')||v.includes('my claw')) return 'MyClaw';
   if(v.includes('agent-zero')||v.includes('agent zero')) return 'Agent Zero';
   if(v.includes('hermes')) return 'Hermes Agent';
@@ -11410,8 +11430,8 @@ function compareCandidatesForProject(projectName){
     const current={agent,version:v.name,date:v.date||'',file:chosen,allFiles:v.files};
     const existing=byAgent[agent];
     if(!existing){byAgent[agent]=current;return;}
-    const a=(existing.date||'').split('.').reverse().join('');
-    const b=(current.date||'').split('.').reverse().join('');
+    const a=versionDateSortKey(existing.date||'');
+    const b=versionDateSortKey(current.date||'');
     if(b && (!a || b>a)) byAgent[agent]=current;
   });
   return Object.values(byAgent);
@@ -12942,15 +12962,15 @@ async function loadDashboard(opts){
     const p=projectMap[domain];
     const meta = apiProjects[domain] || {};
     const versions=Object.values(p.versions).map(v=>{
-      const dateMatch=v.name.match(/(\d+\.\d+\.\d+)/);
-      const isLatest=!!dateMatch; // versions with dates are newer
+      const dateValue=extractVersionDate(v.name);
+      const isLatest=!!dateValue; // versions with dates are newer
       totalVersions++;
       if(isLatest)latestCount++;
-      return{name:v.name,date:dateMatch?dateMatch[1]:'',files:v.files,isLatest};
+      return{name:v.name,date:dateValue,files:v.files,isLatest};
     });
     // Sort: dated versions first (newest date on top), then alphabetical
     versions.sort((a,b)=>{
-      if(a.date&&b.date){const ap=a.date.split('.').reverse().join('');const bp=b.date.split('.').reverse().join('');return bp.localeCompare(ap)}
+      if(a.date&&b.date){return versionDateSortKey(b.date).localeCompare(versionDateSortKey(a.date))}
       if(a.date&&!b.date)return-1;if(!a.date&&b.date)return 1;return b.name.localeCompare(a.name);
     });
     // Mark only the first (newest) version as latest
@@ -12967,8 +12987,8 @@ async function loadDashboard(opts){
     p.versions.forEach(v=>{
       const agentName=detectAgent(v.name);
       const existing=versionsByAgent[agentName];
-      const currentDate=(v.date||'').split('.').reverse().join('');
-      const existingDate=existing?(existing.date||'').split('.').reverse().join(''):'';
+      const currentDate=versionDateSortKey(v.date||'');
+      const existingDate=existing?versionDateSortKey(existing.date||''):'';
       if(!existing || (currentDate && (!existingDate || currentDate>existingDate)) || (!existingDate && v.isLatest)){
         versionsByAgent[agentName]=v;
       }
@@ -13008,8 +13028,8 @@ async function loadDashboard(opts){
     p.versions.forEach(v=>{
       const agentName=detectAgent(v.name);
       const existing=versionsByAgent[agentName];
-      const currentDate=(v.date||'').split('.').reverse().join('');
-      const existingDate=existing?(existing.date||'').split('.').reverse().join(''):'';
+      const currentDate=versionDateSortKey(v.date||'');
+      const existingDate=existing?versionDateSortKey(existing.date||''):'';
       if(!existing || (currentDate && (!existingDate || currentDate>existingDate)) || (!existingDate && v.isLatest)){
         versionsByAgent[agentName]=v;
       }
