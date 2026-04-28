@@ -5896,6 +5896,185 @@ body{{font-family:Arial;padding:24px}}h1{{color:#333}}pre{{background:#f4f4f4;pa
 
         return json_response(self, 404, {'ok': False, 'error': 'Not found'})
 
+    def do_POST(self):
+        if not self._r2_check_rate(): return
+        parsed = urllib.parse.urlparse(self.path)
+        if _dashboard_auth_enabled() and not _stage8_check_auth(self, parsed):
+            return
+        if not _r3_check_csrf_or_warn(self, parsed):
+            return
+
+        if parsed.path == '/api/stuck-projects/sync':
+            try:
+                import sys
+                sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+                try:
+                    from pini_client import create_pini_client
+                except ImportError:
+                    self._send_json(500, {'success': False, 'error': 'pini_client.py not found. Add it to the project root.'})
+                    return
+
+                client = create_pini_client()
+                status = client.get_client_status()
+
+                if not status['configured']:
+                    self._send_json(400, {
+                        'success': False,
+                        'error': 'PINI_URL, PINI_USERNAME, and PINI_PASSWORD environment variables must be configured in Render settings.',
+                        'config_status': status
+                    })
+                    return
+
+                result = client.fetch_projects()
+
+                if result.get('error') and not result.get('projects'):
+                    self._send_json(200, {
+                        'success': True,
+                        'data': {
+                            'message': result.get('error', 'No projects found'),
+                            'status': 'completed',
+                            'projects_synced': 0,
+                            'last_sync': datetime.now(timezone.utc).isoformat(),
+                            'config_status': status
+                        }
+                    })
+                    return
+
+                cfg = _get_supabase_config()
+                if not cfg.get('url') or not cfg.get('key'):
+                    self._send_json(200, {
+                        'success': True,
+                        'data': {
+                            'message': f"Found {result.get('total', 0)} stuck projects. Supabase not configured for storage.",
+                            'status': 'completed',
+                            'projects_synced': result.get('total', 0),
+                            'projects': result.get('projects', [])[:10],
+                            'last_sync': datetime.now(timezone.utc).isoformat(),
+                            'config_status': status
+                        }
+                    })
+                    return
+
+                projects = result.get('projects', [])
+                synced = 0
+                for p in projects:
+                    try:
+                        payload = {
+                            'pini_project_id': str(p.get('id', p.get('project_id', ''))),
+                            'name': p.get('name', 'Unknown'),
+                            'client_name': p.get('client_name', p.get('client', '')),
+                            'workflow_id': p.get('workflow_id', ''),
+                            'workflow_url': p.get('workflow_url', ''),
+                            'status': p.get('status', 'stuck'),
+                            'priority': p.get('priority', 'medium'),
+                            'error_summary': p.get('error_summary', p.get('error', '')),
+                            'error_details': json.dumps(p.get('error_details', p.get('details', {}))),
+                            'error_type': p.get('error_type', ''),
+                            'stuck_since': p.get('stuck_since'),
+                            'last_successful': p.get('last_successful'),
+                            'assigned_to': p.get('assigned_to', ''),
+                            'suggested_fix': p.get('suggested_fix', ''),
+                            'pini_raw_data': json.dumps(p)
+                        }
+
+                        check_url = f"{cfg['url']}/rest/v1/stuck_projects?pini_project_id=eq.{payload['pini_project_id']}"
+                        check_req = urllib.request.Request(check_url, headers={
+                            'apikey': cfg['key'], 'Authorization': f"Bearer {cfg['key']}",
+                            'Content-Type': 'application/json'
+                        })
+                        check_resp = urllib.request.urlopen(check_req, timeout=10)
+                        existing = json.loads(check_resp.read().decode())
+
+                        url = f"{cfg['url']}/rest/v1/stuck_projects"
+                        if existing:
+                            update_url = f"{cfg['url']}/rest/v1/stuck_projects?id=eq.{existing[0]['id']}"
+                            update_req = urllib.request.Request(update_url, data=json.dumps(payload).encode(), headers={
+                                'apikey': cfg['key'], 'Authorization': f"Bearer {cfg['key']}",
+                                'Content-Type': 'application/json'
+                            }, method='PATCH')
+                            urllib.request.urlopen(update_req, timeout=10)
+                        else:
+                            insert_req = urllib.request.Request(url, data=json.dumps(payload).encode(), headers={
+                                'apikey': cfg['key'], 'Authorization': f"Bearer {cfg['key']}",
+                                'Content-Type': 'application/json',
+                                'Prefer': 'return=representation'
+                            })
+                            urllib.request.urlopen(insert_req, timeout=10)
+                        synced += 1
+                    except Exception as e:
+                        print(f'[sync] failed to sync project {p.get("id")}: {e}', flush=True)
+
+                self._send_json(200, {
+                    'success': True,
+                    'data': {
+                        'message': f'Successfully synced {synced}/{len(projects)} projects',
+                        'status': 'completed',
+                        'projects_synced': synced,
+                        'last_sync': datetime.now(timezone.utc).isoformat(),
+                        'config_status': status
+                    }
+                })
+            except Exception as e:
+                self._send_json(500, {'success': False, 'error': str(e)})
+            return
+
+        if parsed.path == '/api/stuck-projects/bulk-update':
+            try:
+                content_length = int(self.headers.get('Content-Length', '0') or '0')
+                payload = json.loads(self.rfile.read(content_length)) if content_length > 0 else {}
+                ids = payload.get('ids', [])
+                updates = payload.get('updates', {})
+                if not ids:
+                    return self._send_json(400, {'success': False, 'error': 'ids required'})
+
+                cfg = _get_supabase_config()
+                if not cfg.get('url') or not cfg.get('key'):
+                    return self._send_json(500, {'success': False, 'error': 'Supabase not configured'})
+
+                for pid in ids:
+                    update_url = f"{cfg['url']}/rest/v1/stuck_projects?id=eq.{pid}"
+                    update_req = urllib.request.Request(update_url, data=json.dumps(updates).encode(), headers={
+                        'apikey': cfg['key'], 'Authorization': f"Bearer {cfg['key']}",
+                        'Content-Type': 'application/json'
+                    }, method='PATCH')
+                    urllib.request.urlopen(update_req, timeout=10)
+
+                self._send_json(200, {'success': True, 'data': {'updated_count': len(ids)}})
+            except Exception as e:
+                self._send_json(500, {'success': False, 'error': str(e)})
+            return
+
+        if parsed.path == '/api/stuck-projects/alerts/test-email':
+            try:
+                from email_notifier import create_notifier
+                notifier = create_notifier()
+                if not notifier.is_configured():
+                    self._send_json(400, {
+                        'success': False,
+                        'error': 'Email notifications not configured. Set NOTIFICATION_EMAIL_ENABLED=true and configure SMTP/Resend credentials.',
+                        'required_env': [
+                            'NOTIFICATION_EMAIL_ENABLED',
+                            'NOTIFICATION_FROM_EMAIL',
+                            'NOTIFICATION_TO_EMAILS',
+                            'NOTIFICATION_EMAIL_PROVIDER (smtp or resend)',
+                            'For SMTP: NOTIFICATION_SMTP_HOST, NOTIFICATION_SMTP_USER, NOTIFICATION_SMTP_PASSWORD',
+                            'For Resend: RESEND_API_KEY'
+                        ]
+                    })
+                    return
+
+                result = notifier.test_email()
+                if result.get('success'):
+                    self._send_json(200, {'success': True, 'data': {'message': result.get('message', 'Test email sent')}})
+                else:
+                    self._send_json(500, {'success': False, 'error': result.get('error', 'Unknown error')})
+            except Exception as e:
+                self._send_json(500, {'success': False, 'error': str(e)})
+            return
+
+        # Default POST handler for other routes
+        self._send_json(404, {'ok': False, 'error': 'POST endpoint not found'})
+
     def do_DELETE(self):
         if not self._r2_check_rate(): return
         parsed = urllib.parse.urlparse(self.path)
