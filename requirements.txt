@@ -1,0 +1,6 @@
+openpyxl
+pandas
+requests
+fpdf2
+sentry-sdk
+python-dotenv
