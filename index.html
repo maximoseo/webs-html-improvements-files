@@ -23758,5 +23758,110 @@ body.page-tasks-active #tasks-board-view{
   window.applyProjectsSortFilter=applyProjectsSortFilter;
 })();
 </script>
+
+
+<style id="fixer-leak-on-projects-fix-2026-04-28">
+/* DASHBOARD_QA_FIX_FIXER_LEAK_ON_PROJECTS_2026_04_28
+   Root cause: legacy N8N Fixer action/history markup can be parsed outside #page-fixer,
+   so its oversized Analyze button SVG leaks into the Projects page as a huge blue/gray canvas.
+   Keep those orphaned fixer controls hidden unless the Fixer tab is explicitly active. */
+body:not(.page-fixer-active) #fixer-analyze-btn,
+body:not(.page-fixer-active) #fixer-triple-btn,
+body:not(.page-fixer-active) #fixer-history{
+  display:none !important;
+  visibility:hidden !important;
+  pointer-events:none !important;
+}
+body:not(.page-fixer-active) #main-content > div:has(> #fixer-analyze-btn),
+body:not(.page-fixer-active) #main-content > div:has(> #fixer-triple-btn){
+  display:none !important;
+  min-height:0 !important;
+  height:0 !important;
+  margin:0 !important;
+  padding:0 !important;
+  overflow:hidden !important;
+}
+body.page-fixer-active #fixer-analyze-btn{
+  max-height:72px !important;
+}
+body.page-fixer-active #fixer-analyze-btn > svg{
+  width:18px !important;
+  height:18px !important;
+  flex:0 0 18px !important;
+}
+</style>
+<script id="fixer-leak-on-projects-fix-2026-04-28">
+(function(){
+  'use strict';
+  var MARKER='DASHBOARD_QA_FIX_FIXER_LEAK_ON_PROJECTS_2026_04_28';
+  function setFixerBodyState(name){
+    var isFixer = name === 'fixer' || (document.getElementById('page-fixer') && getComputedStyle(document.getElementById('page-fixer')).display !== 'none');
+    document.body.classList.toggle('page-fixer-active', !!isFixer);
+  }
+  function wrapShowPage(){
+    if(typeof window.showPage !== 'function' || window.showPage.__fixerLeakGuarded) return false;
+    var original = window.showPage;
+    window.showPage = function(name){
+      var result = original.apply(this, arguments);
+      try{ setFixerBodyState(name); }catch(_){}
+      return result;
+    };
+    window.showPage.__fixerLeakGuarded = true;
+    return true;
+  }
+  function boot(){
+    wrapShowPage();
+    setFixerBodyState('projects');
+    setTimeout(function(){ wrapShowPage(); setFixerBodyState(document.getElementById('page-fixer') && getComputedStyle(document.getElementById('page-fixer')).display !== 'none' ? 'fixer' : 'projects'); }, 800);
+  }
+  if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot, {once:true});
+  else boot();
+})();
+</script>
+
+
+<style id="disable-auto-tour-overlay-fix-2026-04-28">
+/* DASHBOARD_QA_FIX_DISABLE_AUTO_TOUR_OVERLAY_2026_04_28
+   The onboarding tour auto-start overlay can leave the dashboard looking like a smeared/blocked screen.
+   Keep the tour available via window.startTour(), but never auto-cover the Projects page. */
+body:not(.tour-user-started) #tour-backdrop.open{
+  display:none !important;
+  visibility:hidden !important;
+  pointer-events:none !important;
+}
+</style>
+<script id="disable-auto-tour-overlay-fix-2026-04-28">
+(function(){
+  'use strict';
+  var MARKER='DASHBOARD_QA_FIX_DISABLE_AUTO_TOUR_OVERLAY_2026_04_28';
+  try{
+    localStorage.setItem('dash-tour-done-v2','1');
+    sessionStorage.setItem('dash-tour-done-v2','1');
+    document.cookie='dash_tour_done=1; Max-Age='+(86400*365)+'; Path=/; SameSite=Lax';
+  }catch(_){}
+  function cleanupAutoTour(){
+    if(document.body && !document.body.classList.contains('tour-user-started')){
+      document.querySelectorAll('#tour-backdrop.open,.tour-spotlight,.tour-tooltip,.tour-backdrop,.tour-overlay').forEach(function(el){
+        if(el.id==='tour-backdrop'){ el.classList.remove('open'); el.style.display='none'; el.style.visibility='hidden'; }
+        else try{ el.remove(); }catch(_){}
+      });
+      window.__tourActive=false;
+    }
+  }
+  var originalStart=null;
+  function wrapStartTour(){
+    if(typeof window.startTour!=='function' || window.startTour.__autoDisabled) return;
+    originalStart=window.startTour;
+    window.startTour=function(){
+      if(!(document.body && document.body.classList.contains('tour-user-started'))) return;
+      return originalStart.apply(this, arguments);
+    };
+    window.startTour.__autoDisabled=true;
+  }
+  function boot(){ cleanupAutoTour(); wrapStartTour(); setTimeout(function(){ cleanupAutoTour(); wrapStartTour(); },2600); }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded', boot, {once:true});
+  else boot();
+})();
+</script>
 </body>
 </html>
