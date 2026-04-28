@@ -180,7 +180,7 @@ _STAGE8_PUBLIC_PATHS = {
     '/api/auth/request-reset', '/api/auth/reset',
     '/login', '/login.html', '/static/login.css', '/api/login', '/api/reset-password',
     '/api/fixer/analyze', '/api/kwr/ensemble', '/api/delete-agent', '/api/kwr/save-obsidian', '/api/kwr/update-rows',
-    '/api/csrf', '/api/version', '/healthz',
+    '/api/csrf', '/api/version', '/healthz', '/api/studio/improve/rules', '/api/studio/improve',
 }
 _STAGE8_PUBLIC_PREFIXES = ('/static/', '/assets/', '/css/', '/js/', '/img/', '/fonts/')
 
