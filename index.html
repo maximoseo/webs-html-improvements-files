@@ -11377,6 +11377,13 @@ function setDevice(mode,btn){
 }
 function detectAgent(versionName){
   const v=(versionName||'').toLowerCase();
+  // DASHBOARD_QA_FIX_HERMES_MODEL_AGENT_DETECTION_2026_04_27
+  // Keep model-specific Hermes sub-agent runs visible as separate dashboard agents.
+  if(v.includes('hermes gpt')) return 'Hermes GPT 5.5';
+  if(v.includes('hermes opus')) return 'Hermes Opus 4.7';
+  if(v.includes('hermes gemini')) return 'Hermes Gemini 3.1';
+  if(v.includes('hermes kimi')) return 'Hermes Kimi K2.6';
+  if(v.includes('hermes glm')) return 'Hermes GLM 5.1';
   if(v.includes('myclaw')||v.includes('my claw')) return 'MyClaw';
   if(v.includes('agent-zero')||v.includes('agent zero')) return 'Agent Zero';
   if(v.includes('hermes')) return 'Hermes Agent';
@@ -12864,8 +12871,14 @@ async function loadDashboard(opts){
   let sourceDetail='Source: bundled snapshot';
 
   // 2. Try live GitHub API for fresh data (may fail if rate-limited)
-  const liveTree=await fetchJSON(`${API}/git/trees/main?recursive=1${forceRefresh ? '&refresh=' + Date.now() : ''}`);
-  if(liveTree&&liveTree.ok&&liveTree.data&&liveTree.data.tree){tree=liveTree.data;source='live';sourceDetail='Source: Live GitHub'}
+  // DASHBOARD_QA_FIX_FORCE_REFRESH_LOCAL_SNAPSHOT_2026_04_27
+  // When force-refresh is used on a local QA server, keep the freshly bundled
+  // data.json snapshot authoritative. Otherwise GitHub can return the last
+  // pushed tree and hide newly generated local artifacts before commit/push.
+  if(!forceRefresh || location.hostname!=='127.0.0.1' && location.hostname!=='localhost'){
+    const liveTree=await fetchJSON(`${API}/git/trees/main?recursive=1${forceRefresh ? '&refresh=' + Date.now() : ''}`);
+    if(liveTree&&liveTree.ok&&liveTree.data&&liveTree.data.tree){tree=liveTree.data;source='live';sourceDetail='Source: Live GitHub'}
+  }
 
   // 3. Fallback to localStorage cache
   if(!tree||!tree.tree){
@@ -12883,6 +12896,11 @@ async function loadDashboard(opts){
 
   const RAW_BASE=`https://raw.githubusercontent.com/${REPO}/main`;
   const GH_BASE=`https://github.com/${REPO}/blob/main`;
+  // DASHBOARD_QA_FIX_LOCAL_SNAPSHOT_DOWNLOAD_URLS_2026_04_27
+  // In local QA, bundled data.json may include files that are not pushed yet.
+  // Use the local static file route for downloads/previews so UI buttons can
+  // validate generated artifacts before GitHub/Render deployment.
+  const LOCAL_SNAPSHOT_DOWNLOADS=(source==='static'&&(location.hostname==='127.0.0.1'||location.hostname==='localhost'));
   const skipRoots=new Set(['Dockerfile','README.md','index.html','render.yaml']);
   let totalFiles=0,totalVersions=0,latestCount=0;
   let latestSetCount=0, latestSetFileCount=0, visibleAgentCount=0;
@@ -12904,7 +12922,7 @@ async function loadDashboard(opts){
     projectMap[domain].versions[versionPath].files.push({
       name:fileName,
       url:`${GH_BASE}/${encodedPath}`,
-      download:`${RAW_BASE}/${encodedPath}`,
+      download: LOCAL_SNAPSHOT_DOWNLOADS?`/${encodedPath}`:`${RAW_BASE}/${encodedPath}`,
       path:item.path,
       size:item.size||0
     });

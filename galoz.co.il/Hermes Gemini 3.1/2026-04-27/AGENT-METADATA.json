@@ -1,0 +1,13 @@
+{
+  "slug": "hermes-gemini-3.1",
+  "agent": "Hermes Gemini 3.1 Sub-Agent",
+  "model": "google/gemini-3.1-pro-preview",
+  "style": "structured SEO / entity-rich technical guide",
+  "files": [
+    "/home/seoadmin/webs-html-improvements-files/galoz.co.il/_runs/2026-04-27-2145-five-openrouter-agents/hermes-gemini-3.1/galoz.co.il_Improved_HTML_Template-hermes-gemini-3.1-2026-04-27.html",
+    "/home/seoadmin/webs-html-improvements-files/galoz.co.il/_runs/2026-04-27-2145-five-openrouter-agents/hermes-gemini-3.1/galoz.co.il_Improved_N8N_Workflow-hermes-gemini-3.1-2026-04-27.json",
+    "/home/seoadmin/webs-html-improvements-files/galoz.co.il/_runs/2026-04-27-2145-five-openrouter-agents/hermes-gemini-3.1/galoz.co.il_Improved_N8N_Prompt-hermes-gemini-3.1-2026-04-27.txt"
+  ],
+  "openrouterReviewFile": "OPENROUTER-AGENT-REVIEW.json",
+  "openrouterReviewSummary": "Hermes Gemini 3.1 Sub-Agent"
+}
