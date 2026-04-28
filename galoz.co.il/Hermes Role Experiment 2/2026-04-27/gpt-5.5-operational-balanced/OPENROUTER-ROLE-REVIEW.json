@@ -1,0 +1,17 @@
+{
+  "slug": "gpt-5.5-operational-balanced",
+  "agent": "Hermes GPT 5.5 Operational Balanced",
+  "model": "openai/gpt-5.5",
+  "role": "Operational balanced template: safest default for employees, clean structure, simple WordPress paste, balanced SEO/CRO.",
+  "review": {
+    "role_strategy": "Operational balanced template: safest default for employees, clean structure, simple WordPress paste, balanced SEO/CRO.",
+    "error": "JSONDecodeError: Unterminated string starting at: line 1 column 2616 (char 2615)",
+    "html_differentiators": [],
+    "prompt_differentiators": [],
+    "workflow_differentiators": [],
+    "qa_focus": [
+      "fallback local deterministic transform"
+    ],
+    "expected_tradeoffs": []
+  }
+}

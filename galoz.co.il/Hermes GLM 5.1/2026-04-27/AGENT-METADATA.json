@@ -1,0 +1,13 @@
+{
+  "slug": "hermes-glm-5.1",
+  "agent": "Hermes GLM 5.1 Sub-Agent",
+  "model": "z-ai/glm-5.1",
+  "style": "conversion-focused / procurement workflow",
+  "files": [
+    "/home/seoadmin/webs-html-improvements-files/galoz.co.il/_runs/2026-04-27-2145-five-openrouter-agents/hermes-glm-5.1/galoz.co.il_Improved_HTML_Template-hermes-glm-5.1-2026-04-27.html",
+    "/home/seoadmin/webs-html-improvements-files/galoz.co.il/_runs/2026-04-27-2145-five-openrouter-agents/hermes-glm-5.1/galoz.co.il_Improved_N8N_Workflow-hermes-glm-5.1-2026-04-27.json",
+    "/home/seoadmin/webs-html-improvements-files/galoz.co.il/_runs/2026-04-27-2145-five-openrouter-agents/hermes-glm-5.1/galoz.co.il_Improved_N8N_Prompt-hermes-glm-5.1-2026-04-27.txt"
+  ],
+  "openrouterReviewFile": "OPENROUTER-AGENT-REVIEW.json",
+  "openrouterReviewSummary": "WordPress RTL Integration Specialist: Focused on ensuring the HTML snippet survives WordPress content filtering, maintains strict RTL layout against theme overrides, and handles external assets correctly without relying on document-level tags."
+}

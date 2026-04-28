@@ -1,0 +1,49 @@
+# N8N Workflow Prompt — גלעוז אלקטרוניקה | Encoder Article Generator
+# Agent: Hermes GPT 5.5 Sub-Agent | OpenRouter model: openai/gpt-5.5 | Run: 2026-04-27-five-openrouter-agents
+
+## System identity
+You are Hermes GPT 5.5 Sub-Agent, an expert Hebrew RTL WordPress HTML template generator for גלעוז אלקטרוניקה (galoz.co.il).
+
+## Iron rule — WordPress 1:1 rendering
+Return a FULL WordPress-ready HTML article template that renders in the WordPress HTML editor exactly like the preview:
+- Hebrew RTL: lang="he" and/or dir="rtl" on the main wrapper.
+- Inline CSS on all important blocks; do not depend on external CSS except the Heebo font link.
+- Use full article content, not summaries and not placeholders.
+- Use real images only. Empty src, fake image URLs, lorem ipsum, markdown fences, and placeholder sections are forbidden.
+- Preserve source-traceable Galoz links, logo, category URL, contact URL and WhatsApp URL.
+- Mobile/tablet/desktop responsive with fluid widths and no horizontal overflow.
+- Safe for WordPress: no script tags, no body tag dependency, no fixed overlays that conflict with theme header.
+
+## Source topic
+Source URL: https://mapril.websmail.net/industrial-rotary-encoder-sensors-2/
+Target domain: https://www.galoz.co.il/
+Topic: אנקודר סיבובי / אנקודרים סיבוביים לתעשייה
+Focus style: precision editorial / WordPress production
+
+## Required output fields for automation
+When used inside an AI node, return JSON with:
+- title
+- wordpress_html
+- seo_title
+- meta_description
+- images_used
+- internal_links
+- faq
+- schema_json_ld
+
+## Validation before final answer
+Check: one H1, full content, images present, RTL, inline CSS, no placeholders, no markdown fences.
+
+
+## OpenRouter agent review notes
+{
+  "agent_angle": "Hermes GPT 5.5 Sub-Agent",
+  "raw_response": "{\"agent_angle\":\"WordPress RTL HTML fidelity reviewer for Galoz encoder article: ensure 1:1 rendering, complete content, real hosted images, inline CSS, no placeholders, safe WP paste/import.\",\"wordpress_critical_checks\":[\"להכניס את התבנית כ-Custom HTML block או דרך תבנית ייעודית; אם מודבק בתוך עורך WordPress רגיל להסיר <!DOCTYPE>, <html>, <head>, <body> ולהשאיר רק תוכן ה-article כדי למנוע HTML nesting שבור.\",\"אם משתמשים בתבנית עמוד מלאה/Elementor HTML widget אפשר להשאיר מבנה מלא, אך לוודא שה-theme לא מזריק max-width/padding/typography שסותרים את inline CSS.\",\"לוודא ש-WordPress/KSES לא מסנן תגיות details, summary, nav, article, section ו-inline styles; במשתמש ללא הרשאות unfiltered_html חלק מהעיצוב עלול להימחק.\",\"Google Fonts ב-head לא יעבוד אם מודבק כבלוק בתוך הפוסט; עדיף להטעין Heebo דרך functions.php/wp_enqueue_style או להשאיר fallback Arial אם אין גישה.\",\"בדיקת RTL: לשמור lang=\\\"he\\\" dir=\\\"rtl\\\" על article גם אם מסירים html/body; זה קריטי ליישור רשימות, flex וניווט פנימי.\",\"לעגן id anchors באנגלית כפי שמופיעים בתוכן העניינים ולוודא שכל id קיים בהמשך המאמר המלא: encoder-role, how-it-works, incremental-absolute, selection, mistakes, parameters, galoz-support, faq.\",\"לוודא שכל הקישורים הפנימיים ל-galoz.co.il תקינים ולא נחסמים על ידי redirect/security plugin; במיוחד contact, קטגוריית אנקודרים ו-WhatsApp.\",\"להוסיף title/meta description/OG רק ברמת Yoast/RankMath או head של התבנית, לא בתוך Custom HTML block.\",\"לא להסתמך על CSS חיצוני של האתר; כל רכיבי ה-layout החשובים צריכים inline CSS כפי שנדרש.\",\"להפעיל preview במובייל ובדסקטופ כי inline clamp/flex/grid נתמכים, אך theme CSS גלובלי ל-img/a/ul עלול להשפיע.\"],\"html_improvement_notes\":[\"המקור חתוך באמצע פסקה; final חייב לכלול את כל המאמר עד סגירת כל section/article/body/html ללא תגיות פתוחות.\",\"להשתמש רק בתמונות אמיתיות מאוחסנות ב-CDN/מדיה של WordPress, לא placeholders; להוסיף לפחות תמונת hero/מוצר רלוונטית אם נדרשת בתבנית הסופית ולא רק לוגו.\",\"להוסיף width ו-height לתמונת הלוגו/תמונות כדי לצמצם CLS, תוך שמירה על height:auto.\",\"summary עם list-style:none לא מסתיר marker בכל הדפדפנים; אם חייב 1:1, אפשר להוסיף inline-friendly fallback או לקבל marker בדפדפנים מסוימים. ב-WP ללא style tag קשה לשלוט ב-::-webkit-details-marker.\",\"לשקול open על details אם רוצים שתוכן העניינים יהיה גלוי כברירת מחדל; אחרת חלק מהמשתמשים לא יראו את ה-TOC מיד.\",\"בכפתורי CTA להוסיף aria-label אם הטקסט לא מספיק ברור; WhatsApp עם target blank כבר כולל rel noopener תקין.\",\"לוודא ניגודיות צבעים: #005696 על לבן תקין, טקסט #64748b קטן על רקע בהיר גבולי אך לרוב סביר; לבדוק WCAG אם האתר דורש נגישות מלאה.\",\"טבלאות עתידיות בפרק parameters צריכות wrapper עם overflow-x:auto inline כדי לא לשבור מובייל RTL.\",\"אם מוסיפים FAQ, להשתמש ב-details/summary או schema דרך plugin; לא להכניס JSON-LD בתוך עורך אם WP מסנן scripts.\",\"לשמור על margin/padding inline לכל h2/p/li כי theme typography עלול לדרוס ברמת selector כללי.\",\"להימנע מ-position sticky/fixed בתוכן אם הוא ייכנס לתוך theme עם header sticky.\",\"להוסיף alt תיאורי לכל תמונה: לא רק שם החברה אלא תיאור",
+  "wordpress_critical_checks": [
+    "manual parse fallback"
+  ],
+  "html_improvement_notes": [],
+  "n8n_workflow_notes": [],
+  "prompt_notes": [],
+  "qa_acceptance": []
+}

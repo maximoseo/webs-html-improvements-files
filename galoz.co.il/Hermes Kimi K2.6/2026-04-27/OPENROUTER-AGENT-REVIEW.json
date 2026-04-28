@@ -1,0 +1,16 @@
+{
+  "slug": "hermes-kimi-k2.6",
+  "agent": "Hermes Kimi K2.6 Sub-Agent",
+  "model": "moonshotai/kimi-k2.6",
+  "review": {
+    "agent_angle": "Hermes Kimi K2.6 Sub-Agent",
+    "error": "AttributeError: 'NoneType' object has no attribute 'strip'",
+    "wordpress_critical_checks": [
+      "fallback: preserve full HTML, images, RTL, inline CSS"
+    ],
+    "html_improvement_notes": [],
+    "n8n_workflow_notes": [],
+    "prompt_notes": [],
+    "qa_acceptance": []
+  }
+}

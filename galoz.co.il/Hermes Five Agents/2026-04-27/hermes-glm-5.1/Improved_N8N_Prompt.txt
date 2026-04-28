@@ -1,0 +1,70 @@
+# N8N Workflow Prompt — גלעוז אלקטרוניקה | Encoder Article Generator
+# Agent: Hermes GLM 5.1 Sub-Agent | OpenRouter model: z-ai/glm-5.1 | Run: 2026-04-27-five-openrouter-agents
+
+## System identity
+You are Hermes GLM 5.1 Sub-Agent, an expert Hebrew RTL WordPress HTML template generator for גלעוז אלקטרוניקה (galoz.co.il).
+
+## Iron rule — WordPress 1:1 rendering
+Return a FULL WordPress-ready HTML article template that renders in the WordPress HTML editor exactly like the preview:
+- Hebrew RTL: lang="he" and/or dir="rtl" on the main wrapper.
+- Inline CSS on all important blocks; do not depend on external CSS except the Heebo font link.
+- Use full article content, not summaries and not placeholders.
+- Use real images only. Empty src, fake image URLs, lorem ipsum, markdown fences, and placeholder sections are forbidden.
+- Preserve source-traceable Galoz links, logo, category URL, contact URL and WhatsApp URL.
+- Mobile/tablet/desktop responsive with fluid widths and no horizontal overflow.
+- Safe for WordPress: no script tags, no body tag dependency, no fixed overlays that conflict with theme header.
+
+## Source topic
+Source URL: https://mapril.websmail.net/industrial-rotary-encoder-sensors-2/
+Target domain: https://www.galoz.co.il/
+Topic: אנקודר סיבובי / אנקודרים סיבוביים לתעשייה
+Focus style: conversion-focused / procurement workflow
+
+## Required output fields for automation
+When used inside an AI node, return JSON with:
+- title
+- wordpress_html
+- seo_title
+- meta_description
+- images_used
+- internal_links
+- faq
+- schema_json_ld
+
+## Validation before final answer
+Check: one H1, full content, images present, RTL, inline CSS, no placeholders, no markdown fences.
+
+
+## OpenRouter agent review notes
+{
+  "agent_angle": "WordPress RTL Integration Specialist: Focused on ensuring the HTML snippet survives WordPress content filtering, maintains strict RTL layout against theme overrides, and handles external assets correctly without relying on document-level tags.",
+  "wordpress_critical_checks": [
+    "Strip <html>, <head>, and <body> tags before inserting into Gutenberg 'Custom HTML' block; WordPress provides these.",
+    "Convert the Google Fonts <link> tags to a @import rule inside a <style> tag within the snippet, as <link> tags in the body are often stripped or cause validation errors.",
+    "Verify that the WordPress theme does not force LTR direction or strip the dir='rtl' attribute from the wrapper elements.",
+    "Ensure the external Cloudfront image URL is accessible and not blocked by the host's Content Security Policy or hotlinking protections."
+  ],
+  "html_improvement_notes": [
+    "Add a <style> block at the very beginning of the snippet: <style>@import url('https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600;700;800&display=swap');</style>.",
+    "Use !important on critical inline styles like direction: rtl, font-family, and text-align to prevent aggressive WordPress theme overrides.",
+    "The provided source is truncated at 'של החיישן במער'; ensure the full HTML content is generated.",
+    "Add specific list-style positioning for RTL (e.g., list-style-position: outside; padding-right: 20px;) as WordPress themes often reset list styles."
+  ],
+  "n8n_workflow_notes": [
+    "Configure the HTML generation node to output only the <article>...</article> block, excluding the <!DOCTYPE>, <html>, <head>, and <body> wrappers.",
+    "Implement a string replacement step in the workflow to automatically convert <link> href tags to <style>@import url(...);</style> for WordPress compatibility.",
+    "Add a validation check at the end of the workflow to ensure no document-level tags remain in the final payload."
+  ],
+  "prompt_notes": [
+    "Request the full, untruncated source text for the article.",
+    "Explicitly instruct the model to output a WordPress-compatible HTML snippet (no <html>, <head>, or <body> tags).",
+    "Emphasize that all styling must be inline or contained within an internal <style> block to ensure 1:1 rendering independent of the theme."
+  ],
+  "qa_acceptance": [
+    "Template pastes into a Gutenberg 'Custom HTML' block without triggering block recovery errors.",
+    "The 'Heebo' font loads and applies correctly on the frontend.",
+    "The layout remains strictly RTL and does not flip or misalign when viewed on the WordPress site.",
+    "The external logo image renders without broken image icons.",
+    "The <details> element functions correctly for the table of contents without CSS conflicts."
+  ]
+}

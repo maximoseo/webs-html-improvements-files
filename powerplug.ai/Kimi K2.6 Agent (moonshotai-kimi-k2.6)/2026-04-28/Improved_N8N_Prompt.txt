@@ -1,0 +1,30 @@
+# PowerPlug.ai HTML Template Improvement Prompt
+
+## Agent
+- Sub-agent: Kimi K2.6 Agent
+- Requested model: moonshotai/kimi-k2.6
+- Actual source: openrouter
+- Actual model/source path: moonshotai/kimi-k2.6
+- Locked design identity: Data-Driven Visual
+- Visual direction: dark analytical dashboard, metric cards, ROI bars, savings timeline, proof panels, operational data visualization
+- Domain: powerplug.ai
+- Language: English / LTR
+- Date: 2026-04-28
+
+## Objective
+Create a production-ready WordPress HTML block for PowerPlug.ai that can be injected by n8n into WordPress content. Preserve brand accuracy, use real PowerPlug facts and image URLs, and keep this agent's visual identity distinct.
+
+## Compatibility Rules
+- Wrap output in `<!-- wp:html --> ... <!-- /wp:html -->`.
+- Root wrapper uses `all: initial`, system fonts, explicit color/line-height/width, and px units.
+- Inline fallback styles on visible elements.
+- Scoped CSS only; no external CSS/JS/CDN/icon fonts.
+- No scripts, no inline event handlers, no `javascript:` URLs.
+- Include INJECT markers: TITLE, META_DESCRIPTION, HERO, SECTIONS, CTA_TEXT, CTA_URL.
+- Use real powerplug.ai image URLs and meaningful alt text.
+
+## Required Content
+PowerPlug Pro enterprise PC power management; up to 60% PC energy reduction; ROI under 4 months; 100 to 50,000 PC scale; Active Directory/SCCM/attendance integrations; Wake Up Portal; patented Wake-on-LAN Mesh; reports for savings and carbon; Clalit, Rambam, and Ben-Gurion proof points.
+
+## Delivery
+Export exactly three files in this agent folder: `Improved_HTML_Template.html`, `Improved_N8N_Prompt.txt`, and `Improved_N8N_Workflow.json`.

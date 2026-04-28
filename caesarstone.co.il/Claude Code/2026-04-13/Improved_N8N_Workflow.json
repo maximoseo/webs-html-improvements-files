@@ -1,0 +1,2771 @@
+{
+  "name": "caesarstone.co.il",
+  "nodes": [
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1qP1Rpe4lN0_ubPAmRjZ2yd14QUI83Bzmfi7773sI7mU",
+          "mode": "list",
+          "cachedResultName": "caesarstone.co.il - פרסום כתבות N8N",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1qP1Rpe4lN0_ubPAmRjZ2yd14QUI83Bzmfi7773sI7mU/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 683869339,
+          "mode": "list",
+          "cachedResultName": "מחקר + כתבות",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1qP1Rpe4lN0_ubPAmRjZ2yd14QUI83Bzmfi7773sI7mU/edit#gid=683869339"
+        },
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "Published",
+              "lookupValue": "production"
+            }
+          ]
+        },
+        "options": {
+          "returnFirstMatch": true
+        }
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        752,
+        8288
+      ],
+      "id": "f0a30e11-3dcd-4ba5-87a3-b3f9bfa925aa",
+      "name": "Grab New Cluster",
+      "alwaysOutputData": false,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "lvHSVyl4fQmLoRi4",
+          "name": "Tomer google sheets"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "23b8e8c4-9191-415a-9661-1b60d413528a",
+              "name": "research",
+              "value": "={{ $json.output }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1552,
+        8288
+      ],
+      "id": "53decfdd-8e73-487d-94b6-50a70b8b861c",
+      "name": "Fix Links"
+    },
+    {
+      "parameters": {
+        "content": "## Schedule a trigger\n \n",
+        "height": 240,
+        "width": 260
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        416,
+        8224
+      ],
+      "typeVersion": 1,
+      "id": "90dc7d88-f010-483a-aacf-2d3faa754e7b",
+      "name": "Sticky Note15"
+    },
+    {
+      "parameters": {
+        "content": "## New Post Info\n \n",
+        "height": 240
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        704,
+        8208
+      ],
+      "typeVersion": 1,
+      "id": "b05dee5e-71dd-44a3-816e-b00b80f40ab1",
+      "name": "Sticky Note16"
+    },
+    {
+      "parameters": {
+        "content": "## Preliminary Post Plan \n \n",
+        "height": 240,
+        "width": 300
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        944,
+        8208
+      ],
+      "typeVersion": 1,
+      "id": "03da3ac5-7c65-45ef-b467-f1e92f828cdf",
+      "name": "Sticky Note17"
+    },
+    {
+      "parameters": {
+        "content": "## Research\n \n \n",
+        "height": 240,
+        "width": 244
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1232,
+        8208
+      ],
+      "typeVersion": 1,
+      "id": "a20cdc7f-4837-4794-9bd3-f3184f9cfd35",
+      "name": "Sticky Note18"
+    },
+    {
+      "parameters": {
+        "content": "## Post Plan \n \n",
+        "height": 240,
+        "width": 348
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1872,
+        8240
+      ],
+      "typeVersion": 1,
+      "id": "2b703243-8647-4633-928b-37786e7b2d70",
+      "name": "Sticky Note19"
+    },
+    {
+      "parameters": {
+        "content": "## Writing Blog\n \n \n",
+        "height": 240,
+        "width": 460
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        2352,
+        8240
+      ],
+      "typeVersion": 1,
+      "id": "dee742ba-0a8b-4cdb-b2e7-a1079e467092",
+      "name": "Sticky Note20"
+    },
+    {
+      "parameters": {
+        "content": "## HTML\n\n \n \n",
+        "height": 240,
+        "width": 340
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        3184,
+        8208
+      ],
+      "typeVersion": 1,
+      "id": "b37aeea7-a39a-4dd0-b6fc-2097dd805de2",
+      "name": "Sticky Note22"
+    },
+    {
+      "parameters": {
+        "content": "## Slug\n\n\n \n \n",
+        "height": 240,
+        "width": 320
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        3616,
+        8208
+      ],
+      "typeVersion": 1,
+      "id": "83fe919a-e6f2-463f-941f-35c52166fa9d",
+      "name": "Sticky Note23"
+    },
+    {
+      "parameters": {
+        "content": "## Post Title\n\n\n \n \n",
+        "height": 240,
+        "width": 300
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        3968,
+        8208
+      ],
+      "typeVersion": 1,
+      "id": "9840bd1f-870e-4948-9e6e-5f88c7106b12",
+      "name": "Sticky Note24"
+    },
+    {
+      "parameters": {
+        "content": "## Meta Description\n\n\n \n \n",
+        "height": 240,
+        "width": 300
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        4928,
+        8208
+      ],
+      "typeVersion": 1,
+      "id": "8478b345-1ac5-4ec7-8722-a01ad8c47a61",
+      "name": "Sticky Note25"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "═══════════════════════════════════════════════════════\nACTIVE DATA INPUTS (DO NOT EDIT EXPRESSION TOKENS)\n═══════════════════════════════════════════════════════\n\n\n{{ $('Writing Blog').first().json.output }}\n\n\n{{ $items(\"Preparing Images for HTML\")[0].json.images.section_1.url }}\n{{ $items(\"Preparing Images for HTML\")[0].json.images.section_2.url }}\n{{ $items(\"Preparing Images for HTML\")[0].json.images.section_3.url }}\n{{ $items(\"Preparing Images for HTML\")[0].json.images.section_4.url }}\n{{ $items(\"Preparing Images for HTML\")[0].json.images.hero.url }}\n\nYou are an Authority-Building CTR-Optimized WordPress HTML Article Generator specializing in FULLY RESPONSIVE RTL Hebrew design for Caesarstone Israel (אבן קיסר). Generate a single HTML article element that establishes expertise, builds trust, maximizes conversions, and renders PERFECTLY on all devices from 320px mobile to 4K desktop — and renders identically in the raw HTML file and inside the WordPress block editor / post renderer.\n\nLANGUAGE AND DIRECTION:\nAll article content MUST be in Hebrew. The article element MUST use lang=\"he\" dir=\"rtl\". All text alignment defaults to right. All layout direction is RTL.\n\nSTYLE VARIABLES:\nPRIMARY_COLOR: #87562E\nPRIMARY_LIGHT: #A0704A\nPRIMARY_DARK: #6B4323\nSECONDARY_COLOR: #B2A99A\nTEXT_COLOR: #333333\nTEXT_LIGHT: #555555\nBG_COLOR: #ffffff\nBG_SOFT: #F5F3F1\nBG_CARD: #F5F3F1\nBG_WARM: #DCDAD8\nBG_CALLOUT_HOWTO: #FAF8F5\nBORDER_COLOR: #C8C1B8\nBORDER_STRONG: #87562E\nFONT_HEADING: 'Frank Ruhl Libre', 'Times New Roman', David, serif\nFONT_BODY: 'Heebo', 'Segoe UI', Tahoma, sans-serif\nRADIUS_PX: 8px\nSHADOW: 0 2px 12px rgba(135, 86, 46, 0.08)\nSHADOW_HOVER: 0 4px 20px rgba(135, 86, 46, 0.15)\nSPACING: airy\n\nCRITICAL RESPONSIVE FRAMEWORK:\nYou MUST use these breakpoints:\n- Mobile Small: max-width 375px\n- Mobile Large: max-width 480px\n- Tablet: max-width 768px\n- Desktop Small: max-width 1024px\n- Desktop Large: max-width 1440px\n- Desktop XL: min-width 1441px\n\nRESPONSIVE UNIT RULES:\n- Use clamp() for all font sizes: clamp(min, preferred, max)\n- Use percentage or vw for widths, NEVER fixed px for containers\n- Use rem/em for spacing, not fixed px\n- Images MUST use: max-width: 100%; height: auto; object-fit: cover;\n\nWORDPRESS SAFETY RULES (MANDATORY):\n- ALL CSS must be in a SINGLE <style> block at the top of the article element OR inline on each element.\n- NEVER rely on Tailwind JIT, CDN bundlers, or external build steps.\n- NEVER add <link rel=\"stylesheet\"> tags pointing to external CSS files.\n- NEVER use ES modules, build-time transforms, or admin-panel-only JS APIs.\n- All interactive behavior MUST degrade gracefully without JavaScript (use <details>/<summary> for TOC & FAQ).\n- Any required JavaScript must be a tiny inline <script> that works in the WordPress post body area (no WP admin dependencies).\n\nThe article MUST begin with a style block inside the article element. The article MUST start like this:\n\n<article id=\"article-top\" lang=\"he\" dir=\"rtl\">\n<style>\n@import url('https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700;800&family=Frank+Ruhl+Libre:wght@400;500;700;900&display=swap');\n:root{--primary:#87562E;--primary-light:#A0704A;--primary-dark:#6B4323;--secondary:#B2A99A;--text:#333333;--text-light:#555555;--bg:#ffffff;--bg-soft:#F5F3F1;--bg-card:#F5F3F1;--bg-warm:#DCDAD8;--border:#C8C1B8;--radius:8px;--shadow:0 2px 12px rgba(135,86,46,0.08);--shadow-hover:0 4px 20px rgba(135,86,46,0.15)}\ndetails>summary{list-style:none;cursor:pointer}\ndetails>summary::-webkit-details-marker{display:none}\ndetails>summary::after{content:'';display:inline-block;width:10px;height:10px;border-right:2px solid #87562E;border-bottom:2px solid #87562E;transform:rotate(45deg);transition:transform 0.25s ease;margin-inline-start:12px;flex-shrink:0}\ndetails[open]>summary::after{transform:rotate(-135deg)}\ndetails>summary:hover{background:rgba(135,86,46,0.04);border-radius:8px}\n[data-toc-link]:hover{color:#87562E !important;background:rgba(135,86,46,0.05);border-radius:4px;padding-right:8px}\n[data-resp=\"cta-btn\"]:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(135,86,46,0.3) !important}\n[data-resp=\"cta-btn-outline\"]:hover{background:#87562E !important;color:#fff !important;transform:translateY(-2px)}\n[data-resp=\"float-btn\"]:hover{transform:translateY(-2px);box-shadow:0 3px 12px rgba(0,0,0,0.1),0 10px 24px rgba(135,86,46,0.28) !important;background:#6B4323 !important}\n[data-resp=\"top-btn\"]:hover{background:#87562E !important;border-color:#87562E !important;color:#fff !important;transform:translateY(-2px);box-shadow:0 3px 10px rgba(0,0,0,0.08),0 6px 16px rgba(135,86,46,0.18) !important}\n[data-resp=\"top-btn\"]:hover svg{stroke:#fff !important}\n[data-social=\"facebook\"]:hover{background:#1877F2 !important;color:#fff !important;border-color:#1877F2 !important}\n[data-social=\"instagram\"]:hover{background:linear-gradient(45deg,#F58529 0%,#DD2A7B 50%,#8134AF 100%) !important;color:#fff !important;border-color:#DD2A7B !important}\n[data-social=\"pinterest\"]:hover{background:#E60023 !important;color:#fff !important;border-color:#E60023 !important}\n[data-social=\"youtube\"]:hover{background:#FF0000 !important;color:#fff !important;border-color:#FF0000 !important}\n[data-social=\"linkedin\"]:hover{background:#0A66C2 !important;color:#fff !important;border-color:#0A66C2 !important}\n[data-resp=\"card\"]:hover{box-shadow:0 4px 20px rgba(135,86,46,0.1)}\n[data-resp=\"sticky-header\"]{position:sticky;top:0;z-index:100;background:#FFFFFF;border-bottom:1px solid #C8C1B8;box-shadow:0 2px 8px rgba(0,0,0,0.04)}\n[data-resp=\"container\"]{padding:0 15%}\n[data-resp=\"heading\"]{font-size:2.5rem}\n[data-resp=\"table-wrap\"]{overflow-x:auto;-webkit-overflow-scrolling:touch}\n[data-resp=\"table\"]{min-width:600px}\n[data-resp=\"img\"]{width:100%;height:auto}\n[data-resp=\"cta-btn\"]{padding:16px 32px;font-size:1.1rem;transition:all 0.25s ease}\n[data-resp=\"grid\"]{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}\n[data-resp=\"card\"]{padding:24px;transition:box-shadow 0.25s ease}\n[data-resp=\"toc\"]{padding:24px}\n[data-resp=\"faq-item\"]{padding:16px}\n[data-resp=\"author-box\"]{display:flex;flex-direction:row;gap:24px}\n[data-resp=\"stat-grid\"]{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}\n[data-resp=\"trust-strip\"]{display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:clamp(16px,3vw,28px)}\n[data-resp=\"social-grid\"]{display:flex;flex-wrap:wrap;gap:10px}\n[data-resp=\"callout-tip\"]{background:#F5F3F1;border-right:4px solid #87562E;border-radius:8px;padding:clamp(18px,3vw,24px);margin:clamp(20px,3vw,28px) 0;box-shadow:0 2px 12px rgba(135,86,46,0.08)}\n[data-resp=\"callout-howto\"]{background:#FAF8F5;border:1px solid #A0704A;border-radius:8px;padding:clamp(18px,3vw,24px);margin:clamp(20px,3vw,28px) 0;box-shadow:0 2px 12px rgba(135,86,46,0.08)}\n[data-resp=\"callout-didyouknow\"]{background:#DCDAD8;border-radius:8px;padding:clamp(18px,3vw,24px);margin:clamp(20px,3vw,28px) 0;box-shadow:0 2px 12px rgba(135,86,46,0.08)}\n[data-resp=\"callout-label\"]{display:inline-flex;align-items:center;gap:8px;font-family:'Frank Ruhl Libre',serif;font-size:clamp(0.9rem,2vw,1rem);font-weight:700;color:#87562E;letter-spacing:0.5px;margin-bottom:10px}\n[data-resp=\"top-btn\"]{opacity:1;pointer-events:auto;transition:opacity 0.3s ease, transform 0.25s ease, background 0.25s ease, border-color 0.25s ease, color 0.25s ease, box-shadow 0.25s ease}\n[data-resp=\"top-btn\"].js-hidden{opacity:0;pointer-events:none;transform:translateY(10px)}\n[data-resp=\"top-btn\"] svg{transition:stroke 0.25s ease}\n[data-resp=\"float-btn\"]{transition:all 0.25s ease}\n@media(max-width:1024px){\n[data-resp=\"container\"]{padding:0 8%}\n[data-resp=\"grid\"]{grid-template-columns:repeat(2,1fr) !important}\n[data-resp=\"stat-grid\"]{grid-template-columns:repeat(2,1fr) !important}\n[data-resp=\"footer-grid\"]{grid-template-columns:1fr 1fr !important}\n}\n@media(max-width:768px){\n[data-resp=\"container\"]{padding:0 5%}\n[data-resp=\"heading\"]{font-size:1.8rem}\n[data-resp=\"table\"]{font-size:0.85rem}\n[data-resp=\"cta-btn\"]{padding:14px 24px;font-size:1rem;width:100%;box-sizing:border-box}\n[data-resp=\"grid\"]{grid-template-columns:1fr !important}\n[data-resp=\"card\"]{padding:16px}\n[data-resp=\"toc\"]{padding:16px}\n[data-resp=\"author-box\"]{flex-direction:column !important;text-align:center !important;align-items:center !important;gap:20px !important}\n[data-resp=\"author-box\"] > div{width:100% !important;text-align:center !important}\n[data-resp=\"author-box\"] > div > div{justify-content:center !important;flex-wrap:wrap !important}\n[data-resp=\"author-box\"] p{text-align:center !important}\n[data-resp=\"author-section\"] .author-section-h3{text-align:center !important}\n[data-resp=\"stat-grid\"]{grid-template-columns:repeat(2,1fr) !important;gap:12px}\n[data-resp=\"social-grid\"]{justify-content:center !important}\n[data-resp=\"footer-grid\"]{grid-template-columns:1fr 1fr !important;gap:20px !important;text-align:right}\n[data-resp=\"sticky-header\"]{padding:10px 5% !important}\nfooter{padding-inline:5% !important}\n}\n@media(max-width:480px){\n[data-resp=\"container\"]{padding:0 4%}\n[data-resp=\"heading\"]{font-size:1.5rem}\n[data-resp=\"table\"]{font-size:0.75rem;min-width:500px}\n[data-resp=\"cta-btn\"]{padding:12px 20px;font-size:0.95rem}\n[data-resp=\"faq-item\"]{padding:12px}\n[data-resp=\"stat-grid\"]{grid-template-columns:1fr 1fr !important;gap:8px}\n[data-resp=\"footer-grid\"]{grid-template-columns:1fr !important;gap:16px !important}\n[data-resp=\"footer-grid\"] > div{text-align:right}\n[data-resp=\"float-btn\"]{padding:9px 14px !important;font-size:0.82rem !important;bottom:14px !important;left:14px !important;min-height:38px !important;gap:6px !important}\n[data-resp=\"float-btn\"] svg{width:14px !important;height:14px !important}\n[data-resp=\"top-btn\"]{bottom:62px !important;left:14px !important;width:36px !important;height:36px !important;min-height:36px !important;min-width:36px !important}\n[data-resp=\"top-btn\"] svg{width:14px !important;height:14px !important}\n[data-resp=\"author-box\"]{gap:16px !important}\n[data-resp=\"author-box\"] img{max-width:160px !important}\nfooter{padding:clamp(24px,5vw,32px) 4% !important}\nfooter h4{font-size:0.95rem !important}\n}\n@media(max-width:480px){\n[data-resp=\"simple-table\"] tr{display:block;margin-bottom:16px;border:1px solid #C8C1B8;border-radius:8px}\n[data-resp=\"simple-table\"] td{display:flex;justify-content:space-between;padding:8px 12px}\n[data-resp=\"simple-table\"] td::before{content:attr(data-label);font-weight:bold}\n[data-resp=\"simple-table\"] thead{display:none}\n}\n</style>\n[rest of article content]\n</article>\n\nH1 RULE — ABSOLUTELY MANDATORY:\nThe article MUST contain EXACTLY ONE <h1> element and no more, no less. The <h1> MUST hold the article's primary title (the topic/keyword headline). It MUST be placed inside the <header> block immediately inside [data-resp=\"container\"]. Every subsequent section header MUST be <h2>, and every sub-heading <h3>. Do NOT output more than one <h1>. Do NOT start the article with <h2 data-resp=\"heading\">. Do NOT omit the <h1>. This rule is non-negotiable and will be validated post-generation.\n\nSTICKY HEADER BAR (MANDATORY — BEFORE CONTAINER, OUTSIDE CONTAINER):\nAdd a branded sticky header bar BEFORE the container div, OUTSIDE of it. It must be the first visible element inside the article, right after the style block.\nStructure:\n- Full-width bar, position:sticky, top:0, z-index:100, white background (#FFFFFF), border-bottom 1px solid #C8C1B8, box-shadow 0 2px 8px rgba(0,0,0,0.04)\n- Use data-resp=\"sticky-header\" attribute\n- Inside: flex layout, justify-content:space-between, align-items:center, padding:12px 15%\n- Start side (RTL: right): Caesarstone logo wrapped in <a href=\"https://www.caesarstone.co.il/\" aria-label=\"Caesarstone homepage\"> link; logo URL: https://www.caesarstone.co.il/wp-content/uploads/2025/11/i-want-this-logo-to-be-in-21-white-frame-so-it-wil-1-350x100.png at height:32px with object-fit:contain, plus a small article context text in Hebrew\n- End side (RTL: left): Contact CTA button linking to https://www.caesarstone.co.il/contact-us/ — icon AFTER text on same baseline (RTL rule)\n- Responsive: On mobile (max-width 480px) padding adjusts to 10px 5%\n\nBACK TO TOP BUTTON (MANDATORY — PROFESSIONAL, WORDPRESS-SAFE, DEFAULT-VISIBLE):\nDesign intent: secondary, utility-grade — white background with subtle brown border and icon. Never competes visually with the primary Contact Us pill.\nStructure:\n- Position:fixed, bottom:70px, left:20px, z-index:9998\n- Use data-resp=\"top-btn\" attribute\n- Default CSS: opacity:1, pointer-events:auto (ALWAYS VISIBLE — WordPress-safe)\n- When JS runs: adds .js-hidden class at scroll ≤ 300px (opacity:0, pointer-events:none, transform:translateY(10px) for subtle slide-out); removes at scroll > 300px. Progressive enhancement only.\n- Circular button: width:40px, height:40px, border-radius:50%\n- Background: #ffffff (NOT taupe — clean white makes it feel utilitarian not decorative)\n- Border: 1px solid #C8C1B8 (subtle edge against light backgrounds)\n- Icon color: #87562E (brand primary)\n- SVG chevron-up icon (~16px, stroke-width 2.2) — refined stroke weight, not chunky\n- box-shadow: 0 2px 8px rgba(0,0,0,0.06), 0 4px 14px rgba(135,86,46,0.12) — LAYERED, soft, elevation-1 style\n- transition: all 0.25s ease (opacity, transform, background, border-color, color, box-shadow)\n- Uses href=\"#article-top\" and onclick=\"window.scrollTo({top:0,behavior:'smooth'});return false;\"\n- Hover: background → #87562E, border-color → #87562E, icon stroke → #fff, transform:translateY(-2px), shadow deepens slightly\n- Mobile (max-width 480px): bottom:62px, left:14px, width:36px, height:36px, icon 14px\n- Inline <script> at end of article toggles .js-hidden at scroll ≤ 300px:\n  <script>(function(){var b=document.querySelector('[data-resp=\"top-btn\"]');if(!b)return;var t=function(){if(window.pageYOffset<=300){b.classList.add('js-hidden')}else{b.classList.remove('js-hidden')}};window.addEventListener('scroll',t,{passive:true});t();})();</script>\n- NEVER make the default CSS opacity:0 — causes disappearance in WP installs that strip scripts. Default-visible + JS-hidden is correct.\n- The stack math with Contact button: Contact bottom 20 + ~42px height = 62 → 8px gap → top-btn bottom 70. Buttons never overlap on any breakpoint.\n\nFLOATING CONTACT BUTTON (MANDATORY — PROFESSIONAL PILL, PRIMARY FLOATING ACTION):\nDesign intent: primary, brand-coloured, compact pill. Clear visual hierarchy over the Back-to-Top button. Refined typography (not chunky), layered shadow for depth without heaviness.\n<a data-resp=\"float-btn\" href=\"https://www.caesarstone.co.il/contact-us/\" style=\"position:fixed;bottom:20px;left:20px;z-index:9999;display:inline-flex;align-items:center;gap:6px;background:#87562E;color:#fff;padding:10px 18px;border-radius:999px;text-decoration:none;font-size:0.88rem;font-weight:600;box-shadow:0 2px 10px rgba(0,0,0,0.08),0 6px 18px rgba(135,86,46,0.2);cursor:pointer;white-space:nowrap;min-height:42px;letter-spacing:0.01em\" aria-label=\"צור קשר עם אבן קיסר\">\n<span>צור קשר</span>\n<svg width=\"15\" height=\"15\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" style=\"flex-shrink:0\" aria-hidden=\"true\"><path d=\"M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z\"/></svg>\n</a>\nPosition: fixed, bottom-LEFT at 20/20. Icon AFTER text on same baseline (RTL rule, icon+text never break onto 2 lines). Minimum tap target 42x42 (clears 44px target in practice due to padding+icon height). Border-radius 999px for true pill shape. Padding 10px 18px (compact, not chunky). Font-size fixed 0.88rem (clamp removed — consistency across scroll depth). Font-weight 600 (not 700 — more professional, less shouty). Letter-spacing 0.01em (subtle polish). Layered shadow: 0 2px 10px rgba(0,0,0,0.08) + 0 6px 18px rgba(135,86,46,0.2) — depth without visual weight.\nHover: transform:translateY(-2px), background darkens to #6B4323, shadow deepens to 0 3px 12px + 0 10px 24px.\nMobile (max-width 480px): padding 9px 14px, font 0.82rem, bottom 14px left 14px, min-height 38px, gap 6px, icon 14px.\nStacks above any existing WhatsApp/phone floats — NEVER overlap. Back-to-Top sits 8px above with clean vertical rhythm.\n\nTOC RULES — CRITICAL:\n- TOC MUST be placed AFTER the first paragraph of the article (or after the hero image if the hero image directly follows the header). TOC is NEVER the first element. TOC is NEVER placed below the second content section.\n- TOC MUST start COLLAPSED by default (use <details> WITHOUT the open attribute). The summary chevron uses the data-resp::after CSS rule — rotates 45° → -135° on open.\n- TOC headings must be CLEAN — NO leading numeric prefix (\"1.\", \"2.\", \"3.\"). Output only the heading text. Do NOT write \"1. למה הסגנון המודרני...\" — output just \"למה הסגנון המודרני...\".\n- Each TOC link uses data-toc-link attribute for hover styling\n- Icon/chevron in summary must sit AFTER the label text on the same baseline (RTL)\n- Container uses nav data-resp=\"toc\" with aria-label=\"תוכן עניינים\"\n\nFAQ RULES — CRITICAL:\n- FAQ MUST be placed AFTER the closing CTA block and BEFORE the About the Author section.\n- FAQ MUST start COLLAPSED by default (use <details> WITHOUT the open attribute). Same chevron animation as TOC.\n- Each FAQ item is a standalone <details> with summary = question and div = answer\n- Questions use font-weight:600, answers use line-height:1.75\n- 4–6 Q&A pairs, all real and helpful\n- Chevron rotates 45° → -135° on open (handled by CSS)\n\nABOUT THE AUTHOR BLOCK (MANDATORY — BETWEEN FAQ AND FOOTER):\nRebuild the author block as a professional, branded card. Structure:\n- Section wrapper: background #F5F3F1, border-radius 12px, padding clamp(24px,5vw,40px), border 1px solid #C8C1B8\n- <h3> above the author card: \"אודות המחבר\" (About the Author), Frank Ruhl Libre\n- Flex layout with data-resp=\"author-box\": logo card on RTL start side, author content on the other side\n- Logo: MUST be wrapped in <a href=\"https://www.caesarstone.co.il/\" aria-label=\"Caesarstone homepage\"> — NO placeholder \"#\" href. Logo URL: https://www.caesarstone.co.il/wp-content/uploads/2025/11/i-want-this-logo-to-be-in-21-white-frame-so-it-wil-1-350x100.png (max-width clamp(140px,22vw,200px), object-fit:contain, padded in a white card with 1px border and subtle shadow)\n- Author identity (REAL, NOT FABRICATED):\n  - Author name line: \"מערכת התוכן של אבן קיסר\" (The Caesarstone Content Editorial Team)\n  - Role line: \"צוות עיצוב ותוכן מקצועי\" in #87562E, font-weight 600\n  - Bio paragraph (1-2 sentences): real company info — founded 1987, global leader in engineered stone, written by a team of designers, architects, and material experts\n- \"עקבו אחרינו ברשתות:\" label above the social row\n- Social buttons row (MANDATORY — REAL URLs only, never \"#\"):\n  - Facebook: https://www.facebook.com/CaesarstoneIL (hover bg #1877F2)\n  - Instagram: https://www.instagram.com/caesarstone_il/ (hover bg #DD2A7B gradient)\n  - YouTube: https://www.youtube.com/user/CaesarstoneIL (hover bg #FF0000)\n  - LinkedIn: https://www.linkedin.com/company/caesarstone-corporate (hover bg #0A66C2)\n  - Pinterest: https://www.pinterest.com/caesarstone (hover bg #E60023)\n  - Each social button uses data-social attribute, role button, aria-label in English describing the network, ~42x42 circular, white background with 1px #C8C1B8 border, inline SVG brand icon. Icons flip to white on hover via data-social CSS rules.\n- Contact action row below socials: Contact page link + Phone (tel:1800778800) + WhatsApp (https://api.whatsapp.com/send?phone=972524411209) — each button ≥44px tap target\n\nTRUST SIGNAL STRIP (MANDATORY — AFTER TOC, BEFORE STAT GRID):\nOutput a horizontal trust-signal strip using data-resp=\"trust-strip\":\n- 4 trust items with small SVG icons in #87562E followed by a short Hebrew line\n- Items MUST use only REAL Caesarstone facts: מותג ישראלי מוביל מאז 1987 / אחריות לכל החיים / חברה גלובלית, ייצור בישראל / יותר מ-50 גוונים ומרקמים\n- Icon AFTER / before is OK here because these are icon-label chips, BUT icon and text MUST sit on the same baseline, flex:inline-flex, gap:8px\n- Container: background #FAF8F5, border 1px solid #C8C1B8, border-radius:8px, padding clamp(16px,3vw,20px) clamp(12px,3vw,24px)\n\nMID-ARTICLE CTA BLOCKS (MANDATORY — 2+ BLOCKS):\nInsert at least TWO strong mid-article CTA blocks linking to https://www.caesarstone.co.il/contact-us/.\n- CTA #1: After approximately 30% of the content (typically after sections 2-3).\n  - Full-width block with brand gradient background (linear-gradient(135deg,#87562E 0%,#A0704A 100%))\n  - White heading, light supporting line, primary white button \"קבעו פגישת ייעוץ\" → contact-us, secondary outlined phone button\n  - Button icon AFTER text on same baseline (RTL)\n- CTA #2: After approximately 60% of the content (typically after the \"how to choose\" section).\n  - Full-width block with soft gradient background (linear-gradient(135deg,#F5F3F1 0%,#FAF8F5 100%)) and 2px brown border\n  - Primary brown button \"השאירו פרטים לייעוץ אישי\" → contact-us, secondary WhatsApp green button\nBoth CTAs MUST use action-oriented Hebrew copy and link to the contact page. Neither CTA may link to a placeholder or \"#\".\n\nCLOSING CTA BLOCK (MANDATORY — BEFORE THE FAQ SECTION, above the FAQ/author area):\nPosition: Immediately after the last content section and BEFORE <section id=\"faq\">. This is the strongest closing CTA before the FAQ and author area.\nStructure:\n- Full-width block, gradient background (linear-gradient(135deg,#F5F3F1 0%,#ffffff 100%)), 2px solid #87562E border, border-radius 12px\n- <h2> headline in Frank Ruhl Libre, 1 supporting line below\n- Row of 3 buttons: primary \"דברו איתנו עכשיו\" (contact-us), outlined phone button (tel:1800778800), green WhatsApp button\n- All buttons ≥48px tap target, consistent baseline, icon AFTER text (RTL)\n\nSECTION ORDER (DO NOT DEVIATE):\n1. Sticky Header Bar (OUTSIDE container)\n2. Container open\n3. Reading time indicator (small, centered)\n4. Expert Credibility Header: kicker + <h1> + subtitle (NO DATES, NO YEARS, NO TIME REFERENCES here)\n5. Hero Image (max-width:1000px, NO caption, NO date below)\n6. First paragraph / intro (NO DATES, NO YEARS, NO TIME REFERENCES)\n7. TOC (collapsed, AFTER first paragraph/image; NEVER first; NEVER after 2nd section)\n8. Trust Signal Strip (real Caesarstone facts, 1987 founding year allowed here since it's past the hero/intro)\n9. Authority Stats Grid (4 stats, 4→2→1 responsive — avoid time/year inside stats if possible)\n10. Key Insight Box\n11. Key Takeaways card\n12. Expert Analysis Sections (H2/H3) — 6–13 sections, real content, no thin filler\n13. Did You Know callout (at least 1, distinct visual styling)\n14. Mid-article CTA #1 (~30% mark, to contact page)\n15. Tip callout (at least 1, distinct visual styling)\n16. More sections…\n17. Mistake/common-error section\n18. How-To callout (at least 1, distinct numbered-steps styling)\n19. Mid-article CTA #2 (~60% mark, to contact page)\n20. Comparison table (responsive wrapper)\n21. Remaining content sections\n22. Catalog CTA (optional interim CTA to catalog)\n23. CLOSING CTA (strong contact CTA — above FAQ)\n24. FAQ (collapsed, 4–6 items)\n25. About the Author block (MUST BE LAST visible content before footer)\n26. Container close\n27. Footer (OUTSIDE container)\n28. Back to Top button (fixed, hidden until scroll > 300px)\n29. Floating Contact button (fixed, bottom-left)\n30. JSON-LD schemas (Article, Organization, FAQPage)\n31. Scroll visibility inline <script>\n\nCONTENT RULES — MANDATORY:\n- EXACTLY ONE <h1> per article (the primary topic title). Enforced server-side.\n- NO DATES, NO YEARS, NO TIME-STAMPED PHRASES (\"בשנת 2026\", \"כיום ב-2024\", \"לפני שנה\", \"היום\", \"השנה\") in the first paragraph, intro, hero header, or trust strip BEFORE the TOC. Dates ARE allowed later in body content when contextually needed (e.g., historical references like \"מאז 1987\" inside the trust-strip or About section).\n- Every section MUST have real, substantive content — NO thin \"lorem\", NO placeholder text, NO empty image slots.\n- Use REAL images with real URLs only. If a section image URL is missing, OMIT the image tag entirely (never output <img> with empty src).\n- Include AT LEAST ONE internal Caesarstone link (blog, catalog, contact-us, homepage, about, where-to-buy) inside the article body, in addition to CTAs.\n- Include AT LEAST ONE external authoritative link inside the article body (examples: globes.co.il, ynet.co.il, themarker.com, archdaily.com, dezeen.com, apartmenttherapy.com). External links use target=\"_blank\" rel=\"noopener\".\n- At least ONE Tip callout (data-resp=\"callout-tip\"), ONE How-To callout (data-resp=\"callout-howto\"), ONE Did-You-Know callout (data-resp=\"callout-didyouknow\"). Each has a distinct visual style but consistent brand palette.\n- Do NOT fabricate reviews, ratings, testimonials, author credentials, or statistics. Use ONLY real, verifiable data.\n\nCALLOUT COMPONENT STRUCTURES (MANDATORY):\nTip callout:\n<aside data-resp=\"callout-tip\">\n<p data-resp=\"callout-label\"><span>טיפ מקצועי</span><svg>[lightbulb icon]</svg></p>\n<p>[tip content]</p>\n</aside>\n\nHow-To callout (numbered steps):\n<aside data-resp=\"callout-howto\">\n<p data-resp=\"callout-label\"><span>איך עושים את זה – מדריך צעד-אחר-צעד</span><svg>[checklist icon]</svg></p>\n<ol>\n<li><strong>[step 1 bold lead]</strong> [step 1 body]</li>\n<li><strong>[step 2 bold lead]</strong> [step 2 body]</li>\n...3–5 steps total...\n</ol>\n</aside>\n\nDid You Know callout:\n<aside data-resp=\"callout-didyouknow\">\n<p data-resp=\"callout-label\"><span>הידעת?</span><svg>[info-circle icon]</svg></p>\n<p>[factual knowledge drop]</p>\n</aside>\n\nRESPONSIVE TABLE RULES (CRITICAL):\nTables MUST follow these rules. MANDATORY TABLE WRAPPER:\n<div data-resp=\"table-wrap\" style=\"width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch;margin:24px 0;border-radius:8px;box-shadow:0 2px 12px rgba(135,86,46,0.08)\">\n<table data-resp=\"table\" style=\"width:100%;min-width:600px;border-collapse:collapse;font-size:clamp(0.75rem,2vw,1rem)\">\n...\n</table>\n</div>\nTABLE HEADER: background #87562E with white text, right-aligned for RTL. TABLE CELL RULES: Header cells use padding clamp(10px, 2vw, 16px); white-space: nowrap for short text, normal for long. Body cells use padding clamp(10px, 2vw, 14px); word-break: break-word for long content. Alternating rows use background #F5F3F1. Border color #C8C1B8.\n\nRESPONSIVE IMAGE RULES (CRITICAL):\nAll images MUST follow this structure — NO figcaption, NO text below images:\n<img data-resp=\"img\" src=\"[URL]\" alt=\"[DESCRIPTIVE ALT TEXT IN HEBREW]\" loading=\"lazy\" decoding=\"async\" style=\"width:100%;max-width:800px;margin:0 auto clamp(24px,3vw,32px);display:block;height:auto;object-fit:cover;border-radius:8px;box-shadow:0 2px 12px rgba(135,86,46,0.08);aspect-ratio:1200/630\" />\nCRITICAL: NEVER add figcaption, captions, or descriptive text below images. Alt text on the img tag handles accessibility. Do NOT use figure elements.\nHero image can use max-width:1000px, loading=\"eager\". Section images MUST use max-width:800px, loading=\"lazy\".\n\nIMAGE PLACEMENT RULES:\nInsert section images under H2 number 3, number 6, number 9, and number 12 using section_1 through section_4 URLs respectively. ONLY if each URL is non-empty and valid. Never output img tags with empty or placeholder URLs. All images must have descriptive alt text in Hebrew.\n\nAUTHORITY-BUILDING FRAMEWORK:\nEXPERTISE INDICATORS: Include specific data points and statistics relevant to the topic. Reference industry knowledge and practical experience. Add methodology explanations that demonstrate deep expertise. IMPORTANT: Use ONLY real and logical data — never fabricate statistics, reviews, or credentials.\nSOCIAL PROOF: Reference real-world trends, industry publications, and professional consensus. Do NOT fabricate testimonials, reviews, or endorsements.\n\nCTR OPTIMIZATION WITH RESPONSIVE DESIGN:\nRESPONSIVE CTA BUTTONS:\n<div style=\"text-align:center;margin:clamp(32px,5vw,48px) 0\">\n<a data-resp=\"cta-btn\" href=\"[URL]\" style=\"display:inline-block;background:#87562E;color:#fff;padding:clamp(14px,3vw,18px) clamp(28px,5vw,44px);font-size:clamp(0.95rem,2.5vw,1.15rem);font-weight:700;text-decoration:none;border-radius:8px;box-shadow:0 4px 16px rgba(135,86,46,0.2);transition:all 0.25s ease;cursor:pointer;min-height:44px\">\n[CTA TEXT IN HEBREW]\n</a>\n</div>\nMOBILE CTA RULES: Full width on mobile (width: 100%). Minimum 48px touch targets for all interactive elements. High contrast colors. Clear, action-oriented text in Hebrew.\n\nCTA LINK RULES:\n- Main site link: https://www.caesarstone.co.il/\n- Catalog link: https://www.caesarstone.co.il/catalog/\n- Contact page: https://www.caesarstone.co.il/contact-us/\n- Phone: tel:1800778800\n- WhatsApp: https://api.whatsapp.com/send?phone=972524411209\n- NEVER use \"#\" as href. NEVER use \"javascript:void(0)\".\nInclude AT LEAST 4 CTAs throughout the article linking to the contact page (2 mid-article + 1 closing + 1 in author block).\n\nHARD OUTPUT RULES:\n- Output MUST start with <article> and end with </article> with nothing outside\n- ONE style block allowed INSIDE article element at the very beginning for responsive rules\n- All other styling must be inline\n- No markdown, no JSON, no code fences, no comments outside style block\n- ALL text content MUST be in Hebrew with lang=\"he\" dir=\"rtl\" on article element\n- EXACTLY ONE <h1> in the output. H1 contains the primary article title. Multiple H1s or zero H1s FAIL validation.\n- The article body MUST include at least one Tip, one How-To, one Did You Know callout (distinct data-resp attributes)\n- NO dates/years/time-references in the first paragraph, intro, or hero area\n- Article content: 15% margin desktop, 5% margin mobile (use data-resp=\"container\")\n- DO NOT fabricate reviews, ratings, social proof, author identity, or credentials\n\nREQUIRED RESPONSIVE AUTHORITY-DRIVEN STRUCTURE:\n1. Sticky Header Bar (BEFORE container, full-width, position:sticky — see STICKY HEADER BAR section)\n2. Reading time indicator (centered, small text)\n3. Expert Credibility Header: kicker + <h1> + intro paragraph (no dates)\n4. Hero Image (using hero URL, max-width 1000px, NO caption, loading=\"eager\")\n5. Intro paragraph (lede, no dates/years)\n6. Strategic Table of Contents (accordion style, MUST BE COLLAPSIBLE, chevron via CSS ::after; NO numeric prefixes; placed AFTER first paragraph/image; NEVER first)\n7. Trust Signal Strip (real Caesarstone facts; AFTER TOC)\n8. Authority Stats Grid (4 relevant statistics) - 4 to 2 to 1 columns responsive, warm brown accent numbers, soft background\n9. Key Insight Box (unique perspective) - right border accent in #87562E\n10. Key Takeaways (3-4 factual bullet points with checkmarks) - warm brown accented card\n11. Expert Analysis Sections (H2/H3) with section images (max-width 800px, NO captions) — 6–13 sections\n12. Did You Know callout (at least one) woven naturally\n13. Mid-article CTA #1 (~30% mark, contact-us)\n14. Tip callout (at least one) woven naturally\n15. More analysis sections\n16. Mistake section + question list\n17. How-To callout (at least one) with numbered steps\n18. Mid-article CTA #2 (~60% mark, contact-us)\n19. Comparison table (responsive wrapper)\n20. Remaining sections\n21. Quick-check table (optional)\n22. Catalog CTA (optional interim CTA, to catalog)\n23. CLOSING CTA (mandatory, ABOVE FAQ)\n24. Advanced FAQ (accordion, touch-friendly, MUST BE COLLAPSIBLE, 4-6 Q&A)\n25. About the Author Block (MANDATORY — LAST visible content before footer, author logo linked with aria-label, real social URLs)\n26. Footer Section (AFTER About section, OUTSIDE container)\n27. Back to Top Button (fixed, hidden until scroll > 300px, with inline visibility script)\n28. Floating Contact Button (MANDATORY - fixed, bottom-left, icon AFTER text on same baseline)\n29. JSON-LD Schemas (Article, Organization, FAQPage)\n30. Scroll visibility inline <script>\n\nRESPONSIVE ACCORDION COMPONENT (TOC and FAQ):\nMANDATORY structure for collapsible elements — uses CSS ::after chevron (defined in style block). Start CLOSED by default (never use the open attribute):\n<details data-resp=\"accordion\" style=\"margin:12px 0;border:1px solid #C8C1B8;border-radius:8px;overflow:hidden;background:#ffffff\">\n<summary style=\"padding:clamp(14px,3vw,20px);font-weight:600;font-size:clamp(0.95rem,2.5vw,1.1rem);color:#333333;display:flex;justify-content:space-between;align-items:center;transition:background 0.25s ease\">\n[TITLE TEXT IN HEBREW — NO numeric prefix]\n</summary>\n<div style=\"padding:clamp(14px,3vw,20px);border-top:1px solid #C8C1B8;background:#F5F3F1\">\n[CONTENT]\n</div>\n</details>\nDO NOT use span with triangle symbol. The chevron indicator is handled by CSS ::after in the style block. The chevron rotates from 45° (collapsed) to -135° (open) for an animated 180° flip.\n\nFOOTER SECTION (MANDATORY — AFTER ABOUT SECTION, OUTSIDE CONTAINER):\nAdd a full-width footer AFTER the About section, OUTSIDE the container div. It must appear before the floating button and JSON-LD schemas.\nStructure:\n- Full-width, background:#2C2218, padding:clamp(32px,5vw,48px) clamp(5%,10vw,15%)\n- Text color:#DCDAD8, font-family Heebo\n- 4-column grid using data-resp=\"footer-grid\" (grid-template-columns:1.5fr 1fr 1fr 1fr, gap:clamp(20px,4vw,40px))\n- Column 1 — Brand: Caesarstone logo wrapped in anchor link with aria-label=\"Caesarstone homepage\" (filter:brightness(1.2) for slight lightening on dark bg), short brand description in Hebrew\n- Column 2 — Quick Links (ניווט מהיר): homepage, catalog, blog\n- Column 3 — Info (מידע): about, contact, where-to-buy\n- Column 4 — Contact (יצירת קשר): phone, WhatsApp, email\n- Column headings: font-family Frank Ruhl Libre, font-weight:700, font-size:1rem, color:#DCDAD8, border-bottom:1px solid rgba(220,218,216,0.15), padding-bottom:10px, margin-bottom:16px\n- Copyright line below grid: border-top:1px solid rgba(220,218,216,0.15), padding-top, margin-top, text-align:center, font-size:0.85rem, color:#B2A99A. Text: \"© אבן קיסר — כל הזכויות שמורות | www.caesarstone.co.il\"\n- Responsive: 4 columns on desktop, 2 columns on tablet (max-width 1024px), 1 column on mobile (max-width 480px)\n\nJSON-LD SCHEMAS (MANDATORY — inside article, before closing tag):\nInclude THREE JSON-LD script blocks:\n1. Article schema: headline, description, inLanguage \"he-IL\", author Organization (אבן קיסר), publisher with logo, image\n2. Organization schema: name אבן קיסר, url, logo, foundingDate 1987, telephone 1-800-77-88-00, email Sherut@caesarstone.com, sameAs array with all 5 social URLs (facebook, instagram, pinterest, youtube, linkedin)\n3. FAQPage schema: mainEntity array matching all FAQ questions and answers from the article\n\nRESPONSIVE TYPOGRAPHY SCALE:\nH1 (ONLY ONE): font-family Frank Ruhl Libre; font-size: clamp(1.8rem, 5vw, 3rem); font-weight:700; color:#333333; line-height: 1.2; border:none. Used data-resp=\"heading\".\nH2: font-family Frank Ruhl Libre; font-size: clamp(1.5rem, 4vw, 2.25rem); font-weight:700; color:#333333; line-height: 1.3; border-bottom: 2px solid #87562E.\nH3: font-family Frank Ruhl Libre; font-size: clamp(1.2rem, 3vw, 1.5rem); font-weight:700; line-height: 1.4.\nBODY TEXT: Paragraph uses font-family Heebo; font-size: clamp(1rem, 2.5vw, 1.1rem); color:#333333; line-height: 1.75–1.8. Max reading width ~720–780px for intro paragraphs.\n\nSTAT GRID:\n<div data-resp=\"stat-grid\">\nEach stat: text-align center, padding clamp(16px,3vw,24px), background #F5F3F1, border-radius 8px, border 1px solid #C8C1B8.\nNumber: font-family Frank Ruhl Libre, color #87562E, font-weight 700, clamp(1.5rem,4vw,2.5rem).\nLabel: font-size clamp(0.8rem,2vw,0.95rem), color #555555.\n\nINSIGHT/TIP BOXES (standard inline cards):\n<div data-resp=\"card\" style=\"background:#F5F3F1;border:1px solid #C8C1B8;border-radius:8px;padding:clamp(16px,4vw,28px);margin:clamp(16px,3vw,28px) 0;box-shadow:0 2px 12px rgba(135,86,46,0.08);border-right:3px solid #87562E\">\nTitle in #87562E, body text in #333333. Use border-right (RTL start side) for accent stripe. Alternate between #87562E and #B2A99A accent colors for variety. This is DIFFERENT from the dedicated callout-tip / callout-howto / callout-didyouknow blocks.\n\nINTERNAL AND EXTERNAL LINKS:\n- Preserve all internal links from the blog content (links to other Caesarstone pages)\n- Preserve all external links from the blog content\n- Links use color #87562E with underline and font-weight 600\n- Use descriptive anchor text in Hebrew (never raw URLs)\n- Include AT LEAST 1 internal caesarstone.co.il link in body content (not counting CTAs)\n- Include AT LEAST 1 external authoritative link in body content (target=\"_blank\" rel=\"noopener\")\n- Link to Caesarstone contact page at least 4 times throughout the article (header + 2 mid CTAs + closing CTA + author block)\n\nPERFORMANCE OPTIMIZATION:\nAll images must use loading=\"lazy\" decoding=\"async\" (except hero which uses loading=\"eager\"). Minimize inline style length where possible. Use CSS variables in style block for repeated values.\n\nRTL / HEBREW LAYOUT RULES:\n- All TOC / FAQ chevron icons sit AFTER the label text on the same baseline (controlled by margin-inline-start and display:flex)\n- All CTA button icons sit AFTER the text on the same baseline (use gap:8px inside inline-flex)\n- Floating Contact button: icon + text stays on ONE line with icon AFTER text\n- Trust-strip icons sit BEFORE the text as chips (acceptable because they are symbolic rather than directional)\n- Hover color changes MUST keep text legible (white text on brand-color hover backgrounds; never low-contrast pairs)\n\nRESPONSIVE VALIDATION CHECKLIST (self-check before emitting):\n[ ] EXACTLY one <h1> in output\n[ ] <h1> contains the primary article title\n[ ] TOC placed after first paragraph/image, never first\n[ ] TOC starts collapsed (no open attribute)\n[ ] TOC headings have NO leading \"1.\" \"2.\" numeric prefixes\n[ ] FAQ placed between closing CTA and About the Author; starts collapsed\n[ ] Author block logo wrapped in anchor with aria-label=\"Caesarstone homepage\"\n[ ] Author block social row uses REAL Caesarstone URLs for Facebook, Instagram, YouTube, LinkedIn, Pinterest — no \"#\"\n[ ] 2+ mid-article CTAs linking to contact-us, at ~30% and ~60% positions\n[ ] Closing CTA placed BEFORE FAQ section with headline + supporting line + primary contact button + phone + WhatsApp\n[ ] At least 1 Tip callout, 1 How-To callout, 1 Did You Know callout — each with distinct data-resp attribute\n[ ] Floating Contact button fixed bottom-left, icon+text on same baseline, ≥48px tap target\n[ ] Back to Top button hidden until scroll > 300px (via .visible class toggled by inline script)\n[ ] First paragraph, intro, header have ZERO date/year/time references\n[ ] Trust signal strip uses real Caesarstone facts\n[ ] Every section has real content and real images — no placeholder text or empty <img> tags\n[ ] At least 1 internal caesarstone.co.il link and 1 external authoritative link in body content\n[ ] 3 JSON-LD schemas (Article, Organization, FAQPage) present\n[ ] Scroll visibility inline script present at end of article\n[ ] WP-safe: no external build dependencies, all CSS in one style block + inline\n[ ] NO figcaptions or text below images\n[ ] RTL: icons after text, floating button icon+text single line, hover contrast preserved\n\nFULL BLOG CONTENT (Hebrew):\n\n{{ $('Writing Blog').first().json.output }}\n\n\nSECTION IMAGES:\nHero: {{ $items(\"Preparing Images for HTML\")[0].json.images.hero.url }}\nSection 1 (under H2 #3): {{ $items(\"Preparing Images for HTML\")[0].json.images.section_1.url }}\nSection 2 (under H2 #6): {{ $items(\"Preparing Images for HTML\")[0].json.images.section_2.url }}\nSection 3 (under H2 #9): {{ $items(\"Preparing Images for HTML\")[0].json.images.section_3.url }}\nSection 4 (under H2 #12): {{ $items(\"Preparing Images for HTML\")[0].json.images.section_4.url }}\n",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        3248,
+        8288
+      ],
+      "id": "5d6e8e6d-6ff8-4a69-bba1-48f6e05bb189",
+      "name": "HTML"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Create an SEO-friendly URL slug for the following blog post.\n\nIMPORTANT:\n- The blog post content is written in HEBREW.\n- The slug MUST be written in ENGLISH.\n- You must translate the primary keyword into natural, SEO-friendly English.\n- Do NOT transliterate Hebrew letters.\n- Use a clear, commonly used English phrasing.\n\nInput:\nPrimary keyword:\n{{ $('Grab New Cluster').last().json['Primary Keyword'] }}\n\nSupporting keywords:\n{{ $('Grab New Cluster').last().json.Keywords }}\n\nSearch intent:\n{{ $('Grab New Cluster').last().json.Intent }}\n\nSlug rules:\n- The slug must be 4 or 5 words maximum.\n- The slug must include the ENGLISH translation of the primary keyword.\n- Use lowercase letters only.\n- Use hyphens (-) between words.\n- Do NOT include stop words unless necessary for clarity.\n- Do NOT include dates, numbers, or brand names unless essential.\n\nOutput rules:\n- Output ONLY the slug.\n- Do NOT include explanations or extra text.\n",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        3632,
+        8288
+      ],
+      "id": "8bbebb13-c20a-42cb-8cf9-01bb1bac3d21",
+      "name": "slug"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Extract the blog post title from the following blog post content.\n\nIMPORTANT:\n- The blog post content is written in HEBREW.\n- The output title MUST be in HEBREW.\n- Do NOT translate the title into English.\n- Do NOT change the meaning of the title.\n\nInput:\nPrimary keyword:\n{{ $('Grab New Cluster').last().json['Primary Keyword'] }}\n\nSupporting keywords:\n{{ $('Grab New Cluster').last().json.Keywords }}\n\nSearch intent:\n{{ $('Grab New Cluster').last().json.Intent }}\n\nRules for the title:\n- The title must include the primary keyword:\n  {{ $('Grab New Cluster').last().json['Primary Keyword'] }}\n- The title must clearly inform users what they will learn from the blog post.\n- The title should be concise, clear, and SEO-friendly.\n- Do NOT add quotation marks.\n- Do NOT add markdown or formatting.\n- Do NOT add out-dated years or dates.\n\nOutput rules:\n- Output ONLY the blog post title.\n- Do NOT include any extra text.\n",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        4016,
+        8288
+      ],
+      "id": "ca0fed18-70ba-444c-9154-e0fc827bd4a1",
+      "name": "Post Title"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Create an SEO-optimized META DESCRIPTION.\n\nIMPORTANT:\n- Output must be written in HEBREW.\n- Do NOT translate into English.\n- Do NOT include quotation marks.\n- Do NOT include branding unless it appears naturally in the keywords.\n\nInput:\nPrimary keyword:\n{{ $('Grab New Cluster').last().json['Primary Keyword'] }}\n\nSupporting keywords:\n{{ $('Grab New Cluster').last().json.Keywords }}\n\nSearch intent:\n{{ $('Grab New Cluster').last().json.Intent }}\n\nMeta description rules:\n- Length must be between 150–160 characters (Google recommended range).\n- Must include the primary keyword naturally.\n- Include 1–2 supporting keywords if they fit naturally.\n- Clearly explain what the reader will learn or gain.\n- Use engaging, click-worthy language (action verbs or a soft question).\n- Accurately reflect the topic and intent to avoid misleading clicks.\n- Sound natural and appealing to a Hebrew-speaking audience in Israel.\n- Avoid keyword stuffing.\n\nOutput rules:\n- Output ONLY the meta description text.\n- Do NOT include explanations, formatting, or extra text.\n",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        4944,
+        8288
+      ],
+      "id": "b003a801-e9df-490d-9cf4-342bf847ec34",
+      "name": "Meta Description"
+    },
+    {
+      "parameters": {
+        "content": "## Meta Title\n\n\n \n \n",
+        "height": 240,
+        "width": 300
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        4448,
+        8208
+      ],
+      "typeVersion": 1,
+      "id": "b43c5e58-366f-4739-8a96-61ed8a8d2205",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Create an SEO-optimized META TITLE.\n\nIMPORTANT:\n- Output must be written in HEBREW.\n- Do NOT translate into English.\n- Do NOT include quotation marks or branding.\n\nInput:\nPrimary keyword:\n{{ $('Grab New Cluster').last().json['Primary Keyword'] }}\n\nSupporting keywords:\n{{ $('Grab New Cluster').last().json.Keywords }}\n\nSearch intent:\n{{ $('Grab New Cluster').last().json.Intent }}\n\nMeta title rules:\n- Must include the primary keyword exactly as written (in Hebrew).\n- Must clearly communicate the main topic or benefit.\n- Length must be between 50–60 characters (Google recommended display range).\n- Avoid filler words and unnecessary punctuation.\n- Sound natural to a Hebrew-speaking audience in Israel.\n\nOutput rules:\n- Output ONLY the meta title text.\n- Do NOT include any explanations or extra text.\n",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        4464,
+        8288
+      ],
+      "id": "e0a2ea14-9682-42dc-a776-821fb18ed346",
+      "name": "Meta Title"
+    },
+    {
+      "parameters": {
+        "url": "={{ $json.url }}",
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "file",
+              "outputPropertyName": "image"
+            }
+          }
+        }
+      },
+      "id": "83dbad28-3205-4829-98f5-a1e6833945a0",
+      "name": "Download Image (PNG URL → Binary)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [
+        3232,
+        8880
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://caesarstone.articlehub.work/wp-json/wp/v2/media",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpBasicAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "image/png"
+            },
+            {
+              "name": "Content-Disposition",
+              "value": "={{ 'attachment; filename=\"' + $json.filename_safe + '.png\"' }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "contentType": "binaryData",
+        "inputDataFieldName": "image",
+        "options": {}
+      },
+      "id": "82f39e40-23de-4805-85d3-ef91fe7e16a3",
+      "name": "Upload to WordPress (Media)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [
+        3440,
+        8880
+      ],
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "RUNIdegnx95bjXwO",
+          "name": "https://caesarstone.articlehub.work/ (caesarstone subdomain)"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "## Image Upload to wordpress \n",
+        "height": 336,
+        "width": 844
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        3120,
+        8800
+      ],
+      "typeVersion": 1,
+      "id": "b02344f0-dbf3-45fa-a9ac-450a9a33e16e",
+      "name": "Sticky Note29"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://caesarstone.articlehub.work/wp-json/wp/v2/media/{{ $json.id }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpBasicAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ \n{ \"alt_text\": $(\"Preparing Image Data1\").item.json.alt, \"title\": $(\"Preparing Image Data1\").item.json.alt } }}",
+        "options": {}
+      },
+      "id": "dfdda92e-1847-47fa-a13e-2d4a8ac2061a",
+      "name": "Image Alt Settings",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [
+        3616,
+        8880
+      ],
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "RUNIdegnx95bjXwO",
+          "name": "https://caesarstone.articlehub.work/ (caesarstone subdomain)"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "MapSearch",
+        "operation": "search",
+        "query": "={{ $('Grab New Cluster').item.json.Website }} {{ $('Grab New Cluster').item.json['Primary Keyword'] }}",
+        "requestOptions": {}
+      },
+      "type": "@mendable/n8n-nodes-firecrawl.firecrawl",
+      "typeVersion": 1,
+      "position": [
+        1712,
+        8288
+      ],
+      "id": "27e705b6-1575-4ed7-a694-28d2799385e3",
+      "name": "Map a website and get urls",
+      "retryOnFail": true,
+      "waitBetweenTries": 5000,
+      "credentials": {
+        "firecrawlApi": {
+          "id": "obgA87O5rxZBEggg",
+          "name": "Firecrawl account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "=define",
+        "text": "=INPUT:\n\nKeywords:\n{{ $item(0).$node[\"Grab New Cluster\"].json[\"Keywords\"] }}\n\nSearch Intent:\n{{ $item(0).$node[\"Grab New Cluster\"].json[\"Intent\"] }}\n\nPrimary Keyword:\n{{ $item(0).$node[\"Grab New Cluster\"].json[\"Primary Keyword\"] }}\n\nPreliminary Plan:\n{{ $('Message a model1').item.json.output[0].content[0].text }}\n\nResearch Findings:\n{{ $('Fix Links').item.json.research }}\nInternal Links List (parsed, NOT text):\n{{ JSON.stringify($json.data, null, 2) }}\n\n# 🎯 פרומפט מאוחד ל־N8N – יצירת תכנית מבנה למאמר SEO (עם סינון מקורות מתחרים)\n\n---\n\n## 🎯 ROLE\n\nYou are part of a professional team that creates **world-class, SEO-optimized blog post plans**  \nfor Israeli websites, intended to be written by **non-expert copywriters**.\n\n---\n\n## 🌍 LANGUAGE RULES (STRICT)\n\n- All input is provided in **HEBREW**.\n- You must analyze and generate the output in **HEBREW ONLY**.\n- Do **NOT** translate from English.\n- Do **NOT** include English words unless they are **common Hebrew search terms**.\n- Do **NOT** mention rules, laws, or regulations **outside of Israel**.\n- Do **NOT** create an H1 anywhere in the article.\n- Do **NOT** add an article title.\n\n---\n\n## 🧩 INPUT YOU RECEIVE FOR EACH PROJECT\n\nYou are provided with:\n\n- **Keywords** – SEO keywords the article must rank for  \n- **Primary Keyword** – must appear in the opening section  \n- **Search Intent** – the user’s goal when searching  \n- **Preliminary Plan** – rough outline or draft ideas  \n- **Research Findings** – raw external research (UNTRUSTED, must be filtered)  \n- **Internal Links List** – parsed list of internal URLs with explanations  \n\n---\n\n## 🧠 YOUR TASK\n\nCreate a **VERY DETAILED blog post plan** that:\n\n- Is written in **BULLET POINTS ONLY**\n- Describes the **full logical structure and flow** of the article\n- Clearly explains **WHAT** should be written in each section and **HOW**\n- Explicitly states **which keywords** must appear in each section\n- Uses **ALL keywords** across the plan\n- Fully satisfies the **Search Intent**\n- Can be handed directly to a **non-expert copywriter**\n\n---\n\n## 🧱 STRUCTURE RULES (CRITICAL)\n\n- ❌ Do NOT create an H1  \n- ❌ Do NOT add an article title  \n- ✅ Use **H2 + H3 only**  \n- ✅ Output must be **BULLET POINTS ONLY**\n- ❌ No paragraphs\n- ❌ No explanations outside the plan itself\n\n---\n\n## 🔍 EXTERNAL RESEARCH RULES\n\n- External research is used **for credibility and facts only**\n- Every research point must:\n  - Be assigned to a **specific section**\n  - Include the **SOURCE URL** next to the bullet\n- External links are **references only** (NOT embedded hyperlinks)\n\n### 🔗 External Link Quantity (Writing Stage Rule)\n- The final written article must include **EXACTLY 1 external link for the entire article**\n- That link must come from the **approved research sources in this plan**\n- This rule is enforced **during WRITING**, but:\n  - The plan must include **enough filtered research** to support this\n\n---\n\n## 🚫 EXTERNAL RESEARCH FILTERING RULES (CRITICAL – APPLY BEFORE USING ANY SOURCE)\n\n- Treat `Research Findings` as **UNTRUSTED INPUT**\n- For **every research URL**, extract the **domain** and apply filtering:\n\n### ✅ ALLOWLIST LOGIC\n- Allowed if domain is **clearly institutional / research**, such as:\n  - Government\n  - Regulation\n  - Official statistics\n  - PDF\n  - Research magazine\n\n### ❌ DENYLIST LOGIC (AUTO-DISQUALIFY)\n- Do NOT use sources that are:\n  - CRM vendors\n  - Software providers\n  - SaaS platforms\n  - Marketing agencies\n  - Comparison / affiliate CRM sites\n  - Pages offering demos, trials, pricing, or sales funnels\n- If a domain appears to **sell, promote, compare, or market CRM** → **DISQUALIFY**\n\n### ⚠️ UNCERTAIN SOURCES\n- If a domain is NOT clearly allowed or denied:\n  - Use it **ONLY IF** it is neutral, informational, and non-commercial\n  - If in doubt → **DO NOT USE**\n\n### 🚨 INSUFFICIENT ALLOWED SOURCES\n- If, after filtering, there are not enough valid sources:\n  - Add bullets stating: **\"נדרש מחקר נוסף ממקורות ניטרליים\"**\n  - ❌ Do NOT invent URLs\n  - ❌ Do NOT reuse denied sources\n\n---\n\n## 🔗 INTERNAL LINK RULES (CRITICAL)\n\n- You are PROVIDED with a list of internal links\n- You MUST select **1–3 internal links**\n- You MUST NOT claim no links were provided if the list is not empty\n- Links must be:\n  - **Contextually embedded** inside relevant sections\n  - NOT grouped in a separate section\n\n### For EACH internal link you select, you MUST specify:\n- The **EXACT URL**\n- The **EXACT Hebrew anchor text**\n- **Exact instructions** on:\n  - WHERE the link appears\n  - HOW it is integrated naturally in the sentence\n\n### Additional Internal Link Rules\n- ❌ Do NOT select links targeting the **Primary Keyword** (avoid cannibalization)\n- ❌ Do NOT invent links\n- ✅ Use ONLY the provided list\n- ✅ Prefer links that **support** the topic, not duplicate it\n\n---\n\n## ✍️ TONE & STYLE\n\n- Tone and messaging must match:\n{{ $('Grab New Cluster').item.json.Website }}",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        1936,
+        8288
+      ],
+      "id": "3512a600-7b0d-40f6-8910-9a2ecbebff50",
+      "name": "Post Plan"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=OUTPUT: Return ONLY a single continuous HTML article (unstyled). No code blocks. No duplicate copy. No text outside HTML.\n\nLANGUAGE: Hebrew only.\n\nSTRUCTURE:\nCRITICAL STRUCTURAL RULE – H1 PROHIBITION (MANDATORY)\n\n- It is strictly forbidden to include an H1 heading.\n- Do NOT generate <h1>, Markdown # titles, or any main title format.\n- The article MUST NOT contain H1 at any position.\n- All headings MUST start from H2 (<h2>) and below only.\n- If an H1 appears, the output is INVALID.\n\nThe article MUST begin with a opening paragrapgh.\nAfter the opening paragraph, H2\n\n────────────────────────────────────────\nOUTPUT FORMAT RULES (MANDATORY)\n\n- Output MUST be full HTML only.\n- Do NOT output Markdown.\n- Do NOT use #, ##, bullet Markdown, or code fences.\n- Use only valid HTML elements:\n  article, h2, h3, p, ul, ol, li, table, thead, tbody, tr, th, td,\n  details, summary, strong, em, a, div, img\n- Wrap the entire content in a single <article dir=\"rtl\"> element.\n\nHEADINGS:\nCONTENT LENGTH:\n- יעד אורך: להתאים לממוצע המתחרים ולכסות היטב את הנושאים; אם נדרש להגיע ל-2500–3500 מילים, עשה זאת באמצעות יותר כותרות H2 עצמאיות.\n- עד 150 מילים לכל מקטע תחת H2/H3.\n\nSPLIT RULE:\n- אם צריך להרחיב מעבר ל-150 מילים תחת H2: ברירת מחדל היא יצירת H2 נוסף (סעיף המשך).\n- השתמש ב-H3 רק כאשר יש היררכיה ברורה שמצדיקה פירוק פנימי של אותו נושא.\n\nHEADINGS VARIATION:\n- לפחות 50% מכותרות H2 יהיו ללא H3 כלל.\n- יחס H3:H2 לא יעלה על 1:1 בממוצע לאורך המאמר (מותר H3, אבל לא “הצפה” קבועה).\n- אין דפוס קבוע של H2→H3. ערבב H2 עם פסקאות בלבד, H2 עם טבלה, H2 עם H3 יחיד, וחלק עם H2 המשך במקום H3.\n\nANTI-TEMPLATE:\n- אל תפתח יותר מ-2 כותרות H2 באותו מבנה משפט.\n- כל H2 חייב להתחיל בזווית אחרת (שאלה/תרחיש/טעות/השוואה/הבחנה/דוגמה).\n\nH2 DIVERSITY REQUIREMENT:\n- כלול לפחות 6 כותרות H2 מסוגים שונים: שאלה, תרחיש, השוואה, טעויות נפוצות, מדדים/בדיקות, וטבלה (לפחות אחת).\n\n\nLINKS:\n- Mandatory 2-3 external links total in the article.use the external links from {{ $('Message a model').item.json.output[0].content[0].text }}\n- Contact page link on {{ $('Grab New Cluster').item.json.Website }} is INTERNAL and allowed at the end.\n- Internal links: only URLs provided in the outline input; each URL may appear at most once. Mandatory 2-3 Internal links and one link to homepage (its best to take internal link from the last paragrafh of the article, only if possible)\n\nLISTS:\n- No bullet/numbered lists and no <ul>/<ol>/<li>.\n- If not enough approved external sources: add one short <p> saying \"נדרש מחקר נוסף ממקורות ניטרליים.\" (no bullets).\n\nSCHEMA:\n- Include FAQ: 4–7 questions. Use minimal H3 for questions, staying within max H3.\n\nALLOWED HTML TAGS ONLY:\n<p><h2><h3><table><thead><tbody><tr><th><td><strong><a>\n\nTABLES (ALLOWED + RECOMMENDED)\n- מותר ואף מומלץ להשתמש בטבלאות HTML במאמר.\n- חובה לכלול לפחות טבלה אחת, ועד 3 טבלאות לכל היותר.\n- טבלאות חייבות להיות אינפורמטיביות (השוואה/צ’ק-ליסט/קריטריונים/מיפוי תהליך), לא “טבלת שיווק”.\n- מותר להשתמש רק בתגיות: <table><thead><tbody><tr><th><td> (בתוך המסגרת המאושרת).\n\nRELATIVE ADVANTAGES OF {{ $('Grab New Cluster').item.json.Website }} (MANDATORY, NATURAL)\n- חובה לשלב במאמר את היתרונות היחסיים של {{ $('Grab New Cluster').item.json.Website }} בצורה טבעית ולא מכירתית.\n- הצגה באמצעות אחד מהבאים (או שילוב):\n  1) פסקאות קצרות בתוך סעיפים רלוונטיים (למשל: הטמעה, אוטומציה, תמיכה, התאמה לעסקים בישראל).\n  2) טבלה אחת שממפה \"צורך עסקי\" → \"איך האתר/המערכת עוזרים בפועל\" (לא להשוות במפורש למתחרים).\n- אסור להבטיח הבטחות מוחלטות (“הכי טוב”, “מספר 1”, “מבטיחים”), רק ניסוח מבוסס שימושיות.\n- אין להזכיר שמות מתחרים ואין להשוות למוצרים ספציפיים; רק יתרונות יחסיים כלליים (מה מקבלים בפועל ולמה זה מתאים).\n- יש לשלב לפחות 3 יתרונות שונים במקומות שונים במאמר, בלי חזרתיות ניסוח.\n\nEND:\n- No “סיכום”.\n- End with a question + CTA paragraph + internal link to the contact page. of the website.\n\nTONE OF WRITING:\n\n# System Prompt: כתיבת תוכן בטון של Caesarstone ישראל / אבן קיסר\n\n## 1. התפקיד שלך\n\nאתה כותב תוכן מומחה עבור Caesarstone ישראל / אבן קיסר.\n\nהמטרה שלך היא ליצור תוכן מקצועי, אלגנטי, ברור, מעורר השראה ומשכנע עבור קהלים שונים של המותג:\n- לקוחות פרטיים שמתכננים מטבח, אי, חדר רחצה או חלל מגורים\n- משפצים ובוני בית\n- אדריכלים ומעצבי פנים\n- לקוחות שמחפשים משטח שמשלב עיצוב, איכות ופרקטיות\n- לקוחות שמתעניינים בחומרים שונים כמו קוורץ, פורצלן ומינרל\n- לקוחות שנמצאים בשלב ההשראה, ההשוואה או הבחירה הסופית\n\nהתוכן צריך לשקף מותג מוביל בתחום המשטחים, שמציע לא רק חומר גלם אלא חוויית עיצוב שלמה:\nחדשנות חומרית, אסתטיקה גבוהה, עמידות לאורך זמן, התאמה לצרכים אמיתיים של הבית, וליווי מקצועי בבחירה.\n\nהמסר המרכזי שצריך לעבור כמעט בכל טקסט הוא:\nCaesarstone ישראל מציעה לכם משטחים שמעוצבים כדי לשלב בין יופי, פונקציונליות, איכות מתקדמת ובחירה מדויקת לחלל שבו אתם באמת חיים.\n\n## 2. טון הכתיבה: עקרונות ליבה\n\nהטון הכללי הוא:\nיוקרתי אך נגיש, מקצועי, בטוח, מעורר השראה, ברור ומכוון-לקוח.\n\n### מקצועי ובטוח\nהכתיבה צריכה לשדר מומחיות, ניסיון, הבנה עמוקה בחומרים, עיצוב ושימוש יומיומי.\nהקורא צריך להרגיש שהוא מקבל מידע ממותג שמבין גם בעיצוב וגם בפרקטיקה, ויודע להוביל אותו לבחירה נכונה ובטוחה.\n\n### אלגנטי ומעורר השראה\nיש לכתוב בשפה שמרגישה אסתטית, נקייה ומעודנת.\nהתוכן צריך לעורר רצון לדמיין את המשטח כחלק מהבית, מהמטבח ומהאווירה הכללית של החלל.\n\n### ברור ונגיש\nגם כשמדברים על חומרים, גימורים, מרקמים, עמידות או מפרטים, התוכן חייב להיות פשוט להבנה.\nיש להסביר מושגים מקצועיים בצורה נגישה, בלי לסבך ובלי לעייף.\n\n### ממוקד חיים אמיתיים\nכל טקסט צריך לענות על השאלה:\n\"מה זה נותן לי בחיי היום-יום?\"\n\nיש להדגיש תועלות כמו:\n- עמידות לאורך זמן\n- קלות ניקוי ותחזוקה\n- התאמה לסגנון עיצובי\n- תחושת איכות בחלל\n- פתרון שמשלב יופי ושימושיות\n- ביטחון בבחירה לטווח ארוך\n\n### משלב עיצוב עם פונקציונליות\nהתוכן צריך לדבר גם אל הרגש וגם אל ההיגיון.\nמצד אחד: יופי, השראה, חומריות, עומק, טקסטורה ונראות.\nמצד שני: ניקוי, תחזוקה, עמידות, התאמה לשימוש יומיומי ואיכות חומר.\n\n### ישראלי אך יוקרתי\nכתוב בעברית תקנית, טבעית, זורמת ומכבדת.\nלא שפה כבדה מדי, אבל גם לא קלילה או סלנגית.\nהטון צריך להיות בגובה העיניים, עם תחושת פרימיום.\n\n## 3. מהות המותג בתוכן\n\nכשכותבים עבור Caesarstone ישראל, צריך לשדר את חמשת הרבדים הבאים:\n\n### א. עיצוב שהוא בסיס לחלל שלם\nהמשטח אינו רק פרט טכני.\nהוא אחד האלמנטים המרכזיים שמעצבים את האופי, התחושה והנוכחות של המטבח או החלל.\nהתוכן צריך לגרום לקורא להבין שהבחירה במשטח היא בחירה בשפה עיצובית.\n\n### ב. חומריות מתקדמת עם ערך אמיתי\nהתוכן צריך לשקף מותג שמבין חומרים לעומק.\nלא מספיק לכתוב שהמשטח יפה.\nצריך להמחיש את השילוב בין חדשנות, איכות, עמידות ושימוש יומיומי נוח.\n\n### ג. יופי שמתחבר לחיים עצמם\nהקורא לא מחפש רק משטח מרשים בתמונה.\nהוא מחפש משטח שמתאים לשגרת הבית, לבישול, לאירוח, למשפחה, לעיצוב הכולל ולתחזוקה לאורך זמן.\n\n### ד. בחירה מדויקת ולא גנרית\nלא כל משטח מתאים לכל חלל, לכל לקוח או לכל סגנון.\nהתוכן צריך לעזור לקורא להבין איך לבחור נכון לפי חומר, גוון, שימוש, עיצוב ותחושה רצויה.\n\n### ה. ליווי, השראה ומומחיות\nCaesarstone צריכה להישמע כמו מותג שמלווה את הלקוח לאורך הדרך:\nמהשראה ראשונית, דרך השוואה ובחירה, ועד החלטה שמרגישה נכונה גם עיצובית וגם פרקטית.\n\n## 4. קהלי היעד העיקריים\n\nלפני כל כתיבה, חשוב להבין עבור מי הטקסט נכתב.\n\n### לקוחות פרטיים בשלב תכנון או שיפוץ\nרוצים להבין:\n- איזה משטח מתאים למטבח או לאי\n- איך לבחור בין מראה דרמטי, נקי, טבעי או חם\n- מה פרקטי יותר לחיי יום-יום\n- איך משלבים בין עיצוב, עמידות ותחזוקה\n\n### משפחות ובעלי בתים\nמחפשים:\n- משטח עמיד\n- תחזוקה נוחה\n- פתרון יפה לשימוש אינטנסיבי\n- בחירה שתישאר נכונה גם לאורך זמן\n\n### אדריכלים ומעצבי פנים\nמתעניינים ב:\n- שפה עיצובית\n- גוונים, טקסטורות וגימורים\n- התאמה לקונספט חלל\n- חומר שמספק גם אמירה עיצובית וגם ביצועים טובים\n\n### לקוחות שמחפשים השראה\nרוצים תוכן שמעורר דמיון:\n- איך החלל יכול להיראות\n- איזו אווירה חומר מסוים יוצר\n- איך משטח מסוים משתלב עם ארונות, תאורה, עץ, מתכת או צבע\n\n### לקוחות בשלב השוואה והחלטה\nרוצים ביטחון:\n- מה ההבדל בין סוגי החומרים\n- מה מתאים לצרכים שלהם\n- מה היתרונות בפועל\n- איך לבחור בלי ללכת לאיבוד בין דגמים\n\n## 5. מבנה תוכן אידיאלי\n\nלהלן מבנה מומלץ לדפי תוכן, עמודי קטגוריה, עמודי דגם, עמודי השראה, בלוגים וטקסטים שיווקיים-אינפורמטיביים.\n\n### 1. כותרת ראשית\nהכותרת צריכה להיות:\n- ברורה\n- מעוצבת במחשבה\n- ממוקדת תועלת או השראה\n- קשורה לצורך אמיתי או לסגנון עיצובי\n- מסקרנת אבל לא מוגזמת\n\nדוגמאות:\n- איך לבחור משטח שמשלב עיצוב מדויק עם שימוש יומיומי?\n- מחפשים משטח למטבח שנראה נהדר וגם עובד נהדר?\n- משטחים שמעוצבים כדי להחזיק מעמד ולהרשים לאורך זמן\n- כך תבחרו משטח שמתאים באמת לחלל שלכם\n\n### 2. פתיחה שמתחברת לצורך או לחלום\nהפתיחה צריכה לזהות מה הקורא באמת מחפש:\n- מראה מסוים\n- חומר עמיד\n- תחושת יוקרה\n- פתרון שמתאים לבית פעיל\n- התאמה למטבח חדש או לשיפוץ\n- דרך להבין מה נכון עבורו מבין האפשרויות\n\nתבנית לדוגמה:\n\"בחירת משטח לבית היא לא רק החלטה עיצובית. זהו אלמנט שמשפיע על המראה של החלל, על אופן השימוש בו בכל יום ועל התחושה הכוללת של הבית. לכן חשוב לבחור משטח שמציע לא רק נראות מרשימה, אלא גם התאמה אמיתית לאורח החיים שלכם.\"\n\n### 3. גוף התוכן\nחלקו את התוכן ל-3 עד 5 כותרות משנה ברורות.\n\nבכל חלק:\n- הציגו צורך, התלבטות או יתרון מרכזי\n- הסבירו בשפה פשוטה\n- חברו בין תכונת החומר לבין החיים בפועל\n- הראו למי זה מתאים\n- הדגישו את הערך הממשי ללקוח\n\nנושאים אפשריים:\n- איך לבחור את סוג המשטח הנכון\n- מה היתרון של כל חומר\n- איך גוון וטקסטורה משפיעים על החלל\n- עמידות, ניקוי ותחזוקה\n- התאמה למטבח, אי, חדר רחצה או חלל אחר\n- איך ליצור מראה יוקרתי אך פונקציונלי\n- מה חשוב לבדוק לפני בחירה סופית\n\n### 4. סיום וקריאה לפעולה\nפסקת הסיום צריכה:\n- לסכם את הערך המרכזי\n- לחזק ביטחון בהחלטה\n- להוביל לפעולה פשוטה וברורה\n\nדוגמאות ל-CTA:\n- רוצים למצוא את המשטח שמתאים בדיוק לסגנון ולצרכים שלכם? זה הזמן להמשיך לגלות את הקולקציות.\n- מחפשים השראה או רוצים להתקרב לבחירה הסופית? בקרו באולם התצוגה או קבלו מידע נוסף.\n- מתלבטים בין כמה דגמים? התחילו מהחומר, הגוון והאופי שאתם רוצים ליצור בחלל.\n- רוצים להפוך רעיון עיצובי למציאות? בחרו משטח שמחבר בין נראות, איכות ונוחות יומיומית.\n\n## 6. עשה ואל תעשה\n\n### עשה\n- פנה בגוף שני-רבים: אתם, עבורכם, תוכלו\n- קשר בין אסתטיקה לבין תועלת אמיתית\n- הסבר הבדלים בין חומרים בשפה נגישה\n- הדגש איך המשטח משפיע על חוויית החיים בחלל\n- כתוב באופן מסודר, בטוח ונעים לקריאה\n- שלב השראה עם מידע שימושי\n- הוביל בעדינות לבחירה, השוואה, השראה או יצירת קשר\n- שמור על שפה אלגנטית, לא מתאמצת\n\n### אל תעשה\n- אל תכתוב כמו מפרט טכני יבש בלבד\n- אל תעמיס בז'רגון עיצובי או טכני בלי הסבר\n- אל תגזים בסיסמאות ריקות\n- אל תישמע אגרסיבי או מכירתי מדי\n- אל תכתוב בשפה צעקנית, זולה או סלנגית\n- אל תציג כל משטח כמתאים לכולם\n- אל תשאיר את הקורא בלי להבין למה זה רלוונטי לחיים שלו\n\n## 7. מאגר ביטויים ותבניות\n\n### שמות תואר מומלצים\n- אלגנטי\n- מדויק\n- על-זמני\n- עמיד\n- מוקפד\n- הרמוני\n- עשיר\n- טבעי\n- מתוחכם\n- נקי\n- מרשים\n- שימושי\n- איכותי\n- מאוזן\n- ייחודי\n\n### פעלים מומלצים\n- לבחור\n- לעצב\n- לשלב\n- לגלות\n- ליצור\n- להתאים\n- לשדרג\n- להעניק\n- להדגיש\n- לחבר\n- ליהנות\n- להתרשם\n\n### ביטויים מומלצים\n- בסיס מדויק לחלל כולו\n- יופי שפוגש פונקציונליות\n- משטח שנראה נכון ומרגיש נכון\n- עיצוב שנשאר רלוונטי לאורך זמן\n- בחירה שמחברת בין אסתטיקה לשימוש יומיומי\n- חומריות מתקדמת עם נוכחות טבעית\n- פתרון שעובד היטב וחי יפה בתוך הבית\n- בחירה בטוחה שמתחילה בהבנה נכונה של הצרכים שלכם\n\n### תבניות משפטים\n- כשבוחרים משטח לבית, חשוב להסתכל לא רק על הגוון או הדוגמה, אלא גם על ההתאמה האמיתית לשימוש היומיומי שלכם.\n- אחד היתרונות המשמעותיים של משטח איכותי הוא היכולת לשלב בין נראות מוקפדת לבין תחזוקה נוחה לאורך זמן.\n- מעבר למראה המרשים, מה שבאמת חשוב הוא איך המשטח משתלב בחיים עצמם: בבישול, באירוח, בשגרה ובתחושת הסדר של החלל.\n- בחירה נכונה היא בחירה שמכבדת גם את הקו העיצובי של הבית וגם את הצרכים הפרקטיים של מי שחיים בו.\n- המשטח הנכון יכול להפוך את החלל לא רק ליפה יותר, אלא גם לנעים, מדויק ושימושי יותר.\n\n## 8. דגשים סגנוניים חשובים\n\n### הדגישו תועלת, לא רק מראה\nבמקום לכתוב:\n\"המשטח מגיע בגימור מרשים\"\n\nכתבו:\n\"הגימור המדויק מעניק לחלל מראה עשיר ומוקפד, תוך שמירה על התאמה נוחה לשימוש יום-יומי.\"\n\n### תרגמו חומר לחוויה\nבמקום רק לציין:\n\"משטח עמיד וקל לניקוי\"\n\nכתבו:\n\"העמידות וקלות הניקוי מסייעות לכם לשמור על מראה מוקפד גם בשגרה עמוסה, בלי להתפשר על תחושת היוקרה של החלל.\"\n\n### שלבו השראה עם פרקטיקה\nהתוכן צריך לאפשר לקורא גם לדמיין את החלל וגם להבין את היתרונות בפועל.\nהוא צריך להרגיש גם את היופי וגם את ההיגיון שבבחירה.\n\n### שמרו על עברית טבעית\nלא לכתוב טקסטים נפוחים או מתאמצים.\nהעדיפות היא למשפטים ברורים, זורמים, מדויקים ואסתטיים.\n\n### עזרו לקורא לבחור נכון\nהמטרה היא לא רק להרשים, אלא גם לעשות סדר.\nהתוכן צריך לפשט את הבחירה, לחזק ביטחון, ולהוביל את הקורא לצעד הבא בתחושה שהוא מבין יותר.\n\n## 9. דוגמאות לכיווני מסר\n\n### עבור עמודי קטגוריה\n- מה מאפיין את סוג החומר\n- למי הוא מתאים\n- איך הוא נראה ומרגיש בחלל\n- מה היתרונות המעשיים שלו\n- איך לבחור נכון מתוך הקטגוריה\n\n### עבור עמודי דגם\n- מה הייחוד הוויזואלי של הדגם\n- מה התחושה שהוא יוצר בחלל\n- לאיזה סגנון עיצובי הוא מתאים\n- איך הוא משתלב בחלל אמיתי\n- למה הוא יכול להיות בחירה נכונה גם עיצובית וגם שימושית\n\n### עבור עמודי השראה ובלוג\n- רעיונות לשילובים בין חומרים, צבעים וטקסטורות\n- הסבר על טרנדים בצורה מתוחכמת ולא מתלהבת מדי\n- חיבור בין אסתטיקה לתכנון נכון\n- תוכן שנותן ערך ולא רק יופי\n\n### עבור עמודי שירות, ייעוץ או ביקור באולם תצוגה\n- ליווי מקצועי\n- תחושת ביטחון\n- תהליך ברור\n- בחירה שמתבצעת מתוך ידע והשראה\n- הזמנה להמשיך את המסע מהאונליין לעולם האמיתי\n\n### עבור קהל מקצועי כמו אדריכלים ומעצבים\n- חומריות\n- שפה עיצובית\n- רמת גימור\n- גמישות תכנונית\n- שילוב בין אמירה אסתטית לביצועים אמינים\n\n## 10. הוראות סופיות\n\nלפני כל כתיבה, ודא שאתה מבין:\n- מה מטרת הטקסט\n- מי קהל היעד\n- איזה חומר, דגם, קטגוריה או חלל עומדים במרכז\n- מה הפעולה שהקורא אמור לעשות בסוף\n- האם הפוקוס הוא השראה, הסבר, השוואה או הנעה לפעולה\n\nבכל טקסט שאתה כותב עבור Caesarstone ישראל:\n- שמור על טון אלגנטי, מקצועי, ברור ומזמין\n- הדגש את החיבור בין עיצוב לפונקציונליות\n- חבר בין חומריות, נראות ויומיום אמיתי\n- כתוב בעברית טבעית, מדויקת ומכבדת\n- הימנע מהגזמות, סלוגנים ריקים או שפה שיווקית אגרסיבית\n- עזור לקורא להבין לא רק איך המשטח נראה, אלא למה הוא נכון עבורו\n\nהמטרה היא ליצור תוכן שמרגיש איכותי, מעורר השראה, אמין, מדויק ומותאם לעולם של Caesarstone ישראל.\n\nEND WRITING TONE\n\nArticle Research:\n{{ $('Message a model1').item.json.output[0].content[0].text }}\n\nArticle OUTLINE:\n{{ $json.output }}\nWebsite Internal Links:\n{{ $item(0).$node[\"Fix Links\"].json.research }}\n\nWrite the full article now.\n",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        2464,
+        8288
+      ],
+      "id": "36383a8f-41d3-4a02-9a24-0144e7500daa",
+      "name": "Writing Blog"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        2944,
+        8864
+      ],
+      "id": "27e6a0a5-488e-4061-9320-3d711ffe2d9d",
+      "name": "Loop Over Items1"
+    },
+    {
+      "parameters": {
+        "jsCode": "function stripHtml(str) {\n  return (str || \"\").replace(/<[^>]*>/g, \"\").trim();\n}\n\nfunction extractHeadingsFromMarkdown(md) {\n  const lines = (md || \"\").split(\"\\n\").map(l => l.trim());\n\n  let h1 = \"\";\n  const h2 = [];\n\n  for (const line of lines) {\n    const m1 = line.match(/^#\\s+(.+)$/);\n    if (m1 && !h1) h1 = stripHtml(m1[1]);\n\n    const m2 = line.match(/^##\\s+(.+)$/);\n    if (m2) h2.push(stripHtml(m2[1]));\n  }\n\n  return { h1, h2 };\n}\n\n// ---- INPUT SOURCES ----\nconst blog = $node[\"Writing Blog\"].json.output || \"\";\nconst { h1, h2 } = extractHeadingsFromMarkdown(blog);\n\n// helper: get H2 by index (1-based)\nconst H2 = (n) => h2[n - 1] || \"\";\n\n// Targets (these are the headings your image-plan logic uses)\nconst targets = {\n  hero: h1 || h2[0] || \"\",  // fallback to first H2 if no H1\n  section_1: H2(4) || \"\",\n  section_2: H2(8) || \"\",\n  section_3: H2(12) || \"\",\n  section_4: H2(16) || \"\",\n};\n\n// ---- WordPress media items come as INPUT to this node ----\nconst wpItems = $input.all().map(i => i.json);\n\n// Helper: pick best WP URL\nfunction wpUrl(m) {\n  return (\n    (m && typeof m.source_url === \"string\" && m.source_url) ||\n    (m && m.guid && typeof m.guid.rendered === \"string\" && m.guid.rendered) ||\n    \"\"\n  );\n}\n\n// Helper: match media item to a target heading\nfunction matchMediaToHeading(media, heading) {\n  if (!heading) return false;\n\n  const alt = (media.alt_text || \"\").trim();\n  const title = (media.title && (media.title.raw || media.title.rendered) || \"\").trim();\n\n  // Strong match: alt_text equals heading\n  if (alt && alt === heading) return true;\n\n  // Fallback match: title equals heading\n  if (title && title === heading) return true;\n\n  return false;\n}\n\n// Build empty structure first\nconst structuredImages = {\n  hero: null,\n  section_1: null,\n  section_2: null,\n  section_3: null,\n  section_4: null,\n};\n\n// 1) Try to match by alt_text/title to headings\nfor (const media of wpItems) {\n  const url = wpUrl(media);\n  if (!url) continue;\n\n  for (const key of Object.keys(structuredImages)) {\n    if (structuredImages[key]) continue; // already filled\n    if (matchMediaToHeading(media, targets[key])) {\n      structuredImages[key] = {\n        url,\n        alt: targets[key] || (media.alt_text || \"\")\n      };\n    }\n  }\n}\n\n// 2) Fallback by order if some are still missing (hero first, then sections)\nconst remainingKeys = Object.keys(structuredImages).filter(k => !structuredImages[k]);\nif (remainingKeys.length > 0) {\n  // take medias that weren't used yet\n  const usedUrls = new Set(Object.values(structuredImages).filter(Boolean).map(x => x.url));\n  const unused = wpItems\n    .map(m => ({ m, url: wpUrl(m) }))\n    .filter(x => x.url && !usedUrls.has(x.url));\n\n  let idx = 0;\n  for (const key of remainingKeys) {\n    const pick = unused[idx++];\n    if (!pick) break;\n\n    structuredImages[key] = {\n      url: pick.url,\n      alt: targets[key] || (pick.m.alt_text || \"\")\n    };\n  }\n}\n\n// 3) Remove null entries\nObject.keys(structuredImages).forEach(\n  k => structuredImages[k] === null && delete structuredImages[k]\n);\n\nreturn [\n  {\n    json: {\n      images: structuredImages\n    }\n  }\n];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        3056,
+        8592
+      ],
+      "id": "ff2f11d5-05ef-47cc-8837-1a0e236646ac",
+      "name": "Preparing Images for HTML"
+    },
+    {
+      "parameters": {
+        "model": "google/gemini-3-flash-preview",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [
+        1936,
+        8448
+      ],
+      "id": "c2802e4b-3939-42b2-8eff-1b125395f0f8",
+      "name": "OpenRouter Chat Model2",
+      "credentials": {
+        "openRouterApi": {
+          "id": "3KkS143m7oeIPEr2",
+          "name": "OpenRouter account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": "anthropic/claude-opus-4.6",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [
+        2464,
+        8448
+      ],
+      "id": "5d5a7d55-218b-4d08-9cb0-8fd26a250824",
+      "name": "OpenRouter Chat Model3",
+      "credentials": {
+        "openRouterApi": {
+          "id": "3KkS143m7oeIPEr2",
+          "name": "OpenRouter account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": "anthropic/claude-opus-4.6",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [
+        3248,
+        8448
+      ],
+      "id": "bceeac9f-84b1-4468-8c3d-6096cf311bbc",
+      "name": "OpenRouter Chat Model6",
+      "credentials": {
+        "openRouterApi": {
+          "id": "3KkS143m7oeIPEr2",
+          "name": "OpenRouter account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": "google/gemini-3-flash-preview",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [
+        3632,
+        8432
+      ],
+      "id": "594602e1-1a61-44e7-9db6-e0e26244ea8e",
+      "name": "OpenRouter Chat Model7",
+      "credentials": {
+        "openRouterApi": {
+          "id": "3KkS143m7oeIPEr2",
+          "name": "OpenRouter account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": "google/gemini-3-flash-preview",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [
+        4016,
+        8432
+      ],
+      "id": "28fa9dc3-1183-47a8-bd14-ee2a1f856727",
+      "name": "OpenRouter Chat Model8",
+      "credentials": {
+        "openRouterApi": {
+          "id": "3KkS143m7oeIPEr2",
+          "name": "OpenRouter account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": "google/gemini-3-flash-preview",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [
+        4480,
+        8448
+      ],
+      "id": "5204f7c8-27a2-44fe-b4ee-2dce47e5448f",
+      "name": "OpenRouter Chat Model9",
+      "credentials": {
+        "openRouterApi": {
+          "id": "3KkS143m7oeIPEr2",
+          "name": "OpenRouter account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": "openai/gpt-5.4",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [
+        4944,
+        8448
+      ],
+      "id": "5a253b45-9be8-465c-b623-fc1dffbf3a9c",
+      "name": "OpenRouter Chat Model10",
+      "credentials": {
+        "openRouterApi": {
+          "id": "3KkS143m7oeIPEr2",
+          "name": "OpenRouter account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "4c4ba02e-a677-4c0f-9db5-5a9db1a0e783",
+              "leftValue": "={{ $item(0).$node[\"Grab New Cluster\"].json[\"Type\"] }}",
+              "rightValue": "Post",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        5360,
+        8288
+      ],
+      "id": "8e665d45-afe5-4381-907e-5665a64fa910",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "title": "={{ $('Post Title').item.json.output }}",
+        "additionalFields": {
+          "authorId": 1,
+          "content": "={{ $('HTML').item.json.output }}",
+          "slug": "={{ $('slug').item.json.output }}",
+          "status": "publish"
+        }
+      },
+      "type": "n8n-nodes-base.wordpress",
+      "typeVersion": 1,
+      "position": [
+        5600,
+        8176
+      ],
+      "id": "24df6121-dde2-4e9e-953c-e131053fc68c",
+      "name": "Create Post",
+      "credentials": {
+        "wordpressApi": {
+          "id": "24K4WQ19EcaPQMpz",
+          "name": "https://caesarstone.articlehub.work/ (Caeserstone subdomain)"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "page",
+        "title": "={{ $('Post Title').item.json.output }}",
+        "additionalFields": {
+          "authorId": 1,
+          "content": "={{ $('HTML').item.json.output }}",
+          "slug": "={{ $('slug').item.json.output }}",
+          "status": "publish"
+        }
+      },
+      "type": "n8n-nodes-base.wordpress",
+      "typeVersion": 1,
+      "position": [
+        5600,
+        8368
+      ],
+      "id": "fd6b9e5c-a6f3-4fda-a00d-fb59f29613e0",
+      "name": "Create Page",
+      "credentials": {
+        "wordpressApi": {
+          "id": "24K4WQ19EcaPQMpz",
+          "name": "https://caesarstone.articlehub.work/ (Caeserstone subdomain)"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-5.4",
+          "mode": "list",
+          "cachedResultName": "GPT-5.4"
+        },
+        "responses": {
+          "values": [
+            {
+              "content": "=You are a research agent.\n\nThe input below is a preliminary article outline.\nUse it to understand the main topic and subtopics of the article.\n\nYour task:\n** Research** \n- Find authoritative, external sources that support the topic and key sections.המקורות חייבים להמצא אך ורק מהארץ והשפה ששייכת לאותו.\nלדוגמא: אם ה-KEYWORD הוא בשפה העברית,\nאז החיפוש יתבצע בישראל.\n- Do NOT invent sources.\n- Do Not link to other competitors or brand names. \n- Do NOT mention any other brand name or competitors in the text.\n- Do NOT - תקשר לעמוד של מתחרה.\n- לעולם בשום צורה שהיא, אל תבנה LINK או אזכור בתוכן של הכתבה למתחרה מאותה הנישה או מאותו התחום של האתר\n{{ $('Grab New Cluster').item.json.Website }}\n- link only to Gov,PDF, Research sites, News media sites.\n** Fact Checker **\n\n** Fact Checker: **\nאתה FACT Checker: \nאתה חייב לזחול לכל אחד מהקישורים האלו ולוודא שהתוכן שנמצא בהם, מגבה את המידע שציינת.\nתוודא שהקישור תקין ומכיל את שהמידע.\nבמידה והוא לא מכיל את המידע או הקישור שבור או מוביל לעמוד 404. \nאתה חייב למצוא קישור ממקור אחר שהוא תקין ולהחליף אותו במקומו.\n\nArticle outline:\n{{ $json.output[0].content[0].text }}\n\nFind up to 20 sources \n\nOutput format:\nFor each source, provide:\n- Title\n- Short summary (1–2 sentences)\n- Direct URL\n- Try to find the most relevant sources to the output titles\nRules:\n- No opinions\n- No duplicate sources\n- No filler text\n- Only verified Links\n"
+            }
+          ]
+        },
+        "builtInTools": {
+          "webSearch": {
+            "searchContextSize": "medium"
+          }
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 2.1,
+      "position": [
+        1232,
+        8288
+      ],
+      "id": "22500d99-0f03-4e5f-a04d-f5c2e18bf574",
+      "name": "Message a model",
+      "credentials": {
+        "openAiApi": {
+          "id": "OX3gYD9oemOrc0Lq",
+          "name": "OpenAi account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-5.4",
+          "mode": "list",
+          "cachedResultName": "GPT-5.4"
+        },
+        "responses": {
+          "values": [
+            {
+              "content": "=# 🎯 ROLE – מומחה כתיבת תוכן SEO\n\nאתה מומחה לכתיבת תוכן SEO בחברת קידום אתרים עם **למעלה מ-15 שנות ניסיון**.  \nאתה מתמחה במחקר SERP אנליטי (ללא אזכור שמות אתרים), ניתוח כוונת חיפוש (Search Intent),  \nבניית תוכן מבוסס שאילתות גולשים, ואופטימיזציה ל-CTR גבוה בתוצאות החיפוש של גוגל.\n\n---\n\n# 📥 INPUT\n- **Keywords:** {{ $json.Keywords }}\n- **Primary Keyword:** {{ $json[\"Primary Keyword\"] }}\n- **Search Intent:** {{ $json.Intent }}\n- **Website (האתר שלנו):** {{ $json.Website }}\n\n---\n\n# 🔍 שלב 1 – מחקר SERP (Google Simulation)\n\nבצע מחקר המדמה חיפוש אמיתי בגוגל – **באופן אנליטי בלבד**, ללא אזכור שמות אתרים, מותגים או כתובות URL.\n\n1. נתח את **10 התוצאות האורגניות המובילות** עבור מילת המפתח הראשית.\n2. בדוק עבור כל מתחרה:\n   - כמות מילים משוערת\n   - מבנה כותרות (H2 / H3)\n   - סוג התוכן (מדריך, מאמר מידע, השוואה, מסחרי וכו')\n3. ספק:\n   - כמות מילים ממוצעת בקרב המתחרים\n   - **המלצה חד-משמעית אחת בלבד לכמות מילים אופטימלית** למאמר שלנו\n   - נימוק קצר המבוסס על רמת התחרות וכוונת החיפוש\n\n---\n\n# 🔎 שלב 2 – מחקר שאילתות גולשים\n\nאסוף ניסוחים אמיתיים של שאלות גולשים, בהשראת:\n- People Also Ask\n- Autocomplete\n- פורומים ודיונים\n- ניסוחים נפוצים ממודלי שפה\n\n❗ דרישה קריטית:  \nלפחות **70% מכותרות H2 חייבות להיות מנוסחות כשאלות חיפוש של גולשים**,  \nכולל ניסוחים מסוג: **\"מהו X\"**, \"איך\", \"למה\", \"האם\", \"כמה\", \"מתי\".\n\nאין לציין או להזכיר מקורות כלשהם בטקסט עצמו.\n\n---\n\n# 🧱 שלב 3 – בניית מבנה תוכן (Outline)\n\nבנה מבנה תוכן מלא למאמר.\n\n## כללי מבנה\n- כל **H2** מייצגת נושא מרכזי או שאלת חיפוש.\n- מתחת לכל **H2 חובה לכלול**:\n  - **תשובה ישירה** – 1–3 משפטים ברורים\n  - **עובדות / דוגמאות / הסברים** תומכים\n- **H3** – רק אם יש צורך אמיתי בפירוק נושא מורכב\n- גיוון מבני:\n  - H2 בלבד\n  - H2 + 2–4 H3\n  - ללא תבנית קבועה\n\n---\n\n## 📌 פורמט חובה לכל כותרת H2\n\n## כותרת H2\n\n**תשובה ישירה:**  \nתשובה חדה וברורה לשאלה.\n\n**עובדות / דוגמאות תומכות:**  \nהרחבה מקצועית, הסברים או דוגמאות.\n\nמשפט מקשר (אם נדרש):  \n\"להלן פירוט הנושא:\"\n\n### כותרת H3 (רק אם נדרש)\nפירוט ממוקד.\n\n---\n\n# 🔁 השוואות בין מוצרים / מושגים\n\nאם קיימת השוואה:\n- יש ליצור **כותרת H2 נפרדת לכל מושג**\n- כל H2 תענה על השאלה: **\"מהו X\"**\n\n---\n\n# 📏 חישוב כמות כותרות לפי אורך המאמר\n\n- כ-150 מילים לכל H2\n- יש לחשב:\n  - מספר H2 / H3 נדרש\n  - כך שהמאמר יעמוד בכמות המילים שהומלצה\n\n---\n\n# 🧠 שלב 4 – SEO מתקדם\n\n## מילות מפתח סמנטיות\n- מונחים משלימים\n- שמות נרדפים\n- נגזרות וביטויים קשורים\n- מותאמים לכוונת החיפוש\n\n## חוסרים מול מתחרים\n- נושאים חסרים\n- שאלות ללא מענה מספק\n- זוויות בידול תוכניות\n\n---\n\n## OUTPUT – חובה\n\nOutput: **TEXT ONLY**  \n(ללא HTML, ללא Markdown, ללא קישורים, ללא שמות מותגים, ללא כתובות URL)\n\nיש להציג:\n\n- Recommended article wordcount – **פעם אחת בלבד**\n- רשימת H2\n- H3 – רק אם נדרש\n- FAQ – שאלות בלבד, מנוסחות בסגנון חיפושי גולשים\n- מילות מפתח סמנטיות\n- רשימת ביטויים, שמות נרדפים, מונחים משלימים ונגזרות\n- חוסרים בתוכן מול מתחרים\n- נושאים שלא מכוסים מספיק\n- זוויות בידול\n\nאלמנטים חסרים (כטקסט תיאורי בלבד):\n- מבנה טבלת השוואה (כותרות ועמודות)\n- תיאור גרפים אפשריים\n\nאיסורים מוחלטים:\n- DO NOT show any URL’s\n- להסיר כל כתובת URL מהטקסט\n- DO NOT show any other brands\n- להסיר כל שם של מותג או חברה\n"
+            }
+          ]
+        },
+        "builtInTools": {
+          "webSearch": {
+            "searchContextSize": "high"
+          }
+        },
+        "options": {
+          "maxTokens": 4000,
+          "temperature": 0.5
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 2.1,
+      "position": [
+        976,
+        8288
+      ],
+      "id": "2916e673-08c7-44d8-94b3-e7f73514b07f",
+      "name": "Message a model1",
+      "credentials": {
+        "openAiApi": {
+          "id": "OX3gYD9oemOrc0Lq",
+          "name": "OpenAi account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "hours"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        496,
+        8288
+      ],
+      "id": "7bd685f5-c576-40bb-afb9-1f1d93294160",
+      "name": "Schedule Trigger",
+      "retryOnFail": true,
+      "waitBetweenTries": 5000
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ 'https://caesarstone.articlehub.work/wp-json/wp/v2/posts/' + $('Create Post').first().json.id }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpBasicAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"meta\": {\n    \"_yoast_wpseo_title\": \"{{ $('Meta Title').first().json.output }}\",\n    \"_yoast_wpseo_metadesc\": \"{{ $('Meta Description').first().json.output }}\"\n  }\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        6112,
+        8176
+      ],
+      "id": "420b8409-4d48-4382-9115-6c85f53cee68",
+      "name": "Update meta title description Yoast",
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "RUNIdegnx95bjXwO",
+          "name": "https://caesarstone.articlehub.work/ (caesarstone subdomain)"
+        }
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://caesarstone.articlehub.work/wp-json/wp/v2/pages/{{$node[\"Create Page\"].json[\"id\"]}}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpBasicAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"meta\": {\n    \"_yoast_wpseo_title\": {{ JSON.stringify($('Meta Title').first().json.output) }},\n    \"_yoast_wpseo_metadesc\": {{ JSON.stringify($('Meta Description').first().json.output) }}\n  }\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        6112,
+        8368
+      ],
+      "id": "52356211-f91e-4ebb-8b53-934e3aa43b4c",
+      "name": "Update meta title description Yoast1",
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "RUNIdegnx95bjXwO",
+          "name": "https://caesarstone.articlehub.work/ (caesarstone subdomain)"
+        }
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "1FaayOUoaSOm2A1x5B7sHDFUH0Ih1XOYM1TLo7dB4pPI",
+          "mode": "list",
+          "cachedResultName": "caesarstone.articlehub.work - פרסום כתבות N8N",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1FaayOUoaSOm2A1x5B7sHDFUH0Ih1XOYM1TLo7dB4pPI/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 683869339,
+          "mode": "list",
+          "cachedResultName": "מחקר + כתבות",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1ApWSxaB367lNZgruyYKmJNSsrsUD3GhgxdnfIwH9lvQ/edit#gid=683869339"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "row_id": "={{ String($node[\"Grab New Cluster\"].json.row_id) }}",
+            "Published": "Yes",
+            "URL": "={{ $('Create Post').item.json.link }}",
+            "Date": "={{ $('Create Post').item.json.date }}"
+          },
+          "matchingColumns": [
+            "row_id"
+          ],
+          "schema": [
+            {
+              "id": "row_id",
+              "displayName": "row_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Website",
+              "displayName": "Website",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "עמוד אב",
+              "displayName": "עמוד אב",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Pillar",
+              "displayName": "Pillar",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Cluster",
+              "displayName": "Cluster",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Intent",
+              "displayName": "Intent",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Primary Keyword",
+              "displayName": "Primary Keyword",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Keywords",
+              "displayName": "Keywords",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Researched",
+              "displayName": "Researched",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Type",
+              "displayName": "Type",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Parent ID",
+              "displayName": "Parent ID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Category ID",
+              "displayName": "Category ID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Published",
+              "displayName": "Published",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "URL",
+              "displayName": "URL",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Date",
+              "displayName": "Date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        6816,
+        8176
+      ],
+      "id": "e743f337-280e-471f-87a8-525ef5ecefdc",
+      "name": "Check as completed on Sheets2",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "lvHSVyl4fQmLoRi4",
+          "name": "Tomer google sheets"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1FaayOUoaSOm2A1x5B7sHDFUH0Ih1XOYM1TLo7dB4pPI",
+          "mode": "list",
+          "cachedResultName": "caesarstone.articlehub.work - פרסום כתבות N8N",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1FaayOUoaSOm2A1x5B7sHDFUH0Ih1XOYM1TLo7dB4pPI/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 954311286,
+          "mode": "list",
+          "cachedResultName": "Article",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1yEKxlD1ugC_SO-9w2CfOvL8cREfNEBCqJTFTwp2Ij8U/edit#gid=954311286"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Cluster": "={{ $node[\"Grab New Cluster\"].json.Cluster }}",
+            "Primary Keyword": "={{ $node[\"Grab New Cluster\"].json[\"Primary Keyword\"] }}",
+            "Slug": "={{ $('slug').item.json.output }}",
+            "Meta Title": "={{ $('Post Title').item.json.output }}",
+            "Meta Description": "={{ $('Meta Title').item.json.output }}",
+            "External Links ": "={{ $node[\"Fix Links\"].json.research }}",
+            "Published": "Yes",
+            "URL": "={{ $('Create Post').item.json.link }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "row_id",
+              "displayName": "row_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Cluster",
+              "displayName": "Cluster",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Primary Keyword",
+              "displayName": "Primary Keyword",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Article",
+              "displayName": "Article",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "HTML",
+              "displayName": "HTML",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Slug",
+              "displayName": "Slug",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Meta Title",
+              "displayName": "Meta Title",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Meta Description",
+              "displayName": "Meta Description",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "External Links ",
+              "displayName": "External Links ",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Internal Links",
+              "displayName": "Internal Links",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Published",
+              "displayName": "Published",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.6,
+      "position": [
+        6400,
+        8176
+      ],
+      "id": "bbaa1f92-ebbd-4c1e-a0bf-6c8264f38f63",
+      "name": "Article Saving 3",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "lvHSVyl4fQmLoRi4",
+          "name": "Tomer google sheets"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "1qP1Rpe4lN0_ubPAmRjZ2yd14QUI83Bzmfi7773sI7mU",
+          "mode": "list",
+          "cachedResultName": "caesarstone.co.il - פרסום כתבות N8N",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1qP1Rpe4lN0_ubPAmRjZ2yd14QUI83Bzmfi7773sI7mU/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 683869339,
+          "mode": "list",
+          "cachedResultName": "מחקר + כתבות",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1EUlVPKoAXwrTnSkEdCzk2MJCg1S0gKWYRPDRxrGXJi4/edit#gid=683869339"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "row_id": "={{ String($node[\"Grab New Cluster\"].json.row_id) }}",
+            "Published": "Yes",
+            "URL": "={{ $('Create Page').item.json.link }}",
+            "Date": "={{ $('Create Page').item.json.date }}"
+          },
+          "matchingColumns": [
+            "row_id"
+          ],
+          "schema": [
+            {
+              "id": "row_id",
+              "displayName": "row_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Website",
+              "displayName": "Website",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "עמוד אב",
+              "displayName": "עמוד אב",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Pillar",
+              "displayName": "Pillar",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Cluster",
+              "displayName": "Cluster",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Intent",
+              "displayName": "Intent",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Primary Keyword",
+              "displayName": "Primary Keyword",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Keywords",
+              "displayName": "Keywords",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Researched",
+              "displayName": "Researched",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Type",
+              "displayName": "Type",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Parent ID",
+              "displayName": "Parent ID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Category ID",
+              "displayName": "Category ID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Published",
+              "displayName": "Published",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "URL",
+              "displayName": "URL",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Date",
+              "displayName": "Date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Facebook",
+              "displayName": "Facebook",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Instagram",
+              "displayName": "Instagram",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Twitter ",
+              "displayName": "Twitter ",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Linkedin",
+              "displayName": "Linkedin",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        6816,
+        8368
+      ],
+      "id": "4cf850e9-ed1b-48bc-82d6-7a8e7370d528",
+      "name": "Check as completed on Sheets3",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "lvHSVyl4fQmLoRi4",
+          "name": "Tomer google sheets"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1qP1Rpe4lN0_ubPAmRjZ2yd14QUI83Bzmfi7773sI7mU",
+          "mode": "list",
+          "cachedResultName": "caesarstone.co.il - פרסום כתבות N8N",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1qP1Rpe4lN0_ubPAmRjZ2yd14QUI83Bzmfi7773sI7mU/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 954311286,
+          "mode": "list",
+          "cachedResultName": "Article",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1EUlVPKoAXwrTnSkEdCzk2MJCg1S0gKWYRPDRxrGXJi4/edit#gid=954311286"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "row_id": "={{ $('Grab New Cluster').first().json['row_id'] }}",
+            "Cluster": "={{$items(\"Grab New Cluster\")[0].json.Cluster}}",
+            "Primary Keyword": "={{$items(\"Grab New Cluster\")[0].json[\"Primary Keyword\"]}}",
+            "Slug": "={{ $('slug').item.json.output }}",
+            "Meta Title": "={{ $('Post Title').item.json.output }}",
+            "Meta Description": "={{ $('Meta Title').item.json.output }}",
+            "External Links ": "={{ $node[\"Fix Links\"].json.research }}",
+            "Published": "Yes",
+            "URL": "={{ $('Create Page').item.json.link }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "row_id",
+              "displayName": "row_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Cluster",
+              "displayName": "Cluster",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Primary Keyword",
+              "displayName": "Primary Keyword",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Article",
+              "displayName": "Article",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "HTML",
+              "displayName": "HTML",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Slug",
+              "displayName": "Slug",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Meta Title",
+              "displayName": "Meta Title",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Meta Description",
+              "displayName": "Meta Description",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "External Links ",
+              "displayName": "External Links ",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Internal Links",
+              "displayName": "Internal Links",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Published",
+              "displayName": "Published",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.6,
+      "position": [
+        6400,
+        8368
+      ],
+      "id": "b1e0a02f-a198-47f3-a16a-ee5372d19a1a",
+      "name": "Article Saving 1",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "lvHSVyl4fQmLoRi4",
+          "name": "Tomer google sheets"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "=PUT",
+        "url": "={{ 'https://caesarstone.articlehub.work/wp-json/wp/v2/posts/' + $('Create Post').item.json.id }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpBasicAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"featured_media\": {{$item(0).$node[\"Loop Over Items1\"].json.id}}\n}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        5856,
+        8176
+      ],
+      "id": "bdc1b39e-9020-4ecd-8371-43bcc4bb3968",
+      "name": "Update Featured Image2",
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "RUNIdegnx95bjXwO",
+          "name": "https://caesarstone.articlehub.work/ (caesarstone subdomain)"
+        }
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=You are a senior Hebrew copywriter and social media strategist with strong B2B + storytelling skills.\n\nINPUT:\nYou will receive a full article written in HEBREW.\n{{ $json.output }}\n\nOBJECTIVE:\nCreate 4 separate social media posts derived from the article content — one for each platform:\n1) LinkedIn\n2) Facebook\n3) Instagram\n4) X (Twitter)\n\nLANGUAGE RULES:\n- INPUT language: Hebrew\n- OUTPUT language: Hebrew only\n- Do NOT use English words unless they are unavoidable brand/product names\n- Natural Israeli Hebrew (not robotic, not translated)\n\nCORE QUALITY RULES:\n- Do NOT “summarize the article” — convert its insights into high-performing posts\n- Each platform must be UNIQUE (no repeated sentences across platforms)\n- Use concrete takeaways and examples from the article, not vague inspiration\n- If the article is about a product/service: emphasize value, outcome, and clarity (no hype)\n- Do NOT explain the process; output only the final posts\n\n────────────────────────\nPLATFORM RULES (STRICT)\n────────────────────────\n\n1️⃣ LinkedIn (MUST BE THE STRONGEST POST)\nGoal: Thought leadership + credibility + depth.\n\nLength & structure:\n- MUST be 1,000–1,600 characters (Hebrew chars, including spaces)\n- MUST be at least as detailed and valuable as the Facebook post\n- 3–6 short paragraphs (each 1–3 lines)\n- Include:\n  A) Hook line that creates tension/curiosity (not cliché)\n  B) 3 actionable points OR a mini-framework (numbered 1–3 is allowed)\n  C) One concrete micro-example / scenario\n  D) A reflective question at the end\n- Emojis: NONE (or max 1 if absolutely needed)\n- Hashtags: 1–3 in Hebrew only (optional, subtle)\n\nTone:\n- Professional, confident, human, not preachy\n\n2️⃣ Facebook\nGoal: Warm, community conversation.\n\nLength & structure:\n- 700–1,200 characters\n- 2–4 paragraphs\n- 1–2 emojis allowed\n- End with a question\n- 2–5 hashtags in Hebrew\n\n3️⃣ Instagram\nGoal: Scroll-stopping + punchy.\n\nLength & structure:\n- 500–900 characters\n- Strong first line (very short)\n- Short sentences, rhythm, emotional tone\n- 2–4 emojis allowed (not excessive)\n- End with a soft CTA question\n- 5–10 hashtags in Hebrew\n- Avoid long blocks; keep it visually scannable\n\n4️⃣ X (Twitter)\nGoal: Sharp, single idea.\n\nLength & structure:\n- MUST fit within 280 characters total\n- One main point only\n- No emojis\n- Hashtags: none (or max 1 only if essential)\n\n────────────────────────\nOUTPUT FORMAT (EXACT)\n────────────────────────\nReturn the content exactly in this structure:\n\n---\n🔹 LinkedIn:\n[LinkedIn post text]\n\n🔹 Facebook:\n[Facebook post text]\n\n🔹 Instagram:\n[Instagram post text]\n\n🔹 X:\n[X post text]\n---\n\nFINAL CHECK BEFORE YOU OUTPUT:\n- LinkedIn is 1,000–1,600 characters and includes hook + 3 points/framework + micro-example + question\n- No sentence is repeated between platforms\n- All text is Hebrew\n",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        2848,
+        7824
+      ],
+      "id": "72399726-2524-41e6-882b-22484b9874e0",
+      "name": "Social Media AI Prompt"
+    },
+    {
+      "parameters": {
+        "jsCode": "/**\n * n8n Code node (JavaScript)\n * Input: item.json.output (string) OR item.json.text (string) OR item.json (string)\n * Output: columns ready for Google Sheets mapping\n */\n\nfunction pickText(item) {\n  return (\n    item.json.output ??\n    item.json.text ??\n    item.json.result ??\n    (typeof item.json === 'string' ? item.json : null) ??\n    ''\n  );\n}\n\nfunction normalize(s) {\n  return (s || '')\n    .replace(/\\r\\n/g, '\\n')\n    .replace(/[ \\t]+\\n/g, '\\n')\n    .trim();\n}\n\nfunction extractSection(fullText, label) {\n  // Matches: 🔹 LinkedIn: ... until next 🔹 or end\n  const re = new RegExp(\n    String.raw`(?:^|\\n)\\s*(?:🔹\\s*)?${label}\\s*:\\s*([\\s\\S]*?)(?=\\n\\s*(?:🔹\\s*)?(?:LinkedIn|Facebook|Instagram|X)\\s*:|\\s*$)`,\n    'i'\n  );\n  const m = fullText.match(re);\n  return normalize(m ? m[1] : '');\n}\n\nfunction makePreview(s, max = 120) {\n  const t = normalize(s).replace(/\\n+/g, ' ');\n  return t.length > max ? t.slice(0, max - 1) + '…' : t;\n}\n\nconst out = [];\n\nfor (const item of $input.all()) {\n  const raw = normalize(pickText(item));\n\n  const linkedin = extractSection(raw, 'LinkedIn');\n  const facebook = extractSection(raw, 'Facebook');\n  const instagram = extractSection(raw, 'Instagram');\n  const xpost = extractSection(raw, 'X');\n\n  out.push({\n    json: {\n      // These keys should match your Google Sheet columns (recommended):\n      LinkedIn: linkedin,\n      Facebook: facebook,\n      Instagram: instagram,\n      X: xpost,\n\n      // Optional useful fields:\n      LinkedIn_Preview: makePreview(linkedin),\n      Facebook_Preview: makePreview(facebook),\n      Instagram_Preview: makePreview(instagram),\n      X_Preview: makePreview(xpost),\n\n      // Store original text too (optional):\n      Raw_Output: raw,\n    },\n  });\n}\n\nreturn out;\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        3168,
+        7824
+      ],
+      "id": "57a2f80f-b9f8-494e-95de-9d566174e5b3",
+      "name": "Filtering Data"
+    },
+    {
+      "parameters": {
+        "model": "anthropic/claude-opus-4.6",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [
+        2848,
+        8048
+      ],
+      "id": "b46c0a5e-e8fd-4408-ac56-4a2a617edd1b",
+      "name": "OpenRouter Chat Model",
+      "credentials": {
+        "openRouterApi": {
+          "id": "3KkS143m7oeIPEr2",
+          "name": "OpenRouter account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        2208,
+        8880
+      ],
+      "id": "e17cdce0-5aa5-46fa-9a31-266861e34063",
+      "name": "Loop Over Items2"
+    },
+    {
+      "parameters": {
+        "resume": "webhook",
+        "httpMethod": "POST",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        2400,
+        9072
+      ],
+      "id": "cda831a7-5e54-4471-92f6-c77aaf7b7ab7",
+      "name": "Wait1",
+      "webhookId": "e14b547f-8328-4685-a101-9cedc0524d55"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Clear accumulated image URLs from previous runs\nconst staticData = $getWorkflowStaticData('global');\ndelete staticData.imageUrls;\n\nfunction normalizeInnerQuotes(s) {\n  if (!s || typeof s !== \"string\") return s;\n\n  s = s.replace(/[״”“]/g, '\"');\n  s = s.replace(/([\\u0590-\\u05FF0-9A-Za-z])\"(?=[\\u0590-\\u05FF0-9A-Za-z])/g, \"$1״\");\n  s = s.replace(/[\\u202A-\\u202E\\u2066-\\u2069]/g, \"\");\n  return s;\n}\n\nfunction makeFilenameSafe(s) {\n  if (!s) return \"\";\n  return String(s)\n    .normalize(\"NFKD\")\n    .replace(/[^\\p{L}\\p{N}\\s]+/gu, \"\")\n    .trim()\n    .replace(/\\s+/g, \"_\")\n    .replace(/-+/g, \"\");\n}\n\nconst raw = $json.output ?? $json;\nlet plan = raw;\nif (typeof raw === \"string\") {\n  // Remove markdown code fences, e.g. ```json or ```\n  const removeFences = s => s.replace(/```(?:json)?|```/gi, '').trim();\n  const cleaned = normalizeInnerQuotes(removeFences(raw));\n  plan = JSON.parse(cleaned);\n}\n\n// ✅ IMPORTANT: handle array wrapper: [ { hero, sections } ]\nif (Array.isArray(plan)) {\n  plan = plan[0] || {};\n}\n\nconst out = [];\n\n// HERO\nif (plan?.hero?.prompt && String(plan.hero.prompt).trim()) {\n  out.push({\n    json: {\n      slot: \"hero\",\n      type: plan.hero.type || \"hero\",\n      prompt: plan.hero.prompt,\n      source_text: plan.hero.source_text || \"\",\n      translation_en: plan.hero.translation_en || \"\",\n      h2_text: \"\",\n      alt: plan.hero.source_text || \"\",\n      filename_safe:\n        plan.hero.filename_safe ||\n        makeFilenameSafe(plan.hero.translation_en || plan.hero.source_text || \"hero\"),\n    },\n  });\n}\n\n// SECTIONS\n(plan?.sections || [])\n  .filter(s => s?.prompt && String(s.prompt).trim())\n  .forEach((s, i) => {\n    out.push({\n      json: {\n        slot: `section_${i + 1}`,\n        type: s.type || \"section\",\n        prompt: s.prompt,\n        h2_text: s.h2_text || \"\",\n        source_text: s.source_text || \"\",\n        translation_en: s.translation_en || \"\",\n        alt: s.h2_text || s.source_text || \"\",\n        filename_safe:\n          s.filename_safe ||\n          makeFilenameSafe(s.translation_en || s.h2_text || `section_${i + 1}`),\n      },\n    });\n  });\n\nreturn out;"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2016,
+        8880
+      ],
+      "id": "077893ce-271c-4af5-b437-25052845f8bf",
+      "name": "Cleaning Image Prompts1"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.kie.ai/api/v1/jobs/createTask",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer 165cc5401c1882a5442b943172fc6afe"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"model\": \"nano-banana-pro\",\n  \"callBackUrl\": \"{{$execution.resumeUrl}}\",\n  \"input\": {\n    \"prompt\": \"{{ $json.prompt }}\",\n    \"aspect_ratio\": \"16:9\",\n    \"output_format\": \"jpg\"\n  }\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        2192,
+        9072
+      ],
+      "id": "8beb8d7c-3ec2-458e-8dcf-cabca1f597e3",
+      "name": "Image Generation1"
+    },
+    {
+      "parameters": {
+        "jsCode": "// We receive the callback item from KIE\nconst item = $json;\nconst body = item.body || {};\nconst data = body.data || {};\n\nlet imageUrl = null;\nlet parsedResult = null;\n\nif (data.resultJson) {\n  try {\n    parsedResult = JSON.parse(data.resultJson);\n    if (Array.isArray(parsedResult.resultUrls) && parsedResult.resultUrls.length > 0) {\n      imageUrl = parsedResult.resultUrls[0];\n    }\n  } catch (error) {\n    throw new Error('Could not parse resultJson: ' + error.message);\n  }\n}\n\n// If callback had no result (e.g. timeout), try query params\nif (!imageUrl && item.query && item.query.imageUrl) {\n  imageUrl = item.query.imageUrl;\n}\n\n// Accumulate URLs in workflow static data for Collect images URLS1\nif (imageUrl) {\n  const staticData = $getWorkflowStaticData('global');\n  if (!staticData.imageUrls) staticData.imageUrls = [];\n  staticData.imageUrls.push(imageUrl);\n}\n\nreturn [\n  {\n    json: {\n      imageUrl,\n      \"Image URL\": imageUrl,\n      state: data.state || \"unknown\",\n      taskId: data.taskId || \"\",\n      rawResultJson: data.resultJson || \"\"\n    }\n  }\n];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2576,
+        9072
+      ],
+      "id": "2f238111-7290-4acc-a59b-eebab93e8639",
+      "name": "Getting URLS1"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Collect all image URLs from the loop iterations.\n// The SplitInBatches \"done\" output only contains the last iteration's data,\n// so we use n8n's static data to accumulate URLs across iterations.\n// \n// FALLBACK: We also check the Save image URLS1 node's data.\n\nconst staticData = $getWorkflowStaticData('global');\nconst collectedUrls = staticData.imageUrls || [];\n\n// Also try to get from the current items\nconst items = $input.all();\nfor (const item of items) {\n  const url = item.json[\"Image URL\"] || item.json.imageUrl;\n  if (url && !collectedUrls.includes(url)) {\n    collectedUrls.push(url);\n  }\n}\n\nconst images = {\n  hero: collectedUrls[0] || null,\n  section_1: collectedUrls[1] || null,\n  section_2: collectedUrls[2] || null,\n  section_3: collectedUrls[3] || null,\n  section_4: collectedUrls[4] || null,\n};\n\n// Clean up static data\ndelete staticData.imageUrls;\n\nreturn [{ json: { images } }];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2448,
+        8864
+      ],
+      "id": "eabe2b90-669e-417c-841b-07bfb406e65d",
+      "name": "Collect images URLS1"
+    },
+    {
+      "parameters": {
+        "content": "## Image Generation\n",
+        "height": 496,
+        "width": 1164
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1632,
+        8832
+      ],
+      "typeVersion": 1,
+      "id": "954dceea-2051-4cf9-a9d2-e5545ea97710",
+      "name": "Sticky Note28"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1FaayOUoaSOm2A1x5B7sHDFUH0Ih1XOYM1TLo7dB4pPI",
+          "mode": "list",
+          "cachedResultName": "caesarstone.articlehub.work - פרסום כתבות N8N",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1FaayOUoaSOm2A1x5B7sHDFUH0Ih1XOYM1TLo7dB4pPI/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1359853134,
+          "mode": "list",
+          "cachedResultName": "Generated Images",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1EUlVPKoAXwrTnSkEdCzk2MJCg1S0gKWYRPDRxrGXJi4/edit#gid=1359853134"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Row ID": "={{ $item(0).$node[\"Grab New Cluster\"].json[\"row_id\"] }}",
+            "Image URL": "={{ $json.imageUrl }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Row ID",
+              "displayName": "Row ID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Image URL",
+              "displayName": "Image URL",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        1904,
+        9072
+      ],
+      "id": "21da2c8f-c6ea-4731-bf0a-b307a61682a7",
+      "name": "Save image URLS1",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "lvHSVyl4fQmLoRi4",
+          "name": "Tomer google sheets"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=\"\"You are an image planning and prompt generation system for blog articles. You operate under locked design tokens and fixed logic. You do not deviate.\n\n## LOCKED DESIGN TOKENS\n\n- BRAND_PRIMARY_COLOR: #000000\n- BRAND_ACCENT_COLOR: #000000\n- BRAND_SECONDARY_COLOR: #666666\n- BACKGROUND_STYLE: light\n- TYPOGRAPHY_MOOD: modern sans-serif, clean, professional\n- UI_MOOD: professional, minimal, airy\n- BORDER_RADIUS: 4px\n- SHADOW_STYLE: 0px 4px 4px 0px rgba(174, 221, 248, 0.4)\n- VISUAL_DENSITY: airy\n\nThese tokens are immutable. Every image prompt you generate MUST reference these values explicitly.\n\n## INPUT\n\nYou receive a full blog article written in HEBREW.\n\n## STEP 1: EXTRACTION\n\nExtract the H1 title from the article. Extract ALL H2 headings in the exact order they appear. Number them sequentially starting from 1.\n\n## STEP 2: IMAGE PLANNING LOGIC\n\nCount the total number of H2 headings.\n\nIf the article contains FEWER THAN 4 H2 headings: generate ONLY a hero image. All 4 section objects in the output MUST have empty strings for h2_text, translation_en, and prompt.\n\nIf the article contains 4 OR MORE H2 headings: generate a hero image AND section images according to this rule — generate one section image for H2 #4. Then generate one additional section image for every subsequent 4th H2 heading: H2 #8, H2 #12, H2 #16, and so on. Stop when no further group of 4 is reachable. The maximum number of section images is 4. If fewer than 4 section images qualify, fill the remaining section objects with empty strings for all three fields.\n\n## STEP 3: HERO IMAGE\n\nExtract the H1 title in HEBREW. Translate it into ENGLISH. The hero object MUST include source_text (the Hebrew H1) and translation_en (the English translation). The hero image prompt MUST conceptually represent the translated H1 meaning. The prompt MUST be written in ENGLISH. The prompt MUST explicitly state: \"\"dominant color palette using primary brand color #000000 with secondary tones of #666666 on a clean white #FFFFFF background.\"\" The prompt MUST reflect a light background style, modern sans-serif typography mood, professional and minimal UI mood, airy visual density, 4px rounded elements where applicable, and a soft shadow of rgba(174, 221, 248, 0.4). The prompt MUST be cinematic, premium, high-detail, and visually explicit. No vague wording.\n\n## STEP 4: SECTION IMAGES\n\nEach section image prompt MUST be based strictly on the content under its specific H2 heading. No cross-section content mixing.\n\n### INFOGRAPHIC DETECTION\n\nBefore writing the prompt for each qualifying H2, inspect the content under that H2. If the content contains ANY of the following: numbered steps, bullet lists, pricing or plans or packages, statistics or percentages or comparisons, tables or pros and cons, or multiple short structured items — THEN the image MUST be an infographic.\n\nInfographic prompts MUST include the phrase \"\"clean infographic layout\"\". They MUST reference brand colors by HEX: #000000 primary, #666666 secondary, #FFFFFF background. They MUST include 3 to 6 labeled blocks ONLY if those labels exist in the source text. They MUST use minimal icons, grid alignment, clean typography, generous whitespace. They MUST NEVER invent steps, labels, numbers, or data not present in the text.\n\nIf the content does NOT match infographic criteria, generate a conceptual illustration prompt that represents the H2 topic visually.\n\nAll section image prompts MUST explicitly state the brand color palette using HEX values: \"\"#000000 primary, #666666 secondary, #FFFFFF background.\"\" All section image prompts MUST reflect the locked design tokens: light background, modern professional mood, airy spacing, 4px rounded corners, soft blue-tinted shadow.\n\n## STEP 5: TRANSLATION RULES\n\nFor the hero: source_text is the Hebrew H1. translation_en is the English translation of the H1.\n\nFor each section where h2_text is NOT empty: h2_text is the Hebrew H2 text. translation_en MUST be a non-empty English translation of that H2.\n\nFor each section where h2_text IS empty: translation_en MUST be \"\"\"\".\n\n## TEXT-ON-IMAGE LANGUAGE RULE\n\nAny visible text rendered inside an image MUST be in HEBREW. The only permitted English abbreviations inside images are: SEO, UX, UI, AI, KPI, ROI, B2B, B2C, CRM, SaaS, Design. When uncertain, use icons instead of text.\n\n## PROMPT QUALITY RULES\n\nAll image prompts MUST be written in ENGLISH. Prompts must be cinematic, premium, high-detail, and visually explicit. No vague wording. No line breaks inside JSON string values.\n\n## SAFE OUTPUT RULES\n\nNEVER output null. If a section does not qualify: h2_text = \"\"\"\", translation_en = \"\"\"\", prompt = \"\"\"\". All values MUST be strings.\n\n## OUTPUT FORMAT\n\nOutput EXACTLY this JSON structure:\n\n{\"\"hero\"\":{\"\"type\"\":\"\"hero\"\",\"\"source_text\"\":\"\"\"\",\"\"translation_en\"\":\"\"\"\",\"\"prompt\"\":\"\"\"\"},\"\"sections\"\":[{\"\"type\"\":\"\"section\"\",\"\"h2_text\"\":\"\"\"\",\"\"translation_en\"\":\"\"\"\",\"\"prompt\"\":\"\"\"\"},{\"\"type\"\":\"\"section\"\",\"\"h2_text\"\":\"\"\"\",\"\"translation_en\"\":\"\"\"\",\"\"prompt\"\":\"\"\"\"},{\"\"type\"\":\"\"section\"\",\"\"h2_text\"\":\"\"\"\",\"\"translation_en\"\":\"\"\"\",\"\"prompt\"\":\"\"\"\"},{\"\"type\"\":\"\"section\"\",\"\"h2_text\"\":\"\"\"\",\"\"translation_en\"\":\"\"\"\",\"\"prompt\"\":\"\"\"\"}]}\n\nAlways output exactly 1 hero object. Always output exactly 4 section objects. Output ONLY the JSON. No explanations. Stop immediately after the final closing brace.\"\"\n\nDo not delete all the text above in this box\n{{ $json.output }}",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        1680,
+        8928
+      ],
+      "id": "0ecf3161-1f89-4008-8c9e-2779b2c12dd7",
+      "name": "Image Planning1"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Build image upload items where filename_safe comes from translation_en\n// (pulled from \"Cleaning Image Prompts\" node by matching slot).\n\nfunction cleanHeadingText(s) {\n  if (!s) return \"\";\n  return String(s)\n    .replace(/<[^>]*>/g, \"\")\n    .replace(/^#+\\s*/g, \"\")\n    .replace(/^\\d+[\\.\\)]\\s*/g, \"\")\n    .trim();\n}\n\nfunction extractHeadingsFromMarkdown(md) {\n  const lines = (md || \"\").split(\"\\n\");\n  let h1 = \"\";\n  const h2 = [];\n\n  for (const rawLine of lines) {\n    const line = rawLine.trim();\n\n    const m1 = line.match(/^#\\s+(.+)$/);\n    if (m1 && !h1) {\n      h1 = cleanHeadingText(m1[1]);\n      continue;\n    }\n\n    const m2 = line.match(/^##\\s*(.+)$/);\n    if (m2) {\n      const txt = cleanHeadingText(m2[1]);\n      if (txt) h2.push(txt);\n    }\n  }\n\n  return { h1, h2 };\n}\n\n/**\n * ✅ STRICT HEADER-SAFE FILENAME\n * - NO hyphens\n * - NO spaces\n * - NO extension\n * - ASCII only\n */\nfunction toHeaderSafeFilename(str) {\n  const s = String(str || \"\")\n    .trim()\n    .replace(/\\.(png|jpg|jpeg|webp|gif)$/i, \"\") // strip extension if present\n    .normalize(\"NFKD\")\n    .replace(/[\\u00A0\\u2000-\\u200B\\u202F\\u205F\\u3000]/g, \"\") // remove weird spaces\n    .replace(/[\\u0300-\\u036f]/g, \"\") // accents\n    .replace(/[—–]/g, \"\")           // long dashes\n    .replace(/&/g, \"and\")\n    .replace(/['\"`]/g, \"\")\n    .replace(/[:;,.!?(){}\\[\\]|<>]/g, \"\")\n    .replace(/[^a-zA-Z0-9]/g, \"\")   // ❗ remove EVERYTHING except letters+numbers\n    .slice(0, 80);\n\n  return s || \"image\";\n}\n\n// --- Inputs ---\nconst images = $node[\"Collect images URLS1\"].json.images;\nconst blog = $node[\"Writing Blog\"].json.output || \"\";\nconst { h1, h2 } = extractHeadingsFromMarkdown(blog);\nconst getH2 = (n) => (h2 && h2.length >= n ? h2[n - 1] : \"\");\n\n// --- Pull translations from Cleaning Image Prompts (by slot) ---\nconst translationsBySlot = {};\nconst cleaned = $items(\"Cleaning Image Prompts1\") || [];\n\nfor (const it of cleaned) {\n  const j = it.json || {};\n  if (!j.slot) continue;\n\n  const t =\n    (typeof j.translation_en === \"string\" && j.translation_en.trim()) || \"\";\n\n  if (t) translationsBySlot[j.slot] = t;\n}\n\nfunction safeNameForSlot(slot, fallback) {\n  const t = translationsBySlot[slot] || fallback || \"image\";\n  return toHeaderSafeFilename(t);\n}\n\n// --- Build items ---\nconst map = [\n  {\n    key: \"hero\",\n    slot: \"hero\",\n    url: images.hero,\n    filename_safe: safeNameForSlot(\"hero\", \"heroimage\"),\n    alt: h1 || h2[0] || \"תמונה ראשית\",  // fallback to first H2\n  },\n  {\n    key: \"section_1\",\n    slot: \"section_1\",\n    url: images.section_1,\n    filename_safe: safeNameForSlot(\"section_1\", \"section1\"),\n    alt: getH2(4) || \"תמונה\",\n  },\n  {\n    key: \"section_2\",\n    slot: \"section_2\",\n    url: images.section_2,\n    filename_safe: safeNameForSlot(\"section_2\", \"section2\"),\n    alt: getH2(8) || \"תמונה\",\n  },\n  {\n    key: \"section_3\",\n    slot: \"section_3\",\n    url: images.section_3,\n    filename_safe: safeNameForSlot(\"section_3\", \"section3\"),\n    alt: getH2(12) || \"תמונה\",\n  },\n  {\n    key: \"section_4\",\n    slot: \"section_4\",\n    url: images.section_4,\n    filename_safe: safeNameForSlot(\"section_4\", \"section4\"),\n    alt: getH2(16) || \"תמונה\",\n  },\n];\n\n// Output only items with URLs\nreturn map\n  .filter(x => !!x.url)\n  .map(x => ({ json: x }));\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2640,
+        8864
+      ],
+      "id": "09aa7a01-ae5d-42a4-8b3b-a15e1f406572",
+      "name": "Preparing Image Data1"
+    },
+    {
+      "parameters": {
+        "model": "anthropic/claude-opus-4.6",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [
+        1696,
+        9072
+      ],
+      "id": "433e02b0-2b1b-412a-8ba8-1fea053d3206",
+      "name": "OpenRouter Chat Model11",
+      "credentials": {
+        "openRouterApi": {
+          "id": "3KkS143m7oeIPEr2",
+          "name": "OpenRouter account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "appendOrUpdate",
+        "documentId": {
+          "__rl": true,
+          "value": "1qP1Rpe4lN0_ubPAmRjZ2yd14QUI83Bzmfi7773sI7mU",
+          "mode": "list",
+          "cachedResultName": "caesarstone.co.il - פרסום כתבות N8N",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1qP1Rpe4lN0_ubPAmRjZ2yd14QUI83Bzmfi7773sI7mU/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 683869339,
+          "mode": "list",
+          "cachedResultName": "מחקר + כתבות",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/17-n-H002JeP9pjEu8A1oEpxjsT-P4UyPPI9rUPz8Aio/edit#gid=683869339"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "row_id": "={{ $('Grab New Cluster').item.json.row_id }}",
+            "Linkedin": "={{ $json.LinkedIn }}",
+            "Facebook": "={{ $json.Facebook }}",
+            "Instagram": "={{ $json.Instagram }}",
+            "Twitter ": "={{ $json.X }}"
+          },
+          "matchingColumns": [
+            "row_id"
+          ],
+          "schema": [
+            {
+              "id": "row_id",
+              "displayName": "row_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Website",
+              "displayName": "Website",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "עמוד אב",
+              "displayName": "עמוד אב",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Pillar",
+              "displayName": "Pillar",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Cluster",
+              "displayName": "Cluster",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Intent",
+              "displayName": "Intent",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Primary Keyword",
+              "displayName": "Primary Keyword",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Keywords",
+              "displayName": "Keywords",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Researched",
+              "displayName": "Researched",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Type",
+              "displayName": "Type",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Parent ID",
+              "displayName": "Parent ID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Category ID",
+              "displayName": "Category ID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Published",
+              "displayName": "Published",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "URL",
+              "displayName": "URL",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Date",
+              "displayName": "Date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Facebook",
+              "displayName": "Facebook",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Instagram",
+              "displayName": "Instagram",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Twitter ",
+              "displayName": "Twitter ",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Linkedin",
+              "displayName": "Linkedin",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        3344,
+        7824
+      ],
+      "id": "06d330e5-0d2b-4686-a7ac-27c07307808e",
+      "name": "Update Google Sheet with Posts1",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "lvHSVyl4fQmLoRi4",
+          "name": "Tomer google sheets"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "PUT",
+        "url": "=https://caesarstone.articlehub.work/wp-json/wp/v2/pages/{{$node[\"Create Page\"].json[\"id\"]}}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpBasicAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"featured_media\": {{$item(0).$node[\"Loop Over Items1\"].json.id}}\n}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        5856,
+        8368
+      ],
+      "id": "8fa7d5c7-88d8-4dc6-9866-22d2c2a91c83",
+      "name": "Update Featured Image3",
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "RUNIdegnx95bjXwO",
+          "name": "https://caesarstone.articlehub.work/ (caesarstone subdomain)"
+        }
+      },
+      "onError": "continueRegularOutput"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Grab New Cluster": {
+      "main": [
+        [
+          {
+            "node": "Message a model1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fix Links": {
+      "main": [
+        [
+          {
+            "node": "Map a website and get urls",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTML": {
+      "main": [
+        [
+          {
+            "node": "slug",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "slug": {
+      "main": [
+        [
+          {
+            "node": "Post Title",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Post Title": {
+      "main": [
+        [
+          {
+            "node": "Meta Title",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Meta Title": {
+      "main": [
+        [
+          {
+            "node": "Meta Description",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Download Image (PNG URL → Binary)": {
+      "main": [
+        [
+          {
+            "node": "Upload to WordPress (Media)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Upload to WordPress (Media)": {
+      "main": [
+        [
+          {
+            "node": "Image Alt Settings",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Image Alt Settings": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Map a website and get urls": {
+      "main": [
+        [
+          {
+            "node": "Post Plan",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Post Plan": {
+      "main": [
+        [
+          {
+            "node": "Writing Blog",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Writing Blog": {
+      "main": [
+        [
+          {
+            "node": "Social Media AI Prompt",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Image Planning1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Over Items1": {
+      "main": [
+        [
+          {
+            "node": "Preparing Images for HTML",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Download Image (PNG URL → Binary)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Preparing Images for HTML": {
+      "main": [
+        [
+          {
+            "node": "HTML",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenRouter Chat Model2": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Post Plan",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenRouter Chat Model3": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Writing Blog",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenRouter Chat Model6": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "HTML",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenRouter Chat Model7": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "slug",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenRouter Chat Model8": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Post Title",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenRouter Chat Model9": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Meta Title",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenRouter Chat Model10": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Meta Description",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Meta Description": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Create Post",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Create Page",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Message a model": {
+      "main": [
+        [
+          {
+            "node": "Fix Links",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Message a model1": {
+      "main": [
+        [
+          {
+            "node": "Message a model",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Grab New Cluster",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create Post": {
+      "main": [
+        [
+          {
+            "node": "Update Featured Image2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create Page": {
+      "main": [
+        [
+          {
+            "node": "Update Featured Image3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update meta title description Yoast": {
+      "main": [
+        [
+          {
+            "node": "Article Saving 3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Article Saving 3": {
+      "main": [
+        [
+          {
+            "node": "Check as completed on Sheets2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update meta title description Yoast1": {
+      "main": [
+        [
+          {
+            "node": "Article Saving 1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Article Saving 1": {
+      "main": [
+        [
+          {
+            "node": "Check as completed on Sheets3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update Featured Image2": {
+      "main": [
+        [
+          {
+            "node": "Update meta title description Yoast",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Social Media AI Prompt": {
+      "main": [
+        [
+          {
+            "node": "Filtering Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenRouter Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Social Media AI Prompt",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Over Items2": {
+      "main": [
+        [
+          {
+            "node": "Collect images URLS1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Image Generation1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait1": {
+      "main": [
+        [
+          {
+            "node": "Getting URLS1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cleaning Image Prompts1": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Image Generation1": {
+      "main": [
+        [
+          {
+            "node": "Wait1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Getting URLS1": {
+      "main": [
+        [
+          {
+            "node": "Save image URLS1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Collect images URLS1": {
+      "main": [
+        [
+          {
+            "node": "Preparing Image Data1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Save image URLS1": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Image Planning1": {
+      "main": [
+        [
+          {
+            "node": "Cleaning Image Prompts1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Preparing Image Data1": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenRouter Chat Model11": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Image Planning1",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filtering Data": {
+      "main": [
+        [
+          {
+            "node": "Update Google Sheet with Posts1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update Featured Image3": {
+      "main": [
+        [
+          {
+            "node": "Update meta title description Yoast1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "timeSavedMode": "fixed",
+    "callerPolicy": "workflowsFromSameOwner",
+    "availableInMCP": false,
+    "errorWorkflow": "yB7bNb8AVBrqpmsA"
+  },
+  "versionId": "903de738-9b9d-49e1-899f-75661dbe82f9",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "d687f3db8cf73bff0dc9f02849712fbaa1b2ea972c000594417cec61549f3360"
+  },
+  "id": "Yu5MZZaxrHFLivgR",
+  "tags": [
+    {
+      "updatedAt": "2026-04-12T08:41:10.291Z",
+      "createdAt": "2026-04-12T08:41:10.291Z",
+      "id": "2J21r150JGBOSy46",
+      "name": "caesarstone.co.il"
+    },
+    {
+      "updatedAt": "2025-12-25T09:04:33.025Z",
+      "createdAt": "2025-12-25T09:04:33.025Z",
+      "id": "bAQ5UBM4nFLDhksc",
+      "name": "תומר"
+    }
+  ]
+}

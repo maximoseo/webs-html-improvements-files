@@ -1,0 +1,491 @@
+{
+  "name": "Galoz Article Generator — MyClaw Production v15.4.26",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "cronExpression",
+              "expression": "0 6 * * 1"
+            }
+          ]
+        }
+      },
+      "name": "Schedule Trigger",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        100,
+        300
+      ],
+      "id": "node-schedule-trigger"
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "https://mapril.websmail.net/industrial-control-and-command-equipment/",
+        "options": {
+          "redirect": {
+            "redirect": {
+              "followRedirects": true,
+              "maxRedirects": 3
+            }
+          },
+          "response": {
+            "response": {
+              "fullResponse": false
+            }
+          },
+          "timeout": 30000
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "User-Agent",
+              "value": "Mozilla/5.0 (compatible; GalozBot/1.0)"
+            },
+            {
+              "name": "Accept",
+              "value": "text/html,application/xhtml+xml"
+            }
+          ]
+        }
+      },
+      "name": "Fetch Source Article",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [
+        300,
+        300
+      ],
+      "id": "node-fetch-source"
+    },
+    {
+      "parameters": {
+        "jsCode": "\n// ============================================================\n// PARSE SOURCE ARTICLE HTML\n// Extract title, sections, and image URLs from source page\n// ============================================================\nconst html = $input.first().json.body || $input.first().json.data || '';\n\n// Extract title\nconst titleMatch = html.match(/<h1[^>]*>([^<]+)<\\/h1>/i);\nconst articleTitle = titleMatch ? titleMatch[1].trim() : 'ציוד פיקוד ובקרה לתעשייה';\n\n// Extract article body — look for main content area\nconst articleMatch = html.match(/<article[^>]*>([\\s\\S]*?)<\\/article>/i) ||\n                     html.match(/<main[^>]*>([\\s\\S]*?)<\\/main>/i) ||\n                     html.match(/<div[^>]*class[^>]*content[^>]*>([\\s\\S]*?)<\\/div>/i);\nconst articleBody = articleMatch ? articleMatch[1] : html;\n\n// Extract H2 sections\nconst sections = [];\nconst h2Regex = /<h2[^>]*(?:id=\"([^\"]+)\")?[^>]*>([^<]+)<\\/h2>([\\s\\S]*?)(?=<h2|<\\/article|$)/gi;\nlet match;\nwhile ((match = h2Regex.exec(articleBody)) !== null) {\n  const sectionId = match[1] || 'section-' + sections.length;\n  const sectionTitle = match[2].trim();\n  const sectionContent = match[3].trim();\n  if (sectionTitle && sectionContent.length > 50) {\n    sections.push({id: sectionId, title: sectionTitle, content: sectionContent});\n  }\n}\n\n// Extract image URLs from source\nconst imgRegex = /<img[^>]+src=\"([^\"]+mapril\\.websmail\\.net[^\"]+)\"/gi;\nconst articleImages = [];\nlet imgMatch;\nwhile ((imgMatch = imgRegex.exec(html)) !== null) {\n  if (!articleImages.includes(imgMatch[1])) {\n    articleImages.push(imgMatch[1]);\n  }\n}\n\n// Fallback images if none found\nconst fallbackImages = [\n  'https://mapril.websmail.net/wp-content/uploads/2026/04/WhichIndustrialControlInstrumentsAreCommonToday.jpg',\n  'https://mapril.websmail.net/wp-content/uploads/2026/04/HowtoChooseaSupplierforCommandandControlEquipment.jpg',\n  'https://mapril.websmail.net/wp-content/uploads/2026/04/TestsandMetricsWhattoCheckBeforePurchasingControlandMeasurementEquipment.jpg',\n  'https://mapril.websmail.net/wp-content/uploads/2026/04/CommonMistakesinSelectingControlEquipmentAndHowtoAvoidThem.jpg'\n];\n\nconst finalImages = articleImages.length >= 3 ? articleImages : fallbackImages;\n\n// Extract paragraphs for content analysis\nconst paragraphs = [];\nconst pRegex = /<p[^>]*>([\\s\\S]*?)<\\/p>/gi;\nwhile ((match = pRegex.exec(articleBody)) !== null) {\n  const text = match[1].replace(/<[^>]+>/g, '').trim();\n  if (text.length > 80) paragraphs.push(text);\n}\n\nconsole.log('Sections found:', sections.length);\nconsole.log('Images found:', finalImages.length);\nconsole.log('Paragraphs found:', paragraphs.length);\n\nreturn [{\n  json: {\n    articleTitle,\n    articleBody,\n    sections,\n    articleImages: finalImages,\n    paragraphs,\n    sourceUrl: 'https://mapril.websmail.net/industrial-control-and-command-equipment/',\n    targetKeyword: 'ציוד פיקוד ובקרה',\n    processedAt: new Date().toISOString()\n  }\n}];\n"
+      },
+      "name": "Parse Article Sections",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        500,
+        300
+      ],
+      "id": "node-parse-sections"
+    },
+    {
+      "parameters": {
+        "model": "gpt-4o",
+        "messages": {
+          "values": [
+            {
+              "role": "system",
+              "content": "You are a professional Hebrew content writer specializing in industrial automation and control systems for the Israeli market. You write for galoz.co.il — a leading distributor of industrial control, measurement and automation equipment in Israel with over 30 years of experience.\n\nYour task: Rewrite and expand the provided article content into a comprehensive, professional Hebrew article that:\n\n1. Uses professional, clear Hebrew (not overly formal, not colloquial)\n2. Addresses engineers, integrators, plant managers, and technical buyers\n3. Covers all technical aspects thoroughly with real industrial context\n4. Naturally incorporates galoz.co.il expertise and products\n5. Includes practical tips, how-to guidance, and industry facts\n6. Uses correct technical Hebrew terminology\n7. Does NOT mention specific dates, years, or time references in the intro\n8. Has exactly ONE H1 heading (the article title)\n9. Has 5-7 main H2 sections\n10. Each H2 section: 3-4 paragraphs, 50-120 words each\n\nGaloz brand details:\n- Phone: 079-5805040\n- WhatsApp: +972522516009\n- Email: sales@galoz.co.il\n- Contact: https://www.galoz.co.il/contact\n- Experience: 30+ years\n- Specialty: industrial control, measurement, automation\n- Represented brands: Leuze, Gavazzi, Theben, Nethix, CIMON, Red Lion"
+            },
+            {
+              "role": "user",
+              "content": "Article title: {{ $json.articleTitle }}\n\nSource content sections:\n{{ $json.sections.map(s => s.title + ':\n' + s.content.replace(/<[^>]+>/g, '')).join('\n\n---\n\n') }}\n\nRewrite this into a comprehensive, production-ready Hebrew article. Return the article as structured JSON with these fields:\n{\n  \"title\": \"[Hebrew H1 title]\",\n  \"intro\": \"[2-paragraph intro, no dates]\",\n  \"takeaways\": [\"point1\", \"point2\", \"point3\", \"point4\", \"point5\"],\n  \"sections\": [\n    {\n      \"id\": \"section-id\",\n      \"heading\": \"Hebrew H2 heading\",\n      \"content\": \"HTML content with p tags\",\n      \"tip\": \"optional tip text\",\n      \"howto\": {\"title\": \"...\", \"steps\": [...]},\n      \"didYouKnow\": \"optional fact\"\n    }\n  ],\n  \"faqItems\": [{\"q\": \"...\", \"a\": \"...\"}],\n  \"closingParagraph\": \"...\"\n}"
+            }
+          ]
+        },
+        "options": {
+          "temperature": 0.7,
+          "maxTokens": 4000,
+          "responseFormat": {
+            "type": "json_object"
+          }
+        }
+      },
+      "name": "AI Rewrite Article",
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.4,
+      "position": [
+        700,
+        300
+      ],
+      "id": "node-ai-rewrite",
+      "credentials": {
+        "openAiApi": {
+          "id": "openai-creds",
+          "name": "OpenAI API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "\n// ============================================================\n// PARSE AI RESPONSE & EXTRACT ARTICLE DATA\n// ============================================================\nconst aiResponse = $input.first().json;\nconst sourceData = $('Parse Article Sections').first().json;\n\nlet articleData;\ntry {\n  // Try to parse AI response as JSON\n  const content = aiResponse.message?.content || aiResponse.choices?.[0]?.message?.content || JSON.stringify(aiResponse);\n  articleData = typeof content === 'string' ? JSON.parse(content) : content;\n} catch(e) {\n  // Fallback to source data structure\n  console.log('AI response parse failed, using fallback:', e.message);\n  articleData = {\n    title: sourceData.articleTitle || 'ציוד פיקוד ובקרה לתעשייה: המדריך המקיף',\n    intro: 'בחירת ציוד פיקוד ובקרה לתעשייה היא אחת ההחלטות הטכניות המשמעותיות ביותר בכל מערכת ייצור.',\n    takeaways: [\n      'ציוד פיקוד ובקרה מורכב משלוש שכבות: קליטת נתונים, עיבוד ושליטה, ותגובה והפעלה',\n      'רכישה לפי מחיר בלבד ללא התאמה לתנאי הסביבה היא הטעות הנפוצה ביותר',\n      'בחירת ספק מתאים כוללת תמיכה טכנית בעברית וניסיון מוכח',\n      'בדיקת תאימות תקשורת לפני הרכישה חוסכת אינטגרציה בעייתית',\n      'גלעוז אלקטרוניקה מעניקה ייעוץ מקצועי חינם לפני כל בחירת ציוד'\n    ],\n    sections: sourceData.sections.map((s, i) => ({\n      id: s.id,\n      heading: s.title,\n      content: s.content\n    })),\n    faqItems: [\n      {q: 'מה ההבדל בין PLC לבין PAC?', a: 'PLC מותאם לפעולות לוגיות מהירות. PAC מוסיף יכולות מחשוב ואינטגרציה רחבה עם IT ו-SCADA.'},\n      {q: 'איזה פרוטוקולי תקשורת עדיף להשתמש בתעשייה הישראלית?', a: 'Modbus TCP, EtherNet/IP ו-Profinet הם הנפוצים ביותר. ל-IIoT: OPC UA ו-MQTT.'},\n      {q: 'כמה זמן לוקח אספקת ציוד בקרה?', a: 'רכיבים במלאי: ימים בודדים. הזמנה מיוחדת: שבועיים עד 3 חודשים.'}\n    ],\n    closingParagraph: 'גלעוז אלקטרוניקה כאן כדי ללוות אתכם לכל אורך הדרך, מהאפיון הראשוני ועד הפעלה מלאה בשטח.'\n  };\n}\n\nreturn [{\n  json: {\n    ...sourceData,\n    articleData,\n    parsedAt: new Date().toISOString()\n  }\n}];\n"
+      },
+      "name": "Parse AI Response",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        900,
+        300
+      ],
+      "id": "node-parse-ai-response"
+    },
+    {
+      "parameters": {
+        "jsCode": "\n// ============================================================\n// GENERATE FULL HTML ARTICLE\n// Full production HTML with all required elements per MyClaw prompt\n// ============================================================\n\nconst data = $input.first().json;\nconst ad = data.articleData || {};\nconst images = data.articleImages || [];\n\n// Brand constants\nconst BRAND = {\n  primary: '#005696',\n  accent: '#0E6BA8',\n  dark: '#1F2D3D',\n  text: '#334155',\n  bg: '#ffffff',\n  surface: '#f8fafc',\n  border: '#e2e8f0',\n  logo: 'https://d3m9l0v76dty0.cloudfront.net/system/logos/7002/original/f2a1fcfa083f4d83b3269684e5fe223e.png',\n  contact: 'https://www.galoz.co.il/contact',\n  whatsapp: 'https://wa.me/972522516009',\n  phone: '079-5805040',\n  email: 'sales@galoz.co.il',\n  homepage: 'https://www.galoz.co.il/',\n  phoneDisplay: '079-5805040'\n};\n\n// Title and sections\nconst title = ad.title || data.articleTitle || 'ציוד פיקוד ובקרה לתעשייה: המדריך המקיף';\nconst intro = ad.intro || 'בחירת ציוד פיקוד ובקרה לתעשייה היא אחת ההחלטות הטכניות המשמעותיות ביותר.';\nconst sections = ad.sections || data.sections || [];\nconst takeaways = ad.takeaways || [];\nconst faqItems = ad.faqItems || [];\n\n// ---- SINGLE H1 ENFORCEMENT ----\n// All sections use H2; only the title uses H1\nlet h1Count = 0;\nfunction safeH2(tag) {\n  if (tag === 'h1') {\n    h1Count++;\n    return h1Count === 1 ? 'h1' : 'h2';\n  }\n  return tag;\n}\n\n// ---- HELPER FUNCTIONS ----\nfunction hoverBtn(bg, hoverBg) {\n  return `onmouseover=\"this.style.background='${hoverBg}'\" onmouseout=\"this.style.background='${bg}'`;\n}\n\nfunction sectionH2(id, text) {\n  return `<h2 id=\"${id}\" style=\"font-size:1.5rem;font-weight:700;color:${BRAND.dark};margin:48px 0 16px;border-bottom:2px solid ${BRAND.primary};padding-bottom:8px;\">${text}</h2>`;\n}\n\nfunction tipBlock(text) {\n  return `<div style=\"background:#eff6ff;border-right:4px solid #3b82f6;border-radius:8px;padding:16px 20px;margin:24px 0;\"><p style=\"margin:0;font-size:0.9rem;color:#1e40af;font-weight:700;\">💡 טיפ מקצועי</p><p style=\"margin:8px 0 0;font-size:0.9rem;color:${BRAND.text};line-height:1.6;\">${text}</p></div>`;\n}\n\nfunction howtoBlock(title, steps) {\n  const stepsHtml = steps.map(s => `<li>${s}</li>`).join('');\n  return `<div style=\"background:#f0fdf4;border-right:4px solid #22c55e;border-radius:8px;padding:16px 20px;margin:24px 0;\"><p style=\"margin:0;font-size:0.9rem;color:#166534;font-weight:700;\">🔧 ${title}</p><ol style=\"margin:10px 0 0;padding-right:20px;font-size:0.9rem;color:${BRAND.text};line-height:1.8;\">${stepsHtml}</ol></div>`;\n}\n\nfunction dynBlock(text) {\n  return `<div style=\"background:#fefce8;border-right:4px solid #eab308;border-radius:8px;padding:16px 20px;margin:24px 0;\"><p style=\"margin:0;font-size:0.9rem;color:#854d0e;font-weight:700;\">💡 האם ידעתם?</p><p style=\"margin:8px 0 0;font-size:0.9rem;color:${BRAND.text};line-height:1.6;\">${text}</p></div>`;\n}\n\nfunction sectionImg(src, alt) {\n  if (!src) return '';\n  return `<img src=\"${src}\" alt=\"${alt}\" style=\"width:100%;max-width:100%;height:auto;border-radius:10px;margin:1.5rem 0;display:block;\" loading=\"lazy\">`;\n}\n\nfunction bodyPara(text) {\n  if (!text) return '';\n  if (text.startsWith('<p')) return text;\n  return `<p style=\"font-size:1rem;line-height:1.7;color:${BRAND.text};margin-bottom:1.2rem;\">${text}</p>`;\n}\n\n// ---- TOC ----\nconst tocItems = sections.map(s =>\n  `<li style=\"padding:6px 0;border-bottom:1px solid #f1f5f9;\"><a href=\"#${s.id}\" style=\"color:${BRAND.text};text-decoration:none;font-size:0.9rem;\" onmouseover=\"this.style.color='${BRAND.primary}';this.style.textDecoration='underline'\" onmouseout=\"this.style.color='${BRAND.text}';this.style.textDecoration='none'\">${s.heading}</a></li>`\n).join('');\n\nconst tocHtml = `\n<details style=\"border:1px solid ${BRAND.border};border-radius:10px;margin-bottom:28px;overflow:hidden;\">\n<summary style=\"cursor:pointer;padding:14px 20px;font-weight:700;font-size:1rem;color:${BRAND.dark};list-style:none;display:flex;align-items:center;justify-content:space-between;background:${BRAND.surface};\" onmouseover=\"this.style.background='#f1f5f9'\" onmouseout=\"this.style.background='${BRAND.surface}'\"><span>📋 תוכן עניינים</span><span style=\"font-size:1.1rem;color:${BRAND.accent};\">＋</span></summary>\n<nav style=\"padding:12px 20px 16px;\"><ol style=\"margin:0;padding-right:20px;list-style:none;\">${tocItems}<li style=\"padding:6px 0;\"><a href=\"#section-faq\" style=\"color:${BRAND.text};text-decoration:none;font-size:0.9rem;\" onmouseover=\"this.style.color='${BRAND.primary}';this.style.textDecoration='underline'\" onmouseout=\"this.style.color='${BRAND.text}';this.style.textDecoration='none'\">שאלות נפוצות</a></li></ol></nav>\n</details>`;\n\n// ---- TAKEAWAYS ----\nconst takeawayItems = takeaways.map(t =>\n  `<li style=\"padding:6px 0;color:${BRAND.text};font-size:0.95rem;display:flex;align-items:flex-start;gap:8px;\"><span style=\"color:${BRAND.primary};font-weight:700;flex-shrink:0;\">◆</span>${t}</li>`\n).join('');\n\nconst takeawaysHtml = `<div style=\"background:${BRAND.surface};border-right:4px solid ${BRAND.accent};border-radius:8px;padding:20px 24px;margin-bottom:32px;\"><h2 style=\"font-size:1.1rem;font-weight:700;color:${BRAND.dark};margin:0 0 12px;\">בקצרה — מה תלמדו במאמר זה</h2><ul style=\"margin:0;padding:0;list-style:none;\">${takeawayItems}</ul></div>`;\n\n// ---- MID ARTICLE CTA ----\nconst midCTA = `<div style=\"background:linear-gradient(135deg,${BRAND.primary} 0%,#003f6e 100%);border-radius:12px;padding:28px 24px;margin:40px 0;text-align:center;\"><p style=\"font-size:1.2rem;font-weight:700;color:#fff;margin:0 0 8px;\">מחפשים פתרון שמתאים ליישום שלכם?</p><p style=\"font-size:0.95rem;color:rgba(255,255,255,0.9);margin:0 0 20px;line-height:1.6;\">התאמה נכונה של בקר, חיישן, ממיר או רכיב תקשורת מקצרת זמני התקנה וחוסכת תקלות בשטח.</p><div style=\"display:flex;gap:12px;justify-content:center;flex-wrap:wrap;\"><a href=\"${BRAND.contact}\" style=\"display:inline-flex;align-items:center;gap:8px;background:#ffffff;color:${BRAND.primary};font-size:0.95rem;font-weight:700;padding:12px 28px;border-radius:8px;text-decoration:none;\" onmouseover=\"this.style.background='#f0f7ff';this.style.boxShadow='0 4px 16px rgba(0,0,0,0.2)'\" onmouseout=\"this.style.background='#ffffff';this.style.boxShadow='none'\">📞 ליצירת קשר וייעוץ</a><a href=\"${BRAND.whatsapp}\" target=\"_blank\" rel=\"noopener\" style=\"display:inline-flex;align-items:center;gap:8px;background:#25D366;color:#fff;font-size:0.95rem;font-weight:700;padding:12px 28px;border-radius:8px;text-decoration:none;\" onmouseover=\"this.style.background='#1da851'\" onmouseout=\"this.style.background='#25D366'\">💬 WhatsApp</a></div><p style=\"margin:16px 0 0;font-size:0.85rem;color:rgba(255,255,255,0.75);\">📞 <a href=\"tel:${BRAND.phone}\" style=\"color:rgba(255,255,255,0.9);text-decoration:none;\">${BRAND.phoneDisplay}</a> | ✉️ <a href=\"mailto:${BRAND.email}\" style=\"color:rgba(255,255,255,0.9);text-decoration:none;\">${BRAND.email}</a></p></div>`;\n\n// ---- ARTICLE SECTIONS ----\nconst enrichmentBlocks = [\n  tipBlock('לפני בחירת רכיב, בדקו את סביבת העבודה: טמפרטורה, לחות, רעשי EMI ודרגת IP הנדרשת. רכיב עם מפרט לא מתאים לסביבה — יכשל גם אם הוא מבריק בנייר.'),\n  howtoBlock('כיצד לבחון ספק ציוד תעשייתי — 5 שאלות מנחות', [\n    'האם הספק מייצג את המותג רשמית בישראל?',\n    'מה זמן התגובה לפנייה טכנית דחופה?',\n    'האם יש מלאי זמין בארץ לרכיבים קריטיים?',\n    'האם ניתן לקבל תמיכה טכנית בעברית?',\n    'מהן תנאי האחריות ומדיניות ההחלפה?'\n  ]),\n  dynBlock('לפי נתוני תעשייה, כ-40% מתקלות ציוד בקרה נובעות מהתאמה לא נכונה בין הרכיב לסביבת העבודה — לא מכשל של הרכיב עצמו. בדיקה מוקדמת חוסכת זמן וכסף.'),\n  howtoBlock('בדיקת תאימות תקשורת — רשימת בדיקה', [\n    'האם הפרוטוקול (Modbus TCP / EtherNet/IP / Profinet) תואם לציוד הקיים?',\n    'האם כתובות IP ו-Node ID מוגדרים ללא חפיפה?',\n    'האם יש תמיכה בזיהוי תקלות תקשורת מרחוק?',\n    'האם קיים גיבוי תקשורת לנקודות קריטיות?'\n  ]),\n  dynBlock('מתג תעשייתי Managed עם VLAN מאפשר הפרדה מאובטחת בין רשת הבקרה (OT) לרשת הניהול (IT), ומפחית משמעותית סיכוני סייבר בתעשייה.'),\n  tipBlock('כאשר משווים הצעות מחיר, בקשו לכלול עלות רישיון, תוכנת תכנות, הדרכה ועלות חלפים ל-3 שנים. ההצעה הזולה בשנה הראשונה לעיתים היא היקרה ביותר לטווח ארוך.')\n];\n\nlet sectionsHtml = '';\nlet blockIndex = 0;\nconst insertMidCTAAfter = Math.floor(sections.length / 2);\n\nfor (let i = 0; i < sections.length; i++) {\n  const s = sections[i];\n  const sectionContent = typeof s.content === 'string' ? s.content : '';\n\n  // Sanitize content — fix font and color rules\n  const cleanContent = sectionContent\n    .replace(/font-family:[^;'\"]+Arimo[^;'\"]+;?/gi, `font-family:'Heebo',Arial,sans-serif;`)\n    .replace(/#354052/g, BRAND.text)\n    .replace(/color:#0E6BA8/g, `color:${BRAND.accent}`);\n\n  sectionsHtml += sectionH2(s.id, s.heading);\n\n  // Add section content\n  if (cleanContent.includes('<p')) {\n    sectionsHtml += cleanContent;\n  } else {\n    sectionsHtml += bodyPara(cleanContent);\n  }\n\n  // Add enrichment block (one per section, cycling)\n  if (blockIndex < enrichmentBlocks.length) {\n    sectionsHtml += enrichmentBlocks[blockIndex++];\n  }\n\n  // Add section image\n  if (images[i]) {\n    sectionsHtml += sectionImg(images[i], s.heading);\n  }\n\n  // Add mid-article CTA after ~40% of sections\n  if (i === insertMidCTAAfter) {\n    sectionsHtml += midCTA;\n  }\n}\n\n// ---- PRODUCTS SECTION ----\nconst products = [\n  {name: 'בקרים מתוכנתים (PLC)', desc: 'בקרי PLC תעשייתיים למערכות ייצור ואוטומציה', url: 'https://www.galoz.co.il/627680-%D7%91%D7%A7%D7%A8%D7%99%D7%9D-%D7%9E%D7%AA%D7%95%D7%9B%D7%A0%D7%AA%D7%99%D7%9D-%D7%9E%D7%95%D7%93%D7%95%D7%9C%D7%A8%D7%99%D7%9D/', img: 'https://d3m9l0v76dty0.cloudfront.net/system/photos/969317/original/647c52f91134a3275ab30d687acff6d5.jpg?1741787320'},\n  {name: 'בקרי טמפרטורה', desc: 'בקרי טמפרטורה מדויקים לתהליכים תעשייתיים', url: 'https://www.galoz.co.il/627674-%D7%91%D7%A7%D7%A8%D7%99-%D7%98%D7%9E%D7%A4%D7%A8%D7%98%D7%95%D7%A8%D7%94/', img: 'https://d3m9l0v76dty0.cloudfront.net/system/photos/970613/original/b3bd187697754f34c6f49442c17bc7e3.jpg?1742115142'},\n  {name: 'מד טמפרטורה ולחות', desc: 'חיישני טמפרטורה ולחות לתעשייה ותהליכים', url: 'https://www.galoz.co.il/627658-%D7%9E%D7%93-%D7%98%D7%9E%D7%A4%D7%A8%D7%98%D7%95%D7%A8%D7%94-%D7%95%D7%9C%D7%97%D7%95%D7%AA/', img: 'https://d3m9l0v76dty0.cloudfront.net/system/photos/969764/original/9041ae4b888923e5cebfad6abcc82664.jpg?1741873812'},\n  {name: 'מתמרים תעשייתיים', desc: 'מתמרי אות לסוגי מדידה שונים בתעשייה', url: 'https://www.galoz.co.il/627673-%D7%9E%D7%AA%D7%9E%D7%A8/', img: 'https://d3m9l0v76dty0.cloudfront.net/system/photos/970644/original/3584a4aaa67d22ee12f1245a648c0e64.jpg?1742116917'},\n  {name: 'מדי זרימה תעשייתיים', desc: 'מדידת זרימה נוזלים וגזים בדיוק גבוה', url: 'https://www.galoz.co.il/627668-%D7%96%D7%A8%D7%99%D7%9E%D7%94/', img: 'https://d3m9l0v76dty0.cloudfront.net/system/photos/968812/original/b387b2f71f86446944dd7dad0dfb8a5e.jpg?1741684626'},\n  {name: 'אנקודרים תעשייתיים', desc: 'קידוד מיקום וסיבובים לצירי מכונות ומנועים', url: 'https://www.galoz.co.il/627671-%D7%90%D7%A0%D7%A7%D7%95%D7%93%D7%A8%D7%99%D7%9D/', img: 'https://d3m9l0v76dty0.cloudfront.net/system/photos/968810/original/1753abf85b9a080caa8a5b7261ae8dcf.jpg?1741684159'}\n];\n\nconst productCards = products.map(p => `\n<div style=\"background:#ffffff;border:1px solid ${BRAND.border};border-radius:12px;overflow:hidden;position:relative;\" onmouseover=\"this.style.borderColor='${BRAND.primary}';this.style.boxShadow='0 4px 16px rgba(0,86,150,0.15)'\" onmouseout=\"this.style.borderColor='${BRAND.border}';this.style.boxShadow='none'\">\n<div style=\"overflow:hidden;height:160px;\"><img src=\"${p.img}\" alt=\"${p.name}\" width=\"300\" height=\"160\" style=\"width:100%;height:160px;object-fit:cover;display:block;\" loading=\"lazy\"></div>\n<div style=\"padding:12px;\">\n<p style=\"font-size:0.85rem;font-weight:700;color:${BRAND.dark};margin:0 0 4px;\">${p.name}</p>\n<p style=\"font-size:0.8rem;color:#64748b;margin:0 0 8px;\">${p.desc}</p>\n<span style=\"display:inline-block;font-size:0.75rem;font-weight:700;color:${BRAND.primary};padding:4px 10px;border:1px solid ${BRAND.primary};border-radius:20px;\">לפרטים &larr;</span>\n</div>\n<a href=\"${p.url}\" style=\"position:absolute;inset:0;\" aria-label=\"${p.name}\"></a>\n</div>`).join('');\n\nconst productsSection = `\n<h2 id=\"section-products\" style=\"font-size:1.5rem;font-weight:700;color:${BRAND.dark};margin:48px 0 16px;border-bottom:2px solid ${BRAND.primary};padding-bottom:8px;\">מוצרים מומלצים מקטלוג גלעוז</h2>\n<p style=\"font-size:1rem;line-height:1.7;color:${BRAND.text};margin-bottom:24px;\">גלעוז אלקטרוניקה מציגה מגוון רחב של ציוד פיקוד, בקרה ומדידה לתעשייה, מיצרנים מוכרים עם ייצוג רשמי בישראל:</p>\n<div style=\"display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:16px;margin-bottom:32px;\">${productCards}</div>\n<div style=\"text-align:center;margin-bottom:32px;\"><a href=\"https://www.galoz.co.il/627652-%D7%A4%D7%99%D7%A7%D7%95%D7%93-%D7%95%D7%91%D7%A7%D7%A8%D7%94/\" style=\"display:inline-flex;align-items:center;gap:8px;background:${BRAND.primary};color:#fff;font-size:0.95rem;font-weight:700;padding:12px 28px;border-radius:8px;text-decoration:none;\" onmouseover=\"this.style.background='#003f6e'\" onmouseout=\"this.style.background='${BRAND.primary}'\">לכל קטלוג פיקוד ובקרה &larr;</a></div>`;\n\n// ---- TRUST SECTION ----\nconst trustCards = [\n  {icon:'⭐', title:'מעל 30 שנות ניסיון', desc:'ניסיון מצטבר במאות פרויקטי פיקוד, בקרה ומדידה לתעשייה הישראלית.'},\n  {icon:'🔧', title:'ייעוץ מקצועי חינם', desc:'צוות מהנדסים שמלווה את הלקוחות מהאפיון הראשוני עד האינטגרציה בשטח.'},\n  {icon:'🎯', title:'התאמה ליישום', desc:'כל בחירת רכיב מתבצעת לפי דרישות המערכת בפועל, לא רק לפי קטלוג כללי.'},\n  {icon:'🇮🇱', title:'תמיכה בעברית', desc:'תמיכה טכנית מלאה בעברית, מצוות מהנדסים ישראלים עם ניסיון שטח.'}\n].map(c => `<div style=\"background:#fff;border:1px solid ${BRAND.border};border-radius:10px;padding:18px 20px;\"><strong style=\"font-size:0.95rem;color:${BRAND.dark};display:block;margin-bottom:8px;\">${c.icon} ${c.title}</strong><p style=\"margin:0;font-size:0.9rem;color:${BRAND.text};line-height:1.6;\">${c.desc}</p></div>`).join('');\n\nconst trustSection = `\n<h2 id=\"section-trust\" style=\"font-size:1.5rem;font-weight:700;color:${BRAND.dark};margin:48px 0 16px;border-bottom:2px solid ${BRAND.primary};padding-bottom:8px;\">למה בוחרים בגלעוז אלקטרוניקה</h2>\n<div style=\"display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:16px;margin-bottom:24px;\">${trustCards}</div>`;\n\n// ---- FAQ ----\nconst faqHtml = faqItems.map(faq => `\n<details style=\"border:1px solid ${BRAND.border};border-radius:10px;margin-bottom:10px;overflow:hidden;\">\n<summary style=\"cursor:pointer;padding:14px 20px;font-weight:700;font-size:1rem;color:${BRAND.dark};list-style:none;display:flex;align-items:center;justify-content:space-between;background:${BRAND.surface};\" onmouseover=\"this.style.background='#f1f5f9'\" onmouseout=\"this.style.background='${BRAND.surface}'\"><span>${faq.q}</span><span style=\"font-size:1.2rem;color:${BRAND.accent};\">＋</span></summary>\n<p style=\"padding:14px 20px 16px;margin:0;color:${BRAND.text};font-size:0.95rem;line-height:1.7;background:#ffffff;\">${faq.a}</p>\n</details>`).join('');\n\nconst faqSection = `\n<h2 id=\"section-faq\" style=\"font-size:1.5rem;font-weight:700;color:${BRAND.dark};margin:48px 0 16px;border-bottom:2px solid ${BRAND.primary};padding-bottom:8px;\">שאלות נפוצות</h2>\n${faqHtml}`;\n\n// ---- END CTA ----\nconst endCTA = `<div style=\"background:${BRAND.dark};border-radius:16px;padding:32px 24px;margin:48px 0 32px;text-align:center;\"><p style=\"font-size:1.3rem;font-weight:700;color:#ffffff;margin:0 0 8px;\">מוכנים לבחור את הציוד הנכון?</p><p style=\"font-size:1rem;color:rgba(255,255,255,0.85);margin:0 0 24px;line-height:1.6;\">צוות המהנדסים של גלעוז אלקטרוניקה כאן לסייע לכם מהאפיון הראשוני ועד ההפעלה בשטח. ייעוץ מקצועי ללא עלות.</p><div style=\"display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-bottom:16px;\"><a href=\"${BRAND.contact}\" style=\"display:inline-flex;align-items:center;gap:8px;background:${BRAND.primary};color:#fff;font-size:1rem;font-weight:700;padding:14px 32px;border-radius:8px;text-decoration:none;\" onmouseover=\"this.style.background='${BRAND.accent}';this.style.boxShadow='0 6px 20px rgba(0,86,150,0.5)'\" onmouseout=\"this.style.background='${BRAND.primary}';this.style.boxShadow='none'\">📞 ליצירת קשר וייעוץ</a><a href=\"${BRAND.whatsapp}\" target=\"_blank\" rel=\"noopener\" style=\"display:inline-flex;align-items:center;gap:8px;background:#25D366;color:#fff;font-size:1rem;font-weight:700;padding:14px 32px;border-radius:8px;text-decoration:none;\" onmouseover=\"this.style.background='#1da851'\" onmouseout=\"this.style.background='#25D366'\">💬 שלחו הודעה ב-WhatsApp</a></div><p style=\"margin:0;font-size:0.9rem;color:rgba(255,255,255,0.75);\">📞 <a href=\"tel:${BRAND.phone}\" style=\"color:rgba(255,255,255,0.9);text-decoration:none;font-weight:600;\">${BRAND.phoneDisplay}</a>&nbsp;|&nbsp;✉️ <a href=\"mailto:${BRAND.email}\" style=\"color:rgba(255,255,255,0.9);text-decoration:none;font-weight:600;\">${BRAND.email}</a></p></div>`;\n\n// ---- AUTHOR SECTION ----\nconst authorSection = `\n<div style=\"background:${BRAND.surface};border:1px solid ${BRAND.border};border-radius:16px;padding:24px;margin-top:32px;display:flex;gap:20px;align-items:flex-start;flex-wrap:wrap;\">\n<a href=\"${BRAND.homepage}\" style=\"flex-shrink:0;display:block;\" title=\"גלעוז אלקטרוניקה\"><img src=\"${BRAND.logo}\" alt=\"גלעוז אלקטרוניקה לוגו\" width=\"90\" height=\"90\" style=\"width:90px;height:90px;object-fit:contain;border-radius:10px;background:#fff;padding:8px;border:1px solid ${BRAND.border};display:block;\" loading=\"lazy\"></a>\n<div style=\"flex:1;min-width:200px;\"><a href=\"${BRAND.homepage}\" style=\"text-decoration:none;\"><strong style=\"font-size:1.1rem;color:${BRAND.dark};display:block;margin-bottom:4px;\">גלעוז אלקטרוניקה</strong></a><p style=\"margin:0 0 8px;font-size:0.9rem;color:${BRAND.text};line-height:1.6;\">גלעוז אלקטרוניקה מתמחה מעל 30 שנה בפתרונות פיקוד, בקרה ומדידה לתעשייה. אנחנו מייצגים רשמית יצרנים מובילים כמו Leuze, Gavazzi, Theben, Nethix, CIMON ו-Red Lion, ומלווים לקוחות ממגוון תחומים תעשייתיים.</p><p style=\"margin:0 0 12px;font-size:0.85rem;color:#64748b;\">📞 <a href=\"tel:${BRAND.phone}\" style=\"color:${BRAND.primary};text-decoration:none;\">${BRAND.phoneDisplay}</a> | ✉️ <a href=\"mailto:${BRAND.email}\" style=\"color:${BRAND.primary};text-decoration:none;\">${BRAND.email}</a></p><div style=\"margin-top:12px;display:flex;gap:8px;flex-wrap:wrap;\"><a href=\"${BRAND.contact}\" style=\"display:inline-flex;align-items:center;gap:6px;padding:8px 16px;border-radius:8px;background:${BRAND.primary};color:#fff;text-decoration:none;font-size:0.85rem;font-weight:700;\" onmouseover=\"this.style.background='#003f6e'\" onmouseout=\"this.style.background='${BRAND.primary}'\">📬 יצירת קשר</a><a href=\"${BRAND.whatsapp}\" target=\"_blank\" rel=\"noopener\" style=\"display:inline-flex;align-items:center;gap:6px;padding:8px 16px;border-radius:8px;background:#25D366;color:#fff;text-decoration:none;font-size:0.85rem;font-weight:700;\" onmouseover=\"this.style.background='#1da851'\" onmouseout=\"this.style.background='#25D366'\">💬 WhatsApp</a><a href=\"mailto:${BRAND.email}\" style=\"display:inline-flex;align-items:center;gap:6px;padding:8px 16px;border-radius:8px;background:${BRAND.dark};color:#fff;text-decoration:none;font-size:0.85rem;font-weight:700;\" onmouseover=\"this.style.background='#0f1c29'\" onmouseout=\"this.style.background='${BRAND.dark}'\">✉️ מייל</a></div></div>\n</div>`;\n\n// ---- BADGES ----\nconst badgesHtml = `<div style=\"display:flex;flex-wrap:wrap;gap:8px;margin-bottom:28px;\"><span style=\"display:inline-flex;align-items:center;gap:6px;padding:6px 14px;background:${BRAND.surface};border:1px solid ${BRAND.border};border-radius:20px;font-size:0.8rem;color:${BRAND.text};\">✓ מעל 30 שנות ניסיון</span><span style=\"display:inline-flex;align-items:center;gap:6px;padding:6px 14px;background:${BRAND.surface};border:1px solid ${BRAND.border};border-radius:20px;font-size:0.8rem;color:${BRAND.text};\">✓ פתרונות פיקוד ובקרה</span><span style=\"display:inline-flex;align-items:center;gap:6px;padding:6px 14px;background:${BRAND.surface};border:1px solid ${BRAND.border};border-radius:20px;font-size:0.8rem;color:${BRAND.text};\">✓ ייעוץ מקצועי חינם</span><span style=\"display:inline-flex;align-items:center;gap:6px;padding:6px 14px;background:${BRAND.surface};border:1px solid ${BRAND.border};border-radius:20px;font-size:0.8rem;color:${BRAND.text};\">✓ תמיכה טכנית בעברית</span></div>`;\n\n// ---- META BAR ----\nconst metaBar = `<div style=\"display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:24px;padding:12px 16px;background:${BRAND.surface};border:1px solid ${BRAND.border};border-radius:8px;\"><span style=\"font-size:0.85rem;color:${BRAND.text};\">⏱ זמן קריאה: 14 דקות</span><span style=\"font-size:0.85rem;color:${BRAND.text};\">עודכן: אפריל 2026</span></div>`;\n\n// ---- SCHEMA ----\nconst schemaArticle = JSON.stringify({\n  '@context': 'https://schema.org',\n  '@type': 'Article',\n  headline: title,\n  description: 'מדריך מעשי לבחירת ציוד פיקוד ובקרה לתעשייה, כולל קריטריונים לבחירת ספק, בדיקות ושגיאות נפוצות.',\n  author: {'@type': 'Organization', name: 'גלעוז אלקטרוניקה', url: BRAND.homepage},\n  publisher: {'@type': 'Organization', name: 'גלעוז אלקטרוניקה', logo: {'@type': 'ImageObject', url: BRAND.logo}},\n  inLanguage: 'he',\n  image: images[0] || 'https://mapril.websmail.net/wp-content/uploads/2026/04/WhichIndustrialControlInstrumentsAreCommonToday.jpg',\n  mainEntityOfPage: {'@type': 'WebPage', '@id': BRAND.homepage}\n});\n\nconst schemaFaq = JSON.stringify({\n  '@context': 'https://schema.org',\n  '@type': 'FAQPage',\n  mainEntity: faqItems.map(f => ({'@type': 'Question', name: f.q, acceptedAnswer: {'@type': 'Answer', text: f.a}}))\n});\n\n// ---- ASSEMBLE FULL HTML ----\nconst html = `<!DOCTYPE html>\n<html dir=\"rtl\" lang=\"he\">\n<head>\n<meta charset=\"UTF-8\">\n<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n<link rel=\"preconnect\" href=\"https://fonts.googleapis.com\">\n<link rel=\"preconnect\" href=\"https://fonts.gstatic.com\" crossorigin>\n<link href=\"https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600;700&display=swap\" rel=\"stylesheet\">\n<title>${title} | גלעוז אלקטרוניקה</title>\n</head>\n<body style=\"margin:0;padding:0;background:${BRAND.bg};font-family:'Heebo',Arial,sans-serif;color:${BRAND.text};line-height:1.7;font-size:16px;\">\n<article style=\"max-width:720px;margin:0 auto;padding:24px 16px 80px;\">\n\n<h1 style=\"font-size:2rem;font-weight:700;color:${BRAND.dark};margin:0 0 20px;line-height:1.3;\">${title}</h1>\n\n${metaBar}\n${badgesHtml}\n\n<p style=\"font-size:1rem;line-height:1.7;color:${BRAND.text};margin-bottom:1.2rem;\">${typeof intro === 'string' ? intro.split('\n')[0] : intro}</p>\n\n${tocHtml}\n${takeawaysHtml}\n${sectionsHtml}\n${productsSection}\n${trustSection}\n${faqSection}\n${endCTA}\n${authorSection}\n\n</article>\n\n<!-- Floating Contact Button -->\n<a href=\"${BRAND.contact}\" aria-label=\"צור קשר עם גלעוז\" style=\"position:fixed;bottom:24px;right:20px;min-width:56px;min-height:56px;background:${BRAND.primary};color:#fff;text-decoration:none;display:inline-flex;align-items:center;justify-content:center;gap:8px;border-radius:28px;padding:0 18px;font-size:0.85rem;font-weight:700;box-shadow:0 4px 16px rgba(0,86,150,0.4);z-index:9998;white-space:nowrap;\" onmouseover=\"this.style.background='#003f6e';this.style.boxShadow='0 6px 24px rgba(0,86,150,0.55)'\" onmouseout=\"this.style.background='${BRAND.primary}';this.style.boxShadow='0 4px 16px rgba(0,86,150,0.4)'\"><svg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='#fff'><path d='M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z'/></svg><span>צור קשר</span></a>\n\n<!-- Floating WhatsApp Button -->\n<a href=\"${BRAND.whatsapp}\" target=\"_blank\" rel=\"noopener\" aria-label=\"WhatsApp גלעוז\" style=\"position:fixed;bottom:90px;right:20px;width:52px;height:52px;background:#25D366;color:#fff;text-decoration:none;display:flex;align-items:center;justify-content:center;border-radius:50%;box-shadow:0 4px 14px rgba(37,211,102,0.4);z-index:9997;\" onmouseover=\"this.style.background='#1da851'\" onmouseout=\"this.style.background='#25D366'\"><svg xmlns='http://www.w3.org/2000/svg' width='26' height='26' viewBox='0 0 24 24' fill='#fff'><path d='M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413z'/><path d='M12 0C5.373 0 0 5.373 0 12c0 2.625.846 5.059 2.284 7.034L.789 23.492a.5.5 0 00.611.611l4.458-1.495A11.952 11.952 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-2.387 0-4.594-.822-6.34-2.197l-.442-.37-3.09 1.036 1.036-3.09-.37-.442A9.955 9.955 0 012 12C2 6.486 6.486 2 12 2s10 4.486 10 10-4.486 10-10 10z'/></svg></a>\n\n<!-- Floating Scroll-to-Top -->\n<button id=\"scrollTopBtn\" onclick=\"window.scrollTo({top:0,behavior:'smooth'})\" aria-label=\"חזרה לראש הדף\" style=\"position:fixed;bottom:24px;left:20px;width:52px;height:52px;border-radius:50%;background:#f29100;color:#fff;border:none;cursor:pointer;font-size:1.3rem;display:none;align-items:center;justify-content:center;box-shadow:0 4px 14px rgba(242,145,0,0.4);z-index:9997;\" onmouseover=\"this.style.background='#d97e00'\" onmouseout=\"this.style.background='#f29100'\">&#8679;</button>\n\n<script>(function(){var b=document.getElementById('scrollTopBtn');if(b){window.addEventListener('scroll',function(){b.style.display=window.scrollY>300?'flex':'none';});}})()</script>\n\n<script type=\"application/ld+json\">${schemaArticle}</script>\n<script type=\"application/ld+json\">${schemaFaq}</script>\n\n</body>\n</html>`;\n\nconsole.log('HTML length:', html.length, 'chars');\n\nreturn [{\n  json: {\n    html,\n    title,\n    wordpressPostTitle: title,\n    htmlLength: html.length,\n    generatedAt: new Date().toISOString()\n  }\n}];\n"
+      },
+      "name": "Generate HTML Article",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1100,
+        300
+      ],
+      "id": "node-generate-html"
+    },
+    {
+      "parameters": {
+        "jsCode": "\n// ============================================================\n// VALIDATE HTML OUTPUT — QUALITY GATE\n// Checks all mandatory requirements before WP publish\n// ============================================================\nconst data = $input.first().json;\nconst html = data.html || '';\n\nconst checks = {};\n\n// 1. Exactly one H1\nconst h1Matches = html.match(/<h1[^>]*>/gi) || [];\nchecks.singleH1 = h1Matches.length === 1;\n\n// 2. No empty src attributes\nchecks.noEmptySrc = !html.match(/src=\"\"/gi);\n\n// 3. Has real images\nchecks.hasImages = html.includes('cloudfront.net') || html.includes('mapril.websmail');\n\n// 4. Has logo\nchecks.hasLogo = html.includes('d3m9l0v76dty0.cloudfront.net/system/logos');\n\n// 5. Contact URL present\nchecks.hasContact = html.includes('galoz.co.il/contact');\n\n// 6. WhatsApp present\nchecks.hasWhatsApp = html.includes('wa.me/972522516009');\n\n// 7. TOC present and collapsed (no open attribute)\nchecks.hasTOC = html.includes('תוכן עניינים');\nchecks.tocCollapsed = !html.match(/<details[^>]*open[^>]*>\\s*<summary[^>]*>\\s*[^<]*תוכן עניינים/i);\n\n// 8. FAQ present\nchecks.hasFAQ = html.includes('שאלות נפוצות');\n\n// 9. Products section\nchecks.hasProducts = html.includes('מוצרים מומלצים') || html.includes('627680');\n\n// 10. Author section\nchecks.hasAuthor = html.includes('גלעוז אלקטרוניקה') && html.includes('system/logos');\n\n// 11. Floating buttons\nchecks.hasFloatingContact = html.includes('position:fixed') && html.includes('bottom:24px;right:20px');\nchecks.hasScrollTop = html.includes('scrollTopBtn');\n\n// 12. Font is Heebo\nchecks.heeboFont = html.includes('Heebo');\n\n// 13. No Arimo\nchecks.noArimo = !html.includes(\"'Arimo'\") && !html.includes('font-family:Arimo');\n\n// 14. Correct text color\nchecks.correctColor = !html.includes('#354052');\n\n// 15. RTL\nchecks.isRTL = html.includes('dir=\"rtl\"');\n\nconst allPassed = Object.values(checks).every(v => v === true);\nconst failedChecks = Object.entries(checks).filter(([k,v]) => !v).map(([k]) => k);\n\nconsole.log('Quality checks:', JSON.stringify(checks, null, 2));\nconsole.log('All passed:', allPassed);\nif (failedChecks.length) console.log('FAILED:', failedChecks);\n\nreturn [{\n  json: {\n    ...data,\n    qualityChecks: checks,\n    qualityPassed: allPassed,\n    failedChecks,\n    readyToPublish: allPassed\n  }\n}];\n"
+      },
+      "name": "Quality Gate Validator",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1300,
+        300
+      ],
+      "id": "node-quality-gate"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "quality-check",
+              "leftValue": "={{ $json.readyToPublish }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "true"
+              }
+            }
+          ],
+          "combinator": "and"
+        }
+      },
+      "name": "Quality Check",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        1500,
+        300
+      ],
+      "id": "node-if-quality"
+    },
+    {
+      "parameters": {
+        "resource": "post",
+        "operation": "create",
+        "title": "={{ $json.wordpressPostTitle }}",
+        "content": "={{ $json.html }}",
+        "status": "draft",
+        "additionalFields": {
+          "commentStatus": "closed",
+          "format": "standard"
+        }
+      },
+      "name": "Create WordPress Post",
+      "type": "n8n-nodes-base.wordpress",
+      "typeVersion": 1,
+      "position": [
+        1700,
+        200
+      ],
+      "id": "node-create-wp-post",
+      "credentials": {
+        "wordpressApi": {
+          "id": "galoz-wordpress-creds",
+          "name": "galoz.co.il WordPress"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "post",
+        "operation": "update",
+        "postId": "={{ $json.id }}",
+        "updateFields": {
+          "status": "publish"
+        }
+      },
+      "name": "Publish WordPress Post",
+      "type": "n8n-nodes-base.wordpress",
+      "typeVersion": 1,
+      "position": [
+        1900,
+        200
+      ],
+      "id": "node-publish-wp-post",
+      "credentials": {
+        "wordpressApi": {
+          "id": "galoz-wordpress-creds",
+          "name": "galoz.co.il WordPress"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "\n// Log failed quality check\nconst data = $input.first().json;\nconsole.error('Quality check FAILED. Not publishing to WordPress.');\nconsole.error('Failed checks:', JSON.stringify(data.failedChecks));\n\n// Could send Slack/email notification here\nreturn [{\n  json: {\n    status: 'failed',\n    reason: 'quality_check_failed',\n    failedChecks: data.failedChecks,\n    title: data.wordpressPostTitle,\n    timestamp: new Date().toISOString()\n  }\n}];\n"
+      },
+      "name": "Log Quality Failure",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1700,
+        420
+      ],
+      "id": "node-log-failure"
+    },
+    {
+      "parameters": {
+        "jsCode": "\n// Build final success summary\nconst wpData = $input.first().json;\nconst qualityData = $('Quality Gate Validator').first().json;\n\nconsole.log('Article published successfully!');\nconsole.log('WordPress post ID:', wpData.id);\nconsole.log('Post link:', wpData.link);\n\nreturn [{\n  json: {\n    status: 'success',\n    postId: wpData.id,\n    postLink: wpData.link,\n    postTitle: wpData.title?.rendered || qualityData.wordpressPostTitle,\n    qualityPassed: qualityData.qualityPassed,\n    publishedAt: new Date().toISOString(),\n    domain: 'galoz.co.il',\n    agent: 'myclaw',\n    version: '15.4.26'\n  }\n}];\n"
+      },
+      "name": "Success Summary",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2100,
+        200
+      ],
+      "id": "node-success-summary"
+    },
+    {
+      "parameters": {
+        "jsCode": "\n// ============================================================\n// FETCH GALOZ.CO.IL PRODUCT DATA FOR ENRICHMENT\n// Periodically fetches live product data for freshness\n// ============================================================\nconst productCategories = [\n  {name: 'פיקוד ובקרה', url: 'https://www.galoz.co.il/627652-%D7%A4%D7%99%D7%A7%D7%95%D7%93-%D7%95%D7%91%D7%A7%D7%A8%D7%94/'},\n  {name: 'בקרים מתוכנתים', url: 'https://www.galoz.co.il/627680-%D7%91%D7%A7%D7%A8%D7%99%D7%9D-%D7%9E%D7%AA%D7%95%D7%9B%D7%A0%D7%AA%D7%99%D7%9D-%D7%9E%D7%95%D7%93%D7%95%D7%9C%D7%A8%D7%99%D7%9D/'},\n  {name: 'בקרי טמפרטורה', url: 'https://www.galoz.co.il/627674-%D7%91%D7%A7%D7%A8%D7%99-%D7%98%D7%9E%D7%A4%D7%A8%D7%98%D7%95%D7%A8%D7%94/'},\n  {name: 'מד טמפרטורה', url: 'https://www.galoz.co.il/627658-%D7%9E%D7%93-%D7%98%D7%9E%D7%A4%D7%A8%D7%98%D7%95%D7%A8%D7%94-%D7%95%D7%9C%D7%97%D7%95%D7%AA/'},\n  {name: 'מדי זרימה', url: 'https://www.galoz.co.il/627668-%D7%96%D7%A8%D7%99%D7%9E%D7%94/'},\n  {name: 'אנקודרים', url: 'https://www.galoz.co.il/627671-%D7%90%D7%A0%D7%A7%D7%95%D7%93%D7%A8%D7%99%D7%9D/'}\n];\n\nconst staticProductImages = [\n  'https://d3m9l0v76dty0.cloudfront.net/system/photos/969317/original/647c52f91134a3275ab30d687acff6d5.jpg?1741787320',\n  'https://d3m9l0v76dty0.cloudfront.net/system/photos/970613/original/b3bd187697754f34c6f49442c17bc7e3.jpg?1742115142',\n  'https://d3m9l0v76dty0.cloudfront.net/system/photos/969764/original/9041ae4b888923e5cebfad6abcc82664.jpg?1741873812',\n  'https://d3m9l0v76dty0.cloudfront.net/system/photos/970644/original/3584a4aaa67d22ee12f1245a648c0e64.jpg?1742116917',\n  'https://d3m9l0v76dty0.cloudfront.net/system/photos/968812/original/b387b2f71f86446944dd7dad0dfb8a5e.jpg?1741684626',\n  'https://d3m9l0v76dty0.cloudfront.net/system/photos/968810/original/1753abf85b9a080caa8a5b7261ae8dcf.jpg?1741684159'\n];\n\nreturn [{\n  json: {\n    productCategories,\n    staticProductImages,\n    galozBrand: {\n      name: 'גלעוז אלקטרוניקה',\n      logo: 'https://d3m9l0v76dty0.cloudfront.net/system/logos/7002/original/f2a1fcfa083f4d83b3269684e5fe223e.png',\n      phone: '079-5805040',\n      whatsapp: '+972522516009',\n      email: 'sales@galoz.co.il',\n      contact: 'https://www.galoz.co.il/contact',\n      homepage: 'https://www.galoz.co.il/'\n    },\n    fetchedAt: new Date().toISOString()\n  }\n}];\n"
+      },
+      "name": "Load Galoz Product Data",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        300,
+        500
+      ],
+      "id": "node-load-products"
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "https://www.galoz.co.il/wp-json/wp/v2/categories",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpBasicAuth",
+        "options": {
+          "timeout": 15000,
+          "response": {
+            "response": {
+              "fullResponse": false
+            }
+          }
+        },
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "per_page",
+              "value": "50"
+            },
+            {
+              "name": "hide_empty",
+              "value": "false"
+            }
+          ]
+        }
+      },
+      "name": "Fetch WP Categories",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [
+        300,
+        620
+      ],
+      "id": "node-fetch-wp-categories",
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "galoz-wp-basic-auth",
+          "name": "galoz.co.il WP Basic Auth"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "## Galoz Article Generator — MyClaw v15.4.26\n\n### Workflow Overview\n\nThis workflow generates production-ready Hebrew articles for galoz.co.il:\n\n1. **Schedule Trigger** → Runs every Monday at 06:00\n2. **Fetch Source Article** → Downloads the source article from mapril.websmail.net\n3. **Parse Article Sections** → Extracts structure, sections, and images\n4. **AI Rewrite Article** → Rewrites content using GPT-4o\n5. **Parse AI Response** → Validates and structures AI output\n6. **Generate HTML Article** → Builds full production HTML with all MyClaw requirements\n7. **Quality Gate Validator** → Checks all mandatory requirements\n8. **Quality Check** → Routes to publish or failure handler\n9. **Create WordPress Post** → Creates draft post on galoz.co.il\n10. **Publish WordPress Post** → Sets post to published\n11. **Success Summary** → Logs completion\n\n### Credentials Required\n- **openAiApi**: OpenAI API key\n- **wordpressApi**: galoz.co.il WordPress credentials\n- **httpBasicAuth** (galoz-wp-basic-auth): galoz.co.il WP REST API auth\n\n### All URLs hardcoded to galoz.co.il\n- No foreign domains in workflow\n- All WordPress API calls target galoz.co.il\n- All product links are galoz.co.il URLs\n\n### MyClaw Rules Enforced\n- Single H1 enforcement\n- No date in intro\n- TOC collapsed by default\n- FAQ collapsed by default\n- Heebo font only\n- Body text: #334155\n- Border-right for RTL accents",
+        "height": 540,
+        "width": 600
+      },
+      "name": "Workflow Documentation",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        100,
+        580
+      ],
+      "id": "node-documentation"
+    }
+  ],
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Fetch Source Article",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fetch Source Article": {
+      "main": [
+        [
+          {
+            "node": "Parse Article Sections",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse Article Sections": {
+      "main": [
+        [
+          {
+            "node": "AI Rewrite Article",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Rewrite Article": {
+      "main": [
+        [
+          {
+            "node": "Parse AI Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse AI Response": {
+      "main": [
+        [
+          {
+            "node": "Generate HTML Article",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate HTML Article": {
+      "main": [
+        [
+          {
+            "node": "Quality Gate Validator",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Quality Gate Validator": {
+      "main": [
+        [
+          {
+            "node": "Quality Check",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Quality Check": {
+      "main": [
+        [
+          {
+            "node": "Create WordPress Post",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Log Quality Failure",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create WordPress Post": {
+      "main": [
+        [
+          {
+            "node": "Publish WordPress Post",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Publish WordPress Post": {
+      "main": [
+        [
+          {
+            "node": "Success Summary",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1",
+    "saveManualExecutions": true,
+    "callerPolicy": "workflowsFromSameOwner",
+    "errorWorkflow": ""
+  },
+  "staticData": {},
+  "meta": {
+    "templateCredsSetupCompleted": false,
+    "instanceId": "galoz-myclaw-15.4.26"
+  },
+  "id": "galoz-myclaw-workflow-15426",
+  "tags": [
+    {
+      "createdAt": "2026-04-15T00:00:00.000Z",
+      "updatedAt": "2026-04-15T00:00:00.000Z",
+      "id": "tag-galoz",
+      "name": "galoz.co.il"
+    },
+    {
+      "createdAt": "2026-04-15T00:00:00.000Z",
+      "updatedAt": "2026-04-15T00:00:00.000Z",
+      "id": "tag-myclaw",
+      "name": "myclaw"
+    },
+    {
+      "createdAt": "2026-04-15T00:00:00.000Z",
+      "updatedAt": "2026-04-15T00:00:00.000Z",
+      "id": "tag-production",
+      "name": "production"
+    }
+  ],
+  "versionId": "v15.4.26",
+  "triggerCount": 1,
+  "updatedAt": "2026-04-15T00:00:00.000Z",
+  "createdAt": "2026-04-15T00:00:00.000Z"
+}

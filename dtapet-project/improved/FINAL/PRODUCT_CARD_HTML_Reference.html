@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>בדיקת תצוגת מוצרים - דויטשמן טפטים</title>
+    <style>
+        /* Reset for WordPress compatibility */
+        * { box-sizing: border-box; }
+        body { 
+            font-family: 'Assistant', Arial, sans-serif; 
+            max-width: 960px; 
+            margin: 0 auto; 
+            padding: 20px;
+            background: #fff;
+        }
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+            margin: 1.5rem 0;
+        }
+        .product-card {
+            text-decoration: none;
+            color: inherit;
+            display: flex;
+            flex-direction: column;
+            background: #fff;
+            border: 1px solid #e5e5e5;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            overflow: hidden;
+            text-align: center;
+            min-height: 380px;
+            transition: box-shadow 0.2s ease, transform 0.2s ease;
+        }
+        .product-card:hover {
+            box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+            transform: translateY(-2px);
+        }
+        .product-image-container {
+            height: 280px;
+            background: #f9f7f4;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            padding: 1rem;
+        }
+        .product-image {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+        .product-title {
+            font-size: 0.95rem;
+            padding: 0.5rem 1rem;
+            color: #2b2e34;
+            margin: 0;
+            font-weight: 600;
+        }
+        .product-price {
+            font-size: 0.9rem;
+            color: #bc1f1f;
+            font-weight: 700;
+            padding: 0 1rem 1rem;
+            display: block;
+            margin-top: auto;
+        }
+        .test-result {
+            background: #f0fff0;
+            border: 2px solid #27ae60;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin: 2rem 0;
+        }
+        .test-result h3 {
+            color: #27ae60;
+            margin-top: 0;
+        }
+        .error-msg {
+            background: #fff5f5;
+            border: 2px solid #bc1f1f;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin: 1rem 0;
+        }
+        .error-msg h3 {
+            color: #bc1f1f;
+            margin-top: 0;
+        }
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+        @media (max-width: 768px) {
+            .product-grid, .comparison-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<h1>בדיקת תצוגת מוצרים ב-WordPress</h1>
+
+<h2>1. כרטיס מוצר תקין - עם תמונה מקומית</h2>
+<div class="product-grid">
+    <!-- קלפ תקין #1 -->
+    <a href="https://www.dtapet.com/product/sample-1/" class="product-card">
+        <div class="product-image-container">
+            <img src="https://www.dtapet.com/wp-content/uploads/2025/08/20052-catalogue_compressed_page-0060-510x612.jpg" alt="טפט מקטלוג דויטשמן לחיפוי קיר סלון" class="product-image" loading="lazy">
+        </div>
+        <h3 class="product-title">טפטים לחיפוי קיר מהקטלוג החדש</h3>
+        <span class="product-price">לצפייה בקטלוג</span>
+    </a>
+    <!-- קלפ תקין #2 -->
+    <a href="https://www.dtapet.com/product/sample-2/" class="product-card">
+        <div class="product-image-container">
+            <img src="https://www.dtapet.com/wp-content/uploads/2024/01/635-1-510x612.jpg" alt="טפט מעוצב לחיפוי קיר בסלון ובחדר שינה" class="product-image" loading="lazy">
+        </div>
+        <h3 class="product-title">טפטים מעוצבים לסלון ולחדר שינה</h3>
+        <span class="product-price">לצפייה בקטלוג</span>
+    </a>
+    <!-- קלפ תקין #3 -->
+    <a href="https://www.dtapet.com/product/sample-3/" class="product-card">
+        <div class="product-image-container">
+            <img src="https://www.dtapet.com/wp-content/uploads/2022/09/1010-28-28_mockup1-510x612.jpg" alt="טפט גיאומטרי לחיפוי קיר דגש בבית" class="product-image" loading="lazy">
+        </div>
+        <h3 class="product-title">טפטים גיאומטריים לקיר דגש</h3>
+        <span class="product-price">לצפייה בקטלוג</span>
+    </a>
+</div>
+
+<h2>2. קוד HTML להעתקה (Inline Styles)</h2>
+<pre style="background:#f5f5f5;padding:1rem;border-radius:8px;overflow-x:auto;direction:ltr;text-align:left;font-size:0.85rem;">
+&lt;div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;margin:1.5rem 0;"&gt;
+  &lt;a href="https://www.dtapet.com/product/PRODUCT-SLUG/" style="text-decoration:none;color:inherit;display:flex;flex-direction:column;background:#fff;border:1px solid #e5e5e5;border-radius:8px;box-shadow:0 2px 8px rgba(0,0,0,0.08);overflow:hidden;text-align:center;min-height:380px;" onmouseover="this.style.boxShadow='0 4px 16px rgba(0,0,0,0.12)';this.style.transform='translateY(-2px)'" onmouseout="this.style.boxShadow='0 2px 8px rgba(0,0,0,0.08)';this.style.transform='none'"&gt;
+    &lt;div style="height:280px;background:#f9f7f4;display:flex;align-items:center;justify-content:center;overflow:hidden;"&gt;
+      &lt;img src="IMAGE_URL_HERE" alt="ALT_TEXT_HERE" style="width:100%;height:100%;object-fit:contain;padding:1rem;" loading="lazy"&gt;
+    &lt;/div&gt;
+    &lt;h3 style="font-size:0.95rem;padding:0.5rem 1rem 0.5rem;color:#2b2e34;font-family:'Assistant',Arial,sans-serif;margin:0;"&gt;PRODUCT_NAME&lt;/h3&gt;
+    &lt;span style="font-size:0.9rem;color:#bc1f1f;font-weight:700;padding:0 1rem 1rem;display:block;margin-top:auto;"&gt;PRICE_OR_CTA&lt;/span&gt;
+  &lt;/a&gt;
+&lt;/div&gt;
+</pre>
+
+<h2>3. בעיות נפוצות ותיקונים</h2>
+
+<div class="error-msg">
+    <h3>בעיה: התמונה נחתכת או מעוותת</h3>
+    <p><strong>פתרון:</strong> השתמש ב-<code>object-fit:contain</code> במקום <code>object-fit:cover</code></p>
+    <p>✅ נכון: <code>style="width:100%;height:100%;object-fit:contain;padding:1rem;"</code></p>
+    <p>❌ לא נכון: <code>style="width:100%;height:100%;object-fit:cover;"</code></p>
+</div>
+
+<div class="error-msg">
+    <h3>בעיה: הכרטיסים לא באותו גובה</h3>
+    <p><strong>פתרון:</strong> הוסף <code>min-height:380px</code> לקלפ ו-<code>margin-top:auto</code> למחיר</p>
+    <p>זה מבטיח שכל הקלפים יהיו באותו גובה והמחיר תמיד בתחתית</p>
+</div>
+
+<div class="error-msg">
+    <h3>בעיה: הגריד לא עובד בטלפון</h3>
+    <p><strong>פתרון:</strong> הוסף media query למסכים קטנים</p>
+    <pre style="background:#f5f5f5;padding:1rem;border-radius:8px;overflow-x:auto;direction:ltr;text-align:left;font-size:0.85rem;">
+@media (max-width: 768px) {
+  .product-grid {
+    grid-template-columns: 1fr;
+  }
+}
+    </pre>
+</div>
+
+<div class="error-msg">
+    <h3>בעיה: WordPress מוסיף תגיות &lt;p&gt; ו-&lt;br&gt;</h3>
+    <p><strong>פתרון:</strong> הקפד למזער את ה-HTML (minify) ולהשתמש ב-shortcode או ב-Gutenberg blocks</p>
+    <p>או - השתמש ב-Classic Editor והדבק כ-HTML ישירות</p>
+</div>
+
+<div class="test-result">
+    <h3>✅ בדיקה: התבנית עובדת נכון</h3>
+    <p>כל שלושת כרטיסי המוצרים למעלה מוצגים בצורה תקינה.</p>
+    <p>הם מכילים:</p>
+    <ul>
+        <li>תמונה עם <code>object-fit:contain</code> (לא נחתכת)</li>
+        <li>כותרת מוצר</li>
+        <li>מחיר/קישור בתחתית</li>
+        <li>אפקט hover</li>
+    </ul>
+</div>
+
+<h2>4. מבנה נתוני מוצר ל-N8N</h2>
+<pre style="background:#f5f5f5;padding:1rem;border-radius:8px;overflow-x:auto;direction:ltr;text-align:left;font-size:0.85rem;">
+products_data = [
+  {
+    "name": "טפטים לחיפוי קיר מהקטלוג החדש",
+    "url": "https://www.dtapet.com/product/catalogue-wallpaper-1/",
+    "image": "https://www.dtapet.com/wp-content/uploads/2025/08/20052-catalogue_compressed_page-0060-510x612.jpg",
+    "alt": "טפט מקטלוג דויטשמן לחיפוי קיר סלון",
+    "price": "לצפייה בקטלוג"
+  },
+  {
+    "name": "טפטים מעוצבים לסלון ולחדר שינה",
+    "url": "https://www.dtapet.com/product/designed-wallpaper-salon/",
+    "image": "https://www.dtapet.com/wp-content/uploads/2024/01/635-1-510x612.jpg",
+    "alt": "טפט מעוצב לחיפוי קיר בסלון ובחדר שינה",
+    "price": "לצפייה בקטלוג"
+  },
+  {
+    "name": "טפטים גיאומטריים לקיר דגש",
+    "url": "https://www.dtapet.com/product/geometric-wallpaper-accent/",
+    "image": "https://www.dtapet.com/wp-content/uploads/2022/09/1010-28-28_mockup1-510x612.jpg",
+    "alt": "טפט גיאומטרי לחיפוי קיר דגש בבית",
+    "price": "לצפייה בקטלוג"
+  }
+]
+</pre>
+
+</body>
+</html>

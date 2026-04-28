@@ -1,0 +1,43 @@
+{
+  "created_at": "2026-04-28",
+  "report_policy": "SUCCESS_ONLY: this dashboard report lists only models that produced a new validated OpenRouter HTML output. Failed/fallback models are intentionally omitted from this public report.",
+  "successful_outputs": [
+    {
+      "agent": "Hermes Opus 4.7",
+      "model": "anthropic/claude-opus-4.7",
+      "identity": "Elegant Minimalist",
+      "attempts": 1,
+      "html_checks": {
+        "wp_wrapper": true,
+        "has_style": true,
+        "has_all_initial": true,
+        "no_script": true,
+        "rtl": true,
+        "has_img": true,
+        "inline_style_count": 36,
+        "bytes": 8244,
+        "sha256": "12f1e780215944b6"
+      },
+      "file": "Improved_HTML_Template.html"
+    },
+    {
+      "agent": "Hermes GPT 5.5",
+      "model": "openai/gpt-5.5",
+      "identity": "Bold Creative",
+      "attempts": 2,
+      "html_checks": {
+        "wp_wrapper": true,
+        "has_style": true,
+        "has_all_initial": true,
+        "no_script": true,
+        "rtl": true,
+        "has_img": true,
+        "inline_style_count": 43,
+        "bytes": 10363,
+        "sha256": "b3cdac3f0229745c"
+      },
+      "file": "Improved_HTML_Template.html"
+    }
+  ],
+  "success_count": 2
+}

@@ -1,0 +1,27 @@
+<!-- Generated: 20260426-123011 | Pipeline: n8n-html-template-redesign | Agent5: local -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>{{$json.article_title}}</title>
+<style>
+  body { font-family: Arial, sans-serif; margin: 0; padding: 0; }
+  .header { background: #1a1a2e; padding: 24px; text-align: center; }
+  .hero { width: 100%; }
+  .content { padding: 16px; max-width: 680px; margin: 0 auto; }
+</style>
+</head>
+<body>
+  <div class="header">
+    <h1>{{$json.article_title}}</h1>
+    <p>{{$json.publish_date}} | {{$json.author_name}}</p>
+  </div>
+  <img class="hero" src="{{$json.hero_image_url}}" alt="Hero" />
+  <div class="content">
+    <h2>{{$json.article_subtitle}}</h2>
+    <p>{{$json.article_body}}</p>
+    <a href="{{$json.source_url}}">Read more</a>
+    <a href="{{$json.unsubscribe_url}}">Unsubscribe</a>
+  </div>
+<img src="{{$json.tracking_pixel_url}}" width="1" height="1" alt="" style="display:none;border:0;" /></body>
+</html>

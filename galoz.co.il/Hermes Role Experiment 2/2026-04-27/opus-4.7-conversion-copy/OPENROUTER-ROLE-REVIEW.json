@@ -1,0 +1,17 @@
+{
+  "slug": "opus-4.7-conversion-copy",
+  "agent": "Hermes Opus 4.7 Conversion Copy",
+  "model": "anthropic/claude-opus-4.7",
+  "role": "High-conversion copy and narrative: stronger persuasive copy, trust, authority, CTAs, FAQ depth, but still WordPress-safe.",
+  "review": {
+    "role_strategy": "High-conversion copy and narrative: stronger persuasive copy, trust, authority, CTAs, FAQ depth, but still WordPress-safe.",
+    "error": "JSONDecodeError: Unterminated string starting at: line 1 column 2794 (char 2793)",
+    "html_differentiators": [],
+    "prompt_differentiators": [],
+    "workflow_differentiators": [],
+    "qa_focus": [
+      "fallback local deterministic transform"
+    ],
+    "expected_tradeoffs": []
+  }
+}

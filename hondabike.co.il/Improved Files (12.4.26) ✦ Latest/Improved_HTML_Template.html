@@ -1,0 +1,773 @@
+<article lang="he" dir="rtl">
+<style>
+:root {
+--primary: #E91B2F;
+--secondary: #d11223;
+--accent: #E91B2F;
+--text: #404040;
+--bg: #FFFFFF;
+--radius: 6px;
+--shadow: 0 4px 12px rgba(233,27,47,0.15);
+}
+.title_content h1.title { text-align: center !important; }
+html { scroll-behavior: smooth; }
+summary br, [data-resp="float-group"] br, [data-resp="float-group"] a br, [data-resp="cta-btn"] br, .cta-hover br { display: none !important; }
+[data-resp="container"] > p:empty { display: none !important; margin: 0 !important; padding: 0 !important; height: 0 !important; }
+[data-resp="container"] a { transition: color 0.2s, background 0.2s; }
+[data-resp="container"] a:not([data-resp="cta-btn"]):not(.cta-hover):not(.social-btn):not(.float-cta-hover):not([data-resp="cta-link"]):hover { background: transparent !important; color: #d11223 !important; text-decoration: underline !important; }
+[data-resp="cta-link"]:hover { color: #FFFFFF !important; background: transparent !important; text-decoration: underline !important; opacity: 0.85; }
+details[open] summary span.arrow { transform: rotate(180deg); }
+details summary::-webkit-details-marker { display: none; }
+details summary { list-style: none; }
+[data-resp="container"] { padding: 0 15%; }
+[data-resp="heading"] { font-size: 2.5rem; }
+[data-resp="table-wrap"] { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+[data-resp="table"] { min-width: 600px; }
+[data-resp="img"] { width: 100%; height: auto; }
+[data-resp="cta-btn"], .cta-hover { padding: 12px 28px !important; font-size: 0.95rem !important; min-height: 44px; border-radius: 50px !important; border: 2px solid transparent; box-sizing: border-box; display: inline-flex !important; align-items: center; justify-content: center; white-space: nowrap; line-height: 1.2; vertical-align: middle; }
+[data-resp="grid"] { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+[data-resp="card"] { padding: 24px; transition: transform 0.25s ease, box-shadow 0.25s ease; }
+[data-resp="card"]:hover { transform: translateY(-3px); box-shadow: 0 8px 24px rgba(233,27,47,0.2) !important; }
+[data-resp="toc"] { padding: 24px; }
+[data-resp="toc-item"] { border-radius: 6px; transition: background 0.25s, border-color 0.25s; padding: clamp(8px, 1.5vw, 12px) clamp(8px, 2vw, 12px); margin: 0 -clamp(8px, 2vw, 12px); border-right: 3px solid transparent; }
+[data-resp="toc-item"]:hover { background: rgba(233,27,47,0.08); border-right-color: #E91B2F; }
+[data-resp="toc-item"]:hover a { color: #b0151f !important; font-weight: 700 !important; }
+[data-resp="faq-item"] { padding: 16px; }
+[data-resp="faq"] > summary { transition: background 0.25s, border-color 0.25s; border-right: 3px solid transparent; }
+[data-resp="faq"]:not([open]) > summary:hover { background: rgba(233,27,47,0.07); border-right-color: #E91B2F; }
+[data-resp="faq"][open] > summary { background: rgba(233,27,47,0.04); border-right-color: #E91B2F; }
+[data-resp="author-box"] { display: flex; flex-direction: row; gap: 24px; }
+[data-resp="stat-grid"] { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+[data-resp="stat-item"] { transition: transform 0.2s, box-shadow 0.2s; }
+[data-resp="stat-item"]:hover { transform: translateY(-2px); box-shadow: 0 6px 16px rgba(233,27,47,0.2); }
+[data-resp="float-group"] { position: fixed; bottom: 24px; left: 24px; z-index: 9999; display: flex; flex-direction: column; gap: 10px; align-items: flex-start; }
+.social-btn:hover { opacity: 1 !important; }
+.social-fb:hover { background: #1877F2 !important; color: #fff !important; }
+.social-ig:hover { background: #E1306C !important; color: #fff !important; }
+.cta-hover { transition: transform 0.2s, box-shadow 0.2s, background 0.2s, border-color 0.2s; }
+.cta-hover:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(233,27,47,0.35); }
+.cta-red:hover { background: #c4162a !important; }
+.cta-white:hover { background: #f5f5f5 !important; color: #c4162a !important; }
+.cta-outline:hover { background: rgba(255,255,255,0.15) !important; }
+.cta-hover:focus { outline: 2px solid #E91B2F; outline-offset: 2px; }
+.cta-hover:active { transform: translateY(0) scale(0.98); }
+.float-cta-hover:hover { transform: translateY(-3px); box-shadow: 0 8px 24px rgba(233,27,47,0.4); }
+@media (max-width: 1024px) {
+[data-resp="container"] { padding: 0 10%; }
+[data-resp="grid"] { grid-template-columns: repeat(2, 1fr); }
+[data-resp="stat-grid"] { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 768px) {
+[data-resp="container"] { padding: 0 5%; }
+[data-resp="heading"] { font-size: 1.8rem; }
+[data-resp="table"] { font-size: 0.85rem; }
+[data-resp="cta-btn"] { padding: 14px 24px; font-size: 1rem; width: 100%; display: block; text-align: center; }
+[data-resp="grid"] { grid-template-columns: 1fr; }
+[data-resp="card"] { padding: 16px; }
+[data-resp="toc"] { padding: 16px; }
+[data-resp="author-box"] { flex-direction: column; text-align: center; }
+[data-resp="stat-grid"] { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+[data-resp="float-group"] { bottom: 16px; left: 16px; }
+}
+@media (max-width: 480px) {
+[data-resp="container"] { padding: 0 4%; }
+[data-resp="heading"] { font-size: 1.5rem; }
+[data-resp="table"] { font-size: 0.75rem; min-width: 500px; }
+[data-resp="cta-btn"] { padding: 12px 20px; font-size: 0.95rem; }
+[data-resp="faq-item"] { padding: 12px; }
+[data-resp="stat-grid"] { grid-template-columns: 1fr 1fr; gap: 8px; }
+}
+@media (max-width: 480px) {
+[data-resp="simple-table"] tr { display: block; margin-bottom: 16px; border: 1px solid #E91B2F; border-radius: 6px; }
+[data-resp="simple-table"] td { display: flex; justify-content: space-between; padding: 8px 12px; }
+[data-resp="simple-table"] td::before { content: attr(data-label); font-weight: bold; }
+[data-resp="simple-table"] thead { display: none; }
+}
+</style>
+
+<div data-resp="container" style="font-family: Assistant, system-ui, sans-serif; color: #404040; background: #FFFFFF; line-height: 1.7;">
+<span id="article-top" aria-hidden="true"></span>
+
+<!-- HERO SECTION -->
+<div style="margin-bottom: clamp(32px, 6vw, 56px);">
+<div style="background: linear-gradient(135deg, #E91B2F 0%, #d11223 100%); border-radius: 6px; padding: clamp(24px, 5vw, 48px); margin-bottom: clamp(24px, 4vw, 32px); text-align: center;">
+<p style="font-size: clamp(0.85rem, 2vw, 1rem); color: rgba(255,255,255,0.85); text-transform: uppercase; letter-spacing: 2px; margin-bottom: clamp(8px, 2vw, 12px); font-weight: 600;">
+מדריך מקצועי מאת Honda Bike ישראל
+</p>
+<h2 data-resp="heading" style="font-size: clamp(1.8rem, 5vw, 2.8rem); font-weight: 800; color: #FFFFFF; line-height: 1.2; margin: 0 0 clamp(16px, 3vw, 24px) 0; border: none; padding: 0;">
+מדריך קניית אופנוע: כל מה שצריך לדעת לפני שבוחרים את האופנוע הבא שלכם
+</h2>
+<p style="font-size: clamp(0.95rem, 2.5vw, 1.15rem); color: rgba(255,255,255,0.9); max-width: 65ch; margin: 0 auto; line-height: 1.6;">
+מדריך מקיף שיעזור לכם להבין איך לבחור אופנוע נכון, מה לבדוק לפני קנייה ואילו טיפים לקניית אופנוע יחסכו לכם טעויות והוצאות מיותרות.
+</p>
+</div>
+
+<div style="display: flex; justify-content: center; margin-bottom: clamp(16px, 3vw, 24px);">
+<span style="font-size: clamp(0.8rem, 2vw, 0.9rem); color: #404040; opacity: 0.7;">זמן קריאה: 12 דקות</span>
+</div>
+
+<!-- STAT GRID -->
+<div data-resp="stat-grid" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: clamp(12px, 3vw, 20px);">
+<div data-resp="stat-item" style="text-align: center; padding: clamp(12px, 3vw, 20px); background: linear-gradient(135deg, #FFFFFF 0%, #fef2f3 100%); border-radius: 6px; border: 1px solid rgba(233,27,47,0.2);">
+<div style="font-size: clamp(1.5rem, 4vw, 2.5rem); font-weight: 700; color: #E91B2F;">6</div>
+<div style="font-size: clamp(0.8rem, 2vw, 0.95rem); color: #404040;">סוגי אופנועים עיקריים</div>
+</div>
+<div data-resp="stat-item" style="text-align: center; padding: clamp(12px, 3vw, 20px); background: linear-gradient(135deg, #FFFFFF 0%, #fef2f3 100%); border-radius: 6px; border: 1px solid rgba(233,27,47,0.2);">
+<div style="font-size: clamp(1.5rem, 4vw, 2.5rem); font-weight: 700; color: #E91B2F;">3</div>
+<div style="font-size: clamp(0.8rem, 2vw, 0.95rem); color: #404040;">דרגות רישיון</div>
+</div>
+<div data-resp="stat-item" style="text-align: center; padding: clamp(12px, 3vw, 20px); background: linear-gradient(135deg, #FFFFFF 0%, #fef2f3 100%); border-radius: 6px; border: 1px solid rgba(233,27,47,0.2);">
+<div style="font-size: clamp(1.5rem, 4vw, 2.5rem); font-weight: 700; color: #E91B2F;">5</div>
+<div style="font-size: clamp(0.8rem, 2vw, 0.95rem); color: #404040;">טעויות נפוצות</div>
+</div>
+<div data-resp="stat-item" style="text-align: center; padding: clamp(12px, 3vw, 20px); background: linear-gradient(135deg, #FFFFFF 0%, #fef2f3 100%); border-radius: 6px; border: 1px solid rgba(233,27,47,0.2);">
+<div style="font-size: clamp(1.5rem, 4vw, 2.5rem); font-weight: 700; color: #E91B2F;">100%</div>
+<div style="font-size: clamp(0.8rem, 2vw, 0.95rem); color: #404040;">חשיבות בדיקה מקדימה</div>
+</div>
+</div>
+</div>
+
+<!-- TABLE OF CONTENTS -->
+<nav data-resp="toc" style="background: #FFFFFF; border: 1px solid rgba(233,27,47,0.2); border-radius: 6px; padding: clamp(16px, 4vw, 28px); margin-bottom: clamp(32px, 6vw, 56px); box-shadow: 0 4px 12px rgba(233,27,47,0.15);">
+<details data-resp="accordion" style="margin: 0; border: none; border-radius: 0;">
+<summary style="padding: clamp(8px, 2vw, 12px) 0; cursor: pointer; font-weight: 700; font-size: clamp(1.1rem, 2.5vw, 1.3rem); display: flex; justify-content: space-between; align-items: center; color: #E91B2F;">
+תוכן עניינים
+<span class="arrow" style="transition: transform 0.3s; font-size: 0.8em; color: #E91B2F; flex-shrink: 0; min-width: 1.2em; text-align: center; display: inline-block;">&#9660;</span>
+</summary>
+<div style="padding-top: clamp(8px, 2vw, 12px); border-top: 1px solid rgba(233,27,47,0.15);">
+<div data-resp="toc-item" style="border-bottom: 1px solid rgba(233,27,47,0.08);">
+<a href="#section-1" style="color: #E91B2F; text-decoration: none; font-size: clamp(0.9rem, 2.2vw, 1.05rem); display: block; padding: clamp(8px, 1.5vw, 12px) 0;">איך לבחור אופנוע שמתאים בדיוק לצרכים שלכם</a>
+</div>
+<div data-resp="toc-item" style="border-bottom: 1px solid rgba(233,27,47,0.08);">
+<a href="#section-2" style="color: #E91B2F; text-decoration: none; font-size: clamp(0.9rem, 2.2vw, 1.05rem); display: block; padding: clamp(8px, 1.5vw, 12px) 0;">איזה סוג אופנוע מתאים למתחילים</a>
+</div>
+<div data-resp="toc-item" style="border-bottom: 1px solid rgba(233,27,47,0.08);">
+<a href="#section-3" style="color: #E91B2F; text-decoration: none; font-size: clamp(0.9rem, 2.2vw, 1.05rem); display: block; padding: clamp(8px, 1.5vw, 12px) 0;">מקרה מהשטח: רוכב שבחר ספורטיבי כאופנוע ראשון</a>
+</div>
+<div data-resp="toc-item" style="border-bottom: 1px solid rgba(233,27,47,0.08);">
+<a href="#section-4" style="color: #E91B2F; text-decoration: none; font-size: clamp(0.9rem, 2.2vw, 1.05rem); display: block; padding: clamp(8px, 1.5vw, 12px) 0;">חדש מול יד שנייה – השוואה מקצועית</a>
+</div>
+<div data-resp="toc-item" style="border-bottom: 1px solid rgba(233,27,47,0.08);">
+<a href="#section-5" style="color: #E91B2F; text-decoration: none; font-size: clamp(0.9rem, 2.2vw, 1.05rem); display: block; padding: clamp(8px, 1.5vw, 12px) 0;">כמה תקציב באמת צריך להקצות</a>
+</div>
+<div data-resp="toc-item" style="border-bottom: 1px solid rgba(233,27,47,0.08);">
+<a href="#section-6" style="color: #E91B2F; text-decoration: none; font-size: clamp(0.9rem, 2.2vw, 1.05rem); display: block; padding: clamp(8px, 1.5vw, 12px) 0;">האם נפח מנוע גדול יותר תמיד אומר בחירה טובה יותר</a>
+</div>
+<div data-resp="toc-item" style="border-bottom: 1px solid rgba(233,27,47,0.08);">
+<a href="#section-7" style="color: #E91B2F; text-decoration: none; font-size: clamp(0.9rem, 2.2vw, 1.05rem); display: block; padding: clamp(8px, 1.5vw, 12px) 0;">איך לבדוק אופנוע יד שנייה לפני קנייה</a>
+</div>
+<div data-resp="toc-item" style="border-bottom: 1px solid rgba(233,27,47,0.08);">
+<a href="#section-8" style="color: #E91B2F; text-decoration: none; font-size: clamp(0.9rem, 2.2vw, 1.05rem); display: block; padding: clamp(8px, 1.5vw, 12px) 0;">עלויות ביטוח ואחזקה</a>
+</div>
+<div data-resp="toc-item" style="border-bottom: 1px solid rgba(233,27,47,0.08);">
+<a href="#section-9" style="color: #E91B2F; text-decoration: none; font-size: clamp(0.9rem, 2.2vw, 1.05rem); display: block; padding: clamp(8px, 1.5vw, 12px) 0;">התאמת האופנוע לגוף ולסגנון רכיבה</a>
+</div>
+<div data-resp="toc-item" style="border-bottom: 1px solid rgba(233,27,47,0.08);">
+<a href="#section-10" style="color: #E91B2F; text-decoration: none; font-size: clamp(0.9rem, 2.2vw, 1.05rem); display: block; padding: clamp(8px, 1.5vw, 12px) 0;">נסיעת מבחן – למה היא קריטית</a>
+</div>
+<div data-resp="toc-item" style="border-bottom: 1px solid rgba(233,27,47,0.08);">
+<a href="#section-11" style="color: #E91B2F; text-decoration: none; font-size: clamp(0.9rem, 2.2vw, 1.05rem); display: block; padding: clamp(8px, 1.5vw, 12px) 0;">5 טעויות נפוצות ברכישת אופנוע</a>
+</div>
+<div data-resp="toc-item" style="border-bottom: 1px solid rgba(233,27,47,0.08);">
+<a href="#section-12" style="color: #E91B2F; text-decoration: none; font-size: clamp(0.9rem, 2.2vw, 1.05rem); display: block; padding: clamp(8px, 1.5vw, 12px) 0;">בחירת רכב שמתאים להיום ולמחר</a>
+</div>
+<div data-resp="toc-item" style="border-bottom: 1px solid rgba(233,27,47,0.08);">
+<a href="#section-13" style="color: #E91B2F; text-decoration: none; font-size: clamp(0.9rem, 2.2vw, 1.05rem); display: block; padding: clamp(8px, 1.5vw, 12px) 0;">בדיקת דרגת רישיון, נוחות ושליטה</a>
+</div>
+<div data-resp="toc-item">
+<a href="#faq" style="color: #E91B2F; text-decoration: none; font-size: clamp(0.9rem, 2.2vw, 1.05rem); display: block; padding: clamp(8px, 1.5vw, 12px) 0;">שאלות נפוצות</a>
+</div>
+</div>
+</details>
+</nav>
+
+<!-- KEY TAKEAWAYS -->
+<div data-resp="card" style="background: #fef2f3; border: 1px solid rgba(233,27,47,0.2); border-right: 4px solid #E91B2F; border-radius: 6px; padding: clamp(16px, 4vw, 28px); margin-bottom: clamp(32px, 6vw, 56px); box-shadow: 0 4px 12px rgba(233,27,47,0.15);">
+<p style="font-weight: 700; font-size: clamp(1.1rem, 2.5vw, 1.3rem); color: #E91B2F; margin-bottom: clamp(8px, 2vw, 12px);">נקודות מפתח מהמדריך</p>
+<ul style="margin: 0; padding: 0 20px 0 0;">
+<li style="font-size: clamp(1rem, 2.5vw, 1.15rem); color: #404040; padding: 4px 0;">קניית אופנוע היא החלטה משמעותית שדורשת מחקר מקדים מעמיק</li>
+<li style="font-size: clamp(1rem, 2.5vw, 1.15rem); color: #404040; padding: 4px 0;">התאמת סוג האופנוע לניסיון, לסגנון הרכיבה ולתקציב חשובה לא פחות מהמותג</li>
+<li style="font-size: clamp(1rem, 2.5vw, 1.15rem); color: #404040; padding: 4px 0;">בדיקה מקצועית ונסיעת מבחן יכולות לחסוך אלפי שקלים</li>
+<li style="font-size: clamp(1rem, 2.5vw, 1.15rem); color: #404040; padding: 4px 0;">עלויות אחזקה וביטוח הן חלק בלתי נפרד מתקציב הרכישה</li>
+</ul>
+</div>
+
+<!-- EARLY CONTACT CTA -->
+<div style="background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%); border-radius: 8px; padding: clamp(20px, 4vw, 32px); margin-bottom: clamp(32px, 6vw, 56px); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: clamp(12px, 3vw, 20px);">
+<div style="flex: 1; min-width: 200px;">
+<p style="font-size: clamp(1.1rem, 2.8vw, 1.35rem); font-weight: 700; color: #FFFFFF; margin: 0 0 6px 0; line-height: 1.3;">צריכים עזרה בבחירת האופנוע?</p>
+<p style="font-size: clamp(0.85rem, 2vw, 0.95rem); color: rgba(255,255,255,0.7); margin: 0; line-height: 1.5;">הצוות המקצועי שלנו זמין לייעוץ אישי ללא התחייבות</p>
+</div>
+<div style="display: flex; gap: 10px; flex-wrap: wrap;">
+<a data-resp="cta-btn" class="cta-hover cta-white" href="https://hondabike.co.il/%D7%A6%D7%95%D7%A8-%D7%A7%D7%A9%D7%A8/" style="display: inline-block; background: #FFFFFF; color: #1a1a1a; padding: clamp(10px, 2vw, 14px) clamp(20px, 4vw, 32px); font-size: clamp(0.85rem, 2vw, 1rem); font-weight: 700; text-decoration: none; border-radius: 50px; border: 2px solid #FFFFFF; box-shadow: 0 2px 10px rgba(0,0,0,0.2); transition: transform 0.2s, box-shadow 0.2s, background 0.2s;">צרו קשר</a>
+<a data-resp="cta-btn" class="cta-hover cta-outline" href="tel:0772311829" style="display: inline-block; background: transparent; color: #FFFFFF; padding: clamp(10px, 2vw, 14px) clamp(20px, 4vw, 32px); font-size: clamp(0.85rem, 2vw, 1rem); font-weight: 700; text-decoration: none; border-radius: 50px; border: 2px solid rgba(255,255,255,0.4); transition: transform 0.2s, box-shadow 0.2s, background 0.2s;">077-231-1829</a>
+</div>
+</div>
+
+<!-- SECTION 1 -->
+<section id="section-1" style="margin-bottom: clamp(32px, 6vw, 56px);">
+<h2 style="font-size: clamp(1.5rem, 4vw, 2.25rem); font-weight: 700; color: #E91B2F; line-height: 1.3; border-bottom: 2px solid #E91B2F; padding-bottom: clamp(8px, 2vw, 14px); margin-bottom: clamp(16px, 3vw, 24px);">
+איך לבחור אופנוע שמתאים בדיוק לצרכים שלכם
+</h2>
+<p style="font-size: clamp(1rem, 2.5vw, 1.25rem); color: #404040; line-height: 1.7; margin-bottom: clamp(12px, 2vw, 16px);">
+בחירת אופנוע חדש היא אחת ההחלטות המשמעותיות ביותר עבור כל רוכב – בין אם מדובר ברוכב מתחיל שעושה את צעדיו הראשונים בעולם הדו-גלגלי, ובין אם מדובר ברוכב מנוסה שמחפש שדרוג. הבחירה הנכונה תלויה בשילוב של מספר גורמים: סגנון הרכיבה, רמת הניסיון, התקציב, ומטרת השימוש העיקרית.
+</p>
+<p style="font-size: clamp(1rem, 2.5vw, 1.25rem); color: #404040; line-height: 1.7; margin-bottom: clamp(12px, 2vw, 16px);">
+לפני שנכנסים לאולם תצוגה, חשוב לשאול את עצמכם שאלות בסיסיות: האם אתם צריכים אופנוע לנסיעות יומיומיות בעיר? לטיולים ארוכים בכבישי בינעירוניים? לרכיבת שטח? או אולי שילוב של כמה מהם? התשובות לשאלות אלו יכוונו אתכם ישירות לקטגוריה המתאימה.
+</p>
+
+<div data-resp="card" style="background: #fef2f3; border: 1px solid rgba(233,27,47,0.2); border-radius: 6px; padding: clamp(16px, 4vw, 28px); margin: clamp(16px, 3vw, 24px) 0; box-shadow: 0 4px 12px rgba(233,27,47,0.15);">
+<p style="font-weight: 700; font-size: clamp(1rem, 2.5vw, 1.15rem); color: #E91B2F; margin-bottom: clamp(8px, 2vw, 12px);">תובנה מקצועית</p>
+<p style="font-size: clamp(1rem, 2.5vw, 1.15rem); color: #404040; font-style: italic; line-height: 1.7; margin: 0;">
+"רוב הטעויות ברכישת אופנוע קורות עוד לפני שנכנסים לאולם תצוגה – כשלא מגדירים מראש מה באמת צריכים ומה התקציב האמיתי."
+</p>
+</div>
+</section>
+
+<!-- SECTION 2 -->
+<section id="section-2" style="margin-bottom: clamp(32px, 6vw, 56px);">
+<h2 style="font-size: clamp(1.5rem, 4vw, 2.25rem); font-weight: 700; color: #E91B2F; line-height: 1.3; border-bottom: 2px solid #E91B2F; padding-bottom: clamp(8px, 2vw, 14px); margin-bottom: clamp(16px, 3vw, 24px);">
+איזה סוג אופנוע מתאים למתחילים
+</h2>
+<p style="font-size: clamp(1rem, 2.5vw, 1.25rem); color: #404040; line-height: 1.7; margin-bottom: clamp(12px, 2vw, 16px);">
+בעולם האופנועים קיימים מספר סוגים עיקריים, וכל אחד מהם מיועד לשימוש שונה. רוכבים מתחילים נוטים לבחור על בסיס מראה חיצוני בלבד, אך זו טעות נפוצה שעלולה לעלות ביוקר.
+</p>
+
+<div data-resp="grid" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: clamp(12px, 3vw, 20px); margin: clamp(20px, 4vw, 32px) 0;">
+<div data-resp="card" style="background: #FFFFFF; border: 1px solid rgba(233,27,47,0.15); border-radius: 6px; padding: clamp(16px, 4vw, 28px); box-shadow: 0 4px 12px rgba(233,27,47,0.15);">
+<h3 style="font-size: clamp(1.15rem, 2.8vw, 1.45rem); font-weight: 700; color: #E91B2F; margin-bottom: clamp(8px, 2vw, 14px); line-height: 1.4;">
+אופנוע עירוני / נייקד
+</h3>
+<p style="font-size: clamp(0.95rem, 2.3vw, 1.1rem); color: #404040; line-height: 1.6; margin: 0;">
+ישיבה זקופה ונוחה, מתאים לנסיעות יומיומיות בעיר. קל לתמרון, אידיאלי למתחילים. מנועים בטווח 125-500 סמ"ק.
+</p>
+</div>
+<div data-resp="card" style="background: #FFFFFF; border: 1px solid rgba(233,27,47,0.15); border-radius: 6px; padding: clamp(16px, 4vw, 28px); box-shadow: 0 4px 12px rgba(233,27,47,0.15);">
+<h3 style="font-size: clamp(1.15rem, 2.8vw, 1.45rem); font-weight: 700; color: #E91B2F; margin-bottom: clamp(8px, 2vw, 14px); line-height: 1.4;">
+קטנוע
+</h3>
+<p style="font-size: clamp(0.95rem, 2.3vw, 1.1rem); color: #404040; line-height: 1.6; margin: 0;">
+נוח וקל לשימוש, תיבת הילוכים אוטומטית, מושלם לעיר ולנסיעות קצרות. דגמים כמו <a href="https://hondabike.co.il/קטנועים/forza-750/" style="color: #E91B2F; text-decoration: none; font-weight: 600;">Forza 750</a> מתאימים גם לנסיעות ארוכות.
+</p>
+</div>
+<div data-resp="card" style="background: #FFFFFF; border: 1px solid rgba(233,27,47,0.15); border-radius: 6px; padding: clamp(16px, 4vw, 28px); box-shadow: 0 4px 12px rgba(233,27,47,0.15);">
+<h3 style="font-size: clamp(1.15rem, 2.8vw, 1.45rem); font-weight: 700; color: #E91B2F; margin-bottom: clamp(8px, 2vw, 14px); line-height: 1.4;">
+אדוונצ'ר / דואלי
+</h3>
+<p style="font-size: clamp(0.95rem, 2.3vw, 1.1rem); color: #404040; line-height: 1.6; margin: 0;">
+משלב יכולות כביש ושטח, מתאים לרוכבים שרוצים גמישות מקסימלית. דגם כמו <a href="https://hondabike.co.il/model/x-adv/" style="color: #E91B2F; text-decoration: none; font-weight: 600;">X-ADV</a> מציע חוויה ייחודית.
+</p>
+</div>
+</div>
+</section>
+
+<!-- SECTION 3 -->
+<section id="section-3" style="margin-bottom: clamp(32px, 6vw, 56px);">
+<h2 style="font-size: clamp(1.5rem, 4vw, 2.25rem); font-weight: 700; color: #E91B2F; line-height: 1.3; border-bottom: 2px solid #E91B2F; padding-bottom: clamp(8px, 2vw, 14px); margin-bottom: clamp(16px, 3vw, 24px);">
+מקרה מהשטח: רוכב שבחר ספורטיבי כאופנוע ראשון
+</h2>
+
+<figure data-resp="figure" style="margin: clamp(16px, 3vw, 24px) 0; width: 100%; max-width: 800px; margin-left: auto; margin-right: auto;">
+<img data-resp="img" src="https://hondabike.co.il/wp-content/uploads/2026/04/HowtoChooseBetweenaNewMotorcycleandaSecondHandMotorcycle.jpg" alt="השוואה בין אופנוע חדש לאופנוע יד שנייה - מדריך בחירה" loading="lazy" decoding="async" style="width: 100%; height: auto; max-height: 500px; object-fit: cover; border-radius: 6px; display: block;" />
+</figure>
+
+<p style="font-size: clamp(1rem, 2.5vw, 1.25rem); color: #404040; line-height: 1.7; margin-bottom: clamp(12px, 2vw, 16px);">
+רוכב צעיר, בן 22, הגיע לאולם תצוגה עם חלום ברור – אופנוע ספורטיבי עם מנוע חזק. הוא התעלם מהמלצת איש המקצוע והחליט לרכוש אופנוע עם מנוע 600 סמ"ק, למרות שהיה בתחילת דרכו.
+</p>
+<div data-resp="card" style="background: #fef2f3; border: 1px solid rgba(233,27,47,0.2); border-right: 4px solid #E91B2F; border-radius: 6px; padding: clamp(16px, 4vw, 28px); margin: clamp(16px, 3vw, 24px) 0; box-shadow: 0 4px 12px rgba(233,27,47,0.15);">
+<p style="font-weight: 700; color: #E91B2F; margin-bottom: 8px;">מה קרה?</p>
+<p style="font-size: clamp(0.95rem, 2.3vw, 1.1rem); color: #404040; line-height: 1.7; margin-bottom: 8px;">
+תוך שבועיים הוא חווה מספר מצבים מסוכנים – תגובת גז אגרסיבית מדי, קושי בשליטה בסיבובים, ותנוחת רכיבה שגרמה לכאבי גב. בסופו של דבר, הוא מכר את האופנוע בהפסד משמעותי ורכש דגם עירוני שהתאים לרמת הניסיון שלו.
+</p>
+<p style="font-size: clamp(0.95rem, 2.3vw, 1.1rem); color: #404040; line-height: 1.7; margin: 0;">
+<strong style="color: #E91B2F;">הלקח:</strong> התאמת האופנוע לרמת הניסיון חשובה יותר מהמראה או העוצמה.
+</p>
+</div>
+</section>
+
+<!-- SECTION 4 - COMPARISON TABLE -->
+<section id="section-4" style="margin-bottom: clamp(32px, 6vw, 56px);">
+<h2 style="font-size: clamp(1.5rem, 4vw, 2.25rem); font-weight: 700; color: #E91B2F; line-height: 1.3; border-bottom: 2px solid #E91B2F; padding-bottom: clamp(8px, 2vw, 14px); margin-bottom: clamp(16px, 3vw, 24px);">
+חדש מול יד שנייה – השוואה מקצועית
+</h2>
+<p style="font-size: clamp(1rem, 2.5vw, 1.25rem); color: #404040; line-height: 1.7; margin-bottom: clamp(12px, 2vw, 16px);">
+אחת ההחלטות המרכזיות בתהליך הרכישה היא האם לרכוש אופנוע חדש או יד שנייה. לכל אפשרות יש יתרונות וחסרונות ברורים.
+</p>
+
+<div data-resp="table-wrap" style="width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; margin: clamp(16px, 3vw, 24px) 0; border-radius: 6px;">
+<table data-resp="table" style="width: 100%; min-width: 600px; border-collapse: collapse; font-size: clamp(0.75rem, 2vw, 1rem);">
+<thead>
+<tr>
+<th style="padding: clamp(8px, 2vw, 16px); text-align: right; background: #E91B2F; color: #FFFFFF; font-weight: 700; white-space: nowrap;">קריטריון</th>
+<th style="padding: clamp(8px, 2vw, 16px); text-align: right; background: #E91B2F; color: #FFFFFF; font-weight: 700; white-space: nowrap;">אופנוע חדש</th>
+<th style="padding: clamp(8px, 2vw, 16px); text-align: right; background: #E91B2F; color: #FFFFFF; font-weight: 700; white-space: nowrap;">אופנוע יד שנייה</th>
+</tr>
+</thead>
+<tbody>
+<tr style="background: #FFFFFF;">
+<td style="padding: clamp(8px, 2vw, 14px); border-bottom: 1px solid rgba(233,27,47,0.1); font-weight: 600; color: #404040;">מחיר</td>
+<td style="padding: clamp(8px, 2vw, 14px); border-bottom: 1px solid rgba(233,27,47,0.1); color: #404040;">גבוה יותר, מחיר מחירון</td>
+<td style="padding: clamp(8px, 2vw, 14px); border-bottom: 1px solid rgba(233,27,47,0.1); color: #404040;">נמוך יותר, תלוי מצב ושנתון</td>
+</tr>
+<tr style="background: #fef8f8;">
+<td style="padding: clamp(8px, 2vw, 14px); border-bottom: 1px solid rgba(233,27,47,0.1); font-weight: 600; color: #404040;">אחריות</td>
+<td style="padding: clamp(8px, 2vw, 14px); border-bottom: 1px solid rgba(233,27,47,0.1); color: #404040;">אחריות יבואן מלאה</td>
+<td style="padding: clamp(8px, 2vw, 14px); border-bottom: 1px solid rgba(233,27,47,0.1); color: #404040;">ללא אחריות (אלא אם נרכש מסוחר)</td>
+</tr>
+<tr style="background: #FFFFFF;">
+<td style="padding: clamp(8px, 2vw, 14px); border-bottom: 1px solid rgba(233,27,47,0.1); font-weight: 600; color: #404040;">מצב מכני</td>
+<td style="padding: clamp(8px, 2vw, 14px); border-bottom: 1px solid rgba(233,27,47,0.1); color: #404040;">חדש לגמרי, ללא בלאי</td>
+<td style="padding: clamp(8px, 2vw, 14px); border-bottom: 1px solid rgba(233,27,47,0.1); color: #404040;">תלוי בשימוש ותחזוקה קודמים</td>
+</tr>
+<tr style="background: #fef8f8;">
+<td style="padding: clamp(8px, 2vw, 14px); border-bottom: 1px solid rgba(233,27,47,0.1); font-weight: 600; color: #404040;">מימון</td>
+<td style="padding: clamp(8px, 2vw, 14px); border-bottom: 1px solid rgba(233,27,47,0.1); color: #404040;">אפשרויות מימון מגוונות</td>
+<td style="padding: clamp(8px, 2vw, 14px); border-bottom: 1px solid rgba(233,27,47,0.1); color: #404040;">בדרך כלל רכישה עצמאית</td>
+</tr>
+<tr style="background: #FFFFFF;">
+<td style="padding: clamp(8px, 2vw, 14px); border-bottom: 1px solid rgba(233,27,47,0.1); font-weight: 600; color: #404040;">פחת</td>
+<td style="padding: clamp(8px, 2vw, 14px); border-bottom: 1px solid rgba(233,27,47,0.1); color: #404040;">ירידת ערך מהירה בשנה הראשונה</td>
+<td style="padding: clamp(8px, 2vw, 14px); border-bottom: 1px solid rgba(233,27,47,0.1); color: #404040;">ירידת ערך מתונה יותר</td>
+</tr>
+<tr style="background: #fef8f8;">
+<td style="padding: clamp(8px, 2vw, 14px); font-weight: 600; color: #404040;">טכנולוגיה</td>
+<td style="padding: clamp(8px, 2vw, 14px); color: #404040;">דגם עדכני עם מערכות בטיחות מתקדמות</td>
+<td style="padding: clamp(8px, 2vw, 14px); color: #404040;">תלוי בשנתון הדגם</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+
+<!-- SECTION 5 -->
+<section id="section-5" style="margin-bottom: clamp(32px, 6vw, 56px);">
+<h2 style="font-size: clamp(1.5rem, 4vw, 2.25rem); font-weight: 700; color: #E91B2F; line-height: 1.3; border-bottom: 2px solid #E91B2F; padding-bottom: clamp(8px, 2vw, 14px); margin-bottom: clamp(16px, 3vw, 24px);">
+כמה תקציב באמת צריך להקצות
+</h2>
+<p style="font-size: clamp(1rem, 2.5vw, 1.25rem); color: #404040; line-height: 1.7; margin-bottom: clamp(12px, 2vw, 16px);">
+התקציב לרכישת אופנוע אינו מסתכם רק במחיר הרכב עצמו. ישנם שלושה רבדים עיקריים שחשוב לקחת בחשבון.
+</p>
+
+<div data-resp="grid" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: clamp(12px, 3vw, 20px); margin: clamp(20px, 4vw, 32px) 0;">
+<div data-resp="card" style="background: #FFFFFF; border: 1px solid rgba(233,27,47,0.15); border-top: 4px solid #E91B2F; border-radius: 6px; padding: clamp(16px, 4vw, 28px); box-shadow: 0 4px 12px rgba(233,27,47,0.15);">
+<h3 style="font-size: clamp(1.15rem, 2.8vw, 1.45rem); font-weight: 700; color: #E91B2F; margin-bottom: clamp(8px, 2vw, 14px); line-height: 1.4;">
+עלות רכישה ראשונית
+</h3>
+<p style="font-size: clamp(0.95rem, 2.3vw, 1.1rem); color: #404040; line-height: 1.6; margin: 0;">
+מחיר האופנוע עצמו, ביטוח חובה, רישום, קסדה ואביזרי בטיחות. חשוב לתכנן תוספת של לפחות 10-15% מעל מחיר האופנוע.
+</p>
+</div>
+<div data-resp="card" style="background: #FFFFFF; border: 1px solid rgba(233,27,47,0.15); border-top: 4px solid #E91B2F; border-radius: 6px; padding: clamp(16px, 4vw, 28px); box-shadow: 0 4px 12px rgba(233,27,47,0.15);">
+<h3 style="font-size: clamp(1.15rem, 2.8vw, 1.45rem); font-weight: 700; color: #E91B2F; margin-bottom: clamp(8px, 2vw, 14px); line-height: 1.4;">
+עלויות חודשיות שוטפות
+</h3>
+<p style="font-size: clamp(0.95rem, 2.3vw, 1.1rem); color: #404040; line-height: 1.6; margin: 0;">
+ביטוח מקיף, דלק, חניה, ותחזוקה שוטפת (שמן, צמיגים, רפידות). עלות חודשית ממוצעת: 500-1,500 שקלים, בהתאם לדגם ולשימוש.
+</p>
+</div>
+<div data-resp="card" style="background: #FFFFFF; border: 1px solid rgba(233,27,47,0.15); border-top: 4px solid #E91B2F; border-radius: 6px; padding: clamp(16px, 4vw, 28px); box-shadow: 0 4px 12px rgba(233,27,47,0.15);">
+<h3 style="font-size: clamp(1.15rem, 2.8vw, 1.45rem); font-weight: 700; color: #E91B2F; margin-bottom: clamp(8px, 2vw, 14px); line-height: 1.4;">
+ירידת ערך ופחת
+</h3>
+<p style="font-size: clamp(0.95rem, 2.3vw, 1.1rem); color: #404040; line-height: 1.6; margin: 0;">
+אופנוע חדש מאבד בממוצע 15-25% מערכו בשנה הראשונה. בשנים הבאות, הירידה מתמתנת. כדאי לבחור דגם עם ערך שני-שוק יציב.
+</p>
+</div>
+</div>
+
+<div style="text-align: center; margin: clamp(24px, 4vw, 32px) 0;">
+<a data-resp="cta-btn" class="cta-hover cta-red" href="https://hondabike.co.il/%D7%A6%D7%95%D7%A8-%D7%A7%D7%A9%D7%A8/" style="display: inline-block; background: #E91B2F; color: #fff; padding: clamp(14px, 3vw, 18px) clamp(28px, 5vw, 44px); font-size: clamp(0.95rem, 2.5vw, 1.15rem); font-weight: 700; text-decoration: none; border-radius: 50px; border: 2px solid #E91B2F; box-shadow: 0 4px 14px rgba(233,27,47,0.25); transition: transform 0.2s, box-shadow 0.2s, background 0.2s;">
+גלו את מבחר האופנועים שלנו
+</a>
+</div>
+</section>
+
+<!-- DID YOU KNOW - BUDGET -->
+<div data-resp="card" style="background: #f0f7ff; border: 1px solid rgba(0,100,200,0.15); border-right: 4px solid #0064c8; border-radius: 6px; padding: clamp(16px, 4vw, 28px); margin-bottom: clamp(32px, 6vw, 56px); box-shadow: 0 2px 8px rgba(0,100,200,0.08);">
+<p style="font-weight: 700; font-size: clamp(1rem, 2.5vw, 1.15rem); color: #0064c8; margin-bottom: clamp(6px, 1.5vw, 10px);">הידעת?</p>
+<p style="font-size: clamp(0.95rem, 2.3vw, 1.1rem); color: #404040; line-height: 1.7; margin: 0;">
+הונדה היא יצרנית האופנועים והקטנועים הגדולה בעולם, ומייצרת מדי שנה למעלה מ-15 מיליון כלי רכב דו-גלגליים. הדגמים שלה ידועים בערך שוק יציב ובעלויות תחזוקה נמוכות יחסית, מה שהופך אותם לבחירה כלכלית חכמה לטווח ארוך.
+</p>
+</div>
+
+<!-- SECTION 6 -->
+<section id="section-6" style="margin-bottom: clamp(32px, 6vw, 56px);">
+<h2 style="font-size: clamp(1.5rem, 4vw, 2.25rem); font-weight: 700; color: #E91B2F; line-height: 1.3; border-bottom: 2px solid #E91B2F; padding-bottom: clamp(8px, 2vw, 14px); margin-bottom: clamp(16px, 3vw, 24px);">
+האם נפח מנוע גדול יותר תמיד אומר בחירה טובה יותר
+</h2>
+
+<figure data-resp="figure" style="margin: clamp(16px, 3vw, 24px) 0; width: 100%; max-width: 800px; margin-left: auto; margin-right: auto;">
+<img data-resp="img" src="https://hondabike.co.il/wp-content/uploads/2026/04/WhyIsItImportanttoCheckInsuranceandMaintenanceCostsBeforeClosingaDeal.jpg" alt="חשיבות בדיקת עלויות ביטוח ואחזקה לפני סגירת עסקה על אופנוע" loading="lazy" decoding="async" style="width: 100%; height: auto; max-height: 500px; object-fit: cover; border-radius: 6px; display: block;" />
+</figure>
+
+<p style="font-size: clamp(1rem, 2.5vw, 1.25rem); color: #404040; line-height: 1.7; margin-bottom: clamp(12px, 2vw, 16px);">
+לא בהכרח. נפח מנוע גדול יותר אמנם מספק יותר כוח, אבל הוא גם מגיע עם משקל גבוה יותר, צריכת דלק גבוהה יותר, ודרישות ביטוח ותחזוקה יקרות יותר. בנוסף, אופנועים עם מנועים חזקים דורשים שליטה ברמה גבוהה.
+</p>
+<p style="font-size: clamp(1rem, 2.5vw, 1.25rem); color: #404040; line-height: 1.7; margin-bottom: clamp(12px, 2vw, 16px);">
+עבור רוב הרוכבים – במיוחד אלו שנוסעים בעיר – אופנוע או קטנוע עם מנוע בטווח 125-400 סמ"ק יספק את כל מה שצריכים, עם יתרון משמעותי בחיסכון ובקלות התמרון.
+</p>
+</section>
+
+<!-- SECTION 7 -->
+<section id="section-7" style="margin-bottom: clamp(32px, 6vw, 56px);">
+<h2 style="font-size: clamp(1.5rem, 4vw, 2.25rem); font-weight: 700; color: #E91B2F; line-height: 1.3; border-bottom: 2px solid #E91B2F; padding-bottom: clamp(8px, 2vw, 14px); margin-bottom: clamp(16px, 3vw, 24px);">
+איך לבדוק אופנוע יד שנייה לפני קנייה
+</h2>
+<p style="font-size: clamp(1rem, 2.5vw, 1.25rem); color: #404040; line-height: 1.7; margin-bottom: clamp(12px, 2vw, 16px);">
+אם החלטתם לרכוש אופנוע יד שנייה, הנה רשימת בדיקות שחובה לבצע לפני סגירת העסקה.
+</p>
+
+<h3 style="font-size: clamp(1.25rem, 3vw, 1.75rem); font-weight: 700; color: #E91B2F; margin-bottom: clamp(12px, 3vw, 20px); line-height: 1.4;">
+רשימת בדיקות מקדימות
+</h3>
+<div data-resp="grid" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: clamp(12px, 3vw, 20px);">
+<div data-resp="card" style="background: #FFFFFF; border: 1px solid rgba(233,27,47,0.15); border-radius: 6px; padding: clamp(16px, 4vw, 28px); box-shadow: 0 4px 12px rgba(233,27,47,0.15);">
+<p style="font-weight: 700; color: #E91B2F; font-size: clamp(1rem, 2.3vw, 1.1rem); margin-bottom: 8px;">בדיקת מסמכים</p>
+<ul style="padding: 0 16px 0 0; margin: 0;">
+<li style="font-size: clamp(0.9rem, 2.2vw, 1rem); color: #404040; padding: 4px 0;">רישיון רכב בתוקף</li>
+<li style="font-size: clamp(0.9rem, 2.2vw, 1rem); color: #404040; padding: 4px 0;">דו"ח טסט שנתי</li>
+<li style="font-size: clamp(0.9rem, 2.2vw, 1rem); color: #404040; padding: 4px 0;">היסטוריית בעלויות</li>
+<li style="font-size: clamp(0.9rem, 2.2vw, 1rem); color: #404040; padding: 4px 0;">העדר עיקולים ושעבודים</li>
+</ul>
+</div>
+<div data-resp="card" style="background: #FFFFFF; border: 1px solid rgba(233,27,47,0.15); border-radius: 6px; padding: clamp(16px, 4vw, 28px); box-shadow: 0 4px 12px rgba(233,27,47,0.15);">
+<p style="font-weight: 700; color: #E91B2F; font-size: clamp(1rem, 2.3vw, 1.1rem); margin-bottom: 8px;">בדיקה חזותית</p>
+<ul style="padding: 0 16px 0 0; margin: 0;">
+<li style="font-size: clamp(0.9rem, 2.2vw, 1rem); color: #404040; padding: 4px 0;">שריטות ופגיעות בשלדה</li>
+<li style="font-size: clamp(0.9rem, 2.2vw, 1rem); color: #404040; padding: 4px 0;">מצב צמיגים ורפידות</li>
+<li style="font-size: clamp(0.9rem, 2.2vw, 1rem); color: #404040; padding: 4px 0;">נזילות שמן או נוזלים</li>
+<li style="font-size: clamp(0.9rem, 2.2vw, 1rem); color: #404040; padding: 4px 0;">מצב השלדה והמתלים</li>
+</ul>
+</div>
+<div data-resp="card" style="background: #FFFFFF; border: 1px solid rgba(233,27,47,0.15); border-radius: 6px; padding: clamp(16px, 4vw, 28px); box-shadow: 0 4px 12px rgba(233,27,47,0.15);">
+<p style="font-weight: 700; color: #E91B2F; font-size: clamp(1rem, 2.3vw, 1.1rem); margin-bottom: 8px;">סימני אזהרה</p>
+<ul style="padding: 0 16px 0 0; margin: 0;">
+<li style="font-size: clamp(0.9rem, 2.2vw, 1rem); color: #404040; padding: 4px 0;">מונה קילומטרים חשוד</li>
+<li style="font-size: clamp(0.9rem, 2.2vw, 1rem); color: #404040; padding: 4px 0;">רעשים חריגים במנוע</li>
+<li style="font-size: clamp(0.9rem, 2.2vw, 1rem); color: #404040; padding: 4px 0;">סירוב לנסיעת מבחן</li>
+<li style="font-size: clamp(0.9rem, 2.2vw, 1rem); color: #404040; padding: 4px 0;">מכירה בלחץ או במהירות</li>
+</ul>
+</div>
+</div>
+</section>
+
+<!-- SECTION 8 -->
+<section id="section-8" style="margin-bottom: clamp(32px, 6vw, 56px);">
+<h2 style="font-size: clamp(1.5rem, 4vw, 2.25rem); font-weight: 700; color: #E91B2F; line-height: 1.3; border-bottom: 2px solid #E91B2F; padding-bottom: clamp(8px, 2vw, 14px); margin-bottom: clamp(16px, 3vw, 24px);">
+עלויות ביטוח ואחזקה – למה כדאי לבדוק מראש
+</h2>
+<p style="font-size: clamp(1rem, 2.5vw, 1.25rem); color: #404040; line-height: 1.7; margin-bottom: clamp(12px, 2vw, 16px);">
+עלויות הביטוח והאחזקה משתנות באופן משמעותי בין דגמים שונים. אופנוע ספורטיבי יכול לעלות פי שניים עד שלושה בביטוח מקיף לעומת קטנוע עירוני מאותה שנה.
+</p>
+<div data-resp="card" style="background: #fef2f3; border: 1px solid rgba(233,27,47,0.2); border-radius: 6px; padding: clamp(16px, 4vw, 28px); margin: clamp(16px, 3vw, 24px) 0; box-shadow: 0 4px 12px rgba(233,27,47,0.15);">
+<p style="font-weight: 700; color: #E91B2F; margin-bottom: 8px;">טיפ מקצועי</p>
+<p style="font-size: clamp(0.95rem, 2.3vw, 1.1rem); color: #404040; line-height: 1.7; margin: 0;">
+לפני שסוגרים על דגם ספציפי, בקשו הצעות ביטוח מ-3 חברות ביטוח לפחות, ובדקו את עלויות חלפי החילוף הנפוצים (צמיגים, רפידות בלם, שמן). אופנועי Honda מציעים יתרון משמעותי בזמינות חלפים ועלויות תחזוקה תחרותיות בזכות תשתית שירות מסודרת ברחבי הארץ.
+</p>
+</div>
+</section>
+
+<!-- SECTION 9 -->
+<section id="section-9" style="margin-bottom: clamp(32px, 6vw, 56px);">
+<h2 style="font-size: clamp(1.5rem, 4vw, 2.25rem); font-weight: 700; color: #E91B2F; line-height: 1.3; border-bottom: 2px solid #E91B2F; padding-bottom: clamp(8px, 2vw, 14px); margin-bottom: clamp(16px, 3vw, 24px);">
+התאמת האופנוע לגוף ולסגנון רכיבה
+</h2>
+
+<figure data-resp="figure" style="margin: clamp(16px, 3vw, 24px) 0; width: 100%; max-width: 800px; margin-left: auto; margin-right: auto;">
+<img data-resp="img" src="https://hondabike.co.il/wp-content/uploads/2026/04/FiveCommonMistakesWhenBuyingaMotorcycleandHowtoAvoidThem.jpg" alt="חמש טעויות נפוצות ברכישת אופנוע וכיצד להימנע מהן" loading="lazy" decoding="async" style="width: 100%; height: auto; max-height: 500px; object-fit: cover; border-radius: 6px; display: block;" />
+</figure>
+
+<p style="font-size: clamp(1rem, 2.5vw, 1.25rem); color: #404040; line-height: 1.7; margin-bottom: clamp(12px, 2vw, 16px);">
+גובה המושב, המשקל, ותנוחת הרכיבה הם פרמטרים קריטיים שמשפיעים על נוחות הרכיבה ועל הבטיחות. אופנוע שלא מתאים לגוף שלכם יגרום לעייפות מהירה, כאבי גב, ולירידה ביכולת השליטה.
+</p>
+<div data-resp="card" style="background: #FFFFFF; border: 1px solid rgba(233,27,47,0.15); border-right: 4px solid #E91B2F; border-radius: 6px; padding: clamp(16px, 4vw, 28px); margin: clamp(16px, 3vw, 24px) 0; box-shadow: 0 4px 12px rgba(233,27,47,0.15);">
+<p style="font-weight: 700; color: #E91B2F; margin-bottom: 8px;">שאלות שכדאי לשאול את עצמכם:</p>
+<ul style="padding: 0 16px 0 0; margin: 0;">
+<li style="font-size: clamp(0.95rem, 2.3vw, 1.1rem); color: #404040; padding: 4px 0;">האם שתי הרגליים מגיעות בנוחות לקרקע כשאתם יושבים?</li>
+<li style="font-size: clamp(0.95rem, 2.3vw, 1.1rem); color: #404040; padding: 4px 0;">האם הכידון נגיש ללא מאמץ?</li>
+<li style="font-size: clamp(0.95rem, 2.3vw, 1.1rem); color: #404040; padding: 4px 0;">האם תנוחת הרכיבה נוחה למשך זמן ממושך?</li>
+<li style="font-size: clamp(0.95rem, 2.3vw, 1.1rem); color: #404040; padding: 4px 0;">האם אתם מרגישים שליטה מלאה כשהאופנוע נוטה לצדדים?</li>
+</ul>
+</div>
+</section>
+
+<!-- SECTION 10 -->
+<section id="section-10" style="margin-bottom: clamp(32px, 6vw, 56px);">
+<h2 style="font-size: clamp(1.5rem, 4vw, 2.25rem); font-weight: 700; color: #E91B2F; line-height: 1.3; border-bottom: 2px solid #E91B2F; padding-bottom: clamp(8px, 2vw, 14px); margin-bottom: clamp(16px, 3vw, 24px);">
+נסיעת מבחן – למה היא קריטית
+</h2>
+<p style="font-size: clamp(1rem, 2.5vw, 1.25rem); color: #404040; line-height: 1.7; margin-bottom: clamp(12px, 2vw, 16px);">
+נסיעת מבחן היא הדרך הטובה ביותר לוודא שהאופנוע מתאים לכם. אף כמות של מחקר באינטרנט לא יכולה להחליף את התחושה בפועל של ישיבה על האופנוע ורכיבה בתנאים אמיתיים.
+</p>
+<p style="font-size: clamp(1rem, 2.5vw, 1.25rem); color: #404040; line-height: 1.7; margin-bottom: clamp(12px, 2vw, 16px);">
+<strong style="color: #E91B2F;">במהלך נסיעת המבחן שימו לב ל:</strong> תגובת הגז, הבלמים, הנוחות, הראות, רמת הרעש, והתחושה הכללית. אם אתם מרגישים לא בטוחים – זה סימן חשוב.
+</p>
+<p style="font-size: clamp(1rem, 2.5vw, 1.25rem); color: #404040; line-height: 1.7; margin-bottom: clamp(12px, 2vw, 16px);">
+ב-Honda Bike ישראל, ניתן <a href="https://hondabike.co.il/צור-קשר/" style="color: #E91B2F; text-decoration: none; font-weight: 600;">לתאם נסיעת מבחן</a> בכל אחד מאולמות התצוגה שלנו ברחבי הארץ, עם ליווי מקצועי שיעזור לכם להבין בדיוק מה מתאים לכם.
+</p>
+</section>
+
+<!-- DID YOU KNOW - TEST RIDE -->
+<div data-resp="card" style="background: #f0f7ff; border: 1px solid rgba(0,100,200,0.15); border-right: 4px solid #0064c8; border-radius: 6px; padding: clamp(16px, 4vw, 28px); margin-bottom: clamp(32px, 6vw, 56px); box-shadow: 0 2px 8px rgba(0,100,200,0.08);">
+<p style="font-weight: 700; font-size: clamp(1rem, 2.5vw, 1.15rem); color: #0064c8; margin-bottom: clamp(6px, 1.5vw, 10px);">הידעת?</p>
+<p style="font-size: clamp(0.95rem, 2.3vw, 1.1rem); color: #404040; line-height: 1.7; margin: 0;">
+בישראל קיימות 3 דרגות רישיון אופנוע – A1, A2 ו-A. רוכבים רבים לא מודעים לכך שגם עם רישיון A2 ניתן לרכב על אופנועים עם נפח מנוע גבוה, כל עוד ההספק מוגבל ל-35 קילוואט. כדאי לבדוק את דרגת הרישיון שלכם לפני שמתחילים לחפש דגם.
+</p>
+</div>
+
+<!-- SECTION 11 -->
+<section id="section-11" style="margin-bottom: clamp(32px, 6vw, 56px);">
+<h2 style="font-size: clamp(1.5rem, 4vw, 2.25rem); font-weight: 700; color: #E91B2F; line-height: 1.3; border-bottom: 2px solid #E91B2F; padding-bottom: clamp(8px, 2vw, 14px); margin-bottom: clamp(16px, 3vw, 24px);">
+5 טעויות נפוצות ברכישת אופנוע ואיך להימנע מהן
+</h2>
+
+<div data-resp="card" style="background: linear-gradient(135deg, #fef2f3 0%, #FFFFFF 100%); border: 1px solid rgba(233,27,47,0.2); border-radius: 6px; padding: clamp(16px, 4vw, 28px); margin: clamp(16px, 3vw, 24px) 0; box-shadow: 0 4px 12px rgba(233,27,47,0.15);">
+<div style="margin-bottom: clamp(16px, 3vw, 24px); padding-bottom: clamp(12px, 2vw, 16px); border-bottom: 1px solid rgba(233,27,47,0.1);">
+<p style="font-weight: 700; color: #E91B2F; font-size: clamp(1rem, 2.5vw, 1.15rem); margin-bottom: 4px;">1. בחירה לפי מראה בלבד</p>
+<p style="font-size: clamp(0.95rem, 2.3vw, 1.05rem); color: #404040; line-height: 1.6; margin-bottom: 4px;"><strong>התוצאה:</strong> אופנוע שלא מתאים לשימוש היומיומי ומוביל לתסכול ומכירה בהפסד.</p>
+<p style="font-size: clamp(0.95rem, 2.3vw, 1.05rem); color: #404040; line-height: 1.6; margin: 0;"><strong style="color: #E91B2F;">איך להימנע:</strong> הגדירו קודם את הצרכים, ורק אז חפשו דגם שגם נראה טוב וגם מתאים.</p>
+</div>
+<div style="margin-bottom: clamp(16px, 3vw, 24px); padding-bottom: clamp(12px, 2vw, 16px); border-bottom: 1px solid rgba(233,27,47,0.1);">
+<p style="font-weight: 700; color: #E91B2F; font-size: clamp(1rem, 2.5vw, 1.15rem); margin-bottom: 4px;">2. התעלמות מעלויות נלוות</p>
+<p style="font-size: clamp(0.95rem, 2.3vw, 1.05rem); color: #404040; line-height: 1.6; margin-bottom: 4px;"><strong>התוצאה:</strong> הפתעות כספיות כואבות בחודשים הראשונים.</p>
+<p style="font-size: clamp(0.95rem, 2.3vw, 1.05rem); color: #404040; line-height: 1.6; margin: 0;"><strong style="color: #E91B2F;">איך להימנע:</strong> חשבו תקציב כולל – ביטוח, אחזקה, אביזרים – לפני שסוגרים.</p>
+</div>
+<div style="margin-bottom: clamp(16px, 3vw, 24px); padding-bottom: clamp(12px, 2vw, 16px); border-bottom: 1px solid rgba(233,27,47,0.1);">
+<p style="font-weight: 700; color: #E91B2F; font-size: clamp(1rem, 2.5vw, 1.15rem); margin-bottom: 4px;">3. דילוג על נסיעת מבחן</p>
+<p style="font-size: clamp(0.95rem, 2.3vw, 1.05rem); color: #404040; line-height: 1.6; margin-bottom: 4px;"><strong>התוצאה:</strong> גילוי שהאופנוע לא נוח או לא מתאים רק אחרי הרכישה.</p>
+<p style="font-size: clamp(0.95rem, 2.3vw, 1.05rem); color: #404040; line-height: 1.6; margin: 0;"><strong style="color: #E91B2F;">איך להימנע:</strong> תמיד בצעו נסיעת מבחן, גם אם אתם בטוחים בבחירתכם.</p>
+</div>
+<div style="margin-bottom: clamp(16px, 3vw, 24px); padding-bottom: clamp(12px, 2vw, 16px); border-bottom: 1px solid rgba(233,27,47,0.1);">
+<p style="font-weight: 700; color: #E91B2F; font-size: clamp(1rem, 2.5vw, 1.15rem); margin-bottom: 4px;">4. רכישת אופנוע חזק מדי למתחיל</p>
+<p style="font-size: clamp(0.95rem, 2.3vw, 1.05rem); color: #404040; line-height: 1.6; margin-bottom: 4px;"><strong>התוצאה:</strong> מצבים מסוכנים, חוסר שליטה, ולעיתים תאונות.</p>
+<p style="font-size: clamp(0.95rem, 2.3vw, 1.05rem); color: #404040; line-height: 1.6; margin: 0;"><strong style="color: #E91B2F;">איך להימנע:</strong> התחילו עם אופנוע מתאים לרמת הניסיון והתקדמו בהדרגה.</p>
+</div>
+<div>
+<p style="font-weight: 700; color: #E91B2F; font-size: clamp(1rem, 2.5vw, 1.15rem); margin-bottom: 4px;">5. אי-בדיקת אופנוע יד שנייה</p>
+<p style="font-size: clamp(0.95rem, 2.3vw, 1.05rem); color: #404040; line-height: 1.6; margin-bottom: 4px;"><strong>התוצאה:</strong> בעיות מכניות, עלויות תיקון גבוהות, ולעיתים סכנה בטיחותית.</p>
+<p style="font-size: clamp(0.95rem, 2.3vw, 1.05rem); color: #404040; line-height: 1.6; margin: 0;"><strong style="color: #E91B2F;">איך להימנע:</strong> בדקו מסמכים, בצעו בדיקה חזותית, והזמינו בדיקה מקצועית.</p>
+</div>
+</div>
+</section>
+
+<!-- SECTION 12 -->
+<section id="section-12" style="margin-bottom: clamp(32px, 6vw, 56px);">
+<h2 style="font-size: clamp(1.5rem, 4vw, 2.25rem); font-weight: 700; color: #E91B2F; line-height: 1.3; border-bottom: 2px solid #E91B2F; padding-bottom: clamp(8px, 2vw, 14px); margin-bottom: clamp(16px, 3vw, 24px);">
+בחירת רכב שמתאים להיום ולמחר
+</h2>
+
+<figure data-resp="figure" style="margin: clamp(16px, 3vw, 24px) 0; width: 100%; max-width: 800px; margin-left: auto; margin-right: auto;">
+<img data-resp="img" src="https://hondabike.co.il/wp-content/uploads/2026/04/MotorcycleBuyingGuide-4.jpg" alt="מדריך קניית אופנוע - בחירת האופנוע המתאים לצרכים שלכם" loading="lazy" decoding="async" style="width: 100%; height: auto; max-height: 500px; object-fit: cover; border-radius: 6px; display: block;" />
+</figure>
+
+<p style="font-size: clamp(1rem, 2.5vw, 1.25rem); color: #404040; line-height: 1.7; margin-bottom: clamp(12px, 2vw, 16px);">
+כשבוחרים אופנוע, כדאי לחשוב לא רק על הצרכים של היום, אלא גם על איך הצרכים שלכם עשויים להשתנות. רוכב שהיום נוסע בעיקר בעיר עשוי בעתיד לרצות לצאת לטיולי שטח או לנסיעות בינעירוניות.
+</p>
+<div data-resp="card" style="background: #FFFFFF; border: 1px solid rgba(233,27,47,0.15); border-radius: 6px; padding: clamp(16px, 4vw, 28px); margin: clamp(16px, 3vw, 24px) 0; box-shadow: 0 4px 12px rgba(233,27,47,0.15);">
+<p style="font-weight: 700; color: #E91B2F; margin-bottom: 8px;">פרמטרים לבחירה עתידית:</p>
+<ul style="padding: 0 16px 0 0; margin: 0;">
+<li style="font-size: clamp(0.95rem, 2.3vw, 1.1rem); color: #404040; padding: 6px 0;">ערך שוק יציב – דגמים מבוססים שומרים על ערכם לאורך זמן</li>
+<li style="font-size: clamp(0.95rem, 2.3vw, 1.1rem); color: #404040; padding: 6px 0;">זמינות חלפים – מותג עם תשתית שירות מסודרת בארץ</li>
+<li style="font-size: clamp(0.95rem, 2.3vw, 1.1rem); color: #404040; padding: 6px 0;">גמישות שימוש – אופנוע שמתאים למגוון סגנונות רכיבה</li>
+<li style="font-size: clamp(0.95rem, 2.3vw, 1.1rem); color: #404040; padding: 6px 0;">אמינות – מותגים עם מוניטין מוכח לאמינות לטווח ארוך</li>
+</ul>
+</div>
+
+<div style="text-align: center; margin: clamp(24px, 4vw, 32px) 0;">
+<a data-resp="cta-btn" class="cta-hover cta-red" href="https://hondabike.co.il/%D7%A6%D7%95%D7%A8-%D7%A7%D7%A9%D7%A8/" style="display: inline-block; background: #E91B2F; color: #fff; padding: clamp(14px, 3vw, 18px) clamp(28px, 5vw, 44px); font-size: clamp(0.95rem, 2.5vw, 1.15rem); font-weight: 700; text-decoration: none; border-radius: 50px; border: 2px solid #E91B2F; box-shadow: 0 4px 14px rgba(233,27,47,0.25); transition: transform 0.2s, box-shadow 0.2s, background 0.2s;">
+צרו קשר לייעוץ מקצועי
+</a>
+</div>
+</section>
+
+<!-- SECTION 13 -->
+<section id="section-13" style="margin-bottom: clamp(32px, 6vw, 56px);">
+<h2 style="font-size: clamp(1.5rem, 4vw, 2.25rem); font-weight: 700; color: #E91B2F; line-height: 1.3; border-bottom: 2px solid #E91B2F; padding-bottom: clamp(8px, 2vw, 14px); margin-bottom: clamp(16px, 3vw, 24px);">
+בדיקת דרגת רישיון, נוחות ושליטה לפני הרכישה
+</h2>
+<p style="font-size: clamp(1rem, 2.5vw, 1.25rem); color: #404040; line-height: 1.7; margin-bottom: clamp(12px, 2vw, 16px);">
+בישראל, רישיונות האופנוע מחולקים ל-3 דרגות עיקריות על פי משרד התחבורה: A1, A2, ו-A. כל דרגה מגבילה את נפח המנוע וההספק המותרים.
+</p>
+
+<div data-resp="table-wrap" style="width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; margin: clamp(16px, 3vw, 24px) 0; border-radius: 6px;">
+<table data-resp="table" style="width: 100%; min-width: 600px; border-collapse: collapse; font-size: clamp(0.75rem, 2vw, 1rem);">
+<thead>
+<tr>
+<th style="padding: clamp(8px, 2vw, 16px); text-align: right; background: #E91B2F; color: #FFFFFF; font-weight: 700; white-space: nowrap;">דרגת רישיון</th>
+<th style="padding: clamp(8px, 2vw, 16px); text-align: right; background: #E91B2F; color: #FFFFFF; font-weight: 700; white-space: nowrap;">נפח מנוע מותר</th>
+<th style="padding: clamp(8px, 2vw, 16px); text-align: right; background: #E91B2F; color: #FFFFFF; font-weight: 700; white-space: nowrap;">הספק מרבי</th>
+<th style="padding: clamp(8px, 2vw, 16px); text-align: right; background: #E91B2F; color: #FFFFFF; font-weight: 700; white-space: nowrap;">גיל מינימלי</th>
+<th style="padding: clamp(8px, 2vw, 16px); text-align: right; background: #E91B2F; color: #FFFFFF; font-weight: 700; white-space: nowrap;">מתאים ל-</th>
+</tr>
+</thead>
+<tbody>
+<tr style="background: #FFFFFF;">
+<td style="padding: clamp(8px, 2vw, 14px); border-bottom: 1px solid rgba(233,27,47,0.1); font-weight: 600; color: #E91B2F;">A1</td>
+<td style="padding: clamp(8px, 2vw, 14px); border-bottom: 1px solid rgba(233,27,47,0.1); color: #404040;">עד 125 סמ"ק</td>
+<td style="padding: clamp(8px, 2vw, 14px); border-bottom: 1px solid rgba(233,27,47,0.1); color: #404040;">עד 11 קילוואט</td>
+<td style="padding: clamp(8px, 2vw, 14px); border-bottom: 1px solid rgba(233,27,47,0.1); color: #404040;">16</td>
+<td style="padding: clamp(8px, 2vw, 14px); border-bottom: 1px solid rgba(233,27,47,0.1); color: #404040;">קטנועים ואופנועים קלים</td>
+</tr>
+<tr style="background: #fef8f8;">
+<td style="padding: clamp(8px, 2vw, 14px); border-bottom: 1px solid rgba(233,27,47,0.1); font-weight: 600; color: #E91B2F;">A2</td>
+<td style="padding: clamp(8px, 2vw, 14px); border-bottom: 1px solid rgba(233,27,47,0.1); color: #404040;">ללא הגבלה</td>
+<td style="padding: clamp(8px, 2vw, 14px); border-bottom: 1px solid rgba(233,27,47,0.1); color: #404040;">עד 35 קילוואט</td>
+<td style="padding: clamp(8px, 2vw, 14px); border-bottom: 1px solid rgba(233,27,47,0.1); color: #404040;">18</td>
+<td style="padding: clamp(8px, 2vw, 14px); border-bottom: 1px solid rgba(233,27,47,0.1); color: #404040;">אופנועים בינוניים</td>
+</tr>
+<tr style="background: #FFFFFF;">
+<td style="padding: clamp(8px, 2vw, 14px); font-weight: 600; color: #E91B2F;">A</td>
+<td style="padding: clamp(8px, 2vw, 14px); color: #404040;">ללא הגבלה</td>
+<td style="padding: clamp(8px, 2vw, 14px); color: #404040;">ללא הגבלה</td>
+<td style="padding: clamp(8px, 2vw, 14px); color: #404040;">21</td>
+<td style="padding: clamp(8px, 2vw, 14px); color: #404040;">כל סוגי האופנועים</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+
+<!-- TIP BLOCK -->
+<div data-resp="card" style="background: #f5faf5; border: 1px solid rgba(40,160,70,0.15); border-right: 4px solid #28a046; border-radius: 6px; padding: clamp(16px, 4vw, 28px); margin-bottom: clamp(32px, 6vw, 56px); box-shadow: 0 2px 8px rgba(40,160,70,0.08);">
+<p style="font-weight: 700; font-size: clamp(1rem, 2.5vw, 1.15rem); color: #28a046; margin-bottom: clamp(6px, 1.5vw, 10px);">טיפ</p>
+<p style="font-size: clamp(0.95rem, 2.3vw, 1.1rem); color: #404040; line-height: 1.7; margin: 0;">
+לפני שסוגרים על אופנוע, הכינו רשימת בדיקה קצרה: דרגת רישיון מתאימה, תקציב כולל (כולל ביטוח ואביזרים), סוג שימוש עיקרי, ונסיעת מבחן. הגיעו לאולם התצוגה מוכנים – זה יחסוך לכם זמן ויעזור לצוות המקצועי לכוון אתכם לדגם המתאים ביותר.
+</p>
+</div>
+
+<!-- FAQ -->
+<section id="faq" style="margin-bottom: clamp(32px, 6vw, 56px);">
+<h2 style="font-size: clamp(1.5rem, 4vw, 2.25rem); font-weight: 700; color: #E91B2F; line-height: 1.3; border-bottom: 2px solid #E91B2F; padding-bottom: clamp(8px, 2vw, 14px); margin-bottom: clamp(16px, 3vw, 24px);">
+שאלות נפוצות
+</h2>
+
+<details data-resp="faq" style="margin: 12px 0; border: 1px solid rgba(233,27,47,0.2); border-radius: 6px;">
+<summary style="padding: clamp(12px, 3vw, 18px); cursor: pointer; font-weight: 600; font-size: clamp(0.95rem, 2.5vw, 1.1rem); display: flex; justify-content: space-between; align-items: center; color: #404040;">
+מה עדיף למתחיל – אופנוע חדש או יד שנייה?
+<span class="arrow" style="transition: transform 0.3s; color: #E91B2F; flex-shrink: 0; min-width: 1.2em; text-align: center; display: inline-block;">&#9660;</span>
+</summary>
+<div style="padding: clamp(12px, 3vw, 18px); border-top: 1px solid rgba(233,27,47,0.15);">
+<p style="font-size: clamp(0.95rem, 2.3vw, 1.1rem); color: #404040; line-height: 1.7; margin: 0;">
+למתחיל, רכישה של אופנוע חדש מאולם תצוגה מורשה מציעה מספר יתרונות: אחריות מלאה, מצב מכני מושלם, ליווי מקצועי, ואפשרויות מימון. מצד שני, אופנוע יד שנייה יכול להיות פתרון כלכלי טוב למי שמעדיף להתנסות בעלות נמוכה יותר – בתנאי שהוא עובר בדיקה מקצועית.
+</p>
+</div>
+</details>
+
+<details data-resp="faq" style="margin: 12px 0; border: 1px solid rgba(233,27,47,0.2); border-radius: 6px;">
+<summary style="padding: clamp(12px, 3vw, 18px); cursor: pointer; font-weight: 600; font-size: clamp(0.95rem, 2.5vw, 1.1rem); display: flex; justify-content: space-between; align-items: center; color: #404040;">
+כמה עולה לאחזק אופנוע בממוצע?
+<span class="arrow" style="transition: transform 0.3s; color: #E91B2F; flex-shrink: 0; min-width: 1.2em; text-align: center; display: inline-block;">&#9660;</span>
+</summary>
+<div style="padding: clamp(12px, 3vw, 18px); border-top: 1px solid rgba(233,27,47,0.15);">
+<p style="font-size: clamp(0.95rem, 2.3vw, 1.1rem); color: #404040; line-height: 1.7; margin: 0;">
+עלויות האחזקה החודשיות משתנות לפי הדגם ורמת השימוש. בממוצע, ניתן לצפות ל-500-1,500 שקלים בחודש הכוללים ביטוח מקיף, דלק, ותחזוקה שוטפת. טיפולים תקופתיים (כל 5,000-10,000 ק"מ) עולים בין 300-800 שקלים, והחלפת צמיגים נדרשת בדרך כלל כל 10,000-20,000 ק"מ.
+</p>
+</div>
+</details>
+
+<details data-resp="faq" style="margin: 12px 0; border: 1px solid rgba(233,27,47,0.2); border-radius: 6px;">
+<summary style="padding: clamp(12px, 3vw, 18px); cursor: pointer; font-weight: 600; font-size: clamp(0.95rem, 2.5vw, 1.1rem); display: flex; justify-content: space-between; align-items: center; color: #404040;">
+האם כדאי לקנות ציוד מגן מיד?
+<span class="arrow" style="transition: transform 0.3s; color: #E91B2F; flex-shrink: 0; min-width: 1.2em; text-align: center; display: inline-block;">&#9660;</span>
+</summary>
+<div style="padding: clamp(12px, 3vw, 18px); border-top: 1px solid rgba(233,27,47,0.15);">
+<p style="font-size: clamp(0.95rem, 2.3vw, 1.1rem); color: #404040; line-height: 1.7; margin: 0;">
+בהחלט כן. קסדה באישור תקן היא חובה על פי חוק, אבל מומלץ מאוד להשקיע גם בז'קט מגן, כפפות, מגפיים, ומכנסיים ייעודיים. ציוד מגן איכותי יכול לעשות את ההבדל בין שריטה קלה לפציעה חמורה. ב<a href="https://hondabike.co.il/shop/" style="color: #E91B2F; text-decoration: none; font-weight: 600;">חנות האביזרים של Honda Bike</a> תוכלו למצוא מגוון ציוד מגן ואביזרים.
+</p>
+</div>
+</details>
+
+<details data-resp="faq" style="margin: 12px 0; border: 1px solid rgba(233,27,47,0.2); border-radius: 6px;">
+<summary style="padding: clamp(12px, 3vw, 18px); cursor: pointer; font-weight: 600; font-size: clamp(0.95rem, 2.5vw, 1.1rem); display: flex; justify-content: space-between; align-items: center; color: #404040;">
+מה ההבדל בין אופנוע עירוני לאדוונצ'ר?
+<span class="arrow" style="transition: transform 0.3s; color: #E91B2F; flex-shrink: 0; min-width: 1.2em; text-align: center; display: inline-block;">&#9660;</span>
+</summary>
+<div style="padding: clamp(12px, 3vw, 18px); border-top: 1px solid rgba(233,27,47,0.15);">
+<p style="font-size: clamp(0.95rem, 2.3vw, 1.1rem); color: #404040; line-height: 1.7; margin: 0;">
+אופנוע עירוני מתוכנן בעיקר לנסיעות בעיר – קל, זריז, חסכוני בדלק, עם ישיבה זקופה ונוחה. אופנוע אדוונצ'ר מתוכנן לגמישות מקסימלית – הוא יכול להתמודד גם עם כבישים וגם עם שטח, יש לו מהלך מתלה ארוך יותר, גובה מושב גבוה יותר, ולרוב מנוע גדול יותר.
+</p>
+</div>
+</details>
+
+<details data-resp="faq" style="margin: 12px 0; border: 1px solid rgba(233,27,47,0.2); border-radius: 6px;">
+<summary style="padding: clamp(12px, 3vw, 18px); cursor: pointer; font-weight: 600; font-size: clamp(0.95rem, 2.5vw, 1.1rem); display: flex; justify-content: space-between; align-items: center; color: #404040;">
+איך אפשר לתאם נסיעת מבחן?
+<span class="arrow" style="transition: transform 0.3s; color: #E91B2F; flex-shrink: 0; min-width: 1.2em; text-align: center; display: inline-block;">&#9660;</span>
+</summary>
+<div style="padding: clamp(12px, 3vw, 18px); border-top: 1px solid rgba(233,27,47,0.15);">
+<p style="font-size: clamp(0.95rem, 2.3vw, 1.1rem); color: #404040; line-height: 1.7; margin: 0;">
+ניתן לתאם נסיעת מבחן דרך <a href="https://hondabike.co.il/צור-קשר/" style="color: #E91B2F; text-decoration: none; font-weight: 600;">עמוד יצירת הקשר</a> באתר, בטלפון <a href="tel:0772311829" style="color: #E91B2F; text-decoration: none; font-weight: 600;">077-231-1829</a>, או בביקור ישיר באחד מאולמות התצוגה של Honda Bike ישראל ברחבי הארץ. צוות מקצועי ילווה אתכם לאורך כל החוויה.
+</p>
+</div>
+</details>
+</section>
+
+<!-- CLOSING CTA BANNER -->
+<div style="background: linear-gradient(135deg, #E91B2F 0%, #d11223 100%); border-radius: 6px; padding: clamp(24px, 5vw, 48px); text-align: center; margin-bottom: clamp(32px, 6vw, 56px);">
+<p style="font-size: clamp(1.25rem, 3.5vw, 1.75rem); font-weight: 700; color: #FFFFFF; margin-bottom: clamp(12px, 3vw, 20px); line-height: 1.4;">
+רוצים להבין איזה אופנוע או קטנוע מתאים בדיוק לכם?
+</p>
+<p style="font-size: clamp(0.95rem, 2.5vw, 1.15rem); color: rgba(255,255,255,0.9); margin-bottom: clamp(20px, 4vw, 32px); line-height: 1.7; max-width: 60ch; margin-left: auto; margin-right: auto;">
+הצוות המקצועי של Honda Bike ישראל ישמח ללוות אתכם בתהליך הבחירה, לענות על כל שאלה ולעזור לכם לקבל החלטה מבוססת ונכונה. התחילו את הדרך לכלי הרכיבה הבא שלכם.
+</p>
+<div style="display: inline-flex; justify-content: center; gap: 10px; flex-wrap: nowrap;">
+<a class="cta-hover cta-white" href="https://hondabike.co.il/%D7%A6%D7%95%D7%A8-%D7%A7%D7%A9%D7%A8/" style="display: inline-block; background: #FFFFFF; color: #E91B2F; padding: 10px 24px; font-size: 0.9rem; font-weight: 700; text-decoration: none; border-radius: 50px; border: 2px solid #FFFFFF; box-shadow: 0 2px 10px rgba(0,0,0,0.15); transition: transform 0.2s, box-shadow 0.2s, background 0.2s; white-space: nowrap;">צרו קשר</a>
+<a class="cta-hover cta-outline" href="tel:0772311829" style="display: inline-block; background: transparent; color: #FFFFFF; padding: 10px 24px; font-size: 0.9rem; font-weight: 700; text-decoration: none; border-radius: 50px; border: 2px solid rgba(255,255,255,0.6); transition: transform 0.2s, box-shadow 0.2s, background 0.2s; white-space: nowrap;">077-231-1829</a>
+</div>
+</div>
+
+<!-- AUTHOR / BRAND SECTION -->
+<section style="margin-bottom: clamp(16px, 3vw, 24px);">
+<div style="background: linear-gradient(135deg, #fef2f3 0%, #FFFFFF 100%); border-radius: 8px; border-right: 4px solid #E91B2F; overflow: hidden;">
+
+<!-- Author header row -->
+<div data-resp="author-box" style="display: flex; flex-direction: row; gap: clamp(16px, 4vw, 28px); align-items: center; padding: clamp(20px, 4vw, 32px);">
+<a href="https://hondabike.co.il/" style="flex-shrink: 0; text-decoration: none;">
+<img src="https://hondabike.co.il/wp-content/uploads/2020/09/logo_honda_small.png" alt="Honda Bike Israel - לוגו הונדה" style="width: clamp(80px, 15vw, 110px); height: clamp(80px, 15vw, 110px); border-radius: 50%; object-fit: contain; border: 3px solid #E91B2F; background: #FFFFFF; padding: 8px; display: block;" />
+</a>
+<div>
+<div style="font-weight: 700; font-size: clamp(1.1rem, 2.5vw, 1.35rem); color: #E91B2F; margin-bottom: 6px;">Honda Bike ישראל | הונדה אופנועים</div>
+<div style="font-size: clamp(0.85rem, 2vw, 1rem); color: #404040; line-height: 1.65; margin-bottom: clamp(10px, 2vw, 14px);">
+היבואן הרשמי של אופנועי וקטנועי הונדה בישראל מאז 1992. חלק מקבוצת מאיר ("מאיר חברה למכוניות ומשאיות בע"מ"), עם רשת של 18 סוכנויות מכירה ו-14 מרכזי שירות בפריסה ארצית מצפון ועד דרום. הונדה היא יצרנית האופנועים הגדולה בעולם עם למעלה מ-300 מיליון כלי רכב דו-גלגליים שנמכרו בעולם.
+</div>
+<!-- Social buttons -->
+<div style="display: flex; gap: 10px; flex-wrap: wrap;">
+<a class="social-btn social-fb" href="https://www.facebook.com/HondaMotorbike.il" target="_blank" rel="noopener noreferrer" style="display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; border-radius: 50px; background: #f0f2f5; color: #404040; text-decoration: none; font-size: clamp(0.8rem, 1.8vw, 0.9rem); font-weight: 600; transition: background 0.2s, color 0.2s; font-family: Assistant, system-ui, sans-serif;">Facebook</a>
+<a class="social-btn social-ig" href="https://www.instagram.com/honda_bike_israel/" target="_blank" rel="noopener noreferrer" style="display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; border-radius: 50px; background: #f0f2f5; color: #404040; text-decoration: none; font-size: clamp(0.8rem, 1.8vw, 0.9rem); font-weight: 600; transition: background 0.2s, color 0.2s; font-family: Assistant, system-ui, sans-serif;">Instagram</a>
+</div>
+</div>
+</div>
+
+<!-- Trust stats mini-bar -->
+<div style="display: flex; justify-content: space-around; border-top: 1px solid rgba(233,27,47,0.1); padding: clamp(12px, 2vw, 16px) clamp(16px, 3vw, 24px); background: rgba(233,27,47,0.03);">
+<div style="text-align: center;">
+<div style="font-weight: 700; color: #E91B2F; font-size: clamp(1rem, 2.5vw, 1.3rem);">1992</div>
+<div style="font-size: clamp(0.7rem, 1.5vw, 0.8rem); color: #404040; opacity: 0.7;">יבואן רשמי מאז</div>
+</div>
+<div style="text-align: center;">
+<div style="font-weight: 700; color: #E91B2F; font-size: clamp(1rem, 2.5vw, 1.3rem);">18</div>
+<div style="font-size: clamp(0.7rem, 1.5vw, 0.8rem); color: #404040; opacity: 0.7;">סוכנויות מכירה</div>
+</div>
+<div style="text-align: center;">
+<div style="font-weight: 700; color: #E91B2F; font-size: clamp(1rem, 2.5vw, 1.3rem);">14</div>
+<div style="font-size: clamp(0.7rem, 1.5vw, 0.8rem); color: #404040; opacity: 0.7;">מרכזי שירות</div>
+</div>
+<div style="text-align: center;">
+<div style="font-weight: 700; color: #E91B2F; font-size: clamp(1rem, 2.5vw, 1.3rem);">300M+</div>
+<div style="font-size: clamp(0.7rem, 1.5vw, 0.8rem); color: #404040; opacity: 0.7;">כלי רכב בעולם</div>
+</div>
+</div>
+
+</div>
+</section>
+
+</div>
+
+<!-- FLOATING BUTTONS GROUP -->
+<div data-resp="float-group" style="position: fixed; bottom: 24px; left: 24px; z-index: 9999; display: flex; flex-direction: column; gap: 10px; align-items: flex-start;">
+<a href="#article-top" class="float-cta-hover" style="background: #FFFFFF; color: #E91B2F; padding: 8px 14px; border-radius: 50px; font-weight: 600; font-size: clamp(0.7rem, 1.5vw, 0.8rem); text-decoration: none; box-shadow: 0 2px 10px rgba(0,0,0,0.12); transition: transform 0.2s, box-shadow 0.2s; font-family: Assistant, system-ui, sans-serif; display: inline-flex; align-items: center; gap: 5px; min-height: 36px; border: 1px solid rgba(233,27,47,0.2); white-space: nowrap;">&#8593; חזרה למעלה</a>
+<a href="https://hondabike.co.il/%D7%A6%D7%95%D7%A8-%D7%A7%D7%A9%D7%A8/" class="float-cta-hover" style="background: #FFFFFF; color: #E91B2F; padding: 10px 16px; border-radius: 50px; font-weight: 600; font-size: clamp(0.75rem, 1.6vw, 0.85rem); text-decoration: none; box-shadow: 0 3px 12px rgba(233,27,47,0.15); transition: transform 0.2s, box-shadow 0.2s; font-family: Assistant, system-ui, sans-serif; display: inline-flex; align-items: center; gap: 6px; min-height: 38px; white-space: nowrap; border: 1px solid rgba(233,27,47,0.2);">&#9993; צרו קשר</a>
+</div>
+
+</article>
+

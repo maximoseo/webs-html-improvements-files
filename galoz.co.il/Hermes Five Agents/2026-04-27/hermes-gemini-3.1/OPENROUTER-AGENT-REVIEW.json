@@ -1,0 +1,16 @@
+{
+  "slug": "hermes-gemini-3.1",
+  "agent": "Hermes Gemini 3.1 Sub-Agent",
+  "model": "google/gemini-3.1-pro-preview",
+  "review": {
+    "agent_angle": "Hermes Gemini 3.1 Sub-Agent",
+    "raw_response": "{\n  \"agent_angle\": \"Hermes Gemini 3.1 Sub-Agent: Expert in WordPress RTL HTML integration, focusing on inline CSS preservation, responsive design, and Galoz Electronics brand consistency.\",\n  \"",
+    "wordpress_critical_checks": [
+      "manual parse fallback"
+    ],
+    "html_improvement_notes": [],
+    "n8n_workflow_notes": [],
+    "prompt_notes": [],
+    "qa_acceptance": []
+  }
+}

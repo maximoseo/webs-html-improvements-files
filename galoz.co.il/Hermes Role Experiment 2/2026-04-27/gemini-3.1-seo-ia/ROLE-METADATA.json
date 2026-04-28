@@ -1,0 +1,13 @@
+{
+  "slug": "gemini-3.1-seo-ia",
+  "agent": "Hermes Gemini 3.1 SEO IA",
+  "model": "google/gemini-3.1-pro-preview",
+  "role": "SEO and information architecture: stronger headings, semantic clusters, internal links, FAQ/snippet readiness, source traceability.",
+  "status": "artifacts_created",
+  "files": [
+    "Improved_HTML_Template.html",
+    "Improved_N8N_Prompt.txt",
+    "Improved_N8N_Workflow.json",
+    "OPENROUTER-ROLE-REVIEW.json"
+  ]
+}

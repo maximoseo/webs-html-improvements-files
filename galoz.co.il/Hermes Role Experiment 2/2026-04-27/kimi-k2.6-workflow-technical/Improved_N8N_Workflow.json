@@ -1,0 +1,480 @@
+{
+  "name": "Galoz Experiment 2 - Hermes Kimi K2.6 Workflow Technical",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "cronExpression",
+              "expression": "0 6 * * 1"
+            }
+          ]
+        }
+      },
+      "name": "Schedule Trigger",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        100,
+        300
+      ],
+      "id": "node-schedule-trigger"
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "https://mapril.websmail.net/industrial-rotary-encoder-sensors-2/",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "User-Agent",
+              "value": "Mozilla/5.0 (compatible; GalozEncoderBot/1.0)"
+            },
+            {
+              "name": "Accept",
+              "value": "text/html,application/xhtml+xml"
+            }
+          ]
+        },
+        "options": {
+          "timeout": 30000,
+          "redirect": {
+            "redirect": {
+              "followRedirects": true,
+              "maxRedirects": 3
+            }
+          },
+          "response": {
+            "response": {
+              "fullResponse": false
+            }
+          }
+        }
+      },
+      "name": "Fetch Source Article",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [
+        300,
+        300
+      ],
+      "id": "node-fetch-source"
+    },
+    {
+      "parameters": {
+        "jsCode": "const html = $input.first().json.body || $input.first().json.data || '';\nconst strip = (s) => String(s || '').replace(/<[^>]+>/g, ' ').replace(/\\s+/g, ' ').trim();\nconst titleMatch = html.match(/<h1[^>]*>([\\s\\S]*?)<\\/h1>/i);\nconst articleTitle = titleMatch ? strip(titleMatch[1]) : 'מדריך מקיף לבחירה ושימוש באנקודרים סיבוביים בתעשייה';\nconst articleMatch = html.match(/<article[^>]*>([\\s\\S]*?)<\\/article>/i) || html.match(/<main[^>]*>([\\s\\S]*?)<\\/main>/i);\nconst articleBody = articleMatch ? articleMatch[1] : html;\nconst sections = [];\nconst h2Regex = /<h2[^>]*(?:id=[\"']([^\"']+)[\"'])?[^>]*>([\\s\\S]*?)<\\/h2>([\\s\\S]*?)(?=<h2|<\\/article|<\\/main|$)/gi;\nlet match;\nwhile ((match = h2Regex.exec(articleBody)) !== null) {\n  const heading = strip(match[2]);\n  const content = match[3].trim();\n  if (heading && strip(content).length > 40) sections.push({id: match[1] || `section-${sections.length + 1}`, heading, content});\n}\nconst images = [];\nconst imgRegex = /<img[^>]+src=[\"']([^\"']+)[\"'][^>]*>/gi;\nlet img;\nwhile ((img = imgRegex.exec(html)) !== null) {\n  if (img[1].includes('mapril.websmail.net') && !images.includes(img[1])) images.push(img[1]);\n}\nconst fallbackImages = [\n  'https://mapril.websmail.net/wp-content/uploads/2026/04/WhatistheDifferenceBetweenanIncrementalEncoderandanAbsoluteEncoder-scaled.jpg',\n  'https://mapril.websmail.net/wp-content/uploads/2026/04/ParameterComparisonWhattoCheckBeforeOrderinganEncoder.jpg',\n  'https://mapril.websmail.net/wp-content/uploads/2026/04/WhatDoYouActuallyGetWhenChoosinganEncoderfromGalozElectronics.jpg'\n];\nconst links = [...html.matchAll(/href=[\"']([^\"']*galoz\\.co\\.il[^\"']*)[\"']/gi)].map(m => m[1]);\nreturn [{json: {articleTitle, articleBody, sections, articleImages: images.length ? images : fallbackImages, galozLinks: [...new Set(links)], sourceUrl: 'https://mapril.websmail.net/industrial-rotary-encoder-sensors-2/', targetKeyword: 'אנקודר סיבובי', secondaryKeywords: ['אנקודרים', 'PPR', 'אנקודר אינקרמנטלי', 'אנקודר אבסולוטי', 'רמת אטימות IP', 'Push-Pull', 'Line Driver'], processedAt: new Date().toISOString()}}];"
+      },
+      "name": "Parse Article Sections",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        500,
+        300
+      ],
+      "id": "node-parse-sections"
+    },
+    {
+      "parameters": {
+        "jsCode": "return [{json: {galozBrand: {name: 'גלעוז אלקטרוניקה', domain: 'https://www.galoz.co.il/', logo: 'https://d3m9l0v76dty0.cloudfront.net/system/logos/7002/original/f2a1fcfa083f4d83b3269684e5fe223e.png', phone: '079-5805040', whatsapp: '+972522516009', whatsappUrl: 'https://wa.me/972522516009', email: 'sales@galoz.co.il', contact: 'https://www.galoz.co.il/contact'}, encoderAssets: {categoryUrl: 'https://www.galoz.co.il/627671-%D7%90%D7%A0%D7%A7%D7%95%D7%93%D7%A8%D7%99%D7%9D', becProductUrl: 'https://www.galoz.co.il/items/7805059-758-%D7%90%D7%A0%D7%A7%D7%95%D7%93%D7%A8-%D7%A8%D7%95%D7%91%D7%95%D7%A1%D7%98%D7%99-%D7%A2%D7%93-30-000-%D7%A4%D7%95%D7%9C%D7%A1%D7%99%D7%9D-%D7%9C%D7%A1%D7%99%D7%91%D7%95%D7%91-BEC', opticalArticleUrl: 'https://www.galoz.co.il/blog/8756885-%D7%90%D7%A0%D7%A7%D7%95%D7%93%D7%A8%D7%99%D7%9D-%D7%90%D7%95%D7%A4%D7%98%D7%99%D7%99%D7%9D'}, tokens: {primary: '#005696', accent: '#0E6BA8', dark: '#1F2D3D', body: '#334155', surface: '#f8fafc', border: '#e2e8f0'}}}];"
+      },
+      "name": "Load Galoz Encoder Data",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        500,
+        520
+      ],
+      "id": "node-load-galoz-data"
+    },
+    {
+      "parameters": {
+        "model": "openai/gpt-5.5",
+        "messages": {
+          "values": [
+            {
+              "role": "system",
+              "content": "You are a professional Hebrew RTL article designer and content writer for galoz.co.il. Apply the html-redesign-mega principles: WordPress-safe inline CSS, responsive layout, strong section hierarchy, collapsed TOC/FAQ, real Galoz links only, no fake claims, no date references in the intro. Topic: אנקודר סיבובי / industrial rotary encoder sensors."
+            },
+            {
+              "role": "user",
+              "content": "Source URL: {{$json.sourceUrl}}\nTarget keyword: {{$json.targetKeyword}}\nTitle: {{$json.articleTitle}}\nSections: {{JSON.stringify($json.sections)}}\nImages: {{JSON.stringify($json.articleImages)}}\nGaloz links: {{JSON.stringify($json.galozLinks)}}\n\nReturn JSON with fields: title, introParagraphs, takeaways, sections, faqItems, productLinks, schemaSummary. Use Hebrew and preserve technical accuracy around PPR, IP ratings, Push-Pull, Line Driver, incremental encoders, and absolute encoders."
+            }
+          ]
+        },
+        "options": {
+          "temperature": 0.55,
+          "maxTokens": 4500,
+          "responseFormat": {
+            "type": "json_object"
+          }
+        }
+      },
+      "name": "AI Rewrite Article",
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.4,
+      "position": [
+        720,
+        300
+      ],
+      "id": "node-ai-rewrite",
+      "credentials": {
+        "openAiApi": {
+          "id": "openai-creds",
+          "name": "OpenAI API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const aiResponse = $input.first().json;\nconst sourceData = $('Parse Article Sections').first().json;\nlet articleData;\ntry {\n  const content = aiResponse.message?.content || aiResponse.choices?.[0]?.message?.content || aiResponse.text || JSON.stringify(aiResponse);\n  articleData = typeof content === 'string' ? JSON.parse(content) : content;\n} catch (error) {\n  articleData = {\n    title: sourceData.articleTitle,\n    introParagraphs: [\n      'אנקודר סיבובי מספק למערכת הבקרה משוב על מיקום, מהירות וכיוון סיבוב, ולכן הוא משפיע ישירות על דיוק ואמינות המכונה.',\n      'בחירה נכונה מתחילה בהגדרת היישום, תנאי הסביבה, דרישות הרזולוציה וסוג היציאה החשמלית.'\n    ],\n    takeaways: ['להגדיר סוג אנקודר לפני מחיר', 'לאזן בין PPR ליכולת הבקר', 'להתאים IP לסביבת העבודה', 'לוודא התאמת יציאה חשמלית', 'להיעזר בליווי טכני לפני הזמנה'],\n    sections: sourceData.sections,\n    faqItems: [\n      {q: 'מה זה אנקודר סיבובי?', a: 'חיישן שממיר תנועה זוויתית לאותות חשמליים עבור מערכת הבקרה.'},\n      {q: 'מה ההבדל בין אינקרמנטלי לאבסולוטי?', a: 'אינקרמנטלי מודד שינוי ביחס לנקודת אפס; אבסולוטי שומר מיקום גם לאחר כיבוי.'},\n      {q: 'כמה PPR צריך?', a: 'בהתאם לדיוק הנדרש, מהירות הסיבוב ויכולת הקריאה של הבקר.'}\n    ]\n  };\n}\nreturn [{json: {...sourceData, articleData, parsedAt: new Date().toISOString()}}];"
+      },
+      "name": "Parse AI Response",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        940,
+        300
+      ],
+      "id": "node-parse-ai-response"
+    },
+    {
+      "parameters": {
+        "jsCode": "const data = $input.first().json;\nconst brand = {name: 'גלעוז אלקטרוניקה', logo: 'https://d3m9l0v76dty0.cloudfront.net/system/logos/7002/original/f2a1fcfa083f4d83b3269684e5fe223e.png', contact: 'https://www.galoz.co.il/contact', email: 'sales@galoz.co.il'};\nconst title = data.articleData.title || data.articleTitle;\nconst intro = Array.isArray(data.articleData.introParagraphs) ? data.articleData.introParagraphs : [data.articleData.intro || ''];\nconst esc = (s) => String(s || '').replace(/[&<>]/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[ch]));\nlet html = `<!DOCTYPE html><html lang=\"he\" dir=\"rtl\"><head><meta charset=\"UTF-8\"><meta name=\"viewport\" content=\"width=device-width, initial-scale=1\"><link href=\"https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600;700;800&display=swap\" rel=\"stylesheet\"><title>${esc(title)} | גלעוז אלקטרוניקה</title></head><body style=\"margin:0;padding:0;background:#eef4f8;color:#334155;font-family:'Heebo',Arial,sans-serif;line-height:1.75;direction:rtl;text-align:right;\"><article style=\"max-width:1120px;margin:0 auto;padding:24px 16px 104px;box-sizing:border-box;\"><section style=\"border:1px solid #d9e6ef;border-radius:24px;background:#fff;padding:28px 24px;margin:0 0 28px;box-shadow:0 18px 46px rgba(31,45,61,.10);\"><img src=\"${brand.logo}\" alt=\"גלעוז אלקטרוניקה\" style=\"max-width:180px;height:auto;margin:0 0 18px;\"><h1 style=\"margin:0 0 16px;color:#1F2D3D;font-size:clamp(2rem,4.6vw,3.4rem);line-height:1.12;\">${esc(title)}</h1>${intro.map(p => `<p style=\"margin:0 0 14px;font-size:1.08rem;\">${esc(p)}</p>`).join('')}<a href=\"${brand.contact}\" style=\"display:inline-block;margin-top:8px;padding:12px 22px;border-radius:12px;background:#005696;color:#fff;text-decoration:none;font-weight:800;\">לקבלת ייעוץ טכני</a></section>`;\nhtml += `<details style=\"margin:0 0 28px;border:1px solid #d9e6ef;border-radius:18px;background:#fff;overflow:hidden;\"><summary style=\"cursor:pointer;padding:18px 20px;background:#f8fafc;color:#1F2D3D;font-weight:800;\">תוכן עניינים +</summary><nav style=\"padding:16px 20px;\"><ol style=\"margin:0;padding-right:22px;\">${(data.articleData.sections || []).slice(0,8).map((s,i)=>`<li style=\"margin:0 0 8px;\"><a href=\"#section-${i+1}\" style=\"color:#005696;text-decoration:none;font-weight:700;\">${esc(s.heading || s.title || `סעיף ${i+1}`)}</a></li>`).join('')}</ol></nav></details>`;\n(data.articleData.sections || []).slice(0,10).forEach((s,i) => { html += `<section id=\"section-${i+1}\" style=\"margin:0 0 30px;padding:24px;border:1px solid #d9e6ef;border-radius:20px;background:#fff;box-shadow:0 10px 28px rgba(31,45,61,.06);\"><h2 style=\"margin:0 0 14px;color:#1F2D3D;font-size:clamp(1.45rem,3vw,2rem);border-bottom:2px solid #005696;padding-bottom:10px;\">${esc(s.heading || s.title)}</h2><div style=\"color:#334155;\">${s.content || s.text || ''}</div></section>`; });\nhtml += `<section style=\"margin:0 0 30px;padding:24px;border:1px solid #d9e6ef;border-radius:20px;background:#f8fafc;\"><h2 style=\"margin:0 0 14px;color:#1F2D3D;\">קישורים רלוונטיים בגלעוז</h2><p><a href=\"https://www.galoz.co.il/627671-%D7%90%D7%A0%D7%A7%D7%95%D7%93%D7%A8%D7%99%D7%9D\" style=\"color:#005696;font-weight:800;\">קטגוריית אנקודרים</a></p><p><a href=\"https://www.galoz.co.il/items/7805059-758-%D7%90%D7%A0%D7%A7%D7%95%D7%93%D7%A8-%D7%A8%D7%95%D7%91%D7%95%D7%A1%D7%98%D7%99-%D7%A2%D7%93-30-000-%D7%A4%D7%95%D7%9C%D7%A1%D7%99%D7%9D-%D7%9C%D7%A1%D7%99%D7%91%D7%95%D7%91-BEC\" style=\"color:#005696;font-weight:800;\">אנקודר רובוסטי BEC עד 30,000 פולסים לסיבוב</a></p></section>`;\nhtml += `<section id=\"faq\" style=\"margin:0 0 30px;padding:24px;border:1px solid #d9e6ef;border-radius:20px;background:#fff;\"><h2 style=\"margin:0 0 14px;color:#1F2D3D;\">שאלות נפוצות</h2>${(data.articleData.faqItems || []).map(f => `<details style=\"margin:0 0 12px;border:1px solid #d9e6ef;border-radius:14px;overflow:hidden;\"><summary style=\"cursor:pointer;padding:16px 18px;background:#f8fafc;font-weight:800;\">${esc(f.q)}</summary><div style=\"padding:16px 18px;border-top:1px solid #d9e6ef;\"><p style=\"margin:0;\">${esc(f.a)}</p></div></details>`).join('')}</section>`;\nhtml += `<section style=\"padding:24px;border:1px solid #d9e6ef;border-radius:20px;background:#fff;\"><h2 style=\"margin:0 0 12px;color:#1F2D3D;\">צוות גלעוז אלקטרוניקה</h2><p style=\"margin:0 0 14px;\">גלעוז אלקטרוניקה מתמחה מעל 30 שנה בפתרונות פיקוד, בקרה ומדידה לתעשייה.</p><a href=\"${brand.contact}\" style=\"color:#005696;font-weight:800;\">יצירת קשר</a> | <a href=\"mailto:${brand.email}\" style=\"color:#005696;font-weight:800;\">${brand.email}</a></section><script type=\"application/ld+json\">{\"@context\":\"https://schema.org\",\"@type\":\"Article\",\"headline\":\"${esc(title)}\",\"inLanguage\":\"he-IL\",\"mainEntityOfPage\":\"${data.sourceUrl}\",\"author\":{\"@type\":\"Organization\",\"name\":\"גלעוז אלקטרוניקה\"}}</script></article></body></html>`;\nconst h1Count = (html.match(/<h1\\b/gi) || []).length;\nreturn [{json: {html, h1Count, sourceUrl: data.sourceUrl, targetKeyword: data.targetKeyword, generatedAt: new Date().toISOString()}}];"
+      },
+      "name": "Generate HTML Article",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1160,
+        300
+      ],
+      "id": "node-generate-html"
+    },
+    {
+      "parameters": {
+        "jsCode": "const item = $input.first().json;\nconst html = item.html || '';\nconst failures = [];\nif (item.h1Count !== 1) failures.push('HTML must contain exactly one H1');\nif (!html.includes('dir=\"rtl\"')) failures.push('Missing RTL direction');\nif (html.includes('<style')) failures.push('Inline-only mode forbids style blocks');\nif (/src=[\"']\\s*[\"']/.test(html)) failures.push('Empty image src found');\nif (!html.includes('https://mapril.websmail.net/industrial-rotary-encoder-sensors-2/')) failures.push('Source URL not synchronized');\nif (!html.includes('אנקודר')) failures.push('Encoder topic missing');\nif (!html.includes('https://www.galoz.co.il/contact')) failures.push('Galoz contact URL missing');\nreturn [{json: {...item, qualityPassed: failures.length === 0, failures}}];"
+      },
+      "name": "Quality Gate Validator",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1380,
+        300
+      ],
+      "id": "node-quality-gate"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": "={{$json.qualityPassed}}",
+              "value2": true
+            }
+          ]
+        }
+      },
+      "name": "Quality Check",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        1600,
+        300
+      ],
+      "id": "node-quality-check"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://www.galoz.co.il/wp-json/wp/v2/posts",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpBasicAuth",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "title",
+              "value": "={{$json.targetKeyword}}"
+            },
+            {
+              "name": "content",
+              "value": "={{$json.html}}"
+            },
+            {
+              "name": "status",
+              "value": "draft"
+            }
+          ]
+        },
+        "options": {
+          "timeout": 30000
+        }
+      },
+      "name": "Create WordPress Post",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [
+        1820,
+        240
+      ],
+      "id": "node-create-wp-post",
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "galoz-wp-basic-auth",
+          "name": "galoz.co.il WP Basic Auth"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://www.galoz.co.il/wp-json/wp/v2/posts/{{$json.id}}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpBasicAuth",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "status",
+              "value": "publish"
+            }
+          ]
+        },
+        "options": {
+          "timeout": 30000
+        }
+      },
+      "name": "Publish WordPress Post",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [
+        2040,
+        240
+      ],
+      "id": "node-publish-wp-post",
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "galoz-wp-basic-auth",
+          "name": "galoz.co.il WP Basic Auth"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "return [{json: {status: 'success', message: 'Galoz encoder article generated and published', sourceUrl: 'https://mapril.websmail.net/industrial-rotary-encoder-sensors-2/', targetKeyword: 'אנקודר סיבובי', completedAt: new Date().toISOString()}}];"
+      },
+      "name": "Success Summary",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2260,
+        240
+      ],
+      "id": "node-success-summary"
+    },
+    {
+      "parameters": {
+        "jsCode": "return [{json: {status: 'failed_quality_gate', failures: $json.failures || [], sourceUrl: $json.sourceUrl, checkedAt: new Date().toISOString()}}];"
+      },
+      "name": "Log Quality Failure",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1820,
+        420
+      ],
+      "id": "node-log-quality-failure"
+    },
+    {
+      "parameters": {
+        "content": "## Galoz Encoder Article Generator — MyClaw 26.4.26\n\nSource URL: https://mapril.websmail.net/industrial-rotary-encoder-sensors-2/\nTarget keyword: אנקודר סיבובי\n\nMega-skill phases applied:\n- audit source article, links, images\n- WordPress-safe inline HTML\n- RTL/Hebrew layout\n- collapsed TOC and FAQ\n- responsive tables/images\n- Galoz CTA, trust, author/contact\n- JSON-LD Article + FAQPage\n- quality gate validation\n\nCredentials are referenced by existing n8n credential names only; no secrets are stored in this workflow JSON.",
+        "height": 420,
+        "width": 560
+      },
+      "name": "Workflow Documentation",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        100,
+        540
+      ],
+      "id": "node-documentation"
+    }
+  ],
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Fetch Source Article",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fetch Source Article": {
+      "main": [
+        [
+          {
+            "node": "Parse Article Sections",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse Article Sections": {
+      "main": [
+        [
+          {
+            "node": "AI Rewrite Article",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Load Galoz Encoder Data": {
+      "main": [
+        [
+          {
+            "node": "Generate HTML Article",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Rewrite Article": {
+      "main": [
+        [
+          {
+            "node": "Parse AI Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse AI Response": {
+      "main": [
+        [
+          {
+            "node": "Generate HTML Article",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate HTML Article": {
+      "main": [
+        [
+          {
+            "node": "Quality Gate Validator",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Quality Gate Validator": {
+      "main": [
+        [
+          {
+            "node": "Quality Check",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Quality Check": {
+      "main": [
+        [
+          {
+            "node": "Create WordPress Post",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Log Quality Failure",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create WordPress Post": {
+      "main": [
+        [
+          {
+            "node": "Publish WordPress Post",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Publish WordPress Post": {
+      "main": [
+        [
+          {
+            "node": "Success Summary",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1",
+    "saveManualExecutions": true,
+    "callerPolicy": "workflowsFromSameOwner"
+  },
+  "staticData": {},
+  "meta": {
+    "templateCredsSetupCompleted": false,
+    "instanceId": "galoz-encoder-myclaw-26.4.26",
+    "agentSlug": "hermes-gpt-5.5",
+    "agentName": "Hermes GPT 5.5 Sub-Agent",
+    "openrouterModel": "openai/gpt-5.5",
+    "run": "2026-04-27-five-openrouter-agents",
+    "wordpressReady": true,
+    "requiredFiles": [
+      "galoz.co.il_Improved_HTML_Template-hermes-gpt-5.5-2026-04-27.html",
+      "Improved_N8N_Workflow.json",
+      "galoz.co.il_Improved_N8N_Prompt-hermes-gpt-5.5-2026-04-27.txt"
+    ],
+    "experiment": "Hermes Role Experiment 2",
+    "roleAgent": "Hermes Kimi K2.6 Workflow Technical",
+    "model": "moonshotai/kimi-k2.6",
+    "roleFocus": "Technical workflow and engineering: stronger n8n JSON/prompt operational detail, variable mapping, QA steps, technical accuracy."
+  },
+  "id": "galoz-encoder-myclaw-workflow-26426",
+  "tags": [
+    {
+      "name": "galoz.co.il"
+    },
+    {
+      "name": "encoder"
+    },
+    {
+      "name": "myclaw"
+    },
+    {
+      "name": "production"
+    }
+  ],
+  "versionId": "encoder-26.4.26",
+  "triggerCount": 1,
+  "createdAt": "2026-04-26T00:00:00.000Z",
+  "updatedAt": "2026-04-26T00:00:00.000Z"
+}

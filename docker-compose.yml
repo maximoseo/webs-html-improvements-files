@@ -1,0 +1,50 @@
+version: "3.9"
+services:
+  dashboard:
+    build: .
+    ports: ["8000:8000"]
+    environment:
+      # Auth
+      DASHBOARD_USER: ${DASHBOARD_USER:-admin}
+      DASHBOARD_PASSWORD: ${DASHBOARD_PASSWORD:-change-me}
+      DASHBOARD_JWT_SECRET: ${DASHBOARD_JWT_SECRET:-change-me-jwt-secret}
+      DASHBOARD_AUTH_SECRET: ${DASHBOARD_AUTH_SECRET:-change-me-auth-secret}
+      DASH_CSRF: "1"
+
+      # Main verified LLM route
+      OPENROUTER_API_KEY: ${OPENROUTER_API_KEY:-}
+      OPENROUTER_SITE_URL: ${OPENROUTER_SITE_URL:-https://html-redesign-dashboard.maximo-seo.ai/}
+      OPENROUTER_APP_NAME: ${OPENROUTER_APP_NAME:-HTML Redesign Dashboard}
+
+      # Optional direct fallback providers supported by server.py
+      OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}
+      GEMINI_API_KEY: ${GEMINI_API_KEY:-}
+      KIMI_API_KEY: ${KIMI_API_KEY:-}
+      XAI_API_KEY: ${XAI_API_KEY:-}
+      MINIMAX_API_KEY: ${MINIMAX_API_KEY:-}
+      GLM_API_KEY: ${GLM_API_KEY:-}
+
+      # Working model overrides only
+      OPENAI_MODEL: ${OPENAI_MODEL:-gpt-5.4}
+      ANTHROPIC_MODEL: ${ANTHROPIC_MODEL:-claude-opus-4.6}
+      GEMINI_MODEL: ${GEMINI_MODEL:-gemini-3.1-pro-preview}
+      KIMI_MODEL: ${KIMI_MODEL:-kimi-k2.6}
+      XAI_MODEL: ${XAI_MODEL:-grok-4.20}
+      MINIMAX_MODEL: ${MINIMAX_MODEL:-minimax-m2.7}
+      GLM_MODEL: ${GLM_MODEL:-glm-4.6}
+
+      # Integrations
+      SUPABASE_URL: ${SUPABASE_URL:-}
+      SUPABASE_ANON_KEY: ${SUPABASE_ANON_KEY:-}
+      SUPABASE_SERVICE_ROLE_KEY: ${SUPABASE_SERVICE_ROLE_KEY:-}
+      N8N_BASE_URL: ${N8N_BASE_URL:-https://websiseo.app.n8n.cloud}
+      N8N_API_KEY: ${N8N_API_KEY:-}
+      N8N_KWR_WEBHOOK_URL: ${N8N_KWR_WEBHOOK_URL:-}
+      GITHUB_TOKEN: ${GITHUB_TOKEN:-}
+      SENTRY_DSN: ${SENTRY_DSN:-}
+    volumes:
+      - dashboard-data:/data
+    restart: unless-stopped
+volumes:
+  dashboard-data:

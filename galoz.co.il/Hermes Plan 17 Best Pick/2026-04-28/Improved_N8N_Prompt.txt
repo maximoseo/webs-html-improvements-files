@@ -1,0 +1,40 @@
+# GALOZ Plan #17 Best-Pick N8N HTML Prompt
+
+## Target
+Domain: galoz.co.il
+Topic: מדריך מקיף לבחירה ושימוש באנקודרים סיבוביים בתעשייה
+Language: Hebrew RTL
+
+## Design workflow applied
+This prompt follows Hermes Plan #17: five distinct agent design identities were generated and compared:
+- Opus 4.7 — Elegant Minimalist
+- GPT 5.5 — Bold Creative
+- Gemini 3.1 — Clean & Structured
+- Kimi K2.6 — Data-Driven Visual
+- GLM 5.1 — Compact & Efficient
+
+## Best pick
+Use the final template in `Improved_HTML_Template.html`. It combines Gemini's structured clarity, GPT's stronger CTA treatment, and Kimi's decision-metric framing while preserving full WordPress compatibility.
+
+## Mandatory output rules for future N8N generation
+1. Hebrew RTL only.
+2. Full WordPress Custom HTML block: `<!-- wp:html --> ... <!-- /wp:html -->`.
+3. Inline styles on visible elements + scoped wrapper style block.
+4. System fonts only: Arial, Helvetica, sans-serif.
+5. No external CSS, JS, icon fonts, or Google Fonts.
+6. Keep real Galoz links only: category, BEC product, optical encoder article, contact, WhatsApp.
+7. Keep full article content and images. No skeleton placeholders.
+8. No script tags in the final WordPress HTML. Schema can be handled separately by SEO plugin or workflow metadata.
+9. Mobile-first responsive behavior via scoped media query.
+10. CTA should ask the user to send shaft diameter, PPR, voltage, output type, controller, and environment.
+
+## Replaceable content markers
+If dynamic content is injected, preserve these logical fields:
+- article_title
+- meta_description
+- hero_paragraph
+- section_1_content
+- section_2_content
+- section_3_content
+- cta_text
+- cta_url

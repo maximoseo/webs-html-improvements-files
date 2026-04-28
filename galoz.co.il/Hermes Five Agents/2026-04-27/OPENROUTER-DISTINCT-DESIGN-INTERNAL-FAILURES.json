@@ -1,0 +1,64 @@
+{
+  "created_at": "2026-04-28",
+  "note": "Internal audit only. Not used as public success report.",
+  "failed_or_fallback_outputs": [
+    {
+      "agent": "Hermes Gemini 3.1",
+      "model": "google/gemini-3.1-pro-preview",
+      "identity": "Clean Structured",
+      "attempts": 3,
+      "html_checks": {
+        "wp_wrapper": true,
+        "has_style": true,
+        "has_all_initial": true,
+        "no_script": true,
+        "rtl": true,
+        "has_img": true,
+        "inline_style_count": 45,
+        "bytes": 7867,
+        "sha256": "4ad0901ad87c9be1"
+      },
+      "file": "Improved_HTML_Template.html",
+      "reason": "not shown in public success report because it did not produce a new validated OpenRouter HTML within the retry limit"
+    },
+    {
+      "agent": "Hermes Kimi K2.6",
+      "model": "moonshotai/kimi-k2.6",
+      "identity": "Data-Driven Visual",
+      "attempts": null,
+      "html_checks": {
+        "wp_wrapper": true,
+        "has_style": true,
+        "has_all_initial": true,
+        "no_script": true,
+        "rtl": true,
+        "has_img": true,
+        "inline_style_count": 51,
+        "bytes": 7968,
+        "sha256": "2372f3d3d9642b8a"
+      },
+      "file": "Improved_HTML_Template.html",
+      "reason": "not shown in public success report because it did not produce a new validated OpenRouter HTML within the retry limit"
+    },
+    {
+      "agent": "Hermes GLM 5.1",
+      "model": "z-ai/glm-5.1",
+      "identity": "Compact Efficient",
+      "attempts": null,
+      "html_checks": {
+        "wp_wrapper": true,
+        "has_style": true,
+        "has_all_initial": true,
+        "no_script": true,
+        "rtl": true,
+        "has_img": true,
+        "inline_style_count": 44,
+        "bytes": 7670,
+        "sha256": "d0c090058c5dc40e"
+      },
+      "file": "Improved_HTML_Template.html",
+      "reason": "not shown in public success report because it did not produce a new validated OpenRouter HTML within the retry limit"
+    }
+  ],
+  "failure_or_fallback_count": 3
+}

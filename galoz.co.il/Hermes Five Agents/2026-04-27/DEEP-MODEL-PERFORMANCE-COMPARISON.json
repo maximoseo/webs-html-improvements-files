@@ -1,0 +1,324 @@
+{
+  "title": "Galoz Deep Model Performance Comparison",
+  "date": "2026-04-27",
+  "purpose": "Compare five model-specific sub-agents without deleting or merging any agent.",
+  "rubric": {
+    "wordpress_readiness": {
+      "weight": 20,
+      "checks": [
+        "RTL/lang semantics",
+        "inline CSS density",
+        "no script tags",
+        "real images",
+        "no placeholders",
+        "WordPress 1:1 prompt contract"
+      ]
+    },
+    "content_completeness": {
+      "weight": 18,
+      "checks": [
+        "word count",
+        "Hebrew density",
+        "H1/H2/H3 structure",
+        "FAQ/details",
+        "CTA/contact coverage"
+      ]
+    },
+    "visual_ux": {
+      "weight": 14,
+      "checks": [
+        "image count/alt",
+        "links and CTAs",
+        "responsive-friendly structures",
+        "tables/details/sections balance"
+      ]
+    },
+    "seo_structure": {
+      "weight": 12,
+      "checks": [
+        "heading hierarchy",
+        "internal links",
+        "FAQ",
+        "schema/prompt notes",
+        "source traceability"
+      ]
+    },
+    "n8n_workflow_quality": {
+      "weight": 14,
+      "checks": [
+        "valid JSON",
+        "node count",
+        "wordpressReady metadata",
+        "workflow covers HTML/prompt/schema/QA"
+      ]
+    },
+    "prompt_quality": {
+      "weight": 12,
+      "checks": [
+        "prompt length",
+        "explicit WordPress rules",
+        "QA acceptance",
+        "image/source instructions",
+        "model review incorporated"
+      ]
+    },
+    "model_distinctiveness": {
+      "weight": 10,
+      "checks": [
+        "OpenRouter review quality",
+        "agent-specific notes",
+        "model identity preserved",
+        "differences useful for comparison"
+      ]
+    }
+  },
+  "summary": {
+    "winner_by_rubric": "Hermes GLM 5.1",
+    "operational_default_if_preferring_openai": "Hermes GPT 5.5",
+    "backup_recommendation": "Hermes Opus 4.7",
+    "key_finding": "All five outputs pass the WordPress-ready gate and are intentionally similar; differences are mainly prompt/review depth and model-specific metadata, so the dashboard should preserve all five for future side-by-side tests."
+  },
+  "scores": [
+    {
+      "agent": "Hermes GLM 5.1",
+      "model": "z-ai/glm-5.1",
+      "total_score": 99.32,
+      "category_scores": {
+        "wordpress_readiness": 100.0,
+        "content_completeness": 100.0,
+        "visual_ux": 100.0,
+        "seo_structure": 100.0,
+        "n8n_workflow_quality": 97.7,
+        "prompt_quality": 97.0,
+        "model_distinctiveness": 100.0
+      },
+      "metrics": {
+        "html_len": 30968,
+        "prompt_len": 4503,
+        "workflow_len": 18382,
+        "visible_words": 1118,
+        "hebrew_chars": 5211,
+        "h1": 1,
+        "h2": 13,
+        "h3": 2,
+        "imgs": 4,
+        "alts": 4,
+        "links": 22,
+        "details": 6,
+        "tables": 2,
+        "sections": 17,
+        "inline_style": 210,
+        "scripts": 0,
+        "placeholders": 0,
+        "dir_rtl": true,
+        "lang_he": true,
+        "json_nodes": 14,
+        "json_valid": true,
+        "workflow_wp_ready": true,
+        "prompt_wp_rules": 7,
+        "review_items": 19,
+        "sha12": "4488a4f6e48e"
+      },
+      "files": {
+        "html": "/home/seoadmin/webs-html-improvements-files/galoz.co.il/Hermes GLM 5.1/2026-04-27/Improved_HTML_Template.html",
+        "prompt": "/home/seoadmin/webs-html-improvements-files/galoz.co.il/Hermes GLM 5.1/2026-04-27/Improved_N8N_Prompt.txt",
+        "workflow": "/home/seoadmin/webs-html-improvements-files/galoz.co.il/Hermes GLM 5.1/2026-04-27/Improved_N8N_Workflow.json",
+        "review": "/home/seoadmin/webs-html-improvements-files/galoz.co.il/Hermes GLM 5.1/2026-04-27/OPENROUTER-AGENT-REVIEW.json"
+      }
+    },
+    {
+      "agent": "Hermes Opus 4.7",
+      "model": "anthropic/claude-opus-4.7",
+      "total_score": 95.02,
+      "category_scores": {
+        "wordpress_readiness": 100.0,
+        "content_completeness": 100.0,
+        "visual_ux": 100.0,
+        "seo_structure": 100.0,
+        "n8n_workflow_quality": 97.7,
+        "prompt_quality": 84.1,
+        "model_distinctiveness": 72.5
+      },
+      "metrics": {
+        "html_len": 31002,
+        "prompt_len": 5055,
+        "workflow_len": 18413,
+        "visible_words": 1120,
+        "hebrew_chars": 5211,
+        "h1": 1,
+        "h2": 13,
+        "h3": 2,
+        "imgs": 4,
+        "alts": 4,
+        "links": 22,
+        "details": 6,
+        "tables": 2,
+        "sections": 17,
+        "inline_style": 210,
+        "scripts": 0,
+        "placeholders": 0,
+        "dir_rtl": true,
+        "lang_he": true,
+        "json_nodes": 14,
+        "json_valid": true,
+        "workflow_wp_ready": true,
+        "prompt_wp_rules": 7,
+        "review_items": 1,
+        "sha12": "a7eb95118dff"
+      },
+      "files": {
+        "html": "/home/seoadmin/webs-html-improvements-files/galoz.co.il/Hermes Opus 4.7/2026-04-27/Improved_HTML_Template.html",
+        "prompt": "/home/seoadmin/webs-html-improvements-files/galoz.co.il/Hermes Opus 4.7/2026-04-27/Improved_N8N_Prompt.txt",
+        "workflow": "/home/seoadmin/webs-html-improvements-files/galoz.co.il/Hermes Opus 4.7/2026-04-27/Improved_N8N_Workflow.json",
+        "review": "/home/seoadmin/webs-html-improvements-files/galoz.co.il/Hermes Opus 4.7/2026-04-27/OPENROUTER-AGENT-REVIEW.json"
+      }
+    },
+    {
+      "agent": "Hermes GPT 5.5",
+      "model": "openai/gpt-5.5",
+      "total_score": 95.02,
+      "category_scores": {
+        "wordpress_readiness": 100.0,
+        "content_completeness": 100.0,
+        "visual_ux": 100.0,
+        "seo_structure": 100.0,
+        "n8n_workflow_quality": 97.7,
+        "prompt_quality": 84.1,
+        "model_distinctiveness": 72.5
+      },
+      "metrics": {
+        "html_len": 30973,
+        "prompt_len": 5020,
+        "workflow_len": 18386,
+        "visible_words": 1119,
+        "hebrew_chars": 5211,
+        "h1": 1,
+        "h2": 13,
+        "h3": 2,
+        "imgs": 4,
+        "alts": 4,
+        "links": 22,
+        "details": 6,
+        "tables": 2,
+        "sections": 17,
+        "inline_style": 210,
+        "scripts": 0,
+        "placeholders": 0,
+        "dir_rtl": true,
+        "lang_he": true,
+        "json_nodes": 14,
+        "json_valid": true,
+        "workflow_wp_ready": true,
+        "prompt_wp_rules": 7,
+        "review_items": 1,
+        "sha12": "03e3a4c0309c"
+      },
+      "files": {
+        "html": "/home/seoadmin/webs-html-improvements-files/galoz.co.il/Hermes GPT 5.5/2026-04-27/Improved_HTML_Template.html",
+        "prompt": "/home/seoadmin/webs-html-improvements-files/galoz.co.il/Hermes GPT 5.5/2026-04-27/Improved_N8N_Prompt.txt",
+        "workflow": "/home/seoadmin/webs-html-improvements-files/galoz.co.il/Hermes GPT 5.5/2026-04-27/Improved_N8N_Workflow.json",
+        "review": "/home/seoadmin/webs-html-improvements-files/galoz.co.il/Hermes GPT 5.5/2026-04-27/OPENROUTER-AGENT-REVIEW.json"
+      }
+    },
+    {
+      "agent": "Hermes Gemini 3.1",
+      "model": "google/gemini-3.1-pro-preview",
+      "total_score": 92.85,
+      "category_scores": {
+        "wordpress_readiness": 100.0,
+        "content_completeness": 100.0,
+        "visual_ux": 100.0,
+        "seo_structure": 100.0,
+        "n8n_workflow_quality": 97.8,
+        "prompt_quality": 65.9,
+        "model_distinctiveness": 72.5
+      },
+      "metrics": {
+        "html_len": 31017,
+        "prompt_len": 2187,
+        "workflow_len": 18431,
+        "visible_words": 1120,
+        "hebrew_chars": 5211,
+        "h1": 1,
+        "h2": 13,
+        "h3": 2,
+        "imgs": 4,
+        "alts": 4,
+        "links": 22,
+        "details": 6,
+        "tables": 2,
+        "sections": 17,
+        "inline_style": 210,
+        "scripts": 0,
+        "placeholders": 0,
+        "dir_rtl": true,
+        "lang_he": true,
+        "json_nodes": 14,
+        "json_valid": true,
+        "workflow_wp_ready": true,
+        "prompt_wp_rules": 7,
+        "review_items": 1,
+        "sha12": "94d840a4101e"
+      },
+      "files": {
+        "html": "/home/seoadmin/webs-html-improvements-files/galoz.co.il/Hermes Gemini 3.1/2026-04-27/Improved_HTML_Template.html",
+        "prompt": "/home/seoadmin/webs-html-improvements-files/galoz.co.il/Hermes Gemini 3.1/2026-04-27/Improved_N8N_Prompt.txt",
+        "workflow": "/home/seoadmin/webs-html-improvements-files/galoz.co.il/Hermes Gemini 3.1/2026-04-27/Improved_N8N_Workflow.json",
+        "review": "/home/seoadmin/webs-html-improvements-files/galoz.co.il/Hermes Gemini 3.1/2026-04-27/OPENROUTER-AGENT-REVIEW.json"
+      }
+    },
+    {
+      "agent": "Hermes Kimi K2.6",
+      "model": "moonshotai/kimi-k2.6",
+      "total_score": 92.73,
+      "category_scores": {
+        "wordpress_readiness": 100.0,
+        "content_completeness": 100.0,
+        "visual_ux": 100.0,
+        "seo_structure": 100.0,
+        "n8n_workflow_quality": 97.7,
+        "prompt_quality": 65.0,
+        "model_distinctiveness": 72.5
+      },
+      "metrics": {
+        "html_len": 30991,
+        "prompt_len": 2054,
+        "workflow_len": 18408,
+        "visible_words": 1119,
+        "hebrew_chars": 5211,
+        "h1": 1,
+        "h2": 13,
+        "h3": 2,
+        "imgs": 4,
+        "alts": 4,
+        "links": 22,
+        "details": 6,
+        "tables": 2,
+        "sections": 17,
+        "inline_style": 210,
+        "scripts": 0,
+        "placeholders": 0,
+        "dir_rtl": true,
+        "lang_he": true,
+        "json_nodes": 14,
+        "json_valid": true,
+        "workflow_wp_ready": true,
+        "prompt_wp_rules": 7,
+        "review_items": 1,
+        "sha12": "23aa4d3592b8"
+      },
+      "files": {
+        "html": "/home/seoadmin/webs-html-improvements-files/galoz.co.il/Hermes Kimi K2.6/2026-04-27/Improved_HTML_Template.html",
+        "prompt": "/home/seoadmin/webs-html-improvements-files/galoz.co.il/Hermes Kimi K2.6/2026-04-27/Improved_N8N_Prompt.txt",
+        "workflow": "/home/seoadmin/webs-html-improvements-files/galoz.co.il/Hermes Kimi K2.6/2026-04-27/Improved_N8N_Workflow.json",
+        "review": "/home/seoadmin/webs-html-improvements-files/galoz.co.il/Hermes Kimi K2.6/2026-04-27/OPENROUTER-AGENT-REVIEW.json"
+      }
+    }
+  ],
+  "recommendations": [
+    "Keep all five agents visible in the dashboard for true model comparison.",
+    "Use the winner_by_rubric for first manual WordPress paste test.",
+    "Use Hermes GPT 5.5 as operational default if maintaining an OpenAI-first workflow matters more than tiny rubric differences.",
+    "For the next experiment, force each model to produce genuinely different creative/layout strategies to better expose model performance differences."
+  ]
+}

@@ -1,0 +1,27 @@
+{
+  "agent": "Hermes Kimi K2.6",
+  "api_source": "moonshot-direct",
+  "model": "moonshotai/kimi-k2.6",
+  "attempts": [
+    {
+      "attempt": 1,
+      "ok": false,
+      "error": "HTTPError 400",
+      "body_preview": "{\"error\":{\"message\":\"invalid temperature: only 1 is allowed for this model\",\"type\":\"invalid_request_error\"}}"
+    },
+    {
+      "attempt": 2,
+      "ok": false,
+      "error": "HTTPError 400",
+      "body_preview": "{\"error\":{\"message\":\"invalid temperature: only 1 is allowed for this model\",\"type\":\"invalid_request_error\"}}"
+    },
+    {
+      "attempt": 3,
+      "ok": false,
+      "error": "HTTPError 400",
+      "body_preview": "{\"error\":{\"message\":\"invalid temperature: only 1 is allowed for this model\",\"type\":\"invalid_request_error\"}}"
+    }
+  ],
+  "final_written": false,
+  "final_checks": null
+}

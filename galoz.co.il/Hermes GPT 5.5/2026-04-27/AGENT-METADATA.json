@@ -1,0 +1,13 @@
+{
+  "slug": "hermes-gpt-5.5",
+  "agent": "Hermes GPT 5.5 Sub-Agent",
+  "model": "openai/gpt-5.5",
+  "style": "precision editorial / WordPress production",
+  "files": [
+    "/home/seoadmin/webs-html-improvements-files/galoz.co.il/_runs/2026-04-27-2145-five-openrouter-agents/hermes-gpt-5.5/galoz.co.il_Improved_HTML_Template-hermes-gpt-5.5-2026-04-27.html",
+    "/home/seoadmin/webs-html-improvements-files/galoz.co.il/_runs/2026-04-27-2145-five-openrouter-agents/hermes-gpt-5.5/galoz.co.il_Improved_N8N_Workflow-hermes-gpt-5.5-2026-04-27.json",
+    "/home/seoadmin/webs-html-improvements-files/galoz.co.il/_runs/2026-04-27-2145-five-openrouter-agents/hermes-gpt-5.5/galoz.co.il_Improved_N8N_Prompt-hermes-gpt-5.5-2026-04-27.txt"
+  ],
+  "openrouterReviewFile": "OPENROUTER-AGENT-REVIEW.json",
+  "openrouterReviewSummary": "Hermes GPT 5.5 Sub-Agent"
+}

@@ -1,0 +1,93 @@
+{
+  "agent": "Hermes GPT 5.5",
+  "model": "openai/gpt-5.5",
+  "identity": "Bold Creative",
+  "style_brief": "vibrant startup landing page, dramatic hero, gradients, badges, energetic cards, big CTA",
+  "source": "OpenRouter API chat/completions",
+  "max_attempts": 3,
+  "attempts": [
+    {
+      "attempt": 1,
+      "ok": false,
+      "checks": {
+        "wp_wrapper": true,
+        "has_style": false,
+        "has_all_initial": false,
+        "no_script": true,
+        "no_cdn_fonts": true,
+        "rtl": false,
+        "has_img": true,
+        "has_h1": false,
+        "inline_style_count": 1,
+        "bytes": 325,
+        "wrapper": null,
+        "sha256": "6e07b735bff1816c"
+      },
+      "normalizations": [
+        "added_wp_start",
+        "added_wp_end",
+        "inserted_required_image"
+      ],
+      "usage": null
+    },
+    {
+      "attempt": 2,
+      "ok": true,
+      "checks": {
+        "wp_wrapper": true,
+        "has_style": true,
+        "has_all_initial": true,
+        "no_script": true,
+        "no_cdn_fonts": true,
+        "rtl": true,
+        "has_img": true,
+        "has_h1": true,
+        "inline_style_count": 43,
+        "bytes": 10363,
+        "wrapper": "galoz-rotary-boost-55",
+        "sha256": "b3cdac3f0229745c"
+      },
+      "normalizations": [
+        "added_wp_end"
+      ],
+      "usage": {
+        "prompt_tokens": 490,
+        "completion_tokens": 4200,
+        "total_tokens": 4690,
+        "cost": 0.12845,
+        "is_byok": false,
+        "prompt_tokens_details": {
+          "cached_tokens": 0,
+          "cache_write_tokens": 0,
+          "audio_tokens": 0,
+          "video_tokens": 0
+        },
+        "cost_details": {
+          "upstream_inference_cost": 0.12845,
+          "upstream_inference_prompt_cost": 0.00245,
+          "upstream_inference_completions_cost": 0.126
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 466,
+          "image_tokens": 0,
+          "audio_tokens": 0
+        }
+      }
+    }
+  ],
+  "final_written": true,
+  "final_checks": {
+    "wp_wrapper": true,
+    "has_style": true,
+    "has_all_initial": true,
+    "no_script": true,
+    "no_cdn_fonts": true,
+    "rtl": true,
+    "has_img": true,
+    "has_h1": true,
+    "inline_style_count": 43,
+    "bytes": 10363,
+    "wrapper": "galoz-rotary-boost-55",
+    "sha256": "b3cdac3f0229745c"
+  }
+}

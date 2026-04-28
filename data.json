@@ -1,0 +1,854 @@
+{
+  "tree": [
+    {
+      "path": "caesarstone.co.il/Claude Code/2026-04-13/Improved_N8N_Prompt.txt",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "live",
+      "size": 40498,
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/contents/caesarstone.co.il/Claude Code/2026-04-13/Improved_N8N_Prompt.txt"
+    },
+    {
+      "path": "caesarstone.co.il/Claude Code/2026-04-13/Improved_N8N_Workflow.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "live",
+      "size": 175069,
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/contents/caesarstone.co.il/Claude Code/2026-04-13/Improved_N8N_Workflow.json"
+    },
+    {
+      "path": "caesarstone.co.il/Claude Code/2026-04-13/Improved_HTML_Template.html",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "live",
+      "size": 88530,
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/contents/caesarstone.co.il/Claude Code/2026-04-13/Improved_HTML_Template.html"
+    },
+    {
+      "path": "dtapet.com/Improved Files (6.4.26) ✦ Latest/N8N_Workflow.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "live",
+      "size": 191804,
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/contents/dtapet.com/Improved Files (6.4.26) ✦ Latest/N8N_Workflow.json"
+    },
+    {
+      "path": "dtapet.com/Improved Files (6.4.26) ✦ Latest/Improved_N8N_Prompt.txt",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "live",
+      "size": 51034,
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/contents/dtapet.com/Improved Files (6.4.26) ✦ Latest/Improved_N8N_Prompt.txt"
+    },
+    {
+      "path": "dtapet.com/Improved Files (6.4.26) ✦ Latest/Improved_HTML_Template.html",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "live",
+      "size": 60885,
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/contents/dtapet.com/Improved Files (6.4.26) ✦ Latest/Improved_HTML_Template.html"
+    },
+    {
+      "path": "galoz.co.il/Hermes Agent/2026-04-15/Improved_N8N_Prompt.txt",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "live",
+      "size": 15549,
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/contents/galoz.co.il/Hermes Agent/2026-04-15/Improved_N8N_Prompt.txt"
+    },
+    {
+      "path": "galoz.co.il/Hermes Agent/2026-04-15/Improved_N8N_Workflow.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "live",
+      "size": 135447,
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/contents/galoz.co.il/Hermes Agent/2026-04-15/Improved_N8N_Workflow.json"
+    },
+    {
+      "path": "galoz.co.il/Hermes Agent/2026-04-15/Improved_HTML_Template.html",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "live",
+      "size": 44592,
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/contents/galoz.co.il/Hermes Agent/2026-04-15/Improved_HTML_Template.html"
+    },
+    {
+      "path": "galoz.co.il/claude-code-15.4.26/Improved_N8N_Prompt.txt",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "live",
+      "size": 33306,
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/contents/galoz.co.il/claude-code-15.4.26/Improved_N8N_Prompt.txt"
+    },
+    {
+      "path": "galoz.co.il/claude-code-15.4.26/Improved_N8N_Workflow.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "live",
+      "size": 181886,
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/contents/galoz.co.il/claude-code-15.4.26/Improved_N8N_Workflow.json"
+    },
+    {
+      "path": "galoz.co.il/claude-code-15.4.26/Improved_HTML_Template.html",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "live",
+      "size": 56283,
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/contents/galoz.co.il/claude-code-15.4.26/Improved_HTML_Template.html"
+    },
+    {
+      "path": "galoz.co.il/Copilot/2026-04-15/Improved_N8N_Prompt.txt",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "live",
+      "size": 59484,
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/contents/galoz.co.il/Copilot/2026-04-15/Improved_N8N_Prompt.txt"
+    },
+    {
+      "path": "galoz.co.il/Copilot/2026-04-15/Improved_N8N_Workflow.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "live",
+      "size": 181839,
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/contents/galoz.co.il/Copilot/2026-04-15/Improved_N8N_Workflow.json"
+    },
+    {
+      "path": "galoz.co.il/Copilot/2026-04-15/Improved_HTML_Template.html",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "live",
+      "size": 69755,
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/contents/galoz.co.il/Copilot/2026-04-15/Improved_HTML_Template.html"
+    },
+    {
+      "path": "galoz.co.il/myclaw/Updated Files 15.4.26/galoz.co.il_Improved_HTML_Template-myclaw-15.4.26.html",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "live",
+      "size": 55436,
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/contents/galoz.co.il/myclaw/Updated Files 15.4.26/galoz.co.il_Improved_HTML_Template-myclaw-15.4.26.html"
+    },
+    {
+      "path": "galoz.co.il/myclaw/Updated Files 15.4.26/galoz.co.il_Improved_N8N_Workflow-myclaw-15.4.26.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "live",
+      "size": 55712,
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/contents/galoz.co.il/myclaw/Updated Files 15.4.26/galoz.co.il_Improved_N8N_Workflow-myclaw-15.4.26.json"
+    },
+    {
+      "path": "galoz.co.il/myclaw/Updated Files 15.4.26/galoz.co.il_Improved_N8N_Prompt-myclaw-15.4.26.txt",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "live",
+      "size": 49663,
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/contents/galoz.co.il/myclaw/Updated Files 15.4.26/galoz.co.il_Improved_N8N_Prompt-myclaw-15.4.26.txt"
+    },
+    {
+      "path": "galoz.co.il/Codex/2026-04-15/Improved_N8N_Prompt.txt",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "live",
+      "size": 14827,
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/contents/galoz.co.il/Codex/2026-04-15/Improved_N8N_Prompt.txt"
+    },
+    {
+      "path": "galoz.co.il/Codex/2026-04-15/Improved_N8N_Workflow.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "live",
+      "size": 135512,
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/contents/galoz.co.il/Codex/2026-04-15/Improved_N8N_Workflow.json"
+    },
+    {
+      "path": "galoz.co.il/Codex/2026-04-15/Improved_HTML_Template.html",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "live",
+      "size": 47851,
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/contents/galoz.co.il/Codex/2026-04-15/Improved_HTML_Template.html"
+    },
+    {
+      "path": "galoz.co.il/Kimi/2026-04-19/Improved_N8N_Prompt.txt",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "live",
+      "size": 21430,
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/contents/galoz.co.il/Kimi/2026-04-19/Improved_N8N_Prompt.txt"
+    },
+    {
+      "path": "galoz.co.il/Kimi/2026-04-19/Improved_N8N_Workflow.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "live",
+      "size": 181844,
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/contents/galoz.co.il/Kimi/2026-04-19/Improved_N8N_Workflow.json"
+    },
+    {
+      "path": "galoz.co.il/Kimi/2026-04-19/Improved_HTML_Template.html",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "live",
+      "size": 54933,
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/contents/galoz.co.il/Kimi/2026-04-19/Improved_HTML_Template.html"
+    },
+    {
+      "path": "galoz.co.il/Gemini/2026-04-15/Improved_N8N_Workflow_Gemini.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "live",
+      "size": 179597,
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/contents/galoz.co.il/Gemini/2026-04-15/Improved_N8N_Workflow_Gemini.json"
+    },
+    {
+      "path": "galoz.co.il/Gemini/2026-04-15/Improved_N8N_Prompt_Gemini.txt",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "live",
+      "size": 55717,
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/contents/galoz.co.il/Gemini/2026-04-15/Improved_N8N_Prompt_Gemini.txt"
+    },
+    {
+      "path": "galoz.co.il/Gemini/2026-04-15/Improved_HTML_Template_Gemini.html",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "live",
+      "size": 70502,
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/contents/galoz.co.il/Gemini/2026-04-15/Improved_HTML_Template_Gemini.html"
+    },
+    {
+      "path": "hondabike.co.il/Improved Files (12.4.26) ✦ Latest/Improved_N8N_Prompt.txt",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "live",
+      "size": 31069,
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/contents/hondabike.co.il/Improved Files (12.4.26) ✦ Latest/Improved_N8N_Prompt.txt"
+    },
+    {
+      "path": "hondabike.co.il/Improved Files (12.4.26) ✦ Latest/Improved_N8N_Workflow.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "live",
+      "size": 164749,
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/contents/hondabike.co.il/Improved Files (12.4.26) ✦ Latest/Improved_N8N_Workflow.json"
+    },
+    {
+      "path": "hondabike.co.il/Improved Files (12.4.26) ✦ Latest/Improved_HTML_Template.html",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "live",
+      "size": 72389,
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/contents/hondabike.co.il/Improved Files (12.4.26) ✦ Latest/Improved_HTML_Template.html"
+    },
+    {
+      "path": "jacknows.ai/Improved Files (31.3.26) ✦ Latest/Improved_N8N_Prompt.txt",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "live",
+      "size": 20037,
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/contents/jacknows.ai/Improved Files (31.3.26) ✦ Latest/Improved_N8N_Prompt.txt"
+    },
+    {
+      "path": "jacknows.ai/Improved Files (31.3.26) ✦ Latest/Improved_N8N_Workflow.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "live",
+      "size": 142686,
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/contents/jacknows.ai/Improved Files (31.3.26) ✦ Latest/Improved_N8N_Workflow.json"
+    },
+    {
+      "path": "jacknows.ai/Improved Files (31.3.26) ✦ Latest/Improved_HTML_Template.html",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "live",
+      "size": 49584,
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/contents/jacknows.ai/Improved Files (31.3.26) ✦ Latest/Improved_HTML_Template.html"
+    },
+    {
+      "path": "netanya.ac.il/claude-code/06.04.26/Improved_N8N_Prompt.txt",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "live",
+      "size": 26172,
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/contents/netanya.ac.il/claude-code/06.04.26/Improved_N8N_Prompt.txt"
+    },
+    {
+      "path": "netanya.ac.il/claude-code/06.04.26/Improved_N8N_Workflow.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "live",
+      "size": 154138,
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/contents/netanya.ac.il/claude-code/06.04.26/Improved_N8N_Workflow.json"
+    },
+    {
+      "path": "netanya.ac.il/claude-code/06.04.26/Improved_HTML_Template.html",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "live",
+      "size": 80700,
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/contents/netanya.ac.il/claude-code/06.04.26/Improved_HTML_Template.html"
+    },
+    {
+      "path": "netanya.ac.il/Improved Files (6.4.26)/Improved_N8N_Prompt.txt",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "live",
+      "size": 26172,
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/contents/netanya.ac.il/Improved Files (6.4.26)/Improved_N8N_Prompt.txt"
+    },
+    {
+      "path": "netanya.ac.il/Improved Files (6.4.26)/Improved_N8N_Workflow.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "live",
+      "size": 154138,
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/contents/netanya.ac.il/Improved Files (6.4.26)/Improved_N8N_Workflow.json"
+    },
+    {
+      "path": "netanya.ac.il/Improved Files (6.4.26)/Improved_HTML_Template.html",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "live",
+      "size": 80700,
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/contents/netanya.ac.il/Improved Files (6.4.26)/Improved_HTML_Template.html"
+    },
+    {
+      "path": "netanya.ac.il/Improved Files (5.4.26)/Improved_N8N_Prompt.txt",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "live",
+      "size": 17821,
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/contents/netanya.ac.il/Improved Files (5.4.26)/Improved_N8N_Prompt.txt"
+    },
+    {
+      "path": "netanya.ac.il/Improved Files (5.4.26)/Improved_N8N_Workflow.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "live",
+      "size": 16596,
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/contents/netanya.ac.il/Improved Files (5.4.26)/Improved_N8N_Workflow.json"
+    },
+    {
+      "path": "netanya.ac.il/Improved Files (5.4.26)/Improved_HTML_Template.html",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "live",
+      "size": 75510,
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/contents/netanya.ac.il/Improved Files (5.4.26)/Improved_HTML_Template.html"
+    },
+    {
+      "path": "powerplug.ai/OpenClaw/2026-04-20/Improved_N8N_Prompt.txt",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "live",
+      "size": 13385,
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/contents/powerplug.ai/OpenClaw/2026-04-20/Improved_N8N_Prompt.txt"
+    },
+    {
+      "path": "powerplug.ai/OpenClaw/2026-04-20/Improved_N8N_Workflow.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "live",
+      "size": 126202,
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/contents/powerplug.ai/OpenClaw/2026-04-20/Improved_N8N_Workflow.json"
+    },
+    {
+      "path": "powerplug.ai/OpenClaw/2026-04-20/Improved_HTML_Template.html",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "live",
+      "size": 43988,
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/contents/powerplug.ai/OpenClaw/2026-04-20/Improved_HTML_Template.html"
+    },
+    {
+      "path": "powerplug.ai/Hermes Agent/2026-04-16/Improved_N8N_Prompt.txt",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "live",
+      "size": 13385,
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/contents/powerplug.ai/Hermes Agent/2026-04-16/Improved_N8N_Prompt.txt"
+    },
+    {
+      "path": "powerplug.ai/Hermes Agent/2026-04-16/Improved_N8N_Workflow.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "live",
+      "size": 126202,
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/contents/powerplug.ai/Hermes Agent/2026-04-16/Improved_N8N_Workflow.json"
+    },
+    {
+      "path": "powerplug.ai/Hermes Agent/2026-04-16/Improved_HTML_Template.html",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "live",
+      "size": 43988,
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/contents/powerplug.ai/Hermes Agent/2026-04-16/Improved_HTML_Template.html"
+    },
+    {
+      "path": "powerplug.ai/Copilot/2026-04-17/Improved_N8N_Workflow-copilot-2026-04-17.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "live",
+      "size": 129113,
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/contents/powerplug.ai/Copilot/2026-04-17/Improved_N8N_Workflow-copilot-2026-04-17.json"
+    },
+    {
+      "path": "powerplug.ai/Copilot/2026-04-17/Improved_N8N_Prompt-copilot-2026-04-17.txt",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "live",
+      "size": 17427,
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/contents/powerplug.ai/Copilot/2026-04-17/Improved_N8N_Prompt-copilot-2026-04-17.txt"
+    },
+    {
+      "path": "powerplug.ai/Copilot/2026-04-17/Improved_HTML_Template-copilot-2026-04-17.html",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "live",
+      "size": 44444,
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/contents/powerplug.ai/Copilot/2026-04-17/Improved_HTML_Template-copilot-2026-04-17.html"
+    },
+    {
+      "path": "powerplug.ai/agent-zero/2026-04-16/Improved_N8N_Prompt.txt",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "live",
+      "size": 25456,
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/contents/powerplug.ai/agent-zero/2026-04-16/Improved_N8N_Prompt.txt"
+    },
+    {
+      "path": "powerplug.ai/agent-zero/2026-04-16/Improved_N8N_Workflow.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "live",
+      "size": 42689,
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/contents/powerplug.ai/agent-zero/2026-04-16/Improved_N8N_Workflow.json"
+    },
+    {
+      "path": "powerplug.ai/agent-zero/2026-04-16/Improved_HTML_Template.html",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "live",
+      "size": 67808,
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/contents/powerplug.ai/agent-zero/2026-04-16/Improved_HTML_Template.html"
+    },
+    {
+      "path": "powerplug.ai/CLAUDE CODE (Tim Claw Max)/2026-04-16/Improved_N8N_Prompt.txt",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "live",
+      "size": 13577,
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/contents/powerplug.ai/CLAUDE CODE (Tim Claw Max)/2026-04-16/Improved_N8N_Prompt.txt"
+    },
+    {
+      "path": "powerplug.ai/CLAUDE CODE (Tim Claw Max)/2026-04-16/Improved_N8N_Workflow.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "live",
+      "size": 16335,
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/contents/powerplug.ai/CLAUDE CODE (Tim Claw Max)/2026-04-16/Improved_N8N_Workflow.json"
+    },
+    {
+      "path": "powerplug.ai/CLAUDE CODE (Tim Claw Max)/2026-04-16/Improved_HTML_Template.html",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "live",
+      "size": 57234,
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/contents/powerplug.ai/CLAUDE CODE (Tim Claw Max)/2026-04-16/Improved_HTML_Template.html"
+    },
+    {
+      "path": "powerplug.ai/Claude Code/2026-04-16/Improved_N8N_Prompt.txt",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "live",
+      "size": 18688,
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/contents/powerplug.ai/Claude Code/2026-04-16/Improved_N8N_Prompt.txt"
+    },
+    {
+      "path": "powerplug.ai/Claude Code/2026-04-16/Improved_N8N_Workflow.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "live",
+      "size": 20768,
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/contents/powerplug.ai/Claude Code/2026-04-16/Improved_N8N_Workflow.json"
+    },
+    {
+      "path": "powerplug.ai/Claude Code/2026-04-16/Improved_HTML_Template.html",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "live",
+      "size": 49175,
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/contents/powerplug.ai/Claude Code/2026-04-16/Improved_HTML_Template.html"
+    },
+    {
+      "path": "powerplug.ai/gemini/2026-04-17/Improved_HTML_Template-gemini-2026-04-17.html",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "live",
+      "size": 13546,
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/contents/powerplug.ai/gemini/2026-04-17/Improved_HTML_Template-gemini-2026-04-17.html"
+    },
+    {
+      "path": "powerplug.ai/gemini/2026-04-17/Improved_N8N_Prompt-gemini-2026-04-17.txt",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "live",
+      "size": 17425,
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/contents/powerplug.ai/gemini/2026-04-17/Improved_N8N_Prompt-gemini-2026-04-17.txt"
+    },
+    {
+      "path": "powerplug.ai/gemini/2026-04-17/Improved_N8N_Workflow-gemini-2026-04-17.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "live",
+      "size": 129110,
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/contents/powerplug.ai/gemini/2026-04-17/Improved_N8N_Workflow-gemini-2026-04-17.json"
+    },
+    {
+      "path": "galoz.co.il/Hermes GPT 5.5/2026-04-27/AGENT-METADATA.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "local-galoz-five-agents",
+      "size": 849,
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/contents/galoz.co.il/Hermes%20GPT%205.5/2026-04-27/AGENT-METADATA.json"
+    },
+    {
+      "path": "galoz.co.il/Hermes GPT 5.5/2026-04-27/Improved_HTML_Template.html",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "local-galoz-five-agents",
+      "size": 36408,
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/contents/galoz.co.il/Hermes%20GPT%205.5/2026-04-27/Improved_HTML_Template.html"
+    },
+    {
+      "path": "galoz.co.il/Hermes GPT 5.5/2026-04-27/Improved_N8N_Prompt.txt",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "local-galoz-five-agents",
+      "size": 6303,
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/contents/galoz.co.il/Hermes%20GPT%205.5/2026-04-27/Improved_N8N_Prompt.txt"
+    },
+    {
+      "path": "galoz.co.il/Hermes GPT 5.5/2026-04-27/Improved_N8N_Workflow.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "local-galoz-five-agents",
+      "size": 23143,
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/contents/galoz.co.il/Hermes%20GPT%205.5/2026-04-27/Improved_N8N_Workflow.json"
+    },
+    {
+      "path": "galoz.co.il/Hermes GPT 5.5/2026-04-27/OPENROUTER-AGENT-REVIEW.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "local-galoz-five-agents",
+      "size": 4645,
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/contents/galoz.co.il/Hermes%20GPT%205.5/2026-04-27/OPENROUTER-AGENT-REVIEW.json"
+    },
+    {
+      "path": "galoz.co.il/Hermes Opus 4.7/2026-04-27/AGENT-METADATA.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "local-galoz-five-agents",
+      "size": 872,
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/contents/galoz.co.il/Hermes%20Opus%204.7/2026-04-27/AGENT-METADATA.json"
+    },
+    {
+      "path": "galoz.co.il/Hermes Opus 4.7/2026-04-27/Improved_HTML_Template.html",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "local-galoz-five-agents",
+      "size": 36437,
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/contents/galoz.co.il/Hermes%20Opus%204.7/2026-04-27/Improved_HTML_Template.html"
+    },
+    {
+      "path": "galoz.co.il/Hermes Opus 4.7/2026-04-27/Improved_N8N_Prompt.txt",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "local-galoz-five-agents",
+      "size": 5150,
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/contents/galoz.co.il/Hermes%20Opus%204.7/2026-04-27/Improved_N8N_Prompt.txt"
+    },
+    {
+      "path": "galoz.co.il/Hermes Opus 4.7/2026-04-27/Improved_N8N_Workflow.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "local-galoz-five-agents",
+      "size": 23170,
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/contents/galoz.co.il/Hermes%20Opus%204.7/2026-04-27/Improved_N8N_Workflow.json"
+    },
+    {
+      "path": "galoz.co.il/Hermes Opus 4.7/2026-04-27/OPENROUTER-AGENT-REVIEW.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "local-galoz-five-agents",
+      "size": 3489,
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/contents/galoz.co.il/Hermes%20Opus%204.7/2026-04-27/OPENROUTER-AGENT-REVIEW.json"
+    },
+    {
+      "path": "galoz.co.il/Hermes Gemini 3.1/2026-04-27/AGENT-METADATA.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "local-galoz-five-agents",
+      "size": 893,
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/contents/galoz.co.il/Hermes%20Gemini%203.1/2026-04-27/AGENT-METADATA.json"
+    },
+    {
+      "path": "galoz.co.il/Hermes Gemini 3.1/2026-04-27/Improved_HTML_Template.html",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "local-galoz-five-agents",
+      "size": 36452,
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/contents/galoz.co.il/Hermes%20Gemini%203.1/2026-04-27/Improved_HTML_Template.html"
+    },
+    {
+      "path": "galoz.co.il/Hermes Gemini 3.1/2026-04-27/Improved_N8N_Prompt.txt",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "local-galoz-five-agents",
+      "size": 2256,
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/contents/galoz.co.il/Hermes%20Gemini%203.1/2026-04-27/Improved_N8N_Prompt.txt"
+    },
+    {
+      "path": "galoz.co.il/Hermes Gemini 3.1/2026-04-27/Improved_N8N_Workflow.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "local-galoz-five-agents",
+      "size": 23188,
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/contents/galoz.co.il/Hermes%20Gemini%203.1/2026-04-27/Improved_N8N_Workflow.json"
+    },
+    {
+      "path": "galoz.co.il/Hermes Gemini 3.1/2026-04-27/OPENROUTER-AGENT-REVIEW.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "local-galoz-five-agents",
+      "size": 596,
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/contents/galoz.co.il/Hermes%20Gemini%203.1/2026-04-27/OPENROUTER-AGENT-REVIEW.json"
+    },
+    {
+      "path": "galoz.co.il/Hermes Kimi K2.6/2026-04-27/AGENT-METADATA.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "local-galoz-five-agents",
+      "size": 871,
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/contents/galoz.co.il/Hermes%20Kimi%20K2.6/2026-04-27/AGENT-METADATA.json"
+    },
+    {
+      "path": "galoz.co.il/Hermes Kimi K2.6/2026-04-27/Improved_HTML_Template.html",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "local-galoz-five-agents",
+      "size": 36426,
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/contents/galoz.co.il/Hermes%20Kimi%20K2.6/2026-04-27/Improved_HTML_Template.html"
+    },
+    {
+      "path": "galoz.co.il/Hermes Kimi K2.6/2026-04-27/Improved_N8N_Prompt.txt",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "local-galoz-five-agents",
+      "size": 2123,
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/contents/galoz.co.il/Hermes%20Kimi%20K2.6/2026-04-27/Improved_N8N_Prompt.txt"
+    },
+    {
+      "path": "galoz.co.il/Hermes Kimi K2.6/2026-04-27/Improved_N8N_Workflow.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "local-galoz-five-agents",
+      "size": 23165,
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/contents/galoz.co.il/Hermes%20Kimi%20K2.6/2026-04-27/Improved_N8N_Workflow.json"
+    },
+    {
+      "path": "galoz.co.il/Hermes Kimi K2.6/2026-04-27/OPENROUTER-AGENT-REVIEW.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "local-galoz-five-agents",
+      "size": 467,
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/contents/galoz.co.il/Hermes%20Kimi%20K2.6/2026-04-27/OPENROUTER-AGENT-REVIEW.json"
+    },
+    {
+      "path": "galoz.co.il/Hermes GLM 5.1/2026-04-27/AGENT-METADATA.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "local-galoz-five-agents",
+      "size": 1065,
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/contents/galoz.co.il/Hermes%20GLM%205.1/2026-04-27/AGENT-METADATA.json"
+    },
+    {
+      "path": "galoz.co.il/Hermes GLM 5.1/2026-04-27/Improved_HTML_Template.html",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "local-galoz-five-agents",
+      "size": 36403,
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/contents/galoz.co.il/Hermes%20GLM%205.1/2026-04-27/Improved_HTML_Template.html"
+    },
+    {
+      "path": "galoz.co.il/Hermes GLM 5.1/2026-04-27/Improved_N8N_Prompt.txt",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "local-galoz-five-agents",
+      "size": 4584,
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/contents/galoz.co.il/Hermes%20GLM%205.1/2026-04-27/Improved_N8N_Prompt.txt"
+    },
+    {
+      "path": "galoz.co.il/Hermes GLM 5.1/2026-04-27/Improved_N8N_Workflow.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "local-galoz-five-agents",
+      "size": 23139,
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/contents/galoz.co.il/Hermes%20GLM%205.1/2026-04-27/Improved_N8N_Workflow.json"
+    },
+    {
+      "path": "galoz.co.il/Hermes GLM 5.1/2026-04-27/OPENROUTER-AGENT-REVIEW.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "local-galoz-five-agents",
+      "size": 2969,
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/contents/galoz.co.il/Hermes%20GLM%205.1/2026-04-27/OPENROUTER-AGENT-REVIEW.json"
+    },
+    {
+      "path": "galoz.co.il/Hermes Plan 17 Best Pick/2026-04-28/Improved_N8N_Workflow.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "live",
+      "size": 4193,
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/contents/galoz.co.il/Hermes Plan 17 Best Pick/2026-04-28/Improved_N8N_Workflow.json"
+    },
+    {
+      "path": "galoz.co.il/Hermes Plan 17 Best Pick/2026-04-28/Improved_N8N_Prompt.txt",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "live",
+      "size": 1723,
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/contents/galoz.co.il/Hermes Plan 17 Best Pick/2026-04-28/Improved_N8N_Prompt.txt"
+    },
+    {
+      "path": "galoz.co.il/Hermes Plan 17 Best Pick/2026-04-28/Improved_HTML_Template.html",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "live",
+      "size": 10977,
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/contents/galoz.co.il/Hermes Plan 17 Best Pick/2026-04-28/Improved_HTML_Template.html"
+    },
+    {
+      "path": "powerplug.ai/GPT 5.5 Agent (openai-gpt-5.5)/2026-04-28/Improved_HTML_Template.html",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "local-pending",
+      "size": 44597,
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/contents/powerplug.ai/GPT%205.5%20Agent%20(openai-gpt-5.5)/2026-04-28/Improved_HTML_Template.html"
+    },
+    {
+      "path": "powerplug.ai/GPT 5.5 Agent (openai-gpt-5.5)/2026-04-28/Improved_N8N_Prompt.txt",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "local-pending",
+      "size": 2081,
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/contents/powerplug.ai/GPT%205.5%20Agent%20(openai-gpt-5.5)/2026-04-28/Improved_N8N_Prompt.txt"
+    },
+    {
+      "path": "powerplug.ai/GPT 5.5 Agent (openai-gpt-5.5)/2026-04-28/Improved_N8N_Workflow.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "local-pending",
+      "size": 3159,
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/contents/powerplug.ai/GPT%205.5%20Agent%20(openai-gpt-5.5)/2026-04-28/Improved_N8N_Workflow.json"
+    },
+    {
+      "path": "powerplug.ai/Kimi K2.6 Agent (moonshotai-kimi-k2.6)/2026-04-28/Improved_HTML_Template.html",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "local-pending",
+      "size": 19760,
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/contents/powerplug.ai/Kimi%20K2.6%20Agent%20(moonshotai-kimi-k2.6)/2026-04-28/Improved_HTML_Template.html"
+    },
+    {
+      "path": "powerplug.ai/Kimi K2.6 Agent (moonshotai-kimi-k2.6)/2026-04-28/Improved_N8N_Prompt.txt",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "local-pending",
+      "size": 1648,
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/contents/powerplug.ai/Kimi%20K2.6%20Agent%20(moonshotai-kimi-k2.6)/2026-04-28/Improved_N8N_Prompt.txt"
+    },
+    {
+      "path": "powerplug.ai/Kimi K2.6 Agent (moonshotai-kimi-k2.6)/2026-04-28/Improved_N8N_Workflow.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "local-pending",
+      "size": 3424,
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/contents/powerplug.ai/Kimi%20K2.6%20Agent%20(moonshotai-kimi-k2.6)/2026-04-28/Improved_N8N_Workflow.json"
+    },
+    {
+      "path": "powerplug.ai/Opus 4.7 Agent (anthropic-claude-opus-4.7)/2026-04-28/Improved_HTML_Template.html",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "local-pending",
+      "size": 28719,
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/contents/powerplug.ai/Opus%204.7%20Agent%20(anthropic-claude-opus-4.7)/2026-04-28/Improved_HTML_Template.html"
+    },
+    {
+      "path": "powerplug.ai/Opus 4.7 Agent (anthropic-claude-opus-4.7)/2026-04-28/Improved_N8N_Prompt.txt",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "local-pending",
+      "size": 2100,
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/contents/powerplug.ai/Opus%204.7%20Agent%20(anthropic-claude-opus-4.7)/2026-04-28/Improved_N8N_Prompt.txt"
+    },
+    {
+      "path": "powerplug.ai/Opus 4.7 Agent (anthropic-claude-opus-4.7)/2026-04-28/Improved_N8N_Workflow.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "local-pending",
+      "size": 3207,
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/contents/powerplug.ai/Opus%204.7%20Agent%20(anthropic-claude-opus-4.7)/2026-04-28/Improved_N8N_Workflow.json"
+    },
+    {
+      "path": "galoz.co.il/Hermes Success Only Best Pick/2026-04-28/Improved_N8N_Workflow.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "live",
+      "size": 602,
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/contents/galoz.co.il/Hermes Success Only Best Pick/2026-04-28/Improved_N8N_Workflow.json"
+    },
+    {
+      "path": "galoz.co.il/Hermes Success Only Best Pick/2026-04-28/Improved_N8N_Prompt.txt",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "live",
+      "size": 556,
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/contents/galoz.co.il/Hermes Success Only Best Pick/2026-04-28/Improved_N8N_Prompt.txt"
+    },
+    {
+      "path": "galoz.co.il/Hermes Success Only Best Pick/2026-04-28/Improved_HTML_Template.html",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "live",
+      "size": 11186,
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/contents/galoz.co.il/Hermes Success Only Best Pick/2026-04-28/Improved_HTML_Template.html"
+    },
+    {
+      "path": "powerplug.ai/gemini/2026-04-28/Improved_HTML_Template.html",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "local-pending",
+      "size": 24725,
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/contents/powerplug.ai/gemini/2026-04-28/Improved_HTML_Template.html"
+    },
+    {
+      "path": "powerplug.ai/gemini/2026-04-28/Improved_N8N_Prompt.txt",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "local-pending",
+      "size": 2085,
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/contents/powerplug.ai/gemini/2026-04-28/Improved_N8N_Prompt.txt"
+    },
+    {
+      "path": "powerplug.ai/gemini/2026-04-28/Improved_N8N_Workflow.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "local-pending",
+      "size": 3225,
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/contents/powerplug.ai/gemini/2026-04-28/Improved_N8N_Workflow.json"
+    }
+  ],
+  "truncated": false,
+  "success_only_best_pick_updated_at": "2026-04-28"
+}

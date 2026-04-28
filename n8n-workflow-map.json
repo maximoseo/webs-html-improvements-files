@@ -1,0 +1,21 @@
+{
+  "domains": {
+    "caesarstone.co.il": {
+      "workflowId": "Yu5MZZaxrHFLivgR",
+      "workflowName": "caesarstone.co.il",
+      "wpUrl": "https://caesarstone.articlehub.work/"
+    },
+    "galoz.co.il": {
+      "workflowId": "galoz-myclaw-workflow-15426",
+      "workflowName": "Galoz Article Generator — MyClaw Production v15.4.26",
+      "wpUrl": "https://www.galoz.co.il/",
+      "agent": "myclaw",
+      "version": "15.4.26",
+      "updatedAt": "2026-04-15"
+    }
+  },
+  "notes": [
+    "Add exact domain-to-workflow mappings here to make Deploy to n8n deterministic.",
+    "Example: \"galoz.co.il\": { \"workflowId\": \"abc123\", \"workflowName\": \"https://www.galoz.co.il/\" }"
+  ]
+}

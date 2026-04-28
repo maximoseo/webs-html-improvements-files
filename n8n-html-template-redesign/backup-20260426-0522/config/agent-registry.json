@@ -1,0 +1,58 @@
+{
+  "agents": [
+    {
+      "id": 1,
+      "slug": "gpt-5.5-agent",
+      "display": "GPT 5.5 Agent",
+      "role": "Layout Architect",
+      "model": "GPT 5.5",
+      "provider": "Copilot",
+      "obsidian_folder": "HTML-Redesign/GPT-5.5-Agent"
+    },
+    {
+      "id": 2,
+      "slug": "opus-4.7-agent",
+      "display": "Opus 4.7 Agent",
+      "role": "Visual Designer",
+      "model": "Opus 4.7",
+      "provider": "Copilot",
+      "obsidian_folder": "HTML-Redesign/Opus-4.7-Agent"
+    },
+    {
+      "id": 3,
+      "slug": "gemini-3.1-agent",
+      "display": "Gemini 3.1 Agent",
+      "role": "Accessibility Auditor",
+      "model": "Gemini 3.1 Pro Preview",
+      "provider": "Gemini API",
+      "obsidian_folder": "HTML-Redesign/Gemini-3.1-Agent"
+    },
+    {
+      "id": 4,
+      "slug": "kimi-k2.6-agent",
+      "display": "Kimi K2.6 Agent",
+      "role": "Performance Engineer",
+      "model": "Kimi K2.6",
+      "provider": "Moonshot/Kimi",
+      "obsidian_folder": "HTML-Redesign/Kimi-K2.6-Agent"
+    },
+    {
+      "id": 5,
+      "slug": "glm-5.1-agent",
+      "display": "GLM 5.1 Agent",
+      "role": "Analytics Integrator",
+      "model": "GLM 5.1",
+      "provider": "Z.ai",
+      "obsidian_folder": "HTML-Redesign/GLM-5.1-Agent"
+    },
+    {
+      "id": "final",
+      "slug": "hermes-final",
+      "display": "Final Merged Template",
+      "role": "Hermes Combined Best-Of Output",
+      "model": "Hermes Orchestrator",
+      "provider": "mixed",
+      "obsidian_folder": "HTML-Redesign/Hermes-Final"
+    }
+  ]
+}

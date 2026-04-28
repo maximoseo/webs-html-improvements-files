@@ -1,0 +1,13 @@
+{
+  "slug": "glm-5.1-wordpress-qa",
+  "agent": "Hermes GLM 5.1 WordPress QA",
+  "model": "z-ai/glm-5.1",
+  "role": "WordPress-safe QA focus: minimal fragile constructs, mobile/RTL/inline CSS safety, acceptance checklist, failure prevention.",
+  "status": "artifacts_created",
+  "files": [
+    "Improved_HTML_Template.html",
+    "Improved_N8N_Prompt.txt",
+    "Improved_N8N_Workflow.json",
+    "OPENROUTER-ROLE-REVIEW.json"
+  ]
+}

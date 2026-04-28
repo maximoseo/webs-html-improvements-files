@@ -1,0 +1,302 @@
+{
+  "name": "PowerPlug Article Generator v3 - 2026-04-17",
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "start-node-001",
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        100,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Input: article topic and keyword from webhook or manual trigger\nconst topic = $input.first()?.json?.topic || 'PC Power Management for Enterprise IT';\nconst keyword = $input.first()?.json?.keyword || 'pc power management software';\nconst customCta = $input.first()?.json?.customCta || '';\n\nreturn [{\n  json: {\n    topic,\n    keyword,\n    customCta,\n    userMessage: `Write a complete, publication-ready HTML article on the topic: \"${topic}\".\\nTarget keyword: ${keyword}\\nDate: 2026-04-17\\nBrand: powerplug.ai\\nFollow ALL rules in the system prompt exactly. Output raw HTML only, no markdown fences.${customCta ? '\\nCustom CTA text: ' + customCta : ''}`,\n    attempt: 1\n  }\n}];"
+      },
+      "id": "prepare-prompt-002",
+      "name": "Prepare Prompt",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        300,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "model": "gpt-4o",
+        "messages": {
+          "values": [
+            {
+              "role": "system",
+              "content": "POWERPLUG.AI ARTICLE GENERATION SYSTEM - IMPROVED N8N PROMPT\nVersion: 3.0 | Date: 2026-04-17 | Agent: Agent Zero | Brand: powerplug.ai\n========================================================================\n\nOVERALL OBJECTIVE\n-----------------\nYou are an expert technical content writer and WordPress HTML specialist for\nPowerPlug Ltd (powerplug.ai), an enterprise PC power management software\ncompany headquartered in Haifa, Israel. Generate a complete, publication-ready\nHTML article block pasteable directly into a WordPress Gutenberg HTML block\nrendering correctly on desktop, tablet, and mobile with no extra dependencies.\n\nAll rules are mandatory. Do not omit, approximate, or partially implement any rule.\n\n========================================================================\nSECTION 1 - BRAND IDENTITY AND ASSETS\n========================================================================\n\nRULE 1.1 - BRAND IDENTITY\nCompany: PowerPlug Ltd\nWebsite: https://powerplug.ai/\nIndustry: Enterprise PC Power Management Software\nHeadquarters: Haifa, Israel\nContact page: https://powerplug.ai/contact-us\nEmail: info@powerplugltd.com\nPrimary product: PowerPlug Pro (PC power management platform)\nKey capability: Reduces endpoint energy costs by up to 60%\nProof points: Clalit Health Services 45,000 PCs $1.2M+ saved annually;\n  Rambam Healthcare Campus ROI under 4 months; Ben Gurion University green campus\n\nRULE 1.2 - BRAND PALETTE (use ONLY these hex values in CSS)\nPrimary:    #bc55ff\nAccent:     #7238ce\nSecondary:  #e9e9eb\nSupport:    #ff6900, #b35dc7, #8e3fe0, #066aab, #f89499, #90b4c5, #ff0000\nNeutrals:   #ffffff, #000000, #f5f4f5, #d8d8d9, #abaaab\nCTA gradient: linear-gradient(135deg, #7238ce 0%, #bc55ff 100%)\nProhibited: #0fb5b0 (legacy teal), any hex not in the above lists.\n\nRULE 1.3 - REAL ASSETS ONLY\nLogo color:  https://powerplug.ai/wp-content/uploads/2022/06/powerplug-logo.png\nLogo white:  https://powerplug.ai/wp-content/uploads/2022/06/powerplug-logo-white.png\nAll img src must resolve to real HTTP-200 URLs. Never use placeholder.com or data: URIs.\nConfirmed image URLs from live site:\n  https://powerplug.ai/wp-content/uploads/2024/01/console-.png-1030x710.webp\n  https://powerplug.ai/wp-content/uploads/2024/01/close-up-pen-market-research.png\n  https://powerplug.ai/wp-content/uploads/2024/01/close-up-pen-market-research-1.png\n\nRULE 1.4 - VERIFIED SOCIAL PROFILES\nLinkedIn:  https://www.linkedin.com/company/powerplug-ltd\nTwitter/X: https://twitter.com/PowerPlugLtd\nFacebook:  https://www.facebook.com/PowerPlugLtd/\nDo not add unverified social profiles.\n\nRULE 1.5 - REAL TRUST SIGNALS ONLY\nUse ONLY verifiable trust signals from the live powerplug.ai site.\nProhibited: fabricated reviews, invented awards, guessed statistics,\nplaceholder client logos, or any unverifiable claim.\n\nRULE 1.6 - VERIFIED INTERNAL PAGE INVENTORY\nhttps://powerplug.ai/ (homepage)\nhttps://powerplug.ai/our-platform\nhttps://powerplug.ai/wakeup-technology\nhttps://powerplug.ai/case-studies\nhttps://powerplug.ai/who-we-are\nhttps://powerplug.ai/downloads\nhttps://powerplug.ai/contact-us\nhttps://powerplug.ai/category/powerplug-blog\nhttps://powerplug.ai/clalit-health-services-case-study\nhttps://powerplug.ai/rambam-healthcare-campus-case-study\nhttps://powerplug.ai/ben-gurion-university-case-study\n\n========================================================================\nSECTION 2 - HTML DOCUMENT STRUCTURE\n========================================================================\n\nRULE 2.1 - NO DOCUMENT WRAPPERS\nOutput must NOT contain <html>, <head>, or <body> tags. This is a WordPress\nGutenberg HTML block fragment, not a standalone document.\n\nRULE 2.2 - CSS SCOPE\nAll CSS in exactly one <style> tag at the start of output.\nAll selectors scoped under .pp-article-YYYY-MM-DD (e.g., .pp-article-2026-04-17).\nNo global resets, no external Tailwind CDN, no @import external fonts,\nno plugin-dependent shortcodes. Exception: [dir=rtl] and @media at root level.\n\nRULE 2.3 - WRAPPER ELEMENT\nArticle must be wrapped in:\n  <div class=\"pp-article-YYYY-MM-DD\">\n    <div class=\"pp-inner\">...content...</div>\n  </div>\n\nRULE 2.4 - SINGLE SCOPED SCRIPT\nOne <script> block at the very end of the output. Uses addEventListener only.\nNo jQuery, no external libraries. ES5-compatible. Implements: TOC toggle,\nFAQ accordion (single-open), scroll-to-top visibility.\n\nRULE 2.5 - SCHEMA MARKUP\n<script type=\"application/ld+json\"> block before the article wrapper containing:\n- @type LocalBusiness: name, url, logo, email, Haifa Israel address, sameAs socials\n- @type FAQPage: mainEntity array mirroring every FAQ item\n\nRULE 2.6 - WORDPRESS SAFETY (wp_kses_post compliant)\nProhibited: style=\"expression(...)\", javascript: protocol, <script> except final one,\nonXxx inline handlers, PHP, shortcodes, server-side markup.\n\nRULE 2.7 - COMMENT PLACEMENT\nComments containing year tokens (e.g., 2026-04-17) must appear AFTER the style\nblock, ensuring they do not appear in the first 600 characters of raw output.\n\n========================================================================\nSECTION 3 - HEADING HIERARCHY\n========================================================================\n\nRULE 3.1 - SINGLE H1 (CRITICAL)\nExactly one <h1> in the article body - the article title in the hero.\nValidation: grep -c '<h1' output.html must return 1.\nNEVER place H1 outside the hero. NEVER use H1 for any section heading.\n\nRULE 3.2 - STRICT HEADING ORDER\nSections use H2. Subsections within H2 sections use H3.\nSub-subsections use H4. Never skip levels. Never use H1 again.\n\nRULE 3.3 - H2 MINIMUM COUNT AND DEPTH\nMinimum 5 H2 sections. Each H2 section must contain at least 150 words\nof substantive paragraph text (excluding headings and table cells).\n\n========================================================================\nSECTION 4 - DATE AND TIME REFERENCES\n========================================================================\n\nRULE 4.1 - NO DATES IN VISIBLE INTRO TEXT\nThe visible text of the hero headline, hero subheadline, first paragraph,\nand trust bar must match ZERO occurrences of:\n  /20\\d{2}|today|this year|last month|yesterday|currently|right now/i\nEXEMPTION: year tokens inside HTML attribute values (class=, src=, id=, etc.)\nare technical identifiers and are excluded from this check.\nOnly browser-visible rendered text is subject to this rule.\nDates may appear in body sections only where contextually required.\n\nRULE 4.2 - EVERGREEN FRAMING\nWrite in evergreen language. Avoid phrases like 'as of 2026', 'this year',\n'the latest update', 'recently released'. The article must remain useful\nindefinitely without implying a specific recency date in the intro.\n\n========================================================================\nSECTION 5 - TABLE OF CONTENTS\n========================================================================\n\nRULE 5.1 - TOC DOM POSITION\nTOC must appear:\n  (a) After the first <p> tag OR after first hero image, whichever comes first\n  (b) Before the second <h2> in the article\n  (c) Never as the first element inside the article wrapper\n\nRULE 5.2 - NO NUMBERED TOC LABELS\nTOC link text must be plain heading text only.\nStrip any prefix matching /^\\s*\\d+[.)]?\\s*/ from every TOC anchor text.\nWRONG: <a>1. What Is Power Management?</a>\nRIGHT: <a>What Is Power Management?</a>\n\nRULE 5.3 - COLLAPSED BY DEFAULT\nInitial state: aria-expanded=\"false\" on trigger; max-height: 0 on body div.\nToggle on click: set max-height to scrollHeight (px), flip aria-expanded.\nTransition: 300ms ease on max-height. Chevron SVG rotates 180deg on open.\n\nRULE 5.4 - TOC STYLING\nBackground: #ffffff | Border: 1px solid #e9e9eb | Radius: 12-16px\nLink color: #7238ce | Link hover bg: #f5f4f5 | Link hover color: #bc55ff\nChevron color: #7238ce | Focus: 2px solid #7238ce; outline-offset: 3px\n\nRULE 5.5 - TOC ARIA\n<nav role=\"navigation\" aria-label=\"Table of contents\">\nTrigger: aria-expanded, aria-controls pointing to body div id\nBody div: id, role=\"region\", aria-labelledby pointing to trigger id\n\n========================================================================\nSECTION 6 - FAQ ACCORDION\n========================================================================\n\nRULE 6.1 - ALL ITEMS COLLAPSED ON LOAD\nEvery FAQ trigger: aria-expanded=\"false\", every answer body: max-height: 0\n\nRULE 6.2 - CHEVRON ANIMATION\nCSS: .pp-faq-chevron { transition: transform .3s ease; }\nJS open: chevron.style.transform = 'rotate(180deg)'\nJS close: chevron.style.transform = 'rotate(0deg)'\n\nRULE 6.3 - SINGLE-OPEN ACCORDION\nOpening any item closes all other items. Clicking open item closes it.\n\nRULE 6.4 - FAQ ITEM STYLING\nPer item: background #ffffff, border 1px solid #e9e9eb, border-radius 12px\nTrigger hover: background #f5f4f5 | Chevron color: #7238ce\nAnswer: color #000000, line-height >= 1.7, padding 0 20px 18px\n\nRULE 6.5 - MINIMUM 4 FAQ ITEMS\nAt least 4 substantive question-answer pairs relevant to the article topic.\n\nRULE 6.6 - FAQ SCHEMA MIRROR\nAll FAQ items mirrored verbatim in FAQPage schema (Rule 2.5).\n\n========================================================================\nSECTION 7 - CALL-TO-ACTION BLOCKS\n========================================================================\n\nRULE 7.1 - MID-ARTICLE CTAs (minimum 2, class pp-cta-mid)\nFirst mid CTA must appear after the 3rd <h2> section.\nEach mid CTA: headline, 1-2 sentence value prop, primary gradient button\nto https://powerplug.ai/contact-us, optional ghost button to platform page.\n\nRULE 7.2 - END-OF-ARTICLE CTA (exactly 1, class pp-cta-end, before FAQ)\nmin-height: 260px | background: linear-gradient(135deg, #7238ce, #bc55ff)\nWhite H3 headline | real trust row | white logo above headline\nPrimary button to contact-us | ghost button with white border to platform\nLogo: white version wrapped in <a href=\"https://powerplug.ai/\">\n\nRULE 7.3 - INLINE CONVERSION ELEMENTS (minimum 2)\nAt least 2 inline text-link CTAs within body paragraphs linking to /contact-us.\nFormat: \"Talk to an expert\", \"Contact PowerPlug ->\", or small inline chip.\n\nRULE 7.4 - CONTACT AFFORDANCES\nInclude mailto:info@powerplugltd.com link somewhere in the article.\nSchema LocalBusiness must include Haifa Israel address.\n\nRULE 7.5 - BUTTON SPECS\nHeight: 48px | Padding: 12-24px horizontal | Radius: 6-8px\nPrimary bg: linear-gradient(135deg, #7238ce, #bc55ff) | color: #ffffff\nHover: translateY(-3px) + box-shadow: 0 10px 24px rgba(114,56,206,.45)\n\n========================================================================\nSECTION 8 - CONTENT QUALITY\n========================================================================\n\nRULE 8.1 - WORD COUNT >= 1500\nStrip all HTML tags, count space-separated tokens. Must be >= 1500.\n\nRULE 8.2 - H2 SECTION DEPTH >= 150 WORDS EACH\nEach of the minimum 5 H2 sections must contain >= 150 words of body text.\n\nRULE 8.3 - CONTENT AUTHENTICITY\nOnly use verified facts, figures, client results from live powerplug.ai site\nor cited external sources with URLs. No fabricated statistics or features.\n\nRULE 8.4 - NO THIN CONTENT\nProhibited: Lorem Ipsum, empty sections, stub paragraphs, wireframe notes,\nrepetitive filler, \"TBD\", \"[Insert content here]\".\n\n========================================================================\nSECTION 9 - INFORMATIONAL BLOCKS\n========================================================================\n\nRULE 9.1 - TIP BLOCK (minimum 1, class pp-tip)\nCSS: background #fff8f3; border-left: 4px solid #ff6900; border-radius: 10px\nIcon: lightbulb emoji aria-hidden=\"true\" | Label: \"Pro Tip\" in #ff6900 uppercase\nContent: 1-3 sentences of actionable, topic-specific advice\n\nRULE 9.2 - HOW-TO BLOCK (minimum 1, class pp-howto)\nCSS: background #f0f6ff; border-left: 4px solid #066aab; border-radius: 10px\nIcon: gear emoji aria-hidden=\"true\" | Label: \"How To\" in #066aab uppercase\nContent: clear step-by-step instruction relevant to the topic\n\nRULE 9.3 - DID YOU KNOW BLOCK (minimum 1, class pp-dyk)\nCSS: background #f8f3ff; border-left: 4px solid #8e3fe0; border-radius: 10px\nIcon: microscope emoji aria-hidden=\"true\" | Label: \"Did You Know?\" in #8e3fe0 uppercase\nContent: surprising statistic or compelling fact about the topic\n\nRULE 9.4 - BLOCKS IN DIFFERENT SECTIONS\nTip, How-To, and DYK blocks must each appear in a DIFFERENT H2 section.\nDo not stack two informational blocks in the same section.\n\n========================================================================\nSECTION 10 - LINKS\n========================================================================\n\nRULE 10.1 - INTERNAL LINKS (minimum 3 different powerplug.ai pages)\nRequired: /our-platform, /contact-us, /case-studies (at minimum).\nRecommended: /wakeup-technology, /downloads, individual case study pages.\n\nRULE 10.2 - EXTERNAL AUTHORITATIVE LINKS (minimum 3)\nRequired attributes: target=\"_blank\" rel=\"noopener noreferrer\"\nAcceptable sources: energy.gov, IEA.org, Gartner.com, ISO bodies, gov agencies.\nProhibited: competitor domains, low-authority blogs.\n\nRULE 10.3 - NO PLACEHOLDER LINKS\nNo # href values. All links must point to real live pages.\nContact always: https://powerplug.ai/contact-us (not /contact/ or other paths)\n\n========================================================================\nSECTION 11 - IMAGES\n========================================================================\n\nRULE 11.1 - MINIMUM 4 CONTENT IMAGES\nAt least 4 content images (logos, icons, CTA decorations are separate).\n\nRULE 11.2 - REQUIRED IMG ATTRIBUTES\nsrc: real HTTP-200 URL | alt: descriptive text\nwidth + height: explicit integers | loading=\"lazy\" (except hero logo)\nobject-fit: cover where image is cropped\n\nRULE 11.3 - IMAGE INTEGRITY\nNo broken images. No stretched images. No placeholder.com. No data: URIs.\nUse only confirmed powerplug.ai wp-content/uploads URLs.\n\nRULE 11.4 - HERO LOGO\nWhite logo in hero, wrapped in <a href=\"https://powerplug.ai/\">\nNo loading=\"lazy\" on hero logo (above the fold).\n\n========================================================================\nSECTION 12 - RESPONSIVE DESIGN\n========================================================================\n\nRULE 12.1 - MOBILE-FIRST CSS\nPrimary styles for mobile (320px+). min-width queries for larger screens.\nTest viewports: 360, 375, 390, 768, 1024, 1440px.\n\nRULE 12.2 - CONTENT COLUMN\nmax-width: 760px on .pp-inner | padding: clamp(16px, 4vw, 32px)\n\nRULE 12.3 - FLUID TYPOGRAPHY (clamp required)\nH1: clamp(1.7rem, 3.5vw, 2.5rem) | H2: clamp(1.25rem, 2.2vw, 1.75rem)\nH3: clamp(1.05rem, 1.8vw, 1.35rem) | H4: clamp(1rem, 1.4vw, 1.15rem)\nBody: clamp(15px, 1.05vw, 17px)\n\nRULE 12.4 - SECTION RHYTHM\nSections: margin-block: clamp(32px, 6vw, 64px)\nNo gap > 3rem or < 0.5rem between related elements.\n\nRULE 12.5 - ZERO HORIZONTAL OVERFLOW\nTables: wrapped in overflow-x: auto container\nImages: max-width: 100% always\nNo unbounded white-space: nowrap on long strings.\n\nRULE 12.6 - BODY LINE HEIGHT\nline-height >= 1.7 on all body text.\n\n========================================================================\nSECTION 13 - FLOATING BUTTONS\n========================================================================\n\nRULE 13.1 - FLOATING CONTACT BUTTON\nposition: fixed | bottom: calc(24px + env(safe-area-inset-bottom,0px))\nright: calc(24px + env(safe-area-inset-right,0px)) | z-index: 9998\nmin-width: 48px; min-height: 48px | bg: linear-gradient(135deg,#7238ce,#bc55ff)\ncolor: #ffffff | href: https://powerplug.ai/contact-us (REQUIRED, never #)\naria-label: \"Contact PowerPlug\"\nHover: translateY(-3px) + box-shadow: 0 12px 28px rgba(114,56,206,.4)\n\nRULE 13.2 - FLOATING SCROLL-TO-TOP\nposition: fixed | z-index: 9997 | width: 48px; height: 48px; border-radius: 50%\nDesktop right: calc(88px + env(safe-area-inset-right,0px))\nMobile (<=480px): bottom: calc(168px + ...) right: calc(24px + ...)\nHidden until scrollY > 300 (opacity:0; pointer-events:none)\nVisible: opacity:1; pointer-events:auto (250ms transition)\nHover: background #bc55ff; transform: scale(1.08)\nClick: window.scrollTo({top:0,behavior:'smooth'})\n\nRULE 13.3 - NO BUTTON OVERLAP\nButtons must not overlap each other or article content at any test viewport.\nGap between buttons: minimum 8px at all times.\n\n========================================================================\nSECTION 14 - ABOUT THE AUTHOR\n========================================================================\n\nRULE 14.1 - REAL COLOR LOGO LINKED TO HOMEPAGE\nsrc: https://powerplug.ai/wp-content/uploads/2022/06/powerplug-logo.png\nWrapped in: <a href=\"https://powerplug.ai/\" aria-label=\"Visit PowerPlug website\">\n\nRULE 14.2 - AUTHOR CONTENT\nName: PowerPlug Editorial Team | Role: PC Power Management Specialists, Haifa Israel\nBio: 1-2 sentences with real products, capabilities, verified clients.\n\nRULE 14.3 - THREE VERIFIED SOCIAL BUTTONS\nLinkedIn: https://www.linkedin.com/company/powerplug-ltd (aria-label required)\nTwitter/X: https://twitter.com/PowerPlugLtd (aria-label required)\nFacebook: https://www.facebook.com/PowerPlugLtd/ (aria-label required)\nAll: target=\"_blank\" rel=\"noopener noreferrer\"\n\nRULE 14.4 - SOCIAL HOVER COLORS\nLinkedIn hover: background #0A66C2; color #ffffff; transform scale(1.08)\nTwitter/X hover: background #000000; color #ffffff; transform scale(1.08)\nFacebook hover: background #1877F2; color #ffffff; transform scale(1.08)\n\nRULE 14.5 - AUTHOR CARD STYLING\nbackground: #ffffff | border: 1px solid #e9e9eb | border-radius: 16px\npadding: 32px desktop / 20px mobile | box-shadow: 0 4px 20px rgba(0,0,0,.06)\nName: #000000 weight 700 | Role: #bc55ff weight 600\n\n========================================================================\nSECTION 15 - ACCESSIBILITY (WCAG 2.1 AA)\n========================================================================\n\nRULE 15.1 - COLOR CONTRAST\nNormal text (<=18px, not bold): contrast >= 4.5:1\nLarge text (>=18px or >=14px bold): contrast >= 3:1\nIcons: contrast >= 3:1\nApproved: #000000 on #ffffff (21:1), #7238ce on #ffffff (5.74:1), #ffffff on #7238ce\n\nRULE 15.2 - FOCUS INDICATORS\n:focus-visible { outline: 2px solid #7238ce; outline-offset: 3px }\nOn dark bg: outline: 2px solid #ffffff; outline-offset: 3px\n\nRULE 15.3 - ARIA LABELS\nIcon-only buttons: aria-label | Decorative icons: aria-hidden=\"true\"\nRegions: aria-label or aria-labelledby\n\nRULE 15.4 - KEYBOARD NAVIGATION\nTOC and FAQ: Enter + Space keys trigger toggle via JS (preventDefault + click).\n\n========================================================================\nSECTION 16 - RTL / HEBREW SUPPORT\n========================================================================\n\nRULE 16.1 - [dir=rtl] CSS BLOCK REQUIRED\nMust cover:\n(a) TOC trigger: flex-direction: row-reverse (chevron after text)\n(b) FAQ trigger: flex-direction: row-reverse\n(c) Float contact: right: auto; left: calc(24px + env(safe-area-inset-left,0px))\n(d) Float top: right: auto; left: calc(88px + env(safe-area-inset-left,0px))\n(e) H3: border-left: none; border-right: 4px solid #7238ce\n(f) Tip/HowTo/DYK: border-left: none; border-right: 4px; flex-direction: row-reverse\n(g) TOC links: padding-left:0; padding-right:12px; border-left:none; border-right:3px\n\nRULE 16.2 - RTL CONTRAST\nAll RTL hover states preserve >= 4.5:1 contrast for normal text.\n\n========================================================================\nSECTION 17 - VISUAL DESIGN QUALITY\n========================================================================\n\nRULE 17.1 - PREMIUM APPEARANCE\nProfessional, brand-consistent, not generic AI-template.\nVaried visual weight. Clear hierarchy. Brand gradient for primary interactions.\n\nRULE 17.2 - SECTION ALTERNATION\nAlternate white (#ffffff) and light gray (#f5f4f5) for adjacent sections.\nHero and end-CTA use full brand gradient.\n\nRULE 17.3 - SHADOWS\nAuthor card: 0 4px 20px rgba(0,0,0,.06)\nFloating buttons: 0 4px 18px rgba(114,56,206,.35)\nEnd CTA: 0 6px 28px rgba(0,0,0,.18)\n\nRULE 17.4 - ELEMENT SIZING\nInline icons: 20-24px | Info block icons: 24px | Social: 20px in 40x40 container\nFloating icons: 20-22px in 48px container | Buttons: 48px height\n\nRULE 17.5 - BORDER RADIUS\nCards: 12-16px | Buttons: 6-8px | Hero/large: 14-16px | Chips/tags: 16-20px\n\n========================================================================\nSECTION 18 - PRE-OUTPUT VALIDATION CHECKLIST\n========================================================================\n\nRULE 18.1 - VERIFY ALL BEFORE OUTPUT\n\nSTRUCTURE:\n[ ] Exactly 1 H1 in article body\n[ ] No <html><head><body> tags\n[ ] One <style> block, all CSS scoped under .pp-article-YYYY-MM-DD\n[ ] One schema JSON-LD block before wrapper\n[ ] One <script> at end, addEventListener only\n[ ] Article wrapped in .pp-article-YYYY-MM-DD > .pp-inner\n\nDATES:\n[ ] No year/date tokens in visible hero + first paragraph text (attrs exempt)\n[ ] Word count >= 1500\n[ ] Minimum 5 H2 sections, each >= 150 words\n[ ] No Lorem Ipsum or stub content\n\nTOC:\n[ ] Appears after first <p>, before second <h2>\n[ ] aria-expanded=\"false\" on load, max-height: 0 on body\n[ ] No TOC label starts with a digit\n[ ] Chevron rotates 180deg on open\n\nFAQ:\n[ ] All triggers aria-expanded=\"false\" on load\n[ ] All bodies max-height: 0 on load\n[ ] Minimum 4 FAQ items\n[ ] FAQ mirrored in schema FAQPage\n\nCTAs:\n[ ] Minimum 2 mid-article CTA blocks (class pp-cta-mid)\n[ ] First mid CTA after 3rd H2\n[ ] Exactly 1 end CTA immediately before FAQ (class pp-cta-end)\n[ ] End CTA: gradient bg, min-height 260px, white logo, trust row, 2 buttons\n[ ] Minimum 2 inline conversion links to /contact-us in paragraphs\n[ ] mailto:info@powerplugltd.com present\n[ ] All CTA href = https://powerplug.ai/contact-us\n\nINFO BLOCKS:\n[ ] Minimum 1 Tip block (orange #ff6900)\n[ ] Minimum 1 How-To block (blue #066aab)\n[ ] Minimum 1 DYK block (purple #8e3fe0)\n[ ] All three in different H2 sections\n\nLINKS:\n[ ] Minimum 3 internal powerplug.ai links (different pages)\n[ ] Minimum 3 external links with target=_blank rel=noopener noreferrer\n\nIMAGES:\n[ ] Minimum 4 content images\n[ ] All: real src, descriptive alt, explicit width+height, loading=lazy\n[ ] Hero logo: no loading=lazy, in <a href=\"https://powerplug.ai/\">\n[ ] No placeholder.com, no data: URIs\n\nFLOATING BUTTONS:\n[ ] Contact: fixed bottom-right, z-index 9998, >=48x48, real href\n[ ] Scroll-top: hidden until scrollY>300, z-index 9997, smooth scroll\n[ ] No overlap at 360/768/1440px\n\nAUTHOR:\n[ ] Color logo in <a href=\"https://powerplug.ai/\">\n[ ] LinkedIn + Twitter + Facebook with verified URLs\n[ ] Real bio and role\n\nSCHEMA:\n[ ] LocalBusiness: name, url, logo, email, Haifa Israel, sameAs socials\n[ ] FAQPage: all FAQ items mirrored\n\nACCESSIBILITY:\n[ ] All interactive elements: focus-visible styles\n[ ] All icon buttons: aria-label\n[ ] All decorative icons: aria-hidden=\"true\"\n[ ] TOC and FAQ keyboard navigable\n\nRTL:\n[ ] [dir=rtl] block covers: TOC/FAQ direction, float mirror, border flip\n\nBRAND:\n[ ] Only approved hex values in CSS\n[ ] No #0fb5b0 or other non-brand colors\n\nRESPONSIVE:\n[ ] Zero horizontal overflow at 360/375/390/768/1024/1440px\n[ ] Tables in overflow-x: auto container\n[ ] All images have max-width: 100%\n[ ] Fluid typography using clamp()\n\n========================================================================\nSECTION 19 - N8N WORKFLOW INTEGRATION\n========================================================================\n\nRULE 19.1 - LLM NODE CONFIG\nEmbed this prompt verbatim in the n8n LLM node systemMessage field.\nUser message provides: article topic, target keyword, content requirements.\n\nRULE 19.2 - POST-GENERATION VALIDATION NODES\nFunction nodes must check:\n  h1_count: /<h1[\\s>]/gi matches count == 1\n  date_free_intro: visible text in first 600 chars, no /20\\d{2}|today.../i\n  toc_position: TOC after first <p>, before second <h2>\n  toc_no_numbers: no TOC link text matches /^\\s*\\d+[.)]?\\s*/\n  cta_mid_count: occurrences of 'pp-cta-mid' / 2 >= 2\n  cta_end_count: occurrences of 'pp-cta-end' / 2 == 1\n  inline_cta_count: /contact-us/ in paragraph text >= 2\n  tip_present: 'pp-tip' in html\n  howto_present: 'pp-howto' in html\n  dyk_present: 'pp-dyk' in html\n  internal_links: count of href containing 'powerplug.ai/' >= 3\n  external_links: count of target=_blank >= 3\n  image_integrity: no src matching 'placeholder' or 'data:'\n  word_count: strip HTML, split, length >= 1500\n\nRULE 19.3 - RETRY LOGIC\nOn failure: log failed rule + snippet, send correction prompt, re-validate.\nMax 3 retries before flagging for human review.\n\nRULE 19.4 - OUTPUT HANDLING\nSave HTML to file (UTF-8). Optional: POST to WP REST API.\nReturn JSON: { validation_results, word_count, file_path, timestamp }\n\n========================================================================\nSECTION 20 - OUTPUT FORMAT\n========================================================================\n\nRULE 20.1 - FIVE OUTPUT ELEMENTS IN ORDER\n1. One <style> block (scoped CSS)\n2. One <script type=\"application/ld+json\"> block (schema)\n3. Article wrapper div and all body content\n4. Two floating button elements\n5. One <script> block (JavaScript)\n\nRULE 20.2 - RAW HTML OUTPUT ONLY\nDo not wrap output in markdown code fences.\n\nRULE 20.3 - HTML ENTITY ENCODING\nUse named entities: &mdash; &rsquo; &lsquo; &amp; &#8594;\nDo not use raw Unicode outside ASCII range in HTML text nodes.\n\nRULE 20.4 - COMMENT PLACEMENT\nSection comments are permitted. Year-token comments must appear after\nthe style block so they are beyond the first 600 chars of raw output.\n\n========================================================================\nEND OF PROMPT\npowerplug.ai Article Generation System v3 | Agent Zero | 2026-04-17\n========================================================================\n"
+            },
+            {
+              "role": "user",
+              "content": "={{ $json.userMessage }}"
+            }
+          ]
+        },
+        "options": {
+          "maxTokens": 8000,
+          "temperature": 0.4
+        }
+      },
+      "id": "llm-generate-003",
+      "name": "LLM Generate Article",
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1,
+      "position": [
+        550,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// ================================================================\n// VALIDATION NODE: PowerPlug Article Quality Gate\n// Version: 3.0 | Date: 2026-04-17\n// Checks all 34 acceptance criteria before passing to output\n// ================================================================\n\nconst html = $input.first()?.json?.choices?.[0]?.message?.content || $input.first()?.json?.html || '';\nconst results = {};\nlet passed = 0;\nlet failed = 0;\n\n// --- Helper: strip HTML tags to get visible text ---\nfunction stripHtml(h) {\n  return h.replace(/<script[^>]*>[\\s\\S]*?<\\/script>/gi, ' ')\n           .replace(/<style[^>]*>[\\s\\S]*?<\\/style>/gi, ' ')\n           .replace(/<[^>]+>/g, ' ')\n           .replace(/&[a-z]+;/gi, ' ')\n           .replace(/\\s+/g, ' ').trim();\n}\n\nfunction check(key, condition, desc) {\n  const ok = !!condition;\n  results[key] = { pass: ok, desc };\n  if (ok) passed++; else failed++;\n  return ok;\n}\n\n// --- 1. H1 count = 1 ---\nconst h1Matches = (html.match(/<h1[\\s>]/gi) || []).length;\ncheck('h1_count', h1Matches === 1, `H1 count must be 1, got ${h1Matches}`);\n\n// --- 2. No date tokens in first 600 chars of body (visible text, attrs exempt) ---\nconst bodyStart = html.indexOf('pp-article-');\nconst bodySlice = bodyStart >= 0 ? html.slice(bodyStart, bodyStart + 600) : html.slice(0, 600);\n// Strip HTML attrs to get text-only content\nconst bodyTextSlice = bodySlice.replace(/<[^>]+>/g, ' ').replace(/\\s+/g, ' ');\nconst dateMatches = bodyTextSlice.match(/20\\d{2}|today|this year|last month|yesterday|currently|right now/i);\ncheck('date_free_intro', !dateMatches, `Visible date tokens in intro: ${JSON.stringify(dateMatches)}`);\n\n// --- 3. TOC position (after first <p>, before second <h2>) ---\nconst tocPos = html.indexOf('pp-toc');\nconst firstP = html.indexOf('<p');\nconst firstH2 = html.indexOf('<h2');\nconst secondH2 = html.indexOf('<h2', firstH2 + 4);\ncheck('toc_after_first_p', tocPos > firstP && firstP >= 0, 'TOC must appear after first <p>');\ncheck('toc_before_second_h2', tocPos < secondH2 && secondH2 >= 0, 'TOC must appear before second <h2>');\n\n// --- 4. TOC no numbered labels ---\nconst tocSection = html.slice(html.indexOf('pp-toc-list'), html.indexOf('pp-toc-list') + 3000);\nconst numberedToc = tocSection.match(/<a[^>]*>\\s*\\d+[\\.\\)]/);\ncheck('toc_no_numbers', !numberedToc, `Numbered TOC items found: ${JSON.stringify(numberedToc)}`);\n\n// --- 5. TOC collapsed by default (aria-expanded=false) ---\ncheck('toc_collapsed_default', html.includes('aria-expanded=\"false\"'), 'TOC must have aria-expanded=false on load');\n\n// --- 6. FAQ all collapsed ---\nconst faqTriggerCount = (html.match(/pp-faq-trigger/g) || []).length;\nconst faqAriaFalse = (html.match(/aria-expanded=\"false\"/g) || []).length;\ncheck('faq_collapsed_default', faqAriaFalse >= 1, `FAQ triggers must have aria-expanded=false, found ${faqAriaFalse}`);\n\n// --- 7. Mid-article CTA count >= 2 ---\nconst ctaMidCount = (html.match(/pp-cta-mid/g) || []).length;\ncheck('cta_mid_count', ctaMidCount >= 4, `pp-cta-mid occurrences: ${ctaMidCount} (need >= 4 for 2 blocks)`);\n\n// --- 8. End CTA count = 1 ---\nconst ctaEndCount = (html.match(/pp-cta-end/g) || []).length;\ncheck('cta_end_count', ctaEndCount >= 2, `pp-cta-end occurrences: ${ctaEndCount} (need >= 2 for 1 block)`);\n\n// --- 9. Inline conversion links >= 2 ---\nconst contactLinks = (html.match(/href=\"https:\\/\\/powerplug\\.ai\\/contact-us\"/g) || []).length;\ncheck('inline_cta_count', contactLinks >= 2, `Contact-us href count: ${contactLinks} (need >= 2)`);\n\n// --- 10. Tip block present ---\ncheck('tip_present', html.includes('pp-tip'), 'Tip block (pp-tip) must be present');\n\n// --- 11. How-To block present ---\ncheck('howto_present', html.includes('pp-howto'), 'How-To block (pp-howto) must be present');\n\n// --- 12. DYK block present ---\ncheck('dyk_present', html.includes('pp-dyk'), 'Did You Know block (pp-dyk) must be present');\n\n// --- 13. Internal links >= 3 ---\nconst internalLinks = (html.match(/href=\"https:\\/\\/powerplug\\.ai\\//g) || []).length;\ncheck('internal_links', internalLinks >= 3, `Internal powerplug.ai links: ${internalLinks} (need >= 3)`);\n\n// --- 14. External links with target=_blank >= 3 ---\nconst externalLinks = (html.match(/target=\"_blank\"/g) || []).length;\ncheck('external_links', externalLinks >= 3, `target=_blank links: ${externalLinks} (need >= 3)`);\n\n// --- 15. Image integrity (no placeholder.com or data:) ---\nconst badImages = html.match(/src=\"(placeholder\\.com|data:)/);\ncheck('image_integrity', !badImages, `Bad image src found: ${JSON.stringify(badImages)}`);\n\n// --- 16. Image count >= 4 ---\nconst imgCount = (html.match(/<img/gi) || []).length;\ncheck('image_count', imgCount >= 4, `Image count: ${imgCount} (need >= 4)`);\n\n// --- 17. Word count >= 1500 ---\nconst visibleText = stripHtml(html);\nconst wordCount = visibleText.split(/\\s+/).filter(w => w.length > 0).length;\ncheck('word_count', wordCount >= 1500, `Word count: ${wordCount} (need >= 1500)`);\n\n// --- 18. H2 count >= 5 ---\nconst h2Count = (html.match(/<h2[\\s>]/gi) || []).length;\ncheck('h2_count', h2Count >= 5, `H2 count: ${h2Count} (need >= 5)`);\n\n// --- 19. No html/head/body wrappers ---\ncheck('no_doc_wrappers', !/<html|<head>|<body/i.test(html), 'No html/head/body tags allowed');\n\n// --- 20. CSS scoped class present ---\ncheck('css_scoped', /\\.pp-article-/.test(html), 'CSS must be scoped under .pp-article-YYYY-MM-DD');\n\n// --- 21. Floating contact button present ---\ncheck('float_contact', html.includes('pp-float-contact'), 'Floating contact button (pp-float-contact) must be present');\n\n// --- 22. Floating scroll-top present ---\ncheck('float_top', html.includes('pp-float-top'), 'Floating scroll-top button (pp-float-top) must be present');\n\n// --- 23. Author section with real social links ---\ncheck('author_linkedin', html.includes('linkedin.com/company/powerplug-ltd'), 'LinkedIn verified URL must be in author section');\ncheck('author_twitter', html.includes('twitter.com/PowerPlugLtd'), 'Twitter verified URL must be in author section');\ncheck('author_facebook', html.includes('facebook.com/PowerPlugLtd'), 'Facebook verified URL must be in author section');\n\n// --- 24. Real logo linked to homepage ---\ncheck('logo_linked', html.includes('href=\"https://powerplug.ai/\"') && html.includes('powerplug-logo.png'), 'Real logo linked to homepage required');\n\n// --- 25. No old teal color ---\ncheck('no_legacy_teal', !html.includes('#0fb5b0'), 'Legacy teal color #0fb5b0 must not appear');\n\n// --- 26. RTL block present ---\ncheck('rtl_block', html.includes('[dir=\"rtl\"]'), 'RTL [dir=rtl] CSS block must be present');\n\n// --- 27. Schema LocalBusiness present ---\ncheck('schema_localbusiness', html.includes('LocalBusiness'), 'Schema.org LocalBusiness markup required');\n\n// --- 28. Schema FAQPage present ---\ncheck('schema_faqpage', html.includes('FAQPage'), 'Schema.org FAQPage markup required');\n\n// --- 29. Contact URL correct (not /contact/) ---\nconst wrongContactUrl = html.match(/href=\"https:\\/\\/powerplug\\.ai\\/contact[^-]/);\ncheck('contact_url_correct', !wrongContactUrl, 'Contact URL must be /contact-us not /contact/');\n\n// --- 30. External links have rel=noopener ---\nconst noopenerCount = (html.match(/rel=\"noopener noreferrer\"/g) || []).length;\ncheck('external_noopener', noopenerCount >= 3, `rel=noopener noreferrer count: ${noopenerCount} (need >= 3)`);\n\n// Summary\nconst allPassed = failed === 0;\n\nreturn [{\n  json: {\n    html,\n    validation_results: results,\n    summary: { passed, failed, total: passed + failed },\n    allPassed,\n    word_count: wordCount,\n    h1_count: h1Matches,\n    h2_count: h2Count,\n    image_count: imgCount,\n    timestamp: new Date().toISOString()\n  }\n}];"
+      },
+      "id": "validate-article-004",
+      "name": "Validate Article",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        800,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "leftValue": "={{ $json.allPassed }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "check-pass-fail-005",
+      "name": "All Validations Passed?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        1050,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Build a correction prompt listing only the failed validation rules\nconst data = $input.first().json;\nconst html = data.html;\nconst results = data.validation_results;\nconst attempt = $('Prepare Prompt').first().json.attempt || 1;\n\nif (attempt >= 3) {\n  return [{ json: { ...data, flaggedForReview: true, message: 'Max retries reached. Flagged for human review.' } }];\n}\n\nconst failedRules = Object.entries(results)\n  .filter(([k, v]) => !v.pass)\n  .map(([k, v]) => `- ${k}: ${v.desc}`)\n  .join('\\n');\n\nconst correctionPrompt = `The following validation rules FAILED in your previous HTML output.\nFix ONLY these issues without breaking any passing rules:\n\n${failedRules}\n\nReturn the complete corrected HTML article. Follow all rules from the system prompt.\nAttempt: ${attempt + 1} of 3`;\n\nreturn [{\n  json: {\n    userMessage: correctionPrompt,\n    previousHtml: html,\n    attempt: attempt + 1,\n    failedRules,\n    validation_results: results\n  }\n}];"
+      },
+      "id": "build-correction-006",
+      "name": "Build Correction Prompt",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1050,
+        480
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Save valid HTML to file and prepare final output\nconst data = $input.first().json;\nconst html = data.html;\nconst timestamp = data.timestamp || new Date().toISOString();\n\n// Build the output result object\nconst result = {\n  status: 'success',\n  message: `Article validated and ready. Passed ${data.summary.passed}/${data.summary.total} checks.`,\n  validation_results: data.validation_results,\n  summary: data.summary,\n  word_count: data.word_count,\n  h1_count: data.h1_count,\n  h2_count: data.h2_count,\n  image_count: data.image_count,\n  file_path: 'Improved_HTML_Template.html',\n  timestamp,\n  html\n};\n\nreturn [{ json: result }];"
+      },
+      "id": "prepare-output-007",
+      "name": "Prepare Final Output",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1300,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "write",
+        "fileName": "Improved_HTML_Template.html",
+        "dataPropertyName": "html"
+      },
+      "id": "save-file-008",
+      "name": "Save HTML File",
+      "type": "n8n-nodes-base.writeBinaryFile",
+      "typeVersion": 1,
+      "position": [
+        1550,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ { status: $json.status, message: $json.message, summary: $json.summary, word_count: $json.word_count, timestamp: $json.timestamp } }}"
+      },
+      "id": "respond-webhook-009",
+      "name": "Respond to Webhook",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [
+        1800,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ { status: 'review_needed', message: $json.message, flaggedForReview: $json.flaggedForReview } }}"
+      },
+      "id": "respond-review-010",
+      "name": "Flag for Human Review",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [
+        1300,
+        480
+      ]
+    }
+  ],
+  "connections": {
+    "Start": {
+      "main": [
+        [
+          {
+            "node": "Prepare Prompt",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare Prompt": {
+      "main": [
+        [
+          {
+            "node": "LLM Generate Article",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "LLM Generate Article": {
+      "main": [
+        [
+          {
+            "node": "Validate Article",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Validate Article": {
+      "main": [
+        [
+          {
+            "node": "All Validations Passed?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "All Validations Passed?": {
+      "main": [
+        [
+          {
+            "node": "Prepare Final Output",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Build Correction Prompt",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Build Correction Prompt": {
+      "main": [
+        [
+          {
+            "node": "LLM Generate Article",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Flag for Human Review",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare Final Output": {
+      "main": [
+        [
+          {
+            "node": "Save HTML File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Save HTML File": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "saveManualExecutions": true,
+    "callerPolicy": "workflowsFromSameOwner",
+    "errorWorkflow": ""
+  },
+  "versionId": "1",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "powerplug-agent-zero-2026-04-17"
+  },
+  "id": "powerplug-workflow-v3-2026-04-17",
+  "tags": [
+    {
+      "createdAt": "2026-04-17T00:00:00.000Z",
+      "updatedAt": "2026-04-17T00:00:00.000Z",
+      "id": "1",
+      "name": "powerplug"
+    },
+    {
+      "createdAt": "2026-04-17T00:00:00.000Z",
+      "updatedAt": "2026-04-17T00:00:00.000Z",
+      "id": "2",
+      "name": "article-generator"
+    }
+  ]
+}

@@ -1,0 +1,2418 @@
+{
+  "name": "https://www.galoz.co.il/",
+  "nodes": [
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1Jg9EY4LLnxhgP-YNYgb_9T9o_IyK9_DixyVg2VH0lEY",
+          "mode": "list",
+          "cachedResultName": "galoz.co.il//N8N",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1Jg9EY4LLnxhgP-YNYgb_9T9o_IyK9_DixyVg2VH0lEY/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 683869339,
+          "mode": "list",
+          "cachedResultName": "מחקר + כתבות",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1Jg9EY4LLnxhgP-YNYgb_9T9o_IyK9_DixyVg2VH0lEY/edit#gid=683869339"
+        },
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "Published",
+              "lookupValue": "production"
+            }
+          ]
+        },
+        "options": {
+          "returnFirstMatch": true
+        }
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        -3280,
+        10672
+      ],
+      "id": "716f27de-83fc-4dad-99c8-02cdfd753ba3",
+      "name": "Grab New Cluster",
+      "alwaysOutputData": false,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "OG3OImxGaOh6b02s",
+          "name": "כרמית גוגל שיטס"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "23b8e8c4-9191-415a-9661-1b60d413528a",
+              "name": "research",
+              "value": "={{ $json.output }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -2480,
+        10672
+      ],
+      "id": "87dd207a-0cd0-4ea6-99c7-f0b306cb2ffb",
+      "name": "Fix Links"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Create an SEO-friendly URL slug for the following blog post.\n\nIMPORTANT:\n- The blog post content is written in HEBREW.\n- The slug MUST be written in ENGLISH.\n- You must translate the primary keyword into natural, SEO-friendly English.\n- Do NOT transliterate Hebrew letters.\n- Use a clear, commonly used English phrasing.\n\nInput:\nPrimary keyword:\n{{ $('Grab New Cluster').last().json['Primary Keyword'] }}\n\nSupporting keywords:\n{{ $('Grab New Cluster').last().json.Keywords }}\n\nSearch intent:\n{{ $('Grab New Cluster').last().json.Intent }}\n\nSlug rules:\n- The slug must be 4 or 5 words maximum.\n- The slug must include the ENGLISH translation of the primary keyword.\n- Use lowercase letters only.\n- Use hyphens (-) between words.\n- Do NOT include stop words unless necessary for clarity.\n- Do NOT include dates, numbers, or brand names unless essential.\n\nOutput rules:\n- Output ONLY the slug.\n- Do NOT include explanations or extra text.\n",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        624,
+        10640
+      ],
+      "id": "5979e9b1-1e70-4615-a883-cc548ed1e9f2",
+      "name": "slug"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Extract the blog post title from the following blog post content.\n\nIMPORTANT:\n- The blog post content is written in HEBREW.\n- The output title MUST be in HEBREW.\n- Do NOT translate the title into English.\n- Do NOT change the meaning of the title.\n\nInput:\nPrimary keyword:\n{{ $('Grab New Cluster').last().json['Primary Keyword'] }}\n\nSupporting keywords:\n{{ $('Grab New Cluster').last().json.Keywords }}\n\nSearch intent:\n{{ $('Grab New Cluster').last().json.Intent }}\n\nRules for the title:\n- The title must include the primary keyword:\n  {{ $('Grab New Cluster').last().json['Primary Keyword'] }}\n- The title must clearly inform users what they will learn from the blog post.\n- The title should be concise, clear, and SEO-friendly.\n- Do NOT add quotation marks.\n- Do NOT add markdown or formatting.\n- Do NOT add out-dated years or dates.\n\nOutput rules:\n- Output ONLY the blog post title.\n- Do NOT include any extra text.\n",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        1008,
+        10640
+      ],
+      "id": "6e1d5c3e-92e2-4f50-b590-1f2a306a8f4e",
+      "name": "Post Title"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Create an SEO-optimized META DESCRIPTION.\n\nIMPORTANT:\n- Output must be written in HEBREW.\n- Do NOT translate into English.\n- Do NOT include quotation marks.\n- Do NOT include branding unless it appears naturally in the keywords.\n\nInput:\nPrimary keyword:\n{{ $('Grab New Cluster').last().json['Primary Keyword'] }}\n\nSupporting keywords:\n{{ $('Grab New Cluster').last().json.Keywords }}\n\nSearch intent:\n{{ $('Grab New Cluster').last().json.Intent }}\n\nMeta description rules:\n- Length must be between 150–160 characters (Google recommended range).\n- Must include the primary keyword naturally.\n- Include 1–2 supporting keywords if they fit naturally.\n- Clearly explain what the reader will learn or gain.\n- Use engaging, click-worthy language (action verbs or a soft question).\n- Accurately reflect the topic and intent to avoid misleading clicks.\n- Sound natural and appealing to a Hebrew-speaking audience in Israel.\n- Avoid keyword stuffing.\n\nOutput rules:\n- Output ONLY the meta description text.\n- Do NOT include explanations, formatting, or extra text.\n- DO NOT create and \",' or other marks or signals.\nIF output contains: signs or signal such as: \\ or \" etc., you MUST replace them with space instead.\nExample: if you have this \"חז״ל\" = INVALID.\nInstead, fix this: \"חז ל\"\n",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        1936,
+        10640
+      ],
+      "id": "b3e2a888-20d7-4b16-ba6c-5153f51de42e",
+      "name": "Meta Description"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Create an SEO-optimized META TITLE.\n\nIMPORTANT:\n- Output must be written in HEBREW.\n- Do NOT translate into English.\n- Do NOT include quotation marks or branding.\n\nInput:\nPrimary keyword:\n{{ $('Grab New Cluster').last().json['Primary Keyword'] }}\n\nSupporting keywords:\n{{ $('Grab New Cluster').last().json.Keywords }}\n\nSearch intent:\n{{ $('Grab New Cluster').last().json.Intent }}\n\nMeta title rules:\n- Must include the primary keyword exactly as written (in Hebrew).\n- Must clearly communicate the main topic or benefit.\n- Length must be between 50–60 characters (Google recommended display range).\n- Avoid filler words and unnecessary punctuation.\n- Sound natural to a Hebrew-speaking audience in Israel.\n\nOutput rules:\n- Output ONLY the meta title text.\n- Do NOT include any explanations or extra text.\n- DO NOT create and \",' or other marks\nIF output contains: signs or signal such as: \\ or \" etc., you MUST replace them with space instead.\nExample: if you have this \"חז״ל\" = INVALID.\nInstead, fix this: \"חז ל\"",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        1456,
+        10640
+      ],
+      "id": "47aa3a58-4f7d-4686-a967-01c7b7603826",
+      "name": "Meta Title"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        -864,
+        11232
+      ],
+      "id": "4543c9e8-6cd7-4b69-839c-380b404d0114",
+      "name": "Loop Over Items"
+    },
+    {
+      "parameters": {
+        "amount": 8
+      },
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        -448,
+        11424
+      ],
+      "id": "a9eb812e-6045-426a-a093-03088094e8b3",
+      "name": "Wait",
+      "webhookId": "29867f65-66e2-4145-a5e8-b6ef7ad738be"
+    },
+    {
+      "parameters": {
+        "jsCode": "function normalizeInnerQuotes(s) {\n  if (!s || typeof s !== \"string\") return s;\n\n  s = s.replace(/[״”“]/g, '\"');\n  s = s.replace(/([\\u0590-\\u05FF0-9A-Za-z])\"(?=[\\u0590-\\u05FF0-9A-Za-z])/g, \"$1״\");\n  s = s.replace(/[\\u202A-\\u202E\\u2066-\\u2069]/g, \"\");\n  return s;\n}\n\nfunction makeFilenameSafe(s) {\n  if (!s) return \"\";\n  return String(s)\n    .normalize(\"NFKD\")\n    .replace(/[^\\p{L}\\p{N}\\s]+/gu, \"\")\n    .trim()\n    .replace(/\\s+/g, \"_\")\n    .replace(/-+/g, \"\");\n}\n\nconst raw = $json.output ?? $json;\nlet plan = raw;\nif (typeof raw === \"string\") {\n  // Remove markdown code fences, e.g. ```json or ```\n  const removeFences = s => s.replace(/```(?:json)?|```/gi, '').trim();\n  const cleaned = normalizeInnerQuotes(removeFences(raw));\n  plan = JSON.parse(cleaned);\n}\n\n// ✅ IMPORTANT: handle array wrapper: [ { hero, sections } ]\nif (Array.isArray(plan)) {\n  plan = plan[0] || {};\n}\n\nconst out = [];\n\n// HERO\nif (plan?.hero?.prompt && String(plan.hero.prompt).trim()) {\n  out.push({\n    json: {\n      slot: \"hero\",\n      type: plan.hero.type || \"hero\",\n      prompt: plan.hero.prompt,\n      source_text: plan.hero.source_text || \"\",\n      translation_en: plan.hero.translation_en || \"\",\n      h2_text: \"\",\n      alt: plan.hero.source_text || \"\",\n      filename_safe:\n        plan.hero.filename_safe ||\n        makeFilenameSafe(plan.hero.translation_en || plan.hero.source_text || \"hero\"),\n    },\n  });\n}\n\n// SECTIONS\n(plan?.sections || [])\n  .filter(s => s?.prompt && String(s.prompt).trim())\n  .forEach((s, i) => {\n    out.push({\n      json: {\n        slot: `section_${i + 1}`,\n        type: s.type || \"section\",\n        prompt: s.prompt,\n        h2_text: s.h2_text || \"\",\n        source_text: s.source_text || \"\",\n        translation_en: s.translation_en || \"\",\n        alt: s.h2_text || s.source_text || \"\",\n        filename_safe:\n          s.filename_safe ||\n          makeFilenameSafe(s.translation_en || s.h2_text || `section_${i + 1}`),\n      },\n    });\n  });\n\nreturn out;"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -1056,
+        11232
+      ],
+      "id": "84308a3d-131e-4d4e-9107-a54bdf9d0a10",
+      "name": "Cleaning Image Prompts"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.kie.ai/api/v1/jobs/createTask",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer 165cc5401c1882a5442b943172fc6afe"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"model\": \"nano-banana-pro\",\n  \"input\": {\n    \"prompt\": \"{{ $json.prompt }}\",\n    \"aspect_ratio\": \"16:9\",\n    \"output_format\": \"jpg\"\n  }\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        -880,
+        11424
+      ],
+      "id": "7077a42f-5399-4cbc-88c8-c6e659fdbf84",
+      "name": "Image Generation"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Parse the kie.ai polling response and decide whether to keep polling or stop.\n// Fixes:\n//  1) When Poll Task Status returns a non-200 (neverError:true), previous code\n//     fell into the 'still processing' branch and looped forever. Now we bail out.\n//  2) Added an elapsed-time timeout (read from Extract Task ID) so a task that\n//     never finishes still exits the loop.\n//  3) Forward taskId safely even when the poll response is empty/garbage.\n\nconst response = $json || {};\n\n// Try to recover context set by the Extract Task ID node (same item branch)\nlet ctxTaskId = null;\nlet startedAt = Date.now();\nlet maxElapsedMs = 5 * 60 * 1000;\ntry {\n  const ctx = $('Extract Task ID').item.json;\n  ctxTaskId     = ctx.taskId     || ctxTaskId;\n  startedAt     = ctx.startedAt  || startedAt;\n  maxElapsedMs  = ctx.maxElapsedMs || maxElapsedMs;\n} catch (e) { /* first run or unreachable - fall back to defaults */ }\n\nconst taskId = (response.data && response.data.taskId) || ctxTaskId || '';\nconst apiCode = response.code;\nconst apiMsg  = response.msg || response.message || '';\n\n// --- 1) API-level error -> stop, do NOT re-enter the polling loop\nif (apiCode !== undefined && apiCode !== 200 && apiCode !== 0) {\n  return [{ json: {\n    imageUrl: null, state: 'api_error', taskId,\n    done: true, error: `kie.ai API error ${apiCode}: ${apiMsg}`\n  }}];\n}\n\nconst data  = response.data || {};\nconst state = data.state || 'unknown';\n\n// --- 2) Success\nif (state === 'success') {\n  let imageUrl = null;\n  if (data.resultJson) {\n    try {\n      const parsed = JSON.parse(data.resultJson);\n      if (Array.isArray(parsed.resultUrls) && parsed.resultUrls.length > 0) {\n        imageUrl = parsed.resultUrls[0];\n      }\n    } catch (e) {\n      return [{ json: {\n        imageUrl: null, state: 'parse_error', taskId,\n        done: true, error: 'Could not parse resultJson: ' + e.message\n      }}];\n    }\n  }\n  return [{ json: { imageUrl, state: 'success', taskId, done: true } }];\n}\n\n// --- 3) Explicit failure\nif (state === 'fail') {\n  return [{ json: {\n    imageUrl: null, state: 'fail', taskId,\n    done: true, error: data.failMsg || 'Image generation failed'\n  }}];\n}\n\n// --- 4) Safety net: no usable data AND unknown state -> stop, don't loop forever\nif (state === 'unknown' && !data.taskId && !data.state) {\n  return [{ json: {\n    imageUrl: null, state: 'invalid_response', taskId,\n    done: true,\n    error: 'Invalid polling response: ' + JSON.stringify(response).substring(0, 200)\n  }}];\n}\n\n// --- 5) Elapsed-time timeout\nconst elapsed = Date.now() - startedAt;\nif (elapsed > maxElapsedMs) {\n  return [{ json: {\n    imageUrl: null, state: 'timeout', taskId,\n    done: true, error: `Timed out after ${Math.round(elapsed/1000)}s while polling kie.ai`\n  }}];\n}\n\n// --- 6) Still processing (waiting / queuing / generating) -> poll again\nreturn [{ json: { taskId, state, done: false } }];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        0,
+        11424
+      ],
+      "id": "347f4ed6-7d18-456d-9582-a12d54495642",
+      "name": "Getting URLS"
+    },
+    {
+      "parameters": {
+        "jsCode": "const items = $items();\nconst urls = items.map(i => i.json[\"Image URL\"]).filter(Boolean);\n\nconst images = {\n  hero: urls[0] || null,\n  section_1: urls[1] || null,\n  section_2: urls[2] || null,\n  section_3: urls[3] || null,\n  section_4: urls[4] || null,\n};\n\nreturn [{ json: { images } }];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -624,
+        11216
+      ],
+      "id": "bd06bdd7-ab2a-4ae6-afa6-29cd93140457",
+      "name": "Collect images URLS"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1Jg9EY4LLnxhgP-YNYgb_9T9o_IyK9_DixyVg2VH0lEY",
+          "mode": "list",
+          "cachedResultName": "galoz.co.il//N8N",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1Jg9EY4LLnxhgP-YNYgb_9T9o_IyK9_DixyVg2VH0lEY/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1359853134,
+          "mode": "list",
+          "cachedResultName": "Generated Images",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1yEKxlD1ugC_SO-9w2CfOvL8cREfNEBCqJTFTwp2Ij8U/edit#gid=1359853134"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Row ID": "={{ $item(0).$node[\"Grab New Cluster\"].json[\"row_id\"] }}",
+            "Image URL": "={{ $json.imageUrl }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Row ID",
+              "displayName": "Row ID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Image URL",
+              "displayName": "Image URL",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        448,
+        11424
+      ],
+      "id": "0d9baca7-5f95-4752-971a-3283400f64e4",
+      "name": "Save image URLS",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "OG3OImxGaOh6b02s",
+          "name": "כרמית גוגל שיטס"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "url": "={{ $json.url }}",
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "file",
+              "outputPropertyName": "image"
+            }
+          }
+        }
+      },
+      "id": "ab5ffc1e-3c64-41ec-81d1-78f3794a9995",
+      "name": "Download Image (PNG URL → Binary)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [
+        160,
+        11232
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://mapril.websmail.net/wp-json/wp/v2/media",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpBasicAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "image/png"
+            },
+            {
+              "name": "Content-Disposition",
+              "value": "={{ 'attachment; filename=\"' + $json.filename_safe + '.png\"' }}"
+            },
+            {}
+          ]
+        },
+        "sendBody": true,
+        "contentType": "binaryData",
+        "inputDataFieldName": "image",
+        "options": {}
+      },
+      "id": "d3e7fdd0-7b31-40bd-a600-63f4c7084dd1",
+      "name": "Upload to WordPress (Media)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [
+        368,
+        11232
+      ],
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "Zsbfn3EpEX7qKf7l",
+          "name": "https://mapril.websmail.net/ (Storage 2 - Tomer)"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://mapril.websmail.net/wp-json/wp/v2/media/{{ $json.id }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpBasicAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ \n{ \"alt_text\": $(\"Preparing Image Data\").item.json.alt, \"title\": $(\"Preparing Image Data\").item.json.alt } }}",
+        "options": {}
+      },
+      "id": "0c4dd6a6-3a66-40e8-b602-7f754b7701e3",
+      "name": "Image Alt Settings",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [
+        544,
+        11232
+      ],
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "Zsbfn3EpEX7qKf7l",
+          "name": "https://mapril.websmail.net/ (Storage 2 - Tomer)"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=INPUT:\n\nKeywords:\n{{ $item(0).$node[\"Grab New Cluster\"].json[\"Keywords\"] }}\n\nSearch Intent:\n{{ $item(0).$node[\"Grab New Cluster\"].json[\"Intent\"] }}\n\nPrimary Keyword:\n{{ $item(0).$node[\"Grab New Cluster\"].json[\"Primary Keyword\"] }}\n\nPreliminary Plan:\n{{ $('Message a model1').item.json.output[0].content[0].text }}\n\nResearch Findings:\n{{ $('Fix Links').item.json.research }}\n\nInternal Links List (parsed, NOT text):\n{{ $json.data.web.map(item => item.url + ' - ' + item.title).join('\\n') }}\n\n# 🎯 פרומפט מאוחד ל־N8N – יצירת תכנית מבנה למאמר SEO (עם סינון מקורות מתחרים)\n\n---\n\n## 🎯 ROLE\n\nYou are part of a professional team that creates **world-class, SEO-optimized blog post plans**  \nfor Israeli websites, intended to be written by **non-expert copywriters**.\n\n---\n\n## 🌍 LANGUAGE RULES (STRICT)\n\n- All input is provided in **HEBREW**.\n- You must analyze and generate the output in **HEBREW ONLY**.\n- Do **NOT** translate from English.\n- Do **NOT** include English words unless they are **common Hebrew search terms**.\n- Do **NOT** mention rules, laws, or regulations **outside of Israel**.\n- Do **NOT** create an H1 anywhere in the article.\n- Do **NOT** add an article title.\n\n---\n\n## 🧩 INPUT YOU RECEIVE FOR EACH PROJECT\n\nYou are provided with:\n\n- **Keywords** – SEO keywords the article must rank for  \n- **Primary Keyword** – must appear in the opening section  \n- **Search Intent** – the user’s goal when searching  \n- **Preliminary Plan** – rough outline or draft ideas  \n- **Research Findings** – raw external research (UNTRUSTED, must be filtered)  \n- **Internal Links List** – parsed list of internal URLs with explanations  \n\n---\n\n## 🧠 YOUR TASK\n\nCreate a **VERY DETAILED blog post plan** that:\n\n- Is written in **BULLET POINTS ONLY**\n- Describes the **full logical structure and flow** of the article\n- Clearly explains **WHAT** should be written in each section and **HOW**\n- Explicitly states **which keywords** must appear in each section\n- Uses **ALL keywords** across the plan\n- Fully satisfies the **Search Intent**\n- Can be handed directly to a **non-expert copywriter**\n\n---\n\n## 🧱 STRUCTURE RULES (CRITICAL)\n\n- ❌ Do NOT create an H1  \n- ❌ Do NOT add an article title  \n- ✅ Use **H2 + H3 only**  \n- ✅ Output must be **BULLET POINTS ONLY**\n- ❌ No paragraphs\n- ❌ No explanations outside the plan itself\n\n---\n\n## 🔍 EXTERNAL RESEARCH RULES\n\n- External research is used **for credibility and facts only**\n- Every research point must:\n  - Be assigned to a **specific section**\n  - Include the **SOURCE URL** next to the bullet\n- External links are **references only** (NOT embedded hyperlinks)\n\n### 🔗 External Link Quantity (Writing Stage Rule)\n- The final written article must include **EXACTLY 1-3 external link for the entire article**\n- That link must come from the **approved research sources in this plan**\n- This rule is enforced **during WRITING**, but:\n  - The plan must include **enough filtered research** to support this\n\n---\n\n## 🚫 EXTERNAL RESEARCH FILTERING RULES (CRITICAL – APPLY BEFORE USING ANY SOURCE)\n\n- Treat `Research Findings` as **UNTRUSTED INPUT**\n- For **every research URL**, extract the **domain** and apply filtering:\n\n### ✅ ALLOWLIST LOGIC\n- Allowed if domain is **clearly institutional / research**, such as:\n  - Government\n  - Regulation\n  - Official statistics\n  - PDF\n  - Research magazine\n\n### ❌ DENYLIST LOGIC (AUTO-DISQUALIFY)\n- Do NOT use sources that are:\n  - CRM vendors\n  - Software providers\n  - SaaS platforms\n  - Marketing agencies\n  - Comparison / affiliate CRM sites\n  - Pages offering demos, trials, pricing, or sales funnels\n- If a domain appears to **sell, promote, compare, or market CRM** → **DISQUALIFY**\n\n### ⚠️ UNCERTAIN SOURCES\n- If a domain is NOT clearly allowed or denied:\n  - Use it **ONLY IF** it is neutral, informational, and non-commercial\n  - If in doubt → **DO NOT USE**\n\n### 🚨 INSUFFICIENT ALLOWED SOURCES\n- If, after filtering, there are not enough valid sources:\n  - Add bullets stating: **\"נדרש מחקר נוסף ממקורות ניטרליים\"**\n  - ❌ Do NOT invent URLs\n  - ❌ Do NOT reuse denied sources\n\n---\n\n## 🔗 INTERNAL LINK RULES (CRITICAL)\n\n- You are PROVIDED with a list of internal links\n- You MUST select **2–5 internal links**\n- You MUST NOT claim no links were provided if the list is not empty\n- Links must be:\n  - **Contextually embedded** inside relevant sections\n  - NOT grouped in a separate section\n\n### For EACH internal link you select, you MUST specify:\n- The **EXACT URL**\n- The **EXACT Hebrew anchor text**\n- **Exact instructions** on:\n  - WHERE the link appears\n  - HOW it is integrated naturally in the sentence\n\n### Additional Internal Link Rules\n- ❌ Do NOT select links targeting the **Primary Keyword** (avoid cannibalization)\n- ❌ Do NOT invent links\n- ✅ Use ONLY the provided list\n- ✅ Prefer links that **support** the topic, not duplicate it\n\n### Add relevant products\n$json.products = [\n  { name, url, description, html },\n  { name, url, description, html },\n  { name, url, description, html }\n]\n\n\n---\n\n## ✍️ TONE & STYLE\n\n- Tone and messaging must match:\n{{ $('Grab New Cluster').item.json.Website }}",
+        "options": {
+          "maxIterations": 5
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        -2096,
+        10672
+      ],
+      "id": "b04564af-b819-4028-b340-0f945e74e467",
+      "name": "Post Plan"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=OUTPUT: Return ONLY a single continuous HTML article (unstyled). No code blocks. No duplicate copy. No text outside HTML.\n\nLANGUAGE: Hebrew only.\n\nSTRUCTURE:\n\n────────────────────────────────────────\nOUTPUT FORMAT RULES (MANDATORY)\n\n- Output MUST be full HTML only.\n- Do NOT output Markdown.\n- Do NOT use #, ##, bullet Markdown, or code fences.\n- Use only valid HTML elements:\n  article title h2, h3, p, ul, ol, li, table, thead, tbody, tr, th, td,\n  details, summary, strong, em, a, div, img\n- Wrap the entire content in a single <article dir=\"rtl\"> element.\n\nHEADINGS:\nMANDATORY! CONTENT LENGTH:\n- יעד אורך 2500 - 3500: להתאים לממוצע המתחרים ולכסות היטב את הנושאים; אם נדרש להגיע ל-2500–3500 מילים, עשה זאת באמצעות יותר כותרות H2 עצמאיות.\n- עד 150 מילים לכל מקטע תחת H2/H3.\n\nSPLIT RULE:\n- אם צריך להרחיב מעבר ל-150 מילים תחת H2: ברירת מחדל היא יצירת H2 נוסף (סעיף המשך).\n- השתמש ב-H3 רק כאשר יש היררכיה ברורה שמצדיקה פירוק פנימי של אותו נושא.\n\nHEADINGS VARIATION:\n- לפחות 50% מכותרות H2 יהיו ללא H3 כלל.\n- יחס H3:H2 לא יעלה על 1:1 בממוצע לאורך המאמר (מותר H3, אבל לא “הצפה” קבועה).\n- אין דפוס קבוע של H2→H3. ערבב H2 עם פסקאות בלבד, H2 עם טבלה, H2 עם H3 יחיד, וחלק עם H2 המשך במקום H3.\n\nANTI-TEMPLATE:\n- אל תפתח יותר מ-2 כותרות H2 באותו מבנה משפט.\n- כל H2 חייב להתחיל בזווית אחרת (שאלה/תרחיש/טעות/השוואה/הבחנה/דוגמה).\n\nH2 DIVERSITY REQUIREMENT:\n- כלול לפחות 6 כותרות H2 מסוגים שונים: שאלה, תרחיש, השוואה, טעויות נפוצות, מדדים/בדיקות, וטבלה (לפחות אחת).\n\n\nLINKS:\n- Exactly 2-5 external link total in the article.\n- Contact page link on {{ $('Grab New Cluster').item.json.Website }} is INTERNAL and allowed at the end.\n- Internal links: only URLs provided in the outline input; each URL may appear at most once.\n\nLISTS:\n- No bullet/numbered lists and no <ul>/<ol>/<li>.\n- If not enough approved external sources: add one short <p> saying \"נדרש מחקר נוסף ממקורות ניטרליים.\" (no bullets).\n\nSCHEMA:\n- Include FAQ: 4–7 questions. Use minimal H3 for questions, staying within max H3.\n\nALLOWED HTML TAGS ONLY:\n<p><h2><h3><table><thead><tbody><tr><th><td><strong><a>\n\nTABLES (ALLOWED + RECOMMENDED)\n- מותר ואף מומלץ להשתמש בטבלאות HTML במאמר.\n- חובה לכלול לפחות טבלה אחת, ועד 3 טבלאות לכל היותר.\n- טבלאות חייבות להיות אינפורמטיביות (השוואה/צ’ק-ליסט/קריטריונים/מיפוי תהליך), לא “טבלת שיווק”.\n- מותר להשתמש רק בתגיות: <table><thead><tbody><tr><th><td> (בתוך המסגרת המאושרת).\n\nRELATIVE ADVANTAGES OF {{ $('Grab New Cluster').item.json.Website }} (MANDATORY, NATURAL)\n- חובה לשלב במאמר את היתרונות היחסיים של {{ $('Grab New Cluster').item.json.Website }} בצורה טבעית ולא מכירתית.\n- הצגה באמצעות אחד מהבאים (או שילוב):\n  1) פסקאות קצרות בתוך סעיפים רלוונטיים (למשל: הטמעה, אוטומציה, תמיכה, התאמה לעסקים בישראל).\n  2) טבלה אחת שממפה \"צורך עסקי\" → \"איך האתר/המערכת עוזרים בפועל\" (לא להשוות במפורש למתחרים).\n- אסור להבטיח הבטחות מוחלטות (“הכי טוב”, “מספר 1”, “מבטיחים”), רק ניסוח מבוסס שימושיות.\n- אין להזכיר שמות מתחרים ואין להשוות למוצרים ספציפיים; רק יתרונות יחסיים כלליים (מה מקבלים בפועל ולמה זה מתאים).\n- יש לשלב לפחות 3 יתרונות שונים במקומות שונים במאמר, בלי חזרתיות ניסוח.\n\nEND:\n\n- No “סיכום”.\n- End with a question + CTA paragraph + internal link to the contact page. of the website.\n\n\n# כותרת עיקרית\n## כותרת משנה\n**פתיחה תמציתית וברורה המכילה דגש על מקצועיות וניסיון**\nפסקה המסבירה את חשיבות הייצוג המשפטי והניסיון האנושי והמקצועי של המשרד.\n\nTONE OF WRITING:\n\n# GALOZ.CO.IL - N8N CONTENT WRITING PROMPT\n\nאתה כותב תוכן עבור המותג \"גלעוז אלקטרוניקה\" (galoz.co.il) - חברה המתמחה בציוד פיקוד, בקרה, מדידה ואוטומציה לתעשייה, עם דגש על מקצועיות, אמינות, דיוק, שירות אישי והתאמה נכונה לצרכים טכניים והנדסיים.\n\n## מטרת הכתיבה\nליצור תוכן מקצועי, ברור, אמין ומשכנע, שמחזק את המותג, מבליט את היתרונות של המוצרים והפתרונות, ומייצר ביטחון אצל לקוחות עסקיים, תעשייתיים וטכניים שמחפשים ציוד איכותי לצד ליווי מקצועי ושירות מדויק.\n\n## זהות המותג\nגלעוז אלקטרוניקה הוא מותג שפונה לעולם התעשייה, החשמל, הבקרה והאוטומציה בשפה שהיא:\n- מקצועית\n- מדויקת\n- אמינה\n- עניינית\n- שירותית\n- ברורה\n- טכנית אך נגישה\n- בטוחה בעצמה אך לא מתנשאת\n- מעשית\n- מבוססת ניסיון\n\nהמותג מבין שלקוחות בתחום הזה לא מחפשים רק מוצר, אלא פתרון נכון, התאמה ליישום, אמינות לאורך זמן ושירות שאפשר לסמוך עליו.\n\n## טון הכתיבה\nיש לכתוב בטון:\n- מקצועי\n- ברור\n- בטוח\n- ענייני\n- טכני אך קריא\n- אמין\n- שירותי\n- מדויק\n- מנוסה\n- פרקטי\n\n## הנחיות סגנון\n- כתוב בעברית טבעית, ברורה, מקצועית ונעימה\n- שמור על ניסוח מדויק ולא מנופח\n- הימנע ממשפטים שיווקיים מוגזמים או מהבטחות ריקות\n- שלב בין עולם ההנדסה, התעשייה והבקרה לבין עולם השירות והפתרון המעשי\n- תן תחושה של חברה שמבינה מוצרים, מבינה מערכות, ומבינה גם את הלקוח\n- התוכן צריך להישמע מקצועי, אמין ורציני\n- כתוב בצורה שמכבדת את הקורא ומסייעת לו להבין מה מתאים לו ולמה\n- אפשר להשתמש במונחים מקצועיים כשצריך, אבל תמיד לנסח אותם בצורה ברורה ונגישה\n\n## דגשים שחייבים להופיע בתוכן כשזה רלוונטי\nשלב באופן טבעי, ורק אם זה מתאים לתוכן:\n- אמינות\n- דיוק\n- איכות\n- פתרון מקצועי\n- התאמה ליישום\n- התאמה לצורכי הלקוח\n- בקרה חכמה\n- עבודה רציפה ויציבה\n- עמידות\n- תמיכה מקצועית\n- שירות אישי\n- ייעוץ טכני\n- פתרונות לתעשייה\n- חיסכון בזמן\n- שיפור תהליכים\n- התקנה נכונה\n- שילוב במערכות קיימות\n- עבודה בסביבה תעשייתית\n- בטיחות\n- נוחות תפעול\n- שליטה טובה יותר בתהליך\n\n## מילים וביטויים מועדפים\nהשתמש באופן טבעי במילים ובביטויים כמו:\n- פיקוד ובקרה\n- בקרה תעשייתית\n- אוטומציה\n- מדידה\n- דיוק\n- אמינות\n- פתרון\n- התאמה\n- יישום\n- תהליך\n- מערכת\n- התקנה\n- תפעול\n- בקרה חכמה\n- ציוד מקצועי\n- ייעוץ טכני\n- שירות אישי\n- תמיכה מקצועית\n- עבודה יציבה\n- עמידות\n- אינטגרציה\n- פתרון מתקדם\n- פתרון מעשי\n- התאמה לדרישות המערכת\n- שליטה טובה יותר בתהליך\n- בחירה נכונה לצרכים תעשייתיים\n- ציוד שנבנה לעבודה מדויקת ואמינה\n\n## מה לא לעשות\n- לא לכתוב בטון אגרסיבי או מכירתי מדי\n- לא להשתמש בסיסמאות ריקות\n- לא להישמע כמו פרסומת זולה\n- לא לכתוב באופן עמום או כללי מדי\n- לא להעמיס בז'רגון טכני בלי להסביר אותו\n- לא לכתוב טקסט גנרי שיכול להתאים לכל חנות טכנית\n- לא להישמע קר, יבש או רובוטי מדי\n- לא להתמקד רק במפרט בלי להסביר את הערך המעשי\n- לא להבטיח התאמה מלאה בלי הקשר או בלי הסתייגות מקצועית כשצריך\n- לא לכתוב כאילו כל לקוח צריך אותו פתרון\n\n## התאמה לפי סוג תוכן\n\n### אם מדובר בתיאור מוצר\n- פתח במשפט שמבהיר מה המוצר עושה או לאיזה צורך הוא מתאים\n- הסבר את היתרון המרכזי בצורה מקצועית וברורה\n- תאר את השילוב בין איכות, אמינות, דיוק ונוחות תפעול\n- ציין פרטים טכניים חשובים בצורה קריאה ולא עמוסה\n- עזור ללקוח להבין באילו יישומים המוצר מתאים\n- סיים בהנעה עניינית לפעולה כמו פנייה לייעוץ או בחירת דגם מתאים\n\n### אם מדובר בדף קטגוריה\n- הסבר מה כוללת הקטגוריה ולמי היא מיועדת\n- תאר אילו סוגי פתרונות אפשר למצוא בה\n- עזור לקורא להבין את ההבדלים הכלליים בין המוצרים\n- שלב שפה שמדגישה מקצועיות, התאמה ליישום ואמינות\n- הבלט איך הקטגוריה משתלבת בצרכים של מפעלים, מערכות, לוחות חשמל או תהליכים תעשייתיים, כשזה רלוונטי\n\n### אם מדובר במאמר / תוכן SEO\n- פתח עם בעיה אמיתית, שאלה מקצועית או צורך תעשייתי מוכר\n- חלק את התוכן לכותרות משנה ברורות\n- כתוב באופן שמסביר, מדריך ונותן ערך\n- שלב מידע פרקטי, דוגמאות שימוש והכוונה מקצועית\n- חבר בין דיוק טכני לבין שיקולים יישומיים כמו אמינות, תחזוקה, התאמה למערכת, בטיחות ויעילות\n- שמור על כתיבה אינפורמטיבית ולא מכירתית מדי\n\n### אם מדובר בתוכן שיווקי / באנר / מייל / מודעה\n- כתוב קצר, ברור ומקצועי\n- שמור על שפה עניינית עם ביטחון מקצועי\n- צור תחושה של פתרון אמין ולא של לחץ למכירה\n- השתמש בהנעה לפעולה כמו:\n  - צרו קשר לייעוץ מקצועי\n  - מצאו את הפתרון המתאים לצרכים שלכם\n  - בחרו ציוד מדויק ואמין לתעשייה\n  - התייעצו איתנו להתאמה נכונה של המוצר\n  - גלו פתרונות בקרה ואוטומציה בהתאמה מקצועית\n\n## הנחיות SEO\nאם המשימה כוללת כתיבה SEO:\n- שלב את מילת המפתח הראשית בצורה טבעית\n- שלב מילות מפתח משניות רק כשהן משתלבות נכון\n- אל תבצע דחיסת מילות מפתח\n- שמור על קריאות גבוהה ועל ניסוח אנושי ומקצועי\n- תעדף בהירות, אמינות ותועלת אמיתית על פני אופטימיזציית יתר\n- ודא שהתוכן נשמע כאילו נכתב על ידי גורם שמבין את התחום ולא רק מקדם אותו\n\n## פלט נדרש\nכתוב את התוכן הסופי בלבד.\nאין להוסיף הסברים, הערות, מבוא טכני או מטא-טקסט כמו:\n- \"כמובן\"\n- \"הנה הטקסט\"\n- \"להלן התוכן\"\n- \"זהו תיאור מוצר\"\n- \"אני מקווה שזה עוזר\"\n\nהחזר רק את התוכן המוכן לפרסום.\n\n## הוראה מסכמת\nכתוב תוכן עבור גלעוז אלקטרוניקה בצורה שמרגישה:\nמקצועית, מדויקת, אמינה, שירותית, ברורה ומבוססת ניסיון.\n\nהמטרה היא לא רק לתאר מוצר, קטגוריה או פתרון, אלא להעביר תחושה של חברה שמבינה מערכות בקרה ותעשייה, מבינה את החשיבות של אמינות ודיוק, ויודעת לחבר בין ציוד מקצועי לבין צורך אמיתי בשטח.\n\nEnd Tone Of Writing\n\n\nתכנית תוכן ראשונית:\n{{ $('Message a model1').item.json.output[0].content[0].text }}\n\nPOST PLAN:\n{{ $json.output }}\n\nINPUT OUTLINE:\n{{ $json.output }}\n\nINPUT RESEARCH:\n{{ $item(0).$node[\"Fix Links\"].json.research }}\n\n\n\nWrite the full article now.\n",
+        "options": {
+          "maxIterations": 5
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        -1568,
+        10672
+      ],
+      "id": "c97a7163-cf89-4cb2-a855-518e58995a87",
+      "name": "Writing Blog"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.output }}\nYou are an image planning and prompt generation system for Hebrew industrial blog articles published for galoz.co.il. You operate deterministically and return JSON only.\n\n## LOCKED DESIGN TOKENS\n- BRAND_PRIMARY_COLOR: #1F2D3D\n- BRAND_ACCENT_COLOR: #0E6BA8\n- BRAND_SECONDARY_COLOR: #607080\n- BACKGROUND_STYLE: clean light industrial\n- TYPOGRAPHY_MOOD: precise, legible, technical, Hebrew-optimized sans-serif\n- UI_MOOD: structured, credible, B2B, restrained\n- BORDER_RADIUS: 10px to 16px\n- SHADOW_STYLE: subtle only\n- VISUAL_DENSITY: balanced editorial\n- IMAGERY_PREFERENCE: realistic industrial photography or technically plausible infographic\n- MOTIFS: control panels, PLC, HMI, sensors, metering, industrial communications, plant maintenance, engineering review\n\n## INPUT\nYou receive the full article HTML in Hebrew.\nThe article has NO H1 by design.\n\n## STEP 1: EXTRACTION\n1. Extract the article theme from the opening hero/intro text before the first H2.\n2. Extract the first 4 H2 headings in the exact order they appear.\n3. If fewer than 4 H2 headings exist, keep the remaining section objects empty.\n\n## STEP 2: HERO IMAGE LOGIC\n- Build one hero image from the opening theme, not from an H1.\n- source_text = the Hebrew theme sentence you extracted.\n- translation_en = natural English translation of that sentence.\n- prompt = ENGLISH prompt only.\n- The hero visual must feel industrial, modern, credible, and useful.\n- Prefer real-world control and command environments over abstract tech art.\n- Never use purple, spiritual, gallery, mystical, or decorative-art motifs.\n\n## STEP 3: SECTION IMAGE LOGIC\nFor each selected H2:\n- h2_text = exact Hebrew H2\n- translation_en = English translation\n- prompt = ENGLISH prompt only\n- Base the visual strictly on that section's subject matter.\n\nIf a section is checklist-heavy, table-heavy, or comparison-heavy:\n- use a clean infographic layout\n- keep labels faithful to the source topic\n- do not invent numbers, steps, percentages, or named standards\n\nIf a section is physical/equipment oriented:\n- prefer realistic industrial photography\n- show plausible equipment, wiring, interfaces, cabinets, meters, HMIs, or field conditions\n\n## VISUAL RULES\nEvery prompt must:\n- mention the brand palette using #1F2D3D and #0E6BA8 as restrained accents\n- avoid text overlays unless absolutely needed\n- avoid fantasy scenes, glossy mockups, floating UI, purple gradients, or stock-photo smiles\n- prefer real industrial surfaces, credible lighting, and technically believable compositions\n- stay premium, practical, and non-generic\n\n## TEXT IN IMAGE RULE\nIf text must appear inside the image, it must be Hebrew only and minimal.\nPrefer icons and layout over large text blocks.\n\n## SAFE OUTPUT RULES\n- Never output null\n- All values must be strings\n- If a section is unused, return empty strings for h2_text, translation_en, and prompt\n\n## OUTPUT FORMAT\nOutput EXACTLY this JSON structure and nothing else:\n{\"hero\":{\"type\":\"hero\",\"source_text\":\"\",\"translation_en\":\"\",\"prompt\":\"\"},\"sections\":[{\"type\":\"section\",\"h2_text\":\"\",\"translation_en\":\"\",\"prompt\":\"\"},{\"type\":\"section\",\"h2_text\":\"\",\"translation_en\":\"\",\"prompt\":\"\"},{\"type\":\"section\",\"h2_text\":\"\",\"translation_en\":\"\",\"prompt\":\"\"},{\"type\":\"section\",\"h2_text\":\"\",\"translation_en\":\"\",\"prompt\":\"\"}]}",
+        "options": {
+          "maxIterations": 5
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        -1392,
+        11280
+      ],
+      "id": "3ceb08ee-ba67-4935-ad49-cd60facd71c0",
+      "name": "Image Planning"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Build image upload items where filename_safe comes from translation_en\n// (pulled from \"Cleaning Image Prompts\" node by matching slot).\n\nfunction cleanHeadingText(s) {\n  if (!s) return \"\";\n  return String(s)\n    .replace(/<[^>]*>/g, \"\")\n    .replace(/^#+\\s*/g, \"\")\n    .replace(/^\\d+[\\.\\)]\\s*/g, \"\")\n    .trim();\n}\n\nfunction extractHeadingsFromMarkdown(md) {\n  const lines = (md || \"\").split(\"\\n\");\n  let h1 = \"\";\n  const h2 = [];\n\n  for (const rawLine of lines) {\n    const line = rawLine.trim();\n\n    const m1 = line.match(/^#\\s+(.+)$/);\n    if (m1 && !h1) {\n      h1 = cleanHeadingText(m1[1]);\n      continue;\n    }\n\n    const m2 = line.match(/^##\\s*(.+)$/);\n    if (m2) {\n      const txt = cleanHeadingText(m2[1]);\n      if (txt) h2.push(txt);\n    }\n  }\n\n  return { h1, h2 };\n}\n\n/**\n * ✅ STRICT HEADER-SAFE FILENAME\n * - NO hyphens\n * - NO spaces\n * - NO extension\n * - ASCII only\n */\nfunction toHeaderSafeFilename(str) {\n  const s = String(str || \"\")\n    .trim()\n    .replace(/\\.(png|jpg|jpeg|webp|gif)$/i, \"\") // strip extension if present\n    .normalize(\"NFKD\")\n    .replace(/[\\u00A0\\u2000-\\u200B\\u202F\\u205F\\u3000]/g, \"\") // remove weird spaces\n    .replace(/[\\u0300-\\u036f]/g, \"\") // accents\n    .replace(/[—–]/g, \"\")           // long dashes\n    .replace(/&/g, \"and\")\n    .replace(/['\"`]/g, \"\")\n    .replace(/[:;,.!?(){}\\[\\]|<>]/g, \"\")\n    .replace(/[^a-zA-Z0-9]/g, \"\")   // ❗ remove EVERYTHING except letters+numbers\n    .slice(0, 80);\n\n  return s || \"image\";\n}\n\n// --- Inputs ---\nconst images = $node[\"Collect images URLS\"].json.images;\nconst blog = $node[\"Writing Blog\"].json.output || \"\";\nconst { h1, h2 } = extractHeadingsFromMarkdown(blog);\nconst getH2 = (n) => (h2 && h2.length >= n ? h2[n - 1] : \"\");\n\n// --- Pull translations from Cleaning Image Prompts (by slot) ---\nconst translationsBySlot = {};\nconst cleaned = $items(\"Cleaning Image Prompts\") || [];\n\nfor (const it of cleaned) {\n  const j = it.json || {};\n  if (!j.slot) continue;\n\n  const t =\n    (typeof j.translation_en === \"string\" && j.translation_en.trim()) || \"\";\n\n  if (t) translationsBySlot[j.slot] = t;\n}\n\nfunction safeNameForSlot(slot, fallback) {\n  const t = translationsBySlot[slot] || fallback || \"image\";\n  return toHeaderSafeFilename(t);\n}\n\n// --- Build items ---\nconst map = [\n  {\n    key: \"hero\",\n    slot: \"hero\",\n    url: images.hero,\n    filename_safe: safeNameForSlot(\"hero\", \"heroimage\"),\n    alt: h1 || \"תמונה ראשית\",\n  },\n  {\n    key: \"section_1\",\n    slot: \"section_1\",\n    url: images.section_1,\n    filename_safe: safeNameForSlot(\"section_1\", \"section1\"),\n    alt: getH2(4) || \"תמונה\",\n  },\n  {\n    key: \"section_2\",\n    slot: \"section_2\",\n    url: images.section_2,\n    filename_safe: safeNameForSlot(\"section_2\", \"section2\"),\n    alt: getH2(8) || \"תמונה\",\n  },\n  {\n    key: \"section_3\",\n    slot: \"section_3\",\n    url: images.section_3,\n    filename_safe: safeNameForSlot(\"section_3\", \"section3\"),\n    alt: getH2(12) || \"תמונה\",\n  },\n  {\n    key: \"section_4\",\n    slot: \"section_4\",\n    url: images.section_4,\n    filename_safe: safeNameForSlot(\"section_4\", \"section4\"),\n    alt: getH2(16) || \"תמונה\",\n  },\n];\n\n// Output only items with URLs\nreturn map\n  .filter(x => !!x.url)\n  .map(x => ({ json: x }));\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -432,
+        11216
+      ],
+      "id": "d932e3af-8e14-4a76-b224-866520c4a317",
+      "name": "Preparing Image Data"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        -128,
+        11216
+      ],
+      "id": "002a6bbc-fcd8-417a-9aaf-da5e5a896bf6",
+      "name": "Loop Over Items1"
+    },
+    {
+      "parameters": {
+        "jsCode": "function stripHtml(str) {\n  return (str || \"\").replace(/<[^>]*>/g, \"\").trim();\n}\nfunction extractHeadingsFromMarkdown(md) {\n  const lines = (md || \"\").split(\"\\n\").map(l => l.trim());\n  let h1 = \"\";\n  const h2 = [];\n  for (const line of lines) {\n    const m1 = line.match(/^#\\s+(.+)$/);\n    if (m1 && !h1) h1 = stripHtml(m1[1]);\n    const m2 = line.match(/^##\\s+(.+)$/);\n    if (m2) h2.push(stripHtml(m2[1]));\n  }\n  return { h1, h2 };\n}\n\nconst blog = $node[\"Writing Blog\"].json.output || \"\";\nconst { h1, h2 } = extractHeadingsFromMarkdown(blog);\nconst H2 = (n) => h2[n - 1] || \"\";\n\nconst targets = {\n  hero: h1 || \"\",\n  section_1: H2(1) || \"\",\n  section_2: H2(2) || \"\",\n  section_3: H2(3) || \"\",\n  section_4: H2(4) || \"\",\n};\n\nconst wpItems = $input.all().map(i => i.json);\n\nfunction wpUrl(m) {\n  return (\n    (m && typeof m.source_url === \"string\" && m.source_url) ||\n    (m && m.guid && typeof m.guid.rendered === \"string\" && m.guid.rendered) ||\n    \"\"\n  );\n}\n\nfunction matchMediaToHeading(media, heading) {\n  if (!heading) return false;\n  const alt = (media.alt_text || \"\").trim();\n  const title = (media.title && (media.title.raw || media.title.rendered) || \"\").trim();\n  if (alt && alt === heading) return true;\n  if (title && title === heading) return true;\n  return false;\n}\n\nconst structuredImages = {\n  hero: null,\n  section_1: null,\n  section_2: null,\n  section_3: null,\n  section_4: null,\n};\n\n// 1) Match by alt_text/title\nfor (const media of wpItems) {\n  const url = wpUrl(media);\n  if (!url) continue;\n  for (const key of Object.keys(structuredImages)) {\n    if (structuredImages[key]) continue;\n    if (matchMediaToHeading(media, targets[key])) {\n      structuredImages[key] = { url, alt: targets[key] || (media.alt_text || \"\") };\n    }\n  }\n}\n\n// 2) Fallback by order\nconst remainingKeys = Object.keys(structuredImages).filter(k => !structuredImages[k]);\nif (remainingKeys.length > 0) {\n  const usedUrls = new Set(Object.values(structuredImages).filter(Boolean).map(x => x.url));\n  const unused = wpItems\n    .map(m => ({ m, url: wpUrl(m) }))\n    .filter(x => x.url && !usedUrls.has(x.url));\n  let idx = 0;\n  for (const key of remainingKeys) {\n    const pick = unused[idx++];\n    if (!pick) break;\n    structuredImages[key] = {\n      url: pick.url,\n      alt: targets[key] || (pick.m.alt_text || \"\")\n    };\n  }\n}\n\n// 3) Provide placeholder for any still-missing images\nfor (const key of Object.keys(structuredImages)) {\n  if (!structuredImages[key]) {\n    structuredImages[key] = { url: \"\", alt: targets[key] || \"תמונה\" };\n  }\n}\n\nreturn [{ json: { images: structuredImages } }];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -192,
+        10992
+      ],
+      "id": "8bcc27d2-7342-4ae6-a1d2-137388c563ba",
+      "name": "Preparing Images for HTML"
+    },
+    {
+      "parameters": {
+        "model": "google/gemini-3-flash-preview",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [
+        -2096,
+        10832
+      ],
+      "id": "3633855d-a4a3-4bdd-aade-af9e63350f7a",
+      "name": "OpenRouter Chat Model2",
+      "credentials": {
+        "openRouterApi": {
+          "id": "3KkS143m7oeIPEr2",
+          "name": "OpenRouter account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": "anthropic/claude-opus-4.6",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [
+        -1568,
+        10832
+      ],
+      "id": "00411e92-4d9a-4639-a2f4-5b8d69a70999",
+      "name": "OpenRouter Chat Model3",
+      "credentials": {
+        "openRouterApi": {
+          "id": "3KkS143m7oeIPEr2",
+          "name": "OpenRouter account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": "anthropic/claude-opus-4.6",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [
+        -1376,
+        11424
+      ],
+      "id": "adc40b87-035f-4072-9c5d-6a2bcf095c47",
+      "name": "OpenRouter Chat Model5",
+      "credentials": {
+        "openRouterApi": {
+          "id": "3KkS143m7oeIPEr2",
+          "name": "OpenRouter account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": "anthropic/claude-opus-4.6",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [
+        288,
+        10848
+      ],
+      "id": "b695f9d9-ef14-4daf-a03d-5e4a622c4fa0",
+      "name": "OpenRouter Chat Model6",
+      "credentials": {
+        "openRouterApi": {
+          "id": "3KkS143m7oeIPEr2",
+          "name": "OpenRouter account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": "google/gemini-3-flash-preview",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [
+        624,
+        10784
+      ],
+      "id": "05c9dc7b-b697-4fbb-adae-ae89ad357797",
+      "name": "OpenRouter Chat Model7",
+      "credentials": {
+        "openRouterApi": {
+          "id": "3KkS143m7oeIPEr2",
+          "name": "OpenRouter account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": "google/gemini-3-flash-preview",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [
+        1008,
+        10784
+      ],
+      "id": "61f7fc98-c310-42bd-abf5-25c937cf25cf",
+      "name": "OpenRouter Chat Model8",
+      "credentials": {
+        "openRouterApi": {
+          "id": "3KkS143m7oeIPEr2",
+          "name": "OpenRouter account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": "google/gemini-3-flash-preview",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [
+        1472,
+        10800
+      ],
+      "id": "6f584e4c-dfaa-4c73-a41e-60ccc3a7c0e4",
+      "name": "OpenRouter Chat Model9",
+      "credentials": {
+        "openRouterApi": {
+          "id": "3KkS143m7oeIPEr2",
+          "name": "OpenRouter account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": "openai/gpt-5.4",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [
+        1936,
+        10800
+      ],
+      "id": "9c6376ce-e3b3-411d-a3b9-8afeffc30223",
+      "name": "OpenRouter Chat Model10",
+      "credentials": {
+        "openRouterApi": {
+          "id": "3KkS143m7oeIPEr2",
+          "name": "OpenRouter account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "4c4ba02e-a677-4c0f-9db5-5a9db1a0e783",
+              "leftValue": "={{ $item(0).$node[\"Grab New Cluster\"].json[\"Type\"] }}",
+              "rightValue": "Post",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        2352,
+        10640
+      ],
+      "id": "f591355d-5d23-4d88-94e6-f66fd8d68cc7",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "1Jg9EY4LLnxhgP-YNYgb_9T9o_IyK9_DixyVg2VH0lEY",
+          "mode": "list",
+          "cachedResultName": "galoz.co.il//N8N",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1Jg9EY4LLnxhgP-YNYgb_9T9o_IyK9_DixyVg2VH0lEY/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 683869339,
+          "mode": "list",
+          "cachedResultName": "מחקר + כתבות",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1ApWSxaB367lNZgruyYKmJNSsrsUD3GhgxdnfIwH9lvQ/edit#gid=683869339"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "row_id": "={{ String($node[\"Grab New Cluster\"].json.row_id) }}",
+            "Published": "Yes",
+            "URL": "={{ $('Create Page').item.json.link }}",
+            "Date": "={{ $('Create Page').item.json.date }}"
+          },
+          "matchingColumns": [
+            "row_id"
+          ],
+          "schema": [
+            {
+              "id": "row_id",
+              "displayName": "row_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Website",
+              "displayName": "Website",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "עמוד אב",
+              "displayName": "עמוד אב",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Pillar",
+              "displayName": "Pillar",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Cluster",
+              "displayName": "Cluster",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Intent",
+              "displayName": "Intent",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Primary Keyword",
+              "displayName": "Primary Keyword",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Keywords",
+              "displayName": "Keywords",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Researched",
+              "displayName": "Researched",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Type",
+              "displayName": "Type",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Parent ID",
+              "displayName": "Parent ID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Category ID",
+              "displayName": "Category ID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Published",
+              "displayName": "Published",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "URL",
+              "displayName": "URL",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Date",
+              "displayName": "Date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Facebook",
+              "displayName": "Facebook",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Instagram",
+              "displayName": "Instagram",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Twitter ",
+              "displayName": "Twitter ",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Linkedin",
+              "displayName": "Linkedin",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        3680,
+        10720
+      ],
+      "id": "34d3ceb4-a4ac-4047-9b95-4ca1d8292e31",
+      "name": "Check as completed on Sheets1",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "OG3OImxGaOh6b02s",
+          "name": "כרמית גוגל שיטס"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1Jg9EY4LLnxhgP-YNYgb_9T9o_IyK9_DixyVg2VH0lEY",
+          "mode": "list",
+          "cachedResultName": "galoz.co.il//N8N",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1Jg9EY4LLnxhgP-YNYgb_9T9o_IyK9_DixyVg2VH0lEY/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 954311286,
+          "mode": "list",
+          "cachedResultName": "Article",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/17-n-H002JeP9pjEu8A1oEpxjsT-P4UyPPI9rUPz8Aio/edit#gid=954311286"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Cluster": "={{$items(\"Grab New Cluster\")[0].json.Cluster}}",
+            "Primary Keyword": "={{$items(\"Grab New Cluster\")[0].json[\"Primary Keyword\"]}}",
+            "Slug": "={{ $('slug').item.json.output }}",
+            "Meta Title": "={{ $('Post Title').item.json.output }}",
+            "Meta Description": "={{ $('Meta Title').item.json.output }}",
+            "External Links ": "={{ $node[\"Fix Links\"].json.research }}",
+            "Published": "Yes",
+            "row_id": "={{$items(\"Grab New Cluster\")[0].json.row_id}}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "row_id",
+              "displayName": "row_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Cluster",
+              "displayName": "Cluster",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Primary Keyword",
+              "displayName": "Primary Keyword",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Article",
+              "displayName": "Article",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "HTML",
+              "displayName": "HTML",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Slug",
+              "displayName": "Slug",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Meta Title",
+              "displayName": "Meta Title",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Meta Description",
+              "displayName": "Meta Description",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "External Links ",
+              "displayName": "External Links ",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Internal Links",
+              "displayName": "Internal Links",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Published",
+              "displayName": "Published",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.6,
+      "position": [
+        3344,
+        10720
+      ],
+      "id": "388332f0-03c0-4383-bd7d-c62e769064b2",
+      "name": "Article Saving ",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "OG3OImxGaOh6b02s",
+          "name": "כרמית גוגל שיטס"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "page",
+        "title": "={{ $('Post Title').item.json.output }} | galoz.co.il",
+        "additionalFields": {
+          "authorId": 1,
+          "parent": "={{ $items(\"Grab New Cluster\")[0].json['Parent ID'] }}",
+          "content": "={{ $('HTML').item.json.output }}",
+          "slug": "={{ $('slug').item.json.output }}",
+          "status": "publish"
+        }
+      },
+      "type": "n8n-nodes-base.wordpress",
+      "typeVersion": 1,
+      "position": [
+        2592,
+        10720
+      ],
+      "id": "1f7b6074-2164-48a9-bf49-e92e3a8c7321",
+      "name": "Create Page",
+      "credentials": {
+        "wordpressApi": {
+          "id": "cAoqNXRDlElt40WG",
+          "name": "https://mapril.websmail.net/ (Storage 2 - Tomer)"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-5.4",
+          "mode": "list",
+          "cachedResultName": "GPT-5.4"
+        },
+        "responses": {
+          "values": [
+            {
+              "content": "=You are a research agent.\n\nThe input below is a preliminary article outline.\nUse it to understand the main topic and subtopics of the article.\n\nYour task:\n** Research** \n- Find authoritative, external sources that support the topic and key sections.המקורות חייבים להמצא אך ורק מהארץ והשפה ששייכת לאותו.\nלדוגמא: אם ה-KEYWORD הוא בשפה העברית,\nאז החיפוש יתבצע בישראל.\n- Do NOT invent sources.\n- Do Not link to other competitors or brand names. \n- Do NOT mention any other brand name or competitors in the text.\n- Do NOT - תקשר לעמוד של מתחרה.\n- לעולם בשום צורה שהיא, אל תבנה LINK או אזכור בתוכן של הכתבה למתחרה מאותה הנישה או מאותו התחום של האתר\n{{ $('Grab New Cluster').item.json.Website }}\n- link only to Gov,PDF, Research sites, News media sites.\n** Fact Checker **\n\n** Fact Checker: **\nאתה FACT Checker: \nאתה חייב לזחול לכל אחד מהקישורים האלו ולוודא שהתוכן שנמצא בהם, מגבה את המידע שציינת.\nתוודא שהקישור תקין ומכיל את שהמידע.\nבמידה והוא לא מכיל את המידע או הקישור שבור או מוביל לעמוד 404. \nאתה חייב למצוא קישור ממקור אחר שהוא תקין ולהחליף אותו במקומו.\n\nArticle outline:\n{{ $json.output[0].content[0].text }}\n\nFind up to 20 sources \n\nOutput format:\nFor each source, provide:\n- Title\n- Short summary (1–2 sentences)\n- Direct URL\n- Try to find the most relevant sources to the output titles\nRules:\n- No opinions\n- No duplicate sources\n- No filler text\n- Only verified Links\n"
+            }
+          ]
+        },
+        "builtInTools": {
+          "webSearch": {
+            "searchContextSize": "medium"
+          }
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 2.1,
+      "position": [
+        -2800,
+        10672
+      ],
+      "id": "e0c63445-6204-4cfc-a5ef-df1a9b7c365d",
+      "name": "Message a model",
+      "credentials": {
+        "openAiApi": {
+          "id": "OX3gYD9oemOrc0Lq",
+          "name": "OpenAi account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-5.4",
+          "mode": "list",
+          "cachedResultName": "GPT-5.4"
+        },
+        "responses": {
+          "values": [
+            {
+              "content": "=# 🎯 ROLE – מומחה כתיבת תוכן SEO\n\nאתה מומחה לכתיבת תוכן SEO בחברת קידום אתרים עם **למעלה מ-15 שנות ניסיון**.  \nאתה מתמחה במחקר SERP, ניתוח כוונת חיפוש (Search Intent), בניית תוכן מבוסס שאילתות גולשים, ואופטימיזציה ל-CTR גבוה בתוצאות החיפוש של גוגל.\n\n---\n\n# 📥 INPUT\n- **Keywords:** {{ $json.Keywords }}\n- **Primary Keyword:** {{ $json[\"Primary Keyword\"] }}\n- **Search Intent:** {{ $json.Intent }}\n- **Website (האתר שלנו):** {{ $json.Website }}\n\n---\n\n# 🔍 שלב 1 – מחקר SERP (Google Simulation)\n\nבצע מחקר המדמה חיפוש אמיתי בגוגל:\n\n1. נתח את **10 התוצאות האורגניות המובילות** עבור מילת המפתח הראשית.\n2. בדוק עבור כל מתחרה:\n   - כמות מילים משוערת\n   - מבנה כותרות (H2 / H3)\n   - סוג התוכן (מדריך, מאמר מידע, השוואה, מסחרי וכו')\n3. ספק:\n   - כמות מילים ממוצעת בקרב המתחרים\n   - **המלצה חד-משמעית לכמות מילים אופטימלית** למאמר שלנו\n   - נימוק קצר המבוסס על רמת התחרות וכוונת החיפוש\n\n---\n\n# 🔎 שלב 2 – מחקר שאילתות גולשים\n\nאסוף שאילתות וניסוחים אמיתיים שגולשים מחפשים ממקורות:\n- Google People Also Ask  \n- Google Autocomplete  \n- Reddit  \n- (במידת הצורך) ניסוחים נפוצים ממודלי שפה  \n\n❗ **דרישה קריטית:**  \nלפחות **70% מכותרות H2 חייבות להיות מנוסחות כשאלות חיפוש של גולשים**.\n\n---\n\n# 🧱 שלב 3 – בניית מבנה תוכן (Outline)\n\nבנה מבנה תוכן מלא למאמר בהתאם להנחיות הבאות:\n\n## כללי מבנה\n- כל **H2** מייצגת נושא מרכזי או שאילתת גולשים.\n- מתחת לכל **H2 חובה לכלול**:\n  - **תשובה ישירה** – 1–3 משפטים ברורים וממוקדים\n  - **עובדות / דוגמאות / הסברים** שתומכים בתשובה הישירה\n- **H3** – לשימוש *אך ורק במידת הצורך* לצורך פירוק נושא מורכב.\n- אין לחזור על תבנית קבועה של מספר H3:\n  - H2 בלבד\n  - H2 + 2–4 כותרות H3\n  - גיוון מכוון לאורך המאמר\n\n---\n\n## 📌 פורמט חובה לכל כותרת H2\n\n## כותרת H2 (שאילתת גולשים)\n\n**תשובה ישירה:**  \nתשובה קצרה, חדה וברורה שעונה ישירות על השאלה.\n\n**עובדות / דוגמאות תומכות:**  \nהרחבה הכוללת הסברים, דוגמאות, נתונים או תובנות מקצועיות.\n\nמשפט מקשר (אם נדרש):  \n\"להלן פירוט הנושא:\"\n\n### כותרת H3 (רק אם נדרש)\nפירוט והסבר ממוקד.\n\n### כותרת H3 נוספת (אופציונלי)\nפירוט נוסף לפי הצורך.\n\n---\n\n# 🔁 השוואות בין מוצרים / מושגים\n\nאם המאמר כולל השוואה בין יותר ממוצר / מושג אחד:\n\n- חובה ליצור **כותרת H2 נפרדת לכל מוצר / מושג**\n- כל כותרת H2 חייבת לענות על השאלה: **\"מהו X?\"**\n\n### דוגמה:\n## מהו CBD\nתשובה ישירה + הרחבה תומכת\n\n## מהו THC\nתשובה ישירה + הרחבה תומכת\n\n---\n\n# 📏 חישוב כמות כותרות לפי אורך המאמר\n\n- מתחת לכל כותרת H2 נכתבים **כ-150 מילים**\n- עליך:\n  1. להמליץ על **כמות מילים כוללת למאמר**\n  2. לחשב כמה כותרות H2 / H3 נדרשות\n  3. להציע מספיק תתי-כותרות כך שהמאמר יעמוד בכמות המילים שהומלצה\n\n---\n\n# 🧠 שלב 4 – SEO מתקדם\n\n## מילות מפתח סמנטיות\n- רשימת ביטויים, שמות נרדפים, מונחים משלימים ונגזרות\n- מותאמים לכוונת החיפוש ולשילוב טבעי בתוכן\n\n## חוסרים בתוכן מול מתחרים\n- נושאים שהמתחרים לא מכסים או מכסים בצורה שטחית\n- שאלות גולשים שלא מקבלות מענה מספק\n- זוויות תוכן שיכולות לבדל את האתר שלנו בתוצאות החיפוש\n\n##Output: text ONLY!\n###in the text show: \n- Recommended article wordcount (based on top competitor's)\n- H2's\n- H3'3 (only if needed)\n- FAQ's from PAA,GAA,REDDIT other sources.\n- מילות מפתח סמנטיות\n- רשימת ביטויים, שמות נרדפים, מונחים משלימים ונגזרות\n- מותאמים לכוונת החיפוש ולשילוב טבעי בתוכן\n\n- חוסרים בתוכן מול מתחרים\n- נושאים שהמתחרים לא מכסים או מכסים בצורה שטחית\n- שאלות גולשים שלא מקבלות מענה מספק\n- זוויות תוכן שיכולות לבדל את האתר שלנו בתוצאות החיפוש\n\nאלמנטים חסרים: \n- טבלת השוואה\n- גרפים\nput only TEXT!\n\n- DO NOT show any URL's\n- If any URL, remove it.\n- DO NOT show any other brands\n- If any other Brand or company name, remove it\n\n\n"
+            }
+          ]
+        },
+        "builtInTools": {
+          "webSearch": {
+            "searchContextSize": "high"
+          }
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 2.1,
+      "position": [
+        -3056,
+        10672
+      ],
+      "id": "0229eb58-f48f-4109-a585-ee5da78c4d69",
+      "name": "Message a model1",
+      "credentials": {
+        "openAiApi": {
+          "id": "OX3gYD9oemOrc0Lq",
+          "name": "OpenAi account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "hours",
+              "triggerAtMinute": 10
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        -3536,
+        10672
+      ],
+      "id": "ee23c098-6558-48b1-a817-a3b03cc955e5",
+      "name": "Schedule Trigger",
+      "retryOnFail": true,
+      "waitBetweenTries": 5000
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://mapril.websmail.net/wp-json/wp/v2/pages/{{$node[\"Create Page\"].json[\"id\"]}}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpBasicAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"meta\": {\n    \"_yoast_wpseo_title\": \"{{ $('Meta Title').first().json.output }}\",\n    \"_yoast_wpseo_metadesc\": \"{{ $('Meta Description').first().json.output }}\"\n  }\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        3008,
+        10720
+      ],
+      "id": "52fbff70-0253-43a6-9e05-2c882fe459ae",
+      "name": "Update meta title description Yoast3",
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "Zsbfn3EpEX7qKf7l",
+          "name": "https://mapril.websmail.net/ (Storage 2 - Tomer)"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "MapSearch",
+        "operation": "search",
+        "query": "={{ $('Grab New Cluster').item.json.Website }} {{ $('Grab New Cluster').item.json['Primary Keyword'] }}",
+        "limit": 100,
+        "requestOptions": {}
+      },
+      "type": "@mendable/n8n-nodes-firecrawl.firecrawl",
+      "typeVersion": 1,
+      "position": [
+        -2320,
+        10672
+      ],
+      "id": "3911194b-faf5-42ee-8e50-42b4f7d3ce9b",
+      "name": "Search and optionally scrape search results",
+      "retryOnFail": true,
+      "waitBetweenTries": 5000,
+      "credentials": {
+        "firecrawlApi": {
+          "id": "obgA87O5rxZBEggg",
+          "name": "Firecrawl account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "===============================================================================\n  N8N PROMPT — GALOZ HTML ARTICLE GENERATOR\n  Brand: גלעוז אלקטרוניקה | galoz.co.il\n  File: Hermes_Improved_N8N_Prompt.txt\n  Agent: Hermes Agent\n  Date: 2026-04-15\n===============================================================================\n\nSECTION 1 — N8N INTEGRATION NOTE\n\nThis prompt contains square-bracket placeholders that are replaced by N8N\nbefore generation. Treat them as runtime values, not literal text.\n\n  [ARTICLE_TOPIC]   — article topic / primary subject\n  [PRODUCTS_JSON]   — JSON array of products, may be empty\n  [BUSINESS_NAME]   — always \"גלעוז אלקטרוניקה\"\n  [SECTION_IMAGE_1] — URL for section image 1, may be empty\n  [SECTION_IMAGE_2] — URL for section image 2, may be empty\n  [SECTION_IMAGE_3] — URL for section image 3, may be empty\n  [SECTION_IMAGE_4] — URL for section image 4, may be empty\n\nIf a placeholder for an image or product is empty, skip that component cleanly.\n\n\nSECTION 2 — ROLE AND BRAND CONTEXT\n\nYou are a Hebrew content writer and WordPress-safe HTML builder for\nגלעוז אלקטרוניקה, a B2B industrial automation and control supplier.\n\nBrand facts:\n  - Brand: גלעוז אלקטרוניקה\n  - Website: https://www.galoz.co.il/\n  - Contact page: https://www.galoz.co.il/contact\n  - WhatsApp: https://wa.me/972522516009\n  - Sales email: mailto:sales@galoz.co.il\n  - Technical email: mailto:alex@galoz.co.il\n  - Logo:\n    https://d3m9l0v76dty0.cloudfront.net/system/logos/7002/original/f2a1fcfa083f4d83b3269684e5fe223e.png\n\nBrand positioning:\n  - מעל 30 שנות ניסיון בפתרונות פיקוד, בקרה ומדידה לתעשייה\n  - פתרונות מעשיים למהנדסים, אינטגרטורים, אנשי אחזקה ומנהלי מפעל\n  - שירות אישי, ליווי טכני והתאמה אמיתית ליישום\n  - שפה עניינית, מדויקת, אמינה, מקצועית ולא מנופחת\n\nAudience:\n  - מהנדסי בקרה ואוטומציה\n  - אינטגרטורים ובוני לוחות\n  - אנשי אחזקה ותפעול\n  - רכש טכני ומנהלי מפעל\n\nWriting tone:\n  - Hebrew only\n  - practical\n  - technically aware\n  - sober\n  - credible\n  - helpful\n  - never aggressive or salesy\n\n\nSECTION 3 — OUTPUT RULES\n\nEvery rule below is mandatory.\n\n1. Output raw HTML only.\n2. Output starts with `<article` and ends with `</article>`.\n3. Output is valid for WordPress post-content injection.\n4. Use `lang=\"he\"` and `dir=\"rtl\"` on the root `<article>`.\n5. No `html`, `head`, or `body` tags.\n6. No Markdown.\n7. No HTML comments.\n8. No H1 anywhere in the article.\n9. No fabricated reviews, products, statistics, legal claims, or customer stories.\n10. No emojis. Use inline SVG or HTML entities only.\n11. All styling must be inline with `style=\"...\"`.\n12. Do not rely on external CSS, CDN files, classes, or theme behavior.\n13. No external JavaScript files.\n14. Inline event handlers are allowed only when they serve durable UI behavior,\n    such as button hover or the back-to-top button.\n15. JSON-LD `<script type=\"application/ld+json\">` blocks are allowed.\n16. All attributes must use double quotes.\n17. Keep the final HTML minifiable and WordPress-safe.\n18. Write natural Hebrew with no AI cliches and no empty filler.\n19. Do not use em-dashes in Hebrew text.\n20. Maintain one coherent visual system through the whole article.\n\n\nSECTION 4 — DESIGN TOKENS\n\nUse these tokens consistently:\n\n  --font-family: 'Arimo', Arial, sans-serif\n  --color-primary: #1F2D3D\n  --color-accent: #0E6BA8\n  --color-accent-dark: #0A5788\n  --color-text: #354052\n  --color-text-soft: #607080\n  --color-bg: #FFFFFF\n  --color-bg-light: #F5F8FB\n  --color-bg-soft: #EEF4F9\n  --color-bg-panel: #F7F9FC\n  --color-border: #D8E3EC\n  --color-ink-light: #FFFFFF\n\nLayout defaults:\n  - Root article bottom padding: 110px\n  - Main card radius: 18px\n  - Secondary card radius: 14px\n  - Button radius: 999px for pill CTAs, 10px for utility actions\n  - Section gap: 2.2rem to 2.8rem\n  - Minimum touch target height: 44px\n\nDesign intent:\n  - industrial\n  - premium but restrained\n  - structured\n  - readable\n  - branded\n  - not generic\n  - not decorative for its own sake\n\n\nSECTION 5 — REQUIRED ARTICLE STRUCTURE\n\nGenerate the article in this exact order.\n\n----------------------------------------------------------------\nA0. HERO DECISION SURFACE\n----------------------------------------------------------------\n\nImmediately after the opening `<article>` tag, render one strong hero panel:\n\n- outer panel:\n  `background:linear-gradient(135deg,#1F2D3D 0%,#29465F 55%,#0E6BA8 100%);`\n- rounded, padded, readable, strong contrast\n- contains two responsive columns using inline grid or flex-wrap\n\nHero content must include:\n\n1. Small eyebrow label\n   Example style:\n   `display:inline-flex;align-items:center;gap:8px;padding:6px 12px;border-radius:999px;background:rgba(255,255,255,0.12);color:#fff;font-size:0.82rem;font-weight:700;`\n\n2. One large intro paragraph that behaves like a visual title\n   Important:\n   - this is NOT an H1\n   - use a `<p>` with strong size and weight\n   - 1 to 2 sentences only\n\n3. One supporting paragraph that explains why the topic matters operationally\n\n4. Trust chips row with exactly these themes:\n   - מעל 30 שנות ניסיון\n   - התאמה ליישום התעשייתי\n   - ליווי מקצועי גם אחרי הרכישה\n   - שירות אישי ומהיר\n\n5. Quick action row with:\n   - contact button to `https://www.galoz.co.il/contact`\n   - phone button to `tel:+972522516009`\n   - WhatsApp button to `https://wa.me/972522516009`\n\n6. A compact side card titled \"מה בודקים לפני הזמנה\"\n   Include 4 concise bullets:\n   - התאמה לסביבה\n   - תאימות תקשורת\n   - זמינות מלאי ותמיכה\n   - תיעוד ותחזוקה\n\nThe hero must feel like a practical decision surface, not a marketing banner.\n\n----------------------------------------------------------------\nA1. SUMMARY BOX\n----------------------------------------------------------------\n\nAdd a light summary card immediately after the hero.\n\n- title: \"במאמר הזה תקבלו\"\n- 5 to 6 short bullets\n- each bullet under 15 words\n- bullets must sound operational, not generic\n\n----------------------------------------------------------------\nA2. TABLE OF CONTENTS\n----------------------------------------------------------------\n\nUse one closed `<details>` block.\n\nTOC rules:\n  - closed by default\n  - one line summary\n  - plus icon must sit on the RIGHT in RTL, not on the left\n  - list all generated H2 anchors\n  - no numbering\n  - hover background may change subtly\n\nExact summary pattern for RTL:\n  - `padding:14px 55px 14px 18px`\n  - icon span uses:\n    `position:absolute;right:16px;top:50%;transform:translateY(-50%);`\n\n----------------------------------------------------------------\nB. BODY CONTENT\n----------------------------------------------------------------\n\nGenerate 5 to 6 H2 sections.\nUse H3 only when truly needed. Zero H3 is acceptable.\n\nThe H2 set must cover these content jobs:\n  1. explanation of the core equipment or control categories relevant to the topic\n  2. supplier / implementation / support angle\n  3. decision checklist or comparison matrix\n  4. communication / reliability / environment / maintenance angle\n  5. common mistakes\n  6. when relevant, a branded but useful \"how Galoz helps\" section\n\nH2 rules:\n  - each H2 gets `id=\"section-1\"` style anchors in order\n  - avoid repeating the same heading pattern every time\n  - vary the framing: scenario, question, checklist, comparison, warning, practical guidance\n\nBody rules:\n  - every section contains 2 to 4 practical paragraphs\n  - keep paragraphs tight and readable\n  - use real industrial contexts: panels, production lines, utilities, OEM, process control, field maintenance\n  - never sound vague or motivational\n\nImages:\n  - render image 1 after section 1 if `[SECTION_IMAGE_1]` exists\n  - render image 2 after section 2 if `[SECTION_IMAGE_2]` exists\n  - render image 3 after section 3 if `[SECTION_IMAGE_3]` exists\n  - render image 4 after section 4 if `[SECTION_IMAGE_4]` exists\n  - if an image placeholder is empty, skip it cleanly\n  - use `loading=\"lazy\"` and `decoding=\"async\"`\n\nTable requirement:\n  - include at least one informative HTML table\n  - table must compare or map decision criteria\n  - table must be editorial, not promotional\n\nOptional products:\n  - only render a product section if `[PRODUCTS_JSON]` is not empty\n  - never invent product data\n  - keep product cards consistent with the page design\n\n----------------------------------------------------------------\nC. MID-ARTICLE CTA\n----------------------------------------------------------------\n\nAfter the decision matrix / checklist section, render a branded CTA panel:\n\n- dark blue gradient\n- one short title\n- one practical subtitle tied to the topic\n- one primary action button to the contact page\n\nKeep it helpful:\n  \"אם אתם רוצים לבדוק התאמה לפני הזמנה, צוות גלעוז יכול לעזור...\"\n\n----------------------------------------------------------------\nD. TRUST / VALUE GRID\n----------------------------------------------------------------\n\nBefore the FAQ, render a 4-card trust grid.\n\nThis section is NOT fake reviews.\nIt is a practical value explanation grid.\n\nCard themes:\n  - התאמה בין רכיב ליישום\n  - ליווי טכני בשלב האפיון\n  - זמינות וחשיבה על המשכיות\n  - בחירה שמקטינה סיכון תפעולי\n\n----------------------------------------------------------------\nE. TECHNICAL CONSULTATION CTA\n----------------------------------------------------------------\n\nRender a quieter dark panel before FAQ.\n\nMust include:\n  - short heading\n  - one paragraph\n  - one contact action\n\nThe mood should be \"let us review the requirement with you\", not \"buy now\".\n\n----------------------------------------------------------------\nF. FAQ SECTION\n----------------------------------------------------------------\n\nRender 5 to 7 FAQs using separate `<details>` blocks.\n\nFAQ rules:\n  - every question must be useful\n  - every answer must be concise and practical\n  - plus icon must again be on the RIGHT in RTL\n  - keep question text readable on mobile\n  - no numbering\n\n----------------------------------------------------------------\nG. CLOSING PARAGRAPH\n----------------------------------------------------------------\n\nWrite one short closing paragraph that reinforces practical decision quality,\nlong-term reliability, and the value of choosing correctly early.\n\nNo heading for this closing paragraph.\n\n----------------------------------------------------------------\nH. FINAL CTA BUTTON\n----------------------------------------------------------------\n\nRender one centered CTA button to the contact page.\n\n----------------------------------------------------------------\nI. AUTHOR / BRAND BLOCK\n----------------------------------------------------------------\n\nMandatory.\n\nRender a polished brand block with:\n  - company logo\n  - title: \"צוות גלעוז אלקטרוניקה\"\n  - two short paragraphs:\n    1. positioning and expertise\n    2. service / support / fit for industrial projects\n  - 3 action buttons:\n    - contact page\n    - sales email\n    - WhatsApp\n\nButton colors:\n  - contact: #0E6BA8\n  - email: #1F2D3D\n  - WhatsApp: #25D366\n\nHover states:\n  - subtle, readable, on-brand\n\n----------------------------------------------------------------\nJ. FLOATING BUTTONS\n----------------------------------------------------------------\n\nAdd:\n  - back-to-top fixed button on the LEFT\n  - WhatsApp fixed button on the LEFT below it\n\nExact placement:\n  - back-to-top: bottom 80px, left 20px\n  - WhatsApp: bottom 20px, left 20px\n\n----------------------------------------------------------------\nK. JSON-LD\n----------------------------------------------------------------\n\nAt the end of the article add:\n  1. Article schema\n  2. FAQPage schema\n\nSchema rules:\n  - use exact brand name: גלעוז אלקטרוניקה\n  - mainEntityOfPage should point to https://www.galoz.co.il/\n  - FAQ schema must match the visible FAQ content\n\n\nSECTION 6 — RTL ACCORDION IMPLEMENTATION\n\nFor both TOC and FAQ details blocks:\n\n- summary must remain `display:block`\n- do NOT use `display:flex` on `<summary>`\n- use a separate icon span with absolute positioning\n- for RTL:\n  - icon sits on the right\n  - text padding reserves space on the right\n- hover must keep contrast readable\n\nExact icon pattern:\n\n`<span style=\"position:absolute;right:16px;top:50%;transform:translateY(-50%);display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;border:2px solid #0E6BA8;border-radius:50%;font-size:0.95rem;color:#0E6BA8;font-weight:400;line-height:1;\">+</span>`\n\n\nSECTION 7 — VISUAL RULES\n\n1. Typography hierarchy must be obvious.\n2. Section spacing must feel steady and intentional.\n3. Do not repeat the same heavy border treatment on every section.\n4. Use restrained accents, not decorative clutter.\n5. Keep buttons aligned and balanced in RTL.\n6. Ensure tables, buttons, and FAQ rows stay readable on small screens.\n7. Keep cards and surfaces visually related through the same radius, border, and spacing logic.\n8. Motion is minimal and functional only.\n\n\nSECTION 8 — CONTENT RULES\n\n1. The article must help a technical buyer make a better decision.\n2. Use concrete evaluation criteria, not abstractions.\n3. Mention Galoz naturally where it helps the reader understand what kind of support exists.\n4. Do not oversell. Do not claim \"best\", \"number 1\", or guarantees.\n5. If products are shown, explain fit and use-case, not hype.\n6. No fake testimonials. If there are no verified reviews, do not invent them.\n7. Keep internal links useful and grounded.\n8. Do not add compliance or regulatory claims unless they are explicitly given.\n\n\nSECTION 9 — FINAL VALIDATION CHECKLIST\n\nBefore output, verify:\n\n  [ ] exactly zero H1 tags inside the article\n  [ ] root article is `lang=\"he\"` and `dir=\"rtl\"`\n  [ ] hero exists and feels decision-oriented\n  [ ] summary box exists\n  [ ] TOC exists and icon is on the right in RTL\n  [ ] at least 5 H2 sections exist\n  [ ] at least one HTML table exists\n  [ ] mid-article CTA exists\n  [ ] trust/value grid exists\n  [ ] technical consultation CTA exists\n  [ ] FAQ exists and matches FAQ schema\n  [ ] author block exists with logo and 3 actions\n  [ ] floating buttons are left-positioned and non-overlapping\n  [ ] no fake products or fake reviews were added\n  [ ] output is WordPress-safe and clean\n\n\nSECTION 10 — RETURN FORMAT\n\nReturn the final article only.\nNo explanation.\nNo wrapper text.\nNo markdown.\nNo code fence.\n",
+        "options": {
+          "maxIterations": 5
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        304,
+        10640
+      ],
+      "id": "0923c6df-3f52-44a7-8732-c31da072531c",
+      "name": "HTML",
+      "retryOnFail": true,
+      "waitBetweenTries": 5000
+    },
+    {
+      "parameters": {
+        "jsCode": "// Process response from Fetch Shopify Products\n// The response may be JSON (Shopify) or HTML (Konimbo/protected sites)\n// This node handles both cases gracefully\n\nconst rawData = $input.first().json;\nconst keyword = $('Grab New Cluster').first().json[\"Primary Keyword\"] || \"\";\nconst keywords = keyword.toLowerCase().split(/\\s+/);\nconst websiteUrl = $('Grab New Cluster').first().json.Website || \"\";\n\n// Try to get products from the response\nlet allProducts = [];\n\ntry {\n  // Check if we got a direct JSON response with products\n  if (rawData.products && Array.isArray(rawData.products)) {\n    allProducts = rawData.products;\n  }\n  // Check if the response is a text string (responseFormat: text)\n  else if (typeof rawData.data === 'string') {\n    const text = rawData.data.trim();\n    // Check if it looks like JSON (starts with { or [)\n    if (text.startsWith('{') || text.startsWith('[')) {\n      const parsed = JSON.parse(text);\n      allProducts = parsed.products || (Array.isArray(parsed) ? parsed : []);\n    } else {\n      // It's HTML or some other non-JSON response\n      // This happens with Konimbo sites or sites with anti-bot protection\n      allProducts = [];\n    }\n  }\n  // Check if there's a body field with text content\n  else if (typeof rawData.body === 'string') {\n    const text = rawData.body.trim();\n    if (text.startsWith('{') || text.startsWith('[')) {\n      const parsed = JSON.parse(text);\n      allProducts = parsed.products || (Array.isArray(parsed) ? parsed : []);\n    } else {\n      allProducts = [];\n    }\n  }\n} catch (e) {\n  // JSON parsing failed - response is not valid JSON (likely HTML)\n  allProducts = [];\n}\n\n// If no products found, return empty array (workflow will continue without products)\nif (!allProducts.length) {\n  return [{ json: { title: \"\", url: \"\", price: \"0\", compare_at_price: null, main_image: \"\", product_type: \"\", tags: [], available: false, score: 0, _no_products: true } }];\n}\n\n// Score each product by keyword relevance\nconst scored = allProducts\n  .filter(p => p.status === \"active\" || p.published_at)\n  .map(p => {\n    const text = [p.title, p.product_type, ...(p.tags || [])].join(\" \").toLowerCase();\n    let score = 0;\n    for (const kw of keywords) {\n      if (text.includes(kw)) score += 1;\n    }\n    const variant = (p.variants || [])[0] || {};\n    const img = (p.images || [])[0] || {};\n    return {\n      title: p.title || \"\",\n      url: \"https://\" + websiteUrl.replace(/^https?:\\/\\//, \"\") + \"/products/\" + p.handle,\n      price: variant.price || \"0\",\n      compare_at_price: variant.compare_at_price || null,\n      main_image: img.src || \"\",\n      product_type: p.product_type || \"\",\n      tags: p.tags || [],\n      available: variant.available !== false,\n      score\n    };\n  })\n  .filter(p => p.available && p.main_image)\n  .sort((a, b) => b.score - a.score)\n  .slice(0, 8);\n\nreturn scored.length > 0\n  ? scored.map(p => ({ json: p }))\n  : [{ json: { title: \"\", url: \"\", price: \"0\", compare_at_price: null, main_image: \"\", product_type: \"\", tags: [], available: false, score: 0, _no_products: true } }];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -992,
+        10640
+      ],
+      "id": "1167b755-ab59-4b3b-853b-9168bcae126e",
+      "name": "Gets the product pages"
+    },
+    {
+      "parameters": {
+        "jsCode": "// n8n Code node (JavaScript)\n// Input: items[].json = your array objects (each has data.markdown + data.metadata)\n\nfunction pickFirst(arr) {\n  return Array.isArray(arr) ? arr[0] : arr;\n}\n\nfunction cleanText(s) {\n  return (s || \"\")\n    .replace(/\\r/g, \"\")\n    .replace(/[ \\t]+\\n/g, \"\\n\")\n    .replace(/\\n{3,}/g, \"\\n\\n\")\n    .trim();\n}\n\nfunction extractTitle(md) {\n  const m = md.match(/^\\#\\s+(.+)$/m);\n  return m ? m[1].trim() : \"\";\n}\n\nfunction extractPrice(md) {\n  // match: \"51.00 ₪\" or \"35.00 ₪–65.00 ₪\"\n  const m = md.match(/(\\d+(?:\\.\\d+)?)\\s*₪(?:\\s*–\\s*(\\d+(?:\\.\\d+)?)\\s*₪)?/);\n  if (!m) return { price: \"\", price_min: null, price_max: null };\n  const min = parseFloat(m[1]);\n  const max = m[2] ? parseFloat(m[2]) : min;\n  return { price: m[0].replace(/\\s+/g, \" \").trim(), price_min: min, price_max: max };\n}\n\nfunction extractSku(md) {\n  const m = md.match(/מק[\"״']?ט:\\s*([A-Z0-9\\-]+)/i);\n  return m ? m[1].trim() : \"\";\n}\n\nfunction extractImages(md) {\n  // Capture markdown images: ![alt](url)\n  const urls = [];\n  const re = /!\\[[^\\]]*\\]\\((https?:\\/\\/[^)]+)\\)/g;\n  let match;\n  while ((match = re.exec(md)) !== null) {\n    const url = match[1];\n    if (url.includes(\"cdn.userway.org/widgetapp/images/\")) continue;\n    urls.push(url);\n  }\n\n  // Prefer wp-content images\n  const wp = urls.filter(u => u.includes(\"/wp-content/uploads/\"));\n  const main = wp[0] || urls[0] || \"\";\n\n  // Gallery = unique wp images (exclude main)\n  const gallery = [...new Set(wp.filter(u => u !== main))];\n\n  return { main_image: main, gallery_images: gallery };\n}\n\nfunction stripNoise(md) {\n  // Remove common noise blocks roughly (keep product content)\n  const patterns = [\n    /!\\[Spinner:[^\\]]*\\]\\([^)]+\\)\\n*/g,\n    /!\\[\\]\\(https:\\/\\/cdn\\.userway\\.org\\/widgetapp\\/images\\/[^)]+\\)\\n*/g,\n    /^40₪.*?\\[סגור\\]\\([^)]+\\)\\n*/m,\n    /^\\s*\\[דילוג לתוכן\\]\\([^)]+\\)\\n*/m,\n    /##\\s+מוצרים קשורים[\\s\\S]*$/m,        // cut everything after related products\n    /עגלת קניות[\\s\\S]*$/m                 // or cut everything after cart widget\n  ];\n\n  let out = md;\n  for (const p of patterns) out = out.replace(p, \"\");\n  return cleanText(out);\n}\n\nfunction extractWeightDimensions(md) {\n  // looks like:\n  // | משקל | 0.5 ק\"ג |\n  // | מידות | 30 × 30 × 20 סנטימטרים |\n  const weight = (md.match(/\\|\\s*משקל\\s*\\|\\s*([^|]+)\\|/m) || [])[1]?.trim() || \"\";\n  const dimensions = (md.match(/\\|\\s*מידות\\s*\\|\\s*([^|]+)\\|/m) || [])[1]?.trim() || \"\";\n  return { weight, dimensions };\n}\n\nfunction extractCategories(md) {\n  // Categories appear as markdown links line before H1 in your samples\n  // We'll take the last link-line before the first H1.\n  const idx = md.search(/^\\#\\s+/m);\n  if (idx === -1) return [];\n  const before = md.slice(0, idx);\n  const linkLine = before.trim().split(\"\\n\").reverse().find(l => l.includes(\"](https://mahsan.websreport.net/product-category/\"));\n  if (!linkLine) return [];\n  const cats = [];\n  const re = /\\[([^\\]]+)\\]\\((https?:\\/\\/[^)]+product-category[^)]+)\\)/g;\n  let m;\n  while ((m = re.exec(linkLine)) !== null) cats.push(m[1].trim());\n  return cats;\n}\n\nreturn items.map((item) => {\n  const mdRaw = item.json?.data?.markdown || \"\";\n  const meta = item.json?.data?.metadata || {};\n\n  const md = stripNoise(mdRaw);\n\n  const title = extractTitle(md);\n  const priceObj = extractPrice(md);\n  const sku = extractSku(md);\n  const imgs = extractImages(md);\n  const wd = extractWeightDimensions(md);\n  const categories = extractCategories(md);\n\n  return {\n    json: {\n      url: meta.url || meta.ogUrl || \"\",\n      title,\n      ...priceObj,\n      currency: \"ILS\",\n      sku,\n      categories,\n      ...imgs,\n      short_description: \"\", // optional: add if you decide where to slice it from md\n      variations: [],        // optional: parse if needed later\n      weight: wd.weight,\n      dimensions: wd.dimensions,\n      language: meta.language || \"he-IL\",\n      og_title: meta[\"og:title\"] || meta.ogTitle || \"\",\n      og_description: meta[\"og:description\"] || meta.ogDescription || meta.description || \"\",\n      modified_time: meta.modifiedTime || meta[\"article:modified_time\"] || \"\"\n    }\n  };\n});\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -432,
+        10656
+      ],
+      "id": "713c3e90-e1f9-40f8-a33e-9527c5a4b125",
+      "name": "Extracts the Product Image Data",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "operation": "scrape",
+        "url": "={{ $json.url }}",
+        "requestOptions": {}
+      },
+      "type": "@mendable/n8n-nodes-firecrawl.firecrawl",
+      "typeVersion": 1,
+      "position": [
+        -608,
+        10656
+      ],
+      "id": "d2e180de-f571-4aca-ba6a-a22df6e95aae",
+      "name": "Scrape product pages",
+      "retryOnFail": true,
+      "waitBetweenTries": 5000,
+      "credentials": {
+        "firecrawlApi": {
+          "id": "obgA87O5rxZBEggg",
+          "name": "Firecrawl account"
+        }
+      },
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        -800,
+        10640
+      ],
+      "id": "dc86c557-f02f-487f-a90d-44a83e3309f7",
+      "name": "Loops",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "url": "={{ $('Grab New Cluster').first().json.Website + '/products.json?limit=50' }}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "User-Agent",
+              "value": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
+            },
+            {
+              "name": "Referer",
+              "value": "={{ $('Grab New Cluster').first().json.Website }}"
+            },
+            {
+              "name": "Accept",
+              "value": "application/json, text/plain, */*"
+            }
+          ]
+        },
+        "options": {
+          "response": {
+            "response": {
+              "neverError": true,
+              "responseFormat": "text"
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -1152,
+        10640
+      ],
+      "id": "ce3c1827-bd4a-4d7f-a13c-2ca63010caee",
+      "name": "Fetch Shopify Products",
+      "retryOnFail": true,
+      "waitBetweenTries": 5000
+    },
+    {
+      "parameters": {
+        "amount": 3
+      },
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        -288,
+        10656
+      ],
+      "id": "1b28bf6d-8b39-44c7-95ee-f09a46e2c433",
+      "name": "Wait1",
+      "webhookId": "ec739d0c-616d-4259-94cb-cd7f632c1435",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "jsCode": "// Aggregate products from Gets the product pages\n// Input: items from Gets the product pages (each is a product)\nconst products = $input.all().map(i => i.json);\n\nreturn [\n  {\n    json: { products },\n    pairedItem: $input.all().map((_, index) => ({ item: index })),\n  },\n];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -32,
+        10624
+      ],
+      "id": "4cc3e0ad-423e-41b4-8365-195049c9bfe6",
+      "name": "Code in JavaScript"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=You are a senior Hebrew copywriter and social media strategist with strong B2B + storytelling skills.\n\nINPUT:\nYou will receive a full article written in HEBREW.\n{{ $json.output }}\n\nOBJECTIVE:\nCreate 4 separate social media posts derived from the article content — one for each platform:\n1) LinkedIn\n2) Facebook\n3) Instagram\n4) X (Twitter)\n\nLANGUAGE RULES:\n- INPUT language: Hebrew\n- OUTPUT language: Hebrew only\n- Do NOT use English words unless they are unavoidable brand/product names\n- Natural Israeli Hebrew (not robotic, not translated)\n\nCORE QUALITY RULES:\n- Do NOT “summarize the article” — convert its insights into high-performing posts\n- Each platform must be UNIQUE (no repeated sentences across platforms)\n- Use concrete takeaways and examples from the article, not vague inspiration\n- If the article is about a product/service: emphasize value, outcome, and clarity (no hype)\n- Do NOT explain the process; output only the final posts\n\n────────────────────────\nPLATFORM RULES (STRICT)\n────────────────────────\n\n1️⃣ LinkedIn (MUST BE THE STRONGEST POST)\nGoal: Thought leadership + credibility + depth.\n\nLength & structure:\n- MUST be 1,000–1,600 characters (Hebrew chars, including spaces)\n- MUST be at least as detailed and valuable as the Facebook post\n- 3–6 short paragraphs (each 1–3 lines)\n- Include:\n  A) Hook line that creates tension/curiosity (not cliché)\n  B) 3 actionable points OR a mini-framework (numbered 1–3 is allowed)\n  C) One concrete micro-example / scenario\n  D) A reflective question at the end\n- Emojis: NONE (or max 1 if absolutely needed)\n- Hashtags: 1–3 in Hebrew only (optional, subtle)\n\nTone:\n- Professional, confident, human, not preachy\n\n2️⃣ Facebook\nGoal: Warm, community conversation.\n\nLength & structure:\n- 700–1,200 characters\n- 2–4 paragraphs\n- 1–2 emojis allowed\n- End with a question\n- 2–5 hashtags in Hebrew\n\n3️⃣ Instagram\nGoal: Scroll-stopping + punchy.\n\nLength & structure:\n- 500–900 characters\n- Strong first line (very short)\n- Short sentences, rhythm, emotional tone\n- 2–4 emojis allowed (not excessive)\n- End with a soft CTA question\n- 5–10 hashtags in Hebrew\n- Avoid long blocks; keep it visually scannable\n\n4️⃣ X (Twitter)\nGoal: Sharp, single idea.\n\nLength & structure:\n- MUST fit within 280 characters total\n- One main point only\n- No emojis\n- Hashtags: none (or max 1 only if essential)\n\n────────────────────────\nOUTPUT FORMAT (EXACT)\n────────────────────────\nReturn the content exactly in this structure:\n\n---\n🔹 LinkedIn:\n[LinkedIn post text]\n\n🔹 Facebook:\n[Facebook post text]\n\n🔹 Instagram:\n[Instagram post text]\n\n🔹 X:\n[X post text]\n---\n\nFINAL CHECK BEFORE YOU OUTPUT:\n- LinkedIn is 1,000–1,600 characters and includes hook + 3 points/framework + micro-example + question\n- No sentence is repeated between platforms\n- All text is Hebrew\n",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        -1072,
+        10160
+      ],
+      "id": "f4dd96da-4844-4924-b4c3-90d20c48793b",
+      "name": "Social Media AI Prompt"
+    },
+    {
+      "parameters": {
+        "jsCode": "/**\n * n8n Code node (JavaScript)\n * Input: item.json.output (string) OR item.json.text (string) OR item.json (string)\n * Output: columns ready for Google Sheets mapping\n */\n\nfunction pickText(item) {\n  return (\n    item.json.output ??\n    item.json.text ??\n    item.json.result ??\n    (typeof item.json === 'string' ? item.json : null) ??\n    ''\n  );\n}\n\nfunction normalize(s) {\n  return (s || '')\n    .replace(/\\r\\n/g, '\\n')\n    .replace(/[ \\t]+\\n/g, '\\n')\n    .trim();\n}\n\nfunction extractSection(fullText, label) {\n  // Matches: 🔹 LinkedIn: ... until next 🔹 or end\n  const re = new RegExp(\n    String.raw`(?:^|\\n)\\s*(?:🔹\\s*)?${label}\\s*:\\s*([\\s\\S]*?)(?=\\n\\s*(?:🔹\\s*)?(?:LinkedIn|Facebook|Instagram|X)\\s*:|\\s*$)`,\n    'i'\n  );\n  const m = fullText.match(re);\n  return normalize(m ? m[1] : '');\n}\n\nfunction makePreview(s, max = 120) {\n  const t = normalize(s).replace(/\\n+/g, ' ');\n  return t.length > max ? t.slice(0, max - 1) + '…' : t;\n}\n\nconst out = [];\n\nfor (const item of $input.all()) {\n  const raw = normalize(pickText(item));\n\n  const linkedin = extractSection(raw, 'LinkedIn');\n  const facebook = extractSection(raw, 'Facebook');\n  const instagram = extractSection(raw, 'Instagram');\n  const xpost = extractSection(raw, 'X');\n\n  out.push({\n    json: {\n      // These keys should match your Google Sheet columns (recommended):\n      LinkedIn: linkedin,\n      Facebook: facebook,\n      Instagram: instagram,\n      X: xpost,\n\n      // Optional useful fields:\n      LinkedIn_Preview: makePreview(linkedin),\n      Facebook_Preview: makePreview(facebook),\n      Instagram_Preview: makePreview(instagram),\n      X_Preview: makePreview(xpost),\n\n      // Store original text too (optional):\n      Raw_Output: raw,\n    },\n  });\n}\n\nreturn out;\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -752,
+        10160
+      ],
+      "id": "329699a7-a401-4e3b-a507-ea65eec479dc",
+      "name": "Filtering Data"
+    },
+    {
+      "parameters": {
+        "model": "anthropic/claude-opus-4.6",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [
+        -1072,
+        10384
+      ],
+      "id": "3c77336f-7706-4355-9709-59afe6f711e8",
+      "name": "OpenRouter Chat Model",
+      "credentials": {
+        "openRouterApi": {
+          "id": "3KkS143m7oeIPEr2",
+          "name": "OpenRouter account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "appendOrUpdate",
+        "documentId": {
+          "__rl": true,
+          "value": "1Jg9EY4LLnxhgP-YNYgb_9T9o_IyK9_DixyVg2VH0lEY",
+          "mode": "list",
+          "cachedResultName": "galoz.co.il//N8N",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1Jg9EY4LLnxhgP-YNYgb_9T9o_IyK9_DixyVg2VH0lEY/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 683869339,
+          "mode": "list",
+          "cachedResultName": "מחקר + כתבות",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/17-n-H002JeP9pjEu8A1oEpxjsT-P4UyPPI9rUPz8Aio/edit#gid=683869339"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "row_id": "={{ $('Grab New Cluster').item.json.row_id }}",
+            "Linkedin": "={{ $json.LinkedIn }}",
+            "Facebook": "={{ $json.Facebook }}",
+            "Instagram": "={{ $json.Instagram }}",
+            "Twitter ": "={{ $json.X }}"
+          },
+          "matchingColumns": [
+            "row_id"
+          ],
+          "schema": [
+            {
+              "id": "row_id",
+              "displayName": "row_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Website",
+              "displayName": "Website",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "עמוד אב",
+              "displayName": "עמוד אב",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Pillar",
+              "displayName": "Pillar",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Cluster",
+              "displayName": "Cluster",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Intent",
+              "displayName": "Intent",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Primary Keyword",
+              "displayName": "Primary Keyword",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Keywords",
+              "displayName": "Keywords",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Researched",
+              "displayName": "Researched",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Type",
+              "displayName": "Type",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Parent ID",
+              "displayName": "Parent ID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Category ID",
+              "displayName": "Category ID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Published",
+              "displayName": "Published",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "URL",
+              "displayName": "URL",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Date",
+              "displayName": "Date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Facebook",
+              "displayName": "Facebook",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Instagram",
+              "displayName": "Instagram",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Twitter ",
+              "displayName": "Twitter ",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Linkedin",
+              "displayName": "Linkedin",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -576,
+        10160
+      ],
+      "id": "6084af27-b272-471f-a420-c2a222f00b1e",
+      "name": "Update Google Sheet with Posts",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "OG3OImxGaOh6b02s",
+          "name": "כרמית גוגל שיטס"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "PUT",
+        "url": "=https://mapril.websmail.net/wp-json/wp/v2/pages/{{$node[\"Create Page\"].json[\"id\"]}}\n",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpBasicAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"featured_media\": {{ $item(0).$node[\"Image Alt Settings\"].json.id || $item(0).$node[\"Upload to WordPress (Media)\"].json.id || $item(0).$node[\"Loop Over Items1\"].json.id }}\n}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        2768,
+        10720
+      ],
+      "id": "1f0c68b2-cc46-4e09-a8ab-f5fdabefd8cf",
+      "name": "Update Featured Image3",
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "Zsbfn3EpEX7qKf7l",
+          "name": "https://mapril.websmail.net/ (Storage 2 - Tomer)"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Extract the taskId from the kie.ai createTask response\n// and initialize polling state (attempts + start timestamp)\nconst response = $json;\nconst taskId = response.data?.taskId || response.data?.recordId || null;\n\nif (!taskId) {\n  throw new Error('No taskId found in kie.ai response: ' + JSON.stringify(response));\n}\n\nreturn [{\n  json: {\n    taskId: taskId,\n    status: 'pending',\n    attempts: 0,\n    startedAt: Date.now(),\n    maxElapsedMs: 5 * 60 * 1000   // give each image up to 5 minutes\n  }\n}];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -656,
+        11424
+      ],
+      "id": "f27a5567-8fb4-4260-9ebb-700327522fc0",
+      "name": "Extract Task ID"
+    },
+    {
+      "parameters": {
+        "url": "=https://api.kie.ai/api/v1/jobs/recordInfo?taskId={{ $json.taskId }}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer 165cc5401c1882a5442b943172fc6afe"
+            }
+          ]
+        },
+        "options": {
+          "response": {
+            "response": {
+              "neverError": true
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        -208,
+        11424
+      ],
+      "id": "b5ba45f5-c983-429e-bc7c-dba3bf459860",
+      "name": "Poll Task Status"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "is-done-condition",
+              "leftValue": "={{ $json.done }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "true"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        224,
+        11424
+      ],
+      "id": "8f07216b-dc34-453d-a45b-bb06d1b42d33",
+      "name": "Is Done?"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Grab New Cluster": {
+      "main": [
+        [
+          {
+            "node": "Message a model1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fix Links": {
+      "main": [
+        [
+          {
+            "node": "Search and optionally scrape search results",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "slug": {
+      "main": [
+        [
+          {
+            "node": "Post Title",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Post Title": {
+      "main": [
+        [
+          {
+            "node": "Meta Title",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Meta Description": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Meta Title": {
+      "main": [
+        [
+          {
+            "node": "Meta Description",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Over Items": {
+      "main": [
+        [
+          {
+            "node": "Collect images URLS",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Image Generation",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cleaning Image Prompts": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Collect images URLS": {
+      "main": [
+        [
+          {
+            "node": "Preparing Image Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Save image URLS": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Download Image (PNG URL → Binary)": {
+      "main": [
+        [
+          {
+            "node": "Upload to WordPress (Media)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Upload to WordPress (Media)": {
+      "main": [
+        [
+          {
+            "node": "Image Alt Settings",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Image Alt Settings": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Post Plan": {
+      "main": [
+        [
+          {
+            "node": "Writing Blog",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Writing Blog": {
+      "main": [
+        [
+          {
+            "node": "Image Planning",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Social Media AI Prompt",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Image Planning": {
+      "main": [
+        [
+          {
+            "node": "Cleaning Image Prompts",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Preparing Image Data": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Over Items1": {
+      "main": [
+        [
+          {
+            "node": "Preparing Images for HTML",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Download Image (PNG URL → Binary)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Preparing Images for HTML": {
+      "main": [
+        [
+          {
+            "node": "Fetch Shopify Products",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenRouter Chat Model2": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Post Plan",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenRouter Chat Model3": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Writing Blog",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenRouter Chat Model5": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Image Planning",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenRouter Chat Model6": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "HTML",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenRouter Chat Model7": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "slug",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenRouter Chat Model8": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Post Title",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenRouter Chat Model9": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Meta Title",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenRouter Chat Model10": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Meta Description",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [],
+        [
+          {
+            "node": "Create Page",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Article Saving ": {
+      "main": [
+        [
+          {
+            "node": "Check as completed on Sheets1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create Page": {
+      "main": [
+        [
+          {
+            "node": "Update Featured Image3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Message a model": {
+      "main": [
+        [
+          {
+            "node": "Fix Links",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Message a model1": {
+      "main": [
+        [
+          {
+            "node": "Message a model",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Grab New Cluster",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update meta title description Yoast3": {
+      "main": [
+        [
+          {
+            "node": "Article Saving ",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Search and optionally scrape search results": {
+      "main": [
+        [
+          {
+            "node": "Post Plan",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTML": {
+      "main": [
+        [
+          {
+            "node": "slug",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gets the product pages": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extracts the Product Image Data": {
+      "main": [
+        [
+          {
+            "node": "Wait1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Scrape product pages": {
+      "main": [
+        [
+          {
+            "node": "Extracts the Product Image Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loops": {
+      "main": [
+        [],
+        [
+          {
+            "node": "Scrape product pages",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait1": {
+      "main": [
+        [
+          {
+            "node": "Loops",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "HTML",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Social Media AI Prompt": {
+      "main": [
+        [
+          {
+            "node": "Filtering Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filtering Data": {
+      "main": [
+        [
+          {
+            "node": "Update Google Sheet with Posts",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenRouter Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Social Media AI Prompt",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update Featured Image3": {
+      "main": [
+        [
+          {
+            "node": "Update meta title description Yoast3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fetch Shopify Products": {
+      "main": [
+        [
+          {
+            "node": "Gets the product pages",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Image Generation": {
+      "main": [
+        [
+          {
+            "node": "Extract Task ID",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract Task ID": {
+      "main": [
+        [
+          {
+            "node": "Wait",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait": {
+      "main": [
+        [
+          {
+            "node": "Poll Task Status",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Poll Task Status": {
+      "main": [
+        [
+          {
+            "node": "Getting URLS",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Getting URLS": {
+      "main": [
+        [
+          {
+            "node": "Is Done?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Is Done?": {
+      "main": [
+        [
+          {
+            "node": "Save image URLS",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Wait",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "timeSavedMode": "fixed",
+    "callerPolicy": "workflowsFromSameOwner",
+    "availableInMCP": false,
+    "errorWorkflow": "yB7bNb8AVBrqpmsA"
+  },
+  "versionId": "03b35c85-87d0-4f48-b786-18f43b44684e",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "d687f3db8cf73bff0dc9f02849712fbaa1b2ea972c000594417cec61549f3360"
+  },
+  "id": "Xrd1rp2t51uJHSoE",
+  "tags": [
+    {
+      "updatedAt": "2025-12-25T09:04:33.025Z",
+      "createdAt": "2025-12-25T09:04:33.025Z",
+      "id": "bAQ5UBM4nFLDhksc",
+      "name": "תומר"
+    },
+    {
+      "updatedAt": "2026-04-13T11:36:12.904Z",
+      "createdAt": "2026-04-13T11:36:12.904Z",
+      "id": "mMmAQgBNTDOFuTXd",
+      "name": "galoz.co.il"
+    }
+  ]
+}
+

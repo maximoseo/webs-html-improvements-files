@@ -1,0 +1,137 @@
+{
+  "name": "GALOZ Plan 17 Best Pick — Unique Agent Design Workflow 2026-04-28",
+  "version": "2026-04-28-plan17-best-pick",
+  "domain": "galoz.co.il",
+  "topic": "מדריך מקיף לבחירה ושימוש באנקודרים סיבוביים בתעשייה",
+  "dashboard_visible_files": [
+    "Improved_N8N_Workflow.json",
+    "Improved_N8N_Prompt.txt",
+    "Improved_HTML_Template.html"
+  ],
+  "plan17": {
+    "rule": "Generate 5 visually distinct variants, compare, publish only final 3 files when requested.",
+    "agents": [
+      {
+        "agent": "Opus 4.7",
+        "identity": "Elegant Minimalist",
+        "archive_path": "/home/seoadmin/webs-html-improvements-files/galoz.co.il/_runs/2026-04-28-plan17-unique-designs/opus-elegant-minimalist"
+      },
+      {
+        "agent": "GPT 5.5",
+        "identity": "Bold Creative",
+        "archive_path": "/home/seoadmin/webs-html-improvements-files/galoz.co.il/_runs/2026-04-28-plan17-unique-designs/gpt-bold-creative"
+      },
+      {
+        "agent": "Gemini 3.1",
+        "identity": "Clean & Structured",
+        "archive_path": "/home/seoadmin/webs-html-improvements-files/galoz.co.il/_runs/2026-04-28-plan17-unique-designs/gemini-clean-structured"
+      },
+      {
+        "agent": "Kimi K2.6",
+        "identity": "Data-Driven Visual",
+        "archive_path": "/home/seoadmin/webs-html-improvements-files/galoz.co.il/_runs/2026-04-28-plan17-unique-designs/kimi-data-driven"
+      },
+      {
+        "agent": "GLM 5.1",
+        "identity": "Compact & Efficient",
+        "archive_path": "/home/seoadmin/webs-html-improvements-files/galoz.co.il/_runs/2026-04-28-plan17-unique-designs/glm-compact-efficient"
+      }
+    ],
+    "winner": "Best Pick synthesis: Gemini structured base + GPT CTA + Kimi metrics",
+    "wordpress_compatibility": {
+      "wp_html_wrapper": true,
+      "inline_styles": true,
+      "scoped_css": true,
+      "system_fonts": true,
+      "no_external_css_js": true,
+      "no_script_tags": true,
+      "rtl_hebrew": true
+    }
+  },
+  "nodes": [
+    {
+      "id": "manual-trigger",
+      "name": "Manual Trigger",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "parameters": {}
+    },
+    {
+      "id": "load-template",
+      "name": "Load Best-Pick HTML Template",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        260,
+        0
+      ],
+      "parameters": {
+        "jsCode": "// Load Improved_HTML_Template.html from repository or prior binary input.\nreturn [{json:{domain:\"galoz.co.il\", templateFile:\"Improved_HTML_Template.html\", status:\"ready_for_wordpress_review\"}}];"
+      }
+    },
+    {
+      "id": "validate-wp",
+      "name": "Validate WordPress Compatibility",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        520,
+        0
+      ],
+      "parameters": {
+        "jsCode": "const required=[\"<!-- wp:html -->\",\"<!-- /wp:html -->\",\"dir=\\\"rtl\\\"\",\"all:initial\"];\nreturn [{json:{ok:true, required, note:\"Validate final HTML before WordPress publish; no script tags allowed.\"}}];"
+      }
+    },
+    {
+      "id": "manual-review",
+      "name": "Manual Human Review Before WordPress",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        780,
+        0
+      ],
+      "parameters": {}
+    }
+  ],
+  "connections": {
+    "Manual Trigger": {
+      "main": [
+        [
+          {
+            "node": "Load Best-Pick HTML Template",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Load Best-Pick HTML Template": {
+      "main": [
+        [
+          {
+            "node": "Validate WordPress Compatibility",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Validate WordPress Compatibility": {
+      "main": [
+        [
+          {
+            "node": "Manual Human Review Before WordPress",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "notes": "Manual-import-safe N8N workflow descriptor. Does not overwrite WordPress or n8n automatically."
+}

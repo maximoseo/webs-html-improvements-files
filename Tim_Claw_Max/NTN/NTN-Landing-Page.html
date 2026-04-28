@@ -1,0 +1,767 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NTN | אוטומציות שיווק חכמות</title>
+    <meta name="description" content="פתרונות אוטומציה מתקדמים לעסקים. חסכו זמן, הגדילו הכנסות.">
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Assistant:wght@400;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Assistant', Arial, sans-serif; background: #ffffff; color: #1a1a2e; line-height: 1.7; }
+        
+        /* Container */
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+        
+        /* Colors */
+        :root {
+            --primary: #1a1a2e;
+            --accent: #e94560;
+            --accent-dark: #c73e54;
+            --text: #333333;
+            --text-light: #666666;
+            --bg: #ffffff;
+            --bg-alt: #f8f9fa;
+            --surface: #ffffff;
+            --border: #e5e5e5;
+        }
+        
+        /* Buttons */
+        .btn {
+            display: inline-block;
+            padding: 16px 40px;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: none;
+        }
+        .btn-primary {
+            background: var(--accent);
+            color: #fff;
+            box-shadow: 0 4px 16px rgba(233, 69, 96, 0.3);
+        }
+        .btn-primary:hover {
+            background: var(--accent-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 24px rgba(233, 69, 96, 0.4);
+        }
+        .btn-outline {
+            background: transparent;
+            color: var(--primary);
+            border: 2px solid var(--primary);
+        }
+        .btn-outline:hover {
+            background: var(--primary);
+            color: #fff;
+        }
+        
+        /* Header */
+        header {
+            background: var(--bg);
+            border-bottom: 1px solid var(--border);
+            padding: 20px 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .header-inner {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--primary);
+            text-decoration: none;
+        }
+        .logo span { color: var(--accent); }
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 32px;
+        }
+        nav a {
+            color: var(--text);
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s;
+        }
+        nav a:hover { color: var(--accent); }
+        
+        /* Hero */
+        .hero {
+            background: linear-gradient(135deg, var(--primary) 0%, #16213e 100%);
+            color: #fff;
+            padding: 100px 0 120px;
+            text-align: center;
+        }
+        .hero h1 {
+            font-size: 3.2rem;
+            font-weight: 700;
+            margin-bottom: 24px;
+            line-height: 1.3;
+        }
+        .hero h1 span { color: var(--accent); }
+        .hero p {
+            font-size: 1.3rem;
+            color: rgba(255,255,255,0.85);
+            max-width: 700px;
+            margin: 0 auto 40px;
+        }
+        .hero-buttons {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        .hero .btn-outline {
+            color: #fff;
+            border-color: rgba(255,255,255,0.3);
+        }
+        .hero .btn-outline:hover {
+            background: rgba(255,255,255,0.1);
+            border-color: #fff;
+        }
+        
+        /* Trust Banner */
+        .trust-banner {
+            background: var(--bg-alt);
+            border-top: 1px solid var(--border);
+            border-bottom: 1px solid var(--border);
+            padding: 20px 0;
+        }
+        .trust-items {
+            display: flex;
+            justify-content: center;
+            gap: 48px;
+            flex-wrap: wrap;
+        }
+        .trust-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--text);
+            font-size: 1rem;
+        }
+        .trust-item span:first-child {
+            color: var(--accent);
+            font-weight: 700;
+            font-size: 1.2rem;
+        }
+        
+        /* Section */
+        section { padding: 80px 0; }
+        .section-header {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+        .section-header h2 {
+            font-size: 2.4rem;
+            color: var(--primary);
+            margin-bottom: 16px;
+        }
+        .section-header p {
+            color: var(--text-light);
+            font-size: 1.15rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        /* Services Grid */
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 32px;
+        }
+        .service-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 32px;
+            transition: all 0.3s ease;
+        }
+        .service-card:hover {
+            border-color: var(--accent);
+            box-shadow: 0 8px 32px rgba(0,0,0,0.08);
+            transform: translateY(-4px);
+        }
+        .service-icon {
+            width: 64px;
+            height: 64px;
+            background: linear-gradient(135deg, var(--accent), #ff6b6b);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+        }
+        .service-card h3 {
+            font-size: 1.4rem;
+            color: var(--primary);
+            margin-bottom: 12px;
+        }
+        .service-card p {
+            color: var(--text-light);
+            font-size: 1rem;
+            line-height: 1.7;
+        }
+        
+        /* How It Works */
+        .how-it-works {
+            background: var(--bg-alt);
+        }
+        .steps {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 32px;
+            position: relative;
+        }
+        .step {
+            text-align: center;
+            position: relative;
+        }
+        .step-number {
+            width: 56px;
+            height: 56px;
+            background: var(--accent);
+            color: #fff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin: 0 auto 20px;
+        }
+        .step h3 {
+            font-size: 1.2rem;
+            color: var(--primary);
+            margin-bottom: 10px;
+        }
+        .step p {
+            color: var(--text-light);
+            font-size: 0.95rem;
+        }
+        
+        /* Stats */
+        .stats {
+            background: linear-gradient(135deg, var(--primary) 0%, #16213e 100%);
+            color: #fff;
+            padding: 60px 0;
+        }
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 32px;
+            text-align: center;
+        }
+        .stat-item h3 {
+            font-size: 3rem;
+            font-weight: 700;
+            color: var(--accent);
+            margin-bottom: 8px;
+        }
+        .stat-item p {
+            font-size: 1rem;
+            color: rgba(255,255,255,0.8);
+        }
+        
+        /* Testimonials */
+        .testimonials-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 32px;
+        }
+        .testimonial {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 32px;
+        }
+        .testimonial-text {
+            font-size: 1.05rem;
+            color: var(--text);
+            line-height: 1.8;
+            margin-bottom: 24px;
+            font-style: italic;
+        }
+        .testimonial-author {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+        .testimonial-avatar {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, var(--accent), #ff6b6b);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-weight: 700;
+            font-size: 1.2rem;
+        }
+        .testimonial-info h4 {
+            font-size: 1rem;
+            color: var(--primary);
+        }
+        .testimonial-info p {
+            font-size: 0.9rem;
+            color: var(--text-light);
+        }
+        
+        /* FAQ */
+        .faq-list {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        details {
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            margin-bottom: 16px;
+            overflow: hidden;
+            background: var(--surface);
+        }
+        summary {
+            padding: 20px 24px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            color: var(--primary);
+            cursor: pointer;
+            list-style: none;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        summary::-webkit-details-marker { display: none; }
+        summary::after {
+            content: "+";
+            font-size: 1.5rem;
+            color: var(--accent);
+            font-weight: 300;
+        }
+        details[open] summary::after { content: "−"; }
+        details[open] summary { border-bottom: 1px solid var(--border); }
+        .faq-answer {
+            padding: 20px 24px;
+            color: var(--text);
+            line-height: 1.8;
+        }
+        
+        /* CTA Section */
+        .cta-section {
+            background: linear-gradient(135deg, var(--accent) 0%, #ff6b6b 100%);
+            color: #fff;
+            text-align: center;
+            padding: 100px 0;
+        }
+        .cta-section h2 {
+            font-size: 2.6rem;
+            margin-bottom: 20px;
+        }
+        .cta-section p {
+            font-size: 1.2rem;
+            margin-bottom: 40px;
+            opacity: 0.95;
+        }
+        .cta-section .btn {
+            background: #fff;
+            color: var(--accent);
+        }
+        .cta-section .btn:hover {
+            background: var(--primary);
+            color: #fff;
+        }
+        
+        /* Footer */
+        footer {
+            background: var(--primary);
+            color: rgba(255,255,255,0.7);
+            padding: 60px 0 30px;
+        }
+        .footer-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
+            gap: 48px;
+            margin-bottom: 40px;
+        }
+        .footer-about .logo {
+            color: #fff;
+            margin-bottom: 16px;
+            display: inline-block;
+        }
+        .footer-about p {
+            font-size: 0.95rem;
+            line-height: 1.7;
+        }
+        .footer-col h4 {
+            color: #fff;
+            font-size: 1.1rem;
+            margin-bottom: 20px;
+        }
+        .footer-col ul {
+            list-style: none;
+        }
+        .footer-col li {
+            margin-bottom: 12px;
+        }
+        .footer-col a {
+            color: rgba(255,255,255,0.7);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        .footer-col a:hover { color: var(--accent); }
+        .footer-bottom {
+            border-top: 1px solid rgba(255,255,255,0.1);
+            padding-top: 30px;
+            text-align: center;
+            font-size: 0.9rem;
+        }
+        
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .services-grid, .testimonials-grid { grid-template-columns: repeat(2, 1fr); }
+            .steps { grid-template-columns: repeat(2, 1fr); }
+            .stats-grid { grid-template-columns: repeat(2, 1fr); }
+            .footer-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 2.2rem; }
+            .services-grid, .testimonials-grid, .steps { grid-template-columns: 1fr; }
+            .stats-grid { grid-template-columns: repeat(2, 1fr); gap: 24px; }
+            .stat-item h3 { font-size: 2.2rem; }
+            nav ul { display: none; }
+            .trust-items { gap: 24px; }
+            .footer-grid { grid-template-columns: 1fr; gap: 32px; }
+        }
+        
+        /* Floating Buttons */
+        .floating-btn {
+            position: fixed;
+            bottom: 24px;
+            left: 24px;
+            width: 56px;
+            height: 56px;
+            background: var(--accent);
+            color: #fff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            font-size: 1.5rem;
+            box-shadow: 0 4px 16px rgba(233, 69, 96, 0.4);
+            z-index: 999;
+            transition: all 0.3s ease;
+        }
+        .floating-btn:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 6px 24px rgba(233, 69, 96, 0.5);
+        }
+        .floating-btn.whatsapp { background: #25D366; box-shadow: 0 4px 16px rgba(37, 211, 102, 0.4); }
+        .floating-btn.whatsapp:hover { box-shadow: 0 6px 24px rgba(37, 211, 102, 0.5); }
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <header>
+        <div class="container header-inner">
+            <a href="#" class="logo">NT<span>N</span></a>
+            <nav>
+                <ul>
+                    <li><a href="#services">שירותים</a></li>
+                    <li><a href="#how">איך זה עובד</a></li>
+                    <li><a href="#testimonials">המלצות</a></li>
+                    <li><a href="#faq">שאלות</a></li>
+                    <li><a href="#contact">צור קשר</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero -->
+    <section class="hero">
+        <div class="container">
+            <h1>אוטומציות שיווק ש<br><span>מגדילות את העסק שלך</span></h1>
+            <p>חסכו שעות יקרות. התמקדו במה שחשוב. תנו למערכות חכמות לעבוד בשבילכם 24/7</p>
+            <div class="hero-buttons">
+                <a href="#contact" class="btn btn-primary">התחל עכשיו</a>
+                <a href="#how" class="btn btn-outline">ראה איך זה עובד</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Trust Banner -->
+    <div class="trust-banner">
+        <div class="container">
+            <div class="trust-items">
+                <div class="trust-item">
+                    <span>✓</span>
+                    <span>חיסכון של 20+ שעות בחודש</span>
+                </div>
+                <div class="trust-item">
+                    <span>✓</span>
+                    <span>הגדלת המרות ב-300%</span>
+                </div>
+                <div class="trust-item">
+                    <span>✓</span>
+                    <span>תמיכה 24/7</span>
+                </div>
+                <div class="trust-item">
+                    <span>✓</span>
+                    <span>ללא התחייבות</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Services -->
+    <section id="services">
+        <div class="container">
+            <div class="section-header">
+                <h2>פתרונות אוטומציה מתקדמים</h2>
+                <p>מערכות חכמות שעובדות בשבילכם, מבלי שתצטרכו לגעת בכלום</p>
+            </div>
+            <div class="services-grid">
+                <div class="service-card">
+                    <div class="service-icon">📧</div>
+                    <h3>אוטומציית מיילים</h3>
+                    <p>סדרות דיוור אוטומטיות שמתאימות לכל שלב במשפך המכירה. מהתנעה ועד סגירה.</p>
+                </div>
+                <div class="service-card">
+                    <div class="service-icon">💬</div>
+                    <h3>צ'אט בוטים חכמים</h3>
+                    <p>נציג וירטואלי שעונה ללקוחות 24/7, מבלי שתצטרכו להרים אצבע.</p>
+                </div>
+                <div class="service-card">
+                    <div class="service-icon">📱</div>
+                    <h3>הודעות SMS/WhatsApp</h3>
+                    <p>תזכורות, עדכונים והודעות מותאמות אישית שנשלחות אוטומטית בזמן הנכון.</p>
+                </div>
+                <div class="service-card">
+                    <div class="service-icon">📅</div>
+                    <h3>ניהול לידים</h3>
+                    <p>מערכת חכמה שמדרגת לידים, עוקבת אחרי כל אינטראקציה ומזינה את צוות המכירות.</p>
+                </div>
+                <div class="service-card">
+                    <div class="service-icon">📊</div>
+                    <h3>דוחות וניתוח</h3>
+                    <p>תובנות מעמיקות על ביצועי הקמפיינים עם המלצות לשיפור מיידי.</p>
+                </div>
+                <div class="service-card">
+                    <div class="service-icon">🔗</div>
+                    <h3>אינטגרציות</h3>
+                    <p>חיבור לכל הכלים שאתם כבר משתמשים: CRM, חנות, מערכות תשלום ועוד.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works -->
+    <section id="how" class="how-it-works">
+        <div class="container">
+            <div class="section-header">
+                <h2>איך זה עובד</h2>
+                <p>4 צעדים פשוטים להתחברות מלאה למערכת</p>
+            </div>
+            <div class="steps">
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <h3>שיחת היכרות</h3>
+                    <p>נבין יחד את הצרכים שלכם ואת התהליכים הקיימים</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <h3>תכנון</h3>
+                    <p>נבנה תוכנית אוטומציה מותאמת אישית לעסק שלכם</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <h3>הטמעה</h3>
+                    <p>נבנה ונשיק את המערכת תוך מספר ימים</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">4</div>
+                    <h3>צמיחה</h3>
+                    <p>תראו תוצאות מהיום הראשון ותמשיכו לצמוח</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats -->
+    <section class="stats">
+        <div class="container">
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <h3>500+</h3>
+                    <p>לקוחות מרוצים</p>
+                </div>
+                <div class="stat-item">
+                    <h3>20+</h3>
+                    <p>שעות חיסכון בחודש</p>
+                </div>
+                <div class="stat-item">
+                    <h3>300%</h3>
+                    <p>עלייה בהמרות</p>
+                </div>
+                <div class="stat-item">
+                    <h3>99.9%</h3>
+                    <p>זמינות המערכת</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials -->
+    <section id="testimonials">
+        <div class="container">
+            <div class="section-header">
+                <h2>לקוחות ממליצים</h2>
+                <p>מה העסקים שלנו אומרים עלינו</p>
+            </div>
+            <div class="testimonials-grid">
+                <div class="testimonial">
+                    <p class="testimonial-text">"המערכת חסכה לנו 25 שעות בשבוע. הצוות יכול להתמקד במכירות במקום במשימות טכניות."</p>
+                    <div class="testimonial-author">
+                        <div class="testimonial-avatar">י</div>
+                        <div class="testimonial-info">
+                            <h4>יוסי כהן</h4>
+                            <p>מנכ"ל, חברת הייטק</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="testimonial">
+                    <p class="testimonial-text">"ההמרות שלנו עלו ב-400% תוך 3 חודשים. ההשקעה החזירה את עצמה תוך חודש."</p>
+                    <div class="testimonial-author">
+                        <div class="testimonial-avatar">מ</div>
+                        <div class="testimonial-info">
+                            <h4>מיכל לוי</h4>
+                            <p>בעלים, חנות אונליין</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="testimonial">
+                    <p class="testimonial-text">"שירות מקצועי ואדיב. הבנו בדיוק מה אנחנו מקבלים והתוצאות מדברות בעד עצמן."</p>
+                    <div class="testimonial-author">
+                        <div class="testimonial-avatar">א</div>
+                        <div class="testimonial-info">
+                            <h4>אבי ישראלי</h4>
+                            <p>מנהל שיווק, סטארטאפ</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ -->
+    <section id="faq" class="how-it-works">
+        <div class="container">
+            <div class="section-header">
+                <h2>שאלות נפוצות</h2>
+                <p>כל מה שרציתם לדעת</p>
+            </div>
+            <div class="faq-list">
+                <details>
+                    <summary>כמה זמן לוקח להטמיע אוטומציה?</summary>
+                    <div class="faq-answer">
+                        בדרך כלל 3-7 ימים להטמעה מלאה, תלוי במורכבות. אנחנו מתחילים לראות תוצאות תוך השבוע הראשון.
+                    </div>
+                </details>
+                <details>
+                    <summary>האם צריך ידע טכני?</summary>
+                    <div class="faq-answer">
+                        לא בכלל. אנחנו מתקינים ומתחזקים את הכל. אתם רק צריכים לאשר תוכן ולקבל החלטות.
+                    </div>
+                </details>
+                <details>
+                    <summary>מה העלות?</summary>
+                    <div class="faq-answer">
+                        החל מ-1,500₪ לחודש, תלוי בהיקף השירותים. נבנה לכם חבילה מותאמת לפי הצרכים.
+                    </div>
+                </details>
+                <details>
+                    <summary>אפשר לבטל בכל עת?</summary>
+                    <div class="faq-answer">
+                        כן, ללא התחייבות. אפשר לבטל בכל חודש ללא קנסות.
+                    </div>
+                </details>
+                <details>
+                    <summary>על אילו פלטפורמות אתם עובדים?</summary>
+                    <div class="faq-answer">
+                        אנחנו עובדים עם כל הפלטפורמות המובילות: WhatsApp, SMS, Email, Facebook, Instagram ועוד.
+                    </div>
+                </details>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA -->
+    <section id="contact" class="cta-section">
+        <div class="container">
+            <h2>מוכנים להתחיל?</h2>
+            <p>קבלו ייעוץ חינם והצעת מחיר מותאמת אישית</p>
+            <a href="mailto:info@ntn.co.il" class="btn">צרו קשר עכשיו</a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-about">
+                    <a href="#" class="logo">NT<span>N</span></a>
+                    <p>אוטומציות שיווק מתקדמות לעסקים שרוצים לצמוח. פתרונות חכמים, תוצאות מוכחות.</p>
+                </div>
+                <div class="footer-col">
+                    <h4>שירותים</h4>
+                    <ul>
+                        <li><a href="#">אוטומציית מיילים</a></li>
+                        <li><a href="#">צ'אט בוטים</a></li>
+                        <li><a href="#">SMS/WhatsApp</a></li>
+                        <li><a href="#">ניהול לידים</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>החברה</h4>
+                    <ul>
+                        <li><a href="#">אודות</a></li>
+                        <li><a href="#">צור קשר</a></li>
+                        <li><a href="#">בלוג</a></li>
+                        <li><a href="#">קריירה</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>קישורים</h4>
+                    <ul>
+                        <li><a href="#">פרטיות</a></li>
+                        <li><a href="#">תנאים</a></li>
+                        <li><a href="#">מפת אתר</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© 2026 NTN אוטומציות. כל הזכויות שמורות.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Floating Buttons -->
+    <a href="https://wa.me/972500000000" class="floating-btn whatsapp" target="_blank">💬</a>
+    <a href="#" class="floating-btn" onclick="window.scrollTo({top:0,behavior:'smooth'});return false;">↑</a>
+
+</body>
+</html>
