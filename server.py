@@ -873,6 +873,13 @@ def _is_n8n_api_url(url):
         return parsed.scheme in ('http', 'https') and parsed.netloc == base.netloc and parsed.path.startswith('/api/v1/')
     except Exception:
         return False
+    # Start stuck projects auto-sync scheduler
+    try:
+        from sync_scheduler import start_scheduler as start_stuck_sync
+        start_stuck_sync()
+    except Exception as _e:
+        print(f'[stuck-sync] scheduler not started: {_e}', flush=True)
+
 
 
 def n8n_headers():
@@ -1255,6 +1262,18 @@ def supabase_comments_config():
     schema = (os.getenv('SUPABASE_SCHEMA') or 'public').strip() or 'public'
     return {'url': url, 'key': key, 'table': table, 'schema': schema, 'configured': bool(url and key and table)}
 
+
+
+def _get_supabase_config():
+    """Unified Supabase config for all dashboard features."""
+    url = (os.getenv('SUPABASE_URL') or '').strip().rstrip('/')
+    # Prefer service role key for write operations, fall back to anon key
+    key = (
+        (os.getenv('SUPABASE_SERVICE_ROLE_KEY') or '').strip()
+        or (os.getenv('SUPABASE_ANON_KEY') or '').strip()
+        or (os.getenv('SUPABASE_API_KEY') or '').strip()
+    )
+    return {'url': url, 'key': key, 'schema': 'public'}
 
 def supabase_comments_headers(prefer=None):
     cfg = supabase_comments_config()
@@ -4120,23 +4139,237 @@ body{{font-family:Arial;padding:24px}}h1{{color:#333}}pre{{background:#f4f4f4;pa
 
     
 
-    def do_POST(self):
-        if not self._r2_check_rate(): return
-        parsed = urllib.parse.urlparse(self.path)
-        if _dashboard_auth_enabled() and not _stage8_check_auth(self, parsed):
-            return
-        if not _r3_check_csrf_or_warn(self, parsed):
+
+        # ============================================================
+        # N8N Stuck Projects - GET endpoints
+        # ============================================================
+
+        if parsed.path == '/api/stuck-projects':
+            try:
+                qs = urllib.parse.parse_qs(parsed.query)
+                status = qs.get('status', ['stuck,error,failed'])[0]
+                priority = qs.get('priority', ['all'])[0]
+                client = qs.get('client', [None])[0]
+                search = qs.get('search', [None])[0]
+                sort = qs.get('sort', ['stuck_since'])[0]
+                order = qs.get('order', ['desc'])[0]
+                page = int(qs.get('page', ['1'])[0])
+                limit = int(qs.get('limit', ['50'])[0])
+                limit = min(limit, 200)
+
+                cfg = _get_supabase_config()
+                if not cfg.get('url') or not cfg.get('key'):
+                    self._send_json(200, {
+                        'success': True, 'data': [], 'pagination': {'total': 0, 'page': 1, 'limit': limit, 'total_pages': 0},
+                        'summary': {'critical': 0, 'high': 0, 'medium': 0, 'low': 0, 'total_stuck': 0, 'resolved_today': 0}
+                    })
+                    return
+
+                # Build query
+                status_filter = status.replace(' ', '').split(',')
+                filter_clause = "status=in.(" + ','.join(f"'{s}'" for s in status_filter) + ")"
+                if priority != 'all':
+                    filter_clause += f",priority=eq.{priority}"
+                if client:
+                    filter_clause += f",client_name=ilike.*{client}*"
+
+                offset = (page - 1) * limit
+                order_dir = 'desc' if order == 'desc' else 'asc'
+                url = f"{cfg['url']}/rest/v1/stuck_projects?select=*&{filter_clause}&order={sort}.{order_dir}&offset={offset}&limit={limit}"
+
+                req = urllib.request.Request(url, headers={
+                    'apikey': cfg['key'], 'Authorization': f"Bearer {cfg['key']}",
+                    'Content-Type': 'application/json', 'Prefer': 'count=exact'
+                })
+                resp = urllib.request.urlopen(req, timeout=15)
+                data = json.loads(resp.read().decode())
+
+                # Get summary
+                summary_url = f"{cfg['url']}/rest/v1/stuck_projects?select=status,priority"
+                summary_req = urllib.request.Request(summary_url, headers={
+                    'apikey': cfg['key'], 'Authorization': f"Bearer {cfg['key']}", 'Content-Type': 'application/json'
+                })
+                summary_resp = urllib.request.urlopen(summary_req, timeout=15)
+                all_items = json.loads(summary_resp.read().decode())
+
+                summary = {'critical': 0, 'high': 0, 'medium': 0, 'low': 0, 'total_stuck': 0, 'resolved_today': 0}
+                for item in all_items:
+                    if item.get('status') in ('stuck', 'error', 'failed'):
+                        summary['total_stuck'] += 1
+                        p = item.get('priority', 'medium')
+                        if p in summary:
+                            summary[p] += 1
+
+                # Get total count
+                count_url = f"{cfg['url']}/rest/v1/stuck_projects?select=id&{filter_clause}"
+                count_req = urllib.request.Request(count_url, headers={
+                    'apikey': cfg['key'], 'Authorization': f"Bearer {cfg['key']}",
+                    'Content-Type': 'application/json', 'Prefer': 'count=exact'
+                })
+                try:
+                    count_resp = urllib.request.urlopen(count_req, timeout=10)
+                    total = int(count_resp.headers.get('content-range', '0-0/0').split('/')[-1])
+                except:
+                    total = len(all_items)
+
+                self._send_json(200, {
+                    'success': True, 'data': data,
+                    'pagination': {'page': page, 'limit': limit, 'total': total, 'total_pages': (total + limit - 1) // limit if limit else 1},
+                    'summary': summary
+                })
+            except Exception as e:
+                self._send_json(500, {'success': False, 'error': str(e)})
             return
 
-        # PRODUCTIVITY_HUB_API_POST_2026_04_27 - additive persisted notifications/audit.
-        if parsed.path == '/api/productivity/notifications':
+        if parsed.path.startswith('/api/stuck-projects/') and parsed.path != '/api/stuck-projects/sync' and parsed.path != '/api/stuck-projects/sync/status' and parsed.path != '/api/stuck-projects/summary':
+            project_id = parsed.path.split('/')[-1]
+            try:
+                cfg = _get_supabase_config()
+                if not cfg.get('url') or not cfg.get('key'):
+                    self._send_json(404, {'success': False, 'error': 'Supabase not configured'})
+                    return
+
+                url = f"{cfg['url']}/rest/v1/stuck_projects?id=eq.{project_id}&select=*"
+                req = urllib.request.Request(url, headers={
+                    'apikey': cfg['key'], 'Authorization': f"Bearer {cfg['key']}", 'Content-Type': 'application/json'
+                })
+                resp = urllib.request.urlopen(req, timeout=10)
+                data = json.loads(resp.read().decode())
+                if data:
+                    # Increment view count
+                    update_url = f"{cfg['url']}/rest/v1/stuck_projects?id=eq.{project_id}"
+                    update_req = urllib.request.Request(update_url, data=json.dumps({'view_count': data[0].get('view_count', 0) + 1, 'is_new': False}).encode(), headers={
+                        'apikey': cfg['key'], 'Authorization': f"Bearer {cfg['key']}", 'Content-Type': 'application/json'
+                    }, method='PATCH')
+                    try:
+                        urllib.request.urlopen(update_req, timeout=5)
+                    except:
+                        pass
+                    self._send_json(200, {'success': True, 'data': data[0]})
+                else:
+                    self._send_json(404, {'success': False, 'error': 'Project not found'})
+            except Exception as e:
+                self._send_json(500, {'success': False, 'error': str(e)})
+            return
+
+        if parsed.path == '/api/stuck-projects/summary':
+            try:
+                cfg = _get_supabase_config()
+                if not cfg.get('url') or not cfg.get('key'):
+                    self._send_json(200, {'success': True, 'data': {'critical': 0, 'high': 0, 'medium': 0, 'low': 0, 'total_stuck': 0, 'resolved_today': 0}})
+                    return
+
+                url = f"{cfg['url']}/rest/v1/stuck_projects?select=status,priority,first_detected"
+                req = urllib.request.Request(url, headers={
+                    'apikey': cfg['key'], 'Authorization': f"Bearer {cfg['key']}", 'Content-Type': 'application/json'
+                })
+                resp = urllib.request.urlopen(req, timeout=10)
+                data = json.loads(resp.read().decode())
+
+                summary = {'critical': 0, 'high': 0, 'medium': 0, 'low': 0, 'total_stuck': 0, 'resolved_today': 0}
+                from datetime import datetime, timezone
+                today = datetime.now(timezone.utc).date()
+                for item in data:
+                    if item.get('status') in ('stuck', 'error', 'failed'):
+                        summary['total_stuck'] += 1
+                        p = item.get('priority', 'medium')
+                        if p in summary:
+                            summary[p] += 1
+                    if item.get('status') == 'resolved' and item.get('resolved_at'):
+                        try:
+                            resolved_date = datetime.fromisoformat(item['resolved_at'].replace('Z', '+00:00')).date()
+                            if resolved_date == today:
+                                summary['resolved_today'] += 1
+                        except:
+                            pass
+
+                self._send_json(200, {'success': True, 'data': summary})
+            except Exception as e:
+                self._send_json(500, {'success': False, 'error': str(e)})
+            return
+
+        if parsed.path == '/api/stuck-projects/sync/status':
+            try:
+                # Get scheduler status
+                scheduler_status = {'running': False, 'interval_minutes': 30, 'last_sync': None, 'last_result': None, 'sync_count': 0}
+                try:
+                    from sync_scheduler import get_scheduler
+                    sched = get_scheduler()
+                    scheduler_status = sched.get_status()
+                except Exception:
+                    pass
+
+                # Get project count from Supabase
+                cfg = _get_supabase_config()
+                total_projects = 0
+                if cfg.get('url') and cfg.get('key'):
+                    try:
+                        url = f"{cfg['url']}/rest/v1/stuck_projects?select=id&limit=1"
+                        req = urllib.request.Request(url, headers={
+                            'apikey': cfg['key'], 'Authorization': f"Bearer {cfg['key']}",
+                            'Content-Type': 'application/json', 'Prefer': 'count=exact'
+                        })
+                        resp = urllib.request.urlopen(req, timeout=10)
+                        total_projects = int(resp.headers.get('content-range', '0-0/0').split('/')[-1])
+                    except:
+                        pass
+
+                self._send_json(200, {
+                    'success': True,
+                    'data': {
+                        'scheduler': scheduler_status,
+                        'total_projects': total_projects,
+                        'env_configured': {
+                            'pini_url': bool(os.getenv('PINI_URL')),
+                            'pini_username': bool(os.getenv('PINI_USERNAME')),
+                            'supabase_url': bool(cfg.get('url'))
+                        }
+                    }
+                })
+            except Exception as e:
+                self._send_json(500, {'success': False, 'error': str(e)})
+            return
+
+if parsed.path == '/api/productivity/notifications':
             try:
                 payload = read_request_json(self) or {}
                 row = _productivity_add_notification(payload)
                 return json_response(self, 200, {'ok': True, 'notification': row})
             except Exception as exc:
                 return json_response(self, 500, {'ok': False, 'error': str(exc)})
-        if parsed.path == '/api/productivity/audit':
+        
+        if parsed.path == '/api/stuck-projects/alerts/test-email':
+            try:
+                from email_notifier import create_notifier
+                notifier = create_notifier()
+                if not notifier.is_configured():
+                    self._send_json(400, {
+                        'success': False,
+                        'error': 'Email notifications not configured. Set NOTIFICATION_EMAIL_ENABLED=true and configure SMTP/Resend credentials.',
+                        'required_env': [
+                            'NOTIFICATION_EMAIL_ENABLED',
+                            'NOTIFICATION_FROM_EMAIL',
+                            'NOTIFICATION_TO_EMAILS',
+                            'NOTIFICATION_EMAIL_PROVIDER (smtp or resend)',
+                            'For SMTP: NOTIFICATION_SMTP_HOST, NOTIFICATION_SMTP_USER, NOTIFICATION_SMTP_PASSWORD',
+                            'For Resend: RESEND_API_KEY'
+                        ]
+                    })
+                    return
+
+                result = notifier.test_email()
+                self._send_json(200, {
+                    'success': True,
+                    'message': 'Test email sent successfully',
+                    'result': result
+                })
+            except ImportError:
+                self._send_json(500, {'success': False, 'error': 'email_notifier.py not found'})
+            except Exception as e:
+                self._send_json(500, {'success': False, 'error': str(e)})
+            return
+
+if parsed.path == '/api/productivity/audit':
             try:
                 payload = read_request_json(self) or {}
                 row = _productivity_add_audit(payload)
@@ -5696,16 +5929,203 @@ body{{font-family:Arial;padding:24px}}h1{{color:#333}}pre{{background:#f4f4f4;pa
 
         return json_response(self, 404, {'ok': False, 'error': 'Not found'})
 
-    def do_PUT(self):
-        if not self._r2_check_rate(): return
-        parsed = urllib.parse.urlparse(self.path)
-        if _dashboard_auth_enabled() and not _stage8_check_auth(self, parsed):
-            return
-        if not _r3_check_csrf_or_warn(self, parsed):
+
+        # ============================================================
+        # N8N Stuck Projects - POST endpoints
+        # ============================================================
+
+        if parsed.path.startswith('/api/stuck-projects/') and parsed.path != '/api/stuck-projects/sync':
+            project_id = parsed.path.split('/')[-1]
+            try:
+                content_length = int(self.headers.get('Content-Length', 0))
+                body = json.loads(self.rfile.read(content_length).decode()) if content_length > 0 else {}
+
+                cfg = _get_supabase_config()
+                if not cfg.get('url') or not cfg.get('key'):
+                    self._send_json(400, {'success': False, 'error': 'Supabase not configured'})
+                    return
+
+                # Build update payload
+                allowed_fields = {'status', 'priority', 'assigned_to', 'assigned_agent', 'notes', 'suggested_fix', 'tags', 'snoozed_until', 'resolved_at'}
+                update_data = {k: v for k, v in body.items() if k in allowed_fields}
+
+                if not update_data:
+                    self._send_json(400, {'success': False, 'error': 'No valid fields to update'})
+                    return
+
+                # Auto-set resolved_at when status changes to resolved
+                if update_data.get('status') == 'resolved' and 'resolved_at' not in update_data:
+                    update_data['resolved_at'] = __import__('datetime').datetime.now(__import__('datetime').timezone.utc).isoformat()
+
+                # Auto-set is_new=False on any update
+                update_data['is_new'] = False
+
+                url = f"{cfg['url']}/rest/v1/stuck_projects?id=eq.{project_id}"
+                req = urllib.request.Request(url, data=json.dumps(update_data).encode(), headers={
+                    'apikey': cfg['key'], 'Authorization': f"Bearer {cfg['key']}",
+                    'Content-Type': 'application/json'
+                }, method='PATCH')
+                resp = urllib.request.urlopen(req, timeout=10)
+
+                # Log to history
+                for field, new_val in update_data.items():
+                    try:
+                        hist_url = f"{cfg['url']}/rest/v1/stuck_projects_history?select=old_value,new_value&project_id=eq.{project_id}&field_changed=eq.{field}&order=created_at.desc&limit=1"
+                        hist_req = urllib.request.Request(hist_url, headers={
+                            'apikey': cfg['key'], 'Authorization': f"Bearer {cfg['key']}", 'Content-Type': 'application/json'
+                        })
+                        hist_resp = urllib.request.urlopen(hist_req, timeout=5)
+                        hist_data = json.loads(hist_resp.read().decode())
+                        old_val = hist_data[0]['new_value'] if hist_data else None
+
+                        insert_url = f"{cfg['url']}/rest/v1/stuck_projects_history"
+                        insert_req = urllib.request.Request(insert_url, data=json.dumps({
+                            'project_id': project_id, 'field_changed': field,
+                            'old_value': str(old_val) if old_val is not None else None,
+                            'new_value': str(new_val) if new_val is not None else None
+                        }).encode(), headers={
+                            'apikey': cfg['key'], 'Authorization': f"Bearer {cfg['key']}", 'Content-Type': 'application/json'
+                        })
+                        urllib.request.urlopen(insert_req, timeout=5)
+                    except:
+                        pass
+
+                self._send_json(200, {'success': True, 'data': update_data, 'message': 'Project updated'})
+            except Exception as e:
+                self._send_json(500, {'success': False, 'error': str(e)})
             return
 
-        # TEMPLATE_IMPROVEMENTS_API_PUT_2026_04_27 - additive instruction update.
-        if parsed.path.startswith('/api/improve/instructions/'):
+        if parsed.path == '/api/stuck-projects/sync':
+            try:
+                # Import Pini client
+                import sys
+                sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+                try:
+                    from pini_client import create_pini_client
+                except ImportError:
+                    self._send_json(500, {'success': False, 'error': 'pini_client.py not found. Add it to the project root.'})
+                    return
+
+                client = create_pini_client()
+                status = client.get_client_status()
+
+                if not status['configured']:
+                    self._send_json(400, {
+                        'success': False,
+                        'error': 'PINI_URL, PINI_USERNAME, and PINI_PASSWORD environment variables must be configured in Render settings.',
+                        'config_status': status
+                    })
+                    return
+
+                # Fetch projects from Pini
+                result = client.fetch_projects()
+
+                if result.get('error') and not result.get('projects'):
+                    self._send_json(200, {
+                        'success': True,
+                        'data': {
+                            'message': result.get('error', 'No projects found'),
+                            'status': 'completed',
+                            'projects_synced': 0,
+                            'last_sync': datetime.now(timezone.utc).isoformat(),
+                            'config_status': status
+                        }
+                    })
+                    return
+
+                # Get Supabase config for storing results
+                cfg = _get_supabase_config()
+                if not cfg.get('url') or not cfg.get('key'):
+                    # Return the data even without Supabase (for testing)
+                    self._send_json(200, {
+                        'success': True,
+                        'data': {
+                            'message': f"Found {result.get('total', 0)} stuck projects. Supabase not configured for storage.",
+                            'status': 'completed',
+                            'projects_synced': result.get('total', 0),
+                            'projects': result.get('projects', [])[:10],  # First 10 for preview
+                            'last_sync': datetime.now(timezone.utc).isoformat(),
+                            'config_status': status
+                        }
+                    })
+                    return
+
+                # Store projects in Supabase
+                projects = result.get('projects', [])
+                synced = 0
+                errors = 0
+
+                for p in projects:
+                    try:
+                        # Upsert project (insert or update on conflict)
+                        url = f"{cfg['url']}/rest/v1/stuck_projects"
+                        payload = {
+                            'pini_project_id': p.get('pini_project_id', ''),
+                            'name': p.get('name', 'Unknown'),
+                            'client_name': p.get('client_name'),
+                            'workflow_id': p.get('workflow_id'),
+                            'workflow_url': p.get('workflow_url'),
+                            'status': p.get('status', 'stuck'),
+                            'priority': p.get('priority', 'medium'),
+                            'error_summary': p.get('error_summary'),
+                            'error_details': p.get('error_details'),
+                            'error_type': p.get('error_type'),
+                            'stuck_since': p.get('stuck_since'),
+                            'last_successful': p.get('last_successful'),
+                            'assigned_to': p.get('assigned_to'),
+                            'tags': p.get('tags', []),
+                            'notes': p.get('notes'),
+                            'pini_raw_data': p.get('pini_raw_data', {})
+                        }
+
+                        # Check if project already exists
+                        check_url = f"{cfg['url']}/rest/v1/stuck_projects?pini_project_id=eq.{p['pini_project_id']}"
+                        check_req = urllib.request.Request(check_url, headers={
+                            'apikey': cfg['key'], 'Authorization': f"Bearer {cfg['key']}",
+                            'Content-Type': 'application/json'
+                        })
+                        check_resp = urllib.request.urlopen(check_req, timeout=10)
+                        existing = json.loads(check_resp.read().decode())
+
+                        if existing:
+                            # Update existing
+                            update_url = f"{cfg['url']}/rest/v1/stuck_projects?id=eq.{existing[0]['id']}"
+                            update_req = urllib.request.Request(update_url, data=json.dumps(payload).encode(), headers={
+                                'apikey': cfg['key'], 'Authorization': f"Bearer {cfg['key']}",
+                                'Content-Type': 'application/json'
+                            }, method='PATCH')
+                            urllib.request.urlopen(update_req, timeout=10)
+                        else:
+                            # Insert new
+                            insert_req = urllib.request.Request(url, data=json.dumps(payload).encode(), headers={
+                                'apikey': cfg['key'], 'Authorization': f"Bearer {cfg['key']}",
+                                'Content-Type': 'application/json'
+                            })
+                            urllib.request.urlopen(insert_req, timeout=10)
+
+                        synced += 1
+                    except Exception as e:
+                        errors += 1
+                        if errors <= 3:  # Log first 3 errors
+                            print(f"Sync error for project {p.get('name', 'unknown')}: {e}")
+
+                self._send_json(200, {
+                    'success': True,
+                    'data': {
+                        'message': f'Sync complete: {synced} projects synced, {errors} errors',
+                        'status': 'completed',
+                        'projects_synced': synced,
+                        'sync_errors': errors,
+                        'total_stuck': len(projects),
+                        'last_sync': datetime.now(timezone.utc).isoformat(),
+                        'config_status': status
+                    }
+                })
+            except Exception as e:
+                self._send_json(500, {'success': False, 'error': str(e)})
+            return
+
+if parsed.path.startswith('/api/improve/instructions/'):
             inst_id = parsed.path.rsplit('/', 1)[-1]
             try:
                 content_length = int(self.headers.get('Content-Length', '0') or '0')
