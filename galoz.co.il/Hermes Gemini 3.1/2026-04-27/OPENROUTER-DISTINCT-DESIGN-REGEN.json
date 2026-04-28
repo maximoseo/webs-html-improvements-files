@@ -1,0 +1,164 @@
+{
+  "agent": "Hermes Gemini 3.1",
+  "model": "google/gemini-3.1-pro-preview",
+  "identity": "Clean Structured",
+  "style_brief": "corporate structured grid, comparison table, clear IA, blue/green/gray palette",
+  "source": "OpenRouter API chat/completions",
+  "max_attempts": 3,
+  "attempts": [
+    {
+      "attempt": 1,
+      "ok": false,
+      "checks": {
+        "wp_wrapper": true,
+        "has_style": false,
+        "has_all_initial": false,
+        "no_script": true,
+        "no_cdn_fonts": true,
+        "rtl": false,
+        "has_img": true,
+        "has_h1": false,
+        "inline_style_count": 3,
+        "bytes": 864,
+        "wrapper": null,
+        "sha256": "14ddea4cd96fab96"
+      },
+      "normalizations": [
+        "added_wp_start",
+        "added_wp_end",
+        "inserted_required_image"
+      ],
+      "usage": {
+        "prompt_tokens": 562,
+        "completion_tokens": 5196,
+        "total_tokens": 5758,
+        "cost": 0.063476,
+        "is_byok": false,
+        "prompt_tokens_details": {
+          "cached_tokens": 0,
+          "cache_write_tokens": 0,
+          "audio_tokens": 0,
+          "video_tokens": 0
+        },
+        "cost_details": {
+          "upstream_inference_cost": 0.063476,
+          "upstream_inference_prompt_cost": 0.001124,
+          "upstream_inference_completions_cost": 0.062352
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 4991,
+          "image_tokens": 0,
+          "audio_tokens": 0
+        }
+      }
+    },
+    {
+      "attempt": 2,
+      "ok": false,
+      "checks": {
+        "wp_wrapper": true,
+        "has_style": false,
+        "has_all_initial": false,
+        "no_script": true,
+        "no_cdn_fonts": true,
+        "rtl": false,
+        "has_img": true,
+        "has_h1": false,
+        "inline_style_count": 1,
+        "bytes": 861,
+        "wrapper": null,
+        "sha256": "e3c5b622bf0fc2a0"
+      },
+      "normalizations": [
+        "added_wp_start",
+        "added_wp_end",
+        "inserted_required_image"
+      ],
+      "usage": {
+        "prompt_tokens": 562,
+        "completion_tokens": 4196,
+        "total_tokens": 4758,
+        "cost": 0.051476,
+        "is_byok": false,
+        "prompt_tokens_details": {
+          "cached_tokens": 0,
+          "cache_write_tokens": 0,
+          "audio_tokens": 0,
+          "video_tokens": 0
+        },
+        "cost_details": {
+          "upstream_inference_cost": 0.051476,
+          "upstream_inference_prompt_cost": 0.001124,
+          "upstream_inference_completions_cost": 0.050352
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 4032,
+          "image_tokens": 0,
+          "audio_tokens": 0
+        }
+      }
+    },
+    {
+      "attempt": 3,
+      "ok": false,
+      "checks": {
+        "wp_wrapper": true,
+        "has_style": false,
+        "has_all_initial": false,
+        "no_script": true,
+        "no_cdn_fonts": true,
+        "rtl": false,
+        "has_img": true,
+        "has_h1": false,
+        "inline_style_count": 3,
+        "bytes": 631,
+        "wrapper": null,
+        "sha256": "f0b57af60cd64e0f"
+      },
+      "normalizations": [
+        "added_wp_start",
+        "added_wp_end",
+        "inserted_required_image"
+      ],
+      "usage": {
+        "prompt_tokens": 562,
+        "completion_tokens": 3196,
+        "total_tokens": 3758,
+        "cost": 0.039476,
+        "is_byok": false,
+        "prompt_tokens_details": {
+          "cached_tokens": 0,
+          "cache_write_tokens": 0,
+          "audio_tokens": 0,
+          "video_tokens": 0
+        },
+        "cost_details": {
+          "upstream_inference_cost": 0.039476,
+          "upstream_inference_prompt_cost": 0.001124,
+          "upstream_inference_completions_cost": 0.038352
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 3070,
+          "image_tokens": 0,
+          "audio_tokens": 0
+        }
+      }
+    }
+  ],
+  "final_written": false,
+  "final_checks": {
+    "wp_wrapper": true,
+    "has_style": true,
+    "has_all_initial": true,
+    "no_script": true,
+    "rtl": true,
+    "has_img": true,
+    "has_h1": true,
+    "inline_style_count": 45,
+    "bytes": 7867,
+    "wrapper": "galoz-gemini-structured-20260428",
+    "sha256": "4ad0901ad87c9be1"
+  },
+  "dashboard_html_restored_from_commit": "fd7d629",
+  "reason": "OpenRouter retry did not produce a valid finished HTML within allowed attempts; broken output was not published."
+}

@@ -1,0 +1,55 @@
+{
+  "agent": "Hermes GLM 5.1",
+  "model": "z-ai/glm-5.1",
+  "identity": "Compact Efficient",
+  "style_brief": "dense compact high contrast black white yellow utility layout",
+  "usage": {
+    "prompt_tokens": 381,
+    "completion_tokens": 3846,
+    "total_tokens": 4227,
+    "cost": 0.01396464,
+    "is_byok": false,
+    "prompt_tokens_details": {
+      "cached_tokens": 0,
+      "cache_write_tokens": 0,
+      "audio_tokens": 0,
+      "video_tokens": 0
+    },
+    "cost_details": {
+      "upstream_inference_cost": 0.01396464,
+      "upstream_inference_prompt_cost": 0.00042672,
+      "upstream_inference_completions_cost": 0.01353792
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 342,
+      "image_tokens": 0,
+      "audio_tokens": 0
+    }
+  },
+  "html_bytes": 8515,
+  "checks": {
+    "wp_wrapper": false,
+    "has_style": true,
+    "has_all_initial": true,
+    "no_script": true,
+    "rtl": true,
+    "has_img": true,
+    "inline_style_count": 39
+  },
+  "final_written": false,
+  "dashboard_html_restored_from_commit": "fd7d629",
+  "reason": "OpenRouter retry did not produce a valid finished HTML within allowed attempts; broken output was not published.",
+  "final_checks": {
+    "wp_wrapper": true,
+    "has_style": true,
+    "has_all_initial": true,
+    "no_script": true,
+    "rtl": true,
+    "has_img": true,
+    "has_h1": true,
+    "inline_style_count": 44,
+    "bytes": 7670,
+    "wrapper": "galoz-glm-compact-20260428",
+    "sha256": "d0c090058c5dc40e"
+  }
+}

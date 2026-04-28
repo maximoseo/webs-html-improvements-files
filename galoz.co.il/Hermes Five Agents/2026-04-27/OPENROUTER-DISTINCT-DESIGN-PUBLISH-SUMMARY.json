@@ -1,0 +1,106 @@
+{
+  "created_at": "2026-04-28",
+  "policy": "Publish only valid finished HTML outputs. Failed models keep/restore stable dashboard HTML and are documented in meta logs.",
+  "summary": [
+    {
+      "agent": "Hermes Opus 4.7",
+      "model": "anthropic/claude-opus-4.7",
+      "identity": "Elegant Minimalist",
+      "published_to_dashboard": true,
+      "new_openrouter_valid_output_published": true,
+      "restored_to_stable_fallback": false,
+      "attempts": 1,
+      "html_checks": {
+        "wp_wrapper": true,
+        "has_style": true,
+        "has_all_initial": true,
+        "no_script": true,
+        "rtl": true,
+        "has_img": true,
+        "inline_style_count": 36,
+        "bytes": 8244,
+        "sha256": "12f1e780215944b6"
+      }
+    },
+    {
+      "agent": "Hermes GPT 5.5",
+      "model": "openai/gpt-5.5",
+      "identity": "Bold Creative",
+      "published_to_dashboard": true,
+      "new_openrouter_valid_output_published": true,
+      "restored_to_stable_fallback": false,
+      "attempts": 2,
+      "html_checks": {
+        "wp_wrapper": true,
+        "has_style": true,
+        "has_all_initial": true,
+        "no_script": true,
+        "rtl": true,
+        "has_img": true,
+        "inline_style_count": 43,
+        "bytes": 10363,
+        "sha256": "b3cdac3f0229745c"
+      }
+    },
+    {
+      "agent": "Hermes Gemini 3.1",
+      "model": "google/gemini-3.1-pro-preview",
+      "identity": "Clean Structured",
+      "published_to_dashboard": true,
+      "new_openrouter_valid_output_published": false,
+      "restored_to_stable_fallback": true,
+      "attempts": 3,
+      "html_checks": {
+        "wp_wrapper": true,
+        "has_style": true,
+        "has_all_initial": true,
+        "no_script": true,
+        "rtl": true,
+        "has_img": true,
+        "inline_style_count": 45,
+        "bytes": 7867,
+        "sha256": "4ad0901ad87c9be1"
+      }
+    },
+    {
+      "agent": "Hermes Kimi K2.6",
+      "model": "moonshotai/kimi-k2.6",
+      "identity": "Data-Driven Visual",
+      "published_to_dashboard": true,
+      "new_openrouter_valid_output_published": false,
+      "restored_to_stable_fallback": true,
+      "attempts": null,
+      "html_checks": {
+        "wp_wrapper": true,
+        "has_style": true,
+        "has_all_initial": true,
+        "no_script": true,
+        "rtl": true,
+        "has_img": true,
+        "inline_style_count": 51,
+        "bytes": 7968,
+        "sha256": "2372f3d3d9642b8a"
+      }
+    },
+    {
+      "agent": "Hermes GLM 5.1",
+      "model": "z-ai/glm-5.1",
+      "identity": "Compact Efficient",
+      "published_to_dashboard": true,
+      "new_openrouter_valid_output_published": false,
+      "restored_to_stable_fallback": true,
+      "attempts": null,
+      "html_checks": {
+        "wp_wrapper": true,
+        "has_style": true,
+        "has_all_initial": true,
+        "no_script": true,
+        "rtl": true,
+        "has_img": true,
+        "inline_style_count": 44,
+        "bytes": 7670,
+        "sha256": "d0c090058c5dc40e"
+      }
+    }
+  ]
+}

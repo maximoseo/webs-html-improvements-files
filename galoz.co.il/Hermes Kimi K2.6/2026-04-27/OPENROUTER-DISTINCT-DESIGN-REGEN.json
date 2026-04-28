@@ -1,0 +1,55 @@
+{
+  "agent": "Hermes Kimi K2.6",
+  "model": "moonshotai/kimi-k2.6",
+  "identity": "Data-Driven Visual",
+  "style_brief": "dark analytics dashboard, stats, bars, numbered insights",
+  "usage": {
+    "prompt_tokens": 302,
+    "completion_tokens": 3500,
+    "total_tokens": 3802,
+    "cost": 0.0142416,
+    "is_byok": false,
+    "prompt_tokens_details": {
+      "cached_tokens": 0,
+      "cache_write_tokens": 0,
+      "audio_tokens": 0,
+      "video_tokens": 0
+    },
+    "cost_details": {
+      "upstream_inference_cost": 0.0142416,
+      "upstream_inference_prompt_cost": 0.0002416,
+      "upstream_inference_completions_cost": 0.014
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 1077,
+      "image_tokens": 0,
+      "audio_tokens": 0
+    }
+  },
+  "html_bytes": 7688,
+  "checks": {
+    "wp_wrapper": false,
+    "has_style": true,
+    "has_all_initial": true,
+    "no_script": true,
+    "rtl": true,
+    "has_img": false,
+    "inline_style_count": 2
+  },
+  "final_written": false,
+  "dashboard_html_restored_from_commit": "fd7d629",
+  "reason": "OpenRouter retry did not produce a valid finished HTML within allowed attempts; broken output was not published.",
+  "final_checks": {
+    "wp_wrapper": true,
+    "has_style": true,
+    "has_all_initial": true,
+    "no_script": true,
+    "rtl": true,
+    "has_img": true,
+    "has_h1": true,
+    "inline_style_count": 51,
+    "bytes": 7968,
+    "wrapper": "galoz-kimi-data-20260428",
+    "sha256": "2372f3d3d9642b8a"
+  }
+}
