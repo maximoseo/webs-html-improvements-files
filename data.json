@@ -703,6 +703,30 @@
       "sha": "local-galoz-five-agents",
       "size": 2969,
       "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/contents/galoz.co.il/Hermes%20GLM%205.1/2026-04-27/OPENROUTER-AGENT-REVIEW.json"
+    },
+    {
+      "path": "galoz.co.il/Hermes Plan 17 Best Pick/2026-04-28/Improved_N8N_Workflow.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "live",
+      "size": 4193,
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/contents/galoz.co.il/Hermes Plan 17 Best Pick/2026-04-28/Improved_N8N_Workflow.json"
+    },
+    {
+      "path": "galoz.co.il/Hermes Plan 17 Best Pick/2026-04-28/Improved_N8N_Prompt.txt",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "live",
+      "size": 1723,
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/contents/galoz.co.il/Hermes Plan 17 Best Pick/2026-04-28/Improved_N8N_Prompt.txt"
+    },
+    {
+      "path": "galoz.co.il/Hermes Plan 17 Best Pick/2026-04-28/Improved_HTML_Template.html",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "live",
+      "size": 10977,
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/contents/galoz.co.il/Hermes Plan 17 Best Pick/2026-04-28/Improved_HTML_Template.html"
     }
   ]
 }
