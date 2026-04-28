@@ -17,8 +17,7 @@
 
 ## Git Push Rule
 
-WSL HTTPS push times out. Always push from:
-`/mnt/c/Users/seoadmin/webs-html-improvements-files-clean`
+WSL HTTPS push often times out. Use a temporary authenticated remote only when needed, then immediately restore the clean remote URL.
 
 Pattern:
 ```
@@ -27,7 +26,24 @@ git push origin main
 git remote set-url origin https://github.com/maximoseo/webs-html-improvements-files.git
 ```
 
-Clean the remote URL immediately after push. Never leave the PAT in the remote URL.
+Clean the remote URL immediately after push. Never leave the PAT in the remote URL and never print secrets.
+
+## Multi-Agent Git Collaboration Rule
+
+When 2+ Hermes agents work on this repo at the same time, use the repository guide:
+`docs/hermes-multi-agent-git-collaboration.md`
+
+Active adapted model for this dashboard:
+- **Agent Alpha**: UI/dashboard behavior, assigned sections inside the monolithic `index.html` only.
+- **Agent Beta**: backend/API/data logic — `server.py`, `kwr_backend.py`, `backup.py`, `r5_features.py`, `r6_features.py`, `n8n_*.py`, `openapi.yaml`.
+- **Agent Gamma**: tests/QA/docs/CI — `tests/`, `scripts/`, `.github/`, `docs/`.
+
+Critical constraints:
+- Use git worktrees for parallel work: one folder + one branch per agent.
+- Merge sequentially, not in parallel.
+- Treat `index.html`, `data.json`, `Dockerfile`, `.github/workflows/*`, and `AGENTS.md` as shared/locked danger files.
+- Do not apply generic React `/src/components` assumptions to this repo; this dashboard is currently a Python-backed monolithic HTML app.
+- Before agent PRs, run ownership checks with `scripts/check-agent-ownership.sh <alpha|beta|gamma>` where applicable.
 
 ## LLM Provider
 
