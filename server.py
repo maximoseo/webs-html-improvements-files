@@ -4330,7 +4330,7 @@ body{{font-family:Arial;padding:24px}}h1{{color:#333}}pre{{background:#f4f4f4;pa
                 self._send_json(500, {'success': False, 'error': str(e)})
             return
 
-if parsed.path == '/api/productivity/notifications':
+        if parsed.path == '/api/productivity/notifications':
             try:
                 payload = read_request_json(self) or {}
                 row = _productivity_add_notification(payload)
@@ -4369,7 +4369,7 @@ if parsed.path == '/api/productivity/notifications':
                 self._send_json(500, {'success': False, 'error': str(e)})
             return
 
-if parsed.path == '/api/productivity/audit':
+        if parsed.path == '/api/productivity/audit':
             try:
                 payload = read_request_json(self) or {}
                 row = _productivity_add_audit(payload)
@@ -6125,7 +6125,7 @@ if parsed.path == '/api/productivity/audit':
                 self._send_json(500, {'success': False, 'error': str(e)})
             return
 
-if parsed.path.startswith('/api/improve/instructions/'):
+        if parsed.path.startswith('/api/improve/instructions/'):
             inst_id = parsed.path.rsplit('/', 1)[-1]
             try:
                 content_length = int(self.headers.get('Content-Length', '0') or '0')
