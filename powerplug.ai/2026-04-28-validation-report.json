@@ -1,0 +1,164 @@
+{
+  "domain": "powerplug.ai",
+  "date": "2026-04-28",
+  "completed_agents": 4,
+  "excluded_agents": [
+    {
+      "agent": "GLM 5.1 Agent",
+      "reason": "Repeated OpenRouter attempts timed out / no finished artifact"
+    }
+  ],
+  "source_pr": "https://github.com/maximoseo/webs-html-improvements-files/pull/1",
+  "merged_commit": "450830b55b2ef0f08ac388d0d890d8f50f78b167",
+  "agents": [
+    {
+      "name": "Opus 4.7 Agent",
+      "model": "anthropic-claude-opus-4.7",
+      "identity": "Elegant Minimalist",
+      "dir": "powerplug.ai/Opus 4.7 Agent (anthropic-claude-opus-4.7)/2026-04-28",
+      "files": {
+        "Improved_HTML_Template.html": 28719,
+        "Improved_N8N_Prompt.txt": 2100,
+        "Improved_N8N_Workflow.json": 3207
+      },
+      "checks": [
+        {
+          "name": "WordPress wrapper",
+          "pass": true
+        },
+        {
+          "name": "Root isolation",
+          "pass": true
+        },
+        {
+          "name": "n8n markers",
+          "pass": true
+        },
+        {
+          "name": "No scripts/event JS",
+          "pass": true
+        },
+        {
+          "name": "PowerPlug images",
+          "pass": true
+        },
+        {
+          "name": "Workflow JSON parses",
+          "pass": true
+        }
+      ]
+    },
+    {
+      "name": "GPT 5.5 Agent",
+      "model": "openai-gpt-5.5",
+      "identity": "Bold Creative",
+      "dir": "powerplug.ai/GPT 5.5 Agent (openai-gpt-5.5)/2026-04-28",
+      "files": {
+        "Improved_HTML_Template.html": 44597,
+        "Improved_N8N_Prompt.txt": 2081,
+        "Improved_N8N_Workflow.json": 3159
+      },
+      "checks": [
+        {
+          "name": "WordPress wrapper",
+          "pass": true
+        },
+        {
+          "name": "Root isolation",
+          "pass": true
+        },
+        {
+          "name": "n8n markers",
+          "pass": true
+        },
+        {
+          "name": "No scripts/event JS",
+          "pass": true
+        },
+        {
+          "name": "PowerPlug images",
+          "pass": true
+        },
+        {
+          "name": "Workflow JSON parses",
+          "pass": true
+        }
+      ]
+    },
+    {
+      "name": "Gemini 3.1 Agent",
+      "model": "google-gemini-3.1-pro-preview",
+      "identity": "Clean Structured",
+      "dir": "powerplug.ai/Gemini 3.1 Agent (google-gemini-3.1-pro-preview)/2026-04-28",
+      "files": {
+        "Improved_HTML_Template.html": 24725,
+        "Improved_N8N_Prompt.txt": 2085,
+        "Improved_N8N_Workflow.json": 3225
+      },
+      "checks": [
+        {
+          "name": "WordPress wrapper",
+          "pass": true
+        },
+        {
+          "name": "Root isolation",
+          "pass": true
+        },
+        {
+          "name": "n8n markers",
+          "pass": true
+        },
+        {
+          "name": "No scripts/event JS",
+          "pass": true
+        },
+        {
+          "name": "PowerPlug images",
+          "pass": true
+        },
+        {
+          "name": "Workflow JSON parses",
+          "pass": true
+        }
+      ]
+    },
+    {
+      "name": "Kimi K2.6 Agent",
+      "model": "moonshotai-kimi-k2.6",
+      "identity": "Data-Driven Visual",
+      "dir": "powerplug.ai/Kimi K2.6 Agent (moonshotai-kimi-k2.6)/2026-04-28",
+      "files": {
+        "Improved_HTML_Template.html": 19760,
+        "Improved_N8N_Prompt.txt": 1648,
+        "Improved_N8N_Workflow.json": 3424
+      },
+      "checks": [
+        {
+          "name": "WordPress wrapper",
+          "pass": true
+        },
+        {
+          "name": "Root isolation",
+          "pass": true
+        },
+        {
+          "name": "n8n markers",
+          "pass": true
+        },
+        {
+          "name": "No scripts/event JS",
+          "pass": true
+        },
+        {
+          "name": "PowerPlug images",
+          "pass": true
+        },
+        {
+          "name": "Workflow JSON parses",
+          "pass": true
+        }
+      ]
+    }
+  ],
+  "credentials_recorded": false
+}
