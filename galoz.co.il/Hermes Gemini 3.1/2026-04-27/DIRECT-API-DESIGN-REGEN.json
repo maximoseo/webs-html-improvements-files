@@ -1,0 +1,63 @@
+{
+  "agent": "Hermes Gemini 3.1",
+  "api_source": "gemini-direct",
+  "model": "google/gemini-2.5-pro",
+  "attempts": [
+    {
+      "attempt": 1,
+      "ok": false,
+      "checks": {
+        "wp_wrapper": false,
+        "has_style": true,
+        "has_all_initial": true,
+        "no_script": true,
+        "no_cdn_fonts": true,
+        "rtl": true,
+        "has_img": true,
+        "has_h1": true,
+        "inline_style_count": 5,
+        "bytes": 6588,
+        "wrapper": "galoz-rotary-encoders-page-v1",
+        "sha256": "f27ae9e6a3f1b2fc"
+      }
+    },
+    {
+      "attempt": 2,
+      "ok": false,
+      "checks": {
+        "wp_wrapper": false,
+        "has_style": true,
+        "has_all_initial": true,
+        "no_script": true,
+        "no_cdn_fonts": true,
+        "rtl": true,
+        "has_img": false,
+        "has_h1": false,
+        "inline_style_count": 1,
+        "bytes": 4781,
+        "wrapper": "galoz-rotary-encoders-template-v2",
+        "sha256": "80096e678bf9a854"
+      }
+    },
+    {
+      "attempt": 3,
+      "ok": false,
+      "checks": {
+        "wp_wrapper": false,
+        "has_style": false,
+        "has_all_initial": false,
+        "no_script": true,
+        "no_cdn_fonts": true,
+        "rtl": false,
+        "has_img": false,
+        "has_h1": false,
+        "inline_style_count": 0,
+        "bytes": 0,
+        "wrapper": null,
+        "sha256": "e3b0c44298fc1c14"
+      }
+    }
+  ],
+  "final_written": false,
+  "final_checks": null
+}
