@@ -89,7 +89,7 @@
       "name": "Gemini 3.1 Agent",
       "model": "google-gemini-3.1-pro-preview",
       "identity": "Clean Structured",
-      "dir": "powerplug.ai/Gemini 3.1 Agent (google-gemini-3.1-pro-preview)/2026-04-28",
+      "dir": "powerplug.ai/gemini/2026-04-28",
       "files": {
         "Improved_HTML_Template.html": 24725,
         "Improved_N8N_Prompt.txt": 2085,
@@ -120,7 +120,8 @@
           "name": "Workflow JSON parses",
           "pass": true
         }
-      ]
+      ],
+      "dashboard_folder_note": "Moved to canonical gemini folder so dashboard displays it as latest Gemini set; this is not an extra product."
     },
     {
       "name": "Kimi K2.6 Agent",
