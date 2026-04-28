@@ -1,0 +1,128 @@
+{
+  "name": "PowerPlug.ai HTML Template Improvement — Gemini 3.1 Agent — google/gemini-3.1-pro-preview",
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "manual-trigger-powerplug",
+      "name": "Manual Trigger",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "name": "domain",
+              "value": "powerplug.ai"
+            },
+            {
+              "name": "sub_agent",
+              "value": "Gemini 3.1 Agent"
+            },
+            {
+              "name": "model",
+              "value": "google/gemini-3.1-pro-preview"
+            },
+            {
+              "name": "design_identity",
+              "value": "Clean Structured"
+            },
+            {
+              "name": "wordpress_contact_url",
+              "value": "https://powerplug.ai/contact-us"
+            },
+            {
+              "name": "html_file",
+              "value": "Improved_HTML_Template.html"
+            },
+            {
+              "name": "prompt_file",
+              "value": "Improved_N8N_Prompt.txt"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "set-powerplug-template-metadata",
+      "name": "Set PowerPlug Template Metadata",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 2,
+      "position": [
+        240,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "name": "validation_status",
+              "value": "WordPress-safe HTML block generated with real PowerPlug content, real image URLs, scoped CSS, inline fallback styles, and n8n INJECT markers."
+            },
+            {
+              "name": "next_step",
+              "value": "Review in the HTML Redesign Dashboard, pick winning variant, then connect approved HTML to the WordPress publish workflow for powerplug.ai."
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "set-validation-summary",
+      "name": "Set Validation Summary",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 2,
+      "position": [
+        480,
+        0
+      ]
+    }
+  ],
+  "connections": {
+    "Manual Trigger": {
+      "main": [
+        [
+          {
+            "node": "Set PowerPlug Template Metadata",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set PowerPlug Template Metadata": {
+      "main": [
+        [
+          {
+            "node": "Set Validation Summary",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "powerplug-gemini-2026-04-28",
+  "meta": {
+    "domain": "powerplug.ai",
+    "sub_agent": "Gemini 3.1 Agent",
+    "model": "google/gemini-3.1-pro-preview",
+    "design_identity": "Clean Structured",
+    "credential_audit": "No credentials embedded. URLs limited to powerplug.ai/contact-us and repository-managed files."
+  },
+  "tags": [
+    "powerplug.ai",
+    "html-template-redesign",
+    "wordpress-safe",
+    "gemini"
+  ]
+}

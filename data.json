@@ -727,6 +727,102 @@
       "sha": "live",
       "size": 10977,
       "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/contents/galoz.co.il/Hermes Plan 17 Best Pick/2026-04-28/Improved_HTML_Template.html"
+    },
+    {
+      "path": "powerplug.ai/GPT 5.5 Agent (openai-gpt-5.5)/2026-04-28/Improved_HTML_Template.html",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "local-pending",
+      "size": 44597,
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/contents/powerplug.ai/GPT%205.5%20Agent%20(openai-gpt-5.5)/2026-04-28/Improved_HTML_Template.html"
+    },
+    {
+      "path": "powerplug.ai/GPT 5.5 Agent (openai-gpt-5.5)/2026-04-28/Improved_N8N_Prompt.txt",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "local-pending",
+      "size": 2081,
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/contents/powerplug.ai/GPT%205.5%20Agent%20(openai-gpt-5.5)/2026-04-28/Improved_N8N_Prompt.txt"
+    },
+    {
+      "path": "powerplug.ai/GPT 5.5 Agent (openai-gpt-5.5)/2026-04-28/Improved_N8N_Workflow.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "local-pending",
+      "size": 3159,
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/contents/powerplug.ai/GPT%205.5%20Agent%20(openai-gpt-5.5)/2026-04-28/Improved_N8N_Workflow.json"
+    },
+    {
+      "path": "powerplug.ai/Gemini 3.1 Agent (google-gemini-3.1-pro-preview)/2026-04-28/Improved_HTML_Template.html",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "local-pending",
+      "size": 24725,
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/contents/powerplug.ai/Gemini%203.1%20Agent%20(google-gemini-3.1-pro-preview)/2026-04-28/Improved_HTML_Template.html"
+    },
+    {
+      "path": "powerplug.ai/Gemini 3.1 Agent (google-gemini-3.1-pro-preview)/2026-04-28/Improved_N8N_Prompt.txt",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "local-pending",
+      "size": 2085,
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/contents/powerplug.ai/Gemini%203.1%20Agent%20(google-gemini-3.1-pro-preview)/2026-04-28/Improved_N8N_Prompt.txt"
+    },
+    {
+      "path": "powerplug.ai/Gemini 3.1 Agent (google-gemini-3.1-pro-preview)/2026-04-28/Improved_N8N_Workflow.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "local-pending",
+      "size": 3225,
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/contents/powerplug.ai/Gemini%203.1%20Agent%20(google-gemini-3.1-pro-preview)/2026-04-28/Improved_N8N_Workflow.json"
+    },
+    {
+      "path": "powerplug.ai/Kimi K2.6 Agent (moonshotai-kimi-k2.6)/2026-04-28/Improved_HTML_Template.html",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "local-pending",
+      "size": 19760,
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/contents/powerplug.ai/Kimi%20K2.6%20Agent%20(moonshotai-kimi-k2.6)/2026-04-28/Improved_HTML_Template.html"
+    },
+    {
+      "path": "powerplug.ai/Kimi K2.6 Agent (moonshotai-kimi-k2.6)/2026-04-28/Improved_N8N_Prompt.txt",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "local-pending",
+      "size": 1648,
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/contents/powerplug.ai/Kimi%20K2.6%20Agent%20(moonshotai-kimi-k2.6)/2026-04-28/Improved_N8N_Prompt.txt"
+    },
+    {
+      "path": "powerplug.ai/Kimi K2.6 Agent (moonshotai-kimi-k2.6)/2026-04-28/Improved_N8N_Workflow.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "local-pending",
+      "size": 3424,
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/contents/powerplug.ai/Kimi%20K2.6%20Agent%20(moonshotai-kimi-k2.6)/2026-04-28/Improved_N8N_Workflow.json"
+    },
+    {
+      "path": "powerplug.ai/Opus 4.7 Agent (anthropic-claude-opus-4.7)/2026-04-28/Improved_HTML_Template.html",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "local-pending",
+      "size": 28719,
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/contents/powerplug.ai/Opus%204.7%20Agent%20(anthropic-claude-opus-4.7)/2026-04-28/Improved_HTML_Template.html"
+    },
+    {
+      "path": "powerplug.ai/Opus 4.7 Agent (anthropic-claude-opus-4.7)/2026-04-28/Improved_N8N_Prompt.txt",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "local-pending",
+      "size": 2100,
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/contents/powerplug.ai/Opus%204.7%20Agent%20(anthropic-claude-opus-4.7)/2026-04-28/Improved_N8N_Prompt.txt"
+    },
+    {
+      "path": "powerplug.ai/Opus 4.7 Agent (anthropic-claude-opus-4.7)/2026-04-28/Improved_N8N_Workflow.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "local-pending",
+      "size": 3207,
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/contents/powerplug.ai/Opus%204.7%20Agent%20(anthropic-claude-opus-4.7)/2026-04-28/Improved_N8N_Workflow.json"
     }
   ]
 }
