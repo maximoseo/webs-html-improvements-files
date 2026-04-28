@@ -1,0 +1,40 @@
+{
+  "title": "Galoz Role-Based Model Experiment 2 Plan",
+  "date": "2026-04-27",
+  "objective": "Force each model to produce a meaningfully different role/style so performance comparison is sharper than Experiment 1.",
+  "rules": [
+    "Do not delete or merge existing agents",
+    "Create separate Experiment 2 artifacts",
+    "Each model keeps a distinct role",
+    "All HTML must remain full Hebrew RTL WordPress-ready with real images and no scripts",
+    "QA before push/deploy"
+  ],
+  "roles": {
+    "gpt-5.5-operational-balanced": {
+      "agent": "Hermes GPT 5.5 Operational Balanced",
+      "model": "openai/gpt-5.5",
+      "role": "Operational balanced template: safest default for employees, clean structure, simple WordPress paste, balanced SEO/CRO."
+    },
+    "opus-4.7-conversion-copy": {
+      "agent": "Hermes Opus 4.7 Conversion Copy",
+      "model": "anthropic/claude-opus-4.7",
+      "role": "High-conversion copy and narrative: stronger persuasive copy, trust, authority, CTAs, FAQ depth, but still WordPress-safe."
+    },
+    "gemini-3.1-seo-ia": {
+      "agent": "Hermes Gemini 3.1 SEO IA",
+      "model": "google/gemini-3.1-pro-preview",
+      "role": "SEO and information architecture: stronger headings, semantic clusters, internal links, FAQ/snippet readiness, source traceability."
+    },
+    "kimi-k2.6-workflow-technical": {
+      "agent": "Hermes Kimi K2.6 Workflow Technical",
+      "model": "moonshotai/kimi-k2.6",
+      "role": "Technical workflow and engineering: stronger n8n JSON/prompt operational detail, variable mapping, QA steps, technical accuracy."
+    },
+    "glm-5.1-wordpress-qa": {
+      "agent": "Hermes GLM 5.1 WordPress QA",
+      "model": "z-ai/glm-5.1",
+      "role": "WordPress-safe QA focus: minimal fragile constructs, mobile/RTL/inline CSS safety, acceptance checklist, failure prevention."
+    }
+  },
+  "source_baseline": "galoz.co.il/Hermes GPT 5.5/2026-04-27/Improved_HTML_Template.html"
+}

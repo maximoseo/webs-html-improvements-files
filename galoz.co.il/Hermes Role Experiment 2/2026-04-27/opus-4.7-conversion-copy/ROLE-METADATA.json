@@ -1,0 +1,13 @@
+{
+  "slug": "opus-4.7-conversion-copy",
+  "agent": "Hermes Opus 4.7 Conversion Copy",
+  "model": "anthropic/claude-opus-4.7",
+  "role": "High-conversion copy and narrative: stronger persuasive copy, trust, authority, CTAs, FAQ depth, but still WordPress-safe.",
+  "status": "artifacts_created",
+  "files": [
+    "Improved_HTML_Template.html",
+    "Improved_N8N_Prompt.txt",
+    "Improved_N8N_Workflow.json",
+    "OPENROUTER-ROLE-REVIEW.json"
+  ]
+}

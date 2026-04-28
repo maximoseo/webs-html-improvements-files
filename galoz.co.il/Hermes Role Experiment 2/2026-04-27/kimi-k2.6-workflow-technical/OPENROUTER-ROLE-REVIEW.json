@@ -1,0 +1,17 @@
+{
+  "slug": "kimi-k2.6-workflow-technical",
+  "agent": "Hermes Kimi K2.6 Workflow Technical",
+  "model": "moonshotai/kimi-k2.6",
+  "role": "Technical workflow and engineering: stronger n8n JSON/prompt operational detail, variable mapping, QA steps, technical accuracy.",
+  "review": {
+    "role_strategy": "Technical workflow and engineering: stronger n8n JSON/prompt operational detail, variable mapping, QA steps, technical accuracy.",
+    "error": "AttributeError: 'NoneType' object has no attribute 'strip'",
+    "html_differentiators": [],
+    "prompt_differentiators": [],
+    "workflow_differentiators": [],
+    "qa_focus": [
+      "fallback local deterministic transform"
+    ],
+    "expected_tradeoffs": []
+  }
+}

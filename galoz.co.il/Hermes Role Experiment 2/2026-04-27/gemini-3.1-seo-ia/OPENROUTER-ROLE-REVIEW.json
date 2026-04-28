@@ -1,0 +1,17 @@
+{
+  "slug": "gemini-3.1-seo-ia",
+  "agent": "Hermes Gemini 3.1 SEO IA",
+  "model": "google/gemini-3.1-pro-preview",
+  "role": "SEO and information architecture: stronger headings, semantic clusters, internal links, FAQ/snippet readiness, source traceability.",
+  "review": {
+    "role_strategy": "SEO and information architecture: stronger headings, semantic clusters, internal links, FAQ/snippet readiness, source traceability.",
+    "error": "HTTPError: HTTP Error 403: Forbidden",
+    "html_differentiators": [],
+    "prompt_differentiators": [],
+    "workflow_differentiators": [],
+    "qa_focus": [
+      "fallback local deterministic transform"
+    ],
+    "expected_tradeoffs": []
+  }
+}

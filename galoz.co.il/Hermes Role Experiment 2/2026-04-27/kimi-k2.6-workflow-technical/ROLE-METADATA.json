@@ -1,0 +1,13 @@
+{
+  "slug": "kimi-k2.6-workflow-technical",
+  "agent": "Hermes Kimi K2.6 Workflow Technical",
+  "model": "moonshotai/kimi-k2.6",
+  "role": "Technical workflow and engineering: stronger n8n JSON/prompt operational detail, variable mapping, QA steps, technical accuracy.",
+  "status": "artifacts_created",
+  "files": [
+    "Improved_HTML_Template.html",
+    "Improved_N8N_Prompt.txt",
+    "Improved_N8N_Workflow.json",
+    "OPENROUTER-ROLE-REVIEW.json"
+  ]
+}

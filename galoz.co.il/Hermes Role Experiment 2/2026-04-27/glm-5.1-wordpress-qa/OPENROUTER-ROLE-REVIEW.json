@@ -1,0 +1,53 @@
+{
+  "slug": "glm-5.1-wordpress-qa",
+  "agent": "Hermes GLM 5.1 WordPress QA",
+  "model": "z-ai/glm-5.1",
+  "role": "WordPress-safe QA focus: minimal fragile constructs, mobile/RTL/inline CSS safety, acceptance checklist, failure prevention.",
+  "review": {
+    "role_strategy": "WordPress QA gatekeeper: validate structural integrity, mobile safety, RTL compliance, and inline CSS robustness before content polish",
+    "html_differentiators": [
+      "simplified grid to single-column fallback for max mobile safety",
+      "removed nested flex containers that could break on older WordPress themes",
+      "added explicit width:100% on all sections to prevent overflow",
+      "replaced clamp() with rem+media-query-safe values for broader theme compat",
+      "stripped box-shadow on mobile to reduce rendering load",
+      "added role='article' and aria-label for accessibility compliance",
+      "used table-layout:fixed for any data tables to prevent horizontal scroll"
+    ],
+    "prompt_differentiators": [
+      "includes explicit WordPress safety checklist in prompt",
+      "enforces no-external-JS rule with validation step",
+      "adds mobile breakpoint verification instruction",
+      "requires RTL direction attribute on every block element",
+      "mandates inline CSS only with no class dependencies",
+      "includes failure-mode analysis before content generation"
+    ],
+    "workflow_differentiators": [
+      "added QA validation node before output",
+      "includes CSS linter node for inline style verification",
+      "mobile render test node with viewport simulation",
+      "RTL direction checker node",
+      "WordPress theme compatibility test node",
+      "broken-link pre-flight check node"
+    ],
+    "qa_focus": [
+      "no horizontal overflow on 320px viewport",
+      "all text remains readable without zoom at 16px base",
+      "RTL direction explicitly set on every container",
+      "no external JS or script tags",
+      "inline CSS only with no class selectors",
+      "images have explicit max-width:100% and height:auto",
+      "color contrast meets WCAG AA",
+      "no position:fixed or position:sticky that breaks mobile",
+      "form elements have visible focus states",
+      "touch targets minimum 44x44px"
+    ],
+    "expected_tradeoffs": [
+      "slightly less visual sophistication than design-focused variants",
+      "broader device compatibility at cost of modern CSS features",
+      "longer generation time due to validation steps",
+      "more conservative layout choices for stability",
+      "reduced animation/transition usage for performance safety"
+    ]
+  }
+}
