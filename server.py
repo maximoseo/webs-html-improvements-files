@@ -2,6 +2,7 @@
 import base64
 import concurrent.futures
 import datetime
+import hashlib
 import json
 import mimetypes
 import os
@@ -2015,6 +2016,441 @@ def improve_prompt_with_model(payload):
 
 
 
+# ===== Plan #21: Improve Workflow prompt assembly rules =====
+IMPROVEMENT_RULES_VERSION = 1
+IMPROVEMENT_RULES = [
+    {
+        "rule_key": "rule_site_analysis",
+        "rule_name": "Site Analysis & Discovery",
+        "rule_category": 1,
+        "conditional_on": "always",
+        "rule_text": """1. Start from the Main Website URL and inspect the homepage first.
+2. Discover internal pages: about, contact, services, products, blog, reviews, team, location, author.
+3. Check header navigation, footer links, sitemap, and structural pages.
+4. Inspect the N8N Workflow JSON to understand workflow type and intent.
+5. Inspect the original article page for floating buttons, sticky UI, WhatsApp buttons, and layout constraints.
+6. If direct browsing is incomplete, use Firecrawl for crawl mapping, structured content extraction, and product extraction.
+7. Use only real pages and real visible data found on the site.
+8. Extract business name, brand colors, fonts, radius, shadows, language, direction, tone, audience, business type, phone, socials, reviews, video, map, logo, and author info.
+9. Do not ask for information that can be discovered automatically.""",
+    },
+    {
+        "rule_key": "rule_store_decision",
+        "rule_name": "Store vs Non-Store Decision Logic",
+        "rule_category": 2,
+        "conditional_on": "always",
+        "rule_text": """1. If the workflow JSON clearly indicates store, product, catalog, WooCommerce, Shopify, checkout, cart, or eCommerce logic, treat as STORE workflow.
+2. If the live website clearly contains real products, product pages, collections, or category pages, treat as STORE workflow.
+3. If both workflow and site indicate store behavior, products must be added where relevant.
+4. If neither workflow nor site indicates store behavior, do not add product blocks.
+5. If ambiguous, use workflow JSON as the strong decision signal together with the live site structure.
+6. Never add products just because products might exist loosely somewhere on the site.""",
+    },
+    {
+        "rule_key": "rule_product_source",
+        "rule_name": "Product Source & Selection",
+        "rule_category": 3,
+        "conditional_on": "store_mode",
+        "rule_text": """1. If products belong to the main website, extract from the main website.
+2. If products come from another site and an External Product Source URL is provided, use that external site only for product extraction.
+3. The main website always remains the primary source for brand identity, CTA logic, author bio, business details, design direction, palette, and tone.
+4. Products must be relevant to the specific article topic.
+5. Rank product candidates by title similarity, category match, collection match, tag match, product type, and semantic relevance.
+6. Reject random products, weakly related products, duplicates, and products with missing or unusable images.
+7. Each shown product must include a real product image, real product title, and direct link to the exact product page.
+8. Do not show prices unless explicitly requested.
+9. Do not invent products, images, or links.""",
+    },
+    {
+        "rule_key": "rule_image_pipeline",
+        "rule_name": "Product Image Pipeline",
+        "rule_category": 4,
+        "conditional_on": "always",
+        "rule_text": """1. Audit product selection logic, image mapping logic, Supabase storage, and HTML rendering before finalizing.
+2. Prefer true featured or original product images, not thumbnails.
+3. Avoid variant-image mixups and repeated product images.
+4. Store images in Supabase when stability is needed, with deterministic filenames and public URLs.
+5. Use img tags, not background-image, for product images.
+6. Use object-fit: contain, preserve natural proportions, and avoid destructive cropping.
+7. Store source product title, URL, image URL, alt text, and dimensions when available.
+8. Skip products that do not have usable real images.
+9. Store logo and owner or author images in Supabase when needed for stability.""",
+    },
+    {
+        "rule_key": "rule_wordpress_html",
+        "rule_name": "WordPress HTML Output",
+        "rule_category": 5,
+        "conditional_on": "always",
+        "rule_text": """1. File starts with <article> and ends with </article>.
+2. Nothing appears outside the article element.
+3. Inline CSS only; no style blocks.
+4. No markdown, no code fences, no comments.
+5. No H1 tag; start with a context-setting introduction.
+6. No external dependencies: no CDN, no external CSS, no external JavaScript.
+7. Must render correctly inside WordPress.
+8. Use correct language and direction on article: Hebrew lang="he" dir="rtl"; English lang="en" dir="ltr".
+9. Export as a real .html file, not .txt.
+10. The HTML must be immediately usable as an actual HTML file.""",
+    },
+    {
+        "rule_key": "rule_article_structure",
+        "rule_name": "Article Structure",
+        "rule_category": 6,
+        "conditional_on": "always",
+        "rule_text": """1. Context introduction: 2-3 concise factual paragraphs, no H1, no dramatic intro, no rhetorical questions.
+2. Add an In This Article summary box with 4-6 bullets.
+3. Add a Table of Contents inside details/summary, closed by default, single column only. Title must be exactly Table of Contents or תוכן עניינים.
+4. If store workflow is confirmed, show a top product grid immediately after TOC.
+5. Core body uses H2 for main sections, H3 for subsections, substantive paragraphs, lists, comparison tables, and takeaway boxes.
+6. If more products are relevant, add an additional product grid before FAQ.
+7. FAQ uses details/summary, closed by default, and must appear before author bio.
+8. Closing section is 2-3 sentences maximum.
+9. Use one centered professional CTA button only.
+10. Author bio is always the final section; nothing appears after it.
+11. Do not display written, published, updated, modified, or similar date labels by default. If a date must remain, it must be current and justified.""",
+    },
+    {
+        "rule_key": "rule_visual_design",
+        "rule_name": "Visual Design",
+        "rule_category": 7,
+        "conditional_on": "always",
+        "rule_text": """1. Extract the real design system first: primary, secondary, accent, text, background, font, radius, border, shadow, heading, CTA, card, and hover treatments.
+2. If extraction fails, use the safe fallback palette: #363636, #54e9c0, #ffffff, Arimo/Arial/sans-serif, radius 6px, subtle shadow.
+3. H2 and H3 hierarchy must be clear, clamp-based, and brand-consistent. RTL sites use accent borders on the right.
+4. Body text must be readable with strong line-height and balanced spacing.
+5. Cards use subtle borders, subtle shadows, and consistent spacing; no gradients or flashy effects.
+6. Images use width 100%, height auto, max-height 60vh, object-fit contain, descriptive alt text, lazy loading below fold, and captions when useful.
+7. CTA is one button only, professional, centered, accessible, and readable on hover.
+8. Key takeaway boxes are lightly tinted with subtle accent border and concise useful text.
+9. Product grid is clean responsive CSS grid with image, title, short description, and link/button.
+10. Mobile under 768px uses about 5% side margins and single-column products; tablet uses about 10% margins and 2 columns; desktop uses about 15% margins and 3 columns.
+11. WCAG AA contrast, semantic HTML, correct lang/dir, no horizontal scrolling.
+12. Opening logo and author image must be centered on all breakpoints.""",
+    },
+    {
+        "rule_key": "rule_writing_content",
+        "rule_name": "Writing & Content Quality",
+        "rule_category": 8,
+        "conditional_on": "always",
+        "rule_text": """1. Analyze business type, target reader, site communication style, and audience knowledge level before writing.
+2. Match tone to the business: technical, lifestyle, service, expert, or beginner as appropriate.
+3. Every sentence must carry real information or real value.
+4. Delete filler and AI-cliche sentences.
+5. Be specific about features, materials, dimensions, use cases, and evidence.
+6. Replace vague praise with concrete facts.
+7. Explain what supports any claim.
+8. Write like a knowledgeable owner explaining honestly.
+9. Headings must describe content accurately and not overpromise.
+10. CTA text should clearly state what happens when clicked.""",
+    },
+    {
+        "rule_key": "rule_rtl_hebrew",
+        "rule_name": "RTL & Hebrew-Specific",
+        "rule_category": 9,
+        "conditional_on": "hebrew_site",
+        "rule_text": """1. Hebrew article element must use lang="he" dir="rtl".
+2. TOC title must be exactly תוכן עניינים.
+3. Never use em dash in Hebrew body prose.
+4. Avoid colon in body prose unless it is a technical specification, price label, code value, or CSS value.
+5. Date labels in Hebrew are forbidden by default.
+6. TOC and FAQ arrows or plus signs must sit on the same line as text in a fixed position slot, follow RTL flow, keep balanced spacing, stay consistently aligned, and not jump when opening or closing.
+7. Icons must not be glued to text or pushed to the extreme edge.""",
+    },
+    {
+        "rule_key": "rule_floating_buttons",
+        "rule_name": "Floating Button",
+        "rule_category": 10,
+        "conditional_on": "always",
+        "rule_text": """1. Inspect the original page before creating any floating button.
+2. If a WhatsApp floating button already exists, do not create another.
+3. Do not duplicate any existing floating action.
+4. If new floating buttons are needed, position above existing buttons or on the opposite side.
+5. New buttons must not overlap existing UI.
+6. If floating buttons cover text on mobile or tablet, reposition, resize, or hide them for those breakpoints.
+7. If WordPress makes them unstable, remove instead of leaving broken UI.
+8. Phone buttons must use real tel: links.""",
+    },
+    {
+        "rule_key": "rule_n8n_safety",
+        "rule_name": "N8N Prompt Safety",
+        "rule_category": 11,
+        "conditional_on": "always",
+        "rule_text": """1. Improved N8N prompt is clean plain text.
+2. Do not wrap in markdown code fences.
+3. Do not output markdown tables inside the prompt.
+4. Do not add commentary before or after the prompt.
+5. Keep quotes, brackets, and parentheses balanced.
+6. Use strict instruction blocks and direct wording.
+7. Define output boundaries explicitly for HTML output.
+8. For accordions, require details/summary, not JavaScript onclick.
+9. Prefer self-contained WordPress-safe HTML/CSS patterns.
+10. Prompt must be safe to paste back into n8n without formatting errors.
+11. Preserve the original article URL from the initial n8n run.""",
+    },
+    {
+        "rule_key": "rule_workflow_json",
+        "rule_name": "Workflow JSON",
+        "rule_category": 12,
+        "conditional_on": "always",
+        "rule_text": """1. Improved workflow JSON must remain aligned with the original workflow purpose.
+2. It must support the improved prompt and improved HTML template.
+3. It must support store vs non-store logic and optional external product source extraction.
+4. It must support Firecrawl usage when needed.
+5. It must support Supabase image storage when needed.
+6. It must support omitting products without usable images.
+7. It must support floating-button inspection, deduplication, and responsive handling.
+8. It must support date suppression or current-date logic.
+9. It must contain no malformed nodes, broken connections, or broken expressions.
+10. It must export improved HTML as .html, not .txt.
+11. It must be valid JSON.""",
+    },
+    {
+        "rule_key": "rule_schema",
+        "rule_name": "Schema & Structured Data",
+        "rule_category": 13,
+        "conditional_on": "always",
+        "rule_text": """1. Include schema only when relevant to the page and business type.
+2. Schema types must match the actual content and business.
+3. JSON-LD must be syntactically valid.
+4. Do not fabricate AggregateRating.
+5. Do not create fake reviews in schema.
+6. Do not add irrelevant schema types.
+7. Use real data only.""",
+    },
+    {
+        "rule_key": "rule_validation",
+        "rule_name": "Validation Checklist",
+        "rule_category": 14,
+        "conditional_on": "always",
+        "rule_text": """Before finalizing, verify: WordPress compatibility; no horizontal overflow; FAQ before author bio; author bio final; TOC and FAQ closed by default; exact TOC title; no date label by default; anchors unique and correct; CTA links real; phone links use tel:; only real reviews, socials, video, map; no breadcrumbs at top; no paragraph numbering; desktop/tablet/mobile render correctly; workflow JSON used for store decision; products only when justified; every product has correct image and link; unusable product images skipped; product images stored in Supabase when needed; no prices unless requested; logo and author image centered; RTL icon rules satisfied for Hebrew; hover states readable; floating buttons deduplicated; schema relevant and valid; final prompt is n8n-safe; workflow JSON is valid and exports HTML as .html.""",
+    },
+    {
+        "rule_key": "rule_forbidden",
+        "rule_name": "Forbidden Patterns",
+        "rule_category": 15,
+        "conditional_on": "always",
+        "rule_text": """Never include emojis, fake urgency, scarcity, social proof, authority claims, fake trust theater, bonuses, filler phrases, AI-cliche intros, fabricated data, unsupported superlatives, decorative content icons, year-based marketing phrasing, clickbait headings, manipulative CTA language, fake reviews, fake social profiles, fake author info, fake videos, fake products, content after author bio, multi-column TOC, paragraph numbering, breadcrumbs at top, share blocks unless requested, stale dates, product blocks without confirmed store logic, products without usable images, unstable hotlinked product images, duplicate WhatsApp floating buttons, prompt code fences, assistant chatter around the N8N prompt, .txt export for HTML, or anything that works only in preview but breaks in WordPress.""",
+    },
+    {
+        "rule_key": "rule_api_secrets",
+        "rule_name": "API & Secret Handling",
+        "rule_category": 16,
+        "conditional_on": "always",
+        "rule_text": """1. Use direct browsing first.
+2. Use Firecrawl when direct browsing is not enough for site-wide discovery, URL mapping, product extraction, or content extraction.
+3. Use Supabase only when needed for stable asset storage such as product images, logo, owner image, or author image.
+4. Do not use the SQL database password unless absolutely necessary.
+5. Never print, echo, expose, or include API keys in output files or prompts.
+6. Never hardcode secrets into delivered files.
+7. Use environment variables or secure storage references only.
+8. Keys are stored encrypted in backend settings and injected at runtime.""",
+    },
+]
+
+
+def _active_improvement_rules(language='', store_decision=''):
+    language = (language or '').lower()
+    store_decision = (store_decision or '').lower()
+    include_hebrew = language in ('he', 'hebrew', 'rtl')
+    include_store = store_decision in ('store', 'ecommerce', 'shop')
+    active = []
+    for rule in sorted(IMPROVEMENT_RULES, key=lambda r: r['rule_category']):
+        cond = rule.get('conditional_on') or 'always'
+        if cond == 'hebrew_site' and not include_hebrew:
+            continue
+        if cond == 'store_mode' and not include_store:
+            continue
+        active.append({**rule, 'version': IMPROVEMENT_RULES_VERSION, 'is_active': True, 'is_always_included': True})
+    return active
+
+
+def _safe_text(value, limit=20000):
+    if value is None:
+        return ''
+    text = str(value).strip()
+    return text[:limit]
+
+
+def _detect_language_direction(*texts):
+    combined = '\n'.join(_safe_text(t, 3000) for t in texts if t)
+    hebrew_chars = len(re.findall(r'[\u0590-\u05FF]', combined))
+    latin_chars = len(re.findall(r'[A-Za-z]', combined))
+    if hebrew_chars and hebrew_chars >= max(10, latin_chars * 0.15):
+        return 'he', 'rtl'
+    return 'en', 'ltr'
+
+
+def _preanalyze_workflow_json(raw_workflow):
+    text = ''
+    parsed = None
+    if isinstance(raw_workflow, (dict, list)):
+        parsed = raw_workflow
+        text = json.dumps(raw_workflow, ensure_ascii=False)[:200000]
+    else:
+        text = _safe_text(raw_workflow, 200000)
+        if text:
+            try:
+                parsed = json.loads(text)
+            except Exception:
+                parsed = None
+    lowered = text.lower()
+    store_terms = ['woocommerce', 'shopify', 'product', 'products', 'catalog', 'catalogue', 'cart', 'checkout', 'sku', 'collection', 'price', 'store', 'ecommerce', 'e-commerce']
+    hits = [term for term in store_terms if term in lowered]
+    node_count = 0
+    if isinstance(parsed, dict):
+        nodes = parsed.get('nodes') or []
+        node_count = len(nodes) if isinstance(nodes, list) else 0
+    return {
+        'valid_json': parsed is not None if text else False,
+        'node_count': node_count,
+        'store_hits': hits[:20],
+        'store_decision': 'store' if len(hits) >= 2 or any(h in hits for h in ['woocommerce', 'shopify', 'checkout', 'cart']) else 'non_store',
+    }
+
+
+def _format_rules_for_prompt(rules):
+    chunks = []
+    for rule in rules:
+        chunks.append(f"## Rule {rule['rule_category']}: {rule['rule_name']}\nBackend key: {rule['rule_key']}\nConditional: {rule.get('conditional_on') or 'always'}\n\n{rule['rule_text']}")
+    return '\n\n'.join(chunks)
+
+
+def assemble_improve_workflow_prompt(payload):
+    main_url = _safe_text(payload.get('mainWebsiteUrl') or payload.get('main_website_url'), 1000)
+    article_url = _safe_text(payload.get('originalArticleUrl') or payload.get('original_article_url'), 1000)
+    original_prompt = _safe_text(payload.get('originalPrompt') or payload.get('original_prompt') or payload.get('n8nPrompt'), 60000)
+    original_html = _safe_text(payload.get('htmlTemplate') or payload.get('originalHtml') or payload.get('html_template'), 80000)
+    original_workflow = payload.get('workflowJson') or payload.get('originalWorkflow') or payload.get('workflow_json') or ''
+    external_product_url = _safe_text(payload.get('externalProductUrl') or payload.get('external_product_url'), 1000)
+    custom_instructions = _safe_text(payload.get('customInstructions') or payload.get('custom_instructions'), 20000)
+    model = _safe_text(payload.get('model') or prompt_default_model('PROMPT_IMPROVER_MODEL'), 200)
+    mode = _safe_text(payload.get('mode') or 'focused', 40)
+
+    missing = []
+    if not main_url: missing.append('mainWebsiteUrl')
+    if not article_url: missing.append('originalArticleUrl')
+    if not original_prompt: missing.append('originalPrompt')
+    if not original_html: missing.append('htmlTemplate')
+    if not original_workflow: missing.append('workflowJson')
+    if missing:
+        raise ValueError('Missing required inputs: ' + ', '.join(missing))
+
+    workflow_analysis = _preanalyze_workflow_json(original_workflow)
+    language, direction = _detect_language_direction(original_prompt, original_html, json.dumps(original_workflow, ensure_ascii=False) if isinstance(original_workflow, (dict, list)) else original_workflow)
+    store_decision = _safe_text(payload.get('storeDecision'), 50) or workflow_analysis['store_decision']
+    rules = _active_improvement_rules(language=language, store_decision=store_decision)
+    rules_block = _format_rules_for_prompt(rules)
+
+    file_refs = []
+    for key, label in [('originalPromptFileName', 'N8N prompt file'), ('htmlTemplateFileName', 'HTML template file'), ('workflowJsonFileName', 'N8N workflow JSON file')]:
+        if payload.get(key):
+            file_refs.append(f"- {label}: {payload.get(key)}")
+    file_refs_block = '\n'.join(file_refs) if file_refs else '- Uploaded file names were not provided in this request.'
+
+    prompt = f"""# Improve Workflow Production Prompt
+
+You are a senior full-stack developer, prompt engineer, WordPress HTML specialist, n8n workflow engineer, SEO/content editor, and QA lead. Work in plan mode first, then execute. Use sub-agents or swarm-style parallel review when available.
+
+Primary objective: improve the original n8n article workflow and return exactly 3 production deliverables:
+1. Improved_N8N_Prompt.txt
+2. Improved_HTML_Template.html
+3. Improved_N8N_Workflow.json
+
+No extra public deliverables. If validation fails, do not publish a fake success; return a clear failure report internally.
+
+## Required Inputs
+
+- Main Website URL: {main_url}
+- Original Article URL: {article_url}
+- External Product Source URL: {external_product_url or 'None provided'}
+- Mode: {mode}
+- Requested model: {model}
+- Detected language: {language}
+- Detected direction: {direction}
+- Workflow store decision pre-analysis: {store_decision}
+- Workflow JSON valid: {workflow_analysis['valid_json']}
+- Workflow node count: {workflow_analysis['node_count']}
+- Workflow store/product signals: {', '.join(workflow_analysis['store_hits']) if workflow_analysis['store_hits'] else 'none'}
+
+## Uploaded File References
+
+{file_refs_block}
+
+## Auto-Discovery Order
+
+1. Inspect the homepage.
+2. Inspect navigation and footer links.
+3. Inspect key pages: about, contact, services, products, blog, reviews, team.
+4. Inspect the original article page for layout and floating UI.
+5. Inspect the N8N workflow JSON.
+6. Inspect the original N8N prompt.
+7. Inspect the original HTML template.
+8. Use Firecrawl only when direct browsing is incomplete.
+
+## Backend Rules To Enforce
+
+{rules_block}
+
+## Original N8N Prompt
+
+--- BEGIN ORIGINAL N8N PROMPT ---
+{original_prompt}
+--- END ORIGINAL N8N PROMPT ---
+
+## Original HTML Template
+
+--- BEGIN ORIGINAL HTML TEMPLATE ---
+{original_html}
+--- END ORIGINAL HTML TEMPLATE ---
+
+## Original N8N Workflow JSON
+
+--- BEGIN ORIGINAL WORKFLOW JSON ---
+{_safe_text(json.dumps(original_workflow, ensure_ascii=False, indent=2) if isinstance(original_workflow, (dict, list)) else original_workflow, 80000)}
+--- END ORIGINAL WORKFLOW JSON ---
+
+## Custom Instructions
+
+{custom_instructions or 'None.'}
+
+## Output Contract
+
+Return exactly three file sections in this order, with no commentary outside the sections:
+
+### FILE: Improved_N8N_Prompt.txt
+Plain text only. No code fences. Must preserve the original article URL and enforce all active backend rules.
+
+### FILE: Improved_HTML_Template.html
+Raw HTML only. Must start with article and end with article. Inline CSS only. No style blocks. No scripts. No markdown.
+
+### FILE: Improved_N8N_Workflow.json
+Valid JSON only. Must preserve original workflow purpose and support the improved prompt/template, store logic, Firecrawl/Supabase logic when needed, and .html export.
+
+## Failure Handling
+
+If any deliverable cannot be completed truthfully using real data, do not fabricate. Mark that deliverable as failed and explain the blocker internally. Do not present failed or fallback outputs as successful public deliverables.
+""".strip()
+
+    run_id = hashlib.sha256((main_url + article_url + original_prompt[:500] + original_html[:500] + str(time.time())).encode('utf-8')).hexdigest()[:16]
+    return {
+        'ok': True,
+        'runId': run_id,
+        'assembledPrompt': prompt,
+        'rulesUsed': [{
+            'rule_key': r['rule_key'], 'rule_name': r['rule_name'], 'rule_category': r['rule_category'],
+            'version': r['version'], 'conditional_on': r.get('conditional_on')
+        } for r in rules],
+        'discoveredData': {
+            'site_language': language,
+            'site_direction': direction,
+            'store_decision': store_decision,
+            'workflow_analysis': workflow_analysis,
+        },
+        'model': model,
+        'mode': mode,
+    }
+
+
 # ---------- Palette extractor (Prompt Studio) ----------
 
 _HEX_RE = re.compile(r'#(?:[0-9a-fA-F]{6}|[0-9a-fA-F]{3})\b')
@@ -3528,12 +3964,20 @@ body{{font-family:Arial;padding:24px}}h1{{color:#333}}pre{{background:#f4f4f4;pa
                 {'id': 'html-redesign', 'name': 'HTML Redesign Prompt', 'category': 'html', 'description': 'Generate improved HTML templates for websites'},
                 {'id': 'kwr-analysis', 'name': 'Keyword Research', 'category': 'seo', 'description': 'Analyze keywords and generate SEO reports'},
                 {'id': 'n8n-workflow', 'name': 'N8N Workflow', 'category': 'automation', 'description': 'Build and fix n8n automation workflows'},
+                {'id': 'improve-workflow', 'name': 'Improve Workflow', 'category': 'n8n', 'description': 'Assemble a production prompt that improves an N8N prompt, WordPress HTML template, and workflow JSON'},
                 {'id': 'skills-radar', 'name': 'Skills Discovery', 'category': 'research', 'description': 'Discover new AI skills and techniques'},
                 {'id': 'content-rewrite', 'name': 'Content Rewrite', 'category': 'content', 'description': 'Rewrite and improve website content'},
                 {'id': 'meta-optimization', 'name': 'Meta Optimization', 'category': 'seo', 'description': 'Optimize title tags and meta descriptions'},
                 {'id': 'deploy-checklist', 'name': 'Deploy Checklist', 'category': 'devops', 'description': 'Pre-deployment verification checklist'},
             ]
             return json_response(self, 200, {'ok': True, 'palette': palette})
+
+        if parsed.path == '/api/studio/improve/rules':
+            query = urllib.parse.parse_qs(parsed.query or '')
+            language = (query.get('language') or [''])[0]
+            store_decision = (query.get('storeDecision') or [''])[0]
+            rules = _active_improvement_rules(language=language, store_decision=store_decision)
+            return json_response(self, 200, {'ok': True, 'version': IMPROVEMENT_RULES_VERSION, 'rules': rules})
 
         if parsed.path == '/api/projects/list':
             try:
@@ -3929,6 +4373,15 @@ body{{font-family:Arial;padding:24px}}h1{{color:#333}}pre{{background:#f4f4f4;pa
                 return json_response(self, 502, {'ok': False, 'error': f'Model API error {exc.code}', 'details': body})
             except Exception as exc:
                 return json_response(self, 500, {'ok': False, 'error': str(exc)})
+
+        if parsed.path == '/api/studio/improve':
+            try:
+                result = assemble_improve_workflow_prompt(payload)
+                return json_response(self, 200, result)
+            except ValueError as exc:
+                return json_response(self, 400, {'ok': False, 'error': str(exc)})
+            except Exception as exc:
+                return json_response(self, 500, {'ok': False, 'error': str(exc)[:500]})
 
         if parsed.path == '/api/prompt/palette':
             try:

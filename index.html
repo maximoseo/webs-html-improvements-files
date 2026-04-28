@@ -7048,6 +7048,40 @@ function showErrorToast(msg) {
   #an-deploy-labels span:last-child{display:block}
   #an-chart-labels span:nth-child(2n){display:none}
 }
+
+/* PLAN21_IMPROVE_WORKFLOW_PROMPT_STUDIO_2026_04_28 */
+.ps-template-btn[data-template="improve-workflow"]{
+  border-color:rgba(84,233,192,.58) !important;
+  background:linear-gradient(180deg,rgba(84,233,192,.14),rgba(104,101,255,.08)) !important;
+  color:#dffdf4 !important;
+  grid-column:span 2;
+}
+.ps-template-btn[data-template="improve-workflow"].active{
+  background:linear-gradient(180deg,rgba(84,233,192,.24),rgba(104,101,255,.18)) !important;
+  box-shadow:0 0 0 1px rgba(84,233,192,.24),0 10px 28px rgba(84,233,192,.10);
+}
+.ps-improve-workflow-form{
+  display:none;
+  border:1px solid rgba(84,233,192,.22);
+  border-radius:14px;
+  background:rgba(84,233,192,.035);
+  padding:12px;
+  gap:10px;
+}
+.ps-improve-workflow-form.active{display:grid}
+.ps-iw-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.ps-iw-field{display:flex;flex-direction:column;gap:5px;min-width:0}
+.ps-iw-field label{font-size:11px;color:var(--text-secondary);font-weight:700}
+.ps-iw-field input,.ps-iw-field textarea{
+  width:100%;border:1px solid var(--border);border-radius:10px;background:rgba(0,0,0,.16);
+  color:var(--text);padding:9px 10px;font:12px/1.45 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;outline:none;
+}
+.ps-iw-field textarea{min-height:74px;resize:vertical}
+.ps-iw-field.full{grid-column:1/-1}
+.ps-iw-note{font-size:11px;color:var(--muted);line-height:1.45}
+@media(max-width:780px){.ps-iw-grid{grid-template-columns:1fr}.ps-template-btn[data-template="improve-workflow"]{grid-column:auto}}
+/* END PLAN21_IMPROVE_WORKFLOW_PROMPT_STUDIO_2026_04_28 */
+
 </style>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -9660,6 +9694,18 @@ GET    /api/tasks/stats/burndown?project_id=x     — Burndown chart data
             <button type="button" class="ps-mini-btn" onclick="psClearTemplateSelection()">Clear selection</button>
           </div>
         </div>
+        <div id="ps-improve-workflow-form" class="ps-improve-workflow-form" aria-label="Improve Workflow inputs">
+          <div class="ps-iw-note">Improve Workflow builds the full production prompt from backend rules. Required: main site URL, original article URL, original prompt, HTML template, and workflow JSON.</div>
+          <div class="ps-iw-grid">
+            <div class="ps-iw-field"><label for="ps-iw-main-url">Main Website URL *</label><input id="ps-iw-main-url" type="url" placeholder="https://example.com/"></div>
+            <div class="ps-iw-field"><label for="ps-iw-article-url">Original Article URL *</label><input id="ps-iw-article-url" type="url" placeholder="https://example.com/blog/article"></div>
+            <div class="ps-iw-field full"><label for="ps-iw-product-url">External Product Source URL (optional)</label><input id="ps-iw-product-url" type="url" placeholder="Only if products come from another site"></div>
+            <div class="ps-iw-field full"><label for="ps-iw-original-prompt">Original N8N Prompt *</label><textarea id="ps-iw-original-prompt" placeholder="Paste the original N8N prompt or load it from the project file set"></textarea></div>
+            <div class="ps-iw-field full"><label for="ps-iw-html-template">Original HTML Template *</label><textarea id="ps-iw-html-template" placeholder="Paste the original HTML template. If this project has an HTML file, it is auto-loaded when possible."></textarea></div>
+            <div class="ps-iw-field full"><label for="ps-iw-workflow-json">Original N8N Workflow JSON *</label><textarea id="ps-iw-workflow-json" placeholder="Paste the workflow JSON. If this project has a workflow JSON file, it is auto-loaded when possible."></textarea></div>
+            <div class="ps-iw-field full"><label for="ps-iw-custom">Custom Instructions (optional)</label><textarea id="ps-iw-custom" placeholder="Any extra requirements for this improvement run"></textarea></div>
+          </div>
+        </div>
       </div>
       <div class="ps-section" id="ps-constraints-section">
         <div class="ps-section-label">Constraints</div>
@@ -11775,6 +11821,60 @@ function togglePromptStudioExpand(){
   }
 }
 async function improvePrompt(btn){
+  const isImproveWorkflow=!!(window._psSelectedTemplates && window._psSelectedTemplates.has('improve-workflow'));
+  if(isImproveWorkflow){
+    const output=document.getElementById('prompt-output');
+    const status=document.getElementById('prompt-status');
+    if(window._improveAbort){
+      try{ window._improveAbort.abort('user_cancel'); }catch(e){}
+      window._improveAbort=null;
+      status.textContent='Improve Workflow assembly cancelled.';
+      showToast('Improve Workflow cancelled','warn'); _syncPromptModalRunningState();
+      return;
+    }
+    const modelEl=document.getElementById('prompt-model-select');
+    const selectedModel=modelEl?modelEl.value:'google/gemini-2.5-flash';
+    const payload=window.psCollectImproveWorkflowPayload ? window.psCollectImproveWorkflowPayload('focused') : {};
+    payload.model=selectedModel;
+    const missing=[];
+    [['mainWebsiteUrl','Main Website URL'],['originalArticleUrl','Original Article URL'],['originalPrompt','Original N8N Prompt'],['htmlTemplate','HTML Template'],['workflowJson','Workflow JSON']].forEach(function(pair){
+      if(!String(payload[pair[0]]||'').trim()) missing.push(pair[1]);
+    });
+    if(missing.length){status.textContent='Missing Improve Workflow inputs: '+missing.join(', ');return;}
+    const original=btn.innerHTML;
+    output.value='';
+    status.textContent='Assembling Improve Workflow prompt from backend rules...';
+    btn.innerHTML='<span class="btn-spinner" aria-hidden="true"></span>Stop';
+    btn.classList.add('is-running');
+    window._improveAbort=new AbortController(); _syncPromptModalRunningState();
+    try{
+      const res=await fetch('/api/studio/improve',{method:'POST',signal:window._improveAbort.signal,headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
+      const data=await res.json().catch(()=>({}));
+      if(!res.ok||!data.ok) throw new Error(data.error||'Improve Workflow assembly failed');
+      output.value=data.assembledPrompt||'';
+      promptStudioContext.lastImprovedPrompt=output.value;
+      promptStudioContext.lastTweakedHtml='';
+      document.getElementById('prompt-tweak-output').value='';
+      document.getElementById('prompt-tweak-status').textContent='';
+      document.getElementById('prompt-apply-html-btn').style.display='none';
+      document.getElementById('prompt-copy-html-obs-btn').style.display='none';
+      const meta=data.discoveredData||{};
+      status.textContent=`Improve Workflow prompt assembled · ${data.rulesUsed.length} backend rules · ${meta.site_language||'auto'}/${meta.site_direction||'auto'} · ${meta.store_decision||'auto'}`;
+      showToast('Improve Workflow prompt assembled','success');
+      psSaveHistory(output.value,{domain:promptStudioContext.domain,agent:promptStudioContext.agentName,version:promptStudioContext.versionName,kind:'improve-workflow'});
+      psLoadHistory();
+    }catch(err){
+      if(err && (err.name==='AbortError' || String(err.message||'').includes('user_cancel'))){status.textContent='Improve Workflow assembly cancelled.';}
+      else {status.textContent='Error: '+(err.message||err);showToast('Improve Workflow failed','error');}
+    }finally{
+      window._improveAbort=null;
+      btn.innerHTML=original;
+      btn.classList.remove('is-running');
+      btn.title='Build a single high-quality prompt with the selected model';
+      _syncPromptModalRunningState();
+    }
+    return;
+  }
   const draft=document.getElementById('prompt-draft').value.trim();
   const output=document.getElementById('prompt-output');
   const status=document.getElementById('prompt-status');
@@ -17010,7 +17110,11 @@ Instructions:
 - Fix overflowing elements
 - Adjust font sizes for mobile
 - Fix touch target sizes (min 44px)
-- Output: {output_format}`
+- Output: {output_format}`,
+  'improve-workflow': `Improve Workflow task type. Assemble a complete production improvement prompt from backend rules and the provided inputs. The prompt must produce exactly 3 deliverables: Improved_N8N_Prompt.txt, Improved_HTML_Template.html, and Improved_N8N_Workflow.json. Use real discovered site data only, preserve secrets, enforce WordPress-safe HTML, and publish only outputs that pass validation.
+
+Required inputs are captured in the Improve Workflow form below.
+- Output: assembled prompt ready for Focused mode copy or Pipeline mode execution`
 };
 
 window.psBuildSelectedTemplateBlock = function() {
@@ -17063,6 +17167,54 @@ window.psToggleTemplate = function(type, btn) {
     if(btn) btn.classList.add('active');
   }
   window.psUpdateTemplateSelectionNote();
+  window.psSyncImproveWorkflowForm && window.psSyncImproveWorkflowForm();
+};
+window.psSyncImproveWorkflowForm = function(){
+  var form=document.getElementById('ps-improve-workflow-form');
+  if(!form) return;
+  var active=!!(window._psSelectedTemplates && window._psSelectedTemplates.has('improve-workflow'));
+  form.classList.toggle('active', active);
+  if(active) window.psAutoloadImproveWorkflowInputs && window.psAutoloadImproveWorkflowInputs();
+};
+window.psAutoloadImproveWorkflowInputs = async function(){
+  try{
+    var ctx=window.promptStudioContext||{};
+    var main=document.getElementById('ps-iw-main-url');
+    if(main && !main.value && ctx.domain) main.value='https://'+ctx.domain+'/';
+    var html=document.getElementById('ps-iw-html-template');
+    if(html && !html.value && ctx.htmlDownloadUrl){
+      fetch(ctx.htmlDownloadUrl).then(function(r){return r.ok?r.text():'';}).then(function(t){if(t && !html.value) html.value=t;}).catch(function(){});
+    }
+    var prompt=document.getElementById('ps-iw-original-prompt');
+    var workflow=document.getElementById('ps-iw-workflow-json');
+    var files=ctx.fileManifest||[];
+    var promptFile=files.find(function(f){return /prompt/i.test(f.name||'') && String(f.name||'').toLowerCase().endsWith('.txt') && f.download;});
+    var workflowFile=files.find(function(f){return /workflow/i.test(f.name||'') && String(f.name||'').toLowerCase().endsWith('.json') && f.download;});
+    if(prompt && !prompt.value && promptFile){ fetch(promptFile.download).then(function(r){return r.ok?r.text():'';}).then(function(t){if(t && !prompt.value) prompt.value=t;}).catch(function(){}); }
+    if(workflow && !workflow.value && workflowFile){ fetch(workflowFile.download).then(function(r){return r.ok?r.text():'';}).then(function(t){if(t && !workflow.value) workflow.value=t;}).catch(function(){}); }
+  }catch(e){}
+};
+window.psCollectImproveWorkflowPayload = function(mode){
+  var ctx=window.promptStudioContext||{};
+  var modelEl=document.getElementById('prompt-model-select');
+  return {
+    mainWebsiteUrl:(document.getElementById('ps-iw-main-url')||{}).value||'',
+    originalArticleUrl:(document.getElementById('ps-iw-article-url')||{}).value||'',
+    externalProductUrl:(document.getElementById('ps-iw-product-url')||{}).value||'',
+    originalPrompt:(document.getElementById('ps-iw-original-prompt')||{}).value||'',
+    htmlTemplate:(document.getElementById('ps-iw-html-template')||{}).value||'',
+    workflowJson:(document.getElementById('ps-iw-workflow-json')||{}).value||'',
+    customInstructions:(document.getElementById('ps-iw-custom')||{}).value||'',
+    originalPromptFileName:(ctx.promptFilePath||'').split('/').pop(),
+    htmlTemplateFileName:ctx.htmlFileName||'',
+    workflowJsonFileName:(ctx.workflowFilePath||'').split('/').pop(),
+    model:modelEl?modelEl.value:'google/gemini-2.5-flash',
+    mode:mode||'focused',
+    domain:ctx.domain||'',
+    agentName:ctx.agentName||'',
+    versionName:ctx.versionName||'',
+    fileManifest:ctx.fileManifest||[]
+  };
 };
 window.psClearTemplateSelection = function(silent) {
   window._psSelectedTemplates = new Set();
@@ -17072,6 +17224,7 @@ window.psClearTemplateSelection = function(silent) {
     textarea.value = (textarea.value || '').replace(/\n*--- SELECTED TASK TEMPLATES ---[\s\S]*?--- END SELECTED TASK TEMPLATES ---\n*/g, '\n\n').trim();
   }
   window.psUpdateTemplateSelectionNote();
+  window.psSyncImproveWorkflowForm && window.psSyncImproveWorkflowForm();
   if(!silent) showToast('Template selection cleared','success');
 };
 window.renderPromptStudioBrainstormModels = function(models) {
