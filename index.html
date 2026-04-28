@@ -23628,5 +23628,135 @@ body.page-tasks-active #tasks-board-view{
 })();
 </script>
 
+
+
+<style id="projects-sort-filter-fix-2026-04-27">
+/* DASHBOARD_QA_FIX_PROJECTS_SORT_FILTERS_2026_04_27
+   Root cause: the legacy Sort dropdown sorted only DOM nodes after render and had no reliable date keys; Most recent/Oldest often compared all cards as 0. This patch gives project cards stable data attributes, reapplies sort after every dashboard render, and adds useful status/agent filters. */
+#projects-controls-wrap{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-left:10px}
+#projects-controls-wrap label{font-size:11px;font-weight:700;color:var(--muted);letter-spacing:.02em}
+#projects-controls-wrap select{background:var(--card,rgba(255,255,255,0.04));color:var(--text);border:1px solid var(--border);border-radius:8px;padding:7px 10px;font:600 12px/1 inherit;cursor:pointer;min-height:34px}
+#projects-controls-wrap select:focus{outline:2px solid rgba(113,112,255,.55);outline-offset:1px}
+#projects-sort-wrap{margin-left:0!important}
+#projects-filter-wrap{display:inline-flex;align-items:center;gap:6px}
+.projects-filter-active .section-count{border-color:rgba(113,112,255,.28);color:#dfe1ff;background:rgba(113,112,255,.10)}
+@media(max-width:900px){#projects-controls-wrap{width:100%;margin-left:0;justify-content:stretch}#projects-controls-wrap select{flex:1;min-width:150px}.section-head .view-toggle{width:100%}}
+</style>
+<script id="projects-sort-filter-fix-2026-04-27">
+(function(){
+  'use strict';
+  var MARKER='DASHBOARD_QA_FIX_PROJECTS_SORT_FILTERS_2026_04_27';
+  var SORT_KEY='dash-projects-sort-v2';
+  var FILTER_KEY='dash-projects-filter-v1';
+  function lsGet(key, fallback){try{var v=localStorage.getItem(key);return v==null?fallback:JSON.parse(v);}catch(_){return fallback;}}
+  function lsSet(key, value){try{localStorage.setItem(key, JSON.stringify(value));}catch(_){}}
+  function cleanText(v){return String(v||'').trim().toLowerCase();}
+  function parseProjectDate(label){
+    label=String(label||'');
+    var m=label.match(/(\d{1,2})\.(\d{1,2})\.(\d{2,4})/);
+    if(m){var y=m[3].length===2?'20'+m[3]:m[3];return Date.parse(y+'-'+m[2].padStart(2,'0')+'-'+m[1].padStart(2,'0'))||0;}
+    var parsed=Date.parse(label);return isNaN(parsed)?0:parsed;
+  }
+  function cards(){var grid=document.getElementById('projects-grid');return grid?Array.from(grid.querySelectorAll(':scope > .project-card')):[];}
+  function hydrateCard(card){
+    if(!card||card.__sortFilterHydrated) return;
+    var nameEl=card.querySelector('.card-info h3,h3');
+    var name=nameEl?nameEl.textContent.trim():card.dataset.name||'';
+    card.dataset.projectName=cleanText(name||card.dataset.name||'');
+    var statusEl=card.querySelector('.card-meta .meta-tag');
+    card.dataset.projectStatus=cleanText(statusEl?statusEl.textContent:'active').replace(/\s+/g,'_');
+    var agentTags=Array.from(card.querySelectorAll('.agent-group')).map(function(g){return cleanText(g.getAttribute('data-agent')||g.querySelector('strong')?.textContent||'');});
+    card.dataset.projectAgents=agentTags.join('|');
+    var updatedTag=Array.from(card.querySelectorAll('.card-meta .meta-tag')).find(function(el){return /^Updated:/i.test(el.textContent.trim());});
+    var rawDate=(updatedTag&&(updatedTag.getAttribute('title')||updatedTag.textContent.replace(/^Updated:\s*/i,'')))||'';
+    var maxDate=0;
+    Array.from(card.querySelectorAll('.version-title')).forEach(function(v){maxDate=Math.max(maxDate, parseProjectDate(v.textContent));});
+    card.dataset.projectUpdated=String(parseProjectDate(rawDate)||maxDate||0);
+    card.dataset.projectSets=String(card.querySelectorAll('.agent-group').length||0);
+    card.__sortFilterHydrated=true;
+  }
+  function hydrateAll(){cards().forEach(hydrateCard);}
+  function currentSort(){var sel=document.getElementById('projects-sort');return sel?sel.value:lsGet(SORT_KEY, lsGet('dash-projects-sort-v1','recent'));}
+  function currentFilter(){var sel=document.getElementById('projects-filter');return sel?sel.value:lsGet(FILTER_KEY,'all');}
+  function applyProjectsSortFilter(){
+    var grid=document.getElementById('projects-grid');if(!grid||window.__projectSortFilterApplying)return;
+    hydrateAll();
+    var list=cards();if(!list.length)return;
+    var mode=currentSort();var filter=currentFilter();
+    var query=(document.getElementById('search')?.value||'').trim().toLowerCase();
+    var visible=0;
+    list.forEach(function(card){
+      var name=card.dataset.projectName||'';
+      var agents=card.dataset.projectAgents||'';
+      var status=card.dataset.projectStatus||'';
+      var sets=parseInt(card.dataset.projectSets||'0',10)||0;
+      var passSearch=!query||name.includes(query)||agents.includes(query);
+      var passFilter=true;
+      if(filter==='deployed') passFilter=!!card.querySelector('.card-right [title="Deployed to n8n"]');
+      else if(filter==='not-deployed') passFilter=!!card.querySelector('.card-right [title="Not deployed"]');
+      else if(filter==='multi-agent') passFilter=sets>1;
+      else if(filter==='hermes') passFilter=/hermes|gpt|opus|gemini|kimi|glm/.test(agents);
+      else if(filter==='active') passFilter=status==='active';
+      var show=passSearch&&passFilter;
+      card.style.display=show?'':'none';
+      if(show) visible++;
+    });
+    var sorted=list.slice().sort(function(a,b){
+      var ad=parseInt(a.dataset.projectUpdated||'0',10)||0, bd=parseInt(b.dataset.projectUpdated||'0',10)||0;
+      var an=a.dataset.projectName||'', bn=b.dataset.projectName||'';
+      var as=parseInt(a.dataset.projectSets||'0',10)||0, bs=parseInt(b.dataset.projectSets||'0',10)||0;
+      if(mode==='oldest') return (ad-bd)||an.localeCompare(bn);
+      if(mode==='az') return an.localeCompare(bn);
+      if(mode==='za') return bn.localeCompare(an);
+      if(mode==='agents') return (bs-as)||an.localeCompare(bn);
+      return (bd-ad)||an.localeCompare(bn);
+    });
+    try{window.__projectSortFilterApplying=true;sorted.forEach(function(c){grid.appendChild(c);});}finally{window.__projectSortFilterApplying=false;}
+    var count=document.querySelector('.section-count');
+    if(count){var total=list.length;count.textContent=visible+' / '+total+' domains';}
+    document.body.classList.toggle('projects-filter-active', filter!=='all'||!!query);
+    var toggleBtn=document.getElementById('bulk-toggle-projects');if(toggleBtn)toggleBtn.style.display=visible?'':'none';
+    var empty=document.getElementById('projects-empty-state');if(empty)empty.remove();
+    if(!visible){empty=document.createElement('div');empty.id='projects-empty-state';empty.className='empty-state';empty.innerHTML='<p>No projects match the current search/filter.</p>';grid.appendChild(empty);}
+    if(typeof window.syncBulkToggleLabel==='function') window.syncBulkToggleLabel();
+  }
+  function ensureControls(){
+    var viewToggle=document.querySelector('.section-head .view-toggle');if(!viewToggle)return;
+    var sortWrap=document.getElementById('projects-sort-wrap');
+    if(!sortWrap){
+      sortWrap=document.createElement('span');sortWrap.id='projects-sort-wrap';
+      sortWrap.innerHTML='<label for="projects-sort">Sort:</label><select id="projects-sort" aria-label="Sort projects"><option value="recent">Most recent</option><option value="oldest">Oldest first</option><option value="az">Name A→Z</option><option value="za">Name Z→A</option><option value="agents">Most agents</option></select>';
+    } else {
+      var sel=sortWrap.querySelector('#projects-sort');
+      if(sel&&!sel.querySelector('option[value="agents"]')) sel.insertAdjacentHTML('beforeend','<option value="agents">Most agents</option>');
+    }
+    var controls=document.getElementById('projects-controls-wrap');
+    if(!controls){controls=document.createElement('div');controls.id='projects-controls-wrap';viewToggle.insertAdjacentElement('afterend',controls);}
+    if(sortWrap.parentElement!==controls) controls.appendChild(sortWrap);
+    var filterWrap=document.getElementById('projects-filter-wrap');
+    if(!filterWrap){
+      filterWrap=document.createElement('span');filterWrap.id='projects-filter-wrap';
+      filterWrap.innerHTML='<label for="projects-filter">Filter:</label><select id="projects-filter" aria-label="Filter projects"><option value="all">All projects</option><option value="multi-agent">Multi-agent only</option><option value="hermes">Hermes/model outputs</option><option value="deployed">Deployed to n8n</option><option value="not-deployed">Not deployed</option><option value="active">Active status</option></select>';
+      controls.appendChild(filterWrap);
+    }
+    var sort=document.getElementById('projects-sort'), filter=document.getElementById('projects-filter');
+    if(sort&&!sort.__fixed){sort.value=lsGet(SORT_KEY, lsGet('dash-projects-sort-v1','recent'));sort.addEventListener('change',function(){lsSet(SORT_KEY,sort.value);applyProjectsSortFilter();});sort.__fixed=true;}
+    if(filter&&!filter.__fixed){filter.value=lsGet(FILTER_KEY,'all');filter.addEventListener('change',function(){lsSet(FILTER_KEY,filter.value);applyProjectsSortFilter();});filter.__fixed=true;}
+  }
+  var origFilter=window.filterProjects;
+  window.filterProjects=function(q){
+    if(typeof origFilter==='function') origFilter.call(this,q);
+    setTimeout(applyProjectsSortFilter,0);
+  };
+  var origLoad=window.loadDashboard;
+  if(typeof origLoad==='function'&&!origLoad.__sortFilterFixed){
+    window.loadDashboard=async function(){var result=await origLoad.apply(this,arguments);ensureControls();applyProjectsSortFilter();return result;};
+    window.loadDashboard.__sortFilterFixed=true;
+  }
+  function boot(){ensureControls();setTimeout(applyProjectsSortFilter,0);setTimeout(applyProjectsSortFilter,800);}
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot,{once:true});else boot();
+  window.applyProjectsSortFilter=applyProjectsSortFilter;
+})();
+</script>
 </body>
 </html>
