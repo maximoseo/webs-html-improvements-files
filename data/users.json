@@ -6,5 +6,13 @@
     "role": "admin",
     "created_at": "2025-01-01T00:00:00Z",
     "last_login": null
+  },
+  {
+    "username": "admin",
+    "email": "admin@maximo-seo.com",
+    "password_hash": "pbkdf2_sha256$260000$22874a1112253c23b6412368fe24b1e5$7ae82cfb0a5211e02105e598a42a4823ccce95afb37acca0ede63504324505d9",
+    "role": "admin",
+    "created_at": "2026-04-29T19:35:00Z",
+    "last_login": null
   }
 ]
