@@ -2371,10 +2371,89 @@ def tweak_html_with_prompt(payload):
     return {'ok': True, 'model': model, 'provider': provider_used, 'html': content, 'summary': f'Tweaked {html_file_name} for {domain}'}
 
 
+
+# ===== Prompt Studio Contract v2026-04-29 =====
+PROMPT_STUDIO_CONTRACT_VERSION = '2026-04-29'
+PROMPT_STUDIO_REQUIRED_SITE_PROFILE_FIELDS = (
+    'domain', 'business_name', 'language', 'text_direction', 'brand_colors',
+    'fonts', 'logo_url', 'author_or_company', 'contact_url', 'social_links',
+    'tone', 'audience', 'cta_style'
+)
+PROMPT_STUDIO_ALLOWED_NEXT_ACTIONS = {'review_site_profile', 'revise_prompt', 'approve_for_delivery'}
+
+
+def _prompt_studio_normalize_site_profile(value):
+    return value if isinstance(value, dict) else {}
+
+
+def _prompt_studio_build_validation_report(payload, draft):
+    # Prompt Studio Contract: validation report
+    domain = (payload.get('domain') or '').strip()
+    site_profile = _prompt_studio_normalize_site_profile(payload.get('siteProfile'))
+    missing = [field for field in PROMPT_STUDIO_REQUIRED_SITE_PROFILE_FIELDS if not str(site_profile.get(field) or '').strip()]
+    analysis_status = (payload.get('analysisStatus') or 'not_started').strip() or 'not_started'
+    site_profile_reviewed = bool(payload.get('siteProfileReviewed'))
+    read_only_n8n = payload.get('readOnlyN8n')
+    if read_only_n8n is None:
+        read_only_n8n = True
+    next_action = (payload.get('nextAction') or 'review_site_profile').strip() or 'review_site_profile'
+    if next_action not in PROMPT_STUDIO_ALLOWED_NEXT_ACTIONS:
+        next_action = 'review_site_profile'
+    status = 'ready_for_prompt_review'
+    if missing or analysis_status in {'not_started', 'failed'} or not site_profile_reviewed:
+        status = 'needs_review'
+        next_action = 'review_site_profile'
+    return {
+        'contract_version': PROMPT_STUDIO_CONTRACT_VERSION,
+        'domain_present': bool(domain and domain.lower() != 'unknown'),
+        'analysis_status': analysis_status,
+        'site_profile_status': 'reviewed' if site_profile_reviewed and not missing else 'needs_review',
+        'missing_site_profile_fields': missing,
+        'read_only_n8n': bool(read_only_n8n),
+        'requires_n8n_variable_preservation': True,
+        'requires_no_fake_assets_or_placeholders': True,
+        'requires_wordpress_custom_html_compatibility': True,
+        'requires_responsive_no_overflow': True,
+        'requires_rtl_ltr_handling': True,
+        'requires_no_secrets_or_duplicate_storage': True,
+        'status': status,
+        'next_action': next_action,
+    }
+
+
+def _prompt_studio_contract_block(validation_report):
+    missing = validation_report.get('missing_site_profile_fields') or []
+    missing_text = ', '.join(missing) if missing else 'none'
+    return f"""
+--- PROMPT STUDIO CONTRACT v{PROMPT_STUDIO_CONTRACT_VERSION} ---
+This request is for Prompt Studio / Create Improve Prompts. It generates reviewable prompt instructions only.
+Domain-first rule: a real target domain/URL is mandatory before final prompt generation.
+Site profile rule: analyze the real website first. If facts cannot be verified, mark them as needs_review; never invent fake colors, logos, authors, phone numbers, social links, products, services, images, testimonials, or lorem ipsum/placeholder content.
+Current validation status: {validation_report.get('status')}.
+Missing site profile fields: {missing_text}.
+N8N safety: read-only by default. Do not instruct the agent to modify, activate, import, overwrite, or deploy n8n workflows unless explicit task-specific approval is given after review.
+N8N preservation: preserve all {{{{ ... }}}} placeholders, $json fields, callback URLs such as {{{{$execution.resumeUrl}}}}, credential references, workflow variables, and field names exactly.
+WordPress HTML safety: require a unique scoped wrapper, scoped CSS, inline fallback styles for important visuals, responsive no-overflow behavior, no unapproved external dependencies, and safe WordPress Custom HTML insertion.
+Language/direction: detect LTR/RTL. For Hebrew/RTL, require lang="he", dir="rtl", right-aligned defaults, and mirrored directional UI where appropriate.
+Storage safety: do not expose secrets, do not create duplicate files/records, and include clear versioning/metadata for any approved future save/export action.
+The improved prompt MUST be markdown and MUST contain these exact top-level sections in this order:
+## Site Profile
+## Generated Prompt
+## Validation Report
+## Storage Metadata
+## Next Action
+The Next Action section MUST be "review_site_profile" when required facts are missing or uncertain; do not mark production-ready until validation is complete.
+--- END PROMPT STUDIO CONTRACT ---
+"""
+
 def improve_prompt_with_model(payload):
     draft = (payload.get('draftPrompt') or '').strip()
     if not draft:
         raise ValueError('Draft prompt is required')
+    # Prompt Studio Contract: domain-first backend guard
+    early_domain = (payload.get('domain') or '').strip()
+    if not early_domain or early_domain.lower() == 'unknown':
+        raise ValueError('Target domain or URL is required before final prompt generation')
     if not _get_provider_chain():
         raise RuntimeError('No LLM provider configured')
     # Accept model override from the browser payload; fall back to env / default
@@ -2382,26 +2461,28 @@ def improve_prompt_with_model(payload):
     model = (payload.get('model') or '').strip() or default_model
     current_date = os.getenv('PROMPT_CURRENT_DATE', '2026-04-15')
     checklist_rules = _normalize_checklist(payload.get('checklist'))
+    validation_report = _prompt_studio_build_validation_report(payload, draft)
+    contract_block = _prompt_studio_contract_block(validation_report)
 
+    # Prompt Studio Contract: system prompt injection
     system = (
+        contract_block +
         'You are a senior prompt engineer for agentic coding and design workflows. '
-        'Rewrite the user draft into a production-ready, well-structured prompt for the specified agent. '
+        'Rewrite the user draft into a reviewable Prompt Studio package, not an automatic publish/deploy instruction. '
         'Return plain-text markdown only — no code fences, no preamble, no \"here is your prompt\" wrapper. '
-        'The output MUST use clearly labeled sections with markdown headers (## Section Name) so the reader '
-        'can instantly scan the prompt. Required sections in this order:\n'
-        '## Objective — one paragraph, sharp and direct.\n'
-        '## Context — domain, agent, version, relevant background.\n'
-        '## Specific Requirements — numbered list of concrete requirements. No vague instructions.\n'
-        '## Additional Mandatory Rules — present ONLY when the user selected checklist items; '
-        'render each selected rule as a numbered bullet under this section; if no rules were selected, omit this section entirely.\n'
-        '## Acceptance Criteria — numbered checklist the agent must verify before finishing. '
+        'The top-level output schema is the Prompt Studio Contract package above. Do not add competing top-level sections. '
+        'Inside ## Generated Prompt, include the final agent prompt with these nested sections:\n'
+        '### Objective — one paragraph, sharp and direct.\n'
+        '### Context — domain, agent, version, relevant background.\n'
+        '### Specific Requirements — numbered list of concrete requirements. No vague instructions.\n'
+        '### Additional Mandatory Rules — present ONLY when the user selected checklist items; '
+        'render each selected rule as a numbered bullet under this nested section; if no rules were selected, omit it entirely.\n'
+        '### Acceptance Criteria — numbered checklist the agent must verify before finishing. '
         'Every item from Specific Requirements and every Additional Mandatory Rule must map to at least one criterion here.\n'
-        '## Delivery — mandatory export and publish instructions (Obsidian + GitHub dashboard).\n'
-        'Mandatory rule: the Delivery section must explicitly require exporting the final improved files '
-        'into the updated files destination in Obsidian and publishing the same deliverables to the GitHub '
-        'repo behind https://html-redesign-dashboard.maximo-seo.ai/. '
-        'Mandatory rule: the Delivery section must require replacing or updating the existing files for the '
-        'same project/version path rather than leaving old files as the active deliverables. '
+        '### Delivery Targets After Approval — approved destinations and commit guidance only.\n'
+        'Mandatory safety rule: do not instruct automatic exporting, overwriting, publishing, activating, importing, or deploying by default. '
+        'Any write to n8n, GitHub, Supabase, Obsidian, WordPress, or live dashboards requires explicit task-specific approval after review. '
+        'Mandatory rule: the Delivery Targets section may list exact Obsidian/GitHub target paths as approved destinations only. '
         'Mandatory rule: all date references in the generated prompt must use the current working date '
         'provided in the user message; stale dates must be updated. '
         '--- ALWAYS-ON MANDATORY RULES (inject into every prompt regardless of checklist) ---\n'
@@ -2502,8 +2583,9 @@ def improve_prompt_with_model(payload):
     gh_folder = version_path or f'{domain}/{version_name}'
     delivery_block = (
         f'\n\n--- DELIVERY DESTINATIONS ---\n'
-        f'After completing all work, upload the final files to BOTH destinations below.\n'
-        f'Replace the existing files in the same version folder — do not create a new parallel folder.\n\n'
+        f'After review and explicit task-specific approval, approved final files may target BOTH destinations below.\n'
+        f'Do not instruct automatic writes or overwrites by default; require confirmation before n8n, GitHub, Supabase, Obsidian, or WordPress changes.\n'
+        f'When approved, update the existing files in the same version folder rather than creating a duplicate parallel folder.\n\n'
         f'1. Obsidian vault (Windows path):\n'
         f'   {obs_path}\\updated files\\{current_date}\\\n'
         f'   Upload: HTML template, N8N prompt, N8N workflow, validation note, source map, summary.\n\n'
@@ -2512,7 +2594,7 @@ def improve_prompt_with_model(payload):
         f'   Folder:    {gh_folder}\n'
         f'   Dashboard: https://html-redesign-dashboard.maximo-seo.ai/\n'
         f'   Commit message: "feat({domain}): [describe what changed] — {current_date}"\n'
-        f'   After pushing, refresh the dashboard and confirm the updated files appear correctly.\n'
+        f'   After explicit approval and a real push, refresh the dashboard and confirm the updated files appear correctly.\n'
         f'--- END DELIVERY DESTINATIONS ---\n'
     )
 
@@ -2533,9 +2615,10 @@ def improve_prompt_with_model(payload):
         'Every section must be present and populated. '
         'The Context section must list the exact file names from the manifest above so the agent knows exactly which files to work with. '
         'The Specific Requirements section must be a numbered list — not a flat paragraph. '
-        'The Delivery section must copy the exact Obsidian path and GitHub repo path from the delivery destinations block above — '
-        'include real folder paths, real file names from the manifest, and the exact commit message format. '
-        'Use the current required working date above for all folder/date references and correct any stale dates found in the draft.'
+        'The Delivery section must copy the exact Obsidian path and GitHub repo path from the delivery destinations block above as approved target destinations only — '
+        'include real folder paths, real file names from the manifest, and the exact commit message format, but require explicit confirmation before any write/publish/deploy action. '
+        'Use the current required working date above for all folder/date references and correct any stale dates found in the draft. '
+        'Ensure the output package includes ## Site Profile, ## Generated Prompt, ## Validation Report, ## Storage Metadata, and ## Next Action.'
     )
 
     messages = [
@@ -2545,7 +2628,14 @@ def improve_prompt_with_model(payload):
     content, provider_used = call_with_fallback(messages, model, timeout=120)
     if not content:
         raise RuntimeError('Model returned empty content')
-    return {'model': model, 'provider': provider_used, 'content': content}
+    return {
+        'model': model,
+        'provider': provider_used,
+        'content': content,
+        'contractVersion': PROMPT_STUDIO_CONTRACT_VERSION,
+        'validationReport': validation_report,
+        'nextAction': validation_report.get('next_action', 'review_site_profile'),
+    }
 
 
 
