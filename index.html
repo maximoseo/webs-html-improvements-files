@@ -13719,7 +13719,9 @@ function openCreateABTestModal() {
 // Close modals on overlay click
 document.addEventListener('click', function(e) {
   if (e.target.classList.contains('df-modal-overlay')) {
-    e.target.classList.r});
+    e.target.classList.remove('open');
+  }
+});
 
 // Close modals on Escape
 document.addEventListener('keydown', function(e) {
@@ -28412,7 +28414,7 @@ function dfCopyTraceField(id) {
     });
   }
 }
-\n</script>
+</script>
 <!-- PWA Service Worker Registration -->
 <script>
 if ('serviceWorker' in navigator) {
