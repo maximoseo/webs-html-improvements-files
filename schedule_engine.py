@@ -171,11 +171,110 @@ class ScheduleEngine:
             'domains': len(domains),
         })
         
-        # TODO: Actually trigger the pipeline execution here
-        # This would call the existing pipeline runner for each domain
-        # For now, we create the batch job and notification
+        # Actually trigger the pipeline execution
+        self._execute_pipeline_for_schedule(name, domains, batch_job.get('id'), schedule.get('id'))
         
         print(f'[ScheduleEngine] Scheduled "{name}" triggered, batch job created', flush=True)
+    
+    def _execute_pipeline_for_schedule(self, name, domains, batch_job_id, schedule_id):
+        """Execute the pipeline for each domain in the schedule."""
+        n8n_webhook = os.environ.get('N8N_KWR_WEBHOOK_URL', '').strip()
+        
+        if not n8n_webhook:
+            # Webhook not configured - update batch job and notify
+            sh.supa_update('batch_jobs', 'id', batch_job_id, {
+                'status': 'pending_manual_trigger',
+                'error_message': 'N8N_KWR_WEBHOOK_URL not configured. Set it in Render env vars to enable automatic pipeline execution.',
+            })
+            sh.supa_insert('notifications', {
+                'type': 'warning',
+                'title': f'Schedule "{name}" paused - webhook missing',
+                'message': 'Configure N8N_KWR_WEBHOOK_URL in Render to enable automatic pipeline execution.',
+                'link': '/settings',
+            })
+            print(f'[ScheduleEngine] N8N_KWR_WEBHOOK_URL not set. Batch job {batch_job_id} pending manual trigger.', flush=True)
+            return
+        
+        # Execute pipeline via n8n webhook for each domain
+        success_count = 0
+        failed_count = 0
+        errors = []
+        
+        for domain in (domains or []):
+            try:
+                result = self._trigger_n8n_webhook(n8n_webhook, domain, name, schedule_id)
+                if result.get('success'):
+                    success_count += 1
+                else:
+                    failed_count += 1
+                    errors.append(f'{domain}: {result.get("error", "unknown")}')
+            except Exception as e:
+                failed_count += 1
+                errors.append(f'{domain}: {str(e)}')
+            
+            # Small delay between triggers to avoid overwhelming the webhook
+            time.sleep(1)
+        
+        # Update batch job with results
+        final_status = 'completed' if failed_count == 0 else ('partial' if success_count > 0 else 'failed')
+        sh.supa_update('batch_jobs', 'id', batch_job_id, {
+            'status': final_status,
+            'progress': 100,
+            'result_summary': {
+                'success': success_count,
+                'failed': failed_count,
+                'errors': errors[:10],  # Keep only first 10 errors
+            },
+        })
+        
+        # Create completion notification
+        if failed_count == 0:
+            sh.supa_insert('notifications', {
+                'type': 'success',
+                'title': f'Schedule "{name}" completed',
+                'message': f'Successfully triggered pipeline for {success_count} domains',
+                'link': '/batch',
+            })
+        else:
+            sh.supa_insert('notifications', {
+                'type': 'error',
+                'title': f'Schedule "{name}" had errors',
+                'message': f'{success_count} succeeded, {failed_count} failed. Check batch job for details.',
+                'link': '/batch',
+            })
+        
+        print(f'[ScheduleEngine] Pipeline execution: {success_count} succeeded, {failed_count} failed', flush=True)
+    
+    def _trigger_n8n_webhook(self, webhook_url, domain, schedule_name, schedule_id):
+        """Trigger the n8n pipeline for a single domain via webhook."""
+        payload = {
+            'domain': domain,
+            'schedule_name': schedule_name,
+            'schedule_id': schedule_id,
+            'trigger_source': 'scheduler',
+            'timestamp': datetime.datetime.utcnow().isoformat(),
+        }
+        
+        data = json.dumps(payload).encode('utf-8')
+        req = urllib.request.Request(
+            webhook_url,
+            data=data,
+            headers={'Content-Type': 'application/json'},
+            method='POST'
+        )
+        
+        try:
+            with urllib.request.urlopen(req, timeout=120) as resp:
+                status = resp.getcode()
+                body = resp.read().decode('utf-8')
+                if 200 <= status < 300:
+                    return {'success': True, 'status': status, 'response': body}
+                else:
+                    return {'success': False, 'error': f'HTTP {status}: {body[:200]}'}
+        except urllib.error.HTTPError as e:
+            return {'success': False, 'error': f'HTTP {e.code}: {e.read().decode("utf-8")[:200]}'}
+        except Exception as e:
+            return {'success': False, 'error': str(e)}
 
 
 # ============================================================
