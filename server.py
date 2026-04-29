@@ -19,6 +19,7 @@ from pathlib import Path
 import kwr_backend
 import r5_features as r5
 import r6_features as r6
+import schedule_engine
 import dashboard_features_api as df_api
 
 # Load .env file if present (for local development)
@@ -8396,6 +8397,12 @@ def main():
         _stage14_start_scheduler_once()
     except Exception as _e:
         print(f'[stage14] scheduler start failed: {_e}', flush=True)
+    # Start schedule engine
+    try:
+        schedule_engine.start_scheduler()
+        print("[server] Schedule engine started", flush=True)
+    except Exception as e:
+        print(f"[server] Failed to start schedule engine: {e}", flush=True)
     server.serve_forever()
 
 

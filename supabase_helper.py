@@ -119,3 +119,91 @@ def check_budget_exceeded(domain=None, limit_type='daily'):
         if total >= lim:
             return True, limit
     return False, None
+
+
+
+def check_budget_exceeded(domain=None, limit_type='daily'):
+    """Check if current spending exceeds budget limit. Returns (exceeded, limit_info, current_spent)."""
+    import datetime
+    filters = {'is_active': 'eq.true', 'period': f'eq.{limit_type}'}
+    if domain:
+        filters['domain'] = f'eq.{domain}'
+    else:
+        filters['scope'] = 'eq.global'
+    
+    limits = supa_select('budget_limits', filters=filters)
+    if isinstance(limits, dict) and 'error' in limits:
+        return False, None, 0
+    
+    now = datetime.datetime.utcnow()
+    if limit_type == 'daily':
+        start = now - datetime.timedelta(days=1)
+    elif limit_type == 'weekly':
+        start = now - datetime.timedelta(weeks=1)
+    else:
+        start = now - datetime.timedelta(days=30)
+    
+    start_str = start.strftime('%Y-%m-%dT%H:%M:%S')
+    
+    for limit in (limits or []):
+        lim = limit.get('limit_usd', 0)
+        cost_filters = {'created_at': f'gte.{start_str}'}
+        if domain and limit.get('scope') == 'client':
+            cost_filters['domain'] = f'eq.{domain}'
+        
+        cost = supa_select('agent_traces', select='cost_usd', filters=cost_filters, limit=5000)
+        if isinstance(cost, dict) and 'error' in cost:
+            continue
+        total = sum(c.get('cost_usd', 0) for c in (cost or []) if isinstance(c, dict))
+        if total >= lim:
+            return True, limit, total
+    
+    return False, None, 0
+
+
+def create_budget_notification(domain, limit_info, current_spent):
+    """Create a notification when budget is exceeded."""
+    lim = limit_info.get('limit_usd', 0)
+    period = limit_info.get('period', 'daily')
+    scope = limit_info.get('scope', 'global')
+    
+    title = f'Budget exceeded: ${current_spent:.2f}/${lim:.2f}'
+    message = f'{scope.title()} budget for {domain or "all domains"} exceeded ${lim:.2f}/{period}. Current: ${current_spent:.2f}'
+    
+    notification = {
+        'type': 'warning',
+        'title': title,
+        'message': message,
+        'link': '/cost',
+        'is_read': False,
+    }
+    supa_insert('notifications', notification)
+    log_audit('budget_limits', 'budget_exceeded', {
+        'domain': domain,
+        'limit': lim,
+        'spent': current_spent,
+        'period': period,
+        'action': limit_info.get('action', 'alert'),
+    })
+    return notification
+
+
+def check_all_budgets():
+    """Check all budget limits and create notifications for exceeded ones."""
+    for period in ['daily', 'weekly', 'monthly']:
+        exceeded, limit, spent = check_budget_exceeded(limit_type=period)
+        if exceeded and limit:
+            create_budget_notification(None, limit, spent)
+    
+    domains_result = supa_select('budget_limits', filters={'scope': 'eq.client', 'is_active': 'eq.true'})
+    if isinstance(domains_result, list):
+        checked = set()
+        for limit in domains_result:
+            domain = limit.get('domain')
+            period = limit.get('period', 'daily')
+            if domain and domain not in checked:
+                checked.add(domain)
+                exceeded, _, spent = check_budget_exceeded(domain=domain, limit_type=period)
+                if exceeded:
+                    create_budget_notification(domain, limit, spent)
+    return len(checked) + 1

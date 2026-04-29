@@ -11552,6 +11552,393 @@ body{padding-top:96px !important;}
 })();
 </script>
 </body>');doc.close();
+<!-- ═══════════════════════════════════════════════════════
+     DASHBOARD_FEATURES_MODALS — 15-feature roadmap (additive, 2026-04-28)
+     ═══════════════════════════════════════════════════════ -->
+<style>
+.df-modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:10000;display:none;align-items:center;justify-content:center;backdrop-filter:blur(4px)}
+.df-modal-overlay.open{display:flex}
+.df-modal-box{background:var(--bg-elevated,#0f1011);border:1px solid var(--border,rgba(255,255,255,0.08));border-radius:16px;width:90%;max-width:520px;max-height:85vh;overflow-y:auto;box-shadow:0 24px 80px rgba(0,0,0,0.6);padding:0}
+.df-modal-header{display:flex;align-items:center;justify-content:space-between;padding:16px 20px;border-bottom:1px solid var(--border,rgba(255,255,255,0.08));position:sticky;top:0;background:var(--bg-elevated,#0f1011);z-index:1}
+.df-modal-header h3{margin:0;font-size:16px;color:var(--text)}
+.df-modal-close{width:32px;height:32px;border-radius:8px;border:1px solid var(--border,rgba(255,255,255,0.08));background:transparent;color:var(--text);font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.df-modal-close:hover{background:var(--red);color:#fff;border-color:var(--red)}
+.df-modal-body{padding:20px}
+.df-field{margin-bottom:14px}
+.df-field label{display:block;font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:4px}
+.df-field input,.df-field select,.df-field textarea{width:100%;padding:9px 12px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);border-radius:8px;color:var(--text);font-size:13px;font-family:inherit;box-sizing:border-box}
+.df-field input:focus,.df-field select:focus,.df-field textarea:focus{outline:none;border-color:var(--gold)}
+.df-field textarea{resize:vertical;min-height:70px}
+.df-field .df-hint{font-size:11px;color:var(--muted);margin-top:3px}
+.df-field-inline{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.df-tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+.df-tag{display:inline-flex;align-items:center;gap:4px;padding:4px 8px;background:rgba(113,112,255,0.12);border:1px solid rgba(113,112,255,0.2);border-radius:6px;font-size:11px;color:var(--gold-light)}
+.df-tag .df-tag-remove{cursor:pointer;opacity:0.6}
+.df-tag .df-tag-remove:hover{opacity:1}
+.df-modal-footer{display:flex;gap:8px;justify-content:flex-end;padding:14px 20px;border-top:1px solid var(--border,rgba(255,255,255,0.08));position:sticky;bottom:0;background:var(--bg-elevated,#0f1011)}
+.df-btn{padding:9px 18px;border-radius:8px;border:1px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.04);color:var(--text-secondary);font-size:13px;font-weight:700;cursor:pointer;transition:all 0.15s}
+.df-btn:hover{background:rgba(255,255,255,0.08);color:#fff}
+.df-btn.primary{background:linear-gradient(135deg,var(--gold),var(--gold-dim));border-color:transparent;color:#fff}
+.df-btn.primary:hover{background:linear-gradient(135deg,var(--gold-light),var(--gold))}
+.df-btn.danger{background:rgba(239,95,107,0.15);border-color:rgba(239,95,107,0.3);color:var(--red)}
+.df-btn:disabled{opacity:0.4;cursor:not-allowed}
+.df-success-msg{padding:8px 12px;background:rgba(39,166,68,0.1);border:1px solid rgba(39,166,68,0.2);border-radius:8px;font-size:12px;color:#7ee19d;margin-bottom:12px}
+.df-error-msg{padding:8px 12px;background:rgba(239,95,107,0.1);border:1px solid rgba(239,95,107,0.2);border-radius:8px;font-size:12px;color:var(--red);margin-bottom:12px}
+.df-checkbox{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--text-secondary);margin-bottom:8px}
+.df-checkbox input[type=checkbox]{width:16px;height:16px;accent-color:var(--gold)}
+.df-domain-list{max-height:120px;overflow-y:auto;border:1px solid var(--border);border-radius:8px;padding:8px}
+.df-domain-item{display:flex;align-items:center;gap:8px;padding:4px 8px;font-size:12px;color:var(--text-secondary);border-radius:4px}
+.df-domain-item:hover{background:rgba(255,255,255,0.04)}
+.df-domain-item input{margin:0}
+.df-spinner{display:inline-block;width:14px;height:14px;border:2px solid rgba(255,255,255,0.2);border-top-color:var(--gold);border-radius:50%;animation:df-spin 0.7s linear infinite}
+@keyframes df-spin{to{transform:rotate(360deg)}}
+</style>
+
+<!-- Modal: Create Batch Job -->
+<div id="df-modal-batch" class="df-modal-overlay">
+<div class="df-modal-box">
+<div class="df-modal-header"><h3>📦 New Batch Job</h3><button class="df-modal-close" onclick="dfCloseModal('df-modal-batch')">×</button></div>
+<div class="df-modal-body">
+<div id="df-batch-msg"></div>
+<div class="df-field"><label>Batch Name</label><input id="df-batch-name" placeholder="e.g. Redesign all blog pages"></div>
+<div class="df-field"><label>Action</label>
+<select id="df-batch-action"><option value="run_pipeline">Run Pipeline</option><option value="redeploy">Redeploy</option><option value="update_instructions">Update Instructions</option><option value="export">Export Results</option></select></div>
+<div class="df-field"><label>Target Domains</label>
+<div id="df-batch-domains" class="df-domain-list">Loading domains...</div>
+<div class="df-hint"><input type="checkbox" id="df-batch-select-all" onchange="dfToggleBatchAll(this.checked)"> Select all</div></div>
+<div class="df-field"><label>Priority</label>
+<select id="df-batch-priority"><option value="normal">Normal</option><option value="high">High</option><option value="low">Low</option></select></div>
+</div>
+<div class="df-modal-footer"><button class="df-btn" onclick="dfCloseModal('df-modal-batch')">Cancel</button><button class="df-btn primary" id="df-batch-submit" onclick="dfSubmitBatchJob()">Create Batch</button></div>
+</div></div>
+
+<!-- Modal: Generate Report -->
+<div id="df-modal-report" class="df-modal-overlay">
+<div class="df-modal-box">
+<div class="df-modal-header"><h3>📄 Generate Report</h3><button class="df-modal-close" onclick="dfCloseModal('df-modal-report')">×</button></div>
+<div class="df-modal-body">
+<div id="df-report-msg"></div>
+<div class="df-field"><label>Domain</label><select id="df-report-domain"><option value="">All domains</option></select></div>
+<div class="df-field"><label>Report Type</label>
+<select id="df-report-type"><option value="weekly">Weekly Summary</option><option value="monthly">Monthly Deep Dive</option><option value="custom">Custom Range</option></select></div>
+<div class="df-field-inline"><div class="df-field"><label>From</label><input id="df-report-from" type="date"></div><div class="df-field"><label>To</label><input id="df-report-to" type="date"></div></div>
+<div class="df-field"><label>Send To (email)</label><input id="df-report-email" placeholder="client@example.com"></div>
+<div class="df-checkbox"><input type="checkbox" id="df-report-schedule" onchange="document.getElementById('df-report-freq-wrap').style.display=this.checked?'block':'none'"><label for="df-report-schedule">Schedule recurring</label></div>
+<div id="df-report-freq-wrap" style="display:none">
+<div class="df-field"><label>Frequency</label><select id="df-report-freq"><option value="weekly">Weekly</option><option value="monthly">Monthly</option></select></div>
+</div>
+</div>
+<div class="df-modal-footer"><button class="df-btn" onclick="dfCloseModal('df-modal-report')">Cancel</button><button class="df-btn primary" onclick="dfSubmitReport()">Generate</button></div>
+</div></div>
+
+<!-- Modal: Set Budget -->
+<div id="df-modal-budget" class="df-modal-overlay">
+<div class="df-modal-box">
+<div class="df-modal-header"><h3>💰 Set Budget Limit</h3><button class="df-modal-close" onclick="dfCloseModal('df-modal-budget')">×</button></div>
+<div class="df-modal-body">
+<div id="df-budget-msg"></div>
+<div class="df-field"><label>Scope</label><select id="df-budget-scope" onchange="document.getElementById('df-budget-domain-wrap').style.display=this.value==='client'?'block':'none'"><option value="global">Global (all clients)</option><option value="client">Per Client</option></select></div>
+<div id="df-budget-domain-wrap" style="display:none" class="df-field"><label>Domain</label><select id="df-budget-domain"></select></div>
+<div class="df-field"><label>Period</label><select id="df-budget-period"><option value="daily">Daily</option><option value="weekly">Weekly</option><option value="monthly">Monthly</option></select></div>
+<div class="df-field"><label>Limit ($)</label><input id="df-budget-limit" type="number" step="0.01" min="0.01" placeholder="5.00"></div>
+<div class="df-field"><label>Action when exceeded</label><select id="df-budget-action"><option value="alert">Send alert only</option><option value="pause">Pause pipelines</option></select></div>
+</div>
+<div class="df-modal-footer"><button class="df-btn" onclick="dfCloseModal('df-modal-budget')">Cancel</button><button class="df-btn primary" onclick="dfSubmitBudget()">Save Budget</button></div>
+</div></div>
+
+<!-- Modal: Create Schedule -->
+<div id="df-modal-schedule" class="df-modal-overlay">
+<div class="df-modal-box">
+<div class="df-modal-header"><h3>⏰ New Schedule</h3><button class="df-modal-close" onclick="dfCloseModal('df-modal-schedule')">×</button></div>
+<div class="df-modal-body">
+<div id="df-schedule-msg"></div>
+<div class="df-field"><label>Schedule Name</label><input id="df-schedule-name" placeholder="e.g. Daily oritmartin refresh"></div>
+<div class="df-field"><label>Target Domains</label><div id="df-schedule-domains" class="df-domain-list">Loading domains...</div></div>
+<div class="df-field"><label>Cron Expression</label><input id="df-schedule-cron" placeholder="0 6 * * * (daily at 6 AM)"><div class="df-hint">Standard cron format: minute hour day month weekday</div></div>
+<div class="df-field-inline"><div class="df-field"><label>Budget Cap ($)</label><input id="df-schedule-budget" type="number" step="0.01" placeholder="2.00"></div><div class="df-field"><label>Max Concurrency</label><input id="df-schedule-concurrency" type="number" min="1" max="10" value="3"></div></div>
+<div class="df-field"><label>Quick Presets</label>
+<div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:4px">
+<button class="df-btn" onclick="document.getElementById('df-schedule-cron').value='0 6 * * *'" style="font-size:11px;padding:4px 8px">Daily 6AM</button>
+<button class="df-btn" onclick="document.getElementById('df-schedule-cron').value='0 9 * * 1'" style="font-size:11px;padding:4px 8px">Monday 9AM</button>
+<button class="df-btn" onclick="document.getElementById('df-schedule-cron').value='0 2 * * *'" style="font-size:11px;padding:4px 8px">Nightly 2AM</button>
+</div></div>
+</div>
+<div class="df-modal-footer"><button class="df-btn" onclick="dfCloseModal('df-modal-schedule')">Cancel</button><button class="df-btn primary" onclick="dfSubmitSchedule()">Create Schedule</button></div>
+</div></div>
+
+<!-- Modal: Create A/B Test -->
+<div id="df-modal-ab" class="df-modal-overlay">
+<div class="df-modal-box">
+<div class="df-modal-header"><h3>🔀 New A/B Test</h3><button class="df-modal-close" onclick="dfCloseModal('df-modal-ab')">×</button></div>
+<div class="df-modal-body">
+<div id="df-ab-msg"></div>
+<div class="df-field"><label>Domain</label><select id="df-ab-domain"></select></div>
+<div class="df-field"><label>Page Path</label><input id="df-ab-page" placeholder="/blog or /products"></div>
+<div class="df-field"><label>Version A (Template ID)</label><input id="df-ab-version-a" placeholder="Template UUID or select below"><div id="df-ab-versions-a" style="margin-top:4px"></div></div>
+<div class="df-field"><label>Version B (Template ID)</label><input id="df-ab-version-b" placeholder="Template UUID or select below"><div id="df-ab-versions-b" style="margin-top:4px"></div></div>
+<div class="df-field"><label>Notes</label><textarea id="df-ab-notes" placeholder="What are you testing?"></textarea></div>
+</div>
+<div class="df-modal-footer"><button class="df-btn" onclick="dfCloseModal('df-modal-ab')">Cancel</button><button class="df-btn primary" onclick="dfSubmitABTest()">Create Test</button></div>
+</div></div>
+
+<script>
+// ═══════════════════════════════════════════════════════
+// DASHBOARD_FEATURES_MODALS_JS — Modal forms (2026-04-28)
+// ═══════════════════════════════════════════════════════
+var DF_DOMAINS = [];
+
+async function dfLoadDomains() {
+  try {
+    var r = await fetch('/api/analytics');
+    if (r.ok) { var d = await r.json(); return (d.data && d.data.top_projects) ? d.data.top_projects.map(function(p){ return p.name; }) : []; }
+  } catch(e) {}
+  return [];
+}
+
+function dfFillDomainCheckboxes(containerId, selectAllId) {
+  var el = document.getElementById(containerId);
+  if (!el || DF_DOMAINS.length === 0) { if (el) el.innerHTML = '<div style="font-size:12px;color:var(--muted)">No domains found</div>'; return; }
+  var html = '';
+  DF_DOMAINS.forEach(function(d) {
+    html += '<label class="df-domain-item"><input type="checkbox" value="'+d+'"> '+d+'</label>';
+  });
+  el.innerHTML = html;
+}
+
+function dfFillDomainSelect(selectId) {
+  var el = document.getElementById(selectId);
+  if (!el) return;
+  var html = '<option value="">Select domain</option>';
+  DF_DOMAINS.forEach(function(d) { html += '<option value="'+d+'">'+d+'</option>'; });
+  el.innerHTML = html;
+}
+
+function dfToggleBatchAll(checked) {
+  var checks = document.querySelectorAll('#df-batch-domains input[type=checkbox]');
+  checks.forEach(function(c) { c.checked = checked; });
+}
+
+function dfGetCheckedDomains(containerId) {
+  var checks = document.querySelectorAll('#' + containerId + ' input[type=checkbox]:checked');
+  var result = [];
+  checks.forEach(function(c) { result.push(c.value); });
+  return result;
+}
+
+function dfCloseModal(id) {
+  var el = document.getElementById(id);
+  if (el) el.classList.remove('open');
+}
+
+function dfOpenModal(id) {
+  var el = document.getElementById(id);
+  if (el) el.classList.add('open');
+}
+
+function dfShowMsg(containerId, msg, type) {
+  var el = document.getElementById(containerId);
+  if (!el) return;
+  el.innerHTML = '<div class="df-'+type+'-msg">'+msg+'</div>';
+}
+
+async function dfSubmitBatchJob() {
+  var btn = document.getElementById('df-batch-submit');
+  var name = document.getElementById('df-batch-name').value.trim();
+  var action = document.getElementById('df-batch-action').value;
+  var domains = dfGetCheckedDomains('df-batch-domains');
+  var priority = document.getElementById('df-batch-priority').value;
+  if (domains.length === 0) { dfShowMsg('df-batch-msg', 'Select at least one domain', 'error'); return; }
+  btn.disabled = true;
+  btn.innerHTML = '<span class="df-spinner"></span> Creating...';
+  try {
+    var r = await fetch('/api/batch-jobs', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({ batch_name: name || ('Batch: '+action), action: action, targets: domains.map(function(d){ return {domain: d}; }), parameters: {priority: priority} })
+    });
+    var data = await r.json();
+    if (data.ok) {
+      dfShowMsg('df-batch-msg', '✅ Batch job created! ('+domains.length+' targets)', 'success');
+      setTimeout(function() { dfCloseModal('df-modal-batch'); dfShowMsg('df-batch-msg',''); }, 1500);
+      if (typeof loadBatchJobs === 'function') loadBatchJobs();
+    } else {
+      dfShowMsg('df-batch-msg', 'Error: '+(data.error||'Failed'), 'error');
+    }
+  } catch(e) { dfShowMsg('df-batch-msg', 'Network error: '+e.message, 'error'); }
+  btn.disabled = false;
+  btn.textContent = 'Create Batch';
+}
+
+async function dfSubmitReport() {
+  var domain = document.getElementById('df-report-domain').value;
+  var type = document.getElementById('df-report-type').value;
+  var from = document.getElementById('df-report-from').value;
+  var to = document.getElementById('df-report-to').value;
+  var email = document.getElementById('df-report-email').value.trim();
+  var schedule = document.getElementById('df-report-schedule').checked;
+  var freq = document.getElementById('df-report-freq').value;
+  try {
+    var r = await fetch('/api/reports', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({ domain: domain || 'all', report_type: type, date_from: from, date_to: to, sent_to: email || null })
+    });
+    var data = await r.json();
+    if (data.ok) {
+      dfShowMsg('df-report-msg', '✅ Report generated!', 'success');
+      if (schedule) {
+        await fetch('/api/report-schedules', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({ domain: domain || 'all', frequency: freq, send_to: email ? [email] : [] })
+        });
+      }
+      setTimeout(function() { dfCloseModal('df-modal-report'); dfShowMsg('df-report-msg',''); }, 1500);
+      if (typeof loadReports === 'function') loadReports();
+    } else { dfShowMsg('df-report-msg', 'Error: '+(data.error||'Failed'), 'error'); }
+  } catch(e) { dfShowMsg('df-report-msg', 'Network error', 'error'); }
+}
+
+async function dfSubmitBudget() {
+  var scope = document.getElementById('df-budget-scope').value;
+  var domain = scope === 'client' ? document.getElementById('df-budget-domain').value : null;
+  var period = document.getElementById('df-budget-period').value;
+  var limit = parseFloat(document.getElementById('df-budget-limit').value);
+  var action = document.getElementById('df-budget-action').value;
+  if (!limit || limit <= 0) { dfShowMsg('df-budget-msg', 'Enter a valid limit amount', 'error'); return; }
+  try {
+    var r = await fetch('/api/budget-limits', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({ scope: scope, domain: domain, period: period, limit_usd: limit, action: action })
+    });
+    var data = await r.json();
+    if (data.ok) {
+      dfShowMsg('df-budget-msg', '✅ Budget limit saved: $'+limit.toFixed(2)+'/'+period, 'success');
+      setTimeout(function() { dfCloseModal('df-modal-budget'); dfShowMsg('df-budget-msg',''); }, 1500);
+      if (typeof loadCostSummary === 'function') loadCostSummary();
+    } else { dfShowMsg('df-budget-msg', 'Error: '+(data.error||'Failed'), 'error'); }
+  } catch(e) { dfShowMsg('df-budget-msg', 'Network error', 'error'); }
+}
+
+async function dfSubmitSchedule() {
+  var name = document.getElementById('df-schedule-name').value.trim();
+  var domains = dfGetCheckedDomains('df-schedule-domains');
+  var cron = document.getElementById('df-schedule-cron').value.trim();
+  var budget = parseFloat(document.getElementById('df-schedule-budget').value) || null;
+  var concurrency = parseInt(document.getElementById('df-schedule-concurrency').value) || 3;
+  if (!name) { dfShowMsg('df-schedule-msg', 'Enter a schedule name', 'error'); return; }
+  if (!cron) { dfShowMsg('df-schedule-msg', 'Enter a cron expression or use a preset', 'error'); return; }
+  if (domains.length === 0) { dfShowMsg('df-schedule-msg', 'Select at least one domain', 'error'); return; }
+  try {
+    var r = await fetch('/api/pipeline-schedules', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({ name: name, domains: domains.map(function(d){ return {domain: d, subdomains: []}; }), cron_expression: cron, budget_cap: budget, max_concurrency: concurrency })
+    });
+    var data = await r.json();
+    if (data.ok) {
+      dfShowMsg('df-schedule-msg', '✅ Schedule created!', 'success');
+      setTimeout(function() { dfCloseModal('df-modal-schedule'); dfShowMsg('df-schedule-msg',''); }, 1500);
+      if (typeof loadSchedules === 'function') loadSchedules();
+    } else { dfShowMsg('df-schedule-msg', 'Error: '+(data.error||'Failed'), 'error'); }
+  } catch(e) { dfShowMsg('df-schedule-msg', 'Network error', 'error'); }
+}
+
+async function dfSubmitABTest() {
+  var domain = document.getElementById('df-ab-domain').value;
+  var page = document.getElementById('df-ab-page').value.trim();
+  var va = document.getElementById('df-ab-version-a').value.trim();
+  var vb = document.getElementById('df-ab-version-b').value.trim();
+  var notes = document.getElementById('df-ab-notes').value.trim();
+  if (!domain || !page || !va || !vb) { dfShowMsg('df-ab-msg', 'Fill all required fields', 'error'); return; }
+  if (va === vb) { dfShowMsg('df-ab-msg', 'Version A and B must be different', 'error'); return; }
+  try {
+    var r = await fetch('/api/ab-tests', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({ domain: domain, page_path: page, version_a: va, version_b: vb, notes: notes })
+    });
+    var data = await r.json();
+    if (data.ok) {
+      dfShowMsg('df-ab-msg', '✅ A/B test created!', 'success');
+      setTimeout(function() { dfCloseModal('df-modal-ab'); dfShowMsg('df-ab-msg',''); }, 1500);
+      if (typeof loadABTests === 'function') loadABTests();
+    } else { dfShowMsg('df-ab-msg', 'Error: '+(data.error||'Failed'), 'error'); }
+  } catch(e) { dfShowMsg('df-ab-msg', 'Network error', 'error'); }
+}
+
+function openCreateBatchModal() {
+  if (DF_DOMAINS.length === 0) {
+    dfLoadDomains().then(function(domains) {
+      DF_DOMAINS = domains;
+      dfFillDomainCheckboxes('df-batch-domains');
+    });
+  }
+  dfFillDomainCheckboxes('df-batch-domains');
+  dfShowMsg('df-batch-msg', '', 'info');
+  dfOpenModal('df-modal-batch');
+}
+
+function openGenerateReportModal() {
+  if (DF_DOMAINS.length === 0) { dfLoadDomains().then(function(d) { DF_DOMAINS = d; dfFillDomainSelect('df-report-domain'); }); }
+  dfFillDomainSelect('df-report-domain');
+  dfShowMsg('df-report-msg', '', 'info');
+  var today = new Date().toISOString().split('T')[0];
+  var weekAgo = new Date(Date.now() - 7*86400000).toISOString().split('T')[0];
+  document.getElementById('df-report-from').value = weekAgo;
+  document.getElementById('df-report-to').value = today;
+  dfOpenModal('df-modal-report');
+}
+
+function openBudgetModal() {
+  if (DF_DOMAINS.length === 0) { dfLoadDomains().then(function(d) { DF_DOMAINS = d; dfFillDomainSelect('df-budget-domain'); }); }
+  dfFillDomainSelect('df-budget-domain');
+  dfShowMsg('df-budget-msg', '', 'info');
+  document.getElementById('df-budget-limit').value = '';
+  dfOpenModal('df-modal-budget');
+}
+
+function openScheduleModal() {
+  if (DF_DOMAINS.length === 0) { dfLoadDomains().then(function(d) { DF_DOMAINS = d; dfFillDomainCheckboxes('df-schedule-domains'); }); }
+  dfFillDomainCheckboxes('df-schedule-domains');
+  dfShowMsg('df-schedule-msg', '', 'info');
+  document.getElementById('df-schedule-name').value = '';
+  document.getElementById('df-schedule-cron').value = '';
+  document.getElementById('df-schedule-budget').value = '';
+  dfOpenModal('df-modal-schedule');
+}
+
+function openCreateABTestModal() {
+  if (DF_DOMAINS.length === 0) { dfLoadDomains().then(function(d) { DF_DOMAINS = d; dfFillDomainSelect('df-ab-domain'); }); }
+  dfFillDomainSelect('df-ab-domain');
+  dfShowMsg('df-ab-msg', '', 'info');
+  document.getElementById('df-ab-page').value = '';
+  document.getElementById('df-ab-version-a').value = '';
+  document.getElementById('df-ab-version-b').value = '';
+  document.getElementById('df-ab-notes').value = '';
+  dfOpenModal('df-modal-ab');
+}
+
+// Close modals on overlay click
+document.addEventListener('click', function(e) {
+  if (e.target.classList.contains('df-modal-overlay')) {
+    e.target.classList.remove('open');
+  }
+});
+
+// Close modals on Escape
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') {
+    document.querySelectorAll('.df-modal-overlay.open').forEach(function(m) { m.classList.remove('open'); });
+  }
+});
+
+// Load domains on init
+(function() {
+  dfLoadDomains().then(function(domains) { DF_DOMAINS = domains; });
+})();
+</script>
     console.error('openPreview fetch failed:', err);
   });
   setDevice('desktop',document.querySelector('.device-tab:last-child'));
@@ -12039,6 +12426,393 @@ body{padding-top:96px !important;}
 })();
 </script>
 </body>';
+<!-- ═══════════════════════════════════════════════════════
+     DASHBOARD_FEATURES_MODALS — 15-feature roadmap (additive, 2026-04-28)
+     ═══════════════════════════════════════════════════════ -->
+<style>
+.df-modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:10000;display:none;align-items:center;justify-content:center;backdrop-filter:blur(4px)}
+.df-modal-overlay.open{display:flex}
+.df-modal-box{background:var(--bg-elevated,#0f1011);border:1px solid var(--border,rgba(255,255,255,0.08));border-radius:16px;width:90%;max-width:520px;max-height:85vh;overflow-y:auto;box-shadow:0 24px 80px rgba(0,0,0,0.6);padding:0}
+.df-modal-header{display:flex;align-items:center;justify-content:space-between;padding:16px 20px;border-bottom:1px solid var(--border,rgba(255,255,255,0.08));position:sticky;top:0;background:var(--bg-elevated,#0f1011);z-index:1}
+.df-modal-header h3{margin:0;font-size:16px;color:var(--text)}
+.df-modal-close{width:32px;height:32px;border-radius:8px;border:1px solid var(--border,rgba(255,255,255,0.08));background:transparent;color:var(--text);font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.df-modal-close:hover{background:var(--red);color:#fff;border-color:var(--red)}
+.df-modal-body{padding:20px}
+.df-field{margin-bottom:14px}
+.df-field label{display:block;font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:4px}
+.df-field input,.df-field select,.df-field textarea{width:100%;padding:9px 12px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);border-radius:8px;color:var(--text);font-size:13px;font-family:inherit;box-sizing:border-box}
+.df-field input:focus,.df-field select:focus,.df-field textarea:focus{outline:none;border-color:var(--gold)}
+.df-field textarea{resize:vertical;min-height:70px}
+.df-field .df-hint{font-size:11px;color:var(--muted);margin-top:3px}
+.df-field-inline{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.df-tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+.df-tag{display:inline-flex;align-items:center;gap:4px;padding:4px 8px;background:rgba(113,112,255,0.12);border:1px solid rgba(113,112,255,0.2);border-radius:6px;font-size:11px;color:var(--gold-light)}
+.df-tag .df-tag-remove{cursor:pointer;opacity:0.6}
+.df-tag .df-tag-remove:hover{opacity:1}
+.df-modal-footer{display:flex;gap:8px;justify-content:flex-end;padding:14px 20px;border-top:1px solid var(--border,rgba(255,255,255,0.08));position:sticky;bottom:0;background:var(--bg-elevated,#0f1011)}
+.df-btn{padding:9px 18px;border-radius:8px;border:1px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.04);color:var(--text-secondary);font-size:13px;font-weight:700;cursor:pointer;transition:all 0.15s}
+.df-btn:hover{background:rgba(255,255,255,0.08);color:#fff}
+.df-btn.primary{background:linear-gradient(135deg,var(--gold),var(--gold-dim));border-color:transparent;color:#fff}
+.df-btn.primary:hover{background:linear-gradient(135deg,var(--gold-light),var(--gold))}
+.df-btn.danger{background:rgba(239,95,107,0.15);border-color:rgba(239,95,107,0.3);color:var(--red)}
+.df-btn:disabled{opacity:0.4;cursor:not-allowed}
+.df-success-msg{padding:8px 12px;background:rgba(39,166,68,0.1);border:1px solid rgba(39,166,68,0.2);border-radius:8px;font-size:12px;color:#7ee19d;margin-bottom:12px}
+.df-error-msg{padding:8px 12px;background:rgba(239,95,107,0.1);border:1px solid rgba(239,95,107,0.2);border-radius:8px;font-size:12px;color:var(--red);margin-bottom:12px}
+.df-checkbox{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--text-secondary);margin-bottom:8px}
+.df-checkbox input[type=checkbox]{width:16px;height:16px;accent-color:var(--gold)}
+.df-domain-list{max-height:120px;overflow-y:auto;border:1px solid var(--border);border-radius:8px;padding:8px}
+.df-domain-item{display:flex;align-items:center;gap:8px;padding:4px 8px;font-size:12px;color:var(--text-secondary);border-radius:4px}
+.df-domain-item:hover{background:rgba(255,255,255,0.04)}
+.df-domain-item input{margin:0}
+.df-spinner{display:inline-block;width:14px;height:14px;border:2px solid rgba(255,255,255,0.2);border-top-color:var(--gold);border-radius:50%;animation:df-spin 0.7s linear infinite}
+@keyframes df-spin{to{transform:rotate(360deg)}}
+</style>
+
+<!-- Modal: Create Batch Job -->
+<div id="df-modal-batch" class="df-modal-overlay">
+<div class="df-modal-box">
+<div class="df-modal-header"><h3>📦 New Batch Job</h3><button class="df-modal-close" onclick="dfCloseModal('df-modal-batch')">×</button></div>
+<div class="df-modal-body">
+<div id="df-batch-msg"></div>
+<div class="df-field"><label>Batch Name</label><input id="df-batch-name" placeholder="e.g. Redesign all blog pages"></div>
+<div class="df-field"><label>Action</label>
+<select id="df-batch-action"><option value="run_pipeline">Run Pipeline</option><option value="redeploy">Redeploy</option><option value="update_instructions">Update Instructions</option><option value="export">Export Results</option></select></div>
+<div class="df-field"><label>Target Domains</label>
+<div id="df-batch-domains" class="df-domain-list">Loading domains...</div>
+<div class="df-hint"><input type="checkbox" id="df-batch-select-all" onchange="dfToggleBatchAll(this.checked)"> Select all</div></div>
+<div class="df-field"><label>Priority</label>
+<select id="df-batch-priority"><option value="normal">Normal</option><option value="high">High</option><option value="low">Low</option></select></div>
+</div>
+<div class="df-modal-footer"><button class="df-btn" onclick="dfCloseModal('df-modal-batch')">Cancel</button><button class="df-btn primary" id="df-batch-submit" onclick="dfSubmitBatchJob()">Create Batch</button></div>
+</div></div>
+
+<!-- Modal: Generate Report -->
+<div id="df-modal-report" class="df-modal-overlay">
+<div class="df-modal-box">
+<div class="df-modal-header"><h3>📄 Generate Report</h3><button class="df-modal-close" onclick="dfCloseModal('df-modal-report')">×</button></div>
+<div class="df-modal-body">
+<div id="df-report-msg"></div>
+<div class="df-field"><label>Domain</label><select id="df-report-domain"><option value="">All domains</option></select></div>
+<div class="df-field"><label>Report Type</label>
+<select id="df-report-type"><option value="weekly">Weekly Summary</option><option value="monthly">Monthly Deep Dive</option><option value="custom">Custom Range</option></select></div>
+<div class="df-field-inline"><div class="df-field"><label>From</label><input id="df-report-from" type="date"></div><div class="df-field"><label>To</label><input id="df-report-to" type="date"></div></div>
+<div class="df-field"><label>Send To (email)</label><input id="df-report-email" placeholder="client@example.com"></div>
+<div class="df-checkbox"><input type="checkbox" id="df-report-schedule" onchange="document.getElementById('df-report-freq-wrap').style.display=this.checked?'block':'none'"><label for="df-report-schedule">Schedule recurring</label></div>
+<div id="df-report-freq-wrap" style="display:none">
+<div class="df-field"><label>Frequency</label><select id="df-report-freq"><option value="weekly">Weekly</option><option value="monthly">Monthly</option></select></div>
+</div>
+</div>
+<div class="df-modal-footer"><button class="df-btn" onclick="dfCloseModal('df-modal-report')">Cancel</button><button class="df-btn primary" onclick="dfSubmitReport()">Generate</button></div>
+</div></div>
+
+<!-- Modal: Set Budget -->
+<div id="df-modal-budget" class="df-modal-overlay">
+<div class="df-modal-box">
+<div class="df-modal-header"><h3>💰 Set Budget Limit</h3><button class="df-modal-close" onclick="dfCloseModal('df-modal-budget')">×</button></div>
+<div class="df-modal-body">
+<div id="df-budget-msg"></div>
+<div class="df-field"><label>Scope</label><select id="df-budget-scope" onchange="document.getElementById('df-budget-domain-wrap').style.display=this.value==='client'?'block':'none'"><option value="global">Global (all clients)</option><option value="client">Per Client</option></select></div>
+<div id="df-budget-domain-wrap" style="display:none" class="df-field"><label>Domain</label><select id="df-budget-domain"></select></div>
+<div class="df-field"><label>Period</label><select id="df-budget-period"><option value="daily">Daily</option><option value="weekly">Weekly</option><option value="monthly">Monthly</option></select></div>
+<div class="df-field"><label>Limit ($)</label><input id="df-budget-limit" type="number" step="0.01" min="0.01" placeholder="5.00"></div>
+<div class="df-field"><label>Action when exceeded</label><select id="df-budget-action"><option value="alert">Send alert only</option><option value="pause">Pause pipelines</option></select></div>
+</div>
+<div class="df-modal-footer"><button class="df-btn" onclick="dfCloseModal('df-modal-budget')">Cancel</button><button class="df-btn primary" onclick="dfSubmitBudget()">Save Budget</button></div>
+</div></div>
+
+<!-- Modal: Create Schedule -->
+<div id="df-modal-schedule" class="df-modal-overlay">
+<div class="df-modal-box">
+<div class="df-modal-header"><h3>⏰ New Schedule</h3><button class="df-modal-close" onclick="dfCloseModal('df-modal-schedule')">×</button></div>
+<div class="df-modal-body">
+<div id="df-schedule-msg"></div>
+<div class="df-field"><label>Schedule Name</label><input id="df-schedule-name" placeholder="e.g. Daily oritmartin refresh"></div>
+<div class="df-field"><label>Target Domains</label><div id="df-schedule-domains" class="df-domain-list">Loading domains...</div></div>
+<div class="df-field"><label>Cron Expression</label><input id="df-schedule-cron" placeholder="0 6 * * * (daily at 6 AM)"><div class="df-hint">Standard cron format: minute hour day month weekday</div></div>
+<div class="df-field-inline"><div class="df-field"><label>Budget Cap ($)</label><input id="df-schedule-budget" type="number" step="0.01" placeholder="2.00"></div><div class="df-field"><label>Max Concurrency</label><input id="df-schedule-concurrency" type="number" min="1" max="10" value="3"></div></div>
+<div class="df-field"><label>Quick Presets</label>
+<div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:4px">
+<button class="df-btn" onclick="document.getElementById('df-schedule-cron').value='0 6 * * *'" style="font-size:11px;padding:4px 8px">Daily 6AM</button>
+<button class="df-btn" onclick="document.getElementById('df-schedule-cron').value='0 9 * * 1'" style="font-size:11px;padding:4px 8px">Monday 9AM</button>
+<button class="df-btn" onclick="document.getElementById('df-schedule-cron').value='0 2 * * *'" style="font-size:11px;padding:4px 8px">Nightly 2AM</button>
+</div></div>
+</div>
+<div class="df-modal-footer"><button class="df-btn" onclick="dfCloseModal('df-modal-schedule')">Cancel</button><button class="df-btn primary" onclick="dfSubmitSchedule()">Create Schedule</button></div>
+</div></div>
+
+<!-- Modal: Create A/B Test -->
+<div id="df-modal-ab" class="df-modal-overlay">
+<div class="df-modal-box">
+<div class="df-modal-header"><h3>🔀 New A/B Test</h3><button class="df-modal-close" onclick="dfCloseModal('df-modal-ab')">×</button></div>
+<div class="df-modal-body">
+<div id="df-ab-msg"></div>
+<div class="df-field"><label>Domain</label><select id="df-ab-domain"></select></div>
+<div class="df-field"><label>Page Path</label><input id="df-ab-page" placeholder="/blog or /products"></div>
+<div class="df-field"><label>Version A (Template ID)</label><input id="df-ab-version-a" placeholder="Template UUID or select below"><div id="df-ab-versions-a" style="margin-top:4px"></div></div>
+<div class="df-field"><label>Version B (Template ID)</label><input id="df-ab-version-b" placeholder="Template UUID or select below"><div id="df-ab-versions-b" style="margin-top:4px"></div></div>
+<div class="df-field"><label>Notes</label><textarea id="df-ab-notes" placeholder="What are you testing?"></textarea></div>
+</div>
+<div class="df-modal-footer"><button class="df-btn" onclick="dfCloseModal('df-modal-ab')">Cancel</button><button class="df-btn primary" onclick="dfSubmitABTest()">Create Test</button></div>
+</div></div>
+
+<script>
+// ═══════════════════════════════════════════════════════
+// DASHBOARD_FEATURES_MODALS_JS — Modal forms (2026-04-28)
+// ═══════════════════════════════════════════════════════
+var DF_DOMAINS = [];
+
+async function dfLoadDomains() {
+  try {
+    var r = await fetch('/api/analytics');
+    if (r.ok) { var d = await r.json(); return (d.data && d.data.top_projects) ? d.data.top_projects.map(function(p){ return p.name; }) : []; }
+  } catch(e) {}
+  return [];
+}
+
+function dfFillDomainCheckboxes(containerId, selectAllId) {
+  var el = document.getElementById(containerId);
+  if (!el || DF_DOMAINS.length === 0) { if (el) el.innerHTML = '<div style="font-size:12px;color:var(--muted)">No domains found</div>'; return; }
+  var html = '';
+  DF_DOMAINS.forEach(function(d) {
+    html += '<label class="df-domain-item"><input type="checkbox" value="'+d+'"> '+d+'</label>';
+  });
+  el.innerHTML = html;
+}
+
+function dfFillDomainSelect(selectId) {
+  var el = document.getElementById(selectId);
+  if (!el) return;
+  var html = '<option value="">Select domain</option>';
+  DF_DOMAINS.forEach(function(d) { html += '<option value="'+d+'">'+d+'</option>'; });
+  el.innerHTML = html;
+}
+
+function dfToggleBatchAll(checked) {
+  var checks = document.querySelectorAll('#df-batch-domains input[type=checkbox]');
+  checks.forEach(function(c) { c.checked = checked; });
+}
+
+function dfGetCheckedDomains(containerId) {
+  var checks = document.querySelectorAll('#' + containerId + ' input[type=checkbox]:checked');
+  var result = [];
+  checks.forEach(function(c) { result.push(c.value); });
+  return result;
+}
+
+function dfCloseModal(id) {
+  var el = document.getElementById(id);
+  if (el) el.classList.remove('open');
+}
+
+function dfOpenModal(id) {
+  var el = document.getElementById(id);
+  if (el) el.classList.add('open');
+}
+
+function dfShowMsg(containerId, msg, type) {
+  var el = document.getElementById(containerId);
+  if (!el) return;
+  el.innerHTML = '<div class="df-'+type+'-msg">'+msg+'</div>';
+}
+
+async function dfSubmitBatchJob() {
+  var btn = document.getElementById('df-batch-submit');
+  var name = document.getElementById('df-batch-name').value.trim();
+  var action = document.getElementById('df-batch-action').value;
+  var domains = dfGetCheckedDomains('df-batch-domains');
+  var priority = document.getElementById('df-batch-priority').value;
+  if (domains.length === 0) { dfShowMsg('df-batch-msg', 'Select at least one domain', 'error'); return; }
+  btn.disabled = true;
+  btn.innerHTML = '<span class="df-spinner"></span> Creating...';
+  try {
+    var r = await fetch('/api/batch-jobs', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({ batch_name: name || ('Batch: '+action), action: action, targets: domains.map(function(d){ return {domain: d}; }), parameters: {priority: priority} })
+    });
+    var data = await r.json();
+    if (data.ok) {
+      dfShowMsg('df-batch-msg', '✅ Batch job created! ('+domains.length+' targets)', 'success');
+      setTimeout(function() { dfCloseModal('df-modal-batch'); dfShowMsg('df-batch-msg',''); }, 1500);
+      if (typeof loadBatchJobs === 'function') loadBatchJobs();
+    } else {
+      dfShowMsg('df-batch-msg', 'Error: '+(data.error||'Failed'), 'error');
+    }
+  } catch(e) { dfShowMsg('df-batch-msg', 'Network error: '+e.message, 'error'); }
+  btn.disabled = false;
+  btn.textContent = 'Create Batch';
+}
+
+async function dfSubmitReport() {
+  var domain = document.getElementById('df-report-domain').value;
+  var type = document.getElementById('df-report-type').value;
+  var from = document.getElementById('df-report-from').value;
+  var to = document.getElementById('df-report-to').value;
+  var email = document.getElementById('df-report-email').value.trim();
+  var schedule = document.getElementById('df-report-schedule').checked;
+  var freq = document.getElementById('df-report-freq').value;
+  try {
+    var r = await fetch('/api/reports', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({ domain: domain || 'all', report_type: type, date_from: from, date_to: to, sent_to: email || null })
+    });
+    var data = await r.json();
+    if (data.ok) {
+      dfShowMsg('df-report-msg', '✅ Report generated!', 'success');
+      if (schedule) {
+        await fetch('/api/report-schedules', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({ domain: domain || 'all', frequency: freq, send_to: email ? [email] : [] })
+        });
+      }
+      setTimeout(function() { dfCloseModal('df-modal-report'); dfShowMsg('df-report-msg',''); }, 1500);
+      if (typeof loadReports === 'function') loadReports();
+    } else { dfShowMsg('df-report-msg', 'Error: '+(data.error||'Failed'), 'error'); }
+  } catch(e) { dfShowMsg('df-report-msg', 'Network error', 'error'); }
+}
+
+async function dfSubmitBudget() {
+  var scope = document.getElementById('df-budget-scope').value;
+  var domain = scope === 'client' ? document.getElementById('df-budget-domain').value : null;
+  var period = document.getElementById('df-budget-period').value;
+  var limit = parseFloat(document.getElementById('df-budget-limit').value);
+  var action = document.getElementById('df-budget-action').value;
+  if (!limit || limit <= 0) { dfShowMsg('df-budget-msg', 'Enter a valid limit amount', 'error'); return; }
+  try {
+    var r = await fetch('/api/budget-limits', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({ scope: scope, domain: domain, period: period, limit_usd: limit, action: action })
+    });
+    var data = await r.json();
+    if (data.ok) {
+      dfShowMsg('df-budget-msg', '✅ Budget limit saved: $'+limit.toFixed(2)+'/'+period, 'success');
+      setTimeout(function() { dfCloseModal('df-modal-budget'); dfShowMsg('df-budget-msg',''); }, 1500);
+      if (typeof loadCostSummary === 'function') loadCostSummary();
+    } else { dfShowMsg('df-budget-msg', 'Error: '+(data.error||'Failed'), 'error'); }
+  } catch(e) { dfShowMsg('df-budget-msg', 'Network error', 'error'); }
+}
+
+async function dfSubmitSchedule() {
+  var name = document.getElementById('df-schedule-name').value.trim();
+  var domains = dfGetCheckedDomains('df-schedule-domains');
+  var cron = document.getElementById('df-schedule-cron').value.trim();
+  var budget = parseFloat(document.getElementById('df-schedule-budget').value) || null;
+  var concurrency = parseInt(document.getElementById('df-schedule-concurrency').value) || 3;
+  if (!name) { dfShowMsg('df-schedule-msg', 'Enter a schedule name', 'error'); return; }
+  if (!cron) { dfShowMsg('df-schedule-msg', 'Enter a cron expression or use a preset', 'error'); return; }
+  if (domains.length === 0) { dfShowMsg('df-schedule-msg', 'Select at least one domain', 'error'); return; }
+  try {
+    var r = await fetch('/api/pipeline-schedules', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({ name: name, domains: domains.map(function(d){ return {domain: d, subdomains: []}; }), cron_expression: cron, budget_cap: budget, max_concurrency: concurrency })
+    });
+    var data = await r.json();
+    if (data.ok) {
+      dfShowMsg('df-schedule-msg', '✅ Schedule created!', 'success');
+      setTimeout(function() { dfCloseModal('df-modal-schedule'); dfShowMsg('df-schedule-msg',''); }, 1500);
+      if (typeof loadSchedules === 'function') loadSchedules();
+    } else { dfShowMsg('df-schedule-msg', 'Error: '+(data.error||'Failed'), 'error'); }
+  } catch(e) { dfShowMsg('df-schedule-msg', 'Network error', 'error'); }
+}
+
+async function dfSubmitABTest() {
+  var domain = document.getElementById('df-ab-domain').value;
+  var page = document.getElementById('df-ab-page').value.trim();
+  var va = document.getElementById('df-ab-version-a').value.trim();
+  var vb = document.getElementById('df-ab-version-b').value.trim();
+  var notes = document.getElementById('df-ab-notes').value.trim();
+  if (!domain || !page || !va || !vb) { dfShowMsg('df-ab-msg', 'Fill all required fields', 'error'); return; }
+  if (va === vb) { dfShowMsg('df-ab-msg', 'Version A and B must be different', 'error'); return; }
+  try {
+    var r = await fetch('/api/ab-tests', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({ domain: domain, page_path: page, version_a: va, version_b: vb, notes: notes })
+    });
+    var data = await r.json();
+    if (data.ok) {
+      dfShowMsg('df-ab-msg', '✅ A/B test created!', 'success');
+      setTimeout(function() { dfCloseModal('df-modal-ab'); dfShowMsg('df-ab-msg',''); }, 1500);
+      if (typeof loadABTests === 'function') loadABTests();
+    } else { dfShowMsg('df-ab-msg', 'Error: '+(data.error||'Failed'), 'error'); }
+  } catch(e) { dfShowMsg('df-ab-msg', 'Network error', 'error'); }
+}
+
+function openCreateBatchModal() {
+  if (DF_DOMAINS.length === 0) {
+    dfLoadDomains().then(function(domains) {
+      DF_DOMAINS = domains;
+      dfFillDomainCheckboxes('df-batch-domains');
+    });
+  }
+  dfFillDomainCheckboxes('df-batch-domains');
+  dfShowMsg('df-batch-msg', '', 'info');
+  dfOpenModal('df-modal-batch');
+}
+
+function openGenerateReportModal() {
+  if (DF_DOMAINS.length === 0) { dfLoadDomains().then(function(d) { DF_DOMAINS = d; dfFillDomainSelect('df-report-domain'); }); }
+  dfFillDomainSelect('df-report-domain');
+  dfShowMsg('df-report-msg', '', 'info');
+  var today = new Date().toISOString().split('T')[0];
+  var weekAgo = new Date(Date.now() - 7*86400000).toISOString().split('T')[0];
+  document.getElementById('df-report-from').value = weekAgo;
+  document.getElementById('df-report-to').value = today;
+  dfOpenModal('df-modal-report');
+}
+
+function openBudgetModal() {
+  if (DF_DOMAINS.length === 0) { dfLoadDomains().then(function(d) { DF_DOMAINS = d; dfFillDomainSelect('df-budget-domain'); }); }
+  dfFillDomainSelect('df-budget-domain');
+  dfShowMsg('df-budget-msg', '', 'info');
+  document.getElementById('df-budget-limit').value = '';
+  dfOpenModal('df-modal-budget');
+}
+
+function openScheduleModal() {
+  if (DF_DOMAINS.length === 0) { dfLoadDomains().then(function(d) { DF_DOMAINS = d; dfFillDomainCheckboxes('df-schedule-domains'); }); }
+  dfFillDomainCheckboxes('df-schedule-domains');
+  dfShowMsg('df-schedule-msg', '', 'info');
+  document.getElementById('df-schedule-name').value = '';
+  document.getElementById('df-schedule-cron').value = '';
+  document.getElementById('df-schedule-budget').value = '';
+  dfOpenModal('df-modal-schedule');
+}
+
+function openCreateABTestModal() {
+  if (DF_DOMAINS.length === 0) { dfLoadDomains().then(function(d) { DF_DOMAINS = d; dfFillDomainSelect('df-ab-domain'); }); }
+  dfFillDomainSelect('df-ab-domain');
+  dfShowMsg('df-ab-msg', '', 'info');
+  document.getElementById('df-ab-page').value = '';
+  document.getElementById('df-ab-version-a').value = '';
+  document.getElementById('df-ab-version-b').value = '';
+  document.getElementById('df-ab-notes').value = '';
+  dfOpenModal('df-modal-ab');
+}
+
+// Close modals on overlay click
+document.addEventListener('click', function(e) {
+  if (e.target.classList.contains('df-modal-overlay')) {
+    e.target.classList.remove('open');
+  }
+});
+
+// Close modals on Escape
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') {
+    document.querySelectorAll('.df-modal-overlay.open').forEach(function(m) { m.classList.remove('open'); });
+  }
+});
+
+// Load domains on init
+(function() {
+  dfLoadDomains().then(function(domains) { DF_DOMAINS = domains; });
+})();
+</script>
       promptStudioContext.originalPreviewHtml=fallback;
       setPromptPreviewHtml(fallback, 'original');
     });
@@ -12095,6 +12869,393 @@ body{padding-top:96px !important;}
 })();
 </script>
 </body>';
+<!-- ═══════════════════════════════════════════════════════
+     DASHBOARD_FEATURES_MODALS — 15-feature roadmap (additive, 2026-04-28)
+     ═══════════════════════════════════════════════════════ -->
+<style>
+.df-modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:10000;display:none;align-items:center;justify-content:center;backdrop-filter:blur(4px)}
+.df-modal-overlay.open{display:flex}
+.df-modal-box{background:var(--bg-elevated,#0f1011);border:1px solid var(--border,rgba(255,255,255,0.08));border-radius:16px;width:90%;max-width:520px;max-height:85vh;overflow-y:auto;box-shadow:0 24px 80px rgba(0,0,0,0.6);padding:0}
+.df-modal-header{display:flex;align-items:center;justify-content:space-between;padding:16px 20px;border-bottom:1px solid var(--border,rgba(255,255,255,0.08));position:sticky;top:0;background:var(--bg-elevated,#0f1011);z-index:1}
+.df-modal-header h3{margin:0;font-size:16px;color:var(--text)}
+.df-modal-close{width:32px;height:32px;border-radius:8px;border:1px solid var(--border,rgba(255,255,255,0.08));background:transparent;color:var(--text);font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.df-modal-close:hover{background:var(--red);color:#fff;border-color:var(--red)}
+.df-modal-body{padding:20px}
+.df-field{margin-bottom:14px}
+.df-field label{display:block;font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:4px}
+.df-field input,.df-field select,.df-field textarea{width:100%;padding:9px 12px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);border-radius:8px;color:var(--text);font-size:13px;font-family:inherit;box-sizing:border-box}
+.df-field input:focus,.df-field select:focus,.df-field textarea:focus{outline:none;border-color:var(--gold)}
+.df-field textarea{resize:vertical;min-height:70px}
+.df-field .df-hint{font-size:11px;color:var(--muted);margin-top:3px}
+.df-field-inline{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.df-tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+.df-tag{display:inline-flex;align-items:center;gap:4px;padding:4px 8px;background:rgba(113,112,255,0.12);border:1px solid rgba(113,112,255,0.2);border-radius:6px;font-size:11px;color:var(--gold-light)}
+.df-tag .df-tag-remove{cursor:pointer;opacity:0.6}
+.df-tag .df-tag-remove:hover{opacity:1}
+.df-modal-footer{display:flex;gap:8px;justify-content:flex-end;padding:14px 20px;border-top:1px solid var(--border,rgba(255,255,255,0.08));position:sticky;bottom:0;background:var(--bg-elevated,#0f1011)}
+.df-btn{padding:9px 18px;border-radius:8px;border:1px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.04);color:var(--text-secondary);font-size:13px;font-weight:700;cursor:pointer;transition:all 0.15s}
+.df-btn:hover{background:rgba(255,255,255,0.08);color:#fff}
+.df-btn.primary{background:linear-gradient(135deg,var(--gold),var(--gold-dim));border-color:transparent;color:#fff}
+.df-btn.primary:hover{background:linear-gradient(135deg,var(--gold-light),var(--gold))}
+.df-btn.danger{background:rgba(239,95,107,0.15);border-color:rgba(239,95,107,0.3);color:var(--red)}
+.df-btn:disabled{opacity:0.4;cursor:not-allowed}
+.df-success-msg{padding:8px 12px;background:rgba(39,166,68,0.1);border:1px solid rgba(39,166,68,0.2);border-radius:8px;font-size:12px;color:#7ee19d;margin-bottom:12px}
+.df-error-msg{padding:8px 12px;background:rgba(239,95,107,0.1);border:1px solid rgba(239,95,107,0.2);border-radius:8px;font-size:12px;color:var(--red);margin-bottom:12px}
+.df-checkbox{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--text-secondary);margin-bottom:8px}
+.df-checkbox input[type=checkbox]{width:16px;height:16px;accent-color:var(--gold)}
+.df-domain-list{max-height:120px;overflow-y:auto;border:1px solid var(--border);border-radius:8px;padding:8px}
+.df-domain-item{display:flex;align-items:center;gap:8px;padding:4px 8px;font-size:12px;color:var(--text-secondary);border-radius:4px}
+.df-domain-item:hover{background:rgba(255,255,255,0.04)}
+.df-domain-item input{margin:0}
+.df-spinner{display:inline-block;width:14px;height:14px;border:2px solid rgba(255,255,255,0.2);border-top-color:var(--gold);border-radius:50%;animation:df-spin 0.7s linear infinite}
+@keyframes df-spin{to{transform:rotate(360deg)}}
+</style>
+
+<!-- Modal: Create Batch Job -->
+<div id="df-modal-batch" class="df-modal-overlay">
+<div class="df-modal-box">
+<div class="df-modal-header"><h3>📦 New Batch Job</h3><button class="df-modal-close" onclick="dfCloseModal('df-modal-batch')">×</button></div>
+<div class="df-modal-body">
+<div id="df-batch-msg"></div>
+<div class="df-field"><label>Batch Name</label><input id="df-batch-name" placeholder="e.g. Redesign all blog pages"></div>
+<div class="df-field"><label>Action</label>
+<select id="df-batch-action"><option value="run_pipeline">Run Pipeline</option><option value="redeploy">Redeploy</option><option value="update_instructions">Update Instructions</option><option value="export">Export Results</option></select></div>
+<div class="df-field"><label>Target Domains</label>
+<div id="df-batch-domains" class="df-domain-list">Loading domains...</div>
+<div class="df-hint"><input type="checkbox" id="df-batch-select-all" onchange="dfToggleBatchAll(this.checked)"> Select all</div></div>
+<div class="df-field"><label>Priority</label>
+<select id="df-batch-priority"><option value="normal">Normal</option><option value="high">High</option><option value="low">Low</option></select></div>
+</div>
+<div class="df-modal-footer"><button class="df-btn" onclick="dfCloseModal('df-modal-batch')">Cancel</button><button class="df-btn primary" id="df-batch-submit" onclick="dfSubmitBatchJob()">Create Batch</button></div>
+</div></div>
+
+<!-- Modal: Generate Report -->
+<div id="df-modal-report" class="df-modal-overlay">
+<div class="df-modal-box">
+<div class="df-modal-header"><h3>📄 Generate Report</h3><button class="df-modal-close" onclick="dfCloseModal('df-modal-report')">×</button></div>
+<div class="df-modal-body">
+<div id="df-report-msg"></div>
+<div class="df-field"><label>Domain</label><select id="df-report-domain"><option value="">All domains</option></select></div>
+<div class="df-field"><label>Report Type</label>
+<select id="df-report-type"><option value="weekly">Weekly Summary</option><option value="monthly">Monthly Deep Dive</option><option value="custom">Custom Range</option></select></div>
+<div class="df-field-inline"><div class="df-field"><label>From</label><input id="df-report-from" type="date"></div><div class="df-field"><label>To</label><input id="df-report-to" type="date"></div></div>
+<div class="df-field"><label>Send To (email)</label><input id="df-report-email" placeholder="client@example.com"></div>
+<div class="df-checkbox"><input type="checkbox" id="df-report-schedule" onchange="document.getElementById('df-report-freq-wrap').style.display=this.checked?'block':'none'"><label for="df-report-schedule">Schedule recurring</label></div>
+<div id="df-report-freq-wrap" style="display:none">
+<div class="df-field"><label>Frequency</label><select id="df-report-freq"><option value="weekly">Weekly</option><option value="monthly">Monthly</option></select></div>
+</div>
+</div>
+<div class="df-modal-footer"><button class="df-btn" onclick="dfCloseModal('df-modal-report')">Cancel</button><button class="df-btn primary" onclick="dfSubmitReport()">Generate</button></div>
+</div></div>
+
+<!-- Modal: Set Budget -->
+<div id="df-modal-budget" class="df-modal-overlay">
+<div class="df-modal-box">
+<div class="df-modal-header"><h3>💰 Set Budget Limit</h3><button class="df-modal-close" onclick="dfCloseModal('df-modal-budget')">×</button></div>
+<div class="df-modal-body">
+<div id="df-budget-msg"></div>
+<div class="df-field"><label>Scope</label><select id="df-budget-scope" onchange="document.getElementById('df-budget-domain-wrap').style.display=this.value==='client'?'block':'none'"><option value="global">Global (all clients)</option><option value="client">Per Client</option></select></div>
+<div id="df-budget-domain-wrap" style="display:none" class="df-field"><label>Domain</label><select id="df-budget-domain"></select></div>
+<div class="df-field"><label>Period</label><select id="df-budget-period"><option value="daily">Daily</option><option value="weekly">Weekly</option><option value="monthly">Monthly</option></select></div>
+<div class="df-field"><label>Limit ($)</label><input id="df-budget-limit" type="number" step="0.01" min="0.01" placeholder="5.00"></div>
+<div class="df-field"><label>Action when exceeded</label><select id="df-budget-action"><option value="alert">Send alert only</option><option value="pause">Pause pipelines</option></select></div>
+</div>
+<div class="df-modal-footer"><button class="df-btn" onclick="dfCloseModal('df-modal-budget')">Cancel</button><button class="df-btn primary" onclick="dfSubmitBudget()">Save Budget</button></div>
+</div></div>
+
+<!-- Modal: Create Schedule -->
+<div id="df-modal-schedule" class="df-modal-overlay">
+<div class="df-modal-box">
+<div class="df-modal-header"><h3>⏰ New Schedule</h3><button class="df-modal-close" onclick="dfCloseModal('df-modal-schedule')">×</button></div>
+<div class="df-modal-body">
+<div id="df-schedule-msg"></div>
+<div class="df-field"><label>Schedule Name</label><input id="df-schedule-name" placeholder="e.g. Daily oritmartin refresh"></div>
+<div class="df-field"><label>Target Domains</label><div id="df-schedule-domains" class="df-domain-list">Loading domains...</div></div>
+<div class="df-field"><label>Cron Expression</label><input id="df-schedule-cron" placeholder="0 6 * * * (daily at 6 AM)"><div class="df-hint">Standard cron format: minute hour day month weekday</div></div>
+<div class="df-field-inline"><div class="df-field"><label>Budget Cap ($)</label><input id="df-schedule-budget" type="number" step="0.01" placeholder="2.00"></div><div class="df-field"><label>Max Concurrency</label><input id="df-schedule-concurrency" type="number" min="1" max="10" value="3"></div></div>
+<div class="df-field"><label>Quick Presets</label>
+<div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:4px">
+<button class="df-btn" onclick="document.getElementById('df-schedule-cron').value='0 6 * * *'" style="font-size:11px;padding:4px 8px">Daily 6AM</button>
+<button class="df-btn" onclick="document.getElementById('df-schedule-cron').value='0 9 * * 1'" style="font-size:11px;padding:4px 8px">Monday 9AM</button>
+<button class="df-btn" onclick="document.getElementById('df-schedule-cron').value='0 2 * * *'" style="font-size:11px;padding:4px 8px">Nightly 2AM</button>
+</div></div>
+</div>
+<div class="df-modal-footer"><button class="df-btn" onclick="dfCloseModal('df-modal-schedule')">Cancel</button><button class="df-btn primary" onclick="dfSubmitSchedule()">Create Schedule</button></div>
+</div></div>
+
+<!-- Modal: Create A/B Test -->
+<div id="df-modal-ab" class="df-modal-overlay">
+<div class="df-modal-box">
+<div class="df-modal-header"><h3>🔀 New A/B Test</h3><button class="df-modal-close" onclick="dfCloseModal('df-modal-ab')">×</button></div>
+<div class="df-modal-body">
+<div id="df-ab-msg"></div>
+<div class="df-field"><label>Domain</label><select id="df-ab-domain"></select></div>
+<div class="df-field"><label>Page Path</label><input id="df-ab-page" placeholder="/blog or /products"></div>
+<div class="df-field"><label>Version A (Template ID)</label><input id="df-ab-version-a" placeholder="Template UUID or select below"><div id="df-ab-versions-a" style="margin-top:4px"></div></div>
+<div class="df-field"><label>Version B (Template ID)</label><input id="df-ab-version-b" placeholder="Template UUID or select below"><div id="df-ab-versions-b" style="margin-top:4px"></div></div>
+<div class="df-field"><label>Notes</label><textarea id="df-ab-notes" placeholder="What are you testing?"></textarea></div>
+</div>
+<div class="df-modal-footer"><button class="df-btn" onclick="dfCloseModal('df-modal-ab')">Cancel</button><button class="df-btn primary" onclick="dfSubmitABTest()">Create Test</button></div>
+</div></div>
+
+<script>
+// ═══════════════════════════════════════════════════════
+// DASHBOARD_FEATURES_MODALS_JS — Modal forms (2026-04-28)
+// ═══════════════════════════════════════════════════════
+var DF_DOMAINS = [];
+
+async function dfLoadDomains() {
+  try {
+    var r = await fetch('/api/analytics');
+    if (r.ok) { var d = await r.json(); return (d.data && d.data.top_projects) ? d.data.top_projects.map(function(p){ return p.name; }) : []; }
+  } catch(e) {}
+  return [];
+}
+
+function dfFillDomainCheckboxes(containerId, selectAllId) {
+  var el = document.getElementById(containerId);
+  if (!el || DF_DOMAINS.length === 0) { if (el) el.innerHTML = '<div style="font-size:12px;color:var(--muted)">No domains found</div>'; return; }
+  var html = '';
+  DF_DOMAINS.forEach(function(d) {
+    html += '<label class="df-domain-item"><input type="checkbox" value="'+d+'"> '+d+'</label>';
+  });
+  el.innerHTML = html;
+}
+
+function dfFillDomainSelect(selectId) {
+  var el = document.getElementById(selectId);
+  if (!el) return;
+  var html = '<option value="">Select domain</option>';
+  DF_DOMAINS.forEach(function(d) { html += '<option value="'+d+'">'+d+'</option>'; });
+  el.innerHTML = html;
+}
+
+function dfToggleBatchAll(checked) {
+  var checks = document.querySelectorAll('#df-batch-domains input[type=checkbox]');
+  checks.forEach(function(c) { c.checked = checked; });
+}
+
+function dfGetCheckedDomains(containerId) {
+  var checks = document.querySelectorAll('#' + containerId + ' input[type=checkbox]:checked');
+  var result = [];
+  checks.forEach(function(c) { result.push(c.value); });
+  return result;
+}
+
+function dfCloseModal(id) {
+  var el = document.getElementById(id);
+  if (el) el.classList.remove('open');
+}
+
+function dfOpenModal(id) {
+  var el = document.getElementById(id);
+  if (el) el.classList.add('open');
+}
+
+function dfShowMsg(containerId, msg, type) {
+  var el = document.getElementById(containerId);
+  if (!el) return;
+  el.innerHTML = '<div class="df-'+type+'-msg">'+msg+'</div>';
+}
+
+async function dfSubmitBatchJob() {
+  var btn = document.getElementById('df-batch-submit');
+  var name = document.getElementById('df-batch-name').value.trim();
+  var action = document.getElementById('df-batch-action').value;
+  var domains = dfGetCheckedDomains('df-batch-domains');
+  var priority = document.getElementById('df-batch-priority').value;
+  if (domains.length === 0) { dfShowMsg('df-batch-msg', 'Select at least one domain', 'error'); return; }
+  btn.disabled = true;
+  btn.innerHTML = '<span class="df-spinner"></span> Creating...';
+  try {
+    var r = await fetch('/api/batch-jobs', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({ batch_name: name || ('Batch: '+action), action: action, targets: domains.map(function(d){ return {domain: d}; }), parameters: {priority: priority} })
+    });
+    var data = await r.json();
+    if (data.ok) {
+      dfShowMsg('df-batch-msg', '✅ Batch job created! ('+domains.length+' targets)', 'success');
+      setTimeout(function() { dfCloseModal('df-modal-batch'); dfShowMsg('df-batch-msg',''); }, 1500);
+      if (typeof loadBatchJobs === 'function') loadBatchJobs();
+    } else {
+      dfShowMsg('df-batch-msg', 'Error: '+(data.error||'Failed'), 'error');
+    }
+  } catch(e) { dfShowMsg('df-batch-msg', 'Network error: '+e.message, 'error'); }
+  btn.disabled = false;
+  btn.textContent = 'Create Batch';
+}
+
+async function dfSubmitReport() {
+  var domain = document.getElementById('df-report-domain').value;
+  var type = document.getElementById('df-report-type').value;
+  var from = document.getElementById('df-report-from').value;
+  var to = document.getElementById('df-report-to').value;
+  var email = document.getElementById('df-report-email').value.trim();
+  var schedule = document.getElementById('df-report-schedule').checked;
+  var freq = document.getElementById('df-report-freq').value;
+  try {
+    var r = await fetch('/api/reports', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({ domain: domain || 'all', report_type: type, date_from: from, date_to: to, sent_to: email || null })
+    });
+    var data = await r.json();
+    if (data.ok) {
+      dfShowMsg('df-report-msg', '✅ Report generated!', 'success');
+      if (schedule) {
+        await fetch('/api/report-schedules', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({ domain: domain || 'all', frequency: freq, send_to: email ? [email] : [] })
+        });
+      }
+      setTimeout(function() { dfCloseModal('df-modal-report'); dfShowMsg('df-report-msg',''); }, 1500);
+      if (typeof loadReports === 'function') loadReports();
+    } else { dfShowMsg('df-report-msg', 'Error: '+(data.error||'Failed'), 'error'); }
+  } catch(e) { dfShowMsg('df-report-msg', 'Network error', 'error'); }
+}
+
+async function dfSubmitBudget() {
+  var scope = document.getElementById('df-budget-scope').value;
+  var domain = scope === 'client' ? document.getElementById('df-budget-domain').value : null;
+  var period = document.getElementById('df-budget-period').value;
+  var limit = parseFloat(document.getElementById('df-budget-limit').value);
+  var action = document.getElementById('df-budget-action').value;
+  if (!limit || limit <= 0) { dfShowMsg('df-budget-msg', 'Enter a valid limit amount', 'error'); return; }
+  try {
+    var r = await fetch('/api/budget-limits', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({ scope: scope, domain: domain, period: period, limit_usd: limit, action: action })
+    });
+    var data = await r.json();
+    if (data.ok) {
+      dfShowMsg('df-budget-msg', '✅ Budget limit saved: $'+limit.toFixed(2)+'/'+period, 'success');
+      setTimeout(function() { dfCloseModal('df-modal-budget'); dfShowMsg('df-budget-msg',''); }, 1500);
+      if (typeof loadCostSummary === 'function') loadCostSummary();
+    } else { dfShowMsg('df-budget-msg', 'Error: '+(data.error||'Failed'), 'error'); }
+  } catch(e) { dfShowMsg('df-budget-msg', 'Network error', 'error'); }
+}
+
+async function dfSubmitSchedule() {
+  var name = document.getElementById('df-schedule-name').value.trim();
+  var domains = dfGetCheckedDomains('df-schedule-domains');
+  var cron = document.getElementById('df-schedule-cron').value.trim();
+  var budget = parseFloat(document.getElementById('df-schedule-budget').value) || null;
+  var concurrency = parseInt(document.getElementById('df-schedule-concurrency').value) || 3;
+  if (!name) { dfShowMsg('df-schedule-msg', 'Enter a schedule name', 'error'); return; }
+  if (!cron) { dfShowMsg('df-schedule-msg', 'Enter a cron expression or use a preset', 'error'); return; }
+  if (domains.length === 0) { dfShowMsg('df-schedule-msg', 'Select at least one domain', 'error'); return; }
+  try {
+    var r = await fetch('/api/pipeline-schedules', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({ name: name, domains: domains.map(function(d){ return {domain: d, subdomains: []}; }), cron_expression: cron, budget_cap: budget, max_concurrency: concurrency })
+    });
+    var data = await r.json();
+    if (data.ok) {
+      dfShowMsg('df-schedule-msg', '✅ Schedule created!', 'success');
+      setTimeout(function() { dfCloseModal('df-modal-schedule'); dfShowMsg('df-schedule-msg',''); }, 1500);
+      if (typeof loadSchedules === 'function') loadSchedules();
+    } else { dfShowMsg('df-schedule-msg', 'Error: '+(data.error||'Failed'), 'error'); }
+  } catch(e) { dfShowMsg('df-schedule-msg', 'Network error', 'error'); }
+}
+
+async function dfSubmitABTest() {
+  var domain = document.getElementById('df-ab-domain').value;
+  var page = document.getElementById('df-ab-page').value.trim();
+  var va = document.getElementById('df-ab-version-a').value.trim();
+  var vb = document.getElementById('df-ab-version-b').value.trim();
+  var notes = document.getElementById('df-ab-notes').value.trim();
+  if (!domain || !page || !va || !vb) { dfShowMsg('df-ab-msg', 'Fill all required fields', 'error'); return; }
+  if (va === vb) { dfShowMsg('df-ab-msg', 'Version A and B must be different', 'error'); return; }
+  try {
+    var r = await fetch('/api/ab-tests', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({ domain: domain, page_path: page, version_a: va, version_b: vb, notes: notes })
+    });
+    var data = await r.json();
+    if (data.ok) {
+      dfShowMsg('df-ab-msg', '✅ A/B test created!', 'success');
+      setTimeout(function() { dfCloseModal('df-modal-ab'); dfShowMsg('df-ab-msg',''); }, 1500);
+      if (typeof loadABTests === 'function') loadABTests();
+    } else { dfShowMsg('df-ab-msg', 'Error: '+(data.error||'Failed'), 'error'); }
+  } catch(e) { dfShowMsg('df-ab-msg', 'Network error', 'error'); }
+}
+
+function openCreateBatchModal() {
+  if (DF_DOMAINS.length === 0) {
+    dfLoadDomains().then(function(domains) {
+      DF_DOMAINS = domains;
+      dfFillDomainCheckboxes('df-batch-domains');
+    });
+  }
+  dfFillDomainCheckboxes('df-batch-domains');
+  dfShowMsg('df-batch-msg', '', 'info');
+  dfOpenModal('df-modal-batch');
+}
+
+function openGenerateReportModal() {
+  if (DF_DOMAINS.length === 0) { dfLoadDomains().then(function(d) { DF_DOMAINS = d; dfFillDomainSelect('df-report-domain'); }); }
+  dfFillDomainSelect('df-report-domain');
+  dfShowMsg('df-report-msg', '', 'info');
+  var today = new Date().toISOString().split('T')[0];
+  var weekAgo = new Date(Date.now() - 7*86400000).toISOString().split('T')[0];
+  document.getElementById('df-report-from').value = weekAgo;
+  document.getElementById('df-report-to').value = today;
+  dfOpenModal('df-modal-report');
+}
+
+function openBudgetModal() {
+  if (DF_DOMAINS.length === 0) { dfLoadDomains().then(function(d) { DF_DOMAINS = d; dfFillDomainSelect('df-budget-domain'); }); }
+  dfFillDomainSelect('df-budget-domain');
+  dfShowMsg('df-budget-msg', '', 'info');
+  document.getElementById('df-budget-limit').value = '';
+  dfOpenModal('df-modal-budget');
+}
+
+function openScheduleModal() {
+  if (DF_DOMAINS.length === 0) { dfLoadDomains().then(function(d) { DF_DOMAINS = d; dfFillDomainCheckboxes('df-schedule-domains'); }); }
+  dfFillDomainCheckboxes('df-schedule-domains');
+  dfShowMsg('df-schedule-msg', '', 'info');
+  document.getElementById('df-schedule-name').value = '';
+  document.getElementById('df-schedule-cron').value = '';
+  document.getElementById('df-schedule-budget').value = '';
+  dfOpenModal('df-modal-schedule');
+}
+
+function openCreateABTestModal() {
+  if (DF_DOMAINS.length === 0) { dfLoadDomains().then(function(d) { DF_DOMAINS = d; dfFillDomainSelect('df-ab-domain'); }); }
+  dfFillDomainSelect('df-ab-domain');
+  dfShowMsg('df-ab-msg', '', 'info');
+  document.getElementById('df-ab-page').value = '';
+  document.getElementById('df-ab-version-a').value = '';
+  document.getElementById('df-ab-version-b').value = '';
+  document.getElementById('df-ab-notes').value = '';
+  dfOpenModal('df-modal-ab');
+}
+
+// Close modals on overlay click
+document.addEventListener('click', function(e) {
+  if (e.target.classList.contains('df-modal-overlay')) {
+    e.target.classList.remove('open');
+  }
+});
+
+// Close modals on Escape
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') {
+    document.querySelectorAll('.df-modal-overlay.open').forEach(function(m) { m.classList.remove('open'); });
+  }
+});
+
+// Load domains on init
+(function() {
+  dfLoadDomains().then(function(domains) { DF_DOMAINS = domains; });
+})();
+</script>
     promptStudioContext.originalPreviewHtml=fallback;
     setPromptPreviewHtml(fallback, 'original');
   }
@@ -12264,6 +13425,393 @@ body{padding-top:96px !important;}
 })();
 </script>
 </body>');
+<!-- ═══════════════════════════════════════════════════════
+     DASHBOARD_FEATURES_MODALS — 15-feature roadmap (additive, 2026-04-28)
+     ═══════════════════════════════════════════════════════ -->
+<style>
+.df-modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:10000;display:none;align-items:center;justify-content:center;backdrop-filter:blur(4px)}
+.df-modal-overlay.open{display:flex}
+.df-modal-box{background:var(--bg-elevated,#0f1011);border:1px solid var(--border,rgba(255,255,255,0.08));border-radius:16px;width:90%;max-width:520px;max-height:85vh;overflow-y:auto;box-shadow:0 24px 80px rgba(0,0,0,0.6);padding:0}
+.df-modal-header{display:flex;align-items:center;justify-content:space-between;padding:16px 20px;border-bottom:1px solid var(--border,rgba(255,255,255,0.08));position:sticky;top:0;background:var(--bg-elevated,#0f1011);z-index:1}
+.df-modal-header h3{margin:0;font-size:16px;color:var(--text)}
+.df-modal-close{width:32px;height:32px;border-radius:8px;border:1px solid var(--border,rgba(255,255,255,0.08));background:transparent;color:var(--text);font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.df-modal-close:hover{background:var(--red);color:#fff;border-color:var(--red)}
+.df-modal-body{padding:20px}
+.df-field{margin-bottom:14px}
+.df-field label{display:block;font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:4px}
+.df-field input,.df-field select,.df-field textarea{width:100%;padding:9px 12px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);border-radius:8px;color:var(--text);font-size:13px;font-family:inherit;box-sizing:border-box}
+.df-field input:focus,.df-field select:focus,.df-field textarea:focus{outline:none;border-color:var(--gold)}
+.df-field textarea{resize:vertical;min-height:70px}
+.df-field .df-hint{font-size:11px;color:var(--muted);margin-top:3px}
+.df-field-inline{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.df-tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+.df-tag{display:inline-flex;align-items:center;gap:4px;padding:4px 8px;background:rgba(113,112,255,0.12);border:1px solid rgba(113,112,255,0.2);border-radius:6px;font-size:11px;color:var(--gold-light)}
+.df-tag .df-tag-remove{cursor:pointer;opacity:0.6}
+.df-tag .df-tag-remove:hover{opacity:1}
+.df-modal-footer{display:flex;gap:8px;justify-content:flex-end;padding:14px 20px;border-top:1px solid var(--border,rgba(255,255,255,0.08));position:sticky;bottom:0;background:var(--bg-elevated,#0f1011)}
+.df-btn{padding:9px 18px;border-radius:8px;border:1px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.04);color:var(--text-secondary);font-size:13px;font-weight:700;cursor:pointer;transition:all 0.15s}
+.df-btn:hover{background:rgba(255,255,255,0.08);color:#fff}
+.df-btn.primary{background:linear-gradient(135deg,var(--gold),var(--gold-dim));border-color:transparent;color:#fff}
+.df-btn.primary:hover{background:linear-gradient(135deg,var(--gold-light),var(--gold))}
+.df-btn.danger{background:rgba(239,95,107,0.15);border-color:rgba(239,95,107,0.3);color:var(--red)}
+.df-btn:disabled{opacity:0.4;cursor:not-allowed}
+.df-success-msg{padding:8px 12px;background:rgba(39,166,68,0.1);border:1px solid rgba(39,166,68,0.2);border-radius:8px;font-size:12px;color:#7ee19d;margin-bottom:12px}
+.df-error-msg{padding:8px 12px;background:rgba(239,95,107,0.1);border:1px solid rgba(239,95,107,0.2);border-radius:8px;font-size:12px;color:var(--red);margin-bottom:12px}
+.df-checkbox{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--text-secondary);margin-bottom:8px}
+.df-checkbox input[type=checkbox]{width:16px;height:16px;accent-color:var(--gold)}
+.df-domain-list{max-height:120px;overflow-y:auto;border:1px solid var(--border);border-radius:8px;padding:8px}
+.df-domain-item{display:flex;align-items:center;gap:8px;padding:4px 8px;font-size:12px;color:var(--text-secondary);border-radius:4px}
+.df-domain-item:hover{background:rgba(255,255,255,0.04)}
+.df-domain-item input{margin:0}
+.df-spinner{display:inline-block;width:14px;height:14px;border:2px solid rgba(255,255,255,0.2);border-top-color:var(--gold);border-radius:50%;animation:df-spin 0.7s linear infinite}
+@keyframes df-spin{to{transform:rotate(360deg)}}
+</style>
+
+<!-- Modal: Create Batch Job -->
+<div id="df-modal-batch" class="df-modal-overlay">
+<div class="df-modal-box">
+<div class="df-modal-header"><h3>📦 New Batch Job</h3><button class="df-modal-close" onclick="dfCloseModal('df-modal-batch')">×</button></div>
+<div class="df-modal-body">
+<div id="df-batch-msg"></div>
+<div class="df-field"><label>Batch Name</label><input id="df-batch-name" placeholder="e.g. Redesign all blog pages"></div>
+<div class="df-field"><label>Action</label>
+<select id="df-batch-action"><option value="run_pipeline">Run Pipeline</option><option value="redeploy">Redeploy</option><option value="update_instructions">Update Instructions</option><option value="export">Export Results</option></select></div>
+<div class="df-field"><label>Target Domains</label>
+<div id="df-batch-domains" class="df-domain-list">Loading domains...</div>
+<div class="df-hint"><input type="checkbox" id="df-batch-select-all" onchange="dfToggleBatchAll(this.checked)"> Select all</div></div>
+<div class="df-field"><label>Priority</label>
+<select id="df-batch-priority"><option value="normal">Normal</option><option value="high">High</option><option value="low">Low</option></select></div>
+</div>
+<div class="df-modal-footer"><button class="df-btn" onclick="dfCloseModal('df-modal-batch')">Cancel</button><button class="df-btn primary" id="df-batch-submit" onclick="dfSubmitBatchJob()">Create Batch</button></div>
+</div></div>
+
+<!-- Modal: Generate Report -->
+<div id="df-modal-report" class="df-modal-overlay">
+<div class="df-modal-box">
+<div class="df-modal-header"><h3>📄 Generate Report</h3><button class="df-modal-close" onclick="dfCloseModal('df-modal-report')">×</button></div>
+<div class="df-modal-body">
+<div id="df-report-msg"></div>
+<div class="df-field"><label>Domain</label><select id="df-report-domain"><option value="">All domains</option></select></div>
+<div class="df-field"><label>Report Type</label>
+<select id="df-report-type"><option value="weekly">Weekly Summary</option><option value="monthly">Monthly Deep Dive</option><option value="custom">Custom Range</option></select></div>
+<div class="df-field-inline"><div class="df-field"><label>From</label><input id="df-report-from" type="date"></div><div class="df-field"><label>To</label><input id="df-report-to" type="date"></div></div>
+<div class="df-field"><label>Send To (email)</label><input id="df-report-email" placeholder="client@example.com"></div>
+<div class="df-checkbox"><input type="checkbox" id="df-report-schedule" onchange="document.getElementById('df-report-freq-wrap').style.display=this.checked?'block':'none'"><label for="df-report-schedule">Schedule recurring</label></div>
+<div id="df-report-freq-wrap" style="display:none">
+<div class="df-field"><label>Frequency</label><select id="df-report-freq"><option value="weekly">Weekly</option><option value="monthly">Monthly</option></select></div>
+</div>
+</div>
+<div class="df-modal-footer"><button class="df-btn" onclick="dfCloseModal('df-modal-report')">Cancel</button><button class="df-btn primary" onclick="dfSubmitReport()">Generate</button></div>
+</div></div>
+
+<!-- Modal: Set Budget -->
+<div id="df-modal-budget" class="df-modal-overlay">
+<div class="df-modal-box">
+<div class="df-modal-header"><h3>💰 Set Budget Limit</h3><button class="df-modal-close" onclick="dfCloseModal('df-modal-budget')">×</button></div>
+<div class="df-modal-body">
+<div id="df-budget-msg"></div>
+<div class="df-field"><label>Scope</label><select id="df-budget-scope" onchange="document.getElementById('df-budget-domain-wrap').style.display=this.value==='client'?'block':'none'"><option value="global">Global (all clients)</option><option value="client">Per Client</option></select></div>
+<div id="df-budget-domain-wrap" style="display:none" class="df-field"><label>Domain</label><select id="df-budget-domain"></select></div>
+<div class="df-field"><label>Period</label><select id="df-budget-period"><option value="daily">Daily</option><option value="weekly">Weekly</option><option value="monthly">Monthly</option></select></div>
+<div class="df-field"><label>Limit ($)</label><input id="df-budget-limit" type="number" step="0.01" min="0.01" placeholder="5.00"></div>
+<div class="df-field"><label>Action when exceeded</label><select id="df-budget-action"><option value="alert">Send alert only</option><option value="pause">Pause pipelines</option></select></div>
+</div>
+<div class="df-modal-footer"><button class="df-btn" onclick="dfCloseModal('df-modal-budget')">Cancel</button><button class="df-btn primary" onclick="dfSubmitBudget()">Save Budget</button></div>
+</div></div>
+
+<!-- Modal: Create Schedule -->
+<div id="df-modal-schedule" class="df-modal-overlay">
+<div class="df-modal-box">
+<div class="df-modal-header"><h3>⏰ New Schedule</h3><button class="df-modal-close" onclick="dfCloseModal('df-modal-schedule')">×</button></div>
+<div class="df-modal-body">
+<div id="df-schedule-msg"></div>
+<div class="df-field"><label>Schedule Name</label><input id="df-schedule-name" placeholder="e.g. Daily oritmartin refresh"></div>
+<div class="df-field"><label>Target Domains</label><div id="df-schedule-domains" class="df-domain-list">Loading domains...</div></div>
+<div class="df-field"><label>Cron Expression</label><input id="df-schedule-cron" placeholder="0 6 * * * (daily at 6 AM)"><div class="df-hint">Standard cron format: minute hour day month weekday</div></div>
+<div class="df-field-inline"><div class="df-field"><label>Budget Cap ($)</label><input id="df-schedule-budget" type="number" step="0.01" placeholder="2.00"></div><div class="df-field"><label>Max Concurrency</label><input id="df-schedule-concurrency" type="number" min="1" max="10" value="3"></div></div>
+<div class="df-field"><label>Quick Presets</label>
+<div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:4px">
+<button class="df-btn" onclick="document.getElementById('df-schedule-cron').value='0 6 * * *'" style="font-size:11px;padding:4px 8px">Daily 6AM</button>
+<button class="df-btn" onclick="document.getElementById('df-schedule-cron').value='0 9 * * 1'" style="font-size:11px;padding:4px 8px">Monday 9AM</button>
+<button class="df-btn" onclick="document.getElementById('df-schedule-cron').value='0 2 * * *'" style="font-size:11px;padding:4px 8px">Nightly 2AM</button>
+</div></div>
+</div>
+<div class="df-modal-footer"><button class="df-btn" onclick="dfCloseModal('df-modal-schedule')">Cancel</button><button class="df-btn primary" onclick="dfSubmitSchedule()">Create Schedule</button></div>
+</div></div>
+
+<!-- Modal: Create A/B Test -->
+<div id="df-modal-ab" class="df-modal-overlay">
+<div class="df-modal-box">
+<div class="df-modal-header"><h3>🔀 New A/B Test</h3><button class="df-modal-close" onclick="dfCloseModal('df-modal-ab')">×</button></div>
+<div class="df-modal-body">
+<div id="df-ab-msg"></div>
+<div class="df-field"><label>Domain</label><select id="df-ab-domain"></select></div>
+<div class="df-field"><label>Page Path</label><input id="df-ab-page" placeholder="/blog or /products"></div>
+<div class="df-field"><label>Version A (Template ID)</label><input id="df-ab-version-a" placeholder="Template UUID or select below"><div id="df-ab-versions-a" style="margin-top:4px"></div></div>
+<div class="df-field"><label>Version B (Template ID)</label><input id="df-ab-version-b" placeholder="Template UUID or select below"><div id="df-ab-versions-b" style="margin-top:4px"></div></div>
+<div class="df-field"><label>Notes</label><textarea id="df-ab-notes" placeholder="What are you testing?"></textarea></div>
+</div>
+<div class="df-modal-footer"><button class="df-btn" onclick="dfCloseModal('df-modal-ab')">Cancel</button><button class="df-btn primary" onclick="dfSubmitABTest()">Create Test</button></div>
+</div></div>
+
+<script>
+// ═══════════════════════════════════════════════════════
+// DASHBOARD_FEATURES_MODALS_JS — Modal forms (2026-04-28)
+// ═══════════════════════════════════════════════════════
+var DF_DOMAINS = [];
+
+async function dfLoadDomains() {
+  try {
+    var r = await fetch('/api/analytics');
+    if (r.ok) { var d = await r.json(); return (d.data && d.data.top_projects) ? d.data.top_projects.map(function(p){ return p.name; }) : []; }
+  } catch(e) {}
+  return [];
+}
+
+function dfFillDomainCheckboxes(containerId, selectAllId) {
+  var el = document.getElementById(containerId);
+  if (!el || DF_DOMAINS.length === 0) { if (el) el.innerHTML = '<div style="font-size:12px;color:var(--muted)">No domains found</div>'; return; }
+  var html = '';
+  DF_DOMAINS.forEach(function(d) {
+    html += '<label class="df-domain-item"><input type="checkbox" value="'+d+'"> '+d+'</label>';
+  });
+  el.innerHTML = html;
+}
+
+function dfFillDomainSelect(selectId) {
+  var el = document.getElementById(selectId);
+  if (!el) return;
+  var html = '<option value="">Select domain</option>';
+  DF_DOMAINS.forEach(function(d) { html += '<option value="'+d+'">'+d+'</option>'; });
+  el.innerHTML = html;
+}
+
+function dfToggleBatchAll(checked) {
+  var checks = document.querySelectorAll('#df-batch-domains input[type=checkbox]');
+  checks.forEach(function(c) { c.checked = checked; });
+}
+
+function dfGetCheckedDomains(containerId) {
+  var checks = document.querySelectorAll('#' + containerId + ' input[type=checkbox]:checked');
+  var result = [];
+  checks.forEach(function(c) { result.push(c.value); });
+  return result;
+}
+
+function dfCloseModal(id) {
+  var el = document.getElementById(id);
+  if (el) el.classList.remove('open');
+}
+
+function dfOpenModal(id) {
+  var el = document.getElementById(id);
+  if (el) el.classList.add('open');
+}
+
+function dfShowMsg(containerId, msg, type) {
+  var el = document.getElementById(containerId);
+  if (!el) return;
+  el.innerHTML = '<div class="df-'+type+'-msg">'+msg+'</div>';
+}
+
+async function dfSubmitBatchJob() {
+  var btn = document.getElementById('df-batch-submit');
+  var name = document.getElementById('df-batch-name').value.trim();
+  var action = document.getElementById('df-batch-action').value;
+  var domains = dfGetCheckedDomains('df-batch-domains');
+  var priority = document.getElementById('df-batch-priority').value;
+  if (domains.length === 0) { dfShowMsg('df-batch-msg', 'Select at least one domain', 'error'); return; }
+  btn.disabled = true;
+  btn.innerHTML = '<span class="df-spinner"></span> Creating...';
+  try {
+    var r = await fetch('/api/batch-jobs', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({ batch_name: name || ('Batch: '+action), action: action, targets: domains.map(function(d){ return {domain: d}; }), parameters: {priority: priority} })
+    });
+    var data = await r.json();
+    if (data.ok) {
+      dfShowMsg('df-batch-msg', '✅ Batch job created! ('+domains.length+' targets)', 'success');
+      setTimeout(function() { dfCloseModal('df-modal-batch'); dfShowMsg('df-batch-msg',''); }, 1500);
+      if (typeof loadBatchJobs === 'function') loadBatchJobs();
+    } else {
+      dfShowMsg('df-batch-msg', 'Error: '+(data.error||'Failed'), 'error');
+    }
+  } catch(e) { dfShowMsg('df-batch-msg', 'Network error: '+e.message, 'error'); }
+  btn.disabled = false;
+  btn.textContent = 'Create Batch';
+}
+
+async function dfSubmitReport() {
+  var domain = document.getElementById('df-report-domain').value;
+  var type = document.getElementById('df-report-type').value;
+  var from = document.getElementById('df-report-from').value;
+  var to = document.getElementById('df-report-to').value;
+  var email = document.getElementById('df-report-email').value.trim();
+  var schedule = document.getElementById('df-report-schedule').checked;
+  var freq = document.getElementById('df-report-freq').value;
+  try {
+    var r = await fetch('/api/reports', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({ domain: domain || 'all', report_type: type, date_from: from, date_to: to, sent_to: email || null })
+    });
+    var data = await r.json();
+    if (data.ok) {
+      dfShowMsg('df-report-msg', '✅ Report generated!', 'success');
+      if (schedule) {
+        await fetch('/api/report-schedules', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({ domain: domain || 'all', frequency: freq, send_to: email ? [email] : [] })
+        });
+      }
+      setTimeout(function() { dfCloseModal('df-modal-report'); dfShowMsg('df-report-msg',''); }, 1500);
+      if (typeof loadReports === 'function') loadReports();
+    } else { dfShowMsg('df-report-msg', 'Error: '+(data.error||'Failed'), 'error'); }
+  } catch(e) { dfShowMsg('df-report-msg', 'Network error', 'error'); }
+}
+
+async function dfSubmitBudget() {
+  var scope = document.getElementById('df-budget-scope').value;
+  var domain = scope === 'client' ? document.getElementById('df-budget-domain').value : null;
+  var period = document.getElementById('df-budget-period').value;
+  var limit = parseFloat(document.getElementById('df-budget-limit').value);
+  var action = document.getElementById('df-budget-action').value;
+  if (!limit || limit <= 0) { dfShowMsg('df-budget-msg', 'Enter a valid limit amount', 'error'); return; }
+  try {
+    var r = await fetch('/api/budget-limits', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({ scope: scope, domain: domain, period: period, limit_usd: limit, action: action })
+    });
+    var data = await r.json();
+    if (data.ok) {
+      dfShowMsg('df-budget-msg', '✅ Budget limit saved: $'+limit.toFixed(2)+'/'+period, 'success');
+      setTimeout(function() { dfCloseModal('df-modal-budget'); dfShowMsg('df-budget-msg',''); }, 1500);
+      if (typeof loadCostSummary === 'function') loadCostSummary();
+    } else { dfShowMsg('df-budget-msg', 'Error: '+(data.error||'Failed'), 'error'); }
+  } catch(e) { dfShowMsg('df-budget-msg', 'Network error', 'error'); }
+}
+
+async function dfSubmitSchedule() {
+  var name = document.getElementById('df-schedule-name').value.trim();
+  var domains = dfGetCheckedDomains('df-schedule-domains');
+  var cron = document.getElementById('df-schedule-cron').value.trim();
+  var budget = parseFloat(document.getElementById('df-schedule-budget').value) || null;
+  var concurrency = parseInt(document.getElementById('df-schedule-concurrency').value) || 3;
+  if (!name) { dfShowMsg('df-schedule-msg', 'Enter a schedule name', 'error'); return; }
+  if (!cron) { dfShowMsg('df-schedule-msg', 'Enter a cron expression or use a preset', 'error'); return; }
+  if (domains.length === 0) { dfShowMsg('df-schedule-msg', 'Select at least one domain', 'error'); return; }
+  try {
+    var r = await fetch('/api/pipeline-schedules', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({ name: name, domains: domains.map(function(d){ return {domain: d, subdomains: []}; }), cron_expression: cron, budget_cap: budget, max_concurrency: concurrency })
+    });
+    var data = await r.json();
+    if (data.ok) {
+      dfShowMsg('df-schedule-msg', '✅ Schedule created!', 'success');
+      setTimeout(function() { dfCloseModal('df-modal-schedule'); dfShowMsg('df-schedule-msg',''); }, 1500);
+      if (typeof loadSchedules === 'function') loadSchedules();
+    } else { dfShowMsg('df-schedule-msg', 'Error: '+(data.error||'Failed'), 'error'); }
+  } catch(e) { dfShowMsg('df-schedule-msg', 'Network error', 'error'); }
+}
+
+async function dfSubmitABTest() {
+  var domain = document.getElementById('df-ab-domain').value;
+  var page = document.getElementById('df-ab-page').value.trim();
+  var va = document.getElementById('df-ab-version-a').value.trim();
+  var vb = document.getElementById('df-ab-version-b').value.trim();
+  var notes = document.getElementById('df-ab-notes').value.trim();
+  if (!domain || !page || !va || !vb) { dfShowMsg('df-ab-msg', 'Fill all required fields', 'error'); return; }
+  if (va === vb) { dfShowMsg('df-ab-msg', 'Version A and B must be different', 'error'); return; }
+  try {
+    var r = await fetch('/api/ab-tests', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({ domain: domain, page_path: page, version_a: va, version_b: vb, notes: notes })
+    });
+    var data = await r.json();
+    if (data.ok) {
+      dfShowMsg('df-ab-msg', '✅ A/B test created!', 'success');
+      setTimeout(function() { dfCloseModal('df-modal-ab'); dfShowMsg('df-ab-msg',''); }, 1500);
+      if (typeof loadABTests === 'function') loadABTests();
+    } else { dfShowMsg('df-ab-msg', 'Error: '+(data.error||'Failed'), 'error'); }
+  } catch(e) { dfShowMsg('df-ab-msg', 'Network error', 'error'); }
+}
+
+function openCreateBatchModal() {
+  if (DF_DOMAINS.length === 0) {
+    dfLoadDomains().then(function(domains) {
+      DF_DOMAINS = domains;
+      dfFillDomainCheckboxes('df-batch-domains');
+    });
+  }
+  dfFillDomainCheckboxes('df-batch-domains');
+  dfShowMsg('df-batch-msg', '', 'info');
+  dfOpenModal('df-modal-batch');
+}
+
+function openGenerateReportModal() {
+  if (DF_DOMAINS.length === 0) { dfLoadDomains().then(function(d) { DF_DOMAINS = d; dfFillDomainSelect('df-report-domain'); }); }
+  dfFillDomainSelect('df-report-domain');
+  dfShowMsg('df-report-msg', '', 'info');
+  var today = new Date().toISOString().split('T')[0];
+  var weekAgo = new Date(Date.now() - 7*86400000).toISOString().split('T')[0];
+  document.getElementById('df-report-from').value = weekAgo;
+  document.getElementById('df-report-to').value = today;
+  dfOpenModal('df-modal-report');
+}
+
+function openBudgetModal() {
+  if (DF_DOMAINS.length === 0) { dfLoadDomains().then(function(d) { DF_DOMAINS = d; dfFillDomainSelect('df-budget-domain'); }); }
+  dfFillDomainSelect('df-budget-domain');
+  dfShowMsg('df-budget-msg', '', 'info');
+  document.getElementById('df-budget-limit').value = '';
+  dfOpenModal('df-modal-budget');
+}
+
+function openScheduleModal() {
+  if (DF_DOMAINS.length === 0) { dfLoadDomains().then(function(d) { DF_DOMAINS = d; dfFillDomainCheckboxes('df-schedule-domains'); }); }
+  dfFillDomainCheckboxes('df-schedule-domains');
+  dfShowMsg('df-schedule-msg', '', 'info');
+  document.getElementById('df-schedule-name').value = '';
+  document.getElementById('df-schedule-cron').value = '';
+  document.getElementById('df-schedule-budget').value = '';
+  dfOpenModal('df-modal-schedule');
+}
+
+function openCreateABTestModal() {
+  if (DF_DOMAINS.length === 0) { dfLoadDomains().then(function(d) { DF_DOMAINS = d; dfFillDomainSelect('df-ab-domain'); }); }
+  dfFillDomainSelect('df-ab-domain');
+  dfShowMsg('df-ab-msg', '', 'info');
+  document.getElementById('df-ab-page').value = '';
+  document.getElementById('df-ab-version-a').value = '';
+  document.getElementById('df-ab-version-b').value = '';
+  document.getElementById('df-ab-notes').value = '';
+  dfOpenModal('df-modal-ab');
+}
+
+// Close modals on overlay click
+document.addEventListener('click', function(e) {
+  if (e.target.classList.contains('df-modal-overlay')) {
+    e.target.classList.remove('open');
+  }
+});
+
+// Close modals on Escape
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') {
+    document.querySelectorAll('.df-modal-overlay.open').forEach(function(m) { m.classList.remove('open'); });
+  }
+});
+
+// Load domains on init
+(function() {
+  dfLoadDomains().then(function(domains) { DF_DOMAINS = domains; });
+})();
+</script>
   doc.close();
   try{
     const win=previewFrame.contentWindow;
@@ -12369,6 +13917,393 @@ body{padding-top:96px !important;}
 })();
 </script>
 </body>';
+<!-- ═══════════════════════════════════════════════════════
+     DASHBOARD_FEATURES_MODALS — 15-feature roadmap (additive, 2026-04-28)
+     ═══════════════════════════════════════════════════════ -->
+<style>
+.df-modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:10000;display:none;align-items:center;justify-content:center;backdrop-filter:blur(4px)}
+.df-modal-overlay.open{display:flex}
+.df-modal-box{background:var(--bg-elevated,#0f1011);border:1px solid var(--border,rgba(255,255,255,0.08));border-radius:16px;width:90%;max-width:520px;max-height:85vh;overflow-y:auto;box-shadow:0 24px 80px rgba(0,0,0,0.6);padding:0}
+.df-modal-header{display:flex;align-items:center;justify-content:space-between;padding:16px 20px;border-bottom:1px solid var(--border,rgba(255,255,255,0.08));position:sticky;top:0;background:var(--bg-elevated,#0f1011);z-index:1}
+.df-modal-header h3{margin:0;font-size:16px;color:var(--text)}
+.df-modal-close{width:32px;height:32px;border-radius:8px;border:1px solid var(--border,rgba(255,255,255,0.08));background:transparent;color:var(--text);font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.df-modal-close:hover{background:var(--red);color:#fff;border-color:var(--red)}
+.df-modal-body{padding:20px}
+.df-field{margin-bottom:14px}
+.df-field label{display:block;font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:4px}
+.df-field input,.df-field select,.df-field textarea{width:100%;padding:9px 12px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);border-radius:8px;color:var(--text);font-size:13px;font-family:inherit;box-sizing:border-box}
+.df-field input:focus,.df-field select:focus,.df-field textarea:focus{outline:none;border-color:var(--gold)}
+.df-field textarea{resize:vertical;min-height:70px}
+.df-field .df-hint{font-size:11px;color:var(--muted);margin-top:3px}
+.df-field-inline{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.df-tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+.df-tag{display:inline-flex;align-items:center;gap:4px;padding:4px 8px;background:rgba(113,112,255,0.12);border:1px solid rgba(113,112,255,0.2);border-radius:6px;font-size:11px;color:var(--gold-light)}
+.df-tag .df-tag-remove{cursor:pointer;opacity:0.6}
+.df-tag .df-tag-remove:hover{opacity:1}
+.df-modal-footer{display:flex;gap:8px;justify-content:flex-end;padding:14px 20px;border-top:1px solid var(--border,rgba(255,255,255,0.08));position:sticky;bottom:0;background:var(--bg-elevated,#0f1011)}
+.df-btn{padding:9px 18px;border-radius:8px;border:1px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.04);color:var(--text-secondary);font-size:13px;font-weight:700;cursor:pointer;transition:all 0.15s}
+.df-btn:hover{background:rgba(255,255,255,0.08);color:#fff}
+.df-btn.primary{background:linear-gradient(135deg,var(--gold),var(--gold-dim));border-color:transparent;color:#fff}
+.df-btn.primary:hover{background:linear-gradient(135deg,var(--gold-light),var(--gold))}
+.df-btn.danger{background:rgba(239,95,107,0.15);border-color:rgba(239,95,107,0.3);color:var(--red)}
+.df-btn:disabled{opacity:0.4;cursor:not-allowed}
+.df-success-msg{padding:8px 12px;background:rgba(39,166,68,0.1);border:1px solid rgba(39,166,68,0.2);border-radius:8px;font-size:12px;color:#7ee19d;margin-bottom:12px}
+.df-error-msg{padding:8px 12px;background:rgba(239,95,107,0.1);border:1px solid rgba(239,95,107,0.2);border-radius:8px;font-size:12px;color:var(--red);margin-bottom:12px}
+.df-checkbox{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--text-secondary);margin-bottom:8px}
+.df-checkbox input[type=checkbox]{width:16px;height:16px;accent-color:var(--gold)}
+.df-domain-list{max-height:120px;overflow-y:auto;border:1px solid var(--border);border-radius:8px;padding:8px}
+.df-domain-item{display:flex;align-items:center;gap:8px;padding:4px 8px;font-size:12px;color:var(--text-secondary);border-radius:4px}
+.df-domain-item:hover{background:rgba(255,255,255,0.04)}
+.df-domain-item input{margin:0}
+.df-spinner{display:inline-block;width:14px;height:14px;border:2px solid rgba(255,255,255,0.2);border-top-color:var(--gold);border-radius:50%;animation:df-spin 0.7s linear infinite}
+@keyframes df-spin{to{transform:rotate(360deg)}}
+</style>
+
+<!-- Modal: Create Batch Job -->
+<div id="df-modal-batch" class="df-modal-overlay">
+<div class="df-modal-box">
+<div class="df-modal-header"><h3>📦 New Batch Job</h3><button class="df-modal-close" onclick="dfCloseModal('df-modal-batch')">×</button></div>
+<div class="df-modal-body">
+<div id="df-batch-msg"></div>
+<div class="df-field"><label>Batch Name</label><input id="df-batch-name" placeholder="e.g. Redesign all blog pages"></div>
+<div class="df-field"><label>Action</label>
+<select id="df-batch-action"><option value="run_pipeline">Run Pipeline</option><option value="redeploy">Redeploy</option><option value="update_instructions">Update Instructions</option><option value="export">Export Results</option></select></div>
+<div class="df-field"><label>Target Domains</label>
+<div id="df-batch-domains" class="df-domain-list">Loading domains...</div>
+<div class="df-hint"><input type="checkbox" id="df-batch-select-all" onchange="dfToggleBatchAll(this.checked)"> Select all</div></div>
+<div class="df-field"><label>Priority</label>
+<select id="df-batch-priority"><option value="normal">Normal</option><option value="high">High</option><option value="low">Low</option></select></div>
+</div>
+<div class="df-modal-footer"><button class="df-btn" onclick="dfCloseModal('df-modal-batch')">Cancel</button><button class="df-btn primary" id="df-batch-submit" onclick="dfSubmitBatchJob()">Create Batch</button></div>
+</div></div>
+
+<!-- Modal: Generate Report -->
+<div id="df-modal-report" class="df-modal-overlay">
+<div class="df-modal-box">
+<div class="df-modal-header"><h3>📄 Generate Report</h3><button class="df-modal-close" onclick="dfCloseModal('df-modal-report')">×</button></div>
+<div class="df-modal-body">
+<div id="df-report-msg"></div>
+<div class="df-field"><label>Domain</label><select id="df-report-domain"><option value="">All domains</option></select></div>
+<div class="df-field"><label>Report Type</label>
+<select id="df-report-type"><option value="weekly">Weekly Summary</option><option value="monthly">Monthly Deep Dive</option><option value="custom">Custom Range</option></select></div>
+<div class="df-field-inline"><div class="df-field"><label>From</label><input id="df-report-from" type="date"></div><div class="df-field"><label>To</label><input id="df-report-to" type="date"></div></div>
+<div class="df-field"><label>Send To (email)</label><input id="df-report-email" placeholder="client@example.com"></div>
+<div class="df-checkbox"><input type="checkbox" id="df-report-schedule" onchange="document.getElementById('df-report-freq-wrap').style.display=this.checked?'block':'none'"><label for="df-report-schedule">Schedule recurring</label></div>
+<div id="df-report-freq-wrap" style="display:none">
+<div class="df-field"><label>Frequency</label><select id="df-report-freq"><option value="weekly">Weekly</option><option value="monthly">Monthly</option></select></div>
+</div>
+</div>
+<div class="df-modal-footer"><button class="df-btn" onclick="dfCloseModal('df-modal-report')">Cancel</button><button class="df-btn primary" onclick="dfSubmitReport()">Generate</button></div>
+</div></div>
+
+<!-- Modal: Set Budget -->
+<div id="df-modal-budget" class="df-modal-overlay">
+<div class="df-modal-box">
+<div class="df-modal-header"><h3>💰 Set Budget Limit</h3><button class="df-modal-close" onclick="dfCloseModal('df-modal-budget')">×</button></div>
+<div class="df-modal-body">
+<div id="df-budget-msg"></div>
+<div class="df-field"><label>Scope</label><select id="df-budget-scope" onchange="document.getElementById('df-budget-domain-wrap').style.display=this.value==='client'?'block':'none'"><option value="global">Global (all clients)</option><option value="client">Per Client</option></select></div>
+<div id="df-budget-domain-wrap" style="display:none" class="df-field"><label>Domain</label><select id="df-budget-domain"></select></div>
+<div class="df-field"><label>Period</label><select id="df-budget-period"><option value="daily">Daily</option><option value="weekly">Weekly</option><option value="monthly">Monthly</option></select></div>
+<div class="df-field"><label>Limit ($)</label><input id="df-budget-limit" type="number" step="0.01" min="0.01" placeholder="5.00"></div>
+<div class="df-field"><label>Action when exceeded</label><select id="df-budget-action"><option value="alert">Send alert only</option><option value="pause">Pause pipelines</option></select></div>
+</div>
+<div class="df-modal-footer"><button class="df-btn" onclick="dfCloseModal('df-modal-budget')">Cancel</button><button class="df-btn primary" onclick="dfSubmitBudget()">Save Budget</button></div>
+</div></div>
+
+<!-- Modal: Create Schedule -->
+<div id="df-modal-schedule" class="df-modal-overlay">
+<div class="df-modal-box">
+<div class="df-modal-header"><h3>⏰ New Schedule</h3><button class="df-modal-close" onclick="dfCloseModal('df-modal-schedule')">×</button></div>
+<div class="df-modal-body">
+<div id="df-schedule-msg"></div>
+<div class="df-field"><label>Schedule Name</label><input id="df-schedule-name" placeholder="e.g. Daily oritmartin refresh"></div>
+<div class="df-field"><label>Target Domains</label><div id="df-schedule-domains" class="df-domain-list">Loading domains...</div></div>
+<div class="df-field"><label>Cron Expression</label><input id="df-schedule-cron" placeholder="0 6 * * * (daily at 6 AM)"><div class="df-hint">Standard cron format: minute hour day month weekday</div></div>
+<div class="df-field-inline"><div class="df-field"><label>Budget Cap ($)</label><input id="df-schedule-budget" type="number" step="0.01" placeholder="2.00"></div><div class="df-field"><label>Max Concurrency</label><input id="df-schedule-concurrency" type="number" min="1" max="10" value="3"></div></div>
+<div class="df-field"><label>Quick Presets</label>
+<div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:4px">
+<button class="df-btn" onclick="document.getElementById('df-schedule-cron').value='0 6 * * *'" style="font-size:11px;padding:4px 8px">Daily 6AM</button>
+<button class="df-btn" onclick="document.getElementById('df-schedule-cron').value='0 9 * * 1'" style="font-size:11px;padding:4px 8px">Monday 9AM</button>
+<button class="df-btn" onclick="document.getElementById('df-schedule-cron').value='0 2 * * *'" style="font-size:11px;padding:4px 8px">Nightly 2AM</button>
+</div></div>
+</div>
+<div class="df-modal-footer"><button class="df-btn" onclick="dfCloseModal('df-modal-schedule')">Cancel</button><button class="df-btn primary" onclick="dfSubmitSchedule()">Create Schedule</button></div>
+</div></div>
+
+<!-- Modal: Create A/B Test -->
+<div id="df-modal-ab" class="df-modal-overlay">
+<div class="df-modal-box">
+<div class="df-modal-header"><h3>🔀 New A/B Test</h3><button class="df-modal-close" onclick="dfCloseModal('df-modal-ab')">×</button></div>
+<div class="df-modal-body">
+<div id="df-ab-msg"></div>
+<div class="df-field"><label>Domain</label><select id="df-ab-domain"></select></div>
+<div class="df-field"><label>Page Path</label><input id="df-ab-page" placeholder="/blog or /products"></div>
+<div class="df-field"><label>Version A (Template ID)</label><input id="df-ab-version-a" placeholder="Template UUID or select below"><div id="df-ab-versions-a" style="margin-top:4px"></div></div>
+<div class="df-field"><label>Version B (Template ID)</label><input id="df-ab-version-b" placeholder="Template UUID or select below"><div id="df-ab-versions-b" style="margin-top:4px"></div></div>
+<div class="df-field"><label>Notes</label><textarea id="df-ab-notes" placeholder="What are you testing?"></textarea></div>
+</div>
+<div class="df-modal-footer"><button class="df-btn" onclick="dfCloseModal('df-modal-ab')">Cancel</button><button class="df-btn primary" onclick="dfSubmitABTest()">Create Test</button></div>
+</div></div>
+
+<script>
+// ═══════════════════════════════════════════════════════
+// DASHBOARD_FEATURES_MODALS_JS — Modal forms (2026-04-28)
+// ═══════════════════════════════════════════════════════
+var DF_DOMAINS = [];
+
+async function dfLoadDomains() {
+  try {
+    var r = await fetch('/api/analytics');
+    if (r.ok) { var d = await r.json(); return (d.data && d.data.top_projects) ? d.data.top_projects.map(function(p){ return p.name; }) : []; }
+  } catch(e) {}
+  return [];
+}
+
+function dfFillDomainCheckboxes(containerId, selectAllId) {
+  var el = document.getElementById(containerId);
+  if (!el || DF_DOMAINS.length === 0) { if (el) el.innerHTML = '<div style="font-size:12px;color:var(--muted)">No domains found</div>'; return; }
+  var html = '';
+  DF_DOMAINS.forEach(function(d) {
+    html += '<label class="df-domain-item"><input type="checkbox" value="'+d+'"> '+d+'</label>';
+  });
+  el.innerHTML = html;
+}
+
+function dfFillDomainSelect(selectId) {
+  var el = document.getElementById(selectId);
+  if (!el) return;
+  var html = '<option value="">Select domain</option>';
+  DF_DOMAINS.forEach(function(d) { html += '<option value="'+d+'">'+d+'</option>'; });
+  el.innerHTML = html;
+}
+
+function dfToggleBatchAll(checked) {
+  var checks = document.querySelectorAll('#df-batch-domains input[type=checkbox]');
+  checks.forEach(function(c) { c.checked = checked; });
+}
+
+function dfGetCheckedDomains(containerId) {
+  var checks = document.querySelectorAll('#' + containerId + ' input[type=checkbox]:checked');
+  var result = [];
+  checks.forEach(function(c) { result.push(c.value); });
+  return result;
+}
+
+function dfCloseModal(id) {
+  var el = document.getElementById(id);
+  if (el) el.classList.remove('open');
+}
+
+function dfOpenModal(id) {
+  var el = document.getElementById(id);
+  if (el) el.classList.add('open');
+}
+
+function dfShowMsg(containerId, msg, type) {
+  var el = document.getElementById(containerId);
+  if (!el) return;
+  el.innerHTML = '<div class="df-'+type+'-msg">'+msg+'</div>';
+}
+
+async function dfSubmitBatchJob() {
+  var btn = document.getElementById('df-batch-submit');
+  var name = document.getElementById('df-batch-name').value.trim();
+  var action = document.getElementById('df-batch-action').value;
+  var domains = dfGetCheckedDomains('df-batch-domains');
+  var priority = document.getElementById('df-batch-priority').value;
+  if (domains.length === 0) { dfShowMsg('df-batch-msg', 'Select at least one domain', 'error'); return; }
+  btn.disabled = true;
+  btn.innerHTML = '<span class="df-spinner"></span> Creating...';
+  try {
+    var r = await fetch('/api/batch-jobs', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({ batch_name: name || ('Batch: '+action), action: action, targets: domains.map(function(d){ return {domain: d}; }), parameters: {priority: priority} })
+    });
+    var data = await r.json();
+    if (data.ok) {
+      dfShowMsg('df-batch-msg', '✅ Batch job created! ('+domains.length+' targets)', 'success');
+      setTimeout(function() { dfCloseModal('df-modal-batch'); dfShowMsg('df-batch-msg',''); }, 1500);
+      if (typeof loadBatchJobs === 'function') loadBatchJobs();
+    } else {
+      dfShowMsg('df-batch-msg', 'Error: '+(data.error||'Failed'), 'error');
+    }
+  } catch(e) { dfShowMsg('df-batch-msg', 'Network error: '+e.message, 'error'); }
+  btn.disabled = false;
+  btn.textContent = 'Create Batch';
+}
+
+async function dfSubmitReport() {
+  var domain = document.getElementById('df-report-domain').value;
+  var type = document.getElementById('df-report-type').value;
+  var from = document.getElementById('df-report-from').value;
+  var to = document.getElementById('df-report-to').value;
+  var email = document.getElementById('df-report-email').value.trim();
+  var schedule = document.getElementById('df-report-schedule').checked;
+  var freq = document.getElementById('df-report-freq').value;
+  try {
+    var r = await fetch('/api/reports', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({ domain: domain || 'all', report_type: type, date_from: from, date_to: to, sent_to: email || null })
+    });
+    var data = await r.json();
+    if (data.ok) {
+      dfShowMsg('df-report-msg', '✅ Report generated!', 'success');
+      if (schedule) {
+        await fetch('/api/report-schedules', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({ domain: domain || 'all', frequency: freq, send_to: email ? [email] : [] })
+        });
+      }
+      setTimeout(function() { dfCloseModal('df-modal-report'); dfShowMsg('df-report-msg',''); }, 1500);
+      if (typeof loadReports === 'function') loadReports();
+    } else { dfShowMsg('df-report-msg', 'Error: '+(data.error||'Failed'), 'error'); }
+  } catch(e) { dfShowMsg('df-report-msg', 'Network error', 'error'); }
+}
+
+async function dfSubmitBudget() {
+  var scope = document.getElementById('df-budget-scope').value;
+  var domain = scope === 'client' ? document.getElementById('df-budget-domain').value : null;
+  var period = document.getElementById('df-budget-period').value;
+  var limit = parseFloat(document.getElementById('df-budget-limit').value);
+  var action = document.getElementById('df-budget-action').value;
+  if (!limit || limit <= 0) { dfShowMsg('df-budget-msg', 'Enter a valid limit amount', 'error'); return; }
+  try {
+    var r = await fetch('/api/budget-limits', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({ scope: scope, domain: domain, period: period, limit_usd: limit, action: action })
+    });
+    var data = await r.json();
+    if (data.ok) {
+      dfShowMsg('df-budget-msg', '✅ Budget limit saved: $'+limit.toFixed(2)+'/'+period, 'success');
+      setTimeout(function() { dfCloseModal('df-modal-budget'); dfShowMsg('df-budget-msg',''); }, 1500);
+      if (typeof loadCostSummary === 'function') loadCostSummary();
+    } else { dfShowMsg('df-budget-msg', 'Error: '+(data.error||'Failed'), 'error'); }
+  } catch(e) { dfShowMsg('df-budget-msg', 'Network error', 'error'); }
+}
+
+async function dfSubmitSchedule() {
+  var name = document.getElementById('df-schedule-name').value.trim();
+  var domains = dfGetCheckedDomains('df-schedule-domains');
+  var cron = document.getElementById('df-schedule-cron').value.trim();
+  var budget = parseFloat(document.getElementById('df-schedule-budget').value) || null;
+  var concurrency = parseInt(document.getElementById('df-schedule-concurrency').value) || 3;
+  if (!name) { dfShowMsg('df-schedule-msg', 'Enter a schedule name', 'error'); return; }
+  if (!cron) { dfShowMsg('df-schedule-msg', 'Enter a cron expression or use a preset', 'error'); return; }
+  if (domains.length === 0) { dfShowMsg('df-schedule-msg', 'Select at least one domain', 'error'); return; }
+  try {
+    var r = await fetch('/api/pipeline-schedules', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({ name: name, domains: domains.map(function(d){ return {domain: d, subdomains: []}; }), cron_expression: cron, budget_cap: budget, max_concurrency: concurrency })
+    });
+    var data = await r.json();
+    if (data.ok) {
+      dfShowMsg('df-schedule-msg', '✅ Schedule created!', 'success');
+      setTimeout(function() { dfCloseModal('df-modal-schedule'); dfShowMsg('df-schedule-msg',''); }, 1500);
+      if (typeof loadSchedules === 'function') loadSchedules();
+    } else { dfShowMsg('df-schedule-msg', 'Error: '+(data.error||'Failed'), 'error'); }
+  } catch(e) { dfShowMsg('df-schedule-msg', 'Network error', 'error'); }
+}
+
+async function dfSubmitABTest() {
+  var domain = document.getElementById('df-ab-domain').value;
+  var page = document.getElementById('df-ab-page').value.trim();
+  var va = document.getElementById('df-ab-version-a').value.trim();
+  var vb = document.getElementById('df-ab-version-b').value.trim();
+  var notes = document.getElementById('df-ab-notes').value.trim();
+  if (!domain || !page || !va || !vb) { dfShowMsg('df-ab-msg', 'Fill all required fields', 'error'); return; }
+  if (va === vb) { dfShowMsg('df-ab-msg', 'Version A and B must be different', 'error'); return; }
+  try {
+    var r = await fetch('/api/ab-tests', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({ domain: domain, page_path: page, version_a: va, version_b: vb, notes: notes })
+    });
+    var data = await r.json();
+    if (data.ok) {
+      dfShowMsg('df-ab-msg', '✅ A/B test created!', 'success');
+      setTimeout(function() { dfCloseModal('df-modal-ab'); dfShowMsg('df-ab-msg',''); }, 1500);
+      if (typeof loadABTests === 'function') loadABTests();
+    } else { dfShowMsg('df-ab-msg', 'Error: '+(data.error||'Failed'), 'error'); }
+  } catch(e) { dfShowMsg('df-ab-msg', 'Network error', 'error'); }
+}
+
+function openCreateBatchModal() {
+  if (DF_DOMAINS.length === 0) {
+    dfLoadDomains().then(function(domains) {
+      DF_DOMAINS = domains;
+      dfFillDomainCheckboxes('df-batch-domains');
+    });
+  }
+  dfFillDomainCheckboxes('df-batch-domains');
+  dfShowMsg('df-batch-msg', '', 'info');
+  dfOpenModal('df-modal-batch');
+}
+
+function openGenerateReportModal() {
+  if (DF_DOMAINS.length === 0) { dfLoadDomains().then(function(d) { DF_DOMAINS = d; dfFillDomainSelect('df-report-domain'); }); }
+  dfFillDomainSelect('df-report-domain');
+  dfShowMsg('df-report-msg', '', 'info');
+  var today = new Date().toISOString().split('T')[0];
+  var weekAgo = new Date(Date.now() - 7*86400000).toISOString().split('T')[0];
+  document.getElementById('df-report-from').value = weekAgo;
+  document.getElementById('df-report-to').value = today;
+  dfOpenModal('df-modal-report');
+}
+
+function openBudgetModal() {
+  if (DF_DOMAINS.length === 0) { dfLoadDomains().then(function(d) { DF_DOMAINS = d; dfFillDomainSelect('df-budget-domain'); }); }
+  dfFillDomainSelect('df-budget-domain');
+  dfShowMsg('df-budget-msg', '', 'info');
+  document.getElementById('df-budget-limit').value = '';
+  dfOpenModal('df-modal-budget');
+}
+
+function openScheduleModal() {
+  if (DF_DOMAINS.length === 0) { dfLoadDomains().then(function(d) { DF_DOMAINS = d; dfFillDomainCheckboxes('df-schedule-domains'); }); }
+  dfFillDomainCheckboxes('df-schedule-domains');
+  dfShowMsg('df-schedule-msg', '', 'info');
+  document.getElementById('df-schedule-name').value = '';
+  document.getElementById('df-schedule-cron').value = '';
+  document.getElementById('df-schedule-budget').value = '';
+  dfOpenModal('df-modal-schedule');
+}
+
+function openCreateABTestModal() {
+  if (DF_DOMAINS.length === 0) { dfLoadDomains().then(function(d) { DF_DOMAINS = d; dfFillDomainSelect('df-ab-domain'); }); }
+  dfFillDomainSelect('df-ab-domain');
+  dfShowMsg('df-ab-msg', '', 'info');
+  document.getElementById('df-ab-page').value = '';
+  document.getElementById('df-ab-version-a').value = '';
+  document.getElementById('df-ab-version-b').value = '';
+  document.getElementById('df-ab-notes').value = '';
+  dfOpenModal('df-modal-ab');
+}
+
+// Close modals on overlay click
+document.addEventListener('click', function(e) {
+  if (e.target.classList.contains('df-modal-overlay')) {
+    e.target.classList.remove('open');
+  }
+});
+
+// Close modals on Escape
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') {
+    document.querySelectorAll('.df-modal-overlay.open').forEach(function(m) { m.classList.remove('open'); });
+  }
+});
+
+// Load domains on init
+(function() {
+  dfLoadDomains().then(function(domains) { DF_DOMAINS = domains; });
+})();
+</script>
   promptStudioContext.currentPreviewHtml=safeHtml;
   promptStudioContext.previewMode=mode||'original';
   writePromptPreviewDocument(safeHtml);
@@ -25565,7 +27500,7 @@ async function loadTraces(domain) {
     var dur = t.duration_ms ? (t.duration_ms/1000).toFixed(1)+'s' : '—';
     var score = t.score ? t.score + '/100' : '—';
     var cost = t.cost_usd ? '$'+parseFloat(t.cost_usd).toFixed(4) : '—';
-    html += '<div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px;display:flex;align-items:center;gap:12px;flex-wrap:wrap">'
+    html += '<div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px;display:flex;align-items:center;gap:12px;flex-wrap:wrap;cursor:pointer" onclick='dfShowTraceDetail('+JSON.stringify(t).replace(/'/g,"\\'")+')">'
       + '<span style="color:'+statusColor+';font-size:16px">'+statusIcon+'</span>'
       + '<div style="flex:1;min-width:200px">'
       + '<div style="font-size:13px;font-weight:600;color:var(--text)">'+t.agent_name+' <span style="color:var(--muted);font-weight:400">('+t.model_name+')</span></div>'
@@ -25667,6 +27602,31 @@ async function loadCostSummary() {
     });
     byClient.innerHTML = cHtml;
   }
+  // Load budget status
+  dfFetch('/api/budget/status').then(function(data) {
+    if (!data.ok || !data.budgets || data.budgets.length === 0) return;
+    var budgetSection = document.getElementById('cost-budget-status');
+    if (!budgetSection) {
+      budgetSection = document.createElement('div');
+      budgetSection.id = 'cost-budget-status';
+      budgetSection.style.cssText = 'margin-top:24px;padding:16px;background:var(--card);border:1px solid var(--border);border-radius:16px';
+      byClient.parentElement.appendChild(budgetSection);
+    }
+    var html = '<h3 style="font-size:14px;font-weight:700;margin-bottom:12px;color:var(--text)">🔔 Budget Limits</h3>';
+    data.budgets.forEach(function(b) {
+      var pct = b.limit_usd > 0 ? Math.min(100, Math.round((b.current_spent / b.limit_usd) * 100)) : 0;
+      var color = b.exceeded ? '#ef4444' : pct > 80 ? '#f59e0b' : '#22c55e';
+      html += '<div style="margin-bottom:10px">'
+        + '<div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px">'
+        + '<span style="color:var(--text)">'+(b.domain||'Global')+' ('+b.period+')</span>'
+        + '<span style="color:'+color+'">$'+b.current_spent.toFixed(2)+'/$'+b.limit_usd.toFixed(2)+' ('+pct+'%)</span></div>'
+        + '<div style="height:6px;background:rgba(255,255,255,0.06);border-radius:3px;overflow:hidden">'
+        + '<div style="height:100%;width:'+pct+'%;background:'+color+';border-radius:3px"></div></div>'
+        + (b.exceeded ? '<div style="font-size:11px;color:#ef4444;margin-top:2px">⚠️ Budget exceeded! ('+b.action+')</div>' : '')
+        + '</div>';
+    });
+    budgetSection.innerHTML = html;
+  });
 }
 
 async function loadSchedules() {
@@ -25854,4 +27814,558 @@ body{padding-top:96px !important;}
 })();
 </script>
 </body>
+<!-- ═══════════════════════════════════════════════════════
+     DASHBOARD_FEATURES_MODALS — 15-feature roadmap (additive, 2026-04-28)
+     ═══════════════════════════════════════════════════════ -->
+<style>
+.df-modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:10000;display:none;align-items:center;justify-content:center;backdrop-filter:blur(4px)}
+.df-modal-overlay.open{display:flex}
+.df-modal-box{background:var(--bg-elevated,#0f1011);border:1px solid var(--border,rgba(255,255,255,0.08));border-radius:16px;width:90%;max-width:520px;max-height:85vh;overflow-y:auto;box-shadow:0 24px 80px rgba(0,0,0,0.6);padding:0}
+.df-modal-header{display:flex;align-items:center;justify-content:space-between;padding:16px 20px;border-bottom:1px solid var(--border,rgba(255,255,255,0.08));position:sticky;top:0;background:var(--bg-elevated,#0f1011);z-index:1}
+.df-modal-header h3{margin:0;font-size:16px;color:var(--text)}
+.df-modal-close{width:32px;height:32px;border-radius:8px;border:1px solid var(--border,rgba(255,255,255,0.08));background:transparent;color:var(--text);font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.df-modal-close:hover{background:var(--red);color:#fff;border-color:var(--red)}
+.df-modal-body{padding:20px}
+.df-field{margin-bottom:14px}
+.df-field label{display:block;font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:4px}
+.df-field input,.df-field select,.df-field textarea{width:100%;padding:9px 12px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);border-radius:8px;color:var(--text);font-size:13px;font-family:inherit;box-sizing:border-box}
+.df-field input:focus,.df-field select:focus,.df-field textarea:focus{outline:none;border-color:var(--gold)}
+.df-field textarea{resize:vertical;min-height:70px}
+.df-field .df-hint{font-size:11px;color:var(--muted);margin-top:3px}
+.df-field-inline{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.df-tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+.df-tag{display:inline-flex;align-items:center;gap:4px;padding:4px 8px;background:rgba(113,112,255,0.12);border:1px solid rgba(113,112,255,0.2);border-radius:6px;font-size:11px;color:var(--gold-light)}
+.df-tag .df-tag-remove{cursor:pointer;opacity:0.6}
+.df-tag .df-tag-remove:hover{opacity:1}
+.df-modal-footer{display:flex;gap:8px;justify-content:flex-end;padding:14px 20px;border-top:1px solid var(--border,rgba(255,255,255,0.08));position:sticky;bottom:0;background:var(--bg-elevated,#0f1011)}
+.df-btn{padding:9px 18px;border-radius:8px;border:1px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.04);color:var(--text-secondary);font-size:13px;font-weight:700;cursor:pointer;transition:all 0.15s}
+.df-btn:hover{background:rgba(255,255,255,0.08);color:#fff}
+.df-btn.primary{background:linear-gradient(135deg,var(--gold),var(--gold-dim));border-color:transparent;color:#fff}
+.df-btn.primary:hover{background:linear-gradient(135deg,var(--gold-light),var(--gold))}
+.df-btn.danger{background:rgba(239,95,107,0.15);border-color:rgba(239,95,107,0.3);color:var(--red)}
+.df-btn:disabled{opacity:0.4;cursor:not-allowed}
+.df-success-msg{padding:8px 12px;background:rgba(39,166,68,0.1);border:1px solid rgba(39,166,68,0.2);border-radius:8px;font-size:12px;color:#7ee19d;margin-bottom:12px}
+.df-error-msg{padding:8px 12px;background:rgba(239,95,107,0.1);border:1px solid rgba(239,95,107,0.2);border-radius:8px;font-size:12px;color:var(--red);margin-bottom:12px}
+.df-checkbox{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--text-secondary);margin-bottom:8px}
+.df-checkbox input[type=checkbox]{width:16px;height:16px;accent-color:var(--gold)}
+.df-domain-list{max-height:120px;overflow-y:auto;border:1px solid var(--border);border-radius:8px;padding:8px}
+.df-domain-item{display:flex;align-items:center;gap:8px;padding:4px 8px;font-size:12px;color:var(--text-secondary);border-radius:4px}
+.df-domain-item:hover{background:rgba(255,255,255,0.04)}
+.df-domain-item input{margin:0}
+.df-spinner{display:inline-block;width:14px;height:14px;border:2px solid rgba(255,255,255,0.2);border-top-color:var(--gold);border-radius:50%;animation:df-spin 0.7s linear infinite}
+@keyframes df-spin{to{transform:rotate(360deg)}}
+</style>
+
+<!-- Modal: Create Batch Job -->
+<div id="df-modal-batch" class="df-modal-overlay">
+<div class="df-modal-box">
+<div class="df-modal-header"><h3>📦 New Batch Job</h3><button class="df-modal-close" onclick="dfCloseModal('df-modal-batch')">×</button></div>
+<div class="df-modal-body">
+<div id="df-batch-msg"></div>
+<div class="df-field"><label>Batch Name</label><input id="df-batch-name" placeholder="e.g. Redesign all blog pages"></div>
+<div class="df-field"><label>Action</label>
+<select id="df-batch-action"><option value="run_pipeline">Run Pipeline</option><option value="redeploy">Redeploy</option><option value="update_instructions">Update Instructions</option><option value="export">Export Results</option></select></div>
+<div class="df-field"><label>Target Domains</label>
+<div id="df-batch-domains" class="df-domain-list">Loading domains...</div>
+<div class="df-hint"><input type="checkbox" id="df-batch-select-all" onchange="dfToggleBatchAll(this.checked)"> Select all</div></div>
+<div class="df-field"><label>Priority</label>
+<select id="df-batch-priority"><option value="normal">Normal</option><option value="high">High</option><option value="low">Low</option></select></div>
+</div>
+<div class="df-modal-footer"><button class="df-btn" onclick="dfCloseModal('df-modal-batch')">Cancel</button><button class="df-btn primary" id="df-batch-submit" onclick="dfSubmitBatchJob()">Create Batch</button></div>
+</div></div>
+
+<!-- Modal: Generate Report -->
+<div id="df-modal-report" class="df-modal-overlay">
+<div class="df-modal-box">
+<div class="df-modal-header"><h3>📄 Generate Report</h3><button class="df-modal-close" onclick="dfCloseModal('df-modal-report')">×</button></div>
+<div class="df-modal-body">
+<div id="df-report-msg"></div>
+<div class="df-field"><label>Domain</label><select id="df-report-domain"><option value="">All domains</option></select></div>
+<div class="df-field"><label>Report Type</label>
+<select id="df-report-type"><option value="weekly">Weekly Summary</option><option value="monthly">Monthly Deep Dive</option><option value="custom">Custom Range</option></select></div>
+<div class="df-field-inline"><div class="df-field"><label>From</label><input id="df-report-from" type="date"></div><div class="df-field"><label>To</label><input id="df-report-to" type="date"></div></div>
+<div class="df-field"><label>Send To (email)</label><input id="df-report-email" placeholder="client@example.com"></div>
+<div class="df-checkbox"><input type="checkbox" id="df-report-schedule" onchange="document.getElementById('df-report-freq-wrap').style.display=this.checked?'block':'none'"><label for="df-report-schedule">Schedule recurring</label></div>
+<div id="df-report-freq-wrap" style="display:none">
+<div class="df-field"><label>Frequency</label><select id="df-report-freq"><option value="weekly">Weekly</option><option value="monthly">Monthly</option></select></div>
+</div>
+</div>
+<div class="df-modal-footer"><button class="df-btn" onclick="dfCloseModal('df-modal-report')">Cancel</button><button class="df-btn primary" onclick="dfSubmitReport()">Generate</button></div>
+</div></div>
+
+<!-- Modal: Set Budget -->
+<div id="df-modal-budget" class="df-modal-overlay">
+<div class="df-modal-box">
+<div class="df-modal-header"><h3>💰 Set Budget Limit</h3><button class="df-modal-close" onclick="dfCloseModal('df-modal-budget')">×</button></div>
+<div class="df-modal-body">
+<div id="df-budget-msg"></div>
+<div class="df-field"><label>Scope</label><select id="df-budget-scope" onchange="document.getElementById('df-budget-domain-wrap').style.display=this.value==='client'?'block':'none'"><option value="global">Global (all clients)</option><option value="client">Per Client</option></select></div>
+<div id="df-budget-domain-wrap" style="display:none" class="df-field"><label>Domain</label><select id="df-budget-domain"></select></div>
+<div class="df-field"><label>Period</label><select id="df-budget-period"><option value="daily">Daily</option><option value="weekly">Weekly</option><option value="monthly">Monthly</option></select></div>
+<div class="df-field"><label>Limit ($)</label><input id="df-budget-limit" type="number" step="0.01" min="0.01" placeholder="5.00"></div>
+<div class="df-field"><label>Action when exceeded</label><select id="df-budget-action"><option value="alert">Send alert only</option><option value="pause">Pause pipelines</option></select></div>
+</div>
+<div class="df-modal-footer"><button class="df-btn" onclick="dfCloseModal('df-modal-budget')">Cancel</button><button class="df-btn primary" onclick="dfSubmitBudget()">Save Budget</button></div>
+</div></div>
+
+<!-- Modal: Create Schedule -->
+<div id="df-modal-schedule" class="df-modal-overlay">
+<div class="df-modal-box">
+<div class="df-modal-header"><h3>⏰ New Schedule</h3><button class="df-modal-close" onclick="dfCloseModal('df-modal-schedule')">×</button></div>
+<div class="df-modal-body">
+<div id="df-schedule-msg"></div>
+<div class="df-field"><label>Schedule Name</label><input id="df-schedule-name" placeholder="e.g. Daily oritmartin refresh"></div>
+<div class="df-field"><label>Target Domains</label><div id="df-schedule-domains" class="df-domain-list">Loading domains...</div></div>
+<div class="df-field"><label>Cron Expression</label><input id="df-schedule-cron" placeholder="0 6 * * * (daily at 6 AM)"><div class="df-hint">Standard cron format: minute hour day month weekday</div></div>
+<div class="df-field-inline"><div class="df-field"><label>Budget Cap ($)</label><input id="df-schedule-budget" type="number" step="0.01" placeholder="2.00"></div><div class="df-field"><label>Max Concurrency</label><input id="df-schedule-concurrency" type="number" min="1" max="10" value="3"></div></div>
+<div class="df-field"><label>Quick Presets</label>
+<div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:4px">
+<button class="df-btn" onclick="document.getElementById('df-schedule-cron').value='0 6 * * *'" style="font-size:11px;padding:4px 8px">Daily 6AM</button>
+<button class="df-btn" onclick="document.getElementById('df-schedule-cron').value='0 9 * * 1'" style="font-size:11px;padding:4px 8px">Monday 9AM</button>
+<button class="df-btn" onclick="document.getElementById('df-schedule-cron').value='0 2 * * *'" style="font-size:11px;padding:4px 8px">Nightly 2AM</button>
+</div></div>
+</div>
+<div class="df-modal-footer"><button class="df-btn" onclick="dfCloseModal('df-modal-schedule')">Cancel</button><button class="df-btn primary" onclick="dfSubmitSchedule()">Create Schedule</button></div>
+</div></div>
+
+<!-- Modal: Create A/B Test -->
+<div id="df-modal-ab" class="df-modal-overlay">
+<div class="df-modal-box">
+<div class="df-modal-header"><h3>🔀 New A/B Test</h3><button class="df-modal-close" onclick="dfCloseModal('df-modal-ab')">×</button></div>
+<div class="df-modal-body">
+<div id="df-ab-msg"></div>
+<div class="df-field"><label>Domain</label><select id="df-ab-domain"></select></div>
+<div class="df-field"><label>Page Path</label><input id="df-ab-page" placeholder="/blog or /products"></div>
+<div class="df-field"><label>Version A (Template ID)</label><input id="df-ab-version-a" placeholder="Template UUID or select below"><div id="df-ab-versions-a" style="margin-top:4px"></div></div>
+<div class="df-field"><label>Version B (Template ID)</label><input id="df-ab-version-b" placeholder="Template UUID or select below"><div id="df-ab-versions-b" style="margin-top:4px"></div></div>
+<div class="df-field"><label>Notes</label><textarea id="df-ab-notes" placeholder="What are you testing?"></textarea></div>
+</div>
+<div class="df-modal-footer"><button class="df-btn" onclick="dfCloseModal('df-modal-ab')">Cancel</button><button class="df-btn primary" onclick="dfSubmitABTest()">Create Test</button></div>
+</div></div>
+
+<script>
+// ═══════════════════════════════════════════════════════
+// DASHBOARD_FEATURES_MODALS_JS — Modal forms (2026-04-28)
+// ═══════════════════════════════════════════════════════
+var DF_DOMAINS = [];
+
+async function dfLoadDomains() {
+  try {
+    var r = await fetch('/api/analytics');
+    if (r.ok) { var d = await r.json(); return (d.data && d.data.top_projects) ? d.data.top_projects.map(function(p){ return p.name; }) : []; }
+  } catch(e) {}
+  return [];
+}
+
+function dfFillDomainCheckboxes(containerId, selectAllId) {
+  var el = document.getElementById(containerId);
+  if (!el || DF_DOMAINS.length === 0) { if (el) el.innerHTML = '<div style="font-size:12px;color:var(--muted)">No domains found</div>'; return; }
+  var html = '';
+  DF_DOMAINS.forEach(function(d) {
+    html += '<label class="df-domain-item"><input type="checkbox" value="'+d+'"> '+d+'</label>';
+  });
+  el.innerHTML = html;
+}
+
+function dfFillDomainSelect(selectId) {
+  var el = document.getElementById(selectId);
+  if (!el) return;
+  var html = '<option value="">Select domain</option>';
+  DF_DOMAINS.forEach(function(d) { html += '<option value="'+d+'">'+d+'</option>'; });
+  el.innerHTML = html;
+}
+
+function dfToggleBatchAll(checked) {
+  var checks = document.querySelectorAll('#df-batch-domains input[type=checkbox]');
+  checks.forEach(function(c) { c.checked = checked; });
+}
+
+function dfGetCheckedDomains(containerId) {
+  var checks = document.querySelectorAll('#' + containerId + ' input[type=checkbox]:checked');
+  var result = [];
+  checks.forEach(function(c) { result.push(c.value); });
+  return result;
+}
+
+function dfCloseModal(id) {
+  var el = document.getElementById(id);
+  if (el) el.classList.remove('open');
+}
+
+function dfOpenModal(id) {
+  var el = document.getElementById(id);
+  if (el) el.classList.add('open');
+}
+
+function dfShowMsg(containerId, msg, type) {
+  var el = document.getElementById(containerId);
+  if (!el) return;
+  el.innerHTML = '<div class="df-'+type+'-msg">'+msg+'</div>';
+}
+
+async function dfSubmitBatchJob() {
+  var btn = document.getElementById('df-batch-submit');
+  var name = document.getElementById('df-batch-name').value.trim();
+  var action = document.getElementById('df-batch-action').value;
+  var domains = dfGetCheckedDomains('df-batch-domains');
+  var priority = document.getElementById('df-batch-priority').value;
+  if (domains.length === 0) { dfShowMsg('df-batch-msg', 'Select at least one domain', 'error'); return; }
+  btn.disabled = true;
+  btn.innerHTML = '<span class="df-spinner"></span> Creating...';
+  try {
+    var r = await fetch('/api/batch-jobs', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({ batch_name: name || ('Batch: '+action), action: action, targets: domains.map(function(d){ return {domain: d}; }), parameters: {priority: priority} })
+    });
+    var data = await r.json();
+    if (data.ok) {
+      dfShowMsg('df-batch-msg', '✅ Batch job created! ('+domains.length+' targets)', 'success');
+      setTimeout(function() { dfCloseModal('df-modal-batch'); dfShowMsg('df-batch-msg',''); }, 1500);
+      if (typeof loadBatchJobs === 'function') loadBatchJobs();
+    } else {
+      dfShowMsg('df-batch-msg', 'Error: '+(data.error||'Failed'), 'error');
+    }
+  } catch(e) { dfShowMsg('df-batch-msg', 'Network error: '+e.message, 'error'); }
+  btn.disabled = false;
+  btn.textContent = 'Create Batch';
+}
+
+async function dfSubmitReport() {
+  var domain = document.getElementById('df-report-domain').value;
+  var type = document.getElementById('df-report-type').value;
+  var from = document.getElementById('df-report-from').value;
+  var to = document.getElementById('df-report-to').value;
+  var email = document.getElementById('df-report-email').value.trim();
+  var schedule = document.getElementById('df-report-schedule').checked;
+  var freq = document.getElementById('df-report-freq').value;
+  try {
+    var r = await fetch('/api/reports', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({ domain: domain || 'all', report_type: type, date_from: from, date_to: to, sent_to: email || null })
+    });
+    var data = await r.json();
+    if (data.ok) {
+      dfShowMsg('df-report-msg', '✅ Report generated!', 'success');
+      if (schedule) {
+        await fetch('/api/report-schedules', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({ domain: domain || 'all', frequency: freq, send_to: email ? [email] : [] })
+        });
+      }
+      setTimeout(function() { dfCloseModal('df-modal-report'); dfShowMsg('df-report-msg',''); }, 1500);
+      if (typeof loadReports === 'function') loadReports();
+    } else { dfShowMsg('df-report-msg', 'Error: '+(data.error||'Failed'), 'error'); }
+  } catch(e) { dfShowMsg('df-report-msg', 'Network error', 'error'); }
+}
+
+async function dfSubmitBudget() {
+  var scope = document.getElementById('df-budget-scope').value;
+  var domain = scope === 'client' ? document.getElementById('df-budget-domain').value : null;
+  var period = document.getElementById('df-budget-period').value;
+  var limit = parseFloat(document.getElementById('df-budget-limit').value);
+  var action = document.getElementById('df-budget-action').value;
+  if (!limit || limit <= 0) { dfShowMsg('df-budget-msg', 'Enter a valid limit amount', 'error'); return; }
+  try {
+    var r = await fetch('/api/budget-limits', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({ scope: scope, domain: domain, period: period, limit_usd: limit, action: action })
+    });
+    var data = await r.json();
+    if (data.ok) {
+      dfShowMsg('df-budget-msg', '✅ Budget limit saved: $'+limit.toFixed(2)+'/'+period, 'success');
+      setTimeout(function() { dfCloseModal('df-modal-budget'); dfShowMsg('df-budget-msg',''); }, 1500);
+      if (typeof loadCostSummary === 'function') loadCostSummary();
+    } else { dfShowMsg('df-budget-msg', 'Error: '+(data.error||'Failed'), 'error'); }
+  } catch(e) { dfShowMsg('df-budget-msg', 'Network error', 'error'); }
+}
+
+async function dfSubmitSchedule() {
+  var name = document.getElementById('df-schedule-name').value.trim();
+  var domains = dfGetCheckedDomains('df-schedule-domains');
+  var cron = document.getElementById('df-schedule-cron').value.trim();
+  var budget = parseFloat(document.getElementById('df-schedule-budget').value) || null;
+  var concurrency = parseInt(document.getElementById('df-schedule-concurrency').value) || 3;
+  if (!name) { dfShowMsg('df-schedule-msg', 'Enter a schedule name', 'error'); return; }
+  if (!cron) { dfShowMsg('df-schedule-msg', 'Enter a cron expression or use a preset', 'error'); return; }
+  if (domains.length === 0) { dfShowMsg('df-schedule-msg', 'Select at least one domain', 'error'); return; }
+  try {
+    var r = await fetch('/api/pipeline-schedules', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({ name: name, domains: domains.map(function(d){ return {domain: d, subdomains: []}; }), cron_expression: cron, budget_cap: budget, max_concurrency: concurrency })
+    });
+    var data = await r.json();
+    if (data.ok) {
+      dfShowMsg('df-schedule-msg', '✅ Schedule created!', 'success');
+      setTimeout(function() { dfCloseModal('df-modal-schedule'); dfShowMsg('df-schedule-msg',''); }, 1500);
+      if (typeof loadSchedules === 'function') loadSchedules();
+    } else { dfShowMsg('df-schedule-msg', 'Error: '+(data.error||'Failed'), 'error'); }
+  } catch(e) { dfShowMsg('df-schedule-msg', 'Network error', 'error'); }
+}
+
+async function dfSubmitABTest() {
+  var domain = document.getElementById('df-ab-domain').value;
+  var page = document.getElementById('df-ab-page').value.trim();
+  var va = document.getElementById('df-ab-version-a').value.trim();
+  var vb = document.getElementById('df-ab-version-b').value.trim();
+  var notes = document.getElementById('df-ab-notes').value.trim();
+  if (!domain || !page || !va || !vb) { dfShowMsg('df-ab-msg', 'Fill all required fields', 'error'); return; }
+  if (va === vb) { dfShowMsg('df-ab-msg', 'Version A and B must be different', 'error'); return; }
+  try {
+    var r = await fetch('/api/ab-tests', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({ domain: domain, page_path: page, version_a: va, version_b: vb, notes: notes })
+    });
+    var data = await r.json();
+    if (data.ok) {
+      dfShowMsg('df-ab-msg', '✅ A/B test created!', 'success');
+      setTimeout(function() { dfCloseModal('df-modal-ab'); dfShowMsg('df-ab-msg',''); }, 1500);
+      if (typeof loadABTests === 'function') loadABTests();
+    } else { dfShowMsg('df-ab-msg', 'Error: '+(data.error||'Failed'), 'error'); }
+  } catch(e) { dfShowMsg('df-ab-msg', 'Network error', 'error'); }
+}
+
+function openCreateBatchModal() {
+  if (DF_DOMAINS.length === 0) {
+    dfLoadDomains().then(function(domains) {
+      DF_DOMAINS = domains;
+      dfFillDomainCheckboxes('df-batch-domains');
+    });
+  }
+  dfFillDomainCheckboxes('df-batch-domains');
+  dfShowMsg('df-batch-msg', '', 'info');
+  dfOpenModal('df-modal-batch');
+}
+
+function openGenerateReportModal() {
+  if (DF_DOMAINS.length === 0) { dfLoadDomains().then(function(d) { DF_DOMAINS = d; dfFillDomainSelect('df-report-domain'); }); }
+  dfFillDomainSelect('df-report-domain');
+  dfShowMsg('df-report-msg', '', 'info');
+  var today = new Date().toISOString().split('T')[0];
+  var weekAgo = new Date(Date.now() - 7*86400000).toISOString().split('T')[0];
+  document.getElementById('df-report-from').value = weekAgo;
+  document.getElementById('df-report-to').value = today;
+  dfOpenModal('df-modal-report');
+}
+
+function openBudgetModal() {
+  if (DF_DOMAINS.length === 0) { dfLoadDomains().then(function(d) { DF_DOMAINS = d; dfFillDomainSelect('df-budget-domain'); }); }
+  dfFillDomainSelect('df-budget-domain');
+  dfShowMsg('df-budget-msg', '', 'info');
+  document.getElementById('df-budget-limit').value = '';
+  dfOpenModal('df-modal-budget');
+}
+
+function openScheduleModal() {
+  if (DF_DOMAINS.length === 0) { dfLoadDomains().then(function(d) { DF_DOMAINS = d; dfFillDomainCheckboxes('df-schedule-domains'); }); }
+  dfFillDomainCheckboxes('df-schedule-domains');
+  dfShowMsg('df-schedule-msg', '', 'info');
+  document.getElementById('df-schedule-name').value = '';
+  document.getElementById('df-schedule-cron').value = '';
+  document.getElementById('df-schedule-budget').value = '';
+  dfOpenModal('df-modal-schedule');
+}
+
+function openCreateABTestModal() {
+  if (DF_DOMAINS.length === 0) { dfLoadDomains().then(function(d) { DF_DOMAINS = d; dfFillDomainSelect('df-ab-domain'); }); }
+  dfFillDomainSelect('df-ab-domain');
+  dfShowMsg('df-ab-msg', '', 'info');
+  document.getElementById('df-ab-page').value = '';
+  document.getElementById('df-ab-version-a').value = '';
+  document.getElementById('df-ab-version-b').value = '';
+  document.getElementById('df-ab-notes').value = '';
+  dfOpenModal('df-modal-ab');
+}
+
+// Close modals on overlay click
+document.addEventListener('click', function(e) {
+  if (e.target.classList.contains('df-modal-overlay')) {
+    e.target.classList.remove('open');
+  }
+});
+
+// Close modals on Escape
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') {
+    document.querySelectorAll('.df-modal-overlay.open').forEach(function(m) { m.classList.remove('open'); });
+  }
+});
+
+// Load domains on init
+(function() {
+  dfLoadDomains().then(function(domains) { DF_DOMAINS = domains; });
+})();
+
+// A/B Compare: side-by-side view
+function dfCompareAB(testId, versionA, versionB) {
+  // Load both versions and show them side by side
+  dfFetch('/api/template-versions').then(function(data) {
+    if (!data.ok) { alert('Could not load templates'); return; }
+    var va = data.versions.find(function(v) { return v.id === versionA; });
+    var vb = data.versions.find(function(v) { return v.id === versionB; });
+    if (!va || !vb) { alert('Template versions not found'); return; }
+    
+    var overlay = document.getElementById('df-ab-compare-overlay');
+    if (!overlay) {
+      overlay = document.createElement('div');
+      overlay.id = 'df-ab-compare-overlay';
+      overlay.className = 'df-modal-overlay';
+      overlay.innerHTML = '<div class="df-modal-box" style="max-width:95vw;width:95vw;height:90vh">'
+        + '<div class="df-modal-header"><h3>🔀 A/B Comparison</h3>'
+        + '<button class="df-modal-close" onclick="document.getElementById(\'df-ab-compare-overlay\').classList.remove(\'open\')">\\u00D7</button></div>'
+        + '<div class="df-modal-body" style="padding:10px">'
+        + '<div id="df-ab-compare-diff" style="margin-bottom:10px;padding:10px;background:var(--card);border:1px solid var(--border);border-radius:8px;font-size:12px"></div>'
+        + '<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;height:calc(90vh - 180px)">'
+        + '<div style="border:1px solid var(--border);border-radius:8px;overflow:hidden"><div style="padding:8px;background:var(--card);font-size:12px;font-weight:700">Version A (' + (va.model_name||'') + ') <span id="df-ab-score-a" style="float:right"></span></div><iframe id="df-ab-frame-a" style="width:100%;height:calc(100% - 32px);border:none;background:#fff"></iframe></div>'
+        + '<div style="border:1px solid var(--border);border-radius:8px;overflow:hidden"><div style="padding:8px;background:var(--card);font-size:12px;font-weight:700">Version B (' + (vb.model_name||'') + ') <span id="df-ab-score-b" style="float:right"></span></div><iframe id="df-ab-frame-b" style="width:100%;height:calc(100% - 32px);border:none;background:#fff"></iframe></div>'
+        + '</div></div>'
+        + '<div class="df-modal-footer"><button class="df-btn primary" onclick="dfDecideAB(\\'' + testId + '\\',\\'' + versionA + '\\')">\\u2705 Pick A</button><button class="df-btn primary" onclick="dfDecideAB(\\'' + testId + '\\',\\'' + versionB + '\\')">\\u2705 Pick B</button><button class="df-btn" onclick="document.getElementById(\'df-ab-compare-overlay\').classList.remove(\'open\')">Close</button></div>'
+        + '</div>';
+      document.body.appendChild(overlay);
+    }
+    overlay.classList.add('open');
+    
+    // Load iframes
+    document.getElementById('df-ab-frame-a').srcdoc = va.html_content || '<p>No HTML content</p>';
+    document.getElementById('df-ab-frame-b').srcdoc = vb.html_content || '<p>No HTML content</p>';
+    
+    // Scores
+    var sa = va.scores ? JSON.stringify(va.scores) : '';
+    var sb = vb.scores ? JSON.stringify(vb.scores) : '';
+    document.getElementById('df-ab-score-a').textContent = sa;
+    document.getElementById('df-ab-score-b').textContent = sb;
+    
+    // Diff summary
+    var diffHtml = '<strong>Diff Summary:</strong><br>'
+      + 'Model A: ' + (va.model_name||'N/A') + ' | Model B: ' + (vb.model_name||'N/A') + '<br>'
+      + 'Created A: ' + new Date(va.created_at).toLocaleString() + ' | Created B: ' + new Date(vb.created_at).toLocaleString() + '<br>'
+      + 'Size A: ' + ((va.html_content||'').length) + ' chars | Size B: ' + ((vb.html_content||'').length) + ' chars<br>'
+      + 'Size diff: ' + (((va.html_content||'').length - (vb.html_content||'').length) > 0 ? '+' : '') + ((va.html_content||'').length - (vb.html_content||'').length) + ' chars';
+    document.getElementById('df-ab-compare-diff').innerHTML = diffHtml;
+  });
+}
+
+// Decide A/B test winner
+function dfDecideAB(testId, winnerId) {
+  if (!confirm('Set this as the winning version?')) return;
+  dfFetch('/api/ab-tests/' + testId + '/decide', 'POST', {
+    winner_id: winnerId,
+    decided_by: 'user',
+    notes: 'Decided via dashboard UI'
+  }).then(function(data) {
+    if (data.ok) {
+      alert('Winner selected!');
+      if (typeof loadABTests === 'function') loadABTests();
+      var overlay = document.getElementById('df-ab-compare-overlay');
+      if (overlay) overlay.classList.remove('open');
+    } else {
+      alert('Error: ' + (data.error || 'Failed'));
+    }
+  });
+}
+
+
+
+// Trace Detail View
+function dfShowTraceDetail(trace) {
+  var overlay = document.getElementById('df-trace-detail-overlay');
+  if (!overlay) {
+    overlay = document.createElement('div');
+    overlay.id = 'df-trace-detail-overlay';
+    overlay.className = 'df-modal-overlay';
+    overlay.innerHTML = '<div class="df-modal-box" style="max-width:80vw;width:80vw;height:85vh">'
+      + '<div class="df-modal-header"><h3>🔍 Trace Detail</h3>'
+      + '<button class="df-modal-close" onclick="document.getElementById(\'df-trace-detail-overlay\').classList.remove(\'open\')">×</button></div>'
+      + '<div class="df-modal-body" style="padding:12px;overflow-y:auto;max-height:calc(85vh - 120px)" id="df-trace-detail-body"></div>'
+      + '<div class="df-modal-footer"><button class="df-btn" onclick="document.getElementById(\'df-trace-detail-overlay\').classList.remove(\'open\')">Close</button>'
+      + '<button class="df-btn" id="df-trace-copy-prompt" onclick="dfCopyTraceField(\'df-trace-prompt\')">Copy Prompt</button>'
+      + '<button class="df-btn" id="df-trace-copy-response" onclick="dfCopyTraceField(\'df-trace-response\')">Copy Response</button></div>'
+      + '</div>';
+    document.body.appendChild(overlay);
+  }
+  overlay.classList.add('open');
+  
+  var body = document.getElementById('df-trace-detail-body');
+  var statusColor = trace.status === 'success' ? '#22c55e' : trace.status === 'error' ? '#ef4444' : '#f59e0b';
+  var statusIcon = trace.status === 'success' ? '✅' : trace.status === 'error' ? '❌' : '⚠️';
+  
+  body.innerHTML = ''
+    + '<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:16px">'
+    + '<div style="padding:10px;background:var(--card);border-radius:8px;border:1px solid var(--border)">'
+    + '<div style="font-size:11px;color:var(--muted)">Agent</div>'
+    + '<div style="font-size:14px;font-weight:700;color:var(--text)">'+(trace.agent_name||'N/A')+'</div></div>'
+    + '<div style="padding:10px;background:var(--card);border-radius:8px;border:1px solid var(--border)">'
+    + '<div style="font-size:11px;color:var(--muted)">Model</div>'
+    + '<div style="font-size:14px;font-weight:700;color:var(--text)">'+(trace.model_name||'N/A')+'</div></div>'
+    + '<div style="padding:10px;background:var(--card);border-radius:8px;border:1px solid var(--border)">'
+    + '<div style="font-size:11px;color:var(--muted)">Status</div>'
+    + '<div style="font-size:14px;font-weight:700;color:'+statusColor+'">'+statusIcon+' '+trace.status+'</div></div>'
+    + '</div>'
+    + '<div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:10px;margin-bottom:16px">'
+    + '<div style="padding:10px;background:var(--card);border-radius:8px;border:1px solid var(--border);text-align:center">'
+    + '<div style="font-size:24px;font-weight:700;color:var(--gold)">'+(trace.score||'—')+'</div>'
+    + '<div style="font-size:11px;color:var(--muted)">Score</div></div>'
+    + '<div style="padding:10px;background:var(--card);border-radius:8px;border:1px solid var(--border);text-align:center">'
+    + '<div style="font-size:24px;font-weight:700;color:#93c5fd">'+(trace.prompt_tokens||'—')+'</div>'
+    + '<div style="font-size:11px;color:var(--muted)">Prompt Tokens</div></div>'
+    + '<div style="padding:10px;background:var(--card);border-radius:8px;border:1px solid var(--border);text-align:center">'
+    + '<div style="font-size:24px;font-weight:700;color:#86efac">'+(trace.completion_tokens||'—')+'</div>'
+    + '<div style="font-size:11px;color:var(--muted)">Completion Tokens</div></div>'
+    + '<div style="padding:10px;background:var(--card);border-radius:8px;border:1px solid var(--border);text-align:center">'
+    + '<div style="font-size:24px;font-weight:700;color:#fbbf24">$'+(trace.cost_usd||'0').toFixed(4)+'</div>'
+    + '<div style="font-size:11px;color:var(--muted)">Cost</div></div>'
+    + '</div>'
+    + '<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px">'
+    + '<div style="padding:10px;background:var(--card);border-radius:8px;border:1px solid var(--border)">'
+    + '<div style="font-size:11px;color:var(--muted)">Duration</div>'
+    + '<div style="font-size:14px;color:var(--text)">'+(trace.duration_ms ? (trace.duration_ms/1000).toFixed(1)+'s' : '—')+'</div></div>'
+    + '<div style="padding:10px;background:var(--card);border-radius:8px;border:1px solid var(--border)">'
+    + '<div style="font-size:11px;color:var(--muted)">Domain / Subdomain</div>'
+    + '<div style="font-size:14px;color:var(--text)">'+(trace.domain||'')+(trace.subdomain?' / '+trace.subdomain:'')+'</div></div>'
+    + '</div>';
+  
+  if (trace.prompt_text) {
+    body.innerHTML += '<div style="margin-bottom:12px">'
+      + '<div style="font-size:12px;font-weight:700;color:var(--text);margin-bottom:4px">📝 System Prompt</div>'
+      + '<pre id="df-trace-prompt" style="padding:10px;background:rgba(0,0,0,0.3);border:1px solid var(--border);border-radius:8px;font-size:11px;color:var(--text-secondary);max-height:200px;overflow:auto;white-space:pre-wrap;word-break:break-all;font-family:monospace">'+escapeHtml(trace.prompt_text)+'</pre></div>';
+  }
+  
+  if (trace.response_text) {
+    body.innerHTML += '<div style="margin-bottom:12px">'
+      + '<div style="font-size:12px;font-weight:700;color:var(--text);margin-bottom:4px">💬 Response</div>'
+      + '<pre id="df-trace-response" style="padding:10px;background:rgba(0,0,0,0.3);border:1px solid var(--border);border-radius:8px;font-size:11px;color:var(--text-secondary);max-height:200px;overflow:auto;white-space:pre-wrap;word-break:break-all;font-family:monospace">'+escapeHtml(trace.response_text)+'</pre></div>';
+  }
+  
+  if (trace.error_message) {
+    body.innerHTML += '<div style="margin-bottom:12px;padding:10px;background:rgba(239,95,107,0.1);border:1px solid rgba(239,95,107,0.3);border-radius:8px">'
+      + '<div style="font-size:12px;font-weight:700;color:var(--red);margin-bottom:4px">❌ Error</div>'
+      + '<div style="font-size:12px;color:var(--text-secondary);white-space:pre-wrap">'+escapeHtml(trace.error_message)+'</div></div>';
+  }
+  
+  body.innerHTML += '<div style="font-size:11px;color:var(--muted)">Created: '+(trace.created_at ? new Date(trace.created_at).toLocaleString() : 'N/A')+'</div>';
+}
+
+function escapeHtml(text) {
+  var div = document.createElement('div');
+  div.textContent = text || '';
+  return div.innerHTML;
+}
+
+function dfCopyTraceField(id) {
+  var el = document.getElementById(id);
+  if (el) {
+    var text = el.textContent || el.innerText || '';
+    navigator.clipboard.writeText(text).then(function() {
+      alert('Copied to clipboard!');
+    }).catch(function() {
+      alert('Copy failed - select and copy manually');
+    });
+  }
+}
+\n</script>
 </html>

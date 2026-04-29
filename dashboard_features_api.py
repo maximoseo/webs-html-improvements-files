@@ -14,6 +14,32 @@ import supabase_helper as sh
 def _supa_available():
     return bool(os.environ.get('SUPABASE_URL', '').strip())
 
+
+# ============================================================
+# Integration helpers - connect existing ops with new features
+# ============================================================
+
+def log_existing_operation(table_name, action, changes=None, user_id=None, ip_address=None, record_id=None):
+    """Log an existing operation to the audit log (if Supabase is available)."""
+    try:
+        import supabase_helper as sh
+        sh.log_audit(table_name, action, changes, None, user_id, ip_address, record_id)
+    except Exception:
+        pass
+
+def notify_operation(type_, title, message, link=''):
+    """Create a notification for an operation."""
+    try:
+        import supabase_helper as sh
+        sh.supa_insert('notifications', {
+            'type': type_,
+            'title': title,
+            'message': message,
+            'link': link,
+        })
+    except Exception:
+        pass
+
 def _json_resp(handler, status, payload):
     body = json.dumps(payload, ensure_ascii=False).encode('utf-8')
     try:
@@ -178,6 +204,56 @@ def handle_get(handler, parsed):
         if isinstance(result, dict) and 'error' in result:
             return _json_resp(handler, 200, {'ok': True, 'limits': [], 'error': result['error']})
         return _json_resp(handler, 200, {'ok': True, 'limits': result or []})
+
+    # --- Budget Check (auto-check all budgets) ---
+    if path == '/api/budget/check':
+        if not _supa_available():
+            return _json_resp(handler, 200, {'ok': True, 'checked': 0, 'violations': []})
+        try:
+            violations = []
+            for period in ['daily', 'weekly', 'monthly']:
+                exceeded, limit, spent = sh.check_budget_exceeded(limit_type=period)
+                if exceeded and limit:
+                    violations.append({
+                        'period': period,
+                        'limit': limit.get('limit_usd', 0),
+                        'spent': spent,
+                        'domain': limit.get('domain'),
+                        'action': limit.get('action', 'alert'),
+                    })
+                    sh.create_budget_notification(limit.get('domain'), limit, spent)
+            return _json_resp(handler, 200, {'ok': True, 'checked': 1, 'violations': violations})
+        except Exception as e:
+            return _json_resp(handler, 500, {'ok': False, 'error': str(e)})
+
+
+    # --- Budget Status (current spending vs limits) ---
+    if path == '/api/budget/status':
+        if not _supa_available():
+            return _json_resp(handler, 200, {'ok': True, 'budgets': []})
+        try:
+            limits = sh.supa_select('budget_limits', filters={'is_active': 'eq.true'})
+            if isinstance(limits, dict) and 'error' in limits:
+                return _json_resp(handler, 200, {'ok': True, 'budgets': []})
+            budgets = []
+            for lim in (limits or []):
+                period = lim.get('period', 'daily')
+                domain = lim.get('domain')
+                exceeded, _, spent = sh.check_budget_exceeded(domain=domain, limit_type=period)
+                budgets.append({
+                    'id': lim.get('id'),
+                    'scope': lim.get('scope'),
+                    'domain': domain,
+                    'period': period,
+                    'limit_usd': lim.get('limit_usd', 0),
+                    'current_spent': spent,
+                    'exceeded': exceeded,
+                    'action': lim.get('action', 'alert'),
+                    'remaining': max(0, lim.get('limit_usd', 0) - spent),
+                })
+            return _json_resp(handler, 200, {'ok': True, 'budgets': budgets})
+        except Exception as e:
+            return _json_resp(handler, 500, {'ok': False, 'error': str(e)})
 
     # --- Agent Traces ---
     if path == '/api/traces':
@@ -498,219 +574,3 @@ def handle_post(handler, parsed, payload):
             result = sh.supa_insert('template_versions', version)
             if isinstance(result, list) and len(result) > 0:
                 return _json_resp(handler, 201, {'ok': True, 'version': result[0]})
-            return _json_resp(handler, 500, {'ok': False, 'error': result})
-        return _json_resp(handler, 201, {'ok': True, 'version': version})
-
-    # --- Create A/B Test ---
-    if path == '/api/ab-tests':
-        payload = payload or {}
-        test = {
-            'domain': payload.get('domain', ''),
-            'page_path': payload.get('page_path', ''),
-            'version_a': payload.get('version_a'),
-            'version_b': payload.get('version_b'),
-            'notes': payload.get('notes', ''),
-        }
-        if _supa_available():
-            result = sh.supa_insert('ab_tests', test)
-            if isinstance(result, list) and len(result) > 0:
-                return _json_resp(handler, 201, {'ok': True, 'test': result[0]})
-            return _json_resp(handler, 500, {'ok': False, 'error': result})
-        return _json_resp(handler, 201, {'ok': True, 'test': test})
-
-    # --- Decide A/B Test Winner ---
-    if path.startswith('/api/ab-tests/') and path.endswith('/decide'):
-        parts = path.strip('/').split('/')
-        test_id = parts[2] if len(parts) >= 3 else ''
-        payload = payload or {}
-        winner_id = payload.get('winner_id')
-        decided_by = payload.get('decided_by', 'user')
-        notes = payload.get('notes', '')
-        if _supa_available():
-            result = sh.supa_update('ab_tests', 'id', test_id, {
-                'winner': winner_id,
-                'decided_at': datetime.datetime.utcnow().isoformat(),
-                'decided_by': decided_by,
-                'notes': notes,
-            })
-            if isinstance(result, list) and len(result) > 0:
-                return _json_resp(handler, 200, {'ok': True, 'test': result[0]})
-            return _json_resp(handler, 500, {'ok': False, 'error': result})
-        return _json_resp(handler, 200, {'ok': True})
-
-    # --- Create Batch Job ---
-    if path == '/api/batch-jobs':
-        payload = payload or {}
-        targets = payload.get('targets', [])
-        job = {
-            'batch_name': payload.get('batch_name', ''),
-            'action': payload.get('action', 'run_pipeline'),
-            'targets': targets,
-            'parameters': payload.get('parameters', {}),
-            'status': 'queued',
-            'progress': 0,
-            'total': len(targets),
-            'cost_usd': 0,
-        }
-        if _supa_available():
-            result = sh.supa_insert('batch_jobs', job)
-            if isinstance(result, list) and len(result) > 0:
-                return _json_resp(handler, 201, {'ok': True, 'job': result[0]})
-            return _json_resp(handler, 500, {'ok': False, 'error': result})
-        return _json_resp(handler, 201, {'ok': True, 'job': job})
-
-    # --- Cancel Batch Job ---
-    if path.startswith('/api/batch-jobs/') and path.endswith('/cancel'):
-        parts = path.strip('/').split('/')
-        job_id = parts[2] if len(parts) >= 3 else ''
-        if _supa_available():
-            result = sh.supa_update('batch_jobs', 'id', job_id, {'status': 'cancelled'})
-            if isinstance(result, list) and len(result) > 0:
-                return _json_resp(handler, 200, {'ok': True, 'job': result[0]})
-            return _json_resp(handler, 500, {'ok': False, 'error': result})
-        return _json_resp(handler, 200, {'ok': True})
-
-    # --- Create Report ---
-    if path == '/api/reports':
-        payload = payload or {}
-        report = {
-            'domain': payload.get('domain', ''),
-            'report_type': payload.get('report_type', 'custom'),
-            'date_from': payload.get('date_from'),
-            'date_to': payload.get('date_to'),
-            'content': payload.get('content', {}),
-            'sent_to': payload.get('sent_to'),
-        }
-        if _supa_available():
-            result = sh.supa_insert('client_reports', report)
-            if isinstance(result, list) and len(result) > 0:
-                return _json_resp(handler, 201, {'ok': True, 'report': result[0]})
-            return _json_resp(handler, 500, {'ok': False, 'error': result})
-        return _json_resp(handler, 201, {'ok': True, 'report': report})
-
-    # --- Create Report Schedule ---
-    if path == '/api/report-schedules':
-        payload = payload or {}
-        sched = {
-            'domain': payload.get('domain', ''),
-            'frequency': payload.get('frequency', 'weekly'),
-            'day_of_week': payload.get('day_of_week'),
-            'day_of_month': payload.get('day_of_month'),
-            'send_to': payload.get('send_to', []),
-            'is_active': True,
-        }
-        if _supa_available():
-            result = sh.supa_insert('report_schedules', sched)
-            if isinstance(result, list) and len(result) > 0:
-                return _json_resp(handler, 201, {'ok': True, 'schedule': result[0]})
-            return _json_resp(handler, 500, {'ok': False, 'error': result})
-        return _json_resp(handler, 201, {'ok': True, 'schedule': sched})
-
-    # --- Create Pipeline Schedule ---
-    if path == '/api/pipeline-schedules':
-        payload = payload or {}
-        sched = {
-            'name': payload.get('name', ''),
-            'domains': payload.get('domains', []),
-            'cron_expression': payload.get('cron_expression'),
-            'trigger_type': payload.get('trigger_type', 'cron'),
-            'agent_config': payload.get('agent_config', {}),
-            'budget_cap': payload.get('budget_cap'),
-            'max_concurrency': payload.get('max_concurrency', 3),
-            'is_active': True,
-        }
-        if _supa_available():
-            result = sh.supa_insert('pipeline_schedules', sched)
-            if isinstance(result, list) and len(result) > 0:
-                return _json_resp(handler, 201, {'ok': True, 'schedule': result[0]})
-            return _json_resp(handler, 500, {'ok': False, 'error': result})
-        return _json_resp(handler, 201, {'ok': True, 'schedule': sched})
-
-    # --- Update Pipeline Schedule ---
-    if path.startswith('/api/pipeline-schedules/') and path.count('/') == 3:
-        parts = path.strip('/').split('/')
-        sched_id = parts[2] if len(parts) >= 3 else ''
-        if _supa_available():
-            result = sh.supa_update('pipeline_schedules', 'id', sched_id, payload)
-            if isinstance(result, list) and len(result) > 0:
-                return _json_resp(handler, 200, {'ok': True, 'schedule': result[0]})
-            return _json_resp(handler, 500, {'ok': False, 'error': result})
-        return _json_resp(handler, 200, {'ok': True})
-
-    # --- Delete Pipeline Schedule ---
-    if path.startswith('/api/pipeline-schedules/delete/') and path.count('/') == 4:
-        parts = path.strip('/').split('/')
-        sched_id = parts[3] if len(parts) >= 4 else ''
-        if _supa_available():
-            result = sh.supa_delete('pipeline_schedules', 'id', sched_id)
-            return _json_resp(handler, 200, {'ok': True})
-        return _json_resp(handler, 200, {'ok': True})
-
-    # --- Create Note ---
-    if path == '/api/notes':
-        payload = payload or {}
-        note = {
-            'entity_type': payload.get('entity_type', 'domain'),
-            'entity_id': payload.get('entity_id', ''),
-            'content': payload.get('content', ''),
-            'author': payload.get('author', _user_from_handler(handler)),
-            'is_pinned': payload.get('is_pinned', False),
-        }
-        if _supa_available():
-            result = sh.supa_insert('notes', note)
-            if isinstance(result, list) and len(result) > 0:
-                return _json_resp(handler, 201, {'ok': True, 'note': result[0]})
-            return _json_resp(handler, 500, {'ok': False, 'error': result})
-        return _json_resp(handler, 201, {'ok': True, 'note': note})
-
-    # --- Delete Note ---
-    if path.startswith('/api/notes/') and path.count('/') == 3:
-        parts = path.strip('/').split('/')
-        note_id = parts[2] if len(parts) >= 3 else ''
-        if _supa_available():
-            result = sh.supa_delete('notes', 'id', note_id)
-            return _json_resp(handler, 200, {'ok': True})
-        return _json_resp(handler, 200, {'ok': True})
-
-    # --- Toggle Feature Flag ---
-    if path.startswith('/api/feature-flags/') and path.count('/') == 3:
-        parts = path.strip('/').split('/')
-        flag_name = parts[2] if len(parts) >= 3 else ''
-        if _supa_available():
-            result = sh.supa_update('feature_flags', 'flag_name', flag_name, {
-                'is_enabled': payload.get('is_enabled', True),
-                'updated_at': datetime.datetime.utcnow().isoformat(),
-            })
-            if isinstance(result, list) and len(result) > 0:
-                return _json_resp(handler, 200, {'ok': True, 'flag': result[0]})
-            return _json_resp(handler, 500, {'ok': False, 'error': result})
-        return _json_resp(handler, 200, {'ok': True})
-
-    # --- Audit Log Entry ---
-    if path == '/api/audit-log':
-        payload = payload or {}
-        if _supa_available():
-            entry = {
-                'table_name': payload.get('table_name', ''),
-                'action': payload.get('action', ''),
-                'changes': payload.get('changes', {}),
-                'previous_values': payload.get('previous_values'),
-                'user_id': payload.get('user_id', _user_from_handler(handler)),
-                'ip_address': payload.get('ip_address', _client_ip(handler)),
-                'record_id': payload.get('record_id'),
-            }
-            result = sh.supa_insert('audit_log', entry)
-            if isinstance(result, list) and len(result) > 0:
-                return _json_resp(handler, 201, {'ok': True, 'entry': result[0]})
-            return _json_resp(handler, 500, {'ok': False, 'error': result})
-        return _json_resp(handler, 201, {'ok': True})
-
-    return None  # Not handled
-
-# ============================================================
-# Registration function — call from server.py
-# ============================================================
-
-def register_routes():
-    """Returns (get_handler, post_handler) for integration into server.py."""
-    return handle_get, handle_post
