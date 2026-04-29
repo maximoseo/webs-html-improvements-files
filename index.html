@@ -11501,7 +11501,8 @@ function openPreview(downloadUrl,filename,ctx){
   }).catch(err=>{
     const doc=iframe.contentDocument||iframe.contentWindow.document;
     doc.open();doc.write('<body style="font-family:Segoe UI,sans-serif;padding:24px;color:#ef4444">Failed to load preview. The file may be missing or the network request failed.<br><br><a href="'+downloadUrl+'" target="_blank" style="color:#7170ff">Open raw file directly</a></body>');
-});
+  });
+}
 
 <style id="playground-ui-nav-final-override-2026-04-29">
 /* PLAYGROUND_UI_NAV_FINAL_OVERRIDE_2026_04_29
@@ -11894,12 +11895,23 @@ function openBudgetModal() {
 
 function openScheduleModal() {
   if (DF_DOMAINS.length === 0) { dfLoadDomains().then(function(d) { DF_DOMAINS = d; dfFillDomainCheckboxes('df-schedule-domains'); }); }
-  dfFillDomainCheckboxes('df-schedfunction openCreateABTestModal() {
+  dfFillDomainCheckboxes('df-schedule-domains');
+  dfShowMsg('df-schedule-msg', '', 'info');
+  dfOpenModal('df-modal-schedule');
+}
+
+function openCreateABTestModal() {
   if (DF_DOMAINS.length === 0) { dfLoadDomains().then(function(d) { DF_DOMAINS = d; dfFillDomainSelect('df-ab-domain'); }); }
   dfFillDomainSelect('df-ab-domain');
   dfShowMsg('df-ab-msg', '', 'info');
   document.getElementById('df-ab-page').value = '';
-  document.getElementById('df-ab-version-a').val// Close modals on overlay click
+  document.getElementById('df-ab-version-a').value = '';
+  document.getElementById('df-ab-version-b').value = '';
+  document.getElementById('df-ab-notes').value = '';
+  dfOpenModal('df-modal-ab');
+}
+
+// Close modals on overlay click
 document.addEventListener('click', function(e) {
   if (e.target.classList.contains('df-modal-overlay')) {
     e.target.classList.remove('open');
@@ -13111,6 +13123,11 @@ function openCreateBatchModal() {
       dfFillDomainCheckboxes('df-batch-domains');
     });
   }
+  dfFillDomainCheckboxes('df-batch-domains');
+  dfShowMsg('df-batch-msg', '', 'info');
+  dfOpenModal('df-modal-batch');
+}
+
 function openGenerateReportModal() {
   if (DF_DOMAINS.length === 0) { dfLoadDomains().then(function(d) { DF_DOMAINS = d; dfFillDomainSelect('df-report-domain'); }); }
   dfFillDomainSelect('df-report-domain');
@@ -13651,7 +13668,8 @@ function openCreateBatchModal() {
   dfOpenModal('df-modal-batch');
 }
 
-); }
+function openGenerateReportModal() {
+  if (DF_DOMAINS.length === 0) { dfLoadDomains().then(function(d) { DF_DOMAINS = d; dfFillDomainSelect('df-report-domain'); }); }
   dfFillDomainSelect('df-report-domain');
   dfShowMsg('df-report-msg', '', 'info');
   var today = new Date().toISOString().split('T')[0];
@@ -14132,7 +14150,8 @@ function openCreateBatchModal() {
 }
 
 function openGenerateReportModal() {
-  if (DF_DOMAINS.length === 0) { dfLoadDomains().then(function(d) { DF_DOMAINS = d; dfFillDomainSelect('df-report-domain'); }  dfFillDomainSelect('df-report-domain');
+  if (DF_DOMAINS.length === 0) { dfLoadDomains().then(function(d) { DF_DOMAINS = d; dfFillDomainSelect('df-report-domain'); }); }
+  dfFillDomainSelect('df-report-domain');
   dfShowMsg('df-report-msg', '', 'info');
   var today = new Date().toISOString().split('T')[0];
   var weekAgo = new Date(Date.now() - 7*86400000).toISOString().split('T')[0];
