@@ -2,7 +2,7 @@
   {
     "username": "maximoseo",
     "email": "admin@maximo-seo.com",
-    "password_hash": "pbkdf2_sha256$260000$a7b155c5538ddbb6c55b48f5702e5124$e0d018cd4f8eea5b9116d73dab35fd110c466a89828d85f21e1b65b964c13108",
+    "password_hash": "pbkdf2_sha256$260000$950a7f5b87fa9178938492e7450acba0$99cce67937118e4793f549c134dcae672275cb4f247f50f26a04c89bac627b09",
     "role": "admin",
     "created_at": "2025-01-01T00:00:00Z",
     "last_login": null
@@ -13,6 +13,6 @@
     "password_hash": "pbkdf2_sha256$260000$22874a1112253c23b6412368fe24b1e5$7ae82cfb0a5211e02105e598a42a4823ccce95afb37acca0ede63504324505d9",
     "role": "admin",
     "created_at": "2026-04-29T19:35:00Z",
-    "last_login": null
+    "last_login": "2026-04-29T20:31:58.141243Z"
   }
 ]
