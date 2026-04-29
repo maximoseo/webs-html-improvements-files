@@ -6816,13 +6816,17 @@ body{{font-family:Arial;padding:24px}}h1{{color:#333}}pre{{background:#f4f4f4;pa
         # DASHBOARD_FEATURES_API — 15-feature roadmap POST routes (additive, path-guarded)
         _df_new_paths = (
             '/api/notifications', '/api/notifications/mark-read', '/api/notifications/mark-all-read',
-            '/api/alert-rules', '/api/budget-limits', '/api/template-versions',
+            '/api/alert-rules', '/api/budget-limits',
+            '/api/template-versions', '/api/template-versions/',
+            '/api/template-gallery', '/api/template-gallery/', '/api/template-gallery/detail',
             '/api/ab-tests', '/api/ab-tests/',
             '/api/batch-jobs', '/api/batch-jobs/',
-            '/api/reports', '/api/report-schedules',
+            '/api/reports', '/api/reports/', '/api/reports/generate', '/api/reports/export',
+            '/api/report-schedules', '/api/report-schedules/',
             '/api/pipeline-schedules', '/api/pipeline-schedules/',
             '/api/notes', '/api/notes/',
             '/api/audit-log', '/api/feature-flags/',
+            '/api/quick-actions', '/api/client-overview',
         )
         if any(parsed.path == p or (p.endswith('/') and parsed.path.startswith(p)) for p in _df_new_paths):
             try:
@@ -8286,21 +8290,23 @@ def _template_improvement_start_job(payload):
 PRODUCTIVITY_HUB_FILE = ROOT / 'data' / 'productivity_hub.json'
 _PRODUCTIVITY_HUB_LOCK = threading.RLock()
 _PRODUCTIVITY_FEATURES = [
-    {'slug': 'client-overview', 'title': 'Client Overview', 'status': 'planned next', 'priority': 2},
-    {'slug': 'ab-testing', 'title': 'A/B Testing', 'status': 'planned', 'priority': 3},
-    {'slug': 'agent-traces', 'title': 'Agent Observability', 'status': 'planned next', 'priority': 2},
+    {'slug': 'client-overview', 'title': 'Client Overview', 'status': 'planned', 'priority': 2},
+    {'slug': 'ab-testing', 'title': 'A/B Testing', 'status': 'enabled now', 'priority': 2},
+    {'slug': 'agent-traces', 'title': 'Agent Observability', 'status': 'enabled now', 'priority': 2},
     {'slug': 'client-reports', 'title': 'Automated Client Reporting', 'status': 'planned', 'priority': 3},
     {'slug': 'template-gallery', 'title': 'Template Gallery', 'status': 'planned', 'priority': 3},
     {'slug': 'notifications', 'title': 'Notification Center', 'status': 'enabled now', 'priority': 1},
-    {'slug': 'batch-operations', 'title': 'Batch Operations', 'status': 'planned next', 'priority': 2},
+    {'slug': 'batch-operations', 'title': 'Batch Operations', 'status': 'enabled now', 'priority': 2},
     {'slug': 'global-search', 'title': 'Search & Global Filters', 'status': 'enabled now', 'priority': 1},
     {'slug': 'audit-log', 'title': 'Audit Log', 'status': 'enabled now', 'priority': 2},
     {'slug': 'quick-actions', 'title': 'Quick Actions', 'status': 'enabled now', 'priority': 1},
     {'slug': 'cost-tracker', 'title': 'Cost Tracker', 'status': 'enabled now', 'priority': 1},
-    {'slug': 'team-notes', 'title': 'Collaboration Notes', 'status': 'planned', 'priority': 4},
+    {'slug': 'team-notes', 'title': 'Collaboration Notes', 'status': 'enabled now', 'priority': 4},
     {'slug': 'pwa-mobile', 'title': 'PWA / Mobile', 'status': 'partially available', 'priority': 4},
     {'slug': 'export-hub', 'title': 'Data Export Hub', 'status': 'enabled now', 'priority': 3},
-    {'slug': 'scheduled-runs', 'title': 'Scheduled Pipeline Runs', 'status': 'planned', 'priority': 3},
+    {'slug': 'scheduled-runs', 'title': 'Scheduled Pipeline Runs', 'status': 'enabled now', 'priority': 3},
+    {'slug': 'budget-alerts', 'title': 'Budget Alerts', 'status': 'enabled now', 'priority': 1},
+    {'slug': 'feature-flags', 'title': 'Feature Flags', 'status': 'enabled now', 'priority': 1},
 ]
 
 def _productivity_load():

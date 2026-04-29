@@ -25898,7 +25898,7 @@ body.page-tasks-active #tasks-board-view{
 <script id="missing-features-productivity-hub-script">
 /* MISSING_FEATURES_PRODUCTIVITY_HUB_JS_2026_04_27 — client-side quick wins only. No n8n workflow modification. */
 (function(){
-  const features=[['client-overview','Client Overview','planned next'],['ab-testing','A/B Testing','planned'],['agent-traces','Agent Observability','planned next'],['client-reports','Automated Client Reporting','planned'],['template-gallery','Template Gallery','planned'],['notifications','Notification Center','enabled now'],['batch-operations','Batch Operations','planned next'],['global-search','Search & Global Filters','enabled now'],['audit-log','Audit Log','enabled now'],['quick-actions','Quick Actions','enabled now'],['cost-tracker','Cost Tracker','enabled now'],['team-notes','Collaboration Notes','planned'],['pwa-mobile','PWA / Mobile','partially available'],['export-hub','Data Export Hub','enabled now'],['scheduled-runs','Scheduled Pipeline Runs','planned']];
+  const features=[['client-overview','Client Overview','planned'],['ab-testing','A/B Testing','enabled now'],['agent-traces','Agent Observability','enabled now'],['client-reports','Automated Client Reporting','planned'],['template-gallery','Template Gallery','planned'],['notifications','Notification Center','enabled now'],['batch-operations','Batch Operations','enabled now'],['global-search','Search & Global Filters','enabled now'],['audit-log','Audit Log','enabled now'],['quick-actions','Quick Actions','enabled now'],['cost-tracker','Cost Tracker','enabled now'],['team-notes','Collaboration Notes','enabled now'],['pwa-mobile','PWA / Mobile','partially available'],['export-hub','Data Export Hub','enabled now'],['scheduled-runs','Scheduled Pipeline Runs','enabled now'],['budget-alerts','Budget Alerts','enabled now'],['feature-flags','Feature Flags','enabled now']];
   const flagsKey='mfFeatureFlags.v1', auditKey='mfAuditLog.v1';
   function $(id){return document.getElementById(id)}
   function flags(){try{return JSON.parse(localStorage.getItem(flagsKey)||'{}')}catch(e){return {}}}
@@ -27201,6 +27201,27 @@ var connectors = (function() {
   </div>
 </div>
 
+<!-- Template Gallery Page -->
+<div id="page-template-gallery" class="fixer-page" style="display:none">
+  <div class="fixer-page-header">
+    <div>
+      <div class="fixer-page-title">🎨 Template Gallery</div>
+      <p class="fixer-page-subtitle">Browse saved template versions with preview, scores, and filtering.</p>
+    </div>
+    <div class="fixer-page-actions">
+      <input id="tg-search" class="settings-input" style="max-width:200px" placeholder="Search domain or agent…" oninput="loadTemplateGallery(this.value)">
+      <button class="action-btn" onclick="loadTemplateGallery()">🔄 Refresh</button>
+    </div>
+  </div>
+  <div id="tg-filters" style="display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap">
+    <button class="action-btn active" onclick="filterTG('all',this)">All</button>
+    <button class="action-btn" onclick="filterTG('true',this)">Active Only</button>
+  </div>
+  <div id="tg-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px">
+    <div style="color:var(--muted);font-size:13px;text-align:center;padding:40px;grid-column:1/-1">Loading templates…</div>
+  </div>
+</div>
+
 <!-- Reports Page -->
 <div id="page-reports" class="fixer-page" style="display:none">
   <div class="fixer-page-header">
@@ -27328,34 +27349,60 @@ async function loadClientOverview() {
   var summary = document.getElementById('client-overview-summary');
   grid.innerHTML = '<div style="color:var(--muted);font-size:13px;text-align:center;padding:40px;grid-column:1/-1">Loading…</div>';
   var data = await dfFetch('/api/client-overview');
-  if (!data.ok || !data.clients || data.clients.length === 0) {
+  if (!data.ok || !data.overview || !data.overview.by_domain || data.overview.by_domain.length === 0) {
     grid.innerHTML = '<div style="color:var(--muted);font-size:13px;text-align:center;padding:40px;grid-column:1/-1">No client data yet. Run some pipelines first.</div>';
     summary.textContent = 'Tip: Client data populates from agent traces after pipeline runs.';
     return;
   }
+  var ov = data.overview;
+  var domains = ov.by_domain || [];
   var html = '';
-  var totalClients = data.clients.length;
-  var totalRuns = 0;
-  data.clients.forEach(function(c) {
-    var score = Math.round(c.avg_health || 0);
-    var color = score >= 90 ? '#22c55e' : score >= 70 ? '#f59e0b' : '#ef4444';
-    var icon = score >= 90 ? '✅' : score >= 70 ? '⚠️' : '❌';
-    var ratio = c.success_count + '/' + c.total_count;
-    var lastRun = c.last_run ? new Date(c.last_run).toLocaleString() : 'Never';
-    var cost = (c.daily_cost || 0).toFixed(2);
-    html += '<div style="background:var(--card);border:1px solid var(--border);border-radius:16px;padding:20px;cursor:pointer;transition:all 0.2s" onclick="loadTraces(\''+c.domain+'\');showPage(\'traces\')">'
+
+  // Summary cards at top
+  var cardsHtml = '<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px;grid-column:1/-1;margin-bottom:8px">';
+  cardsHtml += '<div style="background:linear-gradient(135deg,#6366f1,#8b5cf6);border-radius:12px;padding:16px;color:#fff"><div style="font-size:11px;opacity:0.8">Domains</div><div style="font-size:28px;font-weight:700">'+(ov.total_domains||0)+'</div></div>';
+  cardsHtml += '<div style="background:linear-gradient(135deg,#06b6d4,#0891b2);border-radius:12px;padding:16px;color:#fff"><div style="font-size:11px;opacity:0.8">Traces</div><div style="font-size:28px;font-weight:700">'+(ov.total_traces||0)+'</div></div>';
+  cardsHtml += '<div style="background:linear-gradient(135deg,#f59e0b,#d97706);border-radius:12px;padding:16px;color:#fff"><div style="font-size:11px;opacity:0.8">Total Cost</div><div style="font-size:28px;font-weight:700">$'+(ov.total_cost||0).toFixed(2)+'</div></div>';
+  cardsHtml += '<div style="background:linear-gradient(135deg,#10b981,#059669);border-radius:12px;padding:16px;color:#fff"><div style="font-size:11px;opacity:0.8">Tokens</div><div style="font-size:28px;font-weight:700">'+formatTokens(ov.total_tokens||0)+'</div></div>';
+  cardsHtml += '</div>';
+
+  // Budget alerts
+  if (ov.budget_alerts && ov.budget_alerts.length > 0) {
+    var alertsHtml = '<div style="grid-column:1/-1;background:#fef2f2;border:1px solid #fecaca;border-radius:12px;padding:12px 16px;color:#dc2626;font-size:13px">';
+    alertsHtml += '⚠️ ' + ov.budget_alerts.map(function(a){ return a.message; }).join(' | ');
+    alertsHtml += '</div>';
+    html += alertsHtml;
+  }
+
+  // Domain cards
+  domains.forEach(function(d) {
+    var cost = (d.cost || 0).toFixed(4);
+    var lastRun = d.last_active ? new Date(d.last_active).toLocaleDateString() : 'Never';
+    var color = d.cost > 1 ? '#ef4444' : d.cost > 0.1 ? '#f59e0b' : '#22c55e';
+    html += '<div style="background:var(--card);border:1px solid var(--border);border-radius:16px;padding:20px;cursor:pointer;transition:all 0.2s" onclick="loadTraces(\''+d.domain+'\');showPage(\'traces\')">'
       + '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">'
-      + '<h4 style="margin:0;font-size:16px;color:var(--text)">'+c.domain+'</h4>'
-      + '<span style="font-size:24px;font-weight:700;color:'+color+'">'+score+'</span></div>'
+      + '<h4 style="margin:0;font-size:16px;color:var(--text)">'+d.domain+'</h4>'
+      + '<span style="font-size:14px;font-weight:700;color:'+color+'">$'+cost+'</span></div>'
       + '<div style="display:flex;gap:12px;flex-wrap:wrap;font-size:12px;color:var(--muted)">'
-      + '<span>'+icon+' '+ratio+' OK</span>'
-      + '<span>📊 '+c.subdomain_count+' subdomains</span>'
-      + '<span>💰 $'+cost+'/day</span></div>'
+      + '<span>📊 '+d.traces+' traces</span>'
+      + '<span>💰 $'+cost+' total</span></div>'
       + '<div style="font-size:11px;color:var(--muted);margin-top:8px">Last: '+lastRun+'</div></div>';
-    totalRuns += (c.total_count || 0);
   });
-  grid.innerHTML = html;
-  summary.textContent = '📊 '+totalClients+' clients | '+totalRuns+' total runs | Last updated: '+new Date().toLocaleTimeString();
+
+  grid.innerHTML = cardsHtml + html;
+
+  // Recent activity summary
+  var recentHtml = '';
+  if (ov.recent_activity && ov.recent_activity.length > 0) {
+    recentHtml = ' | Recent: ' + ov.recent_activity.slice(0, 3).map(function(a){ return a.name + ' (' + a.status + ')'; }).join(', ');
+  }
+  summary.textContent = '📊 '+ov.total_domains+' clients | '+ov.total_traces+' total traces | $'+(ov.total_cost||0).toFixed(2)+' total cost'+recentHtml+' | Updated: '+new Date().toLocaleTimeString();
+}
+
+function formatTokens(n) {
+  if (n >= 1000000) return (n/1000000).toFixed(1)+'M';
+  if (n >= 1000) return (n/1000).toFixed(1)+'K';
+  return n.toString();
 }
 
 async function loadTraces(domain) {
@@ -27412,6 +27459,61 @@ async function loadBatchJobs() {
       + '<span>💰 $'+(j.cost_usd||0).toFixed(2)+'</span></div></div>';
   });
   list.innerHTML = html;
+}
+
+async function loadTemplateGallery(query) {
+  var grid = document.getElementById('tg-grid');
+  grid.innerHTML = '<div style="color:var(--muted);font-size:13px;text-align:center;padding:40px;grid-column:1/-1">Loading templates…</div>';
+  var url = '/api/template-gallery?limit=200';
+  if (query) url += '&domain=' + encodeURIComponent(query);
+  var data = await dfFetch(url);
+  if (!data.ok || !data.templates || data.templates.length === 0) {
+    grid.innerHTML = '<div style="color:var(--muted);font-size:13px;text-align:center;padding:40px;grid-column:1/-1">No templates saved yet. Run pipeline improvements to save versions.</div>';
+    return;
+  }
+  var html = '';
+  data.templates.forEach(function(t) {
+    var agent = t.agent_name || 'unknown';
+    var model = t.model_name || 'unknown';
+    var date = t.created_at ? new Date(t.created_at).toLocaleDateString() : '';
+    var active = t.is_active ? '<span style="color:#22c55e;font-size:11px">● Active</span>' : '<span style="color:var(--muted);font-size:11px">○ Inactive</span>';
+    var scores = t.scores ? JSON.stringify(t.scores).substring(0, 60) : '';
+    html += '<div style="background:var(--card);border:1px solid var(--border);border-radius:16px;padding:20px;cursor:pointer;transition:all 0.2s" onclick="previewTemplate(\''+t.id+'\')">'
+      + '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">'
+      + '<h4 style="margin:0;font-size:15px;color:var(--text)">'+t.domain+'</h4>'
+      + active+'</div>'
+      + '<div style="font-size:12px;color:var(--muted);margin-bottom:8px">'+t.subdomain+' · '+t.page_path+'</div>'
+      + '<div style="display:flex;gap:12px;flex-wrap:wrap;font-size:11px;color:var(--muted)">'
+      + '<span>🤖 '+agent+'</span>'
+      + '<span>🧠 '+model+'</span>'
+      + '<span>📅 '+date+'</span></div>'
+      + (scores ? '<div style="font-size:10px;color:var(--muted);margin-top:6px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+scores+'</div>' : '')
+      + '</div>';
+  });
+  grid.innerHTML = html;
+}
+
+var tgFilter = 'all';
+function filterTG(val, btn) {
+  tgFilter = val;
+  document.querySelectorAll('#tg-filters .action-btn').forEach(function(b){ b.classList.remove('active'); });
+  if (btn) btn.classList.add('active');
+  loadTemplateGallery(document.getElementById('tg-search').value);
+}
+
+async function previewTemplate(id) {
+  var data = await dfFetch('/api/template-gallery/detail?id=' + id);
+  if (!data.ok || !data.template) {
+    alert('Template not found');
+    return;
+  }
+  var t = data.template;
+  // Open in new window for preview
+  var w = window.open('', '_blank');
+  if (w) {
+    w.document.write(t.html_content || '<html><body>No content</body></html>');
+    w.document.close();
+  }
 }
 
 async function loadReports() {
@@ -27647,6 +27749,7 @@ setInterval(loadNotificationBadge, 30000);
       case 'client-overview': loadClientOverview(); break;
       case 'traces': loadTraces(); break;
       case 'batch': loadBatchJobs(); break;
+      case 'template-gallery': loadTemplateGallery(); break;
       case 'reports': loadReports(); break;
       case 'cost': loadCostSummary(); break;
       case 'schedules': loadSchedules(); break;
@@ -28276,4 +28379,16 @@ function dfCopyTraceField(id) {
   }
 }
 \n</script>
+<!-- PWA Service Worker Registration -->
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', function() {
+    navigator.serviceWorker.register('/sw.js').then(function(reg) {
+      console.log('[PWA] ServiceWorker registered, scope:', reg.scope);
+    }).catch(function(err) {
+      console.log('[PWA] ServiceWorker registration failed:', err);
+    });
+  });
+}
+</script>
 </html>

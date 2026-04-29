@@ -46,12 +46,27 @@ class ScheduleEngine:
     
     def _run_loop(self):
         """Main loop: check schedules periodically."""
+        last_report_check = None
         while self.running:
             try:
                 self._check_schedules()
+                # Check report schedules every 6 hours
+                now = datetime.datetime.utcnow()
+                if not last_report_check or (now - last_report_check).total_seconds() > 21600:
+                    self._check_report_schedules()
+                    last_report_check = now
             except Exception as e:
                 print(f'[ScheduleEngine] Error in check loop: {e}', flush=True)
             time.sleep(self.check_interval)
+    
+    def _check_report_schedules(self):
+        """Check and process scheduled reports."""
+        try:
+            from client_reports_engine import get_report_generator
+            gen = get_report_generator()
+            gen.process_scheduled_reports()
+        except Exception as e:
+            print(f'[ScheduleEngine] Report schedule check error: {e}', flush=True)
     
     def _check_schedules(self):
         """Check all active schedules and trigger runs if due."""

@@ -29,11 +29,11 @@ class PiniClient:
     def _discover_and_login(self):
         """
         Phase 1: Discover API endpoints via browser login.
-        This requires puppeteer/playwright - marked as TODO for now.
-        For initial implementation, we'll use direct API calls.
+        Requires puppeteer/playwright - not available in this environment.
+        For initial implementation, we use direct API calls instead.
         """
-        # TODO: Implement Puppeteer-based discovery
-        # For now, try common API patterns directly
+        # Puppeteer not available in production Docker environment
+        # Direct API calls are used via _try_api_login() instead
         return False
 
     def _try_api_login(self):
@@ -77,13 +77,14 @@ class PiniClient:
     def _scrape_projects(self):
         """
         Phase B: Scrape projects page if API not available.
-        Requires puppeteer - marked as TODO.
+        Requires puppeteer/playwright - not available in production.
         """
-        # TODO: Implement Puppeteer scraping
+        # Puppeteer scraping requires headless browser — not available
+        # in the production Docker container. API fallback is preferred.
         return {
             'projects': [],
-            'error': 'Puppeteer scraping not yet implemented. Configure PINI_URL, PINI_USERNAME, PINI_PASSWORD and ensure puppeteer is installed.',
-            'method': 'scrape_not_implemented'
+            'error': 'Puppeteer scraping not available. API login failed or PINI credentials not configured.',
+            'method': 'scrape_unavailable'
         }
 
     def fetch_projects(self):

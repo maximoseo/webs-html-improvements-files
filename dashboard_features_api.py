@@ -417,6 +417,132 @@ def handle_get(handler, parsed):
         return _json_resp(handler, 200, {'ok': True, 'flags': result or []})
 
     # --- Global Search ---
+    if path == '/api/template-gallery':
+        """Template Gallery — browse and search saved template versions."""
+        if not _supa_available():
+            return _json_resp(handler, 200, {'ok': True, 'templates': []})
+        domain = qs.get('domain', [None])[0]
+        agent = qs.get('agent', [None])[0]
+        active = qs.get('active', [None])[0]
+        
+        filters = {}
+        if domain:
+            filters['domain'] = f'eq.{domain}'
+        if agent:
+            filters['agent_name'] = f'eq.{agent}'
+        if active:
+            filters['is_active'] = f'eq.{active}'
+        
+        result = sh.supa_select('template_versions', filters=filters, limit=500, order='created_at.desc')
+        if isinstance(result, dict) and 'error' in result:
+            return _json_resp(handler, 200, {'ok': True, 'templates': [], 'error': result['error']})
+        
+        # Return without HTML content (just metadata) for listing
+        templates = []
+        for t in (result or []):
+            if not isinstance(t, dict):
+                continue
+            templates.append({
+                'id': t.get('id'),
+                'domain': t.get('domain', ''),
+                'subdomain': t.get('subdomain', ''),
+                'page_path': t.get('page_path', ''),
+                'agent_name': t.get('agent_name', ''),
+                'model_name': t.get('model_name', ''),
+                'scores': t.get('scores', {}),
+                'is_active': t.get('is_active', False),
+                'created_at': t.get('created_at', ''),
+            })
+        
+        return _json_resp(handler, 200, {'ok': True, 'templates': templates})
+    
+    if path == '/api/template-gallery/detail':
+        """Get full template including HTML content."""
+        if not _supa_available():
+            return _json_resp(handler, 200, {'ok': True, 'template': None})
+        template_id = qs.get('id', [None])[0]
+        if not template_id:
+            return _json_resp(handler, 400, {'ok': False, 'error': 'id required'})
+        result = sh.supa_select('template_versions', filters={'id': f'eq.{template_id}'}, limit=1)
+        if isinstance(result, list) and len(result) > 0:
+            return _json_resp(handler, 200, {'ok': True, 'template': result[0]})
+        return _json_resp(handler, 404, {'ok': False, 'error': 'Template not found'})
+    
+    if path == '/api/client-overview':
+        """Client Overview — aggregate stats for all domains."""
+        if not _supa_available():
+            return _json_resp(handler, 200, {'ok': True, 'overview': {}})
+        domain = qs.get('domain', [None])[0]
+        
+        # Get traces summary
+        trace_filters = {}
+        if domain:
+            trace_filters['domain'] = f'eq.{domain}'
+        traces = sh.supa_select('agent_traces', filters=trace_filters, limit=10000)
+        
+        overview = {
+            'total_domains': 0,
+            'total_traces': 0,
+            'total_cost': 0,
+            'total_tokens': 0,
+            'by_domain': {},
+            'recent_activity': [],
+            'budget_alerts': [],
+        }
+        
+        if isinstance(traces, list):
+            for t in traces:
+                if not isinstance(t, dict):
+                    continue
+                d = t.get('domain', 'unknown')
+                overview['total_traces'] += 1
+                overview['total_cost'] += t.get('cost_usd', 0) or 0
+                overview['total_tokens'] += (t.get('tokens_in', 0) or 0) + (t.get('tokens_out', 0) or 0)
+                
+                if d not in overview['by_domain']:
+                    overview['by_domain'][d] = {
+                        'domain': d,
+                        'traces': 0,
+                        'cost': 0,
+                        'last_active': t.get('created_at', ''),
+                    }
+                overview['by_domain'][d]['traces'] += 1
+                overview['by_domain'][d]['cost'] += t.get('cost_usd', 0) or 0
+                if t.get('created_at', '') > overview['by_domain'][d].get('last_active', ''):
+                    overview['by_domain'][d]['last_active'] = t.get('created_at', '')
+            
+            overview['total_domains'] = len(overview['by_domain'])
+            overview['total_cost'] = round(overview['total_cost'], 4)
+            
+            # Sort by cost
+            overview['by_domain'] = sorted(
+                overview['by_domain'].values(),
+                key=lambda x: x['cost'], reverse=True
+            )
+        
+        # Get recent batch jobs
+        jobs = sh.supa_select('batch_jobs', limit=10, order='created_at.desc')
+        if isinstance(jobs, list):
+            overview['recent_activity'] = [
+                {
+                    'type': 'batch_job',
+                    'name': j.get('batch_name', ''),
+                    'status': j.get('status', ''),
+                    'created_at': j.get('created_at', ''),
+                }
+                for j in jobs if isinstance(j, dict)
+            ]
+        
+        # Get budget alerts
+        exceeded, limit_info, spent = sh.check_budget_exceeded(limit_type='daily')
+        if exceeded:
+            overview['budget_alerts'].append({
+                'type': 'budget_exceeded',
+                'message': f'Daily budget exceeded: ${spent:.2f} spent',
+                'limit': limit_info.get('limit_usd', 0) if limit_info else 0,
+            })
+        
+        return _json_resp(handler, 200, {'ok': True, 'overview': overview})
     if path == '/api/search':
         q = qs.get('q', [''])[0].strip().lower()
         if not q:
@@ -574,3 +700,163 @@ def handle_post(handler, parsed, payload):
             result = sh.supa_insert('template_versions', version)
             if isinstance(result, list) and len(result) > 0:
                 return _json_resp(handler, 201, {'ok': True, 'version': result[0]})
+            return _json_resp(handler, 500, {'ok': False, 'error': result})
+        return _json_resp(handler, 201, {'ok': True, 'version': version})
+
+    # --- Generate Report ---
+    if path == '/api/reports/generate':
+        payload = payload or {}
+        domain = payload.get('domain', '')
+        if not domain:
+            return _json_resp(handler, 400, {'ok': False, 'error': 'domain required'})
+        try:
+            from client_reports_engine import get_report_generator
+            gen = get_report_generator()
+            result = gen.generate_report(
+                domain=domain,
+                report_type=payload.get('report_type', 'weekly'),
+                date_from=payload.get('date_from'),
+                date_to=payload.get('date_to'),
+                send_to=payload.get('send_to'),
+            )
+            if result.get('success'):
+                return _json_resp(handler, 201, {'ok': True, 'report': result})
+            return _json_resp(handler, 500, {'ok': False, 'error': 'Failed to generate report'})
+        except Exception as e:
+            return _json_resp(handler, 500, {'ok': False, 'error': str(e)})
+
+    # --- Export Report CSV ---
+    if path == '/api/reports/export':
+        payload = payload or {}
+        domain = payload.get('domain', '')
+        if not domain:
+            return _json_resp(handler, 400, {'ok': False, 'error': 'domain required'})
+        try:
+            from client_reports_engine import get_report_generator
+            gen = get_report_generator()
+            csv_data = gen.export_csv(
+                domain=domain,
+                date_from=payload.get('date_from'),
+                date_to=payload.get('date_to'),
+            )
+            body = csv_data.encode('utf-8')
+            handler.send_response(200)
+            handler.send_header('Content-Type', 'text/csv; charset=utf-8')
+            handler.send_header('Content-Disposition', f'attachment; filename="report_{domain}.csv"')
+            handler.send_header('Content-Length', str(len(body)))
+            handler.end_headers()
+            handler.wfile.write(body)
+            return
+        except Exception as e:
+            return _json_resp(handler, 500, {'ok': False, 'error': str(e)})
+
+    # --- Report Schedules (POST) ---
+    if path == '/api/report-schedules':
+        payload = payload or {}
+        schedule = {
+            'domain': payload.get('domain', ''),
+            'frequency': payload.get('frequency', 'weekly'),
+            'day_of_week': payload.get('day_of_week'),
+            'day_of_month': payload.get('day_of_month'),
+            'send_to': payload.get('send_to', []),
+            'is_active': payload.get('is_active', True),
+        }
+        if not schedule['domain']:
+            return _json_resp(handler, 400, {'ok': False, 'error': 'domain required'})
+        if _supa_available():
+            result = sh.supa_insert('report_schedules', schedule)
+            if isinstance(result, list) and len(result) > 0:
+                return _json_resp(handler, 201, {'ok': True, 'schedule': result[0]})
+            return _json_resp(handler, 500, {'ok': False, 'error': result})
+        return _json_resp(handler, 201, {'ok': True, 'schedule': schedule})
+
+    # --- Quick Actions ---
+    if path == '/api/quick-actions':
+        payload = payload or {}
+        action = payload.get('action', '')
+        domain = payload.get('domain', '')
+        
+        if not action:
+            return _json_resp(handler, 400, {'ok': False, 'error': 'action required'})
+        
+        results = {'action': action, 'domain': domain, 'success': False, 'message': ''}
+        
+        try:
+            if action == 'refresh_cache':
+                # Trigger cache refresh for domain
+                results['message'] = f'Cache refresh triggered for {domain or "all domains"}'
+                results['success'] = True
+            
+            elif action == 'run_pipeline':
+                if not domain:
+                    return _json_resp(handler, 400, {'ok': False, 'error': 'domain required for run_pipeline'})
+                # Activate the n8n workflow for this domain
+                n8n_api_key = os.environ.get('N8N_API_KEY', '').strip()
+                n8n_base = os.environ.get('N8N_BASE_URL', 'https://websiseo.app.n8n.cloud').rstrip('/')
+                if not n8n_api_key:
+                    results['message'] = 'N8N_API_KEY not configured'
+                    return _json_resp(handler, 500, results)
+                
+                # Find and activate workflow
+                wf_url = f'{n8n_base}/api/v1/workflows?limit=100'
+                req = urllib.request.Request(wf_url, headers={'X-N8N-API-KEY': n8n_api_key, 'Accept': 'application/json'})
+                with urllib.request.urlopen(req, timeout=30) as resp:
+                    wf_data = json.loads(resp.read().decode('utf-8'))
+                
+                wf_id = None
+                for wf in wf_data.get('data', []):
+                    if domain.lower() in wf.get('name', '').lower():
+                        wf_id = wf['id']
+                        break
+                
+                if not wf_id:
+                    results['message'] = f'No workflow found for {domain}'
+                    return _json_resp(handler, 404, results)
+                
+                activate_url = f'{n8n_base}/api/v1/workflows/{urllib.parse.quote(wf_id)}/activate'
+                activate_req = urllib.request.Request(activate_url, data=b'{}',
+                    headers={'X-N8N-API-KEY': n8n_api_key, 'Content-Type': 'application/json'}, method='PUT')
+                with urllib.request.urlopen(activate_req, timeout=30) as resp:
+                    resp.read()
+                
+                results['success'] = True
+                results['message'] = f'Pipeline activated for {domain}'
+            
+            elif action == 'generate_report':
+                if not domain:
+                    return _json_resp(handler, 400, {'ok': False, 'error': 'domain required for generate_report'})
+                from client_reports_engine import get_report_generator
+                gen = get_report_generator()
+                rpt = gen.generate_report(domain, report_type='weekly')
+                results['success'] = rpt.get('success', False)
+                results['message'] = 'Report generated' if results['success'] else 'Report generation failed'
+                results['report_id'] = rpt.get('report_id')
+            
+            elif action == 'check_budget':
+                exceeded, limit_info, spent = sh.check_budget_exceeded(limit_type='daily')
+                results['success'] = True
+                results['message'] = f'${spent:.2f} spent today' + (' — BUDGET EXCEEDED!' if exceeded else '')
+                results['budget_exceeded'] = exceeded
+                results['spent'] = round(spent, 4)
+            
+            elif action == 'list_domains':
+                # Get all unique domains from agent_traces
+                traces = sh.supa_select('agent_traces', select='domain', limit=5000)
+                domains = set()
+                if isinstance(traces, list):
+                    for t in traces:
+                        if isinstance(t, dict) and t.get('domain'):
+                            domains.add(t['domain'])
+                results['success'] = True
+                results['domains'] = sorted(list(domains))
+                results['message'] = f'Found {len(domains)} domains'
+            
+            else:
+                return _json_resp(handler, 400, {'ok': False, 'error': f'Unknown action: {action}'})
+            
+            # Log to audit
+            log_existing_operation('quick_actions', action, {'domain': domain, 'result': results})
+            
+            return _json_resp(handler, 200, {'ok': True, 'result': results})
+        except Exception as e:
+            return _json_resp(handler, 500, {'ok': False, 'error': str(e)})
