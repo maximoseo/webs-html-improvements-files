@@ -5894,6 +5894,112 @@ body{{font-family:Arial;padding:24px}}h1{{color:#333}}pre{{background:#f4f4f4;pa
             except Exception as exc:
                 return json_response(self, 500, {'ok': False, 'error': str(exc)})
 
+        # ── TEMPLATE INTELLIGENCE CONNECTORS (GET) ──
+        if parsed.path == '/api/connectors/status':
+            return json_response(self, 200, {
+                'ok': True,
+                'connectors': {
+                    'wp_rest': bool(os.getenv('WORDPRESS_SITE_URL')),
+                    'wp_graphql': bool(os.getenv('WORDPRESS_SITE_URL')),
+                    'figma': bool(os.getenv('FIGMA_ACCESS_TOKEN')),
+                    'pagespeed': True,
+                    'grapesjs': True
+                }
+            })
+
+        if parsed.path.startswith('/api/connectors/wp-rest/'):
+            try:
+                from wp_rest_client import create_wp_rest_client
+                action = parsed.path.split('/')[-1]
+                client = create_wp_rest_client()
+                if not client:
+                    return json_response(self, 400, {'ok': False, 'error': 'WordPress REST API not configured. Set WORDPRESS_SITE_URL env var.'})
+                routes = {
+                    'check': client.check_connection,
+                    'posts': client.get_posts,
+                    'pages': client.get_pages,
+                    'media': client.get_media,
+                    'categories': client.get_categories,
+                    'themes': client.get_themes,
+                    'plugins': client.get_plugins,
+                    'templates': client.get_templates,
+                }
+                if action in routes:
+                    return json_response(self, 200, {'ok': True, 'data': routes[action]()})
+                return json_response(self, 404, {'ok': False, 'error': f'Unknown action: {action}'})
+            except Exception as e:
+                return json_response(self, 500, {'ok': False, 'error': str(e)})
+
+        if parsed.path.startswith('/api/connectors/wp-graphql/'):
+            try:
+                from wp_graphql_client import create_wp_graphql_client
+                action = parsed.path.split('/')[-1]
+                client = create_wp_graphql_client()
+                if not client:
+                    return json_response(self, 400, {'ok': False, 'error': 'WPGraphQL not configured. Set WORDPRESS_SITE_URL env var.'})
+                routes = {
+                    'check': client.check_connection,
+                    'posts': client.get_posts,
+                    'pages': client.get_pages,
+                    'media': client.get_media,
+                    'categories': client.get_categories,
+                    'seo': client.get_seo_info,
+                    'menu': client.get_menu,
+                }
+                if action in routes:
+                    return json_response(self, 200, {'ok': True, 'data': routes[action]()})
+                return json_response(self, 404, {'ok': False, 'error': f'Unknown action: {action}'})
+            except Exception as e:
+                return json_response(self, 500, {'ok': False, 'error': str(e)})
+
+        if parsed.path.startswith('/api/connectors/figma/'):
+            try:
+                from figma_client import create_figma_client
+                parts = parsed.path.split('/')
+                action = parts[-1]
+                file_key = parts[-2] if len(parts) > 5 else None
+                client = create_figma_client()
+                if not client:
+                    return json_response(self, 400, {'ok': False, 'error': 'Figma API not configured. Set FIGMA_ACCESS_TOKEN env var.'})
+                if action == 'check':
+                    return json_response(self, 200, {'ok': True, 'data': client.check_connection()})
+                if file_key:
+                    routes = {
+                        'colors': client.extract_colors,
+                        'typography': client.extract_typography,
+                        'spacing': client.extract_spacing,
+                        'components': client.extract_components,
+                        'tokens': client.extract_design_tokens,
+                        'styles': lambda: client.get_styles(file_key),
+                    }
+                    if action in routes:
+                        return json_response(self, 200, {'ok': True, 'data': routes[action]()})
+                return json_response(self, 400, {'ok': False, 'error': 'Missing file_key or unknown action'})
+            except Exception as e:
+                return json_response(self, 500, {'ok': False, 'error': str(e)})
+
+        if parsed.path.startswith('/api/connectors/pagespeed/'):
+            try:
+                from pagespeed_client import create_pagespeed_client
+                parts = parsed.path.split('/')
+                action = parts[-1]
+                qs = urllib.parse.parse_qs(parsed.query)
+                url = qs.get('url', [''])[0]
+                strategy = qs.get('strategy', ['mobile'])[0]
+                client = create_pagespeed_client()
+                if action == 'analyze' and url:
+                    result_data = client.analyze(url, strategy)
+                    summary = client.get_score_summary(result_data)
+                    return json_response(self, 200, {'ok': True, 'data': result_data, 'summary': summary})
+                if action == 'check':
+                    return json_response(self, 200, {'ok': True, 'data': {'connected': True, 'note': 'PageSpeed API available'}})
+                return json_response(self, 400, {'ok': False, 'error': 'Missing url parameter or unknown action'})
+            except Exception as e:
+                return json_response(self, 500, {'ok': False, 'error': str(e)})
+
+        if parsed.path == '/api/connectors/grapesjs/status':
+            return json_response(self, 200, {'ok': True, 'data': {'available': True, 'type': 'embedded'}})
+
         return json_response(self, 404, {'ok': False, 'error': 'Not found'})
 
     def do_POST(self):

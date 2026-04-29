@@ -7275,6 +7275,10 @@ body.light .action-btn.primary{
         N8N Stuck Projects
         <span id="stuck-projects-badge" class="badge-count" style="display:none;background:#ef4444;color:#fff;font-size:10px;padding:1px 5px;border-radius:99px;margin-left:4px;font-weight:700;">0</span>
       </button>
+      <button class="fixer-tab-btn" id="tab-connectors" onclick="showPage('connectors')" aria-label="Template Intelligence" role="tab" aria-selected="false">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+        <span class="tab-label">Connectors</span>
+      </button>
     </div>
     <button class="hdr-search-btn" id="hdr-global-search-btn" onclick="openGlobalSearch()" title="Global search (Ctrl+Shift+F)" aria-label="Global search">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
@@ -24292,6 +24296,227 @@ body:not(.tour-user-started) #tour-backdrop.open{
   } else {
     loadStuckSummary();
   }
+})();
+</script>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<!-- TEMPLATE INTELLIGENCE CONNECTORS PAGE -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<div id="page-connectors" class="fixer-page" style="display:none;">
+  <div class="fixer-page-header">
+    <h2 class="fixer-page-title">🔌 Template Intelligence Connectors</h2>
+    <p class="fixer-page-subtitle">Connect to WordPress, Figma, and Google PageSpeed for AI-powered template improvement</p>
+  </div>
+  <div class="connectors-grid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(380px,1fr));gap:20px;padding:20px;">
+    
+    <!-- WordPress REST API -->
+    <div class="connector-card" style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:16px;padding:24px;">
+      <div class="connector-header" style="display:flex;align-items:center;gap:12px;margin-bottom:16px;">
+        <div style="width:48px;height:48px;background:#21759b;border-radius:12px;display:flex;align-items:center;justify-content:center;">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="white"><path d="M12 2C6.486 2 2 6.486 2 12s4.486 10 10 10 10-4.486 10-10S17.514 2 12 2zm-1.5 15.5c-2.5-1-4-3.5-4-6.5 0-.5.1-1 .2-1.5.5 1.5 1.5 3 2.8 4.2.5.4 1 .8 1 1.8zm5-1.5c0-1 .5-1.4 1-1.8 1.3-1.2 2.3-2.7 2.8-4.2.1.5.2 1 .2 1.5 0 3-1.5 5.5-4 6.5z"/></svg>
+        </div>
+        <div>
+          <h3 style="margin:0;font-size:18px;font-weight:700;">WordPress REST API</h3>
+          <span class="connector-status" id="wp-rest-status" style="font-size:12px;color:#f59e0b;">⚠️ Not configured</span>
+        </div>
+      </div>
+      <p style="color:var(--muted);font-size:13px;margin-bottom:16px;">Fetch posts, pages, media, themes, plugins, and templates from your WordPress site.</p>
+      <div class="connector-actions" style="display:flex;gap:8px;flex-wrap:wrap;">
+        <button onclick="connectors.wpRest.check()" class="conn-btn" style="padding:8px 14px;background:rgba(33,117,155,0.2);border:1px solid rgba(33,117,155,0.3);border-radius:8px;color:#7dd3fc;cursor:pointer;font-size:12px;">🔗 Test Connection</button>
+        <button onclick="connectors.wpRest.fetch('pages')" class="conn-btn" style="padding:8px 14px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:8px;color:var(--muted);cursor:pointer;font-size:12px;">📄 Get Pages</button>
+        <button onclick="connectors.wpRest.fetch('media')" class="conn-btn" style="padding:8px 14px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:8px;color:var(--muted);cursor:pointer;font-size:12px;">🖼️ Get Media</button>
+      </div>
+      <div id="wp-rest-output" class="connector-output" style="margin-top:12px;max-height:200px;overflow-y:auto;font-size:12px;font-family:monospace;background:rgba(0,0,0,0.2);border-radius:8px;padding:8px;display:none;"></div>
+    </div>
+
+    <!-- WPGraphQL -->
+    <div class="connector-card" style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:16px;padding:24px;">
+      <div class="connector-header" style="display:flex;align-items:center;gap:12px;margin-bottom:16px;">
+        <div style="width:48px;height:48px;background:#e35b0e;border-radius:12px;display:flex;align-items:center;justify-content:center;">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="white"><circle cx="12" cy="12" r="10"/></svg>
+        </div>
+        <div>
+          <h3 style="margin:0;font-size:18px;font-weight:700;">WPGraphQL</h3>
+          <span class="connector-status" id="wp-graphql-status" style="font-size:12px;color:#f59e0b;">⚠️ Not configured</span>
+        </div>
+      </div>
+      <p style="color:var(--muted);font-size:13px;margin-bottom:16px;">Query complex nested content, ACF fields, custom post types, and SEO data via GraphQL.</p>
+      <div class="connector-actions" style="display:flex;gap:8px;flex-wrap:wrap;">
+        <button onclick="connectors.wpGraphql.check()" class="conn-btn" style="padding:8px 14px;background:rgba(227,91,14,0.2);border:1px solid rgba(227,91,14,0.3);border-radius:8px;color:#fdba74;cursor:pointer;font-size:12px;">🔗 Test Connection</button>
+        <button onclick="connectors.wpGraphql.fetch('posts')" class="conn-btn" style="padding:8px 14px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:8px;color:var(--muted);cursor:pointer;font-size:12px;">📝 Get Posts</button>
+        <button onclick="connectors.wpGraphql.fetch('seo')" class="conn-btn" style="padding:8px 14px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:8px;color:var(--muted);cursor:pointer;font-size:12px;">🔍 Get SEO Data</button>
+      </div>
+      <div id="wp-graphql-output" class="connector-output" style="margin-top:12px;max-height:200px;overflow-y:auto;font-size:12px;font-family:monospace;background:rgba(0,0,0,0.2);border-radius:8px;padding:8px;display:none;"></div>
+    </div>
+
+    <!-- Figma API -->
+    <div class="connector-card" style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:16px;padding:24px;">
+      <div class="connector-header" style="display:flex;align-items:center;gap:12px;margin-bottom:16px;">
+        <div style="width:48px;height:48px;background:#1abcfe;border-radius:12px;display:flex;align-items:center;justify-content:center;">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="white"><path d="M8 24c2.2 0 4-1.8 4-4v-4H8c-2.2 0-4 1.8-4 4s1.8 4 4 4zm8-8c2.2 0 4-1.8 4-4v-4h-8v8h4zm0-8h8V4c0-2.2-1.8-4-4-4s-4 1.8-4 4v4zm-8 0h8V0H8c-2.2 0-4 1.8-4 4s1.8 4 4 4zm-4 4h4v4H4v-4z"/></svg>
+        </div>
+        <div>
+          <h3 style="margin:0;font-size:18px;font-weight:700;">Figma API</h3>
+          <span class="connector-status" id="figma-status" style="font-size:12px;color:#f59e0b;">⚠️ Not configured</span>
+        </div>
+      </div>
+      <p style="color:var(--muted);font-size:13px;margin-bottom:16px;">Extract colors, typography, spacing, components, and design tokens from Figma files.</p>
+      <div style="margin-bottom:12px;">
+        <input type="text" id="figma-file-key" placeholder="Figma file key (from URL)" style="width:100%;padding:8px 12px;background:rgba(0,0,0,0.2);border:1px solid rgba(255,255,255,0.1);border-radius:8px;color:var(--text);font-size:12px;">
+      </div>
+      <div class="connector-actions" style="display:flex;gap:8px;flex-wrap:wrap;">
+        <button onclick="connectors.figma.check()" class="conn-btn" style="padding:8px 14px;background:rgba(26,188,254,0.2);border:1px solid rgba(26,188,254,0.3);border-radius:8px;color:#7dd3fc;cursor:pointer;font-size:12px;">🔗 Test Connection</button>
+        <button onclick="connectors.figma.extract('colors')" class="conn-btn" style="padding:8px 14px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:8px;color:var(--muted);cursor:pointer;font-size:12px;">🎨 Extract Colors</button>
+        <button onclick="connectors.figma.extract('typography')" class="conn-btn" style="padding:8px 14px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:8px;color:var(--muted);cursor:pointer;font-size:12px;">🔤 Extract Typography</button>
+        <button onclick="connectors.figma.extract('tokens')" class="conn-btn" style="padding:8px 14px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:8px;color:var(--muted);cursor:pointer;font-size:12px;">📦 Extract Tokens</button>
+      </div>
+      <div id="figma-output" class="connector-output" style="margin-top:12px;max-height:200px;overflow-y:auto;font-size:12px;font-family:monospace;background:rgba(0,0,0,0.2);border-radius:8px;padding:8px;display:none;"></div>
+    </div>
+
+    <!-- PageSpeed Insights -->
+    <div class="connector-card" style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:16px;padding:24px;">
+      <div class="connector-header" style="display:flex;align-items:center;gap:12px;margin-bottom:16px;">
+        <div style="width:48px;height:48px;background:#4285f4;border-radius:12px;display:flex;align-items:center;justify-content:center;">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="white"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+        </div>
+        <div>
+          <h3 style="margin:0;font-size:18px;font-weight:700;">PageSpeed Insights</h3>
+          <span class="connector-status" id="pagespeed-status" style="font-size:12px;color:#22c55e;">✅ Available</span>
+        </div>
+      </div>
+      <p style="color:var(--muted);font-size:13px;margin-bottom:16px;">Analyze performance, accessibility, SEO, and Core Web Vitals for any URL.</p>
+      <div style="margin-bottom:12px;">
+        <input type="text" id="pagespeed-url" placeholder="https://example.com" style="width:100%;padding:8px 12px;background:rgba(0,0,0,0.2);border:1px solid rgba(255,255,255,0.1);border-radius:8px;color:var(--text);font-size:12px;">
+      </div>
+      <div class="connector-actions" style="display:flex;gap:8px;flex-wrap:wrap;">
+        <button onclick="connectors.pagespeed.analyze('mobile')" class="conn-btn" style="padding:8px 14px;background:rgba(66,133,244,0.2);border:1px solid rgba(66,133,244,0.3);border-radius:8px;color:#93c5fd;cursor:pointer;font-size:12px;">📱 Mobile Analysis</button>
+        <button onclick="connectors.pagespeed.analyze('desktop')" class="conn-btn" style="padding:8px 14px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:8px;color:var(--muted);cursor:pointer;font-size:12px;">💻 Desktop Analysis</button>
+      </div>
+      <div id="pagespeed-output" class="connector-output" style="margin-top:12px;max-height:200px;overflow-y:auto;font-size:12px;font-family:monospace;background:rgba(0,0,0,0.2);border-radius:8px;padding:8px;display:none;"></div>
+    </div>
+
+    <!-- GrapesJS Editor -->
+    <div class="connector-card" style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:16px;padding:24px;">
+      <div class="connector-header" style="display:flex;align-items:center;gap:12px;margin-bottom:16px;">
+        <div style="width:48px;height:48px;background:#f97316;border-radius:12px;display:flex;align-items:center;justify-content:center;">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="white"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+        </div>
+        <div>
+          <h3 style="margin:0;font-size:18px;font-weight:700;">GrapesJS Editor</h3>
+          <span class="connector-status" style="font-size:12px;color:#22c55e;">✅ Embedded</span>
+        </div>
+      </div>
+      <p style="color:var(--muted);font-size:13px;margin-bottom:16px;">Visual drag-and-drop HTML/CSS editor for building and editing templates inline.</p>
+      <div class="connector-actions" style="display:flex;gap:8px;flex-wrap:wrap;">
+        <button onclick="connectors.grapesjs.open()" class="conn-btn" style="padding:8px 14px;background:rgba(249,115,22,0.2);border:1px solid rgba(249,115,22,0.3);border-radius:8px;color:#fdba74;cursor:pointer;font-size:12px;">🎨 Open Editor</button>
+      </div>
+      <div id="grapesjs-container" style="margin-top:12px;border:1px solid rgba(255,255,255,0.1);border-radius:8px;min-height:400px;display:none;background:rgba(0,0,0,0.2);"></div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════════
+// TEMPLATE INTELLIGENCE CONNECTORS JS
+// ═══════════════════════════════════════════════════════
+var connectors = (function() {
+  var API = '';
+
+  function showOutput(id, data) {
+    var el = document.getElementById(id);
+    el.style.display = 'block';
+    el.textContent = JSON.stringify(data, null, 2);
+  }
+
+  function updateStatus(id, status, color) {
+    var el = document.getElementById(id);
+    if (el) { el.textContent = status; el.style.color = color; }
+  }
+
+  async function apiGet(path) {
+    var resp = await fetch(API + path);
+    return resp.json();
+  }
+
+  return {
+    init: function(baseUrl) {
+      API = baseUrl || '';
+      this.checkAll();
+    },
+    checkAll: function() {
+      apiGet('/api/connectors/status').then(function(r) {
+        if (r.ok) {
+          updateStatus('wp-rest-status', r.connectors.wp_rest ? '✅ Connected' : '⚠️ Not configured', r.connectors.wp_rest ? '#22c55e' : '#f59e0b');
+          updateStatus('wp-graphql-status', r.connectors.wp_graphql ? '✅ Connected' : '⚠️ Not configured', r.connectors.wp_graphql ? '#22c55e' : '#f59e0b');
+          updateStatus('figma-status', r.connectors.figma ? '✅ Connected' : '⚠️ Not configured', r.connectors.figma ? '#22c55e' : '#f59e0b');
+        }
+      }).catch(function() {});
+    },
+    wpRest: {
+      check: function() {
+        apiGet('/api/connectors/wp-rest/check').then(function(r) { showOutput('wp-rest-output', r); });
+      },
+      fetch: function(action) {
+        apiGet('/api/connectors/wp-rest/' + action).then(function(r) { showOutput('wp-rest-output', r); });
+      }
+    },
+    wpGraphql: {
+      check: function() {
+        apiGet('/api/connectors/wp-graphql/check').then(function(r) { showOutput('wp-graphql-output', r); });
+      },
+      fetch: function(action) {
+        apiGet('/api/connectors/wp-graphql/' + action).then(function(r) { showOutput('wp-graphql-output', r); });
+      }
+    },
+    figma: {
+      check: function() {
+        apiGet('/api/connectors/figma/check').then(function(r) { showOutput('figma-output', r); });
+      },
+      extract: function(action) {
+        var fileKey = document.getElementById('figma-file-key').value;
+        if (!fileKey) { alert('Please enter a Figma file key'); return; }
+        apiGet('/api/connectors/figma/' + fileKey + '/' + action).then(function(r) { showOutput('figma-output', r); });
+      }
+    },
+    pagespeed: {
+      analyze: function(strategy) {
+        var url = document.getElementById('pagespeed-url').value;
+        if (!url) { alert('Please enter a URL to analyze'); return; }
+        apiGet('/api/connectors/pagespeed/analyze?url=' + encodeURIComponent(url) + '&strategy=' + strategy).then(function(r) {
+          if (r.summary) {
+            var s = r.summary.mobile || r.summary.desktop || {};
+            var html = 'Performance: ' + (s.performance || 'N/A') + '/100\\nAccessibility: ' + (s.accessibility || 'N/A') + '/100\\nSEO: ' + (s.seo || 'N/A') + '/100\\nLCP: ' + (s.lcp || 'N/A') + '\\nCLS: ' + (s.cls || 'N/A');
+            showOutput('pagespeed-output', { summary: s, raw: r });
+          } else {
+            showOutput('pagespeed-output', r);
+          }
+        });
+      }
+    },
+    grapesjs: {
+      open: function() {
+        var container = document.getElementById('grapesjs-container');
+        if (container.style.display === 'none' || !container.style.display) {
+          container.style.display = 'block';
+          container.innerHTML = '<div style="padding:40px;text-align:center;color:var(--muted);">GrapesJS editor will load here. Add <script src="https://unpkg.com/grapesjs"><\/script> and initialize.</div>';
+        } else {
+          container.style.display = 'none';
+        }
+      }
+    }
+  };
+})();
+
+// Auto-load connectors when tab is shown
+(function() {
+  var origShowPage = window.showPage;
+  window.showPage = function(pageId) {
+    if (origShowPage) origShowPage(pageId);
+    if (pageId === 'connectors') {
+      connectors.init();
+    }
+  };
 })();
 </script>
 </body>
