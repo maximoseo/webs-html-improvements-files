@@ -6606,6 +6606,44 @@ body{
 
 /* END REDESIGN QUICK WIN #1 */
 
+
+
+/* PLAYGROUND_TAB_PLAN24_2026_04_29 — HTML template preview/testing hub */
+#page-playground{min-height:70vh;padding:0 0 70px;max-width:1480px;margin:0 auto;display:none}
+.playground-hero{display:flex;align-items:flex-start;justify-content:space-between;gap:18px;margin-bottom:20px;flex-wrap:wrap}
+.playground-title{font-size:clamp(24px,3vw,36px);font-weight:800;letter-spacing:-.04em;color:var(--text);display:flex;align-items:center;gap:12px}
+.playground-title .pg-icon{width:42px;height:42px;border-radius:14px;display:grid;place-items:center;background:linear-gradient(135deg,rgba(113,112,255,.22),rgba(198,141,255,.18));border:1px solid rgba(180,140,255,.35)}
+.playground-desc{color:var(--muted);font-size:13px;line-height:1.6;max-width:76ch;margin-top:6px}
+.playground-toolbar{display:grid;grid-template-columns:minmax(220px,1fr) repeat(3,minmax(140px,190px)) auto;gap:10px;margin-bottom:18px;align-items:center}
+.playground-toolbar input,.playground-toolbar select,.playground-upload-grid input,.playground-upload-grid textarea{min-width:0;width:100%;border:1px solid rgba(255,255,255,.09);background:rgba(0,0,0,.18);color:var(--text);border-radius:12px;padding:10px 12px;font-size:13px;outline:none}
+.playground-toolbar input:focus,.playground-toolbar select:focus,.playground-upload-grid input:focus,.playground-upload-grid textarea:focus{border-color:rgba(113,112,255,.6);box-shadow:0 0 0 3px rgba(113,112,255,.14)}
+.playground-summary{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px}
+.pg-pill{display:inline-flex;align-items:center;gap:7px;padding:7px 11px;border-radius:999px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);font-size:12px;color:var(--text-secondary)}
+.playground-domain{margin:18px 0 26px;border:1px solid rgba(255,255,255,.08);border-radius:18px;background:linear-gradient(180deg,rgba(255,255,255,.035),rgba(255,255,255,.018));overflow:hidden}
+.playground-domain-head{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 16px;border-bottom:1px solid rgba(255,255,255,.07);cursor:pointer}
+.playground-domain-title{font-size:16px;font-weight:800;color:var(--text);display:flex;align-items:center;gap:9px;overflow-wrap:anywhere}
+.playground-domain-meta{font-size:12px;color:var(--muted);display:flex;gap:8px;flex-wrap:wrap}
+.playground-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(340px,100%),1fr));gap:14px;padding:16px}
+.playground-grid.list{grid-template-columns:1fr}
+.playground-card{border:1px solid rgba(255,255,255,.09);border-radius:16px;background:rgba(10,11,18,.62);box-shadow:0 14px 34px rgba(0,0,0,.18);overflow:hidden;min-width:0;transition:transform .16s ease,border-color .16s ease,box-shadow .16s ease}
+.playground-card:hover{transform:translateY(-2px);border-color:rgba(113,112,255,.42);box-shadow:0 18px 42px rgba(0,0,0,.28)}
+.pg-thumb{height:210px;background:#fff;overflow:hidden;position:relative;border-bottom:1px solid rgba(255,255,255,.08)}
+.pg-thumb iframe{width:1200px;height:840px;transform:scale(.285);transform-origin:top left;border:0;background:#fff;pointer-events:none}
+.pg-card-body{padding:14px;display:grid;gap:10px}
+.pg-agent{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;color:var(--text);font-weight:800}
+.pg-agent small{display:block;color:var(--muted);font-size:11px;font-weight:600;margin-top:2px}
+.pg-tags{display:flex;gap:6px;flex-wrap:wrap}.pg-tag{font-size:10.5px;padding:4px 7px;border-radius:999px;background:rgba(113,112,255,.12);border:1px solid rgba(113,112,255,.22);color:#d7dbff}
+.pg-actions{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.pg-actions .action-btn{justify-content:center;min-height:38px;padding:8px 10px;font-size:12px}
+.playground-empty{padding:28px;border:1px dashed rgba(255,255,255,.16);border-radius:16px;color:var(--muted);text-align:center;background:rgba(255,255,255,.02)}
+.playground-modal{max-width:1540px;width:96vw;height:92vh}.playground-modal .modal-body{display:flex;flex-direction:column;min-height:0;overflow:hidden}.pg-device-bar{display:flex;gap:8px;align-items:center;flex-wrap:wrap;padding:12px 14px;border-bottom:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.02)}
+.pg-device-btn,.pg-zoom-btn{border:1px solid rgba(255,255,255,.09);background:rgba(255,255,255,.035);color:var(--text-secondary);border-radius:10px;padding:8px 11px;font-size:12px;font-weight:700;cursor:pointer}.pg-device-btn.active,.pg-zoom-btn.active{background:rgba(113,112,255,.2);border-color:rgba(113,112,255,.5);color:#fff}.pg-custom-size{display:flex;gap:6px;align-items:center}.pg-custom-size input{width:82px;padding:8px;border-radius:9px;border:1px solid rgba(255,255,255,.09);background:rgba(0,0,0,.2);color:var(--text)}
+.pg-preview-stage{flex:1;min-height:0;overflow:auto;display:flex;align-items:flex-start;justify-content:center;padding:18px;background:radial-gradient(circle at top,rgba(113,112,255,.08),transparent 45%),rgba(0,0,0,.18)}
+.pg-device-frame{background:#fff;box-shadow:0 20px 60px rgba(0,0,0,.44);overflow:hidden;border:2px solid #222;transition:width .18s ease,height .18s ease,border-radius .18s ease}.pg-device-frame.mobile{border-radius:28px}.pg-device-frame.tablet{border-radius:18px}.pg-device-frame iframe{width:100%;height:100%;border:0;background:#fff}.pg-preview-actions{display:flex;gap:8px;flex-wrap:wrap;padding:12px 14px;border-top:1px solid rgba(255,255,255,.08)}
+.pg-report{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px;white-space:pre-wrap;color:var(--text-secondary);background:rgba(0,0,0,.24);border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:12px;max-height:42vh;overflow:auto}
+.playground-upload-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;padding:16px}.playground-upload-grid .wide{grid-column:1/-1}.playground-upload-grid textarea{min-height:230px;font-family:ui-monospace,SFMono-Regular,Menlo,monospace}.pg-export-box{display:grid;gap:12px;padding:16px}.pg-export-content{min-height:260px;max-height:52vh;overflow:auto;white-space:pre-wrap;direction:ltr;text-align:left;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px;background:rgba(0,0,0,.25);border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:12px;color:var(--text-secondary)}
+body.light #page-playground .playground-card,body.light #page-playground .playground-domain{background:#fff;border-color:rgba(17,24,39,.12)}body.light #page-playground .pg-card-body,body.light #page-playground .playground-domain-title{color:#111827}body.light #page-playground .pg-report,body.light #page-playground .pg-export-content{background:#f8fafc;color:#111827;border-color:#e5e7eb}
+@media(max-width:1100px){.playground-toolbar{grid-template-columns:1fr 1fr}.playground-upload-grid{grid-template-columns:1fr 1fr}.pg-actions{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:700px){#page-playground{padding:0 14px 80px}.playground-toolbar{grid-template-columns:1fr}.playground-hero{display:block}.playground-grid{grid-template-columns:1fr;padding:12px}.pg-actions{grid-template-columns:1fr}.playground-modal{width:100vw;height:100vh;border-radius:0}.pg-device-bar{overflow-x:auto;flex-wrap:nowrap;align-items:stretch}.pg-preview-stage{padding:10px;justify-content:flex-start}.playground-upload-grid{grid-template-columns:1fr;padding:12px}.pg-thumb{height:180px}.pg-preview-actions .action-btn{width:100%;justify-content:center}}
 </style>
 <script>
 // ── Global Error Handler (added) ──────────────────────────────────────────
@@ -7232,6 +7270,7 @@ body.light .action-btn.primary{
   <button class="mobile-nav-item" data-testid="mobile-nav-template-improvements" onclick="showPage('template-improvements');closeMobileMenu()">Template Improvements</button>
   <button class="mobile-nav-item" data-testid="mobile-nav-template-connectors" onclick="showPage('template-connectors');closeMobileMenu()">Template Connectors</button>
   <button class="mobile-nav-item" data-testid="mobile-nav-productivity-hub" onclick="showPage('productivity-hub');closeMobileMenu()">Productivity Hub</button>
+  <button class="mobile-nav-item" data-testid="mobile-nav-playground" onclick="showPage('playground');closeMobileMenu()">🎨 Playground</button>
   <button class="mobile-nav-item" onclick="showPage('settings');closeMobileMenu()">Settings</button>
   <button class="mobile-nav-item" onclick="closeMobileMenu();fullSync(document.getElementById('hdr-sync-btn'))">Sync dashboard</button>
   <button class="mobile-nav-item" onclick="closeMobileMenu();refreshDashboardHard(document.getElementById('hdr-refresh-cache-btn'))">Refresh and Clear Cache</button>
@@ -7285,6 +7324,10 @@ body.light .action-btn.primary{
       <button class="fixer-tab-btn" id="tab-productivity-hub" data-testid="tab-productivity-hub" onclick="showPage('productivity-hub')" aria-label="Productivity Hub" role="tab" aria-selected="false" data-feature="productivity-hub">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19V5"/><path d="M4 19h16"/><path d="M8 16v-5"/><path d="M12 16V8"/><path d="M16 16v-3"/><path d="M20 16V6"/></svg>
         <span class="tab-label">Productivity</span>
+      </button>
+      <button class="fixer-tab-btn" id="tab-playground" data-testid="tab-playground" onclick="showPage('playground')" aria-label="Playground" role="tab" aria-selected="false" data-feature="playground">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4 12.5-12.5z"/></svg>
+        <span class="tab-label">Playground</span>
       </button>
       <button class="fixer-tab-btn" id="tab-settings" onclick="showPage('settings')" aria-label="Settings" role="tab" aria-selected="false">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
@@ -7441,6 +7484,89 @@ body.light .action-btn.primary{
      N8N_FIXER_READ_ONLY_UI_2026_04_27
      MANUAL IMPORT ONLY — this dashboard never writes fixed JSON back to n8n.
      ============================================================ -->
+
+
+<!-- ============================================================
+     PLAYGROUND TAB — Plan #24 HTML Template Preview & Testing Hub
+     PLAYGROUND_TAB_PLAN24_2026_04_29
+     ============================================================ -->
+<div id="page-playground" class="fixer-page" style="display:none" data-testid="page-playground">
+  <div class="playground-hero">
+    <div>
+      <div class="playground-title"><span class="pg-icon">🎨</span><span>Playground</span></div>
+      <div class="playground-desc">Preview and test improved HTML templates by domain and agent. Includes live iframe thumbnails, desktop/laptop/tablet/mobile simulator, WordPress compatibility checks, upload/paste, favorites, and one-click N8N prompt/JSON export for manual import.</div>
+    </div>
+    <div class="fixer-page-actions">
+      <button class="action-btn primary" onclick="openPlaygroundUploadModal()">+ Upload Template</button>
+      <button class="action-btn" onclick="loadPlayground(true)">Refresh</button>
+    </div>
+  </div>
+
+  <div class="playground-toolbar" role="search" aria-label="Playground filters">
+    <input id="pg-search" type="search" placeholder="Search by domain, agent, style, tag..." oninput="renderPlayground()">
+    <select id="pg-domain-filter" onchange="renderPlayground()"><option value="">All domains</option></select>
+    <select id="pg-agent-filter" onchange="renderPlayground()"><option value="">All agents</option></select>
+    <select id="pg-sort" onchange="renderPlayground()"><option value="newest">Newest</option><option value="favorite">Favorites first</option><option value="size">Largest HTML</option></select>
+    <div class="view-toggle" style="margin:0"><button class="view-btn active" id="pg-view-grid" onclick="setPlaygroundView('grid')">Grid</button><button class="view-btn" id="pg-view-list" onclick="setPlaygroundView('list')">List</button></div>
+  </div>
+
+  <div class="playground-summary" id="pg-summary"></div>
+  <div id="pg-gallery"><div class="playground-empty">Loading Playground templates…</div></div>
+</div>
+
+<div class="modal-overlay" id="playground-preview-modal" role="dialog" aria-modal="true" aria-labelledby="pg-preview-title">
+  <div class="modal playground-modal">
+    <div class="modal-header">
+      <div class="modal-title" id="pg-preview-title">🎨 HTML Preview</div>
+      <button class="modal-close" onclick="closePlaygroundPreview()" aria-label="Close">×</button>
+    </div>
+    <div class="modal-body">
+      <div class="pg-device-bar">
+        <button class="pg-device-btn active" data-device="desktop" onclick="setPgDevice('desktop')">🖥️ Desktop 1920×1080</button>
+        <button class="pg-device-btn" data-device="laptop" onclick="setPgDevice('laptop')">💻 Laptop 1366×768</button>
+        <button class="pg-device-btn" data-device="tablet" onclick="setPgDevice('tablet')">📱 Tablet 768×1024</button>
+        <button class="pg-device-btn" data-device="mobile" onclick="setPgDevice('mobile')">📱 Mobile 375×812</button>
+        <button class="pg-device-btn" data-device="custom" onclick="setPgDevice('custom')">📐 Custom</button>
+        <span class="pg-custom-size"><input id="pg-custom-w" type="number" value="1024" min="320" max="2560" onchange="updatePlaygroundFrame()"><span>×</span><input id="pg-custom-h" type="number" value="768" min="320" max="2000" onchange="updatePlaygroundFrame()"></span>
+        <button class="pg-zoom-btn active" data-zoom="1" onclick="setPgZoom(1)">100%</button><button class="pg-zoom-btn" data-zoom="0.75" onclick="setPgZoom(.75)">75%</button><button class="pg-zoom-btn" data-zoom="0.5" onclick="setPgZoom(.5)">50%</button>
+        <button class="pg-zoom-btn" onclick="togglePgOrientation()">↔ Orientation</button>
+      </div>
+      <div class="pg-preview-stage">
+        <div class="pg-device-frame desktop" id="pg-device-frame"><iframe id="pg-preview-frame" sandbox="allow-same-origin" title="Playground HTML preview"></iframe></div>
+      </div>
+      <div class="pg-preview-actions">
+        <button class="action-btn" onclick="runPlaygroundCompatibilityCheck()">🔌 WordPress Check</button>
+        <button class="action-btn" onclick="runPlaygroundResponsiveCheck()">📐 Responsive Check</button>
+        <button class="action-btn" onclick="copyCurrentPlaygroundHTML()">📋 Copy HTML</button>
+        <button class="action-btn" onclick="downloadCurrentPlaygroundHTML()">💾 Download HTML</button>
+        <button class="action-btn" onclick="exportPlayground('prompt')">📝 N8N Prompt</button>
+        <button class="action-btn" onclick="exportPlayground('json')">📄 N8N JSON</button>
+      </div>
+      <div id="pg-check-report" class="pg-report" style="display:none"></div>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="playground-upload-modal" role="dialog" aria-modal="true" aria-labelledby="pg-upload-title">
+  <div class="modal" style="max-width:980px;height:auto;max-height:92vh">
+    <div class="modal-header"><div class="modal-title" id="pg-upload-title">+ Upload Playground Template</div><button class="modal-close" onclick="closePlaygroundUploadModal()" aria-label="Close">×</button></div>
+    <div class="playground-upload-grid">
+      <input id="pg-up-domain" placeholder="Domain / site e.g. galoz.co.il">
+      <input id="pg-up-agent" placeholder="Agent e.g. GPT 5.5">
+      <input id="pg-up-style" placeholder="Style e.g. Bold Creative">
+      <input id="pg-up-tags" class="wide" placeholder="Tags comma-separated e.g. hebrew, rtl, store">
+      <textarea id="pg-up-html" class="wide" placeholder="Paste full Improved_HTML_Template.html here"></textarea>
+    </div>
+    <div class="modal-footer" style="padding:12px 16px;border-top:1px solid var(--border);display:flex;gap:8px;justify-content:flex-end"><span id="pg-upload-status" class="prompt-status" style="margin-right:auto"></span><button class="action-btn" onclick="closePlaygroundUploadModal()">Cancel</button><button class="action-btn primary" onclick="savePlaygroundUpload()">Save Template</button></div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="playground-export-modal" role="dialog" aria-modal="true" aria-labelledby="pg-export-title">
+  <div class="modal" style="max-width:1100px;height:auto;max-height:90vh">
+    <div class="modal-header"><div class="modal-title" id="pg-export-title">📤 Playground Export</div><button class="modal-close" onclick="closePlaygroundExportModal()" aria-label="Close">×</button></div>
+    <div class="pg-export-box"><div id="pg-export-status" class="pg-pill">Ready</div><pre id="pg-export-content" class="pg-export-content"></pre><div style="display:flex;gap:8px;flex-wrap:wrap"><button class="action-btn" onclick="copyPlaygroundExport()">📋 Copy</button><button class="action-btn" onclick="downloadPlaygroundExport()">💾 Download</button></div></div>
+  </div>
+</div>
 <div id="page-fixer" class="fixer-page" style="display:none">
 
   <!-- Page Header -->
@@ -13531,6 +13657,7 @@ document.addEventListener('click', function(ev){
     const isTemplateImprovements = (name === 'template-improvements');
     const isTemplateConnectors = (name === 'template-connectors');
     const isProductivityHub = (name === 'productivity-hub');
+    const isPlayground = (name === 'playground');
     document.body.classList.toggle('page-kwr-active', isKwr);
     document.body.classList.toggle('page-tasks-active', isTask);
     document.body.classList.toggle('page-productivity-hub-active', isProductivityHub);
@@ -13577,6 +13704,7 @@ document.addEventListener('click', function(ev){
     var templateImprovementsPage = document.getElementById('page-template-improvements');
     var templateConnectorsPage = document.getElementById('page-template-connectors');
     var productivityHubPage = document.getElementById('page-productivity-hub');
+    var playgroundPage = document.getElementById('page-playground');
     var analyticsPage = document.getElementById('page-analytics');
     var settingsPage  = document.getElementById('page-settings');
     var isAnalytics   = (name === 'analytics');
@@ -13593,6 +13721,10 @@ document.addEventListener('click', function(ev){
       productivityHubPage.style.display = isProductivityHub ? 'block' : 'none';
       productivityHubPage.classList.toggle('active', isProductivityHub);
     }
+    if (playgroundPage) {
+      playgroundPage.style.display = isPlayground ? 'block' : 'none';
+      playgroundPage.classList.toggle('active', isPlayground);
+    }
     if (analyticsPage) {
       analyticsPage.style.display = isAnalytics ? 'block' : 'none';
       analyticsPage.classList.toggle('active', isAnalytics);
@@ -13604,6 +13736,7 @@ document.addEventListener('click', function(ev){
     if (isTemplateImprovements) runPageInit('template-improvements', window.initTemplateImprovementsPage);
     if (isTemplateConnectors) runPageInit('template-connectors', window.initTemplateConnectorsPage);
     if (isProductivityHub) runPageInit('productivity-hub', window.initProductivityHubPage);
+    if (isPlayground) runPageInit('playground', window.initPlaygroundPage);
     if (isAnalytics) runPageInit('analytics', window.initAnalyticsPage);
     if (isSettings)  runPageInit('settings', window.initSettingsPage);
     // Update tab buttons
@@ -13620,11 +13753,13 @@ document.addEventListener('click', function(ev){
     var tabTemplateImprovements = document.getElementById('tab-template-improvements');
     var tabTemplateConnectors = document.getElementById('tab-template-connectors');
     var tabProductivityHub = document.getElementById('tab-productivity-hub');
+    var tabPlayground = document.getElementById('tab-playground');
     var tabAnalytics = document.getElementById('tab-analytics');
     var tabSettings  = document.getElementById('tab-settings');
     if (tabTemplateImprovements) { tabTemplateImprovements.classList.toggle('active', isTemplateImprovements); tabTemplateImprovements.setAttribute('aria-selected', isTemplateImprovements ? 'true' : 'false'); }
     if (tabTemplateConnectors) { tabTemplateConnectors.classList.toggle('active', isTemplateConnectors); tabTemplateConnectors.setAttribute('aria-selected', isTemplateConnectors ? 'true' : 'false'); }
     if (tabProductivityHub) { tabProductivityHub.classList.toggle('active', isProductivityHub); tabProductivityHub.setAttribute('aria-selected', isProductivityHub ? 'true' : 'false'); }
+    if (tabPlayground) { tabPlayground.classList.toggle('active', isPlayground); tabPlayground.setAttribute('aria-selected', isPlayground ? 'true' : 'false'); }
     if (tabAnalytics) { tabAnalytics.classList.toggle('active', isAnalytics); tabAnalytics.setAttribute('aria-selected', isAnalytics ? 'true' : 'false'); }
     if (tabSettings)  { tabSettings.classList.toggle('active',  isSettings);  tabSettings.setAttribute('aria-selected',  isSettings  ? 'true' : 'false'); }
 
@@ -24247,6 +24382,113 @@ body:not(.tour-user-started) #tour-backdrop.open{
   function boot(){ cleanupAutoTour(); wrapStartTour(); setTimeout(function(){ cleanupAutoTour(); wrapStartTour(); },2600); }
   if(document.readyState==='loading') document.addEventListener('DOMContentLoaded', boot, {once:true});
   else boot();
+})();
+
+
+/* PLAYGROUND_TAB_PLAN24_2026_04_29 — vanilla JS implementation */
+(function(){
+  var PG = { templates: [], domains: [], view: 'grid', current: null, device: 'desktop', zoom: 1, landscape: false, lastExport: null };
+  var DEVICES = {
+    desktop: {w: 1920, h: 1080, cls: 'desktop'},
+    laptop: {w: 1366, h: 768, cls: 'desktop'},
+    tablet: {w: 768, h: 1024, cls: 'tablet'},
+    mobile: {w: 375, h: 812, cls: 'mobile'},
+    custom: {w: 1024, h: 768, cls: 'desktop'}
+  };
+  function $(id){ return document.getElementById(id); }
+  function esc(s){ return String(s == null ? '' : s).replace(/[&<>"']/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; }); }
+  function bytes(n){ n=Number(n||0); if(n>1024*1024) return (n/1024/1024).toFixed(1)+' MB'; if(n>1024) return Math.round(n/1024)+' KB'; return n+' B'; }
+  function toast(msg){ if (typeof showToast === 'function') showToast(msg); else console.log(msg); }
+  async function api(url, opts){
+    opts = opts || {}; opts.headers = Object.assign({'Content-Type':'application/json'}, opts.headers || {});
+    var r = await fetch(url, opts); var j = await r.json().catch(function(){ return {}; });
+    if(!r.ok || j.ok === false || j.success === false) throw new Error(j.error || ('HTTP '+r.status));
+    return j;
+  }
+  window.loadPlayground = async function(force){
+    var gallery = $('pg-gallery'); if(gallery) gallery.innerHTML = '<div class="playground-empty">Loading Playground templates…</div>';
+    try{
+      var j = await api('/api/playground/templates?limit=500');
+      PG.templates = j.data || []; PG.domains = j.domains || [];
+      populatePlaygroundFilters(); renderPlayground();
+      if(force) toast('Playground refreshed');
+    }catch(e){ if(gallery) gallery.innerHTML = '<div class="playground-empty">Could not load Playground: '+esc(e.message)+'</div>'; }
+  };
+  window.initPlaygroundPage = function(){ if(!PG.templates.length) loadPlayground(false); else renderPlayground(); };
+  function populatePlaygroundFilters(){
+    var domainSel=$('pg-domain-filter'), agentSel=$('pg-agent-filter'); if(!domainSel||!agentSel) return;
+    var currentDomain=domainSel.value, currentAgent=agentSel.value;
+    domainSel.innerHTML='<option value="">All domains</option>' + PG.domains.map(function(d){ return '<option value="'+esc(d.domain)+'">'+esc(d.domain)+' ('+d.count+')</option>'; }).join('');
+    var agents = Array.from(new Set(PG.templates.map(function(t){return t.agent_name||'';}).filter(Boolean))).sort();
+    agentSel.innerHTML='<option value="">All agents</option>' + agents.map(function(a){ return '<option value="'+esc(a)+'">'+esc(a)+'</option>'; }).join('');
+    domainSel.value=currentDomain; agentSel.value=currentAgent;
+  }
+  window.setPlaygroundView = function(view){ PG.view=view==='list'?'list':'grid'; var g=$('pg-view-grid'), l=$('pg-view-list'); if(g)g.classList.toggle('active',PG.view==='grid'); if(l)l.classList.toggle('active',PG.view==='list'); renderPlayground(); };
+  window.renderPlayground = function(){
+    var gallery=$('pg-gallery'), summary=$('pg-summary'); if(!gallery) return;
+    var q=($('pg-search')&&$('pg-search').value||'').toLowerCase().trim();
+    var domain=($('pg-domain-filter')&&$('pg-domain-filter').value||'').toLowerCase();
+    var agent=($('pg-agent-filter')&&$('pg-agent-filter').value||'').toLowerCase();
+    var sort=($('pg-sort')&&$('pg-sort').value||'newest');
+    var rows=PG.templates.slice().filter(function(t){
+      var hay=[t.domain,t.domain_display,t.agent_name,t.agent_model,t.agent_style,(t.tags||[]).join(' ')].join(' ').toLowerCase();
+      return (!q||hay.indexOf(q)>=0) && (!domain||(t.domain||'').toLowerCase()===domain) && (!agent||(t.agent_name||'').toLowerCase()===agent);
+    });
+    rows.sort(function(a,b){ if(sort==='favorite') return (b.is_favorite?1:0)-(a.is_favorite?1:0)||String(b.created_at||'').localeCompare(a.created_at||''); if(sort==='size') return (b.html_size_bytes||0)-(a.html_size_bytes||0); return String(b.created_at||'').localeCompare(a.created_at||''); });
+    if(summary) summary.innerHTML='<span class="pg-pill">🎨 '+rows.length+' templates</span><span class="pg-pill">📁 '+new Set(rows.map(function(t){return t.domain;})).size+' domains</span><span class="pg-pill">🤖 '+new Set(rows.map(function(t){return t.agent_name;})).size+' agents</span><span class="pg-pill">⭐ '+rows.filter(function(t){return t.is_favorite;}).length+' favorites</span>';
+    if(!rows.length){ gallery.innerHTML='<div class="playground-empty">No templates match the current filters. Upload or paste a template to start.</div>'; return; }
+    var byDomain={}; rows.forEach(function(t){ (byDomain[t.domain]||(byDomain[t.domain]=[])).push(t); });
+    gallery.innerHTML=Object.keys(byDomain).sort().map(function(d){ var group=byDomain[d]; return '<section class="playground-domain"><div class="playground-domain-head" onclick="this.parentElement.classList.toggle(\'collapsed\')"><div><div class="playground-domain-title">📁 '+esc(d)+'</div><div class="playground-domain-meta"><span>'+group.length+' templates</span><span>'+esc((group[0].tags||[]).slice(0,4).join(' · '))+'</span></div></div><span class="pg-pill">'+esc(group[0].language||'')+' / '+esc(group[0].direction||'')+'</span></div><div class="playground-grid '+(PG.view==='list'?'list':'')+'">'+group.map(cardHTML).join('')+'</div></section>'; }).join('');
+  };
+  function cardHTML(t){
+    return '<article class="playground-card" data-template-id="'+esc(t.id)+'"><div class="pg-thumb"><iframe sandbox="allow-same-origin" srcdoc="'+esc(t.html_preview || '<div style=&quot;padding:20px;font-family:sans-serif&quot;>Click Preview to load full HTML</div>')+'" title="Template thumbnail"></iframe></div><div class="pg-card-body"><div class="pg-agent"><div>🤖 '+esc(t.agent_name)+'<small>'+esc(t.agent_style||t.agent_model||'')+'</small></div><button class="action-btn" onclick="togglePlaygroundFavorite(\''+esc(t.id)+'\')" title="Favorite">'+(t.is_favorite?'⭐':'☆')+'</button></div><div class="playground-domain-meta"><span>📅 '+esc((t.created_at||'').slice(0,10))+'</span><span>📏 '+bytes(t.html_size_bytes)+'</span><span>'+esc(t.direction||'ltr')+'</span></div><div class="pg-tags">'+(t.tags||[]).slice(0,6).map(function(tag){return '<span class="pg-tag">'+esc(tag)+'</span>';}).join('')+'</div><div class="pg-actions"><button class="action-btn primary" onclick="openPlaygroundPreview(\''+esc(t.id)+'\')">👁 Preview</button><button class="action-btn" onclick="exportPlayground(\'prompt\',\''+esc(t.id)+'\')">📝 Prompt</button><button class="action-btn" onclick="exportPlayground(\'json\',\''+esc(t.id)+'\')">📄 JSON</button><button class="action-btn danger" onclick="deletePlaygroundTemplate(\''+esc(t.id)+'\')">🗑 Delete</button></div></div></article>';
+  }
+  async function getTemplate(id){
+    var existing = PG.templates.find(function(t){return t.id===id && t.html_content;}); if(existing) return existing;
+    var j = await api('/api/playground/templates/'+encodeURIComponent(id));
+    var t = j.template; var idx = PG.templates.findIndex(function(x){return x.id===id;}); if(idx>=0) PG.templates[idx]=Object.assign({}, PG.templates[idx], t); return PG.templates[idx]||t;
+  }
+  window.openPlaygroundPreview = async function(id){
+    try{ PG.current = await getTemplate(id); var title=$('pg-preview-title'); if(title) title.textContent='🎨 HTML Preview — '+PG.current.domain+' — '+PG.current.agent_name; var iframe=$('pg-preview-frame'); if(iframe) iframe.srcdoc=PG.current.html_content||''; var report=$('pg-check-report'); if(report){ report.style.display='none'; report.textContent=''; } updatePlaygroundFrame(); var modal=$('playground-preview-modal'); if(modal) modal.classList.add('open'); }
+    catch(e){ toast('Preview failed: '+e.message); }
+  };
+  window.closePlaygroundPreview=function(){ var m=$('playground-preview-modal'); if(m)m.classList.remove('open'); };
+  window.setPgDevice=function(device){ PG.device=device; document.querySelectorAll('.pg-device-btn[data-device]').forEach(function(b){b.classList.toggle('active',b.dataset.device===device);}); updatePlaygroundFrame(); };
+  window.setPgZoom=function(z){ PG.zoom=z; document.querySelectorAll('.pg-zoom-btn[data-zoom]').forEach(function(b){b.classList.toggle('active',String(z)===b.dataset.zoom);}); updatePlaygroundFrame(); };
+  window.togglePgOrientation=function(){ PG.landscape=!PG.landscape; updatePlaygroundFrame(); };
+  window.updatePlaygroundFrame=function(){
+    var frame=$('pg-device-frame'); if(!frame) return; var dev=Object.assign({}, DEVICES[PG.device]||DEVICES.desktop);
+    if(PG.device==='custom'){ dev.w=Number(($('pg-custom-w')||{}).value)||1024; dev.h=Number(($('pg-custom-h')||{}).value)||768; }
+    var w=PG.landscape?dev.h:dev.w, h=PG.landscape?dev.w:dev.h; frame.className='pg-device-frame '+dev.cls; frame.style.width=Math.round(w*PG.zoom)+'px'; frame.style.height=Math.round(h*PG.zoom)+'px'; var iframe=frame.querySelector('iframe'); if(iframe){ iframe.style.width=w+'px'; iframe.style.height=h+'px'; iframe.style.transform='scale('+PG.zoom+')'; iframe.style.transformOrigin='top left'; }
+  };
+  function checkHTML(html){
+    var checks=[]; function add(ok,label){checks.push((ok?'✅ ':'❌ ')+label);}
+    add(/<!--\s*wp:html\s*-->/.test(html),'WordPress wp:html wrapper'); add(!/<script\b/i.test(html),'No <script> tags'); add(!/<link\b[^>]*stylesheet/i.test(html),'No external stylesheets'); add(!/<\/?(html|body)\b/i.test(html),'No full-page html/body wrappers'); add(!/<\/?(header|footer|nav)\b/i.test(html),'No fake header/footer/nav tags'); add(/dir=["']rtl["']|dir=["']ltr["']/i.test(html),'Direction declared'); add(/lang=["'][a-z-]+["']/i.test(html),'Language declared'); add(/max-width\s*:\s*100%|width\s*:\s*100%/i.test(html),'Fluid width/image rule present'); add(/@media|clamp\(/i.test(html),'Responsive breakpoint/fluid typography present'); add(/:hover/i.test(html),'Hover affordances present'); return checks.join('\n');
+  }
+  window.runPlaygroundCompatibilityCheck=function(){ if(!PG.current) return; var r=$('pg-check-report'); if(r){ r.style.display='block'; r.textContent='🔌 WordPress Compatibility Check — '+PG.current.domain+' / '+PG.current.agent_name+'\n\n'+checkHTML(PG.current.html_content||''); } };
+  window.runPlaygroundResponsiveCheck=function(){ if(!PG.current) return; var html=PG.current.html_content||''; var report=['📐 Responsive Device Check — '+PG.current.domain,'','Desktop 1920×1080: preview selectable','Laptop 1366×768: preview selectable','Tablet 768×1024: preview selectable','Mobile 375×812: preview selectable','',(/overflow-x\s*:\s*hidden|max-width\s*:\s*100%|grid-template-columns/i.test(html)?'✅ Contains anti-overflow/fluid layout rules':'⚠️ Add explicit anti-overflow/fluid layout rules'),(/@media\s*\(/i.test(html)?'✅ Contains CSS media queries':'⚠️ No media query found'),(/min-height\s*:\s*4[48]px|padding\s*:/i.test(html)?'✅ Likely touch-friendly controls':'⚠️ Verify touch targets manually')].join('\n'); var r=$('pg-check-report'); if(r){r.style.display='block';r.textContent=report;} };
+  window.copyCurrentPlaygroundHTML=async function(){ if(!PG.current) return; await navigator.clipboard.writeText(PG.current.html_content||''); toast('HTML copied'); };
+  window.downloadCurrentPlaygroundHTML=function(){ if(!PG.current) return; downloadText((PG.current.domain||'template')+'-'+(PG.current.agent_name||'agent')+'.html', PG.current.html_content||'', 'text/html'); };
+  function downloadText(name, content, type){ var blob=new Blob([content],{type:type||'text/plain'}); var a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download=name.replace(/[^a-z0-9._-]+/gi,'-'); document.body.appendChild(a); a.click(); setTimeout(function(){URL.revokeObjectURL(a.href);a.remove();},500); }
+  window.exportPlayground=async function(kind,id){
+    try{ var t=id?await getTemplate(id):PG.current; if(!t) throw new Error('Select a template first'); var j=await api('/api/playground/templates/'+encodeURIComponent(t.id)+'/export/'+kind,{method:'POST',body:'{}'}); PG.lastExport=j.export; var m=$('playground-export-modal'), c=$('pg-export-content'), s=$('pg-export-status'), title=$('pg-export-title'); if(title) title.textContent=(kind==='json'?'📄 N8N JSON Workflow':'📝 N8N Improve Prompt')+' — '+t.domain; if(s) s.textContent='✅ Generated '+bytes(j.export.export_size_bytes)+' · manual import/download only'; if(c) c.textContent=j.export.export_content||''; if(m)m.classList.add('open'); await loadPlayground(false); }
+    catch(e){ toast('Export failed: '+e.message); }
+  };
+  window.closePlaygroundExportModal=function(){ var m=$('playground-export-modal'); if(m)m.classList.remove('open'); };
+  window.copyPlaygroundExport=async function(){ if(PG.lastExport) { await navigator.clipboard.writeText(PG.lastExport.export_content||''); toast('Export copied'); } };
+  window.downloadPlaygroundExport=function(){ if(!PG.lastExport) return; downloadText('playground-'+PG.lastExport.export_type+(PG.lastExport.export_type==='n8n_json'?'.json':'.txt'), PG.lastExport.export_content||'', PG.lastExport.export_type==='n8n_json'?'application/json':'text/plain'); };
+  window.openPlaygroundUploadModal=function(){ var m=$('playground-upload-modal'); if(m)m.classList.add('open'); };
+  window.closePlaygroundUploadModal=function(){ var m=$('playground-upload-modal'); if(m)m.classList.remove('open'); };
+  window.savePlaygroundUpload=async function(){
+    var status=$('pg-upload-status'); try{ var payload={domain:($('pg-up-domain')||{}).value||'', agent_name:($('pg-up-agent')||{}).value||'Hermes Agent', agent_style:($('pg-up-style')||{}).value||'Custom', tags:($('pg-up-tags')||{}).value||'', html_content:($('pg-up-html')||{}).value||''}; if(!payload.html_content.trim()) throw new Error('Paste HTML first'); if(status)status.textContent='Saving…'; await api('/api/playground/templates',{method:'POST',body:JSON.stringify(payload)}); if(status)status.textContent='Saved'; closePlaygroundUploadModal(); ['pg-up-domain','pg-up-agent','pg-up-style','pg-up-tags','pg-up-html'].forEach(function(id){var el=$(id); if(el) el.value='';}); await loadPlayground(true); }catch(e){ if(status)status.textContent='Error: '+e.message; }
+  };
+  window.togglePlaygroundFavorite=async function(id){ try{ await api('/api/playground/templates/'+encodeURIComponent(id)+'/favorite',{method:'POST',body:'{}'}); await loadPlayground(false); }catch(e){ toast('Favorite failed: '+e.message); } };
+
+  window.deletePlaygroundTemplate=async function(id){
+    if(!id || !confirm('Delete this Playground template?')) return;
+    try{ await api('/api/playground/templates/'+encodeURIComponent(id),{method:'DELETE',headers:{}}); if(PG.current && PG.current.id===id) closePlaygroundPreview(); await loadPlayground(true); }
+    catch(e){ toast('Delete failed: '+e.message); }
+  };
 })();
 </script>
 

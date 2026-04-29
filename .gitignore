@@ -5,6 +5,8 @@ __pycache__/
 data/users.json
 data/tasks.json
 data/activity/
+data/_backups/
+playground/exports/
 *.pyc
 .pytest_cache/
 index.html.bak*
