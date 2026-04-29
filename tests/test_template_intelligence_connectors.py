@@ -1,6 +1,12 @@
 from pathlib import Path
 from unittest import mock
+from http.server import HTTPServer
+import json
 import sys
+import threading
+import time
+import urllib.error
+import urllib.request
 
 import pytest
 
@@ -11,6 +17,34 @@ if str(ROOT) not in sys.path:
 import server
 
 INDEX_HTML = ROOT / 'index.html'
+
+
+class ReusableHTTPServer(HTTPServer):
+    allow_reuse_address = True
+
+
+def _post_to_temp_server(path, payload=None):
+    httpd = ReusableHTTPServer(('127.0.0.1', 0), server.DashboardHandler)
+    port = httpd.server_port
+    thread = threading.Thread(target=httpd.serve_forever, daemon=True)
+    thread.start()
+    time.sleep(0.05)
+    try:
+        body = json.dumps(payload or {}).encode('utf-8')
+        request = urllib.request.Request(
+            f'http://127.0.0.1:{port}{path}',
+            method='POST',
+            headers={'Content-Type': 'application/json'},
+            data=body,
+        )
+        try:
+            with urllib.request.urlopen(request, timeout=10) as response:
+                return response.status, response.read().decode('utf-8', 'replace')
+        except urllib.error.HTTPError as exc:
+            return exc.code, exc.read().decode('utf-8', 'replace')
+    finally:
+        httpd.shutdown()
+        thread.join(timeout=2)
 
 
 def test_template_connectors_ui_and_navigation_markers_present():
@@ -37,6 +71,26 @@ def test_show_page_knows_template_connectors_tab():
     assert "var templateConnectorsPage = document.getElementById('page-template-connectors');" in html
     assert "runPageInit('template-connectors', window.initTemplateConnectorsPage)" in html
     assert "tabTemplateConnectors.setAttribute('aria-selected', isTemplateConnectors ? 'true' : 'false')" in html
+
+
+def test_login_post_routes_are_registered_and_unknown_post_returns_json(monkeypatch):
+    monkeypatch.setattr(server, '_dashboard_auth_enabled', lambda: False)
+
+    def fake_login(handler, payload):
+        return server.json_response(handler, 200, {'ok': True, 'seen': payload.get('username')})
+
+    monkeypatch.setattr(server, '_stage8_login', fake_login)
+    status, body = _post_to_temp_server('/api/login', {'username': 'smoke'})
+    assert status == 200
+    assert json.loads(body) == {'ok': True, 'seen': 'smoke'}
+
+    status, body = _post_to_temp_server('/api/auth/login', {'username': 'smoke2'})
+    assert status == 200
+    assert json.loads(body) == {'ok': True, 'seen': 'smoke2'}
+
+    status, body = _post_to_temp_server('/api/not-a-real-post-route', {})
+    assert status == 404
+    assert json.loads(body)['error'] == 'POST endpoint not found'
 
 
 def test_connector_catalog_has_priority_one_pack():
