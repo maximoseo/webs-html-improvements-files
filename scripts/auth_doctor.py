@@ -76,6 +76,8 @@ def main() -> int:
     parser.add_argument("--password", default=os.getenv("TEST_ADMIN_PASSWORD", ""))
     parser.add_argument("--bad-attempts", type=int, default=12)
     parser.add_argument("--forwarded-ip", default="203.0.113.77")
+    parser.add_argument("--spoof-forwarded-ip", action="store_true", help="Opt-in: send spoofed proxy/Cloudflare IP headers for controlled proxy tests only")
+    parser.add_argument("--include-rate-limit", action="store_true", help="Opt-in: run bad-login rate-limit probe; disabled by default for production safety")
     args = parser.parse_args()
 
     summary: dict[str, object] = {
@@ -105,10 +107,17 @@ def main() -> int:
 
     cookie_jar = CookieJar()
     primary_headers = {
-        "CF-Connecting-IP": args.forwarded_ip,
-        "X-Forwarded-For": f"{args.forwarded_ip}, 10.0.0.1",
-        "X-Real-IP": args.forwarded_ip,
+        "Accept": "application/json",
+        "User-Agent": "Mozilla/5.0 auth-doctor",
+        "Origin": args.base_url.rstrip("/"),
+        "Referer": args.base_url.rstrip("/") + "/login",
     }
+    if args.spoof_forwarded_ip:
+        primary_headers.update({
+            "CF-Connecting-IP": args.forwarded_ip,
+            "X-Forwarded-For": f"{args.forwarded_ip}, 10.0.0.1",
+            "X-Real-IP": args.forwarded_ip,
+        })
     code, headers, body = _request(
         args.base_url,
         "/api/auth/login",
@@ -171,42 +180,55 @@ def main() -> int:
 
     rate_codes: list[int] = []
     retry_after = None
-    forwarded_headers = {
-        "CF-Connecting-IP": args.forwarded_ip,
-        "X-Forwarded-For": f"{args.forwarded_ip}, 10.0.0.1",
-        "X-Real-IP": args.forwarded_ip,
-    }
-    for _ in range(max(1, args.bad_attempts)):
-        code, headers, body = _request(
-            args.base_url,
-            "/api/auth/login",
-            method="POST",
-            body={"user": args.user, "password": "definitely-wrong-password"},
-            headers=forwarded_headers,
-        )
-        rate_codes.append(code)
-        if code == 429:
-            retry_after = headers.get("Retry-After")
+    forwarded_headers = dict(primary_headers)
+    if args.include_rate_limit:
+        for _ in range(max(1, args.bad_attempts)):
+            code, headers, body = _request(
+                args.base_url,
+                "/api/auth/login",
+                method="POST",
+                body={"user": args.user, "password": "definitely-wrong-password"},
+                headers=forwarded_headers,
+            )
+            rate_codes.append(code)
+            if code == 429:
+                retry_after = headers.get("Retry-After")
+                summary["checks"]["rate_limit"] = {
+                    "status": code,
+                    "ok": True,
+                    "retry_after": retry_after,
+                    "body": _sanitize(_decode_json(body)),
+                    "attempts": len(rate_codes),
+                    "codes": rate_codes,
+                }
+                break
+        else:
             summary["checks"]["rate_limit"] = {
-                "status": code,
-                "ok": True,
+                "status": rate_codes[-1] if rate_codes else None,
+                "ok": False,
                 "retry_after": retry_after,
-                "body": _sanitize(_decode_json(body)),
                 "attempts": len(rate_codes),
                 "codes": rate_codes,
             }
-            break
+            summary["warnings"].append("Rate limit did not trigger within the configured bad attempts window.")
     else:
         summary["checks"]["rate_limit"] = {
-            "status": rate_codes[-1] if rate_codes else None,
-            "ok": False,
-            "retry_after": retry_after,
-            "attempts": len(rate_codes),
-            "codes": rate_codes,
+            "status": None,
+            "ok": None,
+            "skipped": True,
+            "reason": "rate-limit probe disabled by default; pass --include-rate-limit to run it",
+            "attempts": 0,
+            "codes": [],
         }
-        summary["warnings"].append("Rate limit did not trigger within the configured bad attempts window.")
 
     print(json.dumps(summary, indent=2, ensure_ascii=False))
+    if args.password:
+        primary = summary["checks"].get("login_primary", {})
+        me_after = summary["checks"].get("auth_me_after_primary_login", {}).get("body", {})
+        login_ok = bool(primary.get("ok") and primary.get("set_cookie"))
+        me_ok = bool(isinstance(me_after, dict) and me_after.get("user"))
+        if not (login_ok and me_ok):
+            return 2
     return 0
 
 
