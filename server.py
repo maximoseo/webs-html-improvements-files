@@ -32,6 +32,8 @@ INDEX = ROOT / 'index.html'
 DATA = ROOT / 'data.json'
 MAP_FILE = ROOT / 'n8n-workflow-map.json'
 TASKS_FILE = ROOT / 'data' / 'tasks.json'
+PLAYGROUND_FILE = ROOT / 'data' / 'playground.json'
+PLAYGROUND_EXPORTS_DIR = ROOT / 'playground' / 'exports'
 REPO = 'maximoseo/webs-html-improvements-files'
 RAW_BASE = f'https://raw.githubusercontent.com/{REPO}/main'
 DEFAULT_N8N_BASE = 'https://websiseo.app.n8n.cloud'
@@ -118,6 +120,237 @@ def _tasks_save(tasks: list) -> None:
     TASKS_FILE.write_text(json.dumps(tasks, ensure_ascii=False, indent=2), encoding='utf-8')
 
 
+def _playground_now() -> str:
+    return datetime.datetime.utcnow().replace(microsecond=0).isoformat() + 'Z'
+
+
+def _playground_default_data() -> dict:
+    return {'templates': [], 'exports': [], 'preferences': {'theme': 'dark', 'view': 'grid', 'sort': 'newest', 'default_device': 'desktop'}}
+
+
+def _playground_load() -> dict:
+    try:
+        if not PLAYGROUND_FILE.exists():
+            return _playground_default_data()
+        data = json.loads(PLAYGROUND_FILE.read_text(encoding='utf-8'))
+        if not isinstance(data, dict):
+            return _playground_default_data()
+        data.setdefault('templates', [])
+        data.setdefault('exports', [])
+        data.setdefault('preferences', {'theme': 'dark', 'view': 'grid', 'sort': 'newest', 'default_device': 'desktop'})
+        return data
+    except Exception:
+        return _playground_default_data()
+
+
+def _playground_save(data: dict) -> None:
+    PLAYGROUND_FILE.parent.mkdir(parents=True, exist_ok=True)
+    tmp = PLAYGROUND_FILE.with_suffix('.json.tmp')
+    tmp.write_text(json.dumps(data, ensure_ascii=False, indent=2), encoding='utf-8')
+    tmp.replace(PLAYGROUND_FILE)
+
+
+def _playground_slug(value: str, fallback: str = 'template') -> str:
+    value = (value or '').strip().lower()
+    value = re.sub(r'^https?://', '', value)
+    value = re.sub(r'[^a-z0-9._-]+', '-', value)
+    value = value.strip('-._')
+    return value[:80] or fallback
+
+
+def _playground_guess_domain(raw: str) -> str:
+    raw = (raw or '').strip()
+    if not raw:
+        return 'unknown.local'
+    if raw.startswith('http://') or raw.startswith('https://'):
+        try:
+            return urllib.parse.urlparse(raw).netloc.lower().lstrip('www.') or raw
+        except Exception:
+            pass
+    return raw.lower().replace(' ', '-')
+
+
+def _playground_enrich_template(row: dict) -> dict:
+    html = row.get('html_content') or row.get('htmlContent') or ''
+    domain = _playground_guess_domain(row.get('domain') or row.get('domain_display') or row.get('domainDisplay') or 'unknown.local')
+    now = _playground_now()
+    direction = (row.get('direction') or ('rtl' if re.search(r'dir=["\']rtl|lang=["\']he|[\u0590-\u05ff]', html, re.I) else 'ltr')).lower()
+    language = (row.get('language') or ('he' if direction == 'rtl' or re.search(r'[\u0590-\u05ff]', html) else 'en')).lower()
+    tags = row.get('tags') or []
+    if isinstance(tags, str):
+        tags = [t.strip() for t in re.split(r'[,#]', tags) if t.strip()]
+    out = {
+        'id': row.get('id') or str(uuid.uuid4()),
+        'domain': domain,
+        'domain_display': row.get('domain_display') or row.get('domainDisplay') or domain,
+        'agent_name': row.get('agent_name') or row.get('agentName') or 'Hermes Agent',
+        'agent_model': row.get('agent_model') or row.get('agentModel') or 'manual-upload',
+        'agent_style': row.get('agent_style') or row.get('agentStyle') or 'Custom',
+        'html_content': html,
+        'html_size_bytes': len(html.encode('utf-8')),
+        'language': language,
+        'direction': 'rtl' if direction == 'rtl' else 'ltr',
+        'industry': row.get('industry') or '',
+        'tags': tags,
+        'is_favorite': bool(row.get('is_favorite') if 'is_favorite' in row else row.get('isFavorite', False)),
+        'sort_order': int(row.get('sort_order') or row.get('sortOrder') or 0),
+        'n8n_prompt_generated': bool(row.get('n8n_prompt_generated') or row.get('n8nPromptGenerated') or False),
+        'n8n_prompt_generated_at': row.get('n8n_prompt_generated_at') or row.get('n8nPromptGeneratedAt'),
+        'n8n_json_generated': bool(row.get('n8n_json_generated') or row.get('n8nJsonGenerated') or False),
+        'n8n_json_generated_at': row.get('n8n_json_generated_at') or row.get('n8nJsonGeneratedAt'),
+        'uploaded_by': row.get('uploaded_by') or row.get('uploadedBy') or 'user',
+        'source': row.get('source') or 'upload',
+        'obsidian_synced': bool(row.get('obsidian_synced') or False),
+        'obsidian_path': row.get('obsidian_path'),
+        'github_synced': bool(row.get('github_synced') or False),
+        'github_path': row.get('github_path'),
+        'created_at': row.get('created_at') or row.get('createdAt') or now,
+        'updated_at': now,
+    }
+    return out
+
+
+def _playground_public_template(row: dict, include_html: bool = False) -> dict:
+    out = dict(row)
+    if not include_html:
+        out.pop('html_content', None)
+    return out
+
+
+def _playground_domains(templates: list) -> list:
+    grouped = {}
+    for t in templates:
+        domain = t.get('domain') or 'unknown.local'
+        g = grouped.setdefault(domain, {'domain': domain, 'domain_display': t.get('domain_display') or domain, 'count': 0, 'agents': set(), 'tags': set(), 'last_upload': ''})
+        g['count'] += 1
+        if t.get('agent_name'):
+            g['agents'].add(t.get('agent_name'))
+        for tag in t.get('tags') or []:
+            g['tags'].add(str(tag))
+        if (t.get('created_at') or '') > g['last_upload']:
+            g['last_upload'] = t.get('created_at') or ''
+    out = []
+    for g in grouped.values():
+        g['agents'] = sorted(g['agents'])
+        g['tags'] = sorted(g['tags'])
+        out.append(g)
+    return sorted(out, key=lambda x: (x.get('last_upload') or ''), reverse=True)
+
+
+def _playground_seed_if_empty(data: dict) -> bool:
+    if data.get('templates'):
+        return False
+    samples = []
+    candidates = [
+        ROOT / 'galoz.co.il' / 'Hermes Success Only Best Pick' / '2026-04-28' / 'Improved_HTML_Template.html',
+        ROOT / 'powerplug.ai' / 'GPT 5.5 Agent (openai-gpt-5.5)' / '2026-04-28' / 'Improved_HTML_Template.html',
+        ROOT / 'powerplug.ai' / 'Kimi K2.6 Agent (moonshotai-kimi-k2.6)' / '2026-04-28' / 'Improved_HTML_Template.html',
+    ]
+    for fp in candidates:
+        try:
+            if fp.exists():
+                parts = fp.relative_to(ROOT).parts
+                samples.append(_playground_enrich_template({
+                    'domain': parts[0],
+                    'agent_name': parts[1] if len(parts) > 2 else 'Hermes Agent',
+                    'agent_model': parts[1] if len(parts) > 2 else 'manual',
+                    'agent_style': 'Imported latest set',
+                    'html_content': fp.read_text(encoding='utf-8', errors='replace'),
+                    'source': 'auto',
+                    'github_path': str(fp.relative_to(ROOT)),
+                    'github_synced': True,
+                    'tags': ['auto-import', 'html-template'],
+                }))
+        except Exception:
+            pass
+    if not samples:
+        samples.append(_playground_enrich_template({
+            'domain': 'demo.local',
+            'agent_name': 'Hermes Agent',
+            'agent_model': 'demo',
+            'agent_style': 'Responsive demo',
+            'tags': ['demo', 'responsive'],
+            'html_content': '<!-- wp:html --><article lang="he" dir="rtl" style="font-family:Arial,sans-serif;max-width:860px;margin:auto;padding:32px"><h2>תבנית לדוגמה</h2><p>ה־Playground מציג תצוגה חיה של HTML, בדיקות רספונסיביות וייצוא N8N.</p></article><!-- /wp:html -->',
+            'source': 'auto',
+        }))
+    data['templates'] = samples
+    return True
+
+
+def _playground_generate_prompt(template: dict) -> str:
+    direction = template.get('direction') or 'ltr'
+    language = template.get('language') or 'en'
+    return f"""# N8N Improve Prompt — {template.get('domain')} / {template.get('agent_name')}
+
+You are improving a WordPress-safe HTML article template.
+
+## Source template metadata
+- Domain: {template.get('domain')}
+- Agent: {template.get('agent_name')} ({template.get('agent_model')})
+- Style: {template.get('agent_style')}
+- Language: {language}
+- Direction: {direction}
+
+## Mandatory output rules
+1. Return exactly three files: Improved_HTML_Template.html, Improved_N8N_Prompt.txt, Improved_N8N_Workflow.json.
+2. HTML must be WordPress HTML-block compatible, scoped, responsive for desktop/laptop/tablet/mobile, and must not include external CSS/JS/fonts.
+3. Keep real client content, verified contact links, verified product-page links/images for ecommerce, author/about near the end, CSS-only hover affordances, lower TOC, and no fake site header/footer.
+4. Preserve language and direction: lang={language}, dir={direction}.
+
+## HTML template to improve
+```html
+{template.get('html_content','')}
+```
+"""
+
+
+def _playground_generate_workflow(template: dict, prompt: str) -> dict:
+    return {
+        'name': f"Playground Improve — {template.get('domain')} — {template.get('agent_name')}",
+        'active': False,
+        'nodes': [
+            {'id': 'manual-trigger', 'name': 'Manual Trigger', 'type': 'n8n-nodes-base.manualTrigger', 'typeVersion': 1, 'position': [0, 0], 'parameters': {}},
+            {'id': 'improve-prompt', 'name': 'HTML Template Generator', 'type': 'n8n-nodes-base.openAi', 'typeVersion': 1, 'position': [260, 0], 'parameters': {'prompt': prompt, 'maxTokens': 12000}},
+            {'id': 'wordpress-draft', 'name': 'Post to WordPress Draft', 'type': 'n8n-nodes-base.wordpress', 'typeVersion': 1, 'position': [520, 0], 'parameters': {'resource': 'post', 'operation': 'create', 'status': 'draft'}},
+        ],
+        'connections': {'Manual Trigger': {'main': [[{'node': 'HTML Template Generator', 'type': 'main', 'index': 0}]]}, 'HTML Template Generator': {'main': [[{'node': 'Post to WordPress Draft', 'type': 'main', 'index': 0}]]}},
+        'settings': {'executionOrder': 'v1'},
+        'meta': {'generatedBy': 'Hermes Playground', 'manualImportOnly': True, 'templateId': template.get('id')},
+    }
+
+
+def _playground_add_export(data: dict, template: dict, export_type: str, content: str) -> dict:
+    now = _playground_now()
+    row = {
+        'id': str(uuid.uuid4()),
+        'template_id': template.get('id'),
+        'export_type': export_type,
+        'export_content': content,
+        'export_size_bytes': len(content.encode('utf-8')),
+        'generated_by': 'system',
+        'version': 1,
+        'created_at': now,
+    }
+    data.setdefault('exports', []).append(row)
+    if export_type == 'n8n_prompt':
+        template['n8n_prompt_generated'] = True
+        template['n8n_prompt_generated_at'] = now
+    if export_type == 'n8n_json':
+        template['n8n_json_generated'] = True
+        template['n8n_json_generated_at'] = now
+    try:
+        export_dir = PLAYGROUND_EXPORTS_DIR / _playground_slug(template.get('domain'))
+        export_dir.mkdir(parents=True, exist_ok=True)
+        stem = f"{_playground_slug(template.get('agent_name'))}-{export_type}-{now[:10]}"
+        suffix = '.txt' if export_type == 'n8n_prompt' else '.json'
+        fp = export_dir / f"{stem}{suffix}"
+        fp.write_text(content, encoding='utf-8')
+        row['github_path'] = str(fp.relative_to(ROOT))
+    except Exception:
+        pass
+    return row
+
+
 def _cache_control_for(content_type: str, path: str = '') -> str:
     """Pick Cache-Control header value based on content type & path.
     Static assets cache 1 hour; HTML/JSON never cache; everything else no-cache."""
@@ -181,8 +414,9 @@ _STAGE8_PUBLIC_PATHS = {
     '/login', '/login.html', '/static/login.css', '/api/login', '/api/reset-password',
     '/api/fixer/analyze', '/api/kwr/ensemble', '/api/delete-agent', '/api/kwr/save-obsidian', '/api/kwr/update-rows',
     '/api/csrf', '/api/version', '/healthz', '/api/studio/improve/rules', '/api/studio/improve',
+    '/api/playground/templates', '/api/playground/domains', '/api/preferences',
 }
-_STAGE8_PUBLIC_PREFIXES = ('/static/', '/assets/', '/css/', '/js/', '/img/', '/fonts/')
+_STAGE8_PUBLIC_PREFIXES = ('/static/', '/assets/', '/css/', '/js/', '/img/', '/fonts/', '/api/playground/templates/', '/api/playground/exports/')
 
 def _stage8_public_path(path):
     return path in _STAGE8_PUBLIC_PATHS or any(path.startswith(p) for p in _STAGE8_PUBLIC_PREFIXES)
@@ -2974,7 +3208,8 @@ _R3_CSRF_ENABLED = os.environ.get('DASH_CSRF', '1') not in ('0','false','False',
 _R3_CSRF_EXEMPT = (
     '/api/auth/login', '/api/auth/request-reset', '/api/auth/reset',
     '/api/n8n/webhook', '/login', '/api/csrf', '/metrics', '/api/login', '/api/reset-password',
-    '/api/fixer/analyze', '/api/kwr/ensemble', '/api/delete-agent', '/api/kwr/save-obsidian', '/api/kwr/update-rows', '/api/radar/run'
+    '/api/fixer/analyze', '/api/kwr/ensemble', '/api/delete-agent', '/api/kwr/save-obsidian', '/api/kwr/update-rows', '/api/radar/run',
+    '/api/playground/templates', '/api/playground/templates/', '/api/playground/exports/', '/api/preferences'
 )
 
 def _r3_csrf_token():
@@ -3409,6 +3644,62 @@ body{{font-family:Arial;padding:24px}}h1{{color:#333}}pre{{background:#f4f4f4;pa
         # TEMPLATE_INTELLIGENCE_CONNECTORS_API_2026_04_29 - read-only connector catalog.
         if parsed.path == '/api/template-connectors/catalog':
             return json_response(self, 200, _template_connector_catalog())
+
+        # PLAYGROUND_API_2026_04_29 - Plan #24 template preview/testing hub.
+        if parsed.path == '/api/playground/templates':
+            try:
+                qs = urllib.parse.parse_qs(parsed.query)
+                with threading.Lock():
+                    data = _playground_load()
+                    if _playground_seed_if_empty(data):
+                        _playground_save(data)
+                rows = list(data.get('templates', []))
+                domain = (qs.get('domain') or [''])[0].strip().lower()
+                agent = (qs.get('agent') or [''])[0].strip().lower()
+                q = (qs.get('q') or [''])[0].strip().lower()
+                sort = (qs.get('sort') or ['newest'])[0]
+                try:
+                    limit = min(max(int((qs.get('limit') or ['100'])[0]), 1), 500)
+                except Exception:
+                    limit = 100
+                if domain:
+                    rows = [r for r in rows if (r.get('domain') or '').lower() == domain]
+                if agent:
+                    rows = [r for r in rows if agent in (r.get('agent_name') or '').lower() or agent in (r.get('agent_model') or '').lower()]
+                if q:
+                    rows = [r for r in rows if q in ' '.join([str(r.get('domain','')), str(r.get('domain_display','')), str(r.get('agent_name','')), str(r.get('agent_style','')), ' '.join(r.get('tags') or [])]).lower()]
+                if sort == 'favorite':
+                    rows = sorted(rows, key=lambda r: (not r.get('is_favorite'), r.get('created_at','')), reverse=False)
+                elif sort == 'size':
+                    rows = sorted(rows, key=lambda r: int(r.get('html_size_bytes') or 0), reverse=True)
+                else:
+                    rows = sorted(rows, key=lambda r: r.get('created_at',''), reverse=True)
+                public = [_playground_public_template(r, include_html=False) for r in rows[:limit]]
+                return json_response(self, 200, {'success': True, 'ok': True, 'data': public, 'domains': _playground_domains(data.get('templates', [])), 'total': len(rows)})
+            except Exception as exc:
+                return json_response(self, 500, {'ok': False, 'success': False, 'error': str(exc)})
+        if parsed.path == '/api/playground/domains':
+            data = _playground_load()
+            if _playground_seed_if_empty(data):
+                _playground_save(data)
+            return json_response(self, 200, {'ok': True, 'success': True, 'domains': _playground_domains(data.get('templates', []))})
+        if parsed.path.startswith('/api/playground/templates/'):
+            parts = parsed.path.strip('/').split('/')
+            if len(parts) == 4 and parts[:3] == ['api', 'playground', 'templates']:
+                template_id = parts[3]
+                data = _playground_load()
+                row = next((r for r in data.get('templates', []) if r.get('id') == template_id), None)
+                if not row:
+                    return json_response(self, 404, {'ok': False, 'success': False, 'error': 'template not found'})
+                return json_response(self, 200, {'ok': True, 'success': True, 'template': _playground_public_template(row, include_html=True)})
+        if parsed.path.startswith('/api/playground/exports/'):
+            template_id = parsed.path.rsplit('/', 1)[-1]
+            data = _playground_load()
+            exports = [e for e in data.get('exports', []) if e.get('template_id') == template_id]
+            return json_response(self, 200, {'ok': True, 'success': True, 'exports': exports})
+        if parsed.path == '/api/preferences':
+            data = _playground_load()
+            return json_response(self, 200, {'ok': True, 'success': True, 'preferences': data.get('preferences', {})})
 
         # PRODUCTIVITY_HUB_API_2026_04_27 - additive backend foundation routes.
         if parsed.path == '/api/productivity/summary':
@@ -4614,6 +4905,7 @@ body{{font-family:Arial;padding:24px}}h1{{color:#333}}pre{{background:#f4f4f4;pa
                 self._send_json(500, {'success': False, 'error': str(e)})
             return
 
+        # PRODUCTIVITY_HUB_API_POST_2026_04_27 - additive persisted notifications/audit.
         if parsed.path == '/api/productivity/notifications':
             try:
                 payload = read_request_json(self) or {}
@@ -6316,6 +6608,75 @@ body{{font-family:Arial;padding:24px}}h1{{color:#333}}pre{{background:#f4f4f4;pa
             except Exception as exc:
                 return json_response(self, 502, {'ok': False, 'error': str(exc)})
 
+        # PLAYGROUND_API_POST_2026_04_29 - local persisted Playground actions.
+        if parsed.path == '/api/playground/templates':
+            try:
+                content_length = int(self.headers.get('Content-Length', '0') or '0')
+                if content_length > 900000:
+                    return json_response(self, 413, {'ok': False, 'success': False, 'error': 'request too large'})
+                payload = read_request_json(self) or {}
+                row = _playground_enrich_template(payload)
+                if not row.get('html_content'):
+                    return json_response(self, 400, {'ok': False, 'success': False, 'error': 'html_content is required'})
+                data = _playground_load()
+                data.setdefault('templates', []).append(row)
+                try:
+                    domain_dir = ROOT / _playground_slug(row.get('domain')) / _playground_slug(row.get('agent_name')) / row['created_at'][:10]
+                    domain_dir.mkdir(parents=True, exist_ok=True)
+                    fp = domain_dir / 'Improved_HTML_Template.html'
+                    fp.write_text(row['html_content'], encoding='utf-8')
+                    row['github_path'] = str(fp.relative_to(ROOT))
+                    row['github_synced'] = True
+                except Exception:
+                    pass
+                _playground_save(data)
+                return json_response(self, 200, {'ok': True, 'success': True, 'template': _playground_public_template(row, include_html=True)})
+            except Exception as exc:
+                return json_response(self, 500, {'ok': False, 'success': False, 'error': str(exc)})
+        if parsed.path.startswith('/api/playground/templates/'):
+            parts = parsed.path.strip('/').split('/')
+            # /api/playground/templates/:id/favorite
+            if len(parts) == 5 and parts[:3] == ['api', 'playground', 'templates'] and parts[4] == 'favorite':
+                template_id = parts[3]
+                data = _playground_load()
+                row = next((r for r in data.get('templates', []) if r.get('id') == template_id), None)
+                if not row:
+                    return json_response(self, 404, {'ok': False, 'success': False, 'error': 'template not found'})
+                row['is_favorite'] = not bool(row.get('is_favorite'))
+                row['updated_at'] = _playground_now()
+                _playground_save(data)
+                return json_response(self, 200, {'ok': True, 'success': True, 'template': _playground_public_template(row, include_html=False)})
+            # /api/playground/templates/:id/export/prompt|json
+            if len(parts) == 6 and parts[:3] == ['api', 'playground', 'templates'] and parts[4] == 'export':
+                template_id, export_kind = parts[3], parts[5]
+                data = _playground_load()
+                row = next((r for r in data.get('templates', []) if r.get('id') == template_id), None)
+                if not row:
+                    return json_response(self, 404, {'ok': False, 'success': False, 'error': 'template not found'})
+                prompt = _playground_generate_prompt(row)
+                if export_kind == 'prompt':
+                    export = _playground_add_export(data, row, 'n8n_prompt', prompt)
+                elif export_kind == 'json':
+                    workflow = _playground_generate_workflow(row, prompt)
+                    export = _playground_add_export(data, row, 'n8n_json', json.dumps(workflow, ensure_ascii=False, indent=2))
+                else:
+                    return json_response(self, 400, {'ok': False, 'success': False, 'error': 'unsupported export type'})
+                row['updated_at'] = _playground_now()
+                _playground_save(data)
+                return json_response(self, 200, {'ok': True, 'success': True, 'export': export})
+        if parsed.path == '/api/preferences':
+            try:
+                payload = read_request_json(self) or {}
+                data = _playground_load()
+                prefs = data.setdefault('preferences', {})
+                for key in ('theme', 'view', 'sort', 'default_device'):
+                    if key in payload:
+                        prefs[key] = payload.get(key)
+                _playground_save(data)
+                return json_response(self, 200, {'ok': True, 'success': True, 'preferences': prefs})
+            except Exception as exc:
+                return json_response(self, 500, {'ok': False, 'success': False, 'error': str(exc)})
+
         if parsed.path == '/api/stuck-projects/sync':
             try:
                 import sys
@@ -6502,6 +6863,17 @@ body{{font-family:Arial;padding:24px}}h1{{color:#333}}pre{{background:#f4f4f4;pa
             if not ok:
                 return json_response(self, 404, {'ok': False, 'error': err or 'not found'})
             return json_response(self, 200, {'ok': True})
+        if parsed.path.startswith('/api/playground/templates/'):
+            parts = parsed.path.strip('/').split('/')
+            if len(parts) == 4 and parts[:3] == ['api', 'playground', 'templates']:
+                template_id = parts[3]
+                data = _playground_load()
+                before = len(data.get('templates', []))
+                data['templates'] = [row for row in data.get('templates', []) if row.get('id') != template_id]
+                if len(data.get('templates', [])) == before:
+                    return json_response(self, 404, {'ok': False, 'success': False, 'error': 'template not found'})
+                _playground_save(data)
+                return json_response(self, 200, {'ok': True, 'success': True})
         if parsed.path.startswith('/api/users/'):
             username = parsed.path.split('/')[-1].strip()
             if not username:
