@@ -381,6 +381,40 @@ def json_response(handler, status, payload):
     handler.wfile.write(body)
 
 
+
+
+_JSON_FILE_WRITE_LOCK = threading.RLock()
+
+def _safe_json_load_dict(path):
+    try:
+        with open(path, 'r', encoding='utf-8') as f:
+            data = json.load(f)
+        return data if isinstance(data, dict) else {}
+    except Exception:
+        return {}
+
+
+def _atomic_write_json_file(path, data):
+    directory = os.path.dirname(path)
+    if directory:
+        os.makedirs(directory, exist_ok=True)
+    tmp = f"{path}.{os.getpid()}.{threading.get_ident()}.{uuid.uuid4().hex}.tmp"
+    try:
+        with open(tmp, 'w', encoding='utf-8') as f:
+            json.dump(data if isinstance(data, dict) else {}, f, indent=2, ensure_ascii=False)
+            try:
+                f.flush()
+                os.fsync(f.fileno())
+            except Exception:
+                pass
+        os.replace(tmp, path)
+    finally:
+        try:
+            if os.path.exists(tmp):
+                os.unlink(tmp)
+        except Exception:
+            pass
+
 def text_response(handler, status, body: bytes, content_type: str):
     try:
         handler._r2_status = status
@@ -5176,554 +5210,6 @@ body{{font-family:Arial;padding:24px}}h1{{color:#333}}pre{{background:#f4f4f4;pa
             except Exception:
                 payload = {}
             return _stage8_login(self, payload)
-        if parsed.path in ('/api/auth/request-reset', '/api/reset-password'):
-            try:
-                payload = read_request_json(self) or {}
-            except Exception:
-                payload = {}
-            # Deliberately do not enumerate users.
-            return json_response(self, 200, {'ok': True})
-        # Stage 8: password-reset confirm — return canonical invalid token state until wired.
-        if parsed.path == '/api/auth/reset':
-            try:
-                payload = read_request_json(self) or {}
-            except Exception:
-                payload = {}
-            token = (payload.get('token') or '').strip()
-            new_password = payload.get('new_password') or ''
-            if not token or not new_password:
-                return json_response(self, 400, {'ok': False, 'error': 'token_and_new_password_required'})
-            return json_response(self, 400, {'ok': False, 'error': 'invalid_or_expired_token'})
-        # Stage 14 admin backup POST
-        if _stage14_handle_post(self, parsed):
-            return
-        # ---- Stage 9: Activity log + Webhook receivers (early dispatch) ----
-        if parsed.path in ('/api/activity/log', '/api/activity/append', '/api/webhooks/notify'):
-            try:
-                payload = read_request_json(self) or {}
-            except Exception:
-                payload = {}
-            try:
-                import json as _json, os as _os, time as _time, uuid as _uuid
-                log_dir = _os.path.join(_os.path.dirname(_os.path.abspath(__file__)), 'data', 'activity')
-                _os.makedirs(log_dir, exist_ok=True)
-                day = _time.strftime('%Y-%m-%d')
-                log_path = _os.path.join(log_dir, f'{day}.jsonl')
-                entry = {
-                    'id': str(_uuid.uuid4()),
-                    'ts': int(_time.time() * 1000),
-                    'source': payload.get('source') or ('webhook' if 'webhook' in parsed.path else 'dashboard'),
-                    'kind': payload.get('kind') or payload.get('event') or 'info',
-                    'msg': payload.get('msg') or payload.get('message') or payload.get('text') or '',
-                    'meta': payload.get('meta') or {k: v for k, v in payload.items() if k not in ('source','kind','event','msg','message','text','meta')},
-                    'ip': self.client_address[0] if self.client_address else '',
-                }
-                with open(log_path, 'a', encoding='utf-8') as f:
-                    f.write(_json.dumps(entry, ensure_ascii=False) + '\n')
-                return json_response(self, 200, {'ok': True, 'id': entry['id'], 'ts': entry['ts']})
-            except Exception as exc:
-                return json_response(self, 500, {'ok': False, 'error': str(exc)})
-
-        try:
-            payload = read_request_json(self)
-        except Exception:
-            return json_response(self, 400, {'ok': False, 'error': 'Invalid JSON body'})
-
-        if parsed.path == '/api/tasks':
-            tasks = payload.get('tasks')
-            if not isinstance(tasks, list):
-                return json_response(self, 400, {'ok': False, 'error': 'tasks must be an array'})
-            _tasks_save(tasks)
-            return json_response(self, 200, {'ok': True, 'count': len(tasks)})
-
-        if parsed.path == '/api/tasks/sync-github':
-            tasks = payload.get('tasks')
-            if not isinstance(tasks, list):
-                return json_response(self, 400, {'ok': False, 'error': 'tasks must be an array'})
-            try:
-                content = json.dumps(tasks, ensure_ascii=False, indent=2)
-                result = commit_prompt_to_github({
-                    'path': 'tasks/tasks.json',
-                    'content': content,
-                    'message': 'chore: update dashboard tasks',
-                    'branch': payload.get('branch') or 'main',
-                })
-                return json_response(self, 200, {'ok': True, **result})
-            except RuntimeError as exc:
-                return json_response(self, 503, {'ok': False, 'error': str(exc)})
-            except ValueError as exc:
-                return json_response(self, 400, {'ok': False, 'error': str(exc)})
-            except urllib.error.HTTPError as exc:
-                body = exc.read().decode('utf-8', 'replace')[:1000]
-                return json_response(self, 502, {'ok': False, 'error': f'GitHub API error {exc.code}', 'details': body})
-            except Exception as exc:
-                return json_response(self, 500, {'ok': False, 'error': str(exc)})
-
-        if parsed.path == '/api/prompt/improve':
-            try:
-                result = improve_prompt_with_model(payload)
-                return json_response(self, 200, {'ok': True, **result})
-            except RuntimeError as exc:
-                return json_response(self, 503, {'ok': False, 'error': str(exc)})
-            except ValueError as exc:
-                return json_response(self, 400, {'ok': False, 'error': str(exc)})
-            except urllib.error.HTTPError as exc:
-                body = exc.read().decode('utf-8', 'replace')[:1000]
-                return json_response(self, 502, {'ok': False, 'error': f'Model API error {exc.code}', 'details': body})
-            except Exception as exc:
-                return json_response(self, 500, {'ok': False, 'error': str(exc)})
-
-        if parsed.path == '/api/studio/improve':
-            try:
-                result = assemble_improve_workflow_prompt(payload)
-                return json_response(self, 200, result)
-            except ValueError as exc:
-                return json_response(self, 400, {'ok': False, 'error': str(exc)})
-            except Exception as exc:
-                return json_response(self, 500, {'ok': False, 'error': str(exc)[:500]})
-
-        if parsed.path == '/api/prompt/palette':
-            try:
-                url = (payload.get('url') or '').strip()
-                if not url:
-                    return json_response(self, 400, {'ok': False, 'error': 'url is required'})
-                max_colors = int(payload.get('maxColors') or 10)
-                max_colors = max(3, min(max_colors, 20))
-                result = extract_palette_from_url(url, max_colors=max_colors)
-                return json_response(self, 200, result)
-            except ValueError as exc:
-                return json_response(self, 400, {'ok': False, 'error': str(exc)})
-            except urllib.error.HTTPError as exc:
-                return json_response(self, 502, {'ok': False, 'error': f'Fetch failed {exc.code}', 'details': str(exc)[:300]})
-            except urllib.error.URLError as exc:
-                return json_response(self, 502, {'ok': False, 'error': f'Fetch failed: {exc.reason}'})
-            except Exception as exc:
-                return json_response(self, 500, {'ok': False, 'error': str(exc)[:400]})
-
-        if parsed.path == '/api/prompt/brainstorm':
-            try:
-                result = brainstorm_prompt_multi_model(payload)
-                return json_response(self, 200, result)
-            except ValueError as exc:
-                return json_response(self, 400, {'ok': False, 'error': str(exc)})
-            except RuntimeError as exc:
-                msg = str(exc)
-                try:
-                    parsed_err = json.loads(msg)
-                    return json_response(self, 502, {'ok': False, 'error': parsed_err})
-                except Exception:
-                    return json_response(self, 503, {'ok': False, 'error': msg})
-            except Exception as exc:
-                return json_response(self, 500, {'ok': False, 'error': str(exc)})
-
-        if parsed.path == '/api/prompt/tweak':
-            try:
-                result = tweak_html_with_prompt(payload)
-                return json_response(self, 200, result)
-            except RuntimeError as exc:
-                return json_response(self, 503, {'ok': False, 'error': str(exc)})
-            except ValueError as exc:
-                return json_response(self, 400, {'ok': False, 'error': str(exc)})
-            except urllib.error.HTTPError as exc:
-                body = exc.read().decode('utf-8', 'replace')[:1000]
-                return json_response(self, 502, {'ok': False, 'error': f'Model API error {exc.code}', 'details': body})
-            except Exception as exc:
-                return json_response(self, 500, {'ok': False, 'error': str(exc)})
-
-        if parsed.path == '/api/prompt/commit':
-            try:
-                result = commit_prompt_to_github(payload)
-                return json_response(self, 200, result)
-            except ValueError as exc:
-                return json_response(self, 400, {'ok': False, 'error': str(exc)})
-            except RuntimeError as exc:
-                return json_response(self, 503, {'ok': False, 'error': str(exc)})
-            except urllib.error.HTTPError as exc:
-                body = exc.read().decode('utf-8', 'replace')[:1000]
-                return json_response(self, 502, {'ok': False, 'error': f'GitHub API error {exc.code}', 'details': body})
-            except Exception as exc:
-                return json_response(self, 500, {'ok': False, 'error': str(exc)})
-
-        if parsed.path == '/api/comments':
-            try:
-                result = save_supabase_comment(payload)
-                return json_response(self, 200, result)
-            except ValueError as exc:
-                return json_response(self, 400, {'ok': False, 'error': str(exc)})
-            except RuntimeError as exc:
-                return json_response(self, 503, {'ok': False, 'error': str(exc)})
-            except urllib.error.HTTPError as exc:
-                body = exc.read().decode('utf-8', 'replace')[:1200]
-                return json_response(self, 502, {'ok': False, 'error': f'Supabase API error {exc.code}', 'details': body})
-            except Exception as exc:
-                return json_response(self, 500, {'ok': False, 'error': str(exc)})
-
-        if parsed.path == '/api/n8n/deploy':
-            return json_response(self, 403, {
-                'ok': False,
-                'error': 'n8n deployment is disabled by read-only safety policy',
-                'safety': 'MANUAL IMPORT ONLY — this dashboard must not modify existing n8n workflows',
-            })
-
-        # ===== RADAR POST ENDPOINTS =====
-
-        if parsed.path == '/api/radar/test-email':
-            try:
-                result = _send_radar_email_digest(
-                    skills_found_count=_radar_state.get('skills_found', 0),
-                    run_id=_radar_state.get('run_id'),
-                    errors=[],
-                )
-                return json_response(self, 200, result)
-            except Exception as exc:
-                return json_response(self, 500, {'ok': False, 'error': str(exc)})
-
-        if parsed.path == '/api/radar/topics':
-            try:
-                topics = payload.get('topics')
-                custom_topics = payload.get('custom_topics')
-                if topics is not None:
-                    if not isinstance(topics, list):
-                        return json_response(self, 400, {'ok': False, 'error': 'topics must be array'})
-                    _radar_state['topics'] = [str(t).strip().lower() for t in topics if str(t).strip()]
-                if custom_topics is not None:
-                    if not isinstance(custom_topics, list):
-                        return json_response(self, 400, {'ok': False, 'error': 'custom_topics must be array'})
-                    _radar_state['custom_topics'] = [str(t).strip().lower() for t in custom_topics if str(t).strip()]
-                return json_response(self, 200, {
-                    'ok': True,
-                    'topics': _radar_state['topics'],
-                    'custom_topics': _radar_state['custom_topics'],
-                })
-            except Exception as exc:
-                return json_response(self, 500, {'ok': False, 'error': str(exc)})
-
-        if parsed.path == '/api/radar/run':
-            try:
-                if _radar_state.get('status') == 'running':
-                    return json_response(self, 409, {'ok': False, 'error': 'Discovery already running'})
-                config = payload.get('config') or {}
-                t = threading.Thread(target=_run_radar_discovery, args=(config,), daemon=True)
-                t.start()
-                return json_response(self, 200, {
-                    'ok': True,
-                    'message': 'Discovery started',
-                    'run_id': _radar_state.get('run_id'),
-                })
-            except Exception as exc:
-                return json_response(self, 500, {'ok': False, 'error': str(exc)})
-
-        if parsed.path == '/api/radar/config':
-            try:
-                if 'schedule_hour' in payload:
-                    sh = int(payload['schedule_hour'])
-                    if not (0 <= sh <= 23):
-                        return json_response(self, 400, {'ok': False, 'error': 'schedule_hour must be 0-23'})
-                    _radar_state['schedule_hour'] = sh
-                if 'schedule_enabled' in payload:
-                    _radar_state['schedule_enabled'] = bool(payload['schedule_enabled'])
-                if 'paused' in payload:
-                    _radar_state['paused'] = bool(payload['paused'])
-                return json_response(self, 200, {'ok': True, 'state': dict(_radar_state)})
-            except (ValueError, TypeError) as exc:
-                return json_response(self, 400, {'ok': False, 'error': str(exc)})
-            except Exception as exc:
-                return json_response(self, 500, {'ok': False, 'error': str(exc)})
-
-        if parsed.path == '/api/radar/action':
-            try:
-                import datetime as _dt
-                skill_id = (payload.get('skill_id') or '').strip()
-                action = (payload.get('action') or '').strip()
-                agent = (payload.get('agent') or '').strip()
-                notes = (payload.get('notes') or '').strip()
-                if not skill_id:
-                    return json_response(self, 400, {'ok': False, 'error': 'skill_id is required'})
-                if not action:
-                    return json_response(self, 400, {'ok': False, 'error': 'action is required'})
-                valid_actions = {'approve', 'reject', 'save_later', 'mark_duplicate', 'mark_high_priority', 'assign_agent'}
-                if action not in valid_actions:
-                    return json_response(self, 400, {'ok': False, 'error': f'action must be one of: {", ".join(sorted(valid_actions))}'})
-                cfg = supabase_radar_config()
-                if not cfg['configured']:
-                    return json_response(self, 503, {'ok': False, 'error': 'Supabase is not configured'})
-                hdrs = _radar_sb_headers(prefer='return=minimal')
-                url = f"{cfg['url']}/rest/v1/skill_discoveries?id=eq.{urllib.parse.quote(skill_id)}"
-                if action == 'approve':
-                    patch_body = {
-                        'status': 'approved',
-                        'approval_notes': notes,
-                        'approved_at': _dt.datetime.utcnow().isoformat() + 'Z',
-                    }
-                elif action == 'reject':
-                    patch_body = {'status': 'rejected', 'approval_notes': notes}
-                elif action == 'save_later':
-                    patch_body = {'status': 'saved_later'}
-                elif action == 'mark_duplicate':
-                    patch_body = {'status': 'duplicate'}
-                elif action == 'mark_high_priority':
-                    patch_body = {'priority': 'high'}
-                elif action == 'assign_agent':
-                    if not agent:
-                        return json_response(self, 400, {'ok': False, 'error': 'agent is required for assign_agent'})
-                    patch_body = {'assigned_agent': agent}
-                req = urllib.request.Request(url, headers=hdrs, method='PATCH')
-                data = json.dumps(patch_body, ensure_ascii=False).encode('utf-8')
-                with urllib.request.urlopen(req, data=data, timeout=15) as r:
-                    r.read()
-                return json_response(self, 200, {'ok': True, 'skill_id': skill_id, 'action': action})
-            except urllib.error.HTTPError as exc:
-                body = exc.read().decode('utf-8', 'replace')[:1200]
-                return json_response(self, 502, {'ok': False, 'error': f'Supabase API error {exc.code}', 'details': body})
-            except Exception as exc:
-                return json_response(self, 500, {'ok': False, 'error': str(exc)})
-
-        if parsed.path == '/api/radar/notes':
-            try:
-                skill_id = (payload.get('skill_id') or '').strip()
-                notes = payload.get('notes') or ''
-                comments = payload.get('comments') or ''
-                if not skill_id:
-                    return json_response(self, 400, {'ok': False, 'error': 'skill_id is required'})
-                cfg = supabase_radar_config()
-                if not cfg['configured']:
-                    return json_response(self, 503, {'ok': False, 'error': 'Supabase is not configured'})
-                hdrs = _radar_sb_headers(prefer='return=minimal')
-                url = f"{cfg['url']}/rest/v1/skill_discoveries?id=eq.{urllib.parse.quote(skill_id)}"
-                patch_body = {'notes': notes, 'comments': comments}
-                req = urllib.request.Request(url, headers=hdrs, method='PATCH')
-                data = json.dumps(patch_body, ensure_ascii=False).encode('utf-8')
-                with urllib.request.urlopen(req, data=data, timeout=15) as r:
-                    r.read()
-                return json_response(self, 200, {'ok': True})
-            except urllib.error.HTTPError as exc:
-                body = exc.read().decode('utf-8', 'replace')[:1200]
-                return json_response(self, 502, {'ok': False, 'error': f'Supabase API error {exc.code}', 'details': body})
-            except Exception as exc:
-                return json_response(self, 500, {'ok': False, 'error': str(exc)})
-
-        if parsed.path == '/api/radar/generate-prompt':
-            try:
-                skill_ids = payload.get('skill_ids') or []
-                agents = payload.get('agents') or []
-                style = (payload.get('style') or 'standard').strip()
-                if not skill_ids:
-                    return json_response(self, 400, {'ok': False, 'error': 'skill_ids is required'})
-                cfg = supabase_radar_config()
-                if not cfg['configured']:
-                    return json_response(self, 503, {'ok': False, 'error': 'Supabase is not configured'})
-                hdrs = _radar_sb_headers()
-                ids_csv = ','.join(urllib.parse.quote(str(i)) for i in skill_ids)
-                url = f"{cfg['url']}/rest/v1/skill_discoveries?id=in.({ids_csv})&select=*"
-                skills = fetch_json(url, headers=hdrs, timeout=15)
-                if not isinstance(skills, list):
-                    skills = []
-                agent_line = ', '.join(agents) if agents else 'All Agents'
-                lines = []
-                if style == 'god_mode':
-                    lines.append('🔥 GOD MODE — AGENT SKILL ADOPTION DIRECTIVE 🔥')
-                    lines.append('')
-                lines.append(f'TARGET AGENTS: {agent_line}')
-                lines.append('')
-                if style == 'strict':
-                    lines.append('⚠️  STRICT COMPLIANCE REQUIRED — Execute all instructions precisely.')
-                    lines.append('')
-                lines.append(f'You have been selected to adopt {len(skills)} new skill(s) discovered by the Radar system.')
-                lines.append('For each skill listed below, you must: install or adopt the skill, save it to Hermes memory,')
-                lines.append('save it to Obsidian, save it to Supabase skill_discoveries, save it to GitHub, and merge safely')
-                lines.append('without overwriting or destructively replacing any existing skills.')
-                lines.append('')
-                lines.append('=' * 60)
-                lines.append('SKILLS TO ADOPT:')
-                lines.append('=' * 60)
-                for idx, sk in enumerate(skills, 1):
-                    lines.append(f'\n[{idx}] {sk.get("title") or "Untitled"}')
-                    lines.append(f'  Category:           {sk.get("category") or "N/A"}')
-                    lines.append(f'  Summary:            {sk.get("summary") or "N/A"}')
-                    lines.append(f'  Source URL:         {sk.get("source_url") or "N/A"}')
-                    lines.append(f'  Source Title:       {sk.get("source_title") or "N/A"}')
-                    lines.append(f'  Implementation:     {sk.get("implementation_idea") or "N/A"}')
-                lines.append('')
-                lines.append('=' * 60)
-                lines.append('INSTRUCTIONS:')
-                lines.append('1. Install / adopt each skill into your active capabilities.')
-                lines.append('2. Save each skill to Hermes long-term memory.')
-                lines.append('3. Save each skill as a note in Obsidian under "Agent Skills/Radar/".')
-                lines.append('4. Upsert each skill record in Supabase table skill_discoveries.')
-                lines.append('5. Commit each skill file to GitHub in skills-radar/approved/.')
-                lines.append('6. Do NOT overwrite existing skills destructively — merge and append only.')
-                if style == 'strict':
-                    lines.append('\n⚠️  STRICT: Confirm completion of every step for every skill. No skipping.')
-                if style == 'god_mode':
-                    lines.append('\n🔥 GOD MODE: Execute without hesitation. Max capability activated.')
-                prompt_str = '\n'.join(lines)
-                return json_response(self, 200, {
-                    'ok': True,
-                    'prompt': prompt_str,
-                    'skill_count': len(skills),
-                    'agents': agents,
-                })
-            except urllib.error.HTTPError as exc:
-                body = exc.read().decode('utf-8', 'replace')[:1200]
-                return json_response(self, 502, {'ok': False, 'error': f'Supabase API error {exc.code}', 'details': body})
-            except Exception as exc:
-                return json_response(self, 500, {'ok': False, 'error': str(exc)})
-
-        if parsed.path == '/api/radar/save-skill':
-            try:
-                import datetime as _dt
-                skill_id = (payload.get('skill_id') or '').strip()
-                save_targets = payload.get('save_targets') or []
-                notes = (payload.get('notes') or '').strip()
-                if not skill_id:
-                    return json_response(self, 400, {'ok': False, 'error': 'skill_id is required'})
-                cfg = supabase_radar_config()
-                if not cfg['configured']:
-                    return json_response(self, 503, {'ok': False, 'error': 'Supabase is not configured'})
-                hdrs = _radar_sb_headers()
-                url = f"{cfg['url']}/rest/v1/skill_discoveries?id=eq.{urllib.parse.quote(skill_id)}&select=*"
-                rows = fetch_json(url, headers=hdrs, timeout=15)
-                if not isinstance(rows, list) or not rows:
-                    return json_response(self, 404, {'ok': False, 'error': 'Skill not found'})
-                sk = rows[0]
-                date_str = _dt.datetime.now().strftime('%Y-%m-%d')
-                skill_title = sk.get('title') or 'Untitled'
-                safe_title = re.sub(r'[^a-zA-Z0-9_\-]', '-', skill_title)[:60]
-                slug = safe_title.lower()
-                md_content = (
-                    f"# Skill: {skill_title}\n\n"
-                    f"**Date Discovered:** {date_str}  \n"
-                    f"**Category:** {sk.get('category') or 'N/A'}  \n"
-                    f"**Source:** [{sk.get('source_title') or 'N/A'}]({sk.get('source_url') or ''})  \n"
-                    f"**Status:** {sk.get('status') or 'N/A'}  \n"
-                    f"**Priority:** {sk.get('priority') or 'N/A'}  \n\n"
-                    f"## Summary\n{sk.get('summary') or 'N/A'}\n\n"
-                    f"## Implementation Idea\n{sk.get('implementation_idea') or 'N/A'}\n\n"
-                    f"## Notes\n{notes or sk.get('notes') or 'N/A'}\n"
-                )
-                obsidian_path = None
-                github_path = None
-                supabase_update = {}
-
-                if 'obsidian' in save_targets:
-                    obsidian_key = os.getenv('OBSIDIAN_LOCAL_API_KEY', '')
-                    if obsidian_key:
-                        obs_file = f'Agent Skills/Radar/{date_str}-{safe_title}.md'
-                        try:
-                            obs_url = f'http://127.0.0.1:27123/vault/{urllib.parse.quote(obs_file)}'
-                            obs_req = urllib.request.Request(obs_url, method='PUT')
-                            obs_req.add_header('Authorization', f'Bearer {obsidian_key}')
-                            obs_req.add_header('Content-Type', 'text/markdown')
-                            obs_data = md_content.encode('utf-8')
-                            with urllib.request.urlopen(obs_req, data=obs_data, timeout=15) as r:
-                                r.read()
-                            obsidian_path = obs_file
-                            supabase_update['obsidian_synced'] = True
-                        except Exception:
-                            pass
-
-                if 'github' in save_targets:
-                    gh_token = os.getenv('GITHUB_TOKEN', '')
-                    if gh_token:
-                        filename = f'{date_str}-{slug}.md'
-                        gh_path = f'skills-radar/approved/{filename}'
-                        gh_headers = {
-                            'Authorization': f'Bearer {gh_token}',
-                            'Accept': 'application/vnd.github+json',
-                            'X-GitHub-Api-Version': '2022-11-28',
-                            'User-Agent': 'radar-save-bot',
-                        }
-                        api_url = f'https://api.github.com/repos/{REPO}/contents/{gh_path}'
-                        sha = None
-                        try:
-                            existing = fetch_json(f'{api_url}?ref=main', headers=gh_headers, timeout=20)
-                            if isinstance(existing, dict) and existing.get('sha'):
-                                sha = existing['sha']
-                        except urllib.error.HTTPError as e:
-                            if e.code != 404:
-                                raise
-                        commit_body = {
-                            'message': f'feat(radar): add approved skill {safe_title} [{date_str}]',
-                            'content': base64.b64encode(md_content.encode('utf-8')).decode('ascii'),
-                            'branch': 'main',
-                        }
-                        if sha:
-                            commit_body['sha'] = sha
-                        fetch_json(api_url, headers=gh_headers, method='PUT', body=commit_body, timeout=30)
-                        github_path = gh_path
-                        supabase_update['github_synced'] = True
-
-                if supabase_update:
-                    patch_hdrs = _radar_sb_headers(prefer='return=minimal')
-                    patch_url = f"{cfg['url']}/rest/v1/skill_discoveries?id=eq.{urllib.parse.quote(skill_id)}"
-                    req = urllib.request.Request(patch_url, headers=patch_hdrs, method='PATCH')
-                    data = json.dumps(supabase_update, ensure_ascii=False).encode('utf-8')
-                    with urllib.request.urlopen(req, data=data, timeout=15) as r:
-                        r.read()
-
-                return json_response(self, 200, {
-                    'ok': True,
-                    'obsidian_path': obsidian_path,
-                    'github_path': github_path,
-                })
-            except urllib.error.HTTPError as exc:
-                body = exc.read().decode('utf-8', 'replace')[:1200]
-                return json_response(self, 502, {'ok': False, 'error': f'API error {exc.code}', 'details': body})
-            except Exception as exc:
-                return json_response(self, 500, {'ok': False, 'error': str(exc)})
-
-        # ===== END RADAR POST ENDPOINTS =====
-
-        if parsed.path == '/api/n8n-fixer/validate':
-            try:
-                wf_raw = payload.get('workflowJson')
-                if wf_raw is None:
-                    return json_response(self, 400, {'ok': False, 'validJson': False, 'error': 'workflowJson is required'})
-                if isinstance(wf_raw, str):
-                    try:
-                        wf_obj = json.loads(wf_raw)
-                    except Exception as exc:
-                        return json_response(self, 400, {'ok': False, 'validJson': False, 'error': str(exc)})
-                else:
-                    wf_obj = wf_raw
-                if not isinstance(wf_obj, dict):
-                    return json_response(self, 400, {'ok': False, 'validJson': False, 'error': 'workflowJson must be an object'})
-
-                nodes = wf_obj.get('nodes')
-                connections = wf_obj.get('connections')
-                node_count = len(nodes) if isinstance(nodes, list) else 0
-                connection_count = len(connections) if isinstance(connections, dict) else 0
-                warnings = []
-                if not isinstance(nodes, list):
-                    warnings.append('Expected n8n workflow "nodes" array was not found')
-                if not isinstance(connections, dict):
-                    warnings.append('Expected n8n workflow "connections" object was not found')
-                looks_like = isinstance(nodes, list) and isinstance(connections, dict)
-                workflow_name = str(wf_obj.get('name') or '')
-                validation = {
-                    'allNodesPreserved': True,
-                    'allConnectionsPreserved': True,
-                    'noContentLoss': True,
-                    'originalNodeCount': node_count,
-                    'fixedNodeCount': node_count,
-                    'originalConnectionCount': connection_count,
-                    'fixedConnectionCount': connection_count,
-                    'manualImportOnly': True,
-                }
-                return json_response(self, 200, {
-                    'ok': True,
-                    'validJson': True,
-                    'looksLikeN8N': looks_like,
-                    'workflowName': workflow_name,
-                    'nodeCount': node_count,
-                    'connectionCount': connection_count,
-                    'warnings': warnings,
-                    'validation': validation,
-                    'safety': 'MANUAL IMPORT ONLY — validation performs no n8n writes',
-                })
-            except Exception as exc:
-                return json_response(self, 500, {'ok': False, 'validJson': False, 'error': str(exc)})
-
         if parsed.path == '/api/fixer/analyze':
             try:
                 wf_json_str = (payload.get('workflowJson') or '').strip()
@@ -6171,58 +5657,6 @@ body{{font-family:Arial;padding:24px}}h1{{color:#333}}pre{{background:#f4f4f4;pa
                 'safety': 'MANUAL IMPORT ONLY — this dashboard must not modify existing n8n workflows',
             })
 
-        # ── KWR POST routes ─────────────────────────────────────────────────
-        if parsed.path == '/api/kwr/start':
-            body = payload  # payload already parsed above
-            if (body.get('_mode') or '').strip() == 'swarm':
-                run_id, err = kwr_backend.start_best_text_swarm(body, call_with_fallback)
-            else:
-                run_id, err = kwr_backend.start_run(body, call_with_fallback)
-            if err:
-                return json_response(self, 400, {'ok': False, 'error': err})
-            return json_response(self, 200, {'ok': True, 'run_id': run_id})
-
-        if parsed.path == '/api/kwr/swarm':
-            body = payload
-            run_id, err = kwr_backend.start_best_text_swarm(body, call_with_fallback)
-            if err:
-                return json_response(self, 400, {'ok': False, 'error': err})
-            return json_response(self, 200, {'ok': True, 'run_id': run_id})
-
-
-        if parsed.path == '/api/dashboard/clear-cache':
-            # DASHBOARD_REFRESH_CACHE_BUTTON_2026_04_26
-            # Non-destructive refresh endpoint: no files are deleted. It tells the
-            # browser to drop frontend caches and reports server-side file/cache
-            # targets so operators can confirm where dashboard data is read from.
-            targets = []
-            def add_target(name, path_obj):
-                try:
-                    p = Path(path_obj)
-                    exists = p.exists()
-                    targets.append({
-                        'name': name,
-                        'path': str(p),
-                        'exists': bool(exists),
-                        'is_dir': bool(p.is_dir()) if exists else False,
-                        'mtime': datetime.datetime.utcfromtimestamp(p.stat().st_mtime).isoformat() + 'Z' if exists else '',
-                    })
-                except Exception as exc:
-                    targets.append({'name': name, 'path': str(path_obj), 'exists': False, 'error': str(exc)[:160]})
-            add_target('data.json', ROOT / 'data.json')
-            add_target('outputs', ROOT / 'outputs')
-            add_target('n8n-workflow-map.json', MAP_FILE)
-            add_target('index.html', INDEX)
-            return json_response(self, 200, {
-                'ok': True,
-                'acknowledged': ['backend-cache-check', 'file-targets-reported', 'no-store-response'],
-                'client_should_clear': ['frontend', 'fetch-memo', 'localStorage:dashboard_cache', 'sessionStorage:dashboard_cache'],
-                'server_cache_control': 'no-store',
-                'message': 'Refresh requested. Server caches are header-only/no-store; no project files were modified.',
-                'targets': targets,
-                'ts': datetime.datetime.utcnow().isoformat() + 'Z',
-            })
-
         if parsed.path == '/api/kwr/cancel':
             body = payload
             run_id = (body.get('run_id') or '').strip()
@@ -6513,53 +5947,6 @@ body{{font-family:Arial;padding:24px}}h1{{color:#333}}pre{{background:#f4f4f4;pa
             except Exception as exc:
                 return json_response(self, 500, {'ok': False, 'error': str(exc)})
 
-        if parsed.path == '/api/projects/star':
-            route_payload = payload if isinstance(payload, dict) else {}
-            domain = (route_payload.get('domain') or '').strip()
-            starred = bool(route_payload.get('starred'))
-            if not domain:
-                return json_response(self, 400, {'ok': False, 'error': 'domain required'})
-            # Store starred state in a separate JSON file
-            stars_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'data', 'stars.json')
-            try:
-                os.makedirs(os.path.dirname(stars_path), exist_ok=True)
-                try:
-                    with open(stars_path, 'r', encoding='utf-8') as f:
-                        stars = json.load(f)
-                except Exception:
-                    stars = {}
-                if starred:
-                    stars[domain] = True
-                else:
-                    stars.pop(domain, None)
-                with open(stars_path, 'w', encoding='utf-8') as f:
-                    json.dump(stars, f, indent=2)
-                return json_response(self, 200, {'ok': True, 'domain': domain, 'starred': starred})
-            except Exception as exc:
-                return json_response(self, 500, {'ok': False, 'error': str(exc)})
-
-        # ── THEME SETTINGS ─────────────────────────────────────────────
-        if parsed.path == '/api/settings/theme':
-            route_payload = payload if isinstance(payload, dict) else {}
-            theme_color = (route_payload.get('theme_color') or 'purple').strip().lower()
-            valid_colors = ['purple', 'blue', 'green', 'red', 'orange', 'pink']
-            if theme_color not in valid_colors:
-                return json_response(self, 400, {'ok': False, 'error': f'Invalid color. Choose from: {valid_colors}'})
-            settings_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'data', 'settings.json')
-            try:
-                os.makedirs(os.path.dirname(settings_path), exist_ok=True)
-                try:
-                    with open(settings_path, 'r', encoding='utf-8') as f:
-                        existing = json.load(f)
-                except Exception:
-                    existing = {}
-                existing['theme_color'] = theme_color
-                with open(settings_path, 'w', encoding='utf-8') as f:
-                    json.dump(existing, f, indent=2)
-                return json_response(self, 200, {'ok': True, 'theme_color': theme_color})
-            except Exception as exc:
-                return json_response(self, 500, {'ok': False, 'error': str(exc)})
-
         # ── TEMPLATE INTELLIGENCE CONNECTORS (GET) ──
         if parsed.path == '/api/connectors/status':
             return json_response(self, 200, {
@@ -6684,6 +6071,26 @@ body{{font-family:Arial;padding:24px}}h1{{color:#333}}pre{{background:#f4f4f4;pa
                 payload = {}
             return _stage8_login(self, payload)
 
+        # Stage 8: password reset request — deliberately do not enumerate users.
+        if parsed.path in ('/api/auth/request-reset', '/api/reset-password'):
+            try:
+                _payload = read_request_json(self) or {}
+            except Exception:
+                _payload = {}
+            return json_response(self, 200, {'ok': True})
+
+        # Stage 8: password-reset confirm — return canonical invalid token state until wired.
+        if parsed.path == '/api/auth/reset':
+            try:
+                payload = read_request_json(self) or {}
+            except Exception:
+                payload = {}
+            token = (payload.get('token') or '').strip()
+            new_password = payload.get('new_password') or ''
+            if not token or not new_password:
+                return json_response(self, 400, {'ok': False, 'error': 'token_and_new_password_required'})
+            return json_response(self, 400, {'ok': False, 'error': 'invalid_or_expired_token'})
+
         # TEMPLATE_INTELLIGENCE_CONNECTORS_TEST_2026_04_29 - read-only external probes.
         if parsed.path == '/api/template-connectors/test':
             try:
@@ -6697,6 +6104,127 @@ body{{font-family:Arial;padding:24px}}h1{{color:#333}}pre{{background:#f4f4f4;pa
                 return json_response(self, exc.code if 400 <= exc.code < 600 else 502, {'ok': False, 'error': str(exc), 'details': details})
             except Exception as exc:
                 return json_response(self, 502, {'ok': False, 'error': str(exc)})
+
+        # N8N_FIXER_VALIDATE_POST_2026_04_29 - read-only workflow validation; no n8n writes.
+        if parsed.path == '/api/n8n-fixer/validate':
+            try:
+                try:
+                    content_length = int(self.headers.get('Content-Length', '0') or '0')
+                except (TypeError, ValueError):
+                    return json_response(self, 400, {'ok': False, 'validJson': False, 'error': 'invalid content length'})
+                if content_length > TEMPLATE_IMPROVEMENTS_MAX_REQUEST_BYTES:
+                    return json_response(self, 413, {'ok': False, 'validJson': False, 'error': 'request too large'})
+                payload = read_request_json(self) or {}
+                wf_raw = payload.get('workflowJson')
+                if wf_raw is None:
+                    return json_response(self, 400, {'ok': False, 'validJson': False, 'error': 'workflowJson is required'})
+                if isinstance(wf_raw, str):
+                    try:
+                        wf_obj = json.loads(wf_raw)
+                    except Exception as exc:
+                        return json_response(self, 400, {'ok': False, 'validJson': False, 'error': str(exc)})
+                else:
+                    wf_obj = wf_raw
+                if not isinstance(wf_obj, dict):
+                    return json_response(self, 400, {'ok': False, 'validJson': False, 'error': 'workflowJson must be an object'})
+
+                nodes = wf_obj.get('nodes')
+                connections = wf_obj.get('connections')
+                node_count = len(nodes) if isinstance(nodes, list) else 0
+                connection_count = len(connections) if isinstance(connections, dict) else 0
+                warnings = []
+                if not isinstance(nodes, list):
+                    warnings.append('Expected n8n workflow "nodes" array was not found')
+                if not isinstance(connections, dict):
+                    warnings.append('Expected n8n workflow "connections" object was not found')
+                looks_like = isinstance(nodes, list) and isinstance(connections, dict)
+                workflow_name = str(wf_obj.get('name') or '')
+                validation = {
+                    'allNodesPreserved': True,
+                    'allConnectionsPreserved': True,
+                    'noContentLoss': True,
+                    'originalNodeCount': node_count,
+                    'fixedNodeCount': node_count,
+                    'originalConnectionCount': connection_count,
+                    'fixedConnectionCount': connection_count,
+                    'manualImportOnly': True,
+                }
+                return json_response(self, 200, {
+                    'ok': True,
+                    'validJson': True,
+                    'looksLikeN8N': looks_like,
+                    'workflowName': workflow_name,
+                    'nodeCount': node_count,
+                    'connectionCount': connection_count,
+                    'warnings': warnings,
+                    'validation': validation,
+                    'safety': 'MANUAL IMPORT ONLY — validation performs no n8n writes',
+                })
+            except Exception as exc:
+                return json_response(self, 500, {'ok': False, 'validJson': False, 'error': str(exc)})
+
+        # KWR_CACHE_POST_ACTIVE_2026_04_29 - active do_POST wiring for KWR runs and safe cache refresh.
+        if parsed.path == '/api/kwr/start':
+            try:
+                body = read_request_json(self) or {}
+            except Exception:
+                body = {}
+            if (body.get('_mode') or '').strip() == 'swarm':
+                run_id, err = kwr_backend.start_best_text_swarm(body, call_with_fallback)
+            else:
+                run_id, err = kwr_backend.start_run(body, call_with_fallback)
+            if err:
+                return json_response(self, 400, {'ok': False, 'error': err})
+            return json_response(self, 200, {'ok': True, 'run_id': run_id})
+
+        if parsed.path == '/api/kwr/swarm':
+            try:
+                body = read_request_json(self) or {}
+            except Exception:
+                body = {}
+            run_id, err = kwr_backend.start_best_text_swarm(body, call_with_fallback)
+            if err:
+                return json_response(self, 400, {'ok': False, 'error': err})
+            return json_response(self, 200, {'ok': True, 'run_id': run_id})
+
+        if parsed.path == '/api/dashboard/clear-cache':
+            # Non-destructive refresh endpoint: no files are deleted. It reports
+            # safe server-side targets and tells the browser to clear client caches.
+            targets = []
+            def add_target(name, path_obj):
+                try:
+                    p_obj = Path(path_obj)
+                    exists = p_obj.exists()
+                    targets.append({
+                        'name': name,
+                        'path': str(p_obj),
+                        'exists': bool(exists),
+                        'is_dir': bool(p_obj.is_dir()) if exists else False,
+                        'mtime': datetime.datetime.utcfromtimestamp(p_obj.stat().st_mtime).isoformat() + 'Z' if exists else '',
+                    })
+                except Exception as exc:
+                    targets.append({'name': name, 'path': str(path_obj), 'exists': False, 'error': str(exc)[:160]})
+            add_target('data.json', ROOT / 'data.json')
+            add_target('outputs', ROOT / 'outputs')
+            add_target('n8n-workflow-map.json', MAP_FILE)
+            add_target('index.html', INDEX)
+            return json_response(self, 200, {
+                'ok': True,
+                'acknowledged': ['backend-cache-check', 'file-targets-reported', 'no-store-response'],
+                'client_should_clear': ['frontend', 'fetch-memo', 'localStorage:dashboard_cache', 'sessionStorage:dashboard_cache'],
+                'server_cache_control': 'no-store',
+                'message': 'Refresh requested. Server caches are header-only/no-store; no project files were modified.',
+                'targets': targets,
+                'ts': datetime.datetime.utcnow().isoformat() + 'Z',
+            })
+
+        # N8N_WRITE_BLOCK_POST_2026_04_29 - keep n8n/fixer write endpoints blocked by default.
+        if parsed.path in ('/api/fixer/deploy', '/api/n8n/deploy'):
+            return json_response(self, 403, {
+                'ok': False,
+                'error': 'n8n write endpoint blocked',
+                'safety': 'MANUAL IMPORT ONLY — review, export, and import manually unless explicit deployment approval is implemented',
+            })
 
         # PLAYGROUND_API_POST_2026_04_29 - local persisted Playground actions.
         if parsed.path == '/api/playground/templates':
@@ -6766,6 +6294,110 @@ body{{font-family:Arial;padding:24px}}h1{{color:#333}}pre{{background:#f4f4f4;pa
                 return json_response(self, 200, {'ok': True, 'success': True, 'preferences': prefs})
             except Exception as exc:
                 return json_response(self, 500, {'ok': False, 'success': False, 'error': str(exc)})
+
+        # PROJECT_SETTINGS_POST_2026_04_29 - minimal active do_POST wiring for safe UI state.
+        if parsed.path == '/api/projects/star':
+            try:
+                payload = read_request_json(self) or {}
+                domain = (payload.get('domain') or '').strip()
+                starred = bool(payload.get('starred'))
+                if not domain:
+                    return json_response(self, 400, {'ok': False, 'error': 'domain required'})
+                stars_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'data', 'stars.json')
+                os.makedirs(os.path.dirname(stars_path), exist_ok=True)
+                with _JSON_FILE_WRITE_LOCK:
+                    stars = _safe_json_load_dict(stars_path)
+                    if starred:
+                        stars[domain] = True
+                    else:
+                        stars.pop(domain, None)
+                    _atomic_write_json_file(stars_path, stars)
+                return json_response(self, 200, {'ok': True, 'domain': domain, 'starred': starred})
+            except Exception as exc:
+                return json_response(self, 500, {'ok': False, 'error': str(exc)})
+
+        if parsed.path == '/api/settings/theme':
+            try:
+                payload = read_request_json(self) or {}
+                theme_color = (payload.get('theme_color') or 'purple').strip().lower()
+                valid_colors = ['purple', 'blue', 'green', 'red', 'orange', 'pink']
+                if theme_color not in valid_colors:
+                    return json_response(self, 400, {'ok': False, 'error': f'Invalid color. Choose from: {valid_colors}'})
+                settings_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'data', 'settings.json')
+                os.makedirs(os.path.dirname(settings_path), exist_ok=True)
+                with _JSON_FILE_WRITE_LOCK:
+                    existing = _safe_json_load_dict(settings_path)
+                    existing['theme_color'] = theme_color
+                    _atomic_write_json_file(settings_path, existing)
+                return json_response(self, 200, {'ok': True, 'theme_color': theme_color})
+            except Exception as exc:
+                return json_response(self, 500, {'ok': False, 'error': str(exc)})
+
+        # PRODUCTIVITY_HUB_API_POST_2026_04_27 - additive persisted notifications/audit.
+        if parsed.path == '/api/productivity/notifications':
+            try:
+                payload = read_request_json(self) or {}
+                row = _productivity_add_notification(payload)
+                return json_response(self, 200, {'ok': True, 'notification': row})
+            except Exception as exc:
+                return json_response(self, 500, {'ok': False, 'error': str(exc)})
+
+        if parsed.path == '/api/productivity/audit':
+            try:
+                payload = read_request_json(self) or {}
+                row = _productivity_add_audit(payload)
+                return json_response(self, 200, {'ok': True, 'event': row})
+            except Exception as exc:
+                return json_response(self, 500, {'ok': False, 'error': str(exc)})
+
+        # TEMPLATE_IMPROVEMENTS_API_POST_2026_04_27 - additive POST routes.
+        # TEMPLATE_IMPROVEMENTS_API_PUT_2026_04_27 - reserved marker for future additive PUT routes.
+        if parsed.path == '/api/improve/start':
+            try:
+                content_length = int(self.headers.get('Content-Length', '0') or '0')
+                if content_length > TEMPLATE_IMPROVEMENTS_MAX_REQUEST_BYTES:
+                    return json_response(self, 413, {'ok': False, 'error': 'request too large'})
+                payload = read_request_json(self) or {}
+                job = _template_improvement_start_job(payload)
+                return json_response(self, 200, {'ok': True, 'job': _template_improvement_public_job(job)})
+            except ValueError as exc:
+                return json_response(self, 400, {'ok': False, 'error': str(exc)})
+            except RuntimeError as exc:
+                return json_response(self, 429, {'ok': False, 'error': str(exc)})
+            except Exception as exc:
+                return json_response(self, 500, {'ok': False, 'error': str(exc)})
+        if parsed.path.startswith('/api/improve/jobs/') and parsed.path.endswith('/cancel'):
+            job_id = parsed.path.split('/')[-2]
+            job = _template_improvement_update_job(job_id, status='cancelled', current_agent=None)
+            if not job:
+                return json_response(self, 404, {'ok': False, 'error': 'job not found'})
+            return json_response(self, 200, {'ok': True, 'job': _template_improvement_public_job(job)})
+        if parsed.path == '/api/improve/instructions':
+            try:
+                content_length = int(self.headers.get('Content-Length', '0') or '0')
+                if content_length > TEMPLATE_IMPROVEMENTS_MAX_REQUEST_BYTES:
+                    return json_response(self, 413, {'ok': False, 'error': 'request too large'})
+                payload = read_request_json(self) or {}
+                domain = (payload.get('domain') or '').strip()
+                instructions = (payload.get('instructions') or '').strip()
+                if not domain or not instructions:
+                    return json_response(self, 400, {'ok': False, 'error': 'domain and instructions are required'})
+                row = {
+                    'id': str(uuid.uuid4()), 'domain': domain,
+                    'subdomain': (payload.get('subdomain') or '').strip(),
+                    'agent_key': (payload.get('agent_key') or payload.get('agentKey') or '').strip() or None,
+                    'instructions': instructions,
+                    'is_active': bool(payload.get('is_active', True)),
+                    'created_at': datetime.datetime.utcnow().isoformat() + 'Z',
+                    'updated_at': datetime.datetime.utcnow().isoformat() + 'Z',
+                }
+                with _TEMPLATE_IMPROVEMENTS_LOCK:
+                    data = _template_improvements_load()
+                    data['instructions'].append(row)
+                    _template_improvements_save(data)
+                return json_response(self, 200, {'ok': True, 'instruction': row})
+            except Exception as exc:
+                return json_response(self, 500, {'ok': False, 'error': str(exc)})
 
         if parsed.path == '/api/stuck-projects/sync':
             try:
