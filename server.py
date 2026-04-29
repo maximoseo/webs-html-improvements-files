@@ -6294,6 +6294,14 @@ body{{font-family:Arial;padding:24px}}h1{{color:#333}}pre{{background:#f4f4f4;pa
         if not _r3_check_csrf_or_warn(self, parsed):
             return
 
+        # Stage 8: login — both endpoints are aliases for the same cookie-setting handler.
+        if parsed.path in ('/api/auth/login', '/api/login'):
+            try:
+                payload = read_request_json(self) or {}
+            except Exception:
+                payload = {}
+            return _stage8_login(self, payload)
+
         # TEMPLATE_INTELLIGENCE_CONNECTORS_TEST_2026_04_29 - read-only external probes.
         if parsed.path == '/api/template-connectors/test':
             try:
@@ -6477,7 +6485,7 @@ body{{font-family:Arial;padding:24px}}h1{{color:#333}}pre{{background:#f4f4f4;pa
             return
 
         # Default POST handler for other routes
-        self._send_json(404, {'ok': False, 'error': 'POST endpoint not found'})
+        return json_response(self, 404, {'ok': False, 'error': 'POST endpoint not found'})
 
     def do_DELETE(self):
         if not self._r2_check_rate(): return
