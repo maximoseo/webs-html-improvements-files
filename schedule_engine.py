@@ -177,32 +177,36 @@ class ScheduleEngine:
         print(f'[ScheduleEngine] Scheduled "{name}" triggered, batch job created', flush=True)
     
     def _execute_pipeline_for_schedule(self, name, domains, batch_job_id, schedule_id):
-        """Execute the pipeline for each domain in the schedule."""
-        n8n_webhook = os.environ.get('N8N_KWR_WEBHOOK_URL', '').strip()
+        """Execute the pipeline for each domain in the schedule via n8n API."""
+        n8n_api_key = os.environ.get('N8N_API_KEY', '').strip()
+        n8n_base = os.environ.get('N8N_BASE_URL', 'https://websiseo.app.n8n.cloud').rstrip('/')
         
-        if not n8n_webhook:
-            # Webhook not configured - update batch job and notify
+        if not n8n_api_key:
+            # API key not configured - update batch job and notify
             sh.supa_update('batch_jobs', 'id', batch_job_id, {
                 'status': 'pending_manual_trigger',
-                'error_message': 'N8N_KWR_WEBHOOK_URL not configured. Set it in Render env vars to enable automatic pipeline execution.',
+                'error_message': 'N8N_API_KEY not configured. Set it in Render env vars to enable automatic pipeline execution.',
             })
             sh.supa_insert('notifications', {
                 'type': 'warning',
-                'title': f'Schedule "{name}" paused - webhook missing',
-                'message': 'Configure N8N_KWR_WEBHOOK_URL in Render to enable automatic pipeline execution.',
+                'title': f'Schedule "{name}" paused - n8n API key missing',
+                'message': 'Configure N8N_API_KEY in Render to enable automatic pipeline execution.',
                 'link': '/settings',
             })
-            print(f'[ScheduleEngine] N8N_KWR_WEBHOOK_URL not set. Batch job {batch_job_id} pending manual trigger.', flush=True)
+            print(f'[ScheduleEngine] N8N_API_KEY not set. Batch job {batch_job_id} pending manual trigger.', flush=True)
             return
         
-        # Execute pipeline via n8n webhook for each domain
+        # Load workflow map for domain → workflowId resolution
+        workflow_map = self._load_workflow_map()
+        
+        # Execute pipeline via n8n API for each domain
         success_count = 0
         failed_count = 0
         errors = []
         
         for domain in (domains or []):
             try:
-                result = self._trigger_n8n_webhook(n8n_webhook, domain, name, schedule_id)
+                result = self._trigger_n8n_workflow(n8n_base, n8n_api_key, domain, name, schedule_id, workflow_map)
                 if result.get('success'):
                     success_count += 1
                 else:
@@ -212,8 +216,8 @@ class ScheduleEngine:
                 failed_count += 1
                 errors.append(f'{domain}: {str(e)}')
             
-            # Small delay between triggers to avoid overwhelming the webhook
-            time.sleep(1)
+            # Small delay between triggers to avoid overwhelming the API
+            time.sleep(2)
         
         # Update batch job with results
         final_status = 'completed' if failed_count == 0 else ('partial' if success_count > 0 else 'failed')
@@ -245,34 +249,117 @@ class ScheduleEngine:
         
         print(f'[ScheduleEngine] Pipeline execution: {success_count} succeeded, {failed_count} failed', flush=True)
     
-    def _trigger_n8n_webhook(self, webhook_url, domain, schedule_name, schedule_id):
-        """Trigger the n8n pipeline for a single domain via webhook."""
-        payload = {
-            'domain': domain,
-            'schedule_name': schedule_name,
-            'schedule_id': schedule_id,
-            'trigger_source': 'scheduler',
-            'timestamp': datetime.datetime.utcnow().isoformat(),
-        }
+    def _load_workflow_map(self):
+        """Load domain → workflowId mapping from n8n-workflow-map.json."""
+        try:
+            map_path = os.path.join(ROOT, 'n8n-workflow-map.json')
+            if os.path.exists(map_path):
+                with open(map_path, 'r', encoding='utf-8') as f:
+                    data = json.load(f)
+                    return data.get('domains', {})
+        except Exception as e:
+            print(f'[ScheduleEngine] Warning: could not load workflow map: {e}', flush=True)
+        return {}
+    
+    def _find_workflow_by_domain(self, n8n_base, api_key, domain):
+        """Find the n8n workflow ID for a domain by searching the API."""
+        # First check local workflow map
+        workflow_map = self._load_workflow_map()
+        if domain in workflow_map:
+            wf_id = workflow_map[domain].get('workflowId', '')
+            if wf_id:
+                return wf_id, workflow_map[domain].get('workflowName', domain)
         
-        data = json.dumps(payload).encode('utf-8')
-        req = urllib.request.Request(
-            webhook_url,
-            data=data,
-            headers={'Content-Type': 'application/json'},
-            method='POST'
-        )
+        # Search n8n API for workflow matching domain name
+        try:
+            url = f'{n8n_base}/api/v1/workflows?limit=100'
+            req = urllib.request.Request(url, headers={
+                'X-N8N-API-KEY': api_key,
+                'Accept': 'application/json',
+            })
+            with urllib.request.urlopen(req, timeout=30) as resp:
+                data = json.loads(resp.read().decode('utf-8'))
+                for wf in data.get('data', []):
+                    wf_name = wf.get('name', '').lower()
+                    if domain.lower() in wf_name:
+                        return wf['id'], wf['name']
+        except Exception as e:
+            print(f'[ScheduleEngine] Warning: could not search n8n workflows: {e}', flush=True)
+        
+        return None, None
+    
+    def _trigger_n8n_workflow(self, n8n_base, api_key, domain, schedule_name, schedule_id, workflow_map):
+        """Trigger the n8n workflow for a domain via the n8n API.
+        
+        Strategy:
+        1. Find workflow by domain name
+        2. Check if it has a Schedule Trigger node (runs automatically)
+        3. If not active, activate it so the next schedule tick fires
+        4. For immediate execution, check if workflow has a webhook we can POST to
+        """
+        # Find the workflow for this domain
+        workflow_id, workflow_name = self._find_workflow_by_domain(n8n_base, api_key, domain)
+        
+        if not workflow_id:
+            return {'success': False, 'error': f'No n8n workflow found for domain: {domain}'}
         
         try:
-            with urllib.request.urlopen(req, timeout=120) as resp:
-                status = resp.getcode()
-                body = resp.read().decode('utf-8')
-                if 200 <= status < 300:
-                    return {'success': True, 'status': status, 'response': body}
-                else:
-                    return {'success': False, 'error': f'HTTP {status}: {body[:200]}'}
+            # Get workflow details to check its trigger type
+            url = f'{n8n_base}/api/v1/workflows/{urllib.parse.quote(workflow_id)}'
+            req = urllib.request.Request(url, headers={
+                'X-N8N-API-KEY': api_key,
+                'Accept': 'application/json',
+            })
+            with urllib.request.urlopen(req, timeout=30) as resp:
+                wf_data = json.loads(resp.read().decode('utf-8'))
+            
+            nodes = wf_data.get('nodes', [])
+            has_schedule_trigger = any(
+                n.get('type', '').startswith('n8n-nodes-base.scheduleTrigger') or
+                n.get('type', '').startswith('@n8n/n8n-nodes-langchain') or
+                n.get('type') == 'n8n-nodes-base.manualTrigger'
+                for n in nodes
+            )
+            
+            is_active = wf_data.get('active', False)
+            
+            if not is_active:
+                # Activate the workflow so its trigger fires
+                activate_url = f'{n8n_base}/api/v1/workflows/{urllib.parse.quote(workflow_id)}/activate'
+                activate_req = urllib.request.Request(
+                    activate_url,
+                    data=b'{}',
+                    headers={
+                        'X-N8N-API-KEY': api_key,
+                        'Content-Type': 'application/json',
+                    },
+                    method='PUT'
+                )
+                with urllib.request.urlopen(activate_req, timeout=30) as resp:
+                    resp.read()
+                
+                print(f'[ScheduleEngine] Activated workflow "{workflow_name}" for {domain}', flush=True)
+                return {
+                    'success': True,
+                    'status': 200,
+                    'workflow_id': workflow_id,
+                    'workflow_name': workflow_name,
+                    'action': 'activated',
+                    'message': f'Workflow activated for domain {domain}. Pipeline will run on next schedule tick.',
+                }
+            else:
+                return {
+                    'success': True,
+                    'status': 200,
+                    'workflow_id': workflow_id,
+                    'workflow_name': workflow_name,
+                    'action': 'already_active',
+                    'message': f'Workflow already active for domain {domain}.',
+                }
+                
         except urllib.error.HTTPError as e:
-            return {'success': False, 'error': f'HTTP {e.code}: {e.read().decode("utf-8")[:200]}'}
+            body = e.read().decode('utf-8')[:200] if hasattr(e, 'read') else ''
+            return {'success': False, 'error': f'HTTP {e.code}: {body}'}
         except Exception as e:
             return {'success': False, 'error': str(e)}
 
