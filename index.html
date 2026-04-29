@@ -7198,6 +7198,21 @@ body.light .action-btn.primary{
 /* END SAFE_UI_API_FIXES_2026_04_26 */
 
 </style>
+
+<style id="template-intelligence-connectors-css-2026-04-29">
+/* TEMPLATE_INTELLIGENCE_CONNECTORS_UI_2026_04_29 */
+.template-connectors-page{max-width:1180px;margin:0 auto;padding:0 20px 80px;}
+.tic-hero{background:linear-gradient(135deg,rgba(113,112,255,.18),rgba(16,185,129,.08));border:1px solid rgba(113,112,255,.24);border-radius:22px;padding:22px;margin-bottom:18px;box-shadow:0 18px 44px rgba(0,0,0,.18)}
+.tic-hero-kicker{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:#a7a5ff;font-weight:800;margin-bottom:8px}
+.tic-hero h2{font-size:clamp(24px,3vw,36px);letter-spacing:-.04em;margin:0;color:var(--text)}
+.tic-hero p{max-width:780px;color:var(--text-secondary);font-size:14px;line-height:1.65;margin:10px 0 0}
+.tic-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;margin:18px 0}
+.tic-card{border:1px solid var(--border);border-radius:16px;background:var(--surface);padding:16px;display:flex;flex-direction:column;gap:10px;min-height:180px;position:relative;overflow:hidden}
+.tic-card:before{content:"";position:absolute;inset:0 0 auto;height:3px;background:linear-gradient(90deg,#7170ff,#10b981);opacity:.75}
+.tic-card h3{font-size:15px;margin:0;color:var(--text);display:flex;align-items:center;gap:8px}.tic-card p{font-size:12px;color:var(--text-secondary);line-height:1.55;margin:0}.tic-badge{display:inline-flex;align-items:center;width:max-content;padding:3px 8px;border-radius:99px;font-size:10px;font-weight:800;background:rgba(113,112,255,.14);color:#c4c2ff;border:1px solid rgba(113,112,255,.25)}
+.tic-workbench{display:grid;grid-template-columns:minmax(280px,420px) 1fr;gap:16px;align-items:start}.tic-panel{border:1px solid var(--border);border-radius:18px;background:rgba(255,255,255,.025);padding:16px}.tic-panel h3{font-size:14px;margin:0 0 12px;color:var(--text)}.tic-field{display:flex;flex-direction:column;gap:6px;margin-bottom:12px}.tic-field label{font-size:11px;color:var(--muted);font-weight:800;text-transform:uppercase;letter-spacing:.06em}.tic-field input,.tic-field select,.tic-field textarea{width:100%;border:1px solid var(--border);border-radius:10px;background:rgba(0,0,0,.18);color:var(--text);padding:10px 11px;font-size:13px}.tic-field textarea{min-height:100px;font-family:'SF Mono','Monaco',monospace;resize:vertical}.tic-actions{display:flex;gap:8px;flex-wrap:wrap}.tic-output{min-height:260px;background:#08090a;border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:14px;font-family:'SF Mono','Monaco',monospace;font-size:12px;color:#d7dbff;white-space:pre-wrap;word-break:break-word;overflow:auto}.tic-score-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:10px;margin:12px 0}.tic-score{padding:10px;border-radius:12px;background:rgba(255,255,255,.035);border:1px solid rgba(255,255,255,.07)}.tic-score strong{display:block;font-size:22px;color:var(--text)}.tic-score span{font-size:10px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);font-weight:800}.tic-grapes-stage{min-height:420px;border:1px solid var(--border);border-radius:14px;overflow:hidden;background:#fff}.tic-muted{font-size:12px;color:var(--muted);line-height:1.55}.tic-status-ok{color:#6ee7b7}.tic-status-warn{color:#fcd34d}.tic-status-error{color:#fca5a5}@media(max-width:900px){.template-connectors-page{padding:0 12px 90px}.tic-workbench{grid-template-columns:1fr}.tic-hero{padding:18px}.tic-card{min-height:auto}}
+</style>
+
 </head>
 
 <body>
@@ -7215,6 +7230,7 @@ body.light .action-btn.primary{
   <button class="mobile-nav-item" onclick="showPage('tasks');closeMobileMenu()">Tasks</button>
   <button class="mobile-nav-item" onclick="showPage('analytics');closeMobileMenu()">Analytics</button>
   <button class="mobile-nav-item" data-testid="mobile-nav-template-improvements" onclick="showPage('template-improvements');closeMobileMenu()">Template Improvements</button>
+  <button class="mobile-nav-item" data-testid="mobile-nav-template-connectors" onclick="showPage('template-connectors');closeMobileMenu()">Template Connectors</button>
   <button class="mobile-nav-item" data-testid="mobile-nav-productivity-hub" onclick="showPage('productivity-hub');closeMobileMenu()">Productivity Hub</button>
   <button class="mobile-nav-item" onclick="showPage('settings');closeMobileMenu()">Settings</button>
   <button class="mobile-nav-item" onclick="closeMobileMenu();fullSync(document.getElementById('hdr-sync-btn'))">Sync dashboard</button>
@@ -7261,6 +7277,10 @@ body.light .action-btn.primary{
       <button class="fixer-tab-btn" id="tab-template-improvements" data-testid="tab-template-improvements" onclick="showPage('template-improvements')" aria-label="Template Improvements" role="tab" aria-selected="false" data-feature="template-improvements">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3l1.9 5.8h6.1l-4.9 3.6 1.9 5.8-5-3.6-5 3.6 1.9-5.8L4 8.8h6.1L12 3z"/></svg>
         <span class="tab-label">Improvements</span>
+      </button>
+      <button class="fixer-tab-btn" id="tab-template-connectors" data-testid="tab-template-connectors" onclick="showPage('template-connectors')" aria-label="Template Intelligence Connectors" role="tab" aria-selected="false" data-feature="template-connectors">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.07 0l2.83-2.83a5 5 0 1 0-7.07-7.07L11.5 4.43"/><path d="M14 11a5 5 0 0 0-7.07 0L4.1 13.83a5 5 0 1 0 7.07 7.07l1.33-1.33"/></svg>
+        <span class="tab-label">Connectors</span>
       </button>
       <button class="fixer-tab-btn" id="tab-productivity-hub" data-testid="tab-productivity-hub" onclick="showPage('productivity-hub')" aria-label="Productivity Hub" role="tab" aria-selected="false" data-feature="productivity-hub">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19V5"/><path d="M4 19h16"/><path d="M8 16v-5"/><path d="M12 16V8"/><path d="M16 16v-3"/><path d="M20 16V6"/></svg>
@@ -11102,6 +11122,109 @@ CREATE POLICY "Users see own reports"
   <svg id="action-toast-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
   <span id="action-toast-msg">Done</span>
 </div>
+
+<script id="template-intelligence-connectors-js-2026-04-29">
+/* TEMPLATE_INTELLIGENCE_CONNECTORS_JS_2026_04_29 */
+(function(){
+  var ticCatalogLoaded = false;
+  var ticLastResult = null;
+  var ticGrapesEditor = null;
+  function esc(v){return String(v == null ? '' : v).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+  function pretty(v){try{return JSON.stringify(v,null,2);}catch(_){return String(v || '');}}
+  function setOutput(payload, isError){
+    var out=document.getElementById('tic-output');
+    if(out){out.classList.toggle('tic-status-error', !!isError);out.textContent=typeof payload==='string'?payload:pretty(payload);}
+    ticRenderScores(payload);
+  }
+  async function ticFetch(path, opts){
+    opts=opts||{};opts.headers=opts.headers||{};
+    if(opts.body && !opts.headers['Content-Type']) opts.headers['Content-Type']='application/json';
+    var method=String(opts.method||'GET').toUpperCase();
+    if(['POST','PUT','PATCH','DELETE'].indexOf(method)>=0 && window.dashboardEnsureCsrf && !opts.headers['X-CSRF-Token']){
+      var csrf=await window.dashboardEnsureCsrf();
+      if(csrf) opts.headers['X-CSRF-Token']=csrf;
+    }
+    return fetch(path, opts).then(function(r){return r.json().catch(function(){return {ok:false,error:'Invalid JSON response'}}).then(function(data){if(!r.ok && data && data.ok !== false)data.ok=false;return data;});});
+  }
+  function statusClass(row){var s=String(row.status||'').toLowerCase();if(s.indexOf('ready')>=0||row.configured)return 'tic-status-ok';if(s.indexOf('token')>=0||s.indexOf('key')>=0)return 'tic-status-warn';return '';}
+  window.initTemplateConnectorsPage = function(){
+    if(ticCatalogLoaded) return;
+    ticCatalogLoaded = true;
+    ticFetch('/api/template-connectors/catalog').then(function(data){
+      var wrap=document.getElementById('tic-catalog-cards'); if(!wrap) return;
+      var rows=(data&&data.connectors)||[];
+      wrap.innerHTML = rows.map(function(row){
+        return '<article class="tic-card">'
+          + '<span class="tic-badge">Priority '+esc(row.priority)+' · '+esc(row.kind)+'</span>'
+          + '<h3>'+esc(row.name)+'</h3>'
+          + '<p>'+esc(row.description)+'</p>'
+          + '<p class="'+statusClass(row)+'"><strong>Status:</strong> '+esc(row.status)+'</p>'
+          + '</article>';
+      }).join('') || '<div class="tic-card"><p>No connectors returned.</p></div>';
+    }).catch(function(err){ticCatalogLoaded=false;setOutput('Catalog load failed: '+err.message,true);});
+    ticUpdateFormHint();
+  };
+  window.ticUpdateFormHint = function(){
+    var sel=document.getElementById('tic-connector-select'); var hint=document.getElementById('tic-form-hint'); var strategy=document.getElementById('tic-pagespeed-strategy-wrap');
+    var v=sel?sel.value:'wordpress-rest'; if(strategy) strategy.style.display = v==='pagespeed' ? 'block' : 'none';
+    var text={
+      'wordpress-rest':'Enter a WordPress site URL. The dashboard checks /wp-json, wp/v2 types, taxonomies, and sample posts.',
+      'wpgraphql':'Enter a WordPress site URL with WPGraphQL installed. The dashboard probes /graphql with a read-only schema query.',
+      'figma':'Paste a Figma file URL or key. Requires FIGMA_API_TOKEN in Render/Hermes environment; the token is never sent to the browser.',
+      'pagespeed':'Enter any public page URL. Runs Google PageSpeed Insights for mobile or desktop QA.',
+      'grapesjs':'No server call required. Use Open GrapesJS to load the visual editor on demand.'
+    }[v];
+    if(hint) hint.textContent=text;
+  };
+  window.ticRunConnectorTest = async function(){
+    var connector=(document.getElementById('tic-connector-select')||{}).value || 'wordpress-rest';
+    if(connector==='grapesjs'){setOutput({ok:true,connector:'grapesjs',summary:'GrapesJS is client-side. Click Open GrapesJS to edit/export HTML.'});return;}
+    var url=(document.getElementById('tic-target-url')||{}).value || '';
+    var strategy=(document.getElementById('tic-pagespeed-strategy')||{}).value || 'mobile';
+    setOutput('Testing '+connector+'…');
+    try{
+      var payload={connector:connector,url:url,siteUrl:url,strategy:strategy,figmaFileUrl:url};
+      var data=await ticFetch('/api/template-connectors/test',{method:'POST',body:JSON.stringify(payload)});
+      ticLastResult=data; setOutput(data, !data.ok);
+    }catch(err){setOutput('Connector test failed: '+err.message,true);}
+  };
+  function ticRenderScores(payload){
+    var row=document.getElementById('tic-score-row'); if(!row) return;
+    var scores=payload&&payload.scores;
+    if(!scores){row.style.display='none';row.innerHTML='';return;}
+    row.style.display='grid';
+    row.innerHTML=Object.keys(scores).map(function(k){var v=scores[k];return '<div class="tic-score"><strong>'+esc(v==null?'—':v)+'</strong><span>'+esc(k)+'</span></div>';}).join('');
+  }
+  window.ticApplyResultToPromptStudio = function(){
+    if(!ticLastResult){setOutput('Run a connector test first, then send the resulting context to Prompt Studio.',true);return;}
+    try{localStorage.setItem('templateConnectorContext', JSON.stringify(ticLastResult));}catch(_){}
+    setOutput({ok:true,stored:'templateConnectorContext',summary:'Connector context saved locally. Prompt Studio can now use this as source/reference context.',context:ticLastResult});
+  };
+  function loadCssOnce(id, href){return new Promise(function(resolve,reject){if(document.getElementById(id))return resolve();var l=document.createElement('link');l.id=id;l.rel='stylesheet';l.href=href;l.onload=resolve;l.onerror=reject;document.head.appendChild(l);});}
+  function loadScriptOnce(id, src){return new Promise(function(resolve,reject){if(document.getElementById(id))return resolve();var sc=document.createElement('script');sc.id=id;sc.src=src;sc.onload=resolve;sc.onerror=reject;document.head.appendChild(sc);});}
+  window.ticLoadGrapesEditor = async function(){
+    var stage=document.getElementById('tic-grapes-stage'); if(!stage) return;
+    try{
+      stage.innerHTML='<div id="tic-grapes-editor" style="height:520px"></div>';
+      await loadCssOnce('grapesjs-css','https://unpkg.com/grapesjs/dist/css/grapes.min.css');
+      await loadScriptOnce('grapesjs-js','https://unpkg.com/grapesjs');
+      var seed=(document.getElementById('tic-grapes-seed')||{}).value || '<section style="padding:40px;font-family:Inter,Arial,sans-serif"><h2>Template section</h2><p>Edit this HTML visually, then export it.</p><a href="#" style="display:inline-block;padding:12px 18px;border-radius:10px;background:#7170ff;color:white;text-decoration:none">Primary CTA</a></section>';
+      if(!window.grapesjs) throw new Error('GrapesJS did not load');
+      ticGrapesEditor = window.grapesjs.init({container:'#tic-grapes-editor',height:'520px',storageManager:false,fromElement:false,components:seed,style:'body{margin:0}'});
+      setOutput({ok:true,connector:'grapesjs',summary:'GrapesJS editor loaded. Edit visually and export HTML when ready.'});
+    }catch(err){setOutput('Could not load GrapesJS: '+err.message,true);}
+  };
+  window.ticExportGrapesHtml = function(){
+    if(!ticGrapesEditor){setOutput('Load the GrapesJS editor first.',true);return;}
+    var html=ticGrapesEditor.getHtml(); var css=ticGrapesEditor.getCss();
+    var out='<!-- Exported from Template Intelligence GrapesJS -->\n<style>\n'+css+'\n</style>\n'+html;
+    setOutput(out);
+    try{navigator.clipboard&&navigator.clipboard.writeText(out);}catch(_){}
+  };
+  document.addEventListener('DOMContentLoaded', function(){ if(document.getElementById('page-template-connectors')) window.initTemplateConnectorsPage(); });
+})();
+</script>
+
 <footer class="footer"></footer>
 
 <script>
@@ -13406,10 +13529,12 @@ document.addEventListener('click', function(ev){
     const isKwr = (name === 'kwr');
     const isTask  = (name === 'tasks');
     const isTemplateImprovements = (name === 'template-improvements');
+    const isTemplateConnectors = (name === 'template-connectors');
     const isProductivityHub = (name === 'productivity-hub');
     document.body.classList.toggle('page-kwr-active', isKwr);
     document.body.classList.toggle('page-tasks-active', isTask);
     document.body.classList.toggle('page-productivity-hub-active', isProductivityHub);
+    document.body.classList.toggle('page-template-connectors-active', isTemplateConnectors);
     const container = document.querySelector('.container');
     const fixerPage = document.getElementById('page-fixer');
     const radarPage = document.getElementById('page-radar');
@@ -13450,6 +13575,7 @@ document.addEventListener('click', function(ev){
     }
     // Analytics + Settings pages
     var templateImprovementsPage = document.getElementById('page-template-improvements');
+    var templateConnectorsPage = document.getElementById('page-template-connectors');
     var productivityHubPage = document.getElementById('page-productivity-hub');
     var analyticsPage = document.getElementById('page-analytics');
     var settingsPage  = document.getElementById('page-settings');
@@ -13458,6 +13584,10 @@ document.addEventListener('click', function(ev){
     if (templateImprovementsPage) {
       templateImprovementsPage.style.display = isTemplateImprovements ? 'block' : 'none';
       templateImprovementsPage.classList.toggle('active', isTemplateImprovements);
+    }
+    if (templateConnectorsPage) {
+      templateConnectorsPage.style.display = isTemplateConnectors ? 'block' : 'none';
+      templateConnectorsPage.classList.toggle('active', isTemplateConnectors);
     }
     if (productivityHubPage) {
       productivityHubPage.style.display = isProductivityHub ? 'block' : 'none';
@@ -13472,6 +13602,7 @@ document.addEventListener('click', function(ev){
       settingsPage.classList.toggle('active', isSettings);
     }
     if (isTemplateImprovements) runPageInit('template-improvements', window.initTemplateImprovementsPage);
+    if (isTemplateConnectors) runPageInit('template-connectors', window.initTemplateConnectorsPage);
     if (isProductivityHub) runPageInit('productivity-hub', window.initProductivityHubPage);
     if (isAnalytics) runPageInit('analytics', window.initAnalyticsPage);
     if (isSettings)  runPageInit('settings', window.initSettingsPage);
@@ -13487,10 +13618,12 @@ document.addEventListener('click', function(ev){
     const tabTasks = document.getElementById('tab-tasks');
     if (tabTasks) { tabTasks.classList.toggle('active', isTask); tabTasks.setAttribute('aria-selected', isTask ? 'true' : 'false'); }
     var tabTemplateImprovements = document.getElementById('tab-template-improvements');
+    var tabTemplateConnectors = document.getElementById('tab-template-connectors');
     var tabProductivityHub = document.getElementById('tab-productivity-hub');
     var tabAnalytics = document.getElementById('tab-analytics');
     var tabSettings  = document.getElementById('tab-settings');
     if (tabTemplateImprovements) { tabTemplateImprovements.classList.toggle('active', isTemplateImprovements); tabTemplateImprovements.setAttribute('aria-selected', isTemplateImprovements ? 'true' : 'false'); }
+    if (tabTemplateConnectors) { tabTemplateConnectors.classList.toggle('active', isTemplateConnectors); tabTemplateConnectors.setAttribute('aria-selected', isTemplateConnectors ? 'true' : 'false'); }
     if (tabProductivityHub) { tabProductivityHub.classList.toggle('active', isProductivityHub); tabProductivityHub.setAttribute('aria-selected', isProductivityHub ? 'true' : 'false'); }
     if (tabAnalytics) { tabAnalytics.classList.toggle('active', isAnalytics); tabAnalytics.setAttribute('aria-selected', isAnalytics ? 'true' : 'false'); }
     if (tabSettings)  { tabSettings.classList.toggle('active',  isSettings);  tabSettings.setAttribute('aria-selected',  isSettings  ? 'true' : 'false'); }
@@ -19041,6 +19174,77 @@ async function downloadPromptPreviewShot(){
      MISSING FEATURES PRODUCTIVITY HUB — additive feature 2026-04-27
      MISSING_FEATURES_PRODUCTIVITY_HUB_2026_04_27
      ============================================================ -->
+
+<!-- ============================================================
+     TEMPLATE_INTELLIGENCE_CONNECTORS_UI_2026_04_29
+     Read-only connector hub for WordPress/WPGraphQL/Figma/GrapesJS/PageSpeed.
+     ============================================================ -->
+<div id="page-template-connectors" class="fixer-page template-connectors-page" style="display:none" data-feature="template-connectors" data-testid="page-template-connectors">
+  <section class="tic-hero">
+    <div class="tic-hero-kicker">Template Intelligence Connectors</div>
+    <h2>Connect real content, reference design, visual editing, and QA.</h2>
+    <p>Priority-1 connector pack for HTML Improvement Templates: WordPress REST, WPGraphQL, Figma API/MCP-ready metadata, GrapesJS visual editor, and Google PageSpeed Insights. Probes are read-only and never expose server secrets to the browser.</p>
+  </section>
+
+  <div class="tic-grid" id="tic-catalog-cards" aria-live="polite">
+    <div class="tic-card"><span class="tic-badge">Loading</span><p>Loading connector catalog…</p></div>
+  </div>
+
+  <div class="tic-workbench">
+    <section class="tic-panel" aria-labelledby="tic-probe-title">
+      <h3 id="tic-probe-title">Connection test</h3>
+      <div class="tic-field">
+        <label for="tic-connector-select">Connector</label>
+        <select id="tic-connector-select" onchange="ticUpdateFormHint()">
+          <option value="wordpress-rest">WordPress REST API</option>
+          <option value="wpgraphql">WPGraphQL</option>
+          <option value="figma">Figma API / MCP-ready</option>
+          <option value="pagespeed">PageSpeed Insights</option>
+          <option value="grapesjs">GrapesJS editor</option>
+        </select>
+      </div>
+      <div class="tic-field">
+        <label for="tic-target-url">Site URL / Figma file URL or key</label>
+        <input id="tic-target-url" type="url" placeholder="https://example.com">
+      </div>
+      <div class="tic-field" id="tic-pagespeed-strategy-wrap" style="display:none">
+        <label for="tic-pagespeed-strategy">PageSpeed strategy</label>
+        <select id="tic-pagespeed-strategy"><option value="mobile">Mobile</option><option value="desktop">Desktop</option></select>
+      </div>
+      <p class="tic-muted" id="tic-form-hint">Enter a WordPress site URL. The dashboard will check /wp-json and summarize available content structures.</p>
+      <div class="tic-actions">
+        <button class="action-btn accent" onclick="ticRunConnectorTest()">Test Connector</button>
+        <button class="action-btn" onclick="ticApplyResultToPromptStudio()">Send Context to Prompt Studio</button>
+        <button class="action-btn" onclick="ticLoadGrapesEditor()">Open GrapesJS</button>
+      </div>
+    </section>
+
+    <section class="tic-panel" aria-labelledby="tic-output-title">
+      <h3 id="tic-output-title">Connector output</h3>
+      <div class="tic-score-row" id="tic-score-row" style="display:none"></div>
+      <pre class="tic-output" id="tic-output">Run a connector test to see structured context for template generation.</pre>
+    </section>
+  </div>
+
+  <section class="tic-panel" style="margin-top:16px" aria-labelledby="tic-grapes-title">
+    <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:12px">
+      <div>
+        <h3 id="tic-grapes-title" style="margin-bottom:4px">GrapesJS visual editor</h3>
+        <p class="tic-muted">Paste generated HTML/CSS, preview visually, then export cleaned standalone HTML for WordPress/Gutenberg/Elementor adaptation.</p>
+      </div>
+      <div class="tic-actions">
+        <button class="action-btn" onclick="ticLoadGrapesEditor()">Load Editor</button>
+        <button class="action-btn success" onclick="ticExportGrapesHtml()">Export HTML</button>
+      </div>
+    </div>
+    <div class="tic-field">
+      <label for="tic-grapes-seed">Seed HTML</label>
+      <textarea id="tic-grapes-seed" placeholder="<section class='wp-template-section'>...</section>"></textarea>
+    </div>
+    <div id="tic-grapes-stage" class="tic-grapes-stage"><div style="padding:18px;color:#111;font-family:Inter,Arial,sans-serif">Click “Load Editor” to initialize GrapesJS on demand.</div></div>
+  </section>
+</div>
+
 <div id="page-productivity-hub" class="fixer-page missing-features-hub" style="display:none" data-testid="page-productivity-hub" data-feature="productivity-hub">
   <div class="fixer-page-header mf-hero">
     <div>

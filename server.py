@@ -866,6 +866,286 @@ def fetch_text(url, headers=None, timeout=60):
         return resp.read().decode('utf-8')
 
 
+
+
+# ============================================================
+# TEMPLATE_INTELLIGENCE_CONNECTORS_2026_04_29
+# Read-only connector probes for the Template Intelligence dashboard tab.
+# No connector secrets are returned to the browser.
+# ============================================================
+TEMPLATE_CONNECTOR_CATALOG = [
+    {
+        'id': 'wordpress-rest',
+        'name': 'WordPress REST API',
+        'priority': 1,
+        'kind': 'input',
+        'description': 'Pull public WordPress metadata, post types, taxonomies, and sample posts from /wp-json.',
+        'requires': ['site_url'],
+        'configured_env': [],
+        'status': 'ready',
+    },
+    {
+        'id': 'wpgraphql',
+        'name': 'WPGraphQL',
+        'priority': 2,
+        'kind': 'input',
+        'description': 'Probe /graphql for richer WordPress schemas, ACF/content models, and complex references.',
+        'requires': ['site_url'],
+        'configured_env': [],
+        'status': 'ready',
+    },
+    {
+        'id': 'figma',
+        'name': 'Figma API / MCP-ready',
+        'priority': 3,
+        'kind': 'design-source',
+        'description': 'Read Figma file metadata, frames, components, styles, colors, and typography when FIGMA_API_TOKEN is configured.',
+        'requires': ['figma_file_url_or_key', 'FIGMA_API_TOKEN'],
+        'configured_env': ['FIGMA_API_TOKEN'],
+        'status': 'needs-token',
+    },
+    {
+        'id': 'grapesjs',
+        'name': 'GrapesJS Embedded Editor',
+        'priority': 4,
+        'kind': 'builder',
+        'description': 'Client-side visual HTML/CSS editing and export for generated sections/templates.',
+        'requires': ['browser'],
+        'configured_env': [],
+        'status': 'client-ready',
+    },
+    {
+        'id': 'pagespeed',
+        'name': 'PageSpeed Insights API',
+        'priority': 5,
+        'kind': 'qa',
+        'description': 'Run Google PageSpeed/Lighthouse QA for mobile/desktop performance, accessibility, SEO, and diagnostics.',
+        'requires': ['url'],
+        'configured_env': ['PAGESPEED_API_KEY'],
+        'status': 'ready-without-key',
+    },
+]
+
+
+def _template_connector_env_present(name: str) -> bool:
+    return bool((os.getenv(name) or '').strip())
+
+
+def _template_connector_catalog():
+    rows = []
+    for item in TEMPLATE_CONNECTOR_CATALOG:
+        row = dict(item)
+        env_status = {key: _template_connector_env_present(key) for key in row.get('configured_env', [])}
+        row['env'] = env_status
+        if row['id'] == 'figma':
+            row['configured'] = env_status.get('FIGMA_API_TOKEN', False)
+            row['status'] = 'ready' if row['configured'] else 'needs FIGMA_API_TOKEN'
+        elif row['id'] == 'pagespeed':
+            row['configured'] = True
+            row['status'] = 'ready' if env_status.get('PAGESPEED_API_KEY') else 'ready without key (quota-limited)'
+        else:
+            row['configured'] = True
+        rows.append(row)
+    return {'ok': True, 'generated_at': datetime.datetime.utcnow().isoformat() + 'Z', 'connectors': rows}
+
+
+def _template_connector_normalize_url(value: str) -> str:
+    value = (value or '').strip()
+    if not value:
+        raise ValueError('url required')
+    if not re.match(r'^https?://', value, re.I):
+        value = 'https://' + value
+    parsed = urllib.parse.urlparse(value)
+    if parsed.scheme not in ('http', 'https') or not parsed.netloc:
+        raise ValueError('Only absolute http(s) URLs are supported')
+    host = (parsed.hostname or '').lower()
+    blocked_hosts = {'localhost', '127.0.0.1', '0.0.0.0', '::1'}
+    if host in blocked_hosts or host.endswith('.local'):
+        raise ValueError('Local/private connector targets are not allowed from the dashboard')
+    return urllib.parse.urlunparse((parsed.scheme, parsed.netloc, parsed.path.rstrip('/'), '', '', ''))
+
+
+def _template_connector_urljoin(base: str, suffix: str) -> str:
+    return base.rstrip('/') + '/' + suffix.lstrip('/')
+
+
+def _template_connector_extract_figma_key(value: str) -> str:
+    raw = (value or '').strip()
+    if not raw:
+        raise ValueError('figmaFileKey or figmaFileUrl required')
+    m = re.search(r'figma\.com/(?:file|design)/([A-Za-z0-9]+)', raw)
+    if m:
+        return m.group(1)
+    if re.fullmatch(r'[A-Za-z0-9]{8,}', raw):
+        return raw
+    raise ValueError('Could not parse Figma file key from input')
+
+
+def _template_connector_probe_wordpress_rest(url: str):
+    base = _template_connector_normalize_url(url)
+    index_url = _template_connector_urljoin(base, '/wp-json')
+    index = fetch_json(index_url, timeout=20)
+    namespaces = index.get('namespaces', []) if isinstance(index, dict) else []
+    routes = index.get('routes', {}) if isinstance(index, dict) else {}
+    site = {
+        'name': index.get('name') if isinstance(index, dict) else '',
+        'description': index.get('description') if isinstance(index, dict) else '',
+        'url': index.get('url') if isinstance(index, dict) else base,
+        'home': index.get('home') if isinstance(index, dict) else base,
+    }
+    post_types = []
+    taxonomies = []
+    posts_sample = []
+    try:
+        types = fetch_json(_template_connector_urljoin(base, '/wp-json/wp/v2/types?context=view'), timeout=20)
+        if isinstance(types, dict):
+            post_types = sorted(types.keys())[:25]
+    except Exception:
+        pass
+    try:
+        tax = fetch_json(_template_connector_urljoin(base, '/wp-json/wp/v2/taxonomies?context=view'), timeout=20)
+        if isinstance(tax, dict):
+            taxonomies = sorted(tax.keys())[:25]
+    except Exception:
+        pass
+    try:
+        posts = fetch_json(_template_connector_urljoin(base, '/wp-json/wp/v2/posts?per_page=5&_fields=id,slug,link,title,date,modified'), timeout=20)
+        if isinstance(posts, list):
+            for post in posts[:5]:
+                title = post.get('title', {}) if isinstance(post, dict) else {}
+                posts_sample.append({
+                    'id': post.get('id'),
+                    'slug': post.get('slug'),
+                    'link': post.get('link'),
+                    'title': title.get('rendered') if isinstance(title, dict) else str(title or ''),
+                    'date': post.get('date'),
+                    'modified': post.get('modified'),
+                })
+    except Exception:
+        pass
+    return {
+        'ok': True,
+        'connector': 'wordpress-rest',
+        'baseUrl': base,
+        'site': site,
+        'namespaces': namespaces[:30],
+        'hasWpV2': 'wp/v2' in namespaces,
+        'routeCount': len(routes) if isinstance(routes, dict) else 0,
+        'postTypes': post_types,
+        'taxonomies': taxonomies,
+        'samplePosts': posts_sample,
+        'summary': 'WordPress REST is reachable' if namespaces else 'wp-json returned but no namespaces were detected',
+    }
+
+
+def _template_connector_probe_wpgraphql(url: str):
+    base = _template_connector_normalize_url(url)
+    endpoint = _template_connector_urljoin(base, '/graphql')
+    query = '{ __typename generalSettings { title url description } }'
+    data = fetch_json(endpoint, method='POST', body={'query': query}, timeout=25)
+    errors = data.get('errors') if isinstance(data, dict) else None
+    if errors:
+        return {'ok': False, 'connector': 'wpgraphql', 'baseUrl': base, 'endpoint': endpoint, 'errors': errors, 'summary': 'WPGraphQL responded with GraphQL errors'}
+    graph_data = data.get('data', {}) if isinstance(data, dict) else {}
+    settings = graph_data.get('generalSettings', {}) if isinstance(graph_data, dict) else {}
+    return {
+        'ok': True,
+        'connector': 'wpgraphql',
+        'baseUrl': base,
+        'endpoint': endpoint,
+        'typename': graph_data.get('__typename') if isinstance(graph_data, dict) else None,
+        'site': settings,
+        'summary': 'WPGraphQL endpoint is reachable',
+    }
+
+
+def _template_connector_probe_figma(file_ref: str):
+    token = (os.getenv('FIGMA_API_TOKEN') or os.getenv('FIGMA_TOKEN') or '').strip()
+    if not token:
+        return {
+            'ok': False,
+            'connector': 'figma',
+            'configured': False,
+            'error': 'FIGMA_API_TOKEN is not configured in the dashboard environment',
+            'summary': 'Add FIGMA_API_TOKEN to enable Figma file reads',
+        }
+    key = _template_connector_extract_figma_key(file_ref)
+    url = f'https://api.figma.com/v1/files/{urllib.parse.quote(key)}?depth=1'
+    data = fetch_json(url, headers={'X-Figma-Token': token}, timeout=30)
+    document = data.get('document', {}) if isinstance(data, dict) else {}
+    children = document.get('children', []) if isinstance(document, dict) else []
+    frames = []
+    for child in children[:20]:
+        frames.append({'name': child.get('name'), 'type': child.get('type'), 'id': child.get('id')})
+    return {
+        'ok': True,
+        'connector': 'figma',
+        'configured': True,
+        'fileKey': key,
+        'name': data.get('name') if isinstance(data, dict) else '',
+        'lastModified': data.get('lastModified') if isinstance(data, dict) else '',
+        'version': data.get('version') if isinstance(data, dict) else '',
+        'topLevelFrames': frames,
+        'summary': f'Figma file reachable with {len(frames)} top-level frame(s)',
+    }
+
+
+def _template_connector_probe_pagespeed(url: str, strategy: str = 'mobile'):
+    target = _template_connector_normalize_url(url)
+    strategy = (strategy or 'mobile').strip().lower()
+    if strategy not in ('mobile', 'desktop'):
+        strategy = 'mobile'
+    params = [
+        ('url', target),
+        ('strategy', strategy),
+        ('category', 'performance'),
+        ('category', 'accessibility'),
+        ('category', 'seo'),
+        ('category', 'best-practices'),
+    ]
+    key = (os.getenv('PAGESPEED_API_KEY') or '').strip()
+    if key:
+        params.append(('key', key))
+    api_url = 'https://www.googleapis.com/pagespeedonline/v5/runPagespeed?' + urllib.parse.urlencode(params, doseq=True)
+    data = fetch_json(api_url, timeout=60)
+    lighthouse = data.get('lighthouseResult', {}) if isinstance(data, dict) else {}
+    categories = lighthouse.get('categories', {}) if isinstance(lighthouse, dict) else {}
+    scores = {}
+    for name, row in categories.items():
+        score = row.get('score') if isinstance(row, dict) else None
+        scores[name] = None if score is None else round(float(score) * 100)
+    audits = lighthouse.get('audits', {}) if isinstance(lighthouse, dict) else {}
+    metrics = {}
+    for key_name in ('largest-contentful-paint', 'cumulative-layout-shift', 'interactive', 'total-blocking-time', 'speed-index'):
+        audit = audits.get(key_name, {}) if isinstance(audits, dict) else {}
+        if isinstance(audit, dict) and audit.get('displayValue'):
+            metrics[key_name] = audit.get('displayValue')
+    return {
+        'ok': True,
+        'connector': 'pagespeed',
+        'url': target,
+        'strategy': strategy,
+        'scores': scores,
+        'metrics': metrics,
+        'hasApiKey': bool(key),
+        'summary': 'PageSpeed Insights completed',
+    }
+
+
+def _template_connector_probe(payload: dict):
+    connector = (payload.get('connector') or payload.get('id') or '').strip().lower()
+    if connector == 'wordpress-rest':
+        return _template_connector_probe_wordpress_rest(payload.get('url') or payload.get('siteUrl') or '')
+    if connector == 'wpgraphql':
+        return _template_connector_probe_wpgraphql(payload.get('url') or payload.get('siteUrl') or '')
+    if connector == 'figma':
+        return _template_connector_probe_figma(payload.get('figmaFileKey') or payload.get('figmaFileUrl') or payload.get('url') or '')
+    if connector == 'pagespeed':
+        return _template_connector_probe_pagespeed(payload.get('url') or payload.get('siteUrl') or '', payload.get('strategy') or 'mobile')
+    if connector == 'grapesjs':
+        return {'ok': True, 'connector': 'grapesjs', 'clientReady': True, 'summary': 'GrapesJS is loaded client-side from CDN on demand; no server credential needed'}
+    raise ValueError('Unsupported connector: ' + (connector or '<empty>'))
+
 def _is_n8n_api_url(url):
     try:
         parsed = urllib.parse.urlparse(url)
@@ -3126,6 +3406,10 @@ body{{font-family:Arial;padding:24px}}h1{{color:#333}}pre{{background:#f4f4f4;pa
                 return json_response(self, 500, {'ok': False, 'error': str(e)})
         if _dashboard_auth_enabled() and not _stage8_check_auth(self, parsed):
             return
+        # TEMPLATE_INTELLIGENCE_CONNECTORS_API_2026_04_29 - read-only connector catalog.
+        if parsed.path == '/api/template-connectors/catalog':
+            return json_response(self, 200, _template_connector_catalog())
+
         # PRODUCTIVITY_HUB_API_2026_04_27 - additive backend foundation routes.
         if parsed.path == '/api/productivity/summary':
             return json_response(self, 200, _productivity_summary())
@@ -6009,6 +6293,20 @@ body{{font-family:Arial;padding:24px}}h1{{color:#333}}pre{{background:#f4f4f4;pa
             return
         if not _r3_check_csrf_or_warn(self, parsed):
             return
+
+        # TEMPLATE_INTELLIGENCE_CONNECTORS_TEST_2026_04_29 - read-only external probes.
+        if parsed.path == '/api/template-connectors/test':
+            try:
+                payload = read_request_json(self) or {}
+                result = _template_connector_probe(payload)
+                return json_response(self, 200 if result.get('ok') else 424, result)
+            except ValueError as exc:
+                return json_response(self, 400, {'ok': False, 'error': str(exc)})
+            except urllib.error.HTTPError as exc:
+                details = exc.read().decode('utf-8', 'replace')[:800]
+                return json_response(self, exc.code if 400 <= exc.code < 600 else 502, {'ok': False, 'error': str(exc), 'details': details})
+            except Exception as exc:
+                return json_response(self, 502, {'ok': False, 'error': str(exc)})
 
         if parsed.path == '/api/stuck-projects/sync':
             try:
