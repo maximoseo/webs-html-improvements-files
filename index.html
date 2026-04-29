@@ -11852,6 +11852,14 @@ function openPromptStudio(projectName, agentName, versionName, htmlDownloadUrl, 
     previewMode:'original',
     previewDeviceMode:'desktop',
     latestOnly:true,
+    // Prompt Studio Contract: initialize context
+    contractVersion:PROMPT_STUDIO_CONTRACT_VERSION,
+    siteProfile:null,
+    siteProfileReviewed:false,
+    analysisStatus:'not_started',
+    validationStatus:'draft',
+    readOnlyN8n:PROMPT_STUDIO_READ_ONLY_N8N,
+    nextAction:PROMPT_STUDIO_DEFAULT_NEXT_ACTION,
   };
 
   document.getElementById('prompt-filename').textContent=agent||'Agent';
@@ -11969,23 +11977,33 @@ function openPromptStudio(projectName, agentName, versionName, htmlDownloadUrl, 
 GitHub folder: ${ghBase}
 ${fileList(htmlFiles,'HTML Templates - Primary file to improve')}${fileList(txtFiles,'N8N Prompts / Text Files - Improve these prompts')}${fileList(jsonFiles,'N8N Workflow JSON Files - Improve these workflows')}${fileList(otherFiles,'Other Files')}
 ${allVersionsBlock}
+## Site Profile Required Before Final Prompt
+
+Before treating the output as production-ready, analyze the real site for: domain, business name, language, text direction, brand colors, fonts, logo URL, author/company details, contact URL, social links, tone, audience, and CTA style. If any field cannot be verified, mark it as needs_review. Do not invent fake colors, logos, author details, phone numbers, social links, images, or claims.
+
 ## What I Want Changed
 
 - [Describe your improvement goal here]
 
-## Where to Upload After Completing
+## Expected Output Package
 
-Replace the existing files for this project. Upload to BOTH destinations below - do NOT create a new parallel folder, replace the active files:
+Return one reviewable package with these top-level fields/sections: site_profile, generated_prompt, validation_report, storage_metadata, next_action. Put the final agent prompt inside generated_prompt. Do not create a competing top-level prompt structure. Default next_action is review_site_profile unless all required facts were verified.
+
+## Safety & Delivery After Approval
+
+This request generates prompt instructions only. Do not modify n8n, GitHub, Supabase, Obsidian, WordPress, or live workflows unless explicit task-specific confirmation is given after review. Preserve all n8n expressions such as {{ ... }}, $json fields, callback URLs, credential references, and workflow variables exactly.
+
+Approved deliverables should eventually target BOTH destinations below, but only after review/approval:
 
 1. Obsidian vault path:
    ${obsBase}\\updated files\\${today}\\
-   Upload: HTML template, N8N prompt, N8N workflow, validation note, source map, summary.
+   Approved upload package: HTML template, N8N prompt, N8N workflow, validation note, source map, summary.
 
-2. GitHub repo path (same project, same version folder, replace active files):
+2. GitHub repo path (same project, same version folder, update active files only after approval):
    ${domain}/${version}/
    Repo: https://github.com/${REPO}
    Dashboard: https://html-redesign-dashboard.maximo-seo.ai/
-   Commit message: "feat(${domain}): [describe what changed] - ${today}"
+   Suggested commit message after approval: "feat(${domain}): [describe what changed] - ${today}"
 `;
   }
 
@@ -12157,6 +12175,12 @@ async function improvePrompt(btn){
   const output=document.getElementById('prompt-output');
   const status=document.getElementById('prompt-status');
   if(!draft){status.textContent='Please write a draft prompt first.';return;}
+  // Prompt Studio Contract: domain-first guard
+  if(!String(promptStudioContext.domain||'').trim()){
+    status.textContent='Target domain/URL is required before final prompt generation.';
+    if(typeof showToast==='function') showToast('Target domain/URL is required before final prompt generation.','warn');
+    return;
+  }
   // Toggle-to-stop behavior: second click aborts the in-flight request
   if(window._improveAbort){
     try{ window._improveAbort.abort('user_cancel'); }catch(e){}
@@ -12192,6 +12216,14 @@ async function improvePrompt(btn){
       draftPrompt:draft,
       checklist:ruleLabels,
       model:selectedModel,
+      // Prompt Studio Contract: request metadata
+      contractVersion:promptStudioContext.contractVersion,
+      siteProfile:promptStudioContext.siteProfile,
+      siteProfileReviewed:promptStudioContext.siteProfileReviewed,
+      analysisStatus:promptStudioContext.analysisStatus,
+      validationStatus:promptStudioContext.validationStatus,
+      readOnlyN8n:PROMPT_STUDIO_READ_ONLY_N8N,
+      nextAction:promptStudioContext.nextAction,
     })});
     const data=await res.json();
     if(!res.ok||!data.ok) throw new Error(data.error||'Prompt improvement failed');
@@ -12902,6 +12934,16 @@ document.addEventListener('keydown',e=>{
 renderDeployJobs();
 
 
+
+// ── Prompt Studio Contract Rules v2026-04-29 ──
+const PROMPT_STUDIO_CONTRACT_VERSION='2026-04-29';
+const PROMPT_STUDIO_REQUIRED_SITE_PROFILE_FIELDS=[
+  'domain','business_name','language','text_direction','brand_colors','fonts','logo_url','author_or_company','contact_url','social_links','tone','audience','cta_style'
+];
+const PROMPT_STUDIO_OUTPUT_PACKAGE_FIELDS=['site_profile','generated_prompt','validation_report','storage_metadata','next_action'];
+const PROMPT_STUDIO_DEFAULT_NEXT_ACTION='review_site_profile';
+const PROMPT_STUDIO_READ_ONLY_N8N=true;
+
 // ── Pre-Improve Checklist (Additional Improvement Rules) ──
 // Edit this list to extend the checklist. Selected labels are injected into
 // the improvement prompt before the model runs.
@@ -12963,6 +13005,16 @@ const CHECKLIST_GROUPS=[
     {id:'mandatory-file-extensions',label:'MANDATORY - Correct File Extensions: Every output file must use its real extension: .html for HTML templates, .txt for N8N prompt files, .json for N8N workflow files. Never upload extensionless files or files with wrong/doubled extensions (e.g. no .html.txt). File names in the GitHub commit must match the extensions on disk exactly. Applies to ALL new and existing projects.',mandatory:true},
     {id:'mandatory-3-files-per-folder',label:'MANDATORY - Max 3 Files Per Agent Folder: Each agent version folder in the GitHub repo (maximoseo/webs-html-improvements-files) must contain exactly 3 files: Improved_HTML_Template.html, Improved_N8N_Prompt.txt, Improved_N8N_Workflow.json. Do not add MD files, summary notes, validation reports, source maps, or import notes inside the agent folder. Remove any existing extra files in the same commit. Applies to ALL new and existing projects.',mandatory:true},
     {id:'mandatory-n8n-credentials-audit',label:'MANDATORY - N8N Workflow Credentials Audit (new AND existing projects): Before uploading any Improved_N8N_Workflow.json, audit every node for correct credentials and URLs: (a) Every wordpressApi credential must be the correct one for THIS domain - never a credential from a different project. (b) Every httpBasicAuth credential for wp-json calls must point to THIS site - never a URL from another domain. (c) Search all node parameters for any foreign domain name and replace with the correct target domain. (d) Confirm no other domain appears anywhere in the workflow nodes except the correct target. (e) Add the workflowId to n8n-workflow-map.json so the Deploy to n8n button resolves instantly. Wrong credentials will silently publish articles to the wrong WordPress site.',mandatory:true},
+    {id:'mandatory-domain-first-site-analysis',label:'MANDATORY - Domain-first Site Analysis: Require a real target domain/URL and analyze the real website before generating any final improved prompt. If analysis is incomplete, mark missing facts as needs_review instead of guessing.',mandatory:true},
+    {id:'mandatory-site-profile-review',label:'MANDATORY - Site Profile Review: The prompt package must include a site_profile section and require user review for missing or uncertain business, brand, language, direction, contact, author, logo, social, tone, and CTA details.',mandatory:true},
+    {id:'mandatory-no-invented-assets',label:'MANDATORY - No Invented Assets: Do not invent fake logos, colors, author names, phone numbers, social links, images, testimonials, products, services, or placeholder/lorem ipsum content unless the user explicitly requests placeholders.',mandatory:true},
+    {id:'mandatory-wp-custom-html-compatibility',label:'MANDATORY - WordPress Custom HTML Compatibility: HTML/template instructions must require a unique scoped wrapper, scoped CSS, inline fallback styles for key visual elements, no fragile dependencies, and safe WordPress Custom HTML insertion.',mandatory:true},
+    {id:'mandatory-responsive-no-overflow',label:'MANDATORY - Responsive No-Overflow: Require clean behavior across mobile, tablet, desktop, and narrow WordPress content columns with no horizontal overflow, clipped buttons, broken images, unreadable text, or unusable floating elements.',mandatory:true},
+    {id:'mandatory-rtl-ltr-handling',label:'MANDATORY - RTL/LTR Handling: Detect language and text direction. For Hebrew/RTL, require lang/dir attributes, right-aligned defaults, mirrored directional UI, and readable hover/focus states.',mandatory:true},
+    {id:'mandatory-n8n-read-only-default',label:'MANDATORY - N8N Read-Only Default: Prompt Studio output must not imply modifying, activating, importing, or deploying n8n workflows unless explicit task-specific approval is given after review.',mandatory:true},
+    {id:'mandatory-n8n-variable-preservation',label:'MANDATORY - Preserve N8N Variables: Preserve all n8n expressions, {{ ... }} placeholders, $json fields, callback URLs such as {{$execution.resumeUrl}}, credential references, and workflow variables exactly.',mandatory:true},
+    {id:'mandatory-output-package-validation',label:'MANDATORY - Output Package Validation: The improved prompt must return a reviewable package with site_profile, generated_prompt, validation_report, storage_metadata, and next_action, and must not claim production-ready if required context is missing.',mandatory:true},
+    {id:'mandatory-storage-no-secrets-duplicates',label:'MANDATORY - Storage Safety: Do not expose secrets. Avoid duplicate files/records. Include clear versioning, target paths, and metadata for any approved future save/export action.',mandatory:true},
   ]},
 ];
 const CHECKLIST_STORAGE_KEY='promptStudioChecklist.v1';
