@@ -11927,7 +11927,7 @@ document.addEventListener('keydown', function(e) {
 
 // Load domains on init
 (function() {
-  dfLoadDomains().then(func);
+  dfLoadDomains().then(function(domains) { DF_DOMAINS = domains; });
 })();
 </script>
     console.error('openPreview fetch failed:', err);
@@ -13174,7 +13174,8 @@ document.addEventListener('keydown', function(e) {
 
 // Load domains on init
 (function() {
-  dfLoadDomains().then(function(domains) { DF_DOMAINS = domains; })();
+  dfLoadDomains().then(function(domains) { DF_DOMAINS = domains; });
+})();
 </script>
     promptStudioContext.originalPreviewHtml=fallback;
     setPromptPreviewHtml(fallback, 'original');
