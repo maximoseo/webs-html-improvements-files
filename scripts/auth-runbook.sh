@@ -14,7 +14,7 @@ shift || true
 
 DEFAULT_PROD_URL="https://html-redesign-dashboard.maximo-seo.ai"
 DEFAULT_LOCAL_URL="http://127.0.0.1:${PORT:-8010}"
-DEFAULT_USER="${TEST_ADMIN_USER:-admin}"
+DEFAULT_USER="${TEST_ADMIN_USER:-}"
 DEFAULT_EMAIL="${TEST_ADMIN_EMAIL:-service@maximo-seo.com}"
 DEFAULT_PASSWORD="${TEST_ADMIN_PASSWORD:-}"
 DEFAULT_IP="${AUTH_DOCTOR_FORWARDED_IP:-203.0.113.77}"
@@ -48,17 +48,24 @@ require_password() {
   fi
 }
 
+require_full_prod_identity() {
+  if [[ -z "$DEFAULT_USER" && -z "${TEST_ADMIN_EMAIL:-}" ]]; then
+    echo "TEST_ADMIN_USER or TEST_ADMIN_EMAIL is required for full-prod; refusing silent admin fallback." >&2
+    exit 2
+  fi
+}
+
 case "$MODE" in
   safe-prod)
     run_doctor "$DEFAULT_PROD_URL" "$@"
     ;;
   full-prod)
     require_password
+    require_full_prod_identity
     run_doctor "$DEFAULT_PROD_URL" \
       --user "$DEFAULT_USER" \
       --email "$DEFAULT_EMAIL" \
       --password "$DEFAULT_PASSWORD" \
-      --forwarded-ip "$DEFAULT_IP" \
       "$@"
     ;;
   local)
@@ -104,7 +111,7 @@ Modes:
   custom     Run against any base URL. If TEST_ADMIN_PASSWORD is set, full checks run.
 
 Environment:
-  TEST_ADMIN_USER         default: admin
+  TEST_ADMIN_USER         required for full-prod unless TEST_ADMIN_EMAIL is set
   TEST_ADMIN_EMAIL        default: service@maximo-seo.com
   TEST_ADMIN_PASSWORD     required for full-prod/local/full custom checks
   AUTH_DOCTOR_FORWARDED_IP default: 203.0.113.77
