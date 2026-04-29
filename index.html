@@ -11524,7 +11524,7 @@ html body{padding-top:var(--page-safe-top,96px);}
 @media(max-width:1240px){:root{--dashboard-header-offset:88px !important;--header-safe-offset:88px !important;--page-safe-top:88px !important;}header.header,.header{max-height:82px !important}.header-inner{grid-template-columns:auto minmax(0,1fr) !important}.fixer-tab-btn .tab-label{display:none !important}}
 @media(max-width:820px){:root{--dashboard-header-offset:76px !important;--header-safe-offset:76px !important;--page-safe-top:76px !important;}header.header,.header{top:8px !important;left:10px !important;right:10px !important;border-radius:18px !important;max-height:60px !important}.header-inner{display:flex !important;justify-content:space-between !important;min-height:52px !important;max-height:58px !important}.header .fixer-tab-nav.main-menu,.hdr-search-btn,.hdr-expand-all-btn,.hdr-overflow-wrap,.hdr-sync-btn,.hdr-refresh-cache-btn,.hdr-logout-btn{display:none !important}.hamburger-btn,.theme-toggle-btn{display:inline-flex !important}}
 </style>
-<script id="playground-ui-nav-final-override-2026-04-29">
+<script>
 (function(){
   function compactHeaderVars(){
     try{
@@ -12394,7 +12394,7 @@ html body{padding-top:var(--page-safe-top,96px);}
 @media(max-width:1240px){:root{--dashboard-header-offset:88px !important;--header-safe-offset:88px !important;--page-safe-top:88px !important;}header.header,.header{max-height:82px !important}.header-inner{grid-template-columns:auto minmax(0,1fr) !important}.fixer-tab-btn .tab-label{display:none !important}}
 @media(max-width:820px){:root{--dashboard-header-offset:76px !important;--header-safe-offset:76px !important;--page-safe-top:76px !important;}header.header,.header{top:8px !important;left:10px !important;right:10px !important;border-radius:18px !important;max-height:60px !important}.header-inner{display:flex !important;justify-content:space-between !important;min-height:52px !important;max-height:58px !important}.header .fixer-tab-nav.main-menu,.hdr-search-btn,.hdr-expand-all-btn,.hdr-overflow-wrap,.hdr-sync-btn,.hdr-refresh-cache-btn,.hdr-logout-btn{display:none !important}.hamburger-btn,.theme-toggle-btn{display:inline-flex !important}}
 </style>
-<script id="playground-ui-nav-final-override-2026-04-29">
+<script>
 (function(){
   function compactHeaderVars(){
     try{
@@ -12779,7 +12779,7 @@ html body{padding-top:var(--page-safe-top,96px);}
 @media(max-width:1240px){:root{--dashboard-header-offset:88px !important;--header-safe-offset:88px !important;--page-safe-top:88px !important;}header.header,.header{max-height:82px !important}.header-inner{grid-template-columns:auto minmax(0,1fr) !important}.fixer-tab-btn .tab-label{display:none !important}}
 @media(max-width:820px){:root{--dashboard-header-offset:76px !important;--header-safe-offset:76px !important;--page-safe-top:76px !important;}header.header,.header{top:8px !important;left:10px !important;right:10px !important;border-radius:18px !important;max-height:60px !important}.header-inner{display:flex !important;justify-content:space-between !important;min-height:52px !important;max-height:58px !important}.header .fixer-tab-nav.main-menu,.hdr-search-btn,.hdr-expand-all-btn,.hdr-overflow-wrap,.hdr-sync-btn,.hdr-refresh-cache-btn,.hdr-logout-btn{display:none !important}.hamburger-btn,.theme-toggle-btn{display:inline-flex !important}}
 </style>
-<script id="playground-ui-nav-final-override-2026-04-29">
+<script>
 (function(){
   function compactHeaderVars(){
     try{
@@ -13173,7 +13173,12 @@ function openCreateABTestModal() {
   dfFillDomainSelect('df-ab-domain');
   dfShowMsg('df-ab-msg', '', 'info');
   document.getElementById('df-ab-page').value = '';
-  document.getElementById('df-ab-version-a').value// Close modals on overlay click
+  document.getElementById('df-ab-version-a').value = '';
+  document.getElementById('df-ab-version-b').value = '';
+  dfOpenModal('df-modal-ab');
+}
+
+// Close modals on overlay click
 document.addEventListener('click', function(e) {
   if (e.target.classList.contains('df-modal-overlay')) {
     e.target.classList.remove('open');
@@ -13192,6 +13197,7 @@ document.addEventListener('keydown', function(e) {
   dfLoadDomains().then(function(domains) { DF_DOMAINS = domains; });
 })();
 </script>
+<script>
     promptStudioContext.originalPreviewHtml=fallback;
     setPromptPreviewHtml(fallback, 'original');
   }
@@ -13324,7 +13330,7 @@ html body{padding-top:var(--page-safe-top,96px);}
 @media(max-width:1240px){:root{--dashboard-header-offset:88px !important;--header-safe-offset:88px !important;--page-safe-top:88px !important;}header.header,.header{max-height:82px !important}.header-inner{grid-template-columns:auto minmax(0,1fr) !important}.fixer-tab-btn .tab-label{display:none !important}}
 @media(max-width:820px){:root{--dashboard-header-offset:76px !important;--header-safe-offset:76px !important;--page-safe-top:76px !important;}header.header,.header{top:8px !important;left:10px !important;right:10px !important;border-radius:18px !important;max-height:60px !important}.header-inner{display:flex !important;justify-content:space-between !important;min-height:52px !important;max-height:58px !important}.header .fixer-tab-nav.main-menu,.hdr-search-btn,.hdr-expand-all-btn,.hdr-overflow-wrap,.hdr-sync-btn,.hdr-refresh-cache-btn,.hdr-logout-btn{display:none !important}.hamburger-btn,.theme-toggle-btn{display:inline-flex !important}}
 </style>
-<script id="playground-ui-nav-final-override-2026-04-29">
+<script>
 (function(){
   function compactHeaderVars(){
     try{
@@ -13743,6 +13749,7 @@ document.addEventListener('keydown', function(e) {
   dfLoadDomains().then(function(domains) { DF_DOMAINS = domains; });
 })();
 </script>
+<script>
   doc.close();
   try{
     const win=previewFrame.contentWindow;
@@ -13807,7 +13814,7 @@ html body{padding-top:var(--page-safe-top,96px);}
 @media(max-width:1240px){:root{--dashboard-header-offset:88px !important;--header-safe-offset:88px !important;--page-safe-top:88px !important;}header.header,.header{max-height:82px !important}.header-inner{grid-template-columns:auto minmax(0,1fr) !important}.fixer-tab-btn .tab-label{display:none !important}}
 @media(max-width:820px){:root{--dashboard-header-offset:76px !important;--header-safe-offset:76px !important;--page-safe-top:76px !important;}header.header,.header{top:8px !important;left:10px !important;right:10px !important;border-radius:18px !important;max-height:60px !important}.header-inner{display:flex !important;justify-content:space-between !important;min-height:52px !important;max-height:58px !important}.header .fixer-tab-nav.main-menu,.hdr-search-btn,.hdr-expand-all-btn,.hdr-overflow-wrap,.hdr-sync-btn,.hdr-refresh-cache-btn,.hdr-logout-btn{display:none !important}.hamburger-btn,.theme-toggle-btn{display:inline-flex !important}}
 </style>
-<script id="playground-ui-nav-final-override-2026-04-29">
+<script>
 (function(){
   function compactHeaderVars(){
     try{
@@ -14218,6 +14225,7 @@ document.addEventListener('keydown', function(e) {
   dfLoadDomains().then(function(domains) { DF_DOMAINS = domains; });
 })();
 </script>
+<script>
   promptStudioContext.currentPreviewHtml=safeHtml;
   promptStudioContext.previewMode=mode||'original';
   writePromptPreviewDocument(safeHtml);
@@ -14231,7 +14239,9 @@ document.addEventListener('keydown', function(e) {
   }
 }
 function resetPromptPreviewToOriginal(){
-  setPromptPreviewHtml(promptStudioContext.originalPreviewHtml||'', 'original')function previewTweakedHtml(){
+  setPromptPreviewHtml(promptStudioContext.originalPreviewHtml||'', 'original');
+}
+function previewTweakedHtml(){
   const html=(document.getElementById('prompt-tweak-output').value||'').trim();
   if(!html){showToast('Generate an HTML candidate first','warn');return;}
   setPromptPreviewHtml(html,'candidate');
@@ -26608,9 +26618,11 @@ body:not(.tour-user-started) #tour-backdrop.open{
   if(document.readyState==='loading') document.addEventListener('DOMContentLoaded', boot, {once:true});
   else boot();
 })();
+</script>
 
 
 /* PLAYGROUND_TAB_PLAN24_2026_04_29 — vanilla JS implementation */
+<script>
 (function(){
   var PG = { templates: [], domains: [], view: 'grid', current: null, device: 'desktop', zoom: 1, landscape: false, lastExport: null };
   var DEVICES = {
@@ -27837,7 +27849,7 @@ html body{padding-top:var(--page-safe-top,96px);}
 @media(max-width:1240px){:root{--dashboard-header-offset:88px !important;--header-safe-offset:88px !important;--page-safe-top:88px !important;}header.header,.header{max-height:82px !important}.header-inner{grid-template-columns:auto minmax(0,1fr) !important}.fixer-tab-btn .tab-label{display:none !important}}
 @media(max-width:820px){:root{--dashboard-header-offset:76px !important;--header-safe-offset:76px !important;--page-safe-top:76px !important;}header.header,.header{top:8px !important;left:10px !important;right:10px !important;border-radius:18px !important;max-height:60px !important}.header-inner{display:flex !important;justify-content:space-between !important;min-height:52px !important;max-height:58px !important}.header .fixer-tab-nav.main-menu,.hdr-search-btn,.hdr-expand-all-btn,.hdr-overflow-wrap,.hdr-sync-btn,.hdr-refresh-cache-btn,.hdr-logout-btn{display:none !important}.hamburger-btn,.theme-toggle-btn{display:inline-flex !important}}
 </style>
-<script id="playground-ui-nav-final-override-2026-04-29">
+<script>
 (function(){
   function compactHeaderVars(){
     try{
