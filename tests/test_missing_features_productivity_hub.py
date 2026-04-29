@@ -1,9 +1,13 @@
 from pathlib import Path
+import os
 import re
 
 ROOT = Path(__file__).resolve().parents[1]
 INDEX_HTML = ROOT / 'index.html'
-PLAN_DOC = Path('/home/seoadmin/.hermes/cache/documents/doc_57e0d0a2c4f5_hermes-dashboard-missing-features-plan.md')
+PLAN_DOC = Path(os.environ.get(
+    'HERMES_MISSING_FEATURES_PLAN',
+    ROOT / 'tests' / 'fixtures' / 'hermes-dashboard-missing-features-plan.md',
+))
 
 
 def html():

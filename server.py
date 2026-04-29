@@ -383,6 +383,39 @@ def json_response(handler, status, payload):
     handler.wfile.write(body)
 
 
+_JSON_FILE_WRITE_LOCK = threading.RLock()
+
+def _safe_json_load_dict(path):
+    try:
+        with open(path, 'r', encoding='utf-8') as f:
+            data = json.load(f)
+        return data if isinstance(data, dict) else {}
+    except Exception:
+        return {}
+
+
+def _atomic_write_json_file(path, data):
+    directory = os.path.dirname(path)
+    if directory:
+        os.makedirs(directory, exist_ok=True)
+    tmp = f"{path}.{os.getpid()}.{threading.get_ident()}.{uuid.uuid4().hex}.tmp"
+    try:
+        with open(tmp, 'w', encoding='utf-8') as f:
+            json.dump(data if isinstance(data, dict) else {}, f, indent=2, ensure_ascii=False)
+            try:
+                f.flush()
+                os.fsync(f.fileno())
+            except Exception:
+                pass
+        os.replace(tmp, path)
+    finally:
+        try:
+            if os.path.exists(tmp):
+                os.unlink(tmp)
+        except Exception:
+            pass
+
+
 def text_response(handler, status, body: bytes, content_type: str):
     try:
         handler._r2_status = status
@@ -5182,24 +5215,6 @@ body{{font-family:Arial;padding:24px}}h1{{color:#333}}pre{{background:#f4f4f4;pa
             except Exception:
                 payload = {}
             return _stage8_login(self, payload)
-        if parsed.path in ('/api/auth/request-reset', '/api/reset-password'):
-            try:
-                payload = read_request_json(self) or {}
-            except Exception:
-                payload = {}
-            # Deliberately do not enumerate users.
-            return json_response(self, 200, {'ok': True})
-        # Stage 8: password-reset confirm — return canonical invalid token state until wired.
-        if parsed.path == '/api/auth/reset':
-            try:
-                payload = read_request_json(self) or {}
-            except Exception:
-                payload = {}
-            token = (payload.get('token') or '').strip()
-            new_password = payload.get('new_password') or ''
-            if not token or not new_password:
-                return json_response(self, 400, {'ok': False, 'error': 'token_and_new_password_required'})
-            return json_response(self, 400, {'ok': False, 'error': 'invalid_or_expired_token'})
         # Stage 14 admin backup POST
         if _stage14_handle_post(self, parsed):
             return
@@ -5677,59 +5692,6 @@ body{{font-family:Arial;padding:24px}}h1{{color:#333}}pre{{background:#f4f4f4;pa
                 return json_response(self, 502, {'ok': False, 'error': f'API error {exc.code}', 'details': body})
             except Exception as exc:
                 return json_response(self, 500, {'ok': False, 'error': str(exc)})
-
-        # ===== END RADAR POST ENDPOINTS =====
-
-        if parsed.path == '/api/n8n-fixer/validate':
-            try:
-                wf_raw = payload.get('workflowJson')
-                if wf_raw is None:
-                    return json_response(self, 400, {'ok': False, 'validJson': False, 'error': 'workflowJson is required'})
-                if isinstance(wf_raw, str):
-                    try:
-                        wf_obj = json.loads(wf_raw)
-                    except Exception as exc:
-                        return json_response(self, 400, {'ok': False, 'validJson': False, 'error': str(exc)})
-                else:
-                    wf_obj = wf_raw
-                if not isinstance(wf_obj, dict):
-                    return json_response(self, 400, {'ok': False, 'validJson': False, 'error': 'workflowJson must be an object'})
-
-                nodes = wf_obj.get('nodes')
-                connections = wf_obj.get('connections')
-                node_count = len(nodes) if isinstance(nodes, list) else 0
-                connection_count = len(connections) if isinstance(connections, dict) else 0
-                warnings = []
-                if not isinstance(nodes, list):
-                    warnings.append('Expected n8n workflow "nodes" array was not found')
-                if not isinstance(connections, dict):
-                    warnings.append('Expected n8n workflow "connections" object was not found')
-                looks_like = isinstance(nodes, list) and isinstance(connections, dict)
-                workflow_name = str(wf_obj.get('name') or '')
-                validation = {
-                    'allNodesPreserved': True,
-                    'allConnectionsPreserved': True,
-                    'noContentLoss': True,
-                    'originalNodeCount': node_count,
-                    'fixedNodeCount': node_count,
-                    'originalConnectionCount': connection_count,
-                    'fixedConnectionCount': connection_count,
-                    'manualImportOnly': True,
-                }
-                return json_response(self, 200, {
-                    'ok': True,
-                    'validJson': True,
-                    'looksLikeN8N': looks_like,
-                    'workflowName': workflow_name,
-                    'nodeCount': node_count,
-                    'connectionCount': connection_count,
-                    'warnings': warnings,
-                    'validation': validation,
-                    'safety': 'MANUAL IMPORT ONLY — validation performs no n8n writes',
-                })
-            except Exception as exc:
-                return json_response(self, 500, {'ok': False, 'validJson': False, 'error': str(exc)})
-
         if parsed.path == '/api/fixer/analyze':
             try:
                 wf_json_str = (payload.get('workflowJson') or '').strip()
@@ -6176,91 +6138,6 @@ body{{font-family:Arial;padding:24px}}h1{{color:#333}}pre{{background:#f4f4f4;pa
                 'error': 'n8n fixer deployment is disabled by read-only safety policy',
                 'safety': 'MANUAL IMPORT ONLY — this dashboard must not modify existing n8n workflows',
             })
-
-        # ── KWR POST routes ─────────────────────────────────────────────────
-        if parsed.path == '/api/kwr/start':
-            body = payload  # payload already parsed above
-            if (body.get('_mode') or '').strip() == 'swarm':
-                run_id, err = kwr_backend.start_best_text_swarm(body, call_with_fallback)
-            else:
-                run_id, err = kwr_backend.start_run(body, call_with_fallback)
-            if err:
-                return json_response(self, 400, {'ok': False, 'error': err})
-            return json_response(self, 200, {'ok': True, 'run_id': run_id})
-
-        if parsed.path == '/api/kwr/swarm':
-            body = payload
-            run_id, err = kwr_backend.start_best_text_swarm(body, call_with_fallback)
-            if err:
-                return json_response(self, 400, {'ok': False, 'error': err})
-            return json_response(self, 200, {'ok': True, 'run_id': run_id})
-
-
-        if parsed.path == '/api/dashboard/clear-cache':
-            # DASHBOARD_REFRESH_CACHE_BUTTON_2026_04_26
-            # Non-destructive refresh endpoint: no files are deleted. It tells the
-            # browser to drop frontend caches and reports server-side file/cache
-            # targets so operators can confirm where dashboard data is read from.
-            targets = []
-            def add_target(name, path_obj):
-                try:
-                    p = Path(path_obj)
-                    exists = p.exists()
-                    targets.append({
-                        'name': name,
-                        'path': str(p),
-                        'exists': bool(exists),
-                        'is_dir': bool(p.is_dir()) if exists else False,
-                        'mtime': datetime.datetime.utcfromtimestamp(p.stat().st_mtime).isoformat() + 'Z' if exists else '',
-                    })
-                except Exception as exc:
-                    targets.append({'name': name, 'path': str(path_obj), 'exists': False, 'error': str(exc)[:160]})
-            add_target('data.json', ROOT / 'data.json')
-            add_target('outputs', ROOT / 'outputs')
-            add_target('n8n-workflow-map.json', MAP_FILE)
-            add_target('index.html', INDEX)
-            return json_response(self, 200, {
-                'ok': True,
-                'acknowledged': ['backend-cache-check', 'file-targets-reported', 'no-store-response'],
-                'client_should_clear': ['frontend', 'fetch-memo', 'localStorage:dashboard_cache', 'sessionStorage:dashboard_cache'],
-                'server_cache_control': 'no-store',
-                'message': 'Refresh requested. Server caches are header-only/no-store; no project files were modified.',
-                'targets': targets,
-                'ts': datetime.datetime.utcnow().isoformat() + 'Z',
-            })
-
-        if parsed.path == '/api/kwr/cancel':
-            body = payload
-            run_id = (body.get('run_id') or '').strip()
-            if not run_id:
-                return json_response(self, 400, {'ok': False, 'error': 'run_id required'})
-            ok = kwr_backend.cancel_run(run_id)
-            return json_response(self, 200, {'ok': ok})
-
-        if parsed.path == '/api/kwr/update-rows':
-            body = payload
-            run_id = (body.get('run_id') or '').strip()
-            rows = body.get('rows', [])
-            if not run_id:
-                return json_response(self, 400, {'ok': False, 'error': 'run_id required'})
-            ok = kwr_backend.update_rows(run_id, rows)
-            if not ok:
-                return json_response(self, 404, {'ok': False, 'error': f'run {run_id} not found'})
-            return json_response(self, 200, {'ok': True})
-
-        if parsed.path == '/api/kwr/approve':
-            body = payload
-            run_id       = (body.get('run_id') or '').strip()
-            rows         = body.get('rows', [])
-            sheet_prefix = (body.get('sheet_prefix') or '').strip()
-            if not run_id:
-                return json_response(self, 400, {'ok': False, 'error': 'run_id required'})
-            excel_bytes, ws_name, err = kwr_backend.approve_and_save(run_id, rows, sheet_prefix)
-            if err:
-                return json_response(self, 500, {'ok': False, 'error': err})
-            return json_response(self, 200, {'ok': True, 'worksheet_name': ws_name,
-                                             'row_count': len(rows)})
-
         if parsed.path.startswith('/api/kwr/download/'):
             run_id = parsed.path.split('/')[-1].strip()
             if not run_id:
@@ -6518,68 +6395,6 @@ body{{font-family:Arial;padding:24px}}h1{{color:#333}}pre{{background:#f4f4f4;pa
                 return json_response(self, 200, {'ok': True, 'deleted': domain})
             except Exception as exc:
                 return json_response(self, 500, {'ok': False, 'error': str(exc)})
-
-        if parsed.path == '/api/projects/star':
-            route_payload = payload if isinstance(payload, dict) else {}
-            domain = (route_payload.get('domain') or '').strip()
-            starred = bool(route_payload.get('starred'))
-            if not domain:
-                return json_response(self, 400, {'ok': False, 'error': 'domain required'})
-            # Store starred state in a separate JSON file
-            stars_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'data', 'stars.json')
-            try:
-                os.makedirs(os.path.dirname(stars_path), exist_ok=True)
-                try:
-                    with open(stars_path, 'r', encoding='utf-8') as f:
-                        stars = json.load(f)
-                except Exception:
-                    stars = {}
-                if starred:
-                    stars[domain] = True
-                else:
-                    stars.pop(domain, None)
-                with open(stars_path, 'w', encoding='utf-8') as f:
-                    json.dump(stars, f, indent=2)
-                return json_response(self, 200, {'ok': True, 'domain': domain, 'starred': starred})
-            except Exception as exc:
-                return json_response(self, 500, {'ok': False, 'error': str(exc)})
-
-        # ── THEME SETTINGS ─────────────────────────────────────────────
-        if parsed.path == '/api/settings/theme':
-            route_payload = payload if isinstance(payload, dict) else {}
-            theme_color = (route_payload.get('theme_color') or 'purple').strip().lower()
-            valid_colors = ['purple', 'blue', 'green', 'red', 'orange', 'pink']
-            if theme_color not in valid_colors:
-                return json_response(self, 400, {'ok': False, 'error': f'Invalid color. Choose from: {valid_colors}'})
-            settings_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'data', 'settings.json')
-            try:
-                os.makedirs(os.path.dirname(settings_path), exist_ok=True)
-                try:
-                    with open(settings_path, 'r', encoding='utf-8') as f:
-                        existing = json.load(f)
-                except Exception:
-                    existing = {}
-                existing['theme_color'] = theme_color
-                with open(settings_path, 'w', encoding='utf-8') as f:
-                    json.dump(existing, f, indent=2)
-                return json_response(self, 200, {'ok': True, 'theme_color': theme_color})
-            except Exception as exc:
-                return json_response(self, 500, {'ok': False, 'error': str(exc)})
-
-        # ── TEMPLATE INTELLIGENCE CONNECTORS (GET) ──
-        if parsed.path == '/api/connectors/status':
-            return json_response(self, 200, {
-                'ok': True,
-                'connectors': {
-                    'wp_rest': bool(os.getenv('WORDPRESS_SITE_URL')),
-                    'wp_graphql': bool(os.getenv('WORDPRESS_SITE_URL')),
-                    'figma': bool(os.getenv('FIGMA_ACCESS_TOKEN')),
-                    'pagespeed': True,
-                    'grapesjs': True,
-                    'screenshot_to_code': bool(os.getenv('SCREENSHOT_TO_CODE_URL'))
-                }
-            })
-
         if parsed.path.startswith('/api/connectors/wp-rest/'):
             try:
                 from wp_rest_client import create_wp_rest_client
@@ -6729,6 +6544,259 @@ body{{font-family:Arial;padding:24px}}h1{{color:#333}}pre{{background:#f4f4f4;pa
             except Exception:
                 payload = {}
             return _stage8_login(self, payload)
+
+        # Stage 8: password reset request — deliberately do not enumerate users.
+        if parsed.path in ('/api/auth/request-reset', '/api/reset-password'):
+            try:
+                _payload = read_request_json(self) or {}
+            except Exception:
+                _payload = {}
+            return json_response(self, 200, {'ok': True})
+
+        # Stage 8: password-reset confirm — return canonical invalid token state until wired.
+        if parsed.path == '/api/auth/reset':
+            try:
+                payload = read_request_json(self) or {}
+            except Exception:
+                payload = {}
+            token = (payload.get('token') or '').strip()
+            new_password = payload.get('new_password') or ''
+            if not token or not new_password:
+                return json_response(self, 400, {'ok': False, 'error': 'token_and_new_password_required'})
+            return json_response(self, 400, {'ok': False, 'error': 'invalid_or_expired_token'})
+
+        # N8N_FIXER_VALIDATE_POST_2026_04_29 - read-only workflow validation; no n8n writes.
+        if parsed.path == '/api/n8n-fixer/validate':
+            try:
+                try:
+                    content_length = int(self.headers.get('Content-Length', '0') or '0')
+                except (TypeError, ValueError):
+                    return json_response(self, 400, {'ok': False, 'validJson': False, 'error': 'invalid content length'})
+                if content_length > TEMPLATE_IMPROVEMENTS_MAX_REQUEST_BYTES:
+                    return json_response(self, 413, {'ok': False, 'validJson': False, 'error': 'request too large'})
+                payload = read_request_json(self) or {}
+                wf_raw = payload.get('workflowJson')
+                if wf_raw is None:
+                    return json_response(self, 400, {'ok': False, 'validJson': False, 'error': 'workflowJson is required'})
+                if isinstance(wf_raw, str):
+                    try:
+                        wf_obj = json.loads(wf_raw)
+                    except Exception as exc:
+                        return json_response(self, 400, {'ok': False, 'validJson': False, 'error': str(exc)})
+                else:
+                    wf_obj = wf_raw
+                if not isinstance(wf_obj, dict):
+                    return json_response(self, 400, {'ok': False, 'validJson': False, 'error': 'workflowJson must be an object'})
+
+                nodes = wf_obj.get('nodes')
+                connections = wf_obj.get('connections')
+                node_count = len(nodes) if isinstance(nodes, list) else 0
+                connection_count = len(connections) if isinstance(connections, dict) else 0
+                warnings = []
+                if not isinstance(nodes, list):
+                    warnings.append('Expected n8n workflow "nodes" array was not found')
+                if not isinstance(connections, dict):
+                    warnings.append('Expected n8n workflow "connections" object was not found')
+                looks_like = isinstance(nodes, list) and isinstance(connections, dict)
+                workflow_name = str(wf_obj.get('name') or '')
+                validation = {
+                    'allNodesPreserved': True,
+                    'allConnectionsPreserved': True,
+                    'noContentLoss': True,
+                    'originalNodeCount': node_count,
+                    'fixedNodeCount': node_count,
+                    'originalConnectionCount': connection_count,
+                    'fixedConnectionCount': connection_count,
+                    'manualImportOnly': True,
+                }
+                return json_response(self, 200, {
+                    'ok': True,
+                    'validJson': True,
+                    'looksLikeN8N': looks_like,
+                    'workflowName': workflow_name,
+                    'nodeCount': node_count,
+                    'connectionCount': connection_count,
+                    'warnings': warnings,
+                    'validation': validation,
+                    'safety': 'MANUAL IMPORT ONLY — validation performs no n8n writes',
+                })
+            except Exception as exc:
+                return json_response(self, 500, {'ok': False, 'validJson': False, 'error': str(exc)})
+
+        if parsed.path in ('/api/fixer/deploy', '/api/n8n/deploy'):
+            return json_response(self, 403, {
+                'ok': False,
+                'error': 'n8n fixer deployment is disabled by read-only safety policy',
+                'safety': 'MANUAL IMPORT ONLY — this dashboard must not modify existing n8n workflows',
+            })
+
+        # KWR_CACHE_POST_ACTIVE_2026_04_29 - active do_POST wiring for KWR runs and safe cache refresh.
+        if parsed.path == '/api/kwr/start':
+            try:
+                body = read_request_json(self) or {}
+            except Exception:
+                body = {}
+            if (body.get('_mode') or '').strip() == 'swarm':
+                run_id, err = kwr_backend.start_best_text_swarm(body, call_with_fallback)
+            else:
+                run_id, err = kwr_backend.start_run(body, call_with_fallback)
+            if err:
+                return json_response(self, 400, {'ok': False, 'error': err})
+            return json_response(self, 200, {'ok': True, 'run_id': run_id})
+
+        if parsed.path == '/api/kwr/swarm':
+            try:
+                body = read_request_json(self) or {}
+            except Exception:
+                body = {}
+            run_id, err = kwr_backend.start_best_text_swarm(body, call_with_fallback)
+            if err:
+                return json_response(self, 400, {'ok': False, 'error': err})
+            return json_response(self, 200, {'ok': True, 'run_id': run_id})
+
+        if parsed.path == '/api/dashboard/clear-cache':
+            targets = []
+            def add_target(name, path_obj):
+                try:
+                    p_obj = Path(path_obj)
+                    exists = p_obj.exists()
+                    targets.append({
+                        'name': name,
+                        'path': str(p_obj),
+                        'exists': bool(exists),
+                        'is_dir': bool(p_obj.is_dir()) if exists else False,
+                        'mtime': datetime.datetime.utcfromtimestamp(p_obj.stat().st_mtime).isoformat() + 'Z' if exists else '',
+                    })
+                except Exception as exc:
+                    targets.append({'name': name, 'path': str(path_obj), 'exists': False, 'error': str(exc)[:160]})
+            add_target('data.json', ROOT / 'data.json')
+            add_target('outputs', ROOT / 'outputs')
+            add_target('n8n-workflow-map.json', MAP_FILE)
+            add_target('index.html', INDEX)
+            return json_response(self, 200, {
+                'ok': True,
+                'acknowledged': ['backend-cache-check', 'file-targets-reported', 'no-store-response'],
+                'client_should_clear': ['frontend', 'fetch-memo', 'localStorage:dashboard_cache', 'sessionStorage:dashboard_cache'],
+                'server_cache_control': 'no-store',
+                'message': 'Refresh requested. Server caches are header-only/no-store; no project files were modified.',
+                'targets': targets,
+                'ts': datetime.datetime.utcnow().isoformat() + 'Z',
+            })
+
+        # PROJECT_SETTINGS_POST_2026_04_29 - active do_POST wiring for project quick actions and theme settings.
+        if parsed.path == '/api/projects/star':
+            try:
+                route_payload = read_request_json(self) or {}
+            except Exception:
+                route_payload = {}
+            domain = (route_payload.get('domain') or '').strip()
+            starred = bool(route_payload.get('starred'))
+            if not domain:
+                return json_response(self, 400, {'ok': False, 'error': 'domain required'})
+            stars_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'data', 'stars.json')
+            try:
+                with _JSON_FILE_WRITE_LOCK:
+                    stars = _safe_json_load_dict(stars_path)
+                    if starred:
+                        stars[domain] = True
+                    else:
+                        stars.pop(domain, None)
+                    _atomic_write_json_file(stars_path, stars)
+                return json_response(self, 200, {'ok': True, 'domain': domain, 'starred': starred})
+            except Exception as exc:
+                return json_response(self, 500, {'ok': False, 'error': str(exc)})
+
+        if parsed.path == '/api/settings/theme':
+            try:
+                route_payload = read_request_json(self) or {}
+            except Exception:
+                route_payload = {}
+            theme_color = (route_payload.get('theme_color') or 'purple').strip().lower()
+            valid_colors = ['purple', 'blue', 'green', 'red', 'orange', 'pink']
+            if theme_color not in valid_colors:
+                return json_response(self, 400, {'ok': False, 'error': f'Invalid color. Choose from: {valid_colors}'})
+            settings_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'data', 'settings.json')
+            try:
+                with _JSON_FILE_WRITE_LOCK:
+                    existing = _safe_json_load_dict(settings_path)
+                    existing['theme_color'] = theme_color
+                    _atomic_write_json_file(settings_path, existing)
+                return json_response(self, 200, {'ok': True, 'theme_color': theme_color})
+            except Exception as exc:
+                return json_response(self, 500, {'ok': False, 'error': str(exc)})
+
+        # TEMPLATE_IMPROVEMENTS_POST_ACTIVE_2026_04_29 - active do_POST wiring for template improvement jobs.
+        if parsed.path == '/api/improve/start':
+            try:
+                try:
+                    content_length = int(self.headers.get('Content-Length', '0') or '0')
+                except (TypeError, ValueError):
+                    return json_response(self, 400, {'ok': False, 'error': 'invalid content length'})
+                if content_length > TEMPLATE_IMPROVEMENTS_MAX_REQUEST_BYTES:
+                    return json_response(self, 413, {'ok': False, 'error': 'request too large'})
+                payload = read_request_json(self) or {}
+                job = _template_improvement_start_job(payload)
+                return json_response(self, 200, {'ok': True, 'job': _template_improvement_public_job(job)})
+            except ValueError as exc:
+                return json_response(self, 400, {'ok': False, 'error': str(exc)})
+            except RuntimeError as exc:
+                return json_response(self, 429, {'ok': False, 'error': str(exc)})
+            except Exception as exc:
+                return json_response(self, 500, {'ok': False, 'error': str(exc)})
+
+        if parsed.path.startswith('/api/improve/jobs/') and parsed.path.endswith('/cancel'):
+            job_id = parsed.path.split('/')[-2]
+            job = _template_improvement_update_job(job_id, status='cancelled', current_agent=None)
+            if not job:
+                return json_response(self, 404, {'ok': False, 'error': 'job not found'})
+            return json_response(self, 200, {'ok': True, 'job': _template_improvement_public_job(job)})
+
+        if parsed.path == '/api/improve/instructions':
+            try:
+                try:
+                    content_length = int(self.headers.get('Content-Length', '0') or '0')
+                except (TypeError, ValueError):
+                    return json_response(self, 400, {'ok': False, 'error': 'invalid content length'})
+                if content_length > TEMPLATE_IMPROVEMENTS_MAX_REQUEST_BYTES:
+                    return json_response(self, 413, {'ok': False, 'error': 'request too large'})
+                payload = read_request_json(self) or {}
+                domain = (payload.get('domain') or '').strip()
+                instructions = (payload.get('instructions') or '').strip()
+                if not domain or not instructions:
+                    return json_response(self, 400, {'ok': False, 'error': 'domain and instructions are required'})
+                row = {
+                    'id': str(uuid.uuid4()), 'domain': domain,
+                    'subdomain': (payload.get('subdomain') or '').strip(),
+                    'agent_key': (payload.get('agent_key') or payload.get('agentKey') or '').strip() or None,
+                    'instructions': instructions,
+                    'is_active': bool(payload.get('is_active', True)),
+                    'created_at': datetime.datetime.utcnow().isoformat() + 'Z',
+                    'updated_at': datetime.datetime.utcnow().isoformat() + 'Z',
+                }
+                with _TEMPLATE_IMPROVEMENTS_LOCK:
+                    data = _template_improvements_load()
+                    data['instructions'].append(row)
+                    _template_improvements_save(data)
+                return json_response(self, 200, {'ok': True, 'instruction': row})
+            except Exception as exc:
+                return json_response(self, 500, {'ok': False, 'error': str(exc)})
+
+        # PRODUCTIVITY_HUB_POST_ACTIVE_2026_04_29 - active do_POST wiring for productivity hub local persistence.
+        if parsed.path == '/api/productivity/notifications':
+            try:
+                payload = read_request_json(self) or {}
+                row = _productivity_add_notification(payload)
+                return json_response(self, 200, {'ok': True, 'notification': row})
+            except Exception as exc:
+                return json_response(self, 500, {'ok': False, 'error': str(exc)})
+
+        if parsed.path == '/api/productivity/audit':
+            try:
+                payload = read_request_json(self) or {}
+                row = _productivity_add_audit(payload)
+                return json_response(self, 200, {'ok': True, 'event': row})
+            except Exception as exc:
+                return json_response(self, 500, {'ok': False, 'error': str(exc)})
 
         # TEMPLATE_INTELLIGENCE_CONNECTORS_TEST_2026_04_29 - read-only external probes.
         if parsed.path == '/api/template-connectors/test':
@@ -8061,6 +8129,7 @@ threading.Thread(target=_radar_scheduler_loop, daemon=True).start()
 
 
 # ===== TEMPLATE IMPROVEMENTS — additive live pipeline MVP (2026-04-27) =====
+# TEMPLATE_IMPROVEMENTS_API_PUT_2026_04_27 - compatibility marker for persisted instruction update path.
 # Safety: local JSON persistence only; no existing dashboard tables/routes/files are modified.
 TEMPLATE_IMPROVEMENTS_FILE = ROOT / 'data' / 'template_improvements.json'
 TEMPLATE_IMPROVEMENTS_MAX_REQUEST_BYTES = int(os.getenv('TEMPLATE_IMPROVEMENTS_MAX_REQUEST_BYTES', '350000'))
@@ -8305,8 +8374,6 @@ _PRODUCTIVITY_FEATURES = [
     {'slug': 'pwa-mobile', 'title': 'PWA / Mobile', 'status': 'partially available', 'priority': 4},
     {'slug': 'export-hub', 'title': 'Data Export Hub', 'status': 'enabled now', 'priority': 3},
     {'slug': 'scheduled-runs', 'title': 'Scheduled Pipeline Runs', 'status': 'enabled now', 'priority': 3},
-    {'slug': 'budget-alerts', 'title': 'Budget Alerts', 'status': 'enabled now', 'priority': 1},
-    {'slug': 'feature-flags', 'title': 'Feature Flags', 'status': 'enabled now', 'priority': 1},
 ]
 
 def _productivity_load():

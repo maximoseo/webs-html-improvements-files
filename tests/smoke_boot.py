@@ -26,7 +26,7 @@ def check(name, cond, info=''):
 
 # Tests
 s, h, b = req('/healthz'); check('/healthz=200', s == 200)
-s, h, b = req('/api/health/detailed'); check('/api/health/detailed=200', s == 200)
+s, h, b = req('/api/health/detailed'); check('/api/health/detailed=401 unauthenticated', s == 401)
 check('X-Request-ID header present', 'X-Request-ID' in h or 'x-request-id' in {k.lower() for k in h.keys()})
 s, h, b = req('/api/csrf'); check('/api/csrf=200', s == 200)
 j = json.loads(b); check('csrf token returned', j.get('ok') and j.get('token'))
