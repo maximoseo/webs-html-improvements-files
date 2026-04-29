@@ -19,6 +19,7 @@ from pathlib import Path
 import kwr_backend
 import r5_features as r5
 import r6_features as r6
+import dashboard_features_api as df_api
 
 # Load .env file if present (for local development)
 try:
@@ -3791,6 +3792,10 @@ body{{font-family:Arial;padding:24px}}h1{{color:#333}}pre{{background:#f4f4f4;pa
             data = _playground_load()
             return json_response(self, 200, {'ok': True, 'success': True, 'preferences': data.get('preferences', {})})
 
+        # DASHBOARD_FEATURES_API — 15-feature roadmap GET routes (additive)
+        _df_get = df_api.handle_get(self, parsed)
+        if _df_get is not None:
+            return
         # PRODUCTIVITY_HUB_API_2026_04_27 - additive backend foundation routes.
         if parsed.path == '/api/productivity/summary':
             return json_response(self, 200, _productivity_summary())
@@ -6569,7 +6574,8 @@ body{{font-family:Arial;padding:24px}}h1{{color:#333}}pre{{background:#f4f4f4;pa
                     'wp_graphql': bool(os.getenv('WORDPRESS_SITE_URL')),
                     'figma': bool(os.getenv('FIGMA_ACCESS_TOKEN')),
                     'pagespeed': True,
-                    'grapesjs': True
+                    'grapesjs': True,
+                    'screenshot_to_code': bool(os.getenv('SCREENSHOT_TO_CODE_URL'))
                 }
             })
 
@@ -6665,6 +6671,30 @@ body{{font-family:Arial;padding:24px}}h1{{color:#333}}pre{{background:#f4f4f4;pa
 
         if parsed.path == '/api/connectors/grapesjs/status':
             return json_response(self, 200, {'ok': True, 'data': {'available': True, 'type': 'embedded'}})
+
+        if parsed.path.startswith('/api/connectors/screenshot-to-code/'):
+            try:
+                from screenshot_to_code_client import create_s2c_client
+                parts = parsed.path.split('/')
+                action = parts[-1]
+                qs = urllib.parse.parse_qs(parsed.query)
+                client = create_s2c_client()
+                if not client:
+                    return json_response(self, 400, {'ok': False, 'error': 'Screenshot-to-Code not configured. Set SCREENSHOT_TO_CODE_URL env var.'})
+                if action == 'check':
+                    return json_response(self, 200, {'ok': True, 'data': client.check_connection()})
+                if action == 'convert':
+                    image_url = qs.get('image_url', [''])[0]
+                    image_base64 = qs.get('image_base64', [''])[0]
+                    output_format = qs.get('format', ['html_tailwind'])[0]
+                    model = qs.get('model', [''])[0]
+                    if not image_url and not image_base64:
+                        return json_response(self, 400, {'ok': False, 'error': 'Missing image_url or image_base64 parameter'})
+                    result = client.convert_image(image_url or image_base64, output_format, model)
+                    return json_response(self, 200, {'ok': True, 'data': result})
+                return json_response(self, 404, {'ok': False, 'error': f'Unknown action: {action}'})
+            except Exception as e:
+                return json_response(self, 500, {'ok': False, 'error': str(e)})
 
         return json_response(self, 404, {'ok': False, 'error': 'Not found'})
 
@@ -6766,6 +6796,31 @@ body{{font-family:Arial;padding:24px}}h1{{color:#333}}pre{{background:#f4f4f4;pa
                 return json_response(self, 200, {'ok': True, 'success': True, 'preferences': prefs})
             except Exception as exc:
                 return json_response(self, 500, {'ok': False, 'success': False, 'error': str(exc)})
+
+        # DASHBOARD_FEATURES_API — 15-feature roadmap POST routes (additive, path-guarded)
+        _df_new_paths = (
+            '/api/notifications', '/api/notifications/mark-read', '/api/notifications/mark-all-read',
+            '/api/alert-rules', '/api/budget-limits', '/api/template-versions',
+            '/api/ab-tests', '/api/ab-tests/',
+            '/api/batch-jobs', '/api/batch-jobs/',
+            '/api/reports', '/api/report-schedules',
+            '/api/pipeline-schedules', '/api/pipeline-schedules/',
+            '/api/notes', '/api/notes/',
+            '/api/audit-log', '/api/feature-flags/',
+        )
+        if any(parsed.path == p or (p.endswith('/') and parsed.path.startswith(p)) for p in _df_new_paths):
+            try:
+                _ct = (self.headers.get('Content-Type') or '').lower()
+                if 'application/json' in _ct:
+                    _len = int(self.headers.get('Content-Length', 0))
+                    _body = json.loads(self.rfile.read(_len)) if _len > 0 else {}
+                else:
+                    _body = {}
+                _df_post = df_api.handle_post(self, parsed, _body)
+                if _df_post is not None:
+                    return
+            except Exception as e:
+                return json_response(self, 500, {'ok': False, 'error': f'df_api: {e}'})
 
         if parsed.path == '/api/stuck-projects/sync':
             try:

@@ -7342,6 +7342,39 @@ body.light .action-btn.primary{
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
         <span class="tab-label">Connectors</span>
       </button>
+      <!-- DASHBOARD_FEATURES_TABS — 15-feature roadmap (additive, 2026-04-28) -->
+      <button class="fixer-tab-btn" id="tab-client-overview" onclick="showPage('client-overview')" aria-label="Client Overview" role="tab" aria-selected="false">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        <span class="tab-label">Overview</span>
+      </button>
+      <button class="fixer-tab-btn" id="tab-traces" onclick="showPage('traces')" aria-label="Agent Traces" role="tab" aria-selected="false">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+        <span class="tab-label">Traces</span>
+      </button>
+      <button class="fixer-tab-btn" id="tab-batch" onclick="showPage('batch')" aria-label="Batch Jobs" role="tab" aria-selected="false">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg>
+        <span class="tab-label">Batch</span>
+      </button>
+      <button class="fixer-tab-btn" id="tab-reports" onclick="showPage('reports')" aria-label="Reports" role="tab" aria-selected="false">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+        <span class="tab-label">Reports</span>
+      </button>
+      <button class="fixer-tab-btn" id="tab-cost" onclick="showPage('cost')" aria-label="Cost Tracker" role="tab" aria-selected="false">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+        <span class="tab-label">Cost</span>
+      </button>
+      <button class="fixer-tab-btn" id="tab-schedules" onclick="showPage('schedules')" aria-label="Schedules" role="tab" aria-selected="false">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        <span class="tab-label">Schedules</span>
+      </button>
+      <button class="fixer-tab-btn" id="tab-ab-testing" onclick="showPage('ab-testing')" aria-label="A/B Testing" role="tab" aria-selected="false">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="18" rx="2"/><line x1="12" y1="3" x2="12" y2="21"/></svg>
+        <span class="tab-label">A/B Test</span>
+      </button>
+      <button class="fixer-tab-btn" id="tab-export" onclick="showPage('export')" aria-label="Export Hub" role="tab" aria-selected="false">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        <span class="tab-label">Export</span>
+      </button>
     </div>
     <button class="hdr-search-btn" id="hdr-global-search-btn" onclick="openGlobalSearch()" title="Global search (Ctrl+Shift+F)" aria-label="Global search">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
@@ -25017,5 +25050,471 @@ var connectors = (function() {
   };
 })();
 </script>
+
+<!-- ═══════════════════════════════════════════════════════
+     DASHBOARD_FEATURES_PAGES — 15-feature roadmap (additive, 2026-04-28)
+     ═══════════════════════════════════════════════════════ -->
+
+<!-- Client Overview Page -->
+<div id="page-client-overview" class="fixer-page" style="display:none">
+  <div class="fixer-page-header">
+    <div>
+      <div class="fixer-page-title">🏠 Client Overview</div>
+      <p class="fixer-page-subtitle">At-a-glance view of all clients, their pipeline status, health scores, and daily costs.</p>
+    </div>
+    <div class="fixer-page-actions">
+      <button class="action-btn" onclick="loadClientOverview()">🔄 Refresh</button>
+    </div>
+  </div>
+  <div id="client-overview-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px">
+    <div style="color:var(--muted);font-size:13px;text-align:center;padding:40px;grid-column:1/-1">Loading client data…</div>
+  </div>
+  <div id="client-overview-summary" style="margin-top:20px;padding:12px 16px;background:var(--card);border:1px solid var(--border);border-radius:12px;font-size:13px;color:var(--muted);"></div>
+</div>
+
+<!-- Agent Traces Page -->
+<div id="page-traces" class="fixer-page" style="display:none">
+  <div class="fixer-page-header">
+    <div>
+      <div class="fixer-page-title">🔍 Agent Traces</div>
+      <p class="fixer-page-subtitle">Full observability into what each agent did — prompts, tokens, costs, and scores.</p>
+    </div>
+    <div class="fixer-page-actions">
+      <input id="trace-domain-filter" class="settings-input" style="max-width:200px" placeholder="Filter by domain…" oninput="loadTraces(this.value)">
+      <button class="action-btn" onclick="loadTraces()">🔄 Refresh</button>
+    </div>
+  </div>
+  <div id="traces-list" style="display:flex;flex-direction:column;gap:10px">
+    <div style="color:var(--muted);font-size:13px;text-align:center;padding:40px">Loading traces…</div>
+  </div>
+</div>
+
+<!-- Batch Jobs Page -->
+<div id="page-batch" class="fixer-page" style="display:none">
+  <div class="fixer-page-header">
+    <div>
+      <div class="fixer-page-title">📦 Batch Operations</div>
+      <p class="fixer-page-subtitle">Run pipeline on multiple subdomains simultaneously with progress tracking.</p>
+    </div>
+    <div class="fixer-page-actions">
+      <button class="action-btn primary" onclick="openCreateBatchModal()">+ New Batch Job</button>
+    </div>
+  </div>
+  <div id="batch-jobs-list" style="display:flex;flex-direction:column;gap:10px">
+    <div style="color:var(--muted);font-size:13px;text-align:center;padding:40px">Loading batch jobs…</div>
+  </div>
+</div>
+
+<!-- Reports Page -->
+<div id="page-reports" class="fixer-page" style="display:none">
+  <div class="fixer-page-header">
+    <div>
+      <div class="fixer-page-title">📄 Reports</div>
+      <p class="fixer-page-subtitle">Generate and send automated client reports with score improvements and cost summaries.</p>
+    </div>
+    <div class="fixer-page-actions">
+      <button class="action-btn primary" onclick="openGenerateReportModal()">+ Generate Report</button>
+    </div>
+  </div>
+  <div id="reports-list" style="display:flex;flex-direction:column;gap:10px">
+    <div style="color:var(--muted);font-size:13px;text-align:center;padding:40px">Loading reports…</div>
+  </div>
+</div>
+
+<!-- Cost Tracker Page -->
+<div id="page-cost" class="fixer-page" style="display:none">
+  <div class="fixer-page-header">
+    <div>
+      <div class="fixer-page-title">💰 Cost Tracker</div>
+      <p class="fixer-page-subtitle">Track API spending by model, client, and time period. Set budget limits and alerts.</p>
+    </div>
+    <div class="fixer-page-actions">
+      <button class="action-btn" onclick="loadCostSummary()">🔄 Refresh</button>
+      <button class="action-btn primary" onclick="openBudgetModal()">+ Set Budget</button>
+    </div>
+  </div>
+  <div id="cost-summary-cards" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:16px;margin-bottom:24px"></div>
+  <div style="margin-bottom:24px">
+    <h3 style="font-size:16px;font-weight:700;margin-bottom:14px;color:var(--text)">Cost by Model</h3>
+    <div id="cost-by-model" style="display:flex;flex-direction:column;gap:8px"></div>
+  </div>
+  <div>
+    <h3 style="font-size:16px;font-weight:700;margin-bottom:14px;color:var(--text)">Cost by Client</h3>
+    <div id="cost-by-client" style="display:flex;flex-direction:column;gap:8px"></div>
+  </div>
+</div>
+
+<!-- Schedules Page -->
+<div id="page-schedules" class="fixer-page" style="display:none">
+  <div class="fixer-page-header">
+    <div>
+      <div class="fixer-page-title">⏰ Scheduled Runs</div>
+      <p class="fixer-page-subtitle">Schedule automatic pipeline runs at specific times or intervals.</p>
+    </div>
+    <div class="fixer-page-actions">
+      <button class="action-btn primary" onclick="openScheduleModal()">+ New Schedule</button>
+    </div>
+  </div>
+  <div id="schedules-list" style="display:flex;flex-direction:column;gap:10px">
+    <div style="color:var(--muted);font-size:13px;text-align:center;padding:40px">Loading schedules…</div>
+  </div>
+</div>
+
+<!-- A/B Testing Page -->
+<div id="page-ab-testing" class="fixer-page" style="display:none">
+  <div class="fixer-page-header">
+    <div>
+      <div class="fixer-page-title">🔀 A/B Testing</div>
+      <p class="fixer-page-subtitle">Compare template versions side-by-side and track which agent produces the best results.</p>
+    </div>
+    <div class="fixer-page-actions">
+      <button class="action-btn primary" onclick="openCreateABTestModal()">+ New Test</button>
+    </div>
+  </div>
+  <div id="ab-tests-list" style="display:flex;flex-direction:column;gap:10px">
+    <div style="color:var(--muted);font-size:13px;text-align:center;padding:40px">Loading A/B tests…</div>
+  </div>
+</div>
+
+<!-- Export Hub Page -->
+<div id="page-export" class="fixer-page" style="display:none">
+  <div class="fixer-page-header">
+    <div>
+      <div class="fixer-page-title">📤 Export Hub</div>
+      <p class="fixer-page-subtitle">Export dashboard data in CSV, JSON, Excel, or PDF format.</p>
+    </div>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:16px">
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:16px;padding:24px;text-align:center">
+      <div style="font-size:32px;margin-bottom:8px">📊</div>
+      <h4 style="margin:0 0 8px;font-size:16px;color:var(--text)">Export All Projects</h4>
+      <p style="color:var(--muted);font-size:12px;margin-bottom:16px">Download full project data as JSON</p>
+      <button class="action-btn primary" onclick="exportData('json','projects')" style="width:100%">Export JSON</button>
+    </div>
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:16px;padding:24px;text-align:center">
+      <div style="font-size:32px;margin-bottom:8px">📋</div>
+      <h4 style="margin:0 0 8px;font-size:16px;color:var(--text)">Cost Report</h4>
+      <p style="color:var(--muted);font-size:12px;margin-bottom:16px">Download cost summary as CSV</p>
+      <button class="action-btn" onclick="exportData('csv','cost')" style="width:100%">Export CSV</button>
+    </div>
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:16px;padding:24px;text-align:center">
+      <div style="font-size:32px;margin-bottom:8px">📝</div>
+      <h4 style="margin:0 0 8px;font-size:16px;color:var(--text)">Audit Log</h4>
+      <p style="color:var(--muted);font-size:12px;margin-bottom:16px">Export audit trail as CSV</p>
+      <button class="action-btn" onclick="exportData('csv','audit')" style="width:100%">Export CSV</button>
+    </div>
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:16px;padding:24px;text-align:center">
+      <div style="font-size:32px;margin-bottom:8px">📁</div>
+      <h4 style="margin:0 0 8px;font-size:16px;color:var(--text)">Templates ZIP</h4>
+      <p style="color:var(--muted);font-size:12px;margin-bottom:16px">Download all HTML templates</p>
+      <button class="action-btn" onclick="exportData('zip','templates')" style="width:100%">Export ZIP</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════════
+// DASHBOARD_FEATURES_JS — 15-feature roadmap JS (2026-04-28)
+// ═══════════════════════════════════════════════════════
+var DF_API = '';
+
+async function dfFetch(path, method='GET', body=null) {
+  var opts = { method: method, headers: {} };
+  if (body) { opts.body = JSON.stringify(body); opts.headers['Content-Type'] = 'application/json'; }
+  try {
+    var r = await fetch(DF_API + path, opts);
+    return await r.json();
+  } catch(e) { return { ok: false, error: e.message }; }
+}
+
+async function loadClientOverview() {
+  var grid = document.getElementById('client-overview-grid');
+  var summary = document.getElementById('client-overview-summary');
+  grid.innerHTML = '<div style="color:var(--muted);font-size:13px;text-align:center;padding:40px;grid-column:1/-1">Loading…</div>';
+  var data = await dfFetch('/api/client-overview');
+  if (!data.ok || !data.clients || data.clients.length === 0) {
+    grid.innerHTML = '<div style="color:var(--muted);font-size:13px;text-align:center;padding:40px;grid-column:1/-1">No client data yet. Run some pipelines first.</div>';
+    summary.textContent = 'Tip: Client data populates from agent traces after pipeline runs.';
+    return;
+  }
+  var html = '';
+  var totalClients = data.clients.length;
+  var totalRuns = 0;
+  data.clients.forEach(function(c) {
+    var score = Math.round(c.avg_health || 0);
+    var color = score >= 90 ? '#22c55e' : score >= 70 ? '#f59e0b' : '#ef4444';
+    var icon = score >= 90 ? '✅' : score >= 70 ? '⚠️' : '❌';
+    var ratio = c.success_count + '/' + c.total_count;
+    var lastRun = c.last_run ? new Date(c.last_run).toLocaleString() : 'Never';
+    var cost = (c.daily_cost || 0).toFixed(2);
+    html += '<div style="background:var(--card);border:1px solid var(--border);border-radius:16px;padding:20px;cursor:pointer;transition:all 0.2s" onclick="loadTraces(\''+c.domain+'\');showPage(\'traces\')">'
+      + '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">'
+      + '<h4 style="margin:0;font-size:16px;color:var(--text)">'+c.domain+'</h4>'
+      + '<span style="font-size:24px;font-weight:700;color:'+color+'">'+score+'</span></div>'
+      + '<div style="display:flex;gap:12px;flex-wrap:wrap;font-size:12px;color:var(--muted)">'
+      + '<span>'+icon+' '+ratio+' OK</span>'
+      + '<span>📊 '+c.subdomain_count+' subdomains</span>'
+      + '<span>💰 $'+cost+'/day</span></div>'
+      + '<div style="font-size:11px;color:var(--muted);margin-top:8px">Last: '+lastRun+'</div></div>';
+    totalRuns += (c.total_count || 0);
+  });
+  grid.innerHTML = html;
+  summary.textContent = '📊 '+totalClients+' clients | '+totalRuns+' total runs | Last updated: '+new Date().toLocaleTimeString();
+}
+
+async function loadTraces(domain) {
+  var list = document.getElementById('traces-list');
+  list.innerHTML = '<div style="color:var(--muted);font-size:13px;text-align:center;padding:40px">Loading traces…</div>';
+  var url = '/api/traces?limit=200';
+  if (domain) url += '&domain=' + encodeURIComponent(domain);
+  var data = await dfFetch(url);
+  if (!data.ok || !data.traces || data.traces.length === 0) {
+    list.innerHTML = '<div style="color:var(--muted);font-size:13px;text-align:center;padding:40px">No traces found.'+(domain?' Try a different domain.':'')+'</div>';
+    return;
+  }
+  var html = '';
+  data.traces.forEach(function(t) {
+    var statusColor = t.status === 'success' ? '#22c55e' : t.status === 'error' ? '#ef4444' : '#f59e0b';
+    var statusIcon = t.status === 'success' ? '✅' : t.status === 'error' ? '❌' : '⚠️';
+    var dur = t.duration_ms ? (t.duration_ms/1000).toFixed(1)+'s' : '—';
+    var score = t.score ? t.score + '/100' : '—';
+    var cost = t.cost_usd ? '$'+parseFloat(t.cost_usd).toFixed(4) : '—';
+    html += '<div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px;display:flex;align-items:center;gap:12px;flex-wrap:wrap">'
+      + '<span style="color:'+statusColor+';font-size:16px">'+statusIcon+'</span>'
+      + '<div style="flex:1;min-width:200px">'
+      + '<div style="font-size:13px;font-weight:600;color:var(--text)">'+t.agent_name+' <span style="color:var(--muted);font-weight:400">('+t.model_name+')</span></div>'
+      + '<div style="font-size:11px;color:var(--muted)">'+(t.domain||'')+(t.subdomain?' / '+t.subdomain:'')+' · Step '+t.step_order+'</div></div>'
+      + '<div style="display:flex;gap:16px;font-size:12px;color:var(--muted);flex-wrap:wrap">'
+      + '<span>🏆 Score: '+score+'</span>'
+      + '<span>⏱️ '+dur+'</span>'
+      + '<span>💰 '+cost+'</span>'
+      + '<span>📝 '+t.prompt_tokens+'→'+t.completion_tokens+' tokens</span></div></div>';
+  });
+  list.innerHTML = html;
+}
+
+async function loadBatchJobs() {
+  var list = document.getElementById('batch-jobs-list');
+  list.innerHTML = '<div style="color:var(--muted);font-size:13px;text-align:center;padding:40px">Loading batch jobs…</div>';
+  var data = await dfFetch('/api/batch-jobs');
+  if (!data.ok || !data.jobs || data.jobs.length === 0) {
+    list.innerHTML = '<div style="color:var(--muted);font-size:13px;text-align:center;padding:40px">No batch jobs yet.</div>';
+    return;
+  }
+  var html = '';
+  data.jobs.forEach(function(j) {
+    var statusColor = j.status === 'completed' ? '#22c55e' : j.status === 'failed' || j.status === 'cancelled' ? '#ef4444' : j.status === 'running' ? '#f59e0b' : '#6b7280';
+    var pct = j.total > 0 ? Math.round((j.progress/j.total)*100) : 0;
+    html += '<div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px">'
+      + '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">'
+      + '<h4 style="margin:0;font-size:14px;color:var(--text)">'+(j.batch_name||j.action)+'</h4>'
+      + '<span style="color:'+statusColor+';font-size:12px;font-weight:700;text-transform:uppercase">'+j.status+'</span></div>'
+      + '<div style="height:6px;background:rgba(255,255,255,0.06);border-radius:3px;overflow:hidden;margin-bottom:8px">'
+      + '<div style="height:100%;width:'+pct+'%;background:linear-gradient(90deg,var(--gold),var(--gold-light));border-radius:3px;transition:width 0.3s"></div></div>'
+      + '<div style="font-size:12px;color:var(--muted);display:flex;justify-content:space-between">'
+      + '<span>'+j.progress+'/'+j.total+' items</span>'
+      + '<span>💰 $'+(j.cost_usd||0).toFixed(2)+'</span></div></div>';
+  });
+  list.innerHTML = html;
+}
+
+async function loadReports() {
+  var list = document.getElementById('reports-list');
+  list.innerHTML = '<div style="color:var(--muted);font-size:13px;text-align:center;padding:40px">Loading reports…</div>';
+  var data = await dfFetch('/api/reports');
+  if (!data.ok || !data.reports || data.reports.length === 0) {
+    list.innerHTML = '<div style="color:var(--muted);font-size:13px;text-align:center;padding:40px">No reports yet.</div>';
+    return;
+  }
+  var html = '';
+  data.reports.forEach(function(r) {
+    var sent = r.sent_at ? '✅ Sent '+new Date(r.sent_at).toLocaleDateString() : '⏳ Not sent';
+    html += '<div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px">'
+      + '<div><h4 style="margin:0;font-size:14px;color:var(--text)">'+r.domain+'</h4>'
+      + '<div style="font-size:12px;color:var(--muted)">'+r.report_type+' · '+new Date(r.created_at).toLocaleDateString()+'</div></div>'
+      + '<span style="font-size:12px;color:var(--muted)">'+sent+'</span></div>';
+  });
+  list.innerHTML = html;
+}
+
+async function loadCostSummary() {
+  var cards = document.getElementById('cost-summary-cards');
+  var byModel = document.getElementById('cost-by-model');
+  var byClient = document.getElementById('cost-by-client');
+  cards.innerHTML = '<div style="color:var(--muted);font-size:13px;text-align:center;padding:20px;grid-column:1/-1">Loading…</div>';
+  var [summaryRes, modelRes] = await Promise.all([
+    dfFetch('/api/cost/summary'),
+    dfFetch('/api/cost/by-model')
+  ]);
+  if (!summaryRes.ok) { cards.innerHTML = '<div style="color:var(--muted);font-size:13px;text-align:center;padding:20px;grid-column:1/-1">No cost data yet.</div>'; return; }
+  var s = summaryRes.summary || {};
+  var total = (s.total || 0).toFixed(2);
+  cards.innerHTML = ''
+    + '<div style="background:var(--card);border:1px solid var(--border);border-radius:16px;padding:20px;text-align:center">'
+    + '<div style="font-size:32px;font-weight:700;color:var(--gold)">$'+total+'</div>'
+    + '<div style="font-size:12px;color:var(--muted);margin-top:4px">Total API Cost</div></div>'
+    + '<div style="background:var(--card);border:1px solid var(--border);border-radius:16px;padding:20px;text-align:center">'
+    + '<div style="font-size:32px;font-weight:700;color:#93c5fd">'+((s.by_model||[]).length)+'</div>'
+    + '<div style="font-size:12px;color:var(--muted);margin-top:4px">Active Models</div></div>'
+    + '<div style="background:var(--card);border:1px solid var(--border);border-radius:16px;padding:20px;text-align:center">'
+    + '<div style="font-size:32px;font-weight:700;color:#86efac">'+((s.by_domain||[]).length)+'</div>'
+    + '<div style="font-size:12px;color:var(--muted);margin-top:4px">Active Clients</div></div>';
+  if (modelRes.ok && modelRes.data && modelRes.data.length > 0) {
+    var maxCost = Math.max.apply(null, modelRes.data.map(function(d){ return d.total; }));
+    var mHtml = '';
+    modelRes.data.forEach(function(d) {
+      var pct = maxCost > 0 ? Math.round((d.total/maxCost)*100) : 0;
+      mHtml += '<div style="display:flex;align-items:center;gap:12px;padding:8px 0">'
+        + '<div style="flex:1;min-width:120px;font-size:13px;color:var(--text);font-weight:600">'+d.model_name+'</div>'
+        + '<div style="width:200px;height:8px;background:rgba(255,255,255,0.06);border-radius:4px;overflow:hidden">'
+        + '<div style="height:100%;width:'+pct+'%;background:var(--gold);border-radius:4px"></div></div>'
+        + '<div style="font-size:12px;color:var(--muted);min-width:60px;text-align:right">$'+d.total.toFixed(2)+' ('+d.count+')</div></div>';
+    });
+    byModel.innerHTML = mHtml;
+  }
+  if (s.by_domain && s.by_domain.length > 0) {
+    var cHtml = '';
+    s.by_domain.slice(0, 10).forEach(function(d) {
+      cHtml += '<div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border)">'
+        + '<span style="font-size:13px;color:var(--text);font-weight:600">'+d.domain+'</span>'
+        + '<span style="font-size:12px;color:var(--muted)">$'+d.total.toFixed(2)+' · '+d.count+'</span></div>';
+    });
+    byClient.innerHTML = cHtml;
+  }
+}
+
+async function loadSchedules() {
+  var list = document.getElementById('schedules-list');
+  list.innerHTML = '<div style="color:var(--muted);font-size:13px;text-align:center;padding:40px">Loading schedules…</div>';
+  var data = await dfFetch('/api/pipeline-schedules');
+  if (!data.ok || !data.schedules || data.schedules.length === 0) {
+    list.innerHTML = '<div style="color:var(--muted);font-size:13px;text-align:center;padding:40px">No scheduled runs yet.</div>';
+    return;
+  }
+  var html = '';
+  data.schedules.forEach(function(s) {
+    var sc = s.is_active ? '#22c55e' : '#6b7280';
+    var st = s.is_active ? '✅ Active' : '⏸️ Paused';
+    html += '<div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px">'
+      + '<div><h4 style="margin:0;font-size:14px;color:var(--text)">'+s.name+'</h4>'
+      + '<div style="font-size:12px;color:var(--muted)">'+(s.cron_expression||'Manual')+' · Budget: $'+(s.budget_cap||'∞')+'</div></div>'
+      + '<span style="color:'+sc+';font-size:12px;font-weight:700">'+st+'</span></div>';
+  });
+  list.innerHTML = html;
+}
+
+async function loadABTests() {
+  var list = document.getElementById('ab-tests-list');
+  list.innerHTML = '<div style="color:var(--muted);font-size:13px;text-align:center;padding:40px">Loading A/B tests…</div>';
+  var data = await dfFetch('/api/ab-tests');
+  if (!data.ok || !data.tests || data.tests.length === 0) {
+    list.innerHTML = '<div style="color:var(--muted);font-size:13px;text-align:center;padding:40px">No A/B tests yet.</div>';
+    return;
+  }
+  var html = '';
+  data.tests.forEach(function(t) {
+    var dec = t.decided_at ? '🏆 Winner decided' : '⏳ Pending';
+    html += '<div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px">'
+      + '<div><h4 style="margin:0;font-size:14px;color:var(--text)">'+t.domain+' / '+t.page_path+'</h4>'
+      + '<div style="font-size:12px;color:var(--muted)">Created: '+new Date(t.created_at).toLocaleDateString()+'</div></div>'
+      + '<span style="font-size:12px;color:var(--muted)">'+dec+'</span></div>';
+  });
+  list.innerHTML = html;
+}
+
+function exportData(format, type) {
+  if (type === 'json') {
+    dfFetch('/api/cost/summary').then(function(data) {
+      var blob = new Blob([JSON.stringify(data, null, 2)], {type: 'application/json'});
+      var a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'hermes-cost-summary.json'; a.click();
+    });
+  } else if (type === 'cost') {
+    dfFetch('/api/cost/summary').then(function(data) {
+      var s = data.summary || {};
+      var csv = 'Domain,Total Cost,Run Count\n';
+      (s.by_domain || []).forEach(function(d) { csv += d.domain+','+d.total.toFixed(2)+','+d.count+'\n'; });
+      var blob = new Blob([csv], {type: 'text/csv'});
+      var a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'hermes-cost-report.csv'; a.click();
+    });
+  } else if (type === 'audit') {
+    dfFetch('/api/audit-log?limit=500').then(function(data) {
+      var csv = 'Date,Table,Action,User,Record ID\n';
+      (data.events || []).forEach(function(e) { csv += new Date(e.created_at).toISOString()+','+e.table_name+','+e.action+','+(e.user_id||'system')+','+(e.record_id||'')+'\n'; });
+      var blob = new Blob([csv], {type: 'text/csv'});
+      var a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'hermes-audit-log.csv'; a.click();
+    });
+  } else { alert('Export coming soon!'); }
+}
+
+function openCreateBatchModal() { alert('Batch job creation: Select domains/subdomains and action.'); }
+function openGenerateReportModal() { alert('Report generation: Select date range and client.'); }
+function openBudgetModal() { alert('Budget settings: Set daily/weekly/monthly limits.'); }
+function openScheduleModal() { alert('Schedule creation: Set cron expression and domains.'); }
+function openCreateABTestModal() { alert('A/B Test creation: Select two template versions to compare.'); }
+
+var notificationBadge = null;
+async function loadNotificationBadge() {
+  var data = await dfFetch('/api/notifications/unread-count');
+  if (data.ok && notificationBadge) {
+    notificationBadge.textContent = data.count || '';
+    notificationBadge.style.display = data.count > 0 ? 'inline-block' : 'none';
+  }
+}
+
+function openNotificationPanel() {
+  dfFetch('/api/notifications?limit=20').then(function(data) {
+    if (!data.ok || !data.notifications || data.notifications.length === 0) { alert('No notifications'); return; }
+    var msg = '🔔 Notifications:\n\n';
+    data.notifications.slice(0, 10).forEach(function(n) {
+      var icon = n.type === 'error' ? '🔴' : n.type === 'warning' ? '🟡' : n.type === 'success' ? '🟢' : '🔵';
+      msg += icon + ' ' + n.title + '\n   ' + (n.message || '') + '\n\n';
+    });
+    alert(msg);
+    dfFetch('/api/notifications/mark-all-read');
+    loadNotificationBadge();
+  });
+}
+
+document.addEventListener('keydown', function(e) {
+  if ((e.ctrlKey || e.metaKey) && e.key === 'k') { e.preventDefault(); if (typeof openGlobalSearch === 'function') openGlobalSearch(); }
+  if (e.key === '?' && !e.ctrlKey && !e.metaKey && document.activeElement.tagName !== 'INPUT' && document.activeElement.tagName !== 'TEXTAREA') {
+    e.preventDefault();
+    alert('Shortcuts:\nCtrl+K: Search\nCtrl+R: Run Pipeline\n?: Help');
+  }
+});
+
+setInterval(loadNotificationBadge, 30000);
+
+(function() {
+  var origShowPage = window.showPage;
+  window.showPage = function(pageId) {
+    if (origShowPage) origShowPage(pageId);
+    switch(pageId) {
+      case 'client-overview': loadClientOverview(); break;
+      case 'traces': loadTraces(); break;
+      case 'batch': loadBatchJobs(); break;
+      case 'reports': loadReports(); break;
+      case 'cost': loadCostSummary(); break;
+      case 'schedules': loadSchedules(); break;
+      case 'ab-testing': loadABTests(); break;
+    }
+  };
+})();
+
+(function() {
+  var ha = document.querySelector('.header-actions');
+  if (ha && !document.getElementById('notification-bell')) {
+    var bell = document.createElement('button');
+    bell.id = 'notification-bell';
+    bell.onclick = openNotificationPanel;
+    bell.style.cssText = 'position:relative;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:12px;padding:9px 14px;color:var(--text-secondary);cursor:pointer;font-size:16px;min-height:38px;transition:all 0.15s';
+    bell.innerHTML = '🔔<span id="notif-badge" style="position:absolute;top:-4px;right:-4px;background:#ef4444;color:#fff;font-size:9px;font-weight:700;padding:1px 5px;border-radius:999px;display:none;min-width:14px;text-align:center"></span>';
+    ha.insertBefore(bell, ha.firstChild);
+    notificationBadge = document.getElementById('notif-badge');
+    loadNotificationBadge();
+  }
+})();
+</script>
+
 </body>
 </html>
