@@ -6707,6 +6707,21 @@ body{{font-family:Arial;padding:24px}}h1{{color:#333}}pre{{background:#f4f4f4;pa
         if not _r3_check_csrf_or_warn(self, parsed):
             return
 
+        # AUDIT_LOG_HOOK — log key operations to Supabase audit_log
+        _audit_paths = ('/api/improve/', '/api/stuck-projects/', '/api/kwr/', '/api/deploy/', '/api/sync/', '/api/tasks')
+        if any(parsed.path.startswith(p) for p in _audit_paths):
+            try:
+                import supabase_helper as _sh_audit
+                _method = 'POST'
+                _sh_audit.log_audit(
+                    parsed.path.split('/')[2] if len(parsed.path.split('/')) > 2 else parsed.path,
+                    _method,
+                    {'path': parsed.path},
+                    ip_address=_stage8_client_ip(self) if '_stage8_client_ip' in dir() else 'unknown'
+                )
+            except Exception:
+                pass
+
         # Stage 8: login — both endpoints are aliases for the same cookie-setting handler.
         if parsed.path in ('/api/auth/login', '/api/login'):
             try:
