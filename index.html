@@ -11610,20 +11610,54 @@ function formatCommentTimestamp(ts){
   if(!ts) return 'Unknown time';
   try{return new Date(ts).toLocaleString('en-GB',{dateStyle:'medium',timeStyle:'short'});}catch(e){return ts;}
 }
+/* DASHBOARD_XSS_FIX_COMMENTS_SAFE_RENDER_2026_04_30
+   Comments are user/API text. Render them with DOM text nodes instead of
+   HTML templates so stored comments cannot become executable markup. */
+function setCommentText(el, value){
+  if(el) el.textContent = value == null ? '' : String(value);
+  return el;
+}
+function createCommentEmptyState(message){
+  const empty = document.createElement('div');
+  empty.className = 'comments-empty';
+  setCommentText(empty, message || 'No comments saved yet for this context.');
+  return empty;
+}
+function createCommentItem(item){
+  const row = document.createElement('div');
+  row.className = 'comments-item';
+
+  const head = document.createElement('div');
+  head.className = 'comments-item-head';
+  const author = document.createElement('span');
+  author.className = 'comments-author';
+  setCommentText(author, item && item.authorName || item && item.author_name || 'Anonymous');
+  const time = document.createElement('span');
+  time.className = 'comments-time';
+  setCommentText(time, formatCommentTimestamp(item && (item.createdAt || item.created_at) || ''));
+  head.append(author, time);
+
+  const body = document.createElement('div');
+  body.className = 'comments-body';
+  setCommentText(body, item && (item.commentText || item.comment_text) || '');
+
+  row.append(head, body);
+  return row;
+}
 function renderCommentsList(items){
   const list=document.getElementById('comments-list');
   if(!list) return;
   if(!items||!items.length){
-    list.innerHTML='<div class="comments-empty">No comments saved yet for this context.</div>';
+    list.replaceChildren(createCommentEmptyState('No comments saved yet for this context.'));
     return;
   }
-  list.innerHTML=items.map(item=>`<div class="comments-item"><div class="comments-item-head"><span class="comments-author">${escapeHtml(item.authorName||'Anonymous')}</span><span class="comments-time">${escapeHtml(formatCommentTimestamp(item.createdAt||item.created_at||''))}</span></div><div class="comments-body">${escapeHtml(item.commentText||item.comment_text||'')}</div></div>`).join('');
+  list.replaceChildren(...items.map(item=>createCommentItem(item)));
 }
 async function loadComments(){
   const status=document.getElementById('comments-status');
   const list=document.getElementById('comments-list');
   if(status) status.textContent='Loading comments...';
-  if(list) list.innerHTML='<div class="comments-empty">Loading comments…</div>';
+  if(list) list.replaceChildren(createCommentEmptyState('Loading comments…'));
   try{
     const qs=new URLSearchParams({contextKey:commentsContext.contextKey||'',limit:'50'});
     const res=await fetch(`/api/comments?${qs.toString()}`);
