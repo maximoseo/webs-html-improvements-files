@@ -24824,9 +24824,7 @@ pre, code { overflow-x: auto !important; }
 </style>
 
 <script>
-/* ═══════════════════════════════════════════════════
-   Scrollable Tab Nav Arrows (Plan #26)
-   ═══════════════════════════════════════════════════ */
+/* Scrollable Tab Nav Arrows (Plan #26) */
 (function() {
   function updateTabArrows() {
     var nav = document.getElementById('fixer-tab-nav');
@@ -24851,16 +24849,13 @@ pre, code { overflow-x: auto !important; }
   });
 })();
 
-/* ═══════════════════════════════════════════════════
-   Playground Tab Logic (Plan #24)
-   ═══════════════════════════════════════════════════ */
+/* Playground Tab Logic (Plan #24) */
 (function() {
   var _pgTemplates = [];
-  var _pgView = 'grid';
   var _pgCurrentHTML = '';
   var _pgCurrentTitle = '';
 
-  function escHtml(s) {
+  function escH(s) {
     return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
   }
 
@@ -24878,7 +24873,6 @@ pre, code { overflow-x: auto !important; }
     var empty = document.getElementById('pg-empty');
     var statsBar = document.getElementById('pg-stats-bar');
     if (!gallery) return;
-
     if (!templates || templates.length === 0) {
       gallery.innerHTML = '';
       if (empty) empty.style.display = 'block';
@@ -24887,59 +24881,51 @@ pre, code { overflow-x: auto !important; }
     }
     if (empty) empty.style.display = 'none';
     if (statsBar) statsBar.style.display = 'flex';
-
     var domains = pgGroupByDomain(templates);
     var domainNames = Object.keys(domains);
     var agentSet = new Set(templates.map(function(t){ return t.agent; }));
-
     var cT = document.getElementById('pg-count-templates');
     var cD = document.getElementById('pg-count-domains');
     var cA = document.getElementById('pg-count-agents');
     if (cT) cT.textContent = templates.length;
     if (cD) cD.textContent = domainNames.length;
     if (cA) cA.textContent = agentSet.size;
-
     var html = '';
     domainNames.forEach(function(domain) {
       var cards = domains[domain];
-      html += '<div class="pg-domain-group" data-domain="' + escHtml(domain) + '">';
+      html += '<div class="pg-domain-group" data-domain="' + escH(domain) + '">';
       html += '<div class="pg-domain-header" onclick="pgToggleDomain(this.parentElement)">';
-      html += '<span style="font-size:15px">📁</span>';
-      html += '<span class="pg-domain-name">' + escHtml(domain) + '</span>';
+      html += '<span style="font-size:15px">&#128193;</span>';
+      html += '<span class="pg-domain-name">' + escH(domain) + '</span>';
       html += '<span class="pg-domain-count">' + cards.length + '</span>';
-      html += '<span class="pg-domain-toggle">▾</span>';
+      html += '<span class="pg-domain-toggle">&#9662;</span>';
       html += '</div>';
       html += '<div class="pg-cards-grid">';
       cards.forEach(function(t) {
-        var encHtml = encodeURIComponent(t.html || '');
-        html += '<div class="pg-card" data-agent="' + escHtml(t.agent) + '" data-domain="' + escHtml(t.domain) + '">';
-        html += '<div class="pg-thumb-wrap" onclick="pgOpenPreview('' + t.id + '')">';
-        html += '<iframe sandbox="allow-same-origin" loading="lazy" srcdoc="' + (t.html||'').replace(/"/g,'&quot;').substring(0,3000) + '"></iframe>';
-        html += '<div class="pg-thumb-overlay"><span>👁 Preview</span></div>';
+        var thumbHtml = (t.html || '').substring(0, 2000).replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+        html += '<div class="pg-card" data-id="' + escH(t.id) + '" data-agent="' + escH(t.agent) + '" data-domain="' + escH(t.domain) + '">';
+        html += '<div class="pg-thumb-wrap" onclick="pgOpenById(this.closest(\'.pg-card\').dataset.id)">';
+        html += '<iframe sandbox="allow-same-origin" loading="lazy" srcdoc="' + thumbHtml + '"></iframe>';
+        html += '<div class="pg-thumb-overlay"><span>&#128065; Preview</span></div>';
         html += '</div>';
         html += '<div class="pg-card-body">';
-        html += '<div class="pg-card-agent">🤖 ' + escHtml(t.agent) + '</div>';
-        html += '<div class="pg-card-meta">📅 ' + escHtml(t.date||'') + ' · 📏 ' + escHtml(t.size||'') + '</div>';
+        html += '<div class="pg-card-agent">&#129302; ' + escH(t.agent) + '</div>';
+        html += '<div class="pg-card-meta">&#128197; ' + escH(t.date || '') + ' &middot; ' + escH(t.size || '') + '</div>';
         html += '<div class="pg-card-actions">';
-        html += '<button class="pg-action-btn primary" onclick="pgOpenPreview('' + t.id + '')">👁 Preview</button>';
-        html += '<button class="pg-action-btn" onclick="pgCopyById('' + t.id + '')">📋 Copy</button>';
-        html += '<button class="pg-action-btn" onclick="pgDownloadById('' + t.id + '','' + escHtml(t.domain) + '','' + escHtml(t.agent) + '')">💾 DL</button>';
+        html += '<button class="pg-action-btn primary" onclick="pgOpenById(this.closest(\'.pg-card\').dataset.id)">&#128065; Preview</button>';
+        html += '<button class="pg-action-btn" onclick="pgCopyById(this.closest(\'.pg-card\').dataset.id)">&#128203; Copy</button>';
+        html += '<button class="pg-action-btn" onclick="pgDownloadById(this.closest(\'.pg-card\').dataset.id)">&#128190; DL</button>';
         html += '</div></div></div>';
       });
-      html += '</div>';
-      html += '<div class="pg-cards-list" style="display:none"></div>';
-      html += '</div>';
+      html += '</div><div class="pg-cards-list" style="display:none"></div></div>';
     });
     gallery.innerHTML = html;
   }
 
   window.pgInitPage = function() {
-    // Load from localStorage
     try {
       var saved = JSON.parse(localStorage.getItem('pg_templates') || '[]');
-      if (saved.length) {
-        _pgTemplates = saved;
-      }
+      if (saved.length) _pgTemplates = saved;
     } catch(e) {}
     pgRenderGallery(_pgTemplates);
   };
@@ -24947,28 +24933,22 @@ pre, code { overflow-x: auto !important; }
   window.pgAddTemplate = function(domain, agent, html, date) {
     var id = 'pg-' + Date.now();
     var tpl = {
-      id: id,
-      domain: domain || 'Unknown domain',
-      agent: agent || 'Agent',
+      id: id, domain: domain || 'Unknown domain', agent: agent || 'Agent',
       html: html || '',
       date: date || new Date().toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'}),
       size: Math.round(((html||'').length)/1024) + ' KB'
     };
-    // Avoid exact duplicates (same domain+agent)
     _pgTemplates = _pgTemplates.filter(function(t){ return !(t.domain===tpl.domain && t.agent===tpl.agent); });
     _pgTemplates.unshift(tpl);
-    // Persist (cap at 30 templates)
-    try {
-      localStorage.setItem('pg_templates', JSON.stringify(_pgTemplates.slice(0,30)));
-    } catch(e) {}
+    try { localStorage.setItem('pg_templates', JSON.stringify(_pgTemplates.slice(0,30))); } catch(e) {}
     return id;
   };
 
-  window.pgOpenPreview = function(id) {
+  window.pgOpenById = function(id) {
     var tpl = _pgTemplates.find(function(t){ return t.id===id; });
     if (!tpl) return;
     _pgCurrentHTML = tpl.html;
-    _pgCurrentTitle = tpl.agent + ' — ' + tpl.domain;
+    _pgCurrentTitle = tpl.agent + ' - ' + tpl.domain;
     var modal = document.getElementById('pg-preview-modal');
     var title = document.getElementById('pg-modal-title');
     var iframe = document.getElementById('pg-modal-iframe');
@@ -24976,9 +24956,11 @@ pre, code { overflow-x: auto !important; }
     if (title) title.textContent = _pgCurrentTitle;
     if (iframe) iframe.srcdoc = _pgCurrentHTML;
     if (charCount) charCount.textContent = (_pgCurrentHTML.length).toLocaleString() + ' chars';
-    if (modal) { modal.style.display = 'flex'; }
+    if (modal) modal.style.display = 'flex';
     document.body.style.overflow = 'hidden';
   };
+
+  window.pgOpenPreview = window.pgOpenById;
 
   window.pgClosePreview = function() {
     var modal = document.getElementById('pg-preview-modal');
@@ -25008,28 +24990,29 @@ pre, code { overflow-x: auto !important; }
     if (!_pgCurrentHTML) return;
     navigator.clipboard.writeText(_pgCurrentHTML).then(function(){
       var btn = document.getElementById('pg-copy-btn');
-      if (btn) { btn.textContent = '✅ Copied!'; setTimeout(function(){ btn.textContent = '📋 Copy HTML'; }, 2000); }
+      if (btn) { btn.textContent = 'Copied!'; setTimeout(function(){ btn.textContent = 'Copy HTML'; }, 2000); }
     });
   };
+
   window.pgCopyById = function(id) {
     var tpl = _pgTemplates.find(function(t){ return t.id===id; });
     if (tpl && tpl.html) navigator.clipboard.writeText(tpl.html).then(function(){ alert('Copied!'); });
   };
+
   window.pgDownloadHTML = function() {
     if (!_pgCurrentHTML) return;
     var blob = new Blob([_pgCurrentHTML], {type:'text/html'});
-    var a = document.createElement('a');
-    a.href = URL.createObjectURL(blob);
+    var a = document.createElement('a'); a.href = URL.createObjectURL(blob);
     a.download = (_pgCurrentTitle||'template').replace(/[^a-z0-9]/gi,'_').toLowerCase() + '.html';
     a.click();
   };
-  window.pgDownloadById = function(id, domain, agent) {
+
+  window.pgDownloadById = function(id) {
     var tpl = _pgTemplates.find(function(t){ return t.id===id; });
     if (!tpl) return;
     var blob = new Blob([tpl.html], {type:'text/html'});
-    var a = document.createElement('a');
-    a.href = URL.createObjectURL(blob);
-    a.download = (domain+'_'+agent).replace(/[^a-z0-9]/gi,'_').toLowerCase() + '.html';
+    var a = document.createElement('a'); a.href = URL.createObjectURL(blob);
+    a.download = (tpl.domain+'_'+tpl.agent).replace(/[^a-z0-9]/gi,'_').toLowerCase() + '.html';
     a.click();
   };
 
@@ -25037,15 +25020,13 @@ pre, code { overflow-x: auto !important; }
     var agentF = (document.getElementById('pg-filter-agent')||{}).value || '';
     q = (q||'').toLowerCase();
     var filtered = _pgTemplates.filter(function(t){
-      var mq = !q || t.domain.toLowerCase().includes(q) || t.agent.toLowerCase().includes(q);
-      var ma = !agentF || t.agent.toLowerCase().includes(agentF.toLowerCase());
-      return mq && ma;
+      return (!q || t.domain.toLowerCase().includes(q) || t.agent.toLowerCase().includes(q)) &&
+             (!agentF || t.agent.toLowerCase().includes(agentF.toLowerCase()));
     });
     pgRenderGallery(filtered);
   };
 
   window.pgSetView = function(view, btn) {
-    _pgView = view;
     document.querySelectorAll('.pg-view-btn').forEach(function(b){ b.classList.remove('active'); });
     if (btn) btn.classList.add('active');
     document.querySelectorAll('.pg-cards-grid').forEach(function(el){ el.style.display = view==='list'?'none':''; });
@@ -25054,40 +25035,17 @@ pre, code { overflow-x: auto !important; }
 
   window.pgToggleDomain = function(group) { if (group) group.classList.toggle('collapsed'); };
 
-  // Escape key handler
   document.addEventListener('keydown', function(e) {
     if (e.key === 'Escape') {
       var modal = document.getElementById('pg-preview-modal');
       if (modal && modal.style.display !== 'none') {
-        e.preventDefault();
-        e.stopPropagation();
+        e.preventDefault(); e.stopPropagation();
         pgClosePreview();
       }
     }
   }, true);
-
-  // Hook: when openFocusedCompare is called, capture the HTML and add to playground
-  var _origOpenFocused = window.openFocusedCompare;
-  if (_origOpenFocused) {
-    window.openFocusedCompare = function(url, agent, version) {
-      _origOpenFocused.apply(this, arguments);
-      setTimeout(function() {
-        try {
-          var iframe = document.querySelector('.focus-device-frame iframe');
-          if (iframe && iframe.contentDocument) {
-            var html = iframe.contentDocument.documentElement.outerHTML;
-            if (html && html.length > 500) {
-              var agentDec = decodeURIComponent(agent||'Agent');
-              var verDec   = decodeURIComponent(version||'');
-              var domain   = verDec || agentDec;
-              pgAddTemplate(domain, agentDec, html, null);
-            }
-          }
-        } catch(e) {}
-      }, 1800);
-    };
-  }
 })();
+
 </script>
 
 </body>
