@@ -13286,7 +13286,7 @@ function writePromptPreviewDocument(html){
   if(!previewFrame) return;
   const doc=previewFrame.contentDocument||previewFrame.contentWindow.document;
   doc.open();
-  doc.write(html||'<body style="font-family:Segoe UI,sans-serif;padding:24px;color:#666">Preview unavailable.</body>');
+  doc.write(html||'<body style="font-family:Segoe UI,sans-serif;padding:24px;color:#666">Preview unavailable.</body>');vailable.</body>');
 </script>
 
 <style id="playground-ui-nav-final-override-2026-04-29">
@@ -13726,34 +13726,7 @@ document.addEventListener('keydown', function(e) {
 (function() {
   dfLoadDomains().then(function(domains) { DF_DOMAINS = domains; });
 })();
-  doc.close();
-  try{
-    const win=previewFrame.contentWindow;
-    if(win && !previewFrame.dataset.wheelBound){
-      previewFrame.dataset.wheelBound='1';
-      previewFrame.addEventListener('wheel', function(ev){
-        const panel=previewFrame.closest('.prompt-panel');
-        if(!panel) return;
-        panel.scrollTop += ev.deltaY;
-        ev.preventDefault();
-      }, {passive:false});
-      win.addEventListener('wheel', function(ev){
-        const panel=previewFrame.closest('.prompt-panel');
-        if(!panel) return;
-        panel.scrollTop += ev.deltaY;
-        ev.preventDefault();
-      }, {passive:false});
-    }
-    if(doc && doc.documentElement){
-      doc.documentElement.style.overflow='hidden';
-    }
-    if(doc && doc.body){
-      doc.body.style.overflow='hidden';
-      doc.body.style.overscrollBehavior='contain';
-      doc.body.style.margin='0';
-    }
-  }catch(err){}
-}
+
 function updatePromptPreviewBadge(label,isOriginal){
   const badge=document.getElementById('prompt-preview-badge');
   if(!badge) return;
@@ -13775,7 +13748,9 @@ function setPromptPreviewDevice(mode,btn){
   document.querySelectorAll('#prompt-preview-device-tabs .device-tab').forEach(funct);
 }
 function setPromptPreviewHtml(html, mode){
-  const safeHtml=(html||'').trim()||'<body style="font-family:Segoe UI,sans-serif;padding:24px;color:#666">Preview unavailable.
+  const safeHtml=(html||'').trim()||'<body style="font-family:Segoe UI,sans-serif;padding:24px;color:#666">Preview unavailable.</body>';
+</script>
+
 <style id="playground-ui-nav-final-override-2026-04-29">
 /* PLAYGROUND_UI_NAV_FINAL_OVERRIDE_2026_04_29
    Final late-cascade guard for Playground preview and dashboard nav.
@@ -14290,7 +14265,7 @@ async function improvePrompt(btn){
   }
   const draft=document.getElementById('prompt-draft').value.trim();
   output=document.getElementById('prompt-output');
-  const status=document.getElementById('prompt-status');
+  status=document.getElementById('prompt-status');
   if(!draft){status.textContent='Please write a draft prompt first.';return;}
   // Prompt Studio Contract: domain-first guard
   if(!String(promptStudioContext.domain||'').trim()){
