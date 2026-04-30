@@ -11299,7 +11299,8 @@ function openPreview(downloadUrl,filename,ctx){
     doc.open();doc.write(html);doc.close();
   }).catch(err=>{
     const doc=iframe.contentDocument||iframe.contentWindow.document;
-    doc.open();doc.write('<body style="font-family:Segoe UI,sans-serif;padding:24px;color:#ef4444">Failed to load preview. The file may be missing or the network request failed.<br><br><a href="'+downloadUrl+'" target="_blank" style="color:#7170ff">Open raw file directly</a></body>');doc.close();
+    doc.open();doc.write('<body style="font-family:Segoe UI,sans-serif;padding:24px;color:#ef4444">Failed to load preview. The file may be missing or the network request failed.<br><br><a href="'+downloadUrl+'" target="_blank" style="color:#7170ff">Open raw file directly</a>
+</body>');doc.close();
     console.error('openPreview fetch failed:', err);
   });
   setDevice('desktop',document.querySelector('.device-tab:last-child'));
@@ -24150,5 +24151,383 @@ body:not(.tour-user-started) #tour-backdrop.open{
   else boot();
 })();
 </script>
+
+<!-- DASHBOARD RESPONSIVE REDESIGN v1 -->
+<style id="dashboard-redesign-v1">
+/* ================================================================
+   DASHBOARD RESPONSIVE REDESIGN — ADDITIVE OVERRIDES ONLY
+   Injected after all existing styles — safe, non-destructive
+   ================================================================ */
+
+/* ── 1. HEADER: Fix the wrapping / 174px height problem ── */
+.header-inner {
+  flex-wrap: nowrap !important;
+  align-items: center !important;
+  padding: 0 16px !important;
+  height: 56px !important;
+  min-height: 56px !important;
+  max-height: 56px !important;
+  gap: 12px !important;
+  overflow: hidden !important;
+}
+
+.header-actions {
+  flex-wrap: nowrap !important;
+  align-items: center !important;
+  gap: 6px !important;
+  overflow: visible !important;
+  flex: 1 1 auto !important;
+  min-width: 0 !important;
+}
+
+/* ── 2. TAB NAV: scrollable, no wrap, condensed ── */
+.fixer-tab-nav {
+  flex: 1 1 auto !important;
+  min-width: 0 !important;
+  overflow-x: auto !important;
+  overflow-y: hidden !important;
+  scrollbar-width: none !important;
+  -ms-overflow-style: none !important;
+  flex-shrink: 1 !important;
+}
+.fixer-tab-nav::-webkit-scrollbar { display: none !important; }
+
+.fixer-tab-btn {
+  white-space: nowrap !important;
+  flex-shrink: 0 !important;
+  padding: 6px 12px !important;
+  font-size: 12.5px !important;
+  min-height: 34px !important;
+  border-radius: 8px !important;
+}
+
+/* ── 3. Right-side header controls: compact, no wrap ── */
+.hdr-expand-all-btn,
+.hdr-sync-btn,
+.hdr-overflow-wrap,
+.hdr-refresh-cache-btn {
+  flex-shrink: 0 !important;
+}
+
+/* Hide verbose labels on mid-size screens to save space */
+@media (max-width: 1100px) {
+  .hdr-expand-all-btn .btn-label,
+  .hdr-sync-btn .btn-label,
+  .hdr-refresh-cache-btn .btn-label {
+    display: none !important;
+  }
+  .hdr-expand-all-btn,
+  .hdr-sync-btn,
+  .hdr-refresh-cache-btn {
+    min-width: 36px !important;
+    padding: 0 10px !important;
+    justify-content: center !important;
+  }
+}
+
+.search-wrap {
+  flex-shrink: 1 !important;
+  min-width: 0 !important;
+  max-width: 220px !important;
+}
+.search-box {
+  width: 100% !important;
+  min-width: 0 !important;
+}
+
+.status-stack {
+  flex-shrink: 1 !important;
+  white-space: nowrap !important;
+}
+@media (max-width: 1200px) {
+  .status-stack { display: none !important; }
+}
+
+/* Sign out: inline with header, not floating */
+.hdr-logout-btn {
+  flex-shrink: 0 !important;
+  font-size: 12px !important;
+  padding: 5px 10px !important;
+  opacity: 0.7 !important;
+}
+.hdr-logout-btn:hover { opacity: 1 !important; }
+
+/* ── 4. Main content: proper top margin for fixed header ── */
+#main-content,
+.container {
+  margin-top: 56px !important;
+  padding-top: 24px !important;
+}
+
+/* ── 5. STATS BAR: clean cards, consistent sizing ── */
+.stats-grid,
+#stats-grid {
+  display: grid !important;
+  grid-template-columns: repeat(4, 1fr) !important;
+  gap: 14px !important;
+  margin-bottom: 24px !important;
+}
+@media (max-width: 900px) {
+  .stats-grid, #stats-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+}
+@media (max-width: 480px) {
+  .stats-grid, #stats-grid {
+    grid-template-columns: 1fr 1fr !important;
+    gap: 10px !important;
+  }
+}
+
+.stat-card {
+  padding: 18px 16px !important;
+  border-radius: 12px !important;
+  min-height: 80px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: center !important;
+  gap: 6px !important;
+}
+.stat-number {
+  font-size: 26px !important;
+  font-weight: 700 !important;
+  line-height: 1 !important;
+  letter-spacing: -0.02em !important;
+}
+.stat-label {
+  font-size: 10px !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.07em !important;
+  text-transform: uppercase !important;
+  opacity: 0.6 !important;
+}
+.stat-icon {
+  font-size: 16px !important;
+  opacity: 0.4 !important;
+}
+
+/* ── 6. PROJECTS SECTION HEADER ── */
+.section-head {
+  display: flex !important;
+  align-items: center !important;
+  flex-wrap: wrap !important;
+  gap: 12px !important;
+  margin-bottom: 20px !important;
+  padding-bottom: 16px !important;
+  border-bottom: 1px solid var(--border, rgba(255,255,255,0.08)) !important;
+}
+.section-title {
+  font-size: 16px !important;
+  font-weight: 700 !important;
+  letter-spacing: -0.02em !important;
+}
+
+/* ── 7. PROJECT CARDS ── */
+.project-card {
+  border-radius: 14px !important;
+  transition: box-shadow 0.2s, transform 0.15s !important;
+  overflow: hidden !important;
+}
+.project-card:hover {
+  transform: translateY(-2px) !important;
+  box-shadow: 0 12px 32px rgba(0,0,0,0.18) !important;
+}
+
+/* Collapsed card: cleaner header row */
+.project-card > button[aria-expanded] {
+  padding: 14px 16px !important;
+  width: 100% !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+  min-height: 60px !important;
+}
+.project-card h3 {
+  font-size: 14px !important;
+  font-weight: 600 !important;
+  letter-spacing: -0.01em !important;
+}
+
+/* ── 8. PROJECTS GRID: proper responsive ── */
+#projects-grid {
+  display: grid !important;
+  gap: 14px !important;
+  grid-template-columns: repeat(3, 1fr) !important;
+}
+@media (max-width: 1024px) {
+  #projects-grid { grid-template-columns: repeat(2, 1fr) !important; }
+}
+@media (max-width: 640px) {
+  #projects-grid { grid-template-columns: 1fr !important; }
+}
+
+/* ── 9. INNER PAGES (Fixer, Radar, KWR, Tasks etc) ── */
+.fixer-page {
+  padding: 24px !important;
+  max-width: 1200px !important;
+  margin: 0 auto !important;
+}
+.fixer-page-header {
+  display: flex !important;
+  align-items: flex-start !important;
+  justify-content: space-between !important;
+  flex-wrap: wrap !important;
+  gap: 12px !important;
+  margin-bottom: 28px !important;
+  padding-bottom: 20px !important;
+  border-bottom: 1px solid var(--border, rgba(255,255,255,0.08)) !important;
+}
+.fixer-page-title {
+  font-size: 20px !important;
+  font-weight: 700 !important;
+  letter-spacing: -0.03em !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+}
+.fixer-page-desc,
+.fixer-page-subtitle {
+  font-size: 13px !important;
+  opacity: 0.6 !important;
+  margin-top: 4px !important;
+  line-height: 1.5 !important;
+  max-width: 600px !important;
+}
+
+/* ── 10. FOOTER ── */
+.footer {
+  margin-top: 48px !important;
+  padding: 14px 20px !important;
+  border-top: 1px solid var(--border, rgba(255,255,255,0.08)) !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  flex-wrap: wrap !important;
+  gap: 8px !important;
+  font-size: 12px !important;
+  opacity: 0.6 !important;
+}
+
+/* ── 11. LIGHT MODE: Override hardcoded dark-only colors ── */
+body.light .stat-card {
+  background: #fff !important;
+  border-color: rgba(0,0,0,0.08) !important;
+}
+body.light .stat-number { color: #1a1a2e !important; }
+body.light .stat-label  { color: #666 !important; }
+body.light .project-card {
+  background: #fff !important;
+  border-color: rgba(0,0,0,0.08) !important;
+}
+body.light .fixer-page-title { color: #1a1a2e !important; }
+body.light .section-title    { color: #1a1a2e !important; }
+body.light .section-head {
+  border-bottom-color: rgba(0,0,0,0.08) !important;
+}
+body.light .fixer-page {
+  background: transparent !important;
+}
+
+/* ── 12. MOBILE HEADER: hamburger only ── */
+@media (max-width: 768px) {
+  .header-inner {
+    height: 52px !important;
+    min-height: 52px !important;
+    max-height: 52px !important;
+    padding: 0 12px !important;
+    gap: 8px !important;
+  }
+  #main-content, .container { margin-top: 52px !important; }
+
+  /* Hide desktop-only elements on mobile */
+  .fixer-tab-nav,
+  .hdr-expand-all-btn,
+  .hdr-overflow-wrap,
+  .hdr-sync-btn:not(.hdr-refresh-cache-btn),
+  .hdr-refresh-cache-btn,
+  .status-stack,
+  .search-wrap,
+  .theme-toggle-btn {
+    display: none !important;
+  }
+  /* Show hamburger */
+  .hamburger-btn { display: flex !important; }
+
+  /* Mobile: single column */
+  #projects-grid { grid-template-columns: 1fr !important; }
+  .fixer-page { padding: 16px !important; }
+  .stats-grid, #stats-grid { grid-template-columns: 1fr 1fr !important; gap: 10px !important; }
+}
+
+/* ── 13. TABLET: 768–1024px ── */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .header-inner {
+    height: 54px !important;
+    min-height: 54px !important;
+    max-height: 54px !important;
+  }
+  #main-content, .container { margin-top: 54px !important; }
+  .fixer-tab-btn {
+    font-size: 11.5px !important;
+    padding: 5px 10px !important;
+  }
+  .search-wrap { max-width: 160px !important; }
+}
+
+/* ── 14. CONTAINER: max-width + padding ── */
+.container {
+  max-width: 1280px !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  padding-left: 20px !important;
+  padding-right: 20px !important;
+}
+@media (max-width: 768px) {
+  .container {
+    padding-left: 12px !important;
+    padding-right: 12px !important;
+  }
+}
+
+/* ── 15. RECENT ACTIVITY: clean list ── */
+.activity-list .activity-item,
+[class*="activity-item"],
+#recent-activity-list > * {
+  padding: 10px 0 !important;
+  border-bottom: 1px solid var(--border, rgba(255,255,255,0.06)) !important;
+  display: flex !important;
+  align-items: flex-start !important;
+  gap: 10px !important;
+  font-size: 13px !important;
+}
+
+/* ── 16. TASK MANAGER: fix duplicate empty states ── */
+/* Only show the tasks-empty div, hide the watchEmpty skeleton */
+#tasks-list-view .tasks-empty:not(#tasks-empty) {
+  display: none !important;
+}
+
+/* ── 17. GLOBAL: Scrollbar styling ── */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb {
+  background: var(--border, rgba(255,255,255,0.15));
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--muted, rgba(255,255,255,0.3));
+}
+
+/* ── 18. MISC: Prevent layout-breaking elements ── */
+img, video, iframe { max-width: 100% !important; }
+pre, code { overflow-x: auto !important; }
+
+/* ── 19. SMOOTH TRANSITIONS ── */
+.fixer-page, .container, .stat-card, .project-card {
+  transition: background 0.2s, border-color 0.2s !important;
+}
+
+
+</style>
 </body>
 </html>
