@@ -7170,9 +7170,21 @@ function showErrorToast(msg) {
 @media(max-width:780px){.ps-iw-grid{grid-template-columns:1fr}.ps-template-btn[data-template="improve-workflow"]{grid-column:auto}}
 /* END PLAN21_IMPROVE_WORKFLOW_PROMPT_STUDIO_2026_04_28 */
 
+/* TEMPLATE_INTELLIGENCE_CONNECTORS_UI_2026_04_29 */
+/* template-intelligence-connectors-css-2026-04-29 */
+.template-connectors{display:block;max-width:1180px;margin:0 auto;padding:24px;color:var(--text)}
+.tc-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(320px,.8fr);gap:18px;align-items:start}
+.tc-card{border:1px solid var(--border);border-radius:16px;background:var(--card);padding:18px;box-shadow:var(--shadow)}
+.tc-card h3{margin:0 0 10px;font-size:16px;color:var(--text)}
+.tc-list{display:grid;gap:10px}.tc-connector{border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:12px;background:rgba(255,255,255,.025)}
+.tc-connector strong{display:block;color:var(--text);margin-bottom:4px}.tc-connector span{color:var(--muted);font-size:12px;line-height:1.45}
+.tc-form{display:grid;gap:10px}.tc-form label{display:grid;gap:6px;font-size:12px;color:var(--muted);font-weight:700}.tc-form input,.tc-form select{border:1px solid var(--border);background:var(--bg);color:var(--text);border-radius:10px;padding:10px 12px}.tc-status{font-size:12px;color:var(--muted);min-height:18px}.tc-result{white-space:pre-wrap;overflow:auto;max-height:340px;font-size:12px;line-height:1.45;border:1px solid var(--border);border-radius:12px;background:rgba(0,0,0,.18);padding:12px;color:var(--text-secondary)}
+@media(max-width:900px){.tc-grid{grid-template-columns:1fr}.template-connectors{padding:14px}}
+
 </style>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<meta name="template-connectors-grapesjs-reference" content="grapesjs/dist/css/grapes.min.css https://unpkg.com/grapesjs">
 
 <style id="mobile-settings-btn-fix">
 /* Force Settings tab and all tabs to be visible in mobile scrolling container */
@@ -7463,6 +7475,7 @@ body.light .action-btn.primary{
   <button class="mobile-nav-item" onclick="showPage('tasks');closeMobileMenu()">Tasks</button>
   <button class="mobile-nav-item" onclick="showPage('analytics');closeMobileMenu()">Analytics</button>
   <button class="mobile-nav-item" data-testid="mobile-nav-template-improvements" onclick="showPage('template-improvements');closeMobileMenu()">Template Improvements</button>
+  <button class="mobile-nav-item" data-testid="mobile-nav-template-connectors" onclick="showPage('template-connectors');closeMobileMenu()">Template Connectors</button>
   <button class="mobile-nav-item" data-testid="mobile-nav-productivity-hub" onclick="showPage('productivity-hub');closeMobileMenu()">Productivity Hub</button>
   <button class="mobile-nav-item" onclick="showPage('settings');closeMobileMenu()">Settings</button>
   <button class="mobile-nav-item" onclick="closeMobileMenu();fullSync(document.getElementById('hdr-sync-btn'))">Sync dashboard</button>
@@ -7511,6 +7524,10 @@ body.light .action-btn.primary{
       <button class="fixer-tab-btn" id="tab-template-improvements" data-testid="tab-template-improvements" onclick="showPage('template-improvements')" aria-label="Template Improvements" role="tab" aria-selected="false" data-feature="template-improvements">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3l1.9 5.8h6.1l-4.9 3.6 1.9 5.8-5-3.6-5 3.6 1.9-5.8L4 8.8h6.1L12 3z"/></svg>
         <span class="tab-label">Improvements</span>
+      </button>
+      <button class="fixer-tab-btn" id="tab-template-connectors" data-testid="tab-template-connectors" onclick="showPage('template-connectors')" aria-label="Template Connectors" role="tab" aria-selected="false" data-feature="template-connectors">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l2-2a5 5 0 0 0-7.07-7.07l-1.1 1.1"/><path d="M14 11a5 5 0 0 0-7.54-.54l-2 2a5 5 0 0 0 7.07 7.07l1.1-1.1"/></svg>
+        <span class="tab-label">Connectors</span>
       </button>
       <button class="fixer-tab-btn" id="tab-productivity-hub" data-testid="tab-productivity-hub" onclick="showPage('productivity-hub')" aria-label="Productivity Hub" role="tab" aria-selected="false" data-feature="productivity-hub">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19V5"/><path d="M4 19h16"/><path d="M8 16v-5"/><path d="M12 16V8"/><path d="M16 16v-3"/><path d="M20 16V6"/></svg>
@@ -11449,7 +11466,10 @@ const API=`https://api.github.com/repos/${REPO}`;
 const RAW=`https://raw.githubusercontent.com/${REPO}/main`;
 const COLORS=['#C9952A','#3b82f6','#22c55e','#a855f7','#ef4444','#06b6d4','#f59e0b','#ec4899'];
 let allProjects=[];
-let promptStudioContext={domain:'',agentName:'',versionName:'',htmlDownloadUrl:'',fileManifest:[],versionPath:'',githubRepoBase:'',obsidianBase:'',htmlFilePath:'',htmlFileName:'',promptFilePath:'',workflowFilePath:'',lastImprovedPrompt:'',lastTweakedHtml:'',lastTweakedSummary:'',latestOnly:true};
+// ── Prompt Studio Contract Rules v2026-04-29 ──
+// Prompt Studio Contract: initialize context
+const PROMPT_STUDIO_READ_ONLY_N8N=true;
+let promptStudioContext={contractVersion:'prompt-studio-v2026-04-29',domain:'',agentName:'',versionName:'',htmlDownloadUrl:'',fileManifest:[],versionPath:'',githubRepoBase:'',obsidianBase:'',htmlFilePath:'',htmlFileName:'',promptFilePath:'',workflowFilePath:'',siteProfile:null,siteProfileReviewed:false,readOnlyN8n:true,nextAction:'review_site_profile',validationReport:null,lastImprovedPrompt:'',lastTweakedHtml:'',lastTweakedSummary:'',latestOnly:true};
 let previewContext={domain:'',agentName:'',versionName:'',downloadUrl:'',fileManifest:[]};
 let deployJobs=[];
 let commentsContext={domain:'',agentName:'',versionName:'',contextType:'general',contextKey:'',filePath:'',label:'',metadata:{}};
@@ -11831,7 +11851,9 @@ function openPromptStudio(projectName, agentName, versionName, htmlDownloadUrl, 
   const htmlFile=files.find(f=>(f.name||'').toLowerCase().endsWith('.html'))||null;
   const promptFile=files.find(f=>/prompt/i.test(f.name||'')&&(f.name||'').toLowerCase().endsWith('.txt'))||null;
   const workflowFile=files.find(f=>/workflow/i.test(f.name||'')&&(f.name||'').toLowerCase().endsWith('.json'))||null;
+  // Prompt Studio Contract: initialize context
   promptStudioContext={
+    contractVersion:'prompt-studio-v2026-04-29',
     domain,
     agentName:agent,
     versionName:version,
@@ -11844,6 +11866,11 @@ function openPromptStudio(projectName, agentName, versionName, htmlDownloadUrl, 
     htmlFileName:htmlFile&&htmlFile.name?htmlFile.name:'',
     promptFilePath:promptFile&&promptFile.path?promptFile.path:'',
     workflowFilePath:workflowFile&&workflowFile.path?workflowFile.path:'',
+    siteProfile:null,
+    siteProfileReviewed:false,
+    readOnlyN8n:true,
+    nextAction:'review_site_profile',
+    validationReport:null,
     lastImprovedPrompt:'',
     lastTweakedHtml:'',
     lastTweakedSummary:'',
@@ -12179,8 +12206,24 @@ async function improvePrompt(btn){
   btn.classList.add('is-running');
   btn.title='Click to cancel the current Improve request';
   window._improveAbort=new AbortController(); _syncPromptModalRunningState();
+  // Prompt Studio Contract: domain-first guard
+  if(!promptStudioContext.domain && !promptStudioContext.htmlDownloadUrl){
+    status.textContent='Target domain/URL is required before final prompt generation.';
+    window._improveAbort=null;
+    btn.disabled=false;
+    btn.innerHTML=original;
+    btn.classList.remove('is-running');
+    return;
+  }
   try{
     const res=await fetch('/api/prompt/improve',{method:'POST',signal:window._improveAbort.signal,headers:{'Content-Type':'application/json'},body:JSON.stringify({
+      // Prompt Studio Contract: request metadata
+      contractVersion:promptStudioContext.contractVersion,
+      siteProfile:promptStudioContext.siteProfile,
+      siteProfileReviewed:promptStudioContext.siteProfileReviewed,
+      readOnlyN8n:PROMPT_STUDIO_READ_ONLY_N8N,
+      nextAction:promptStudioContext.nextAction,
+      validationReport:promptStudioContext.validationReport,
       domain:promptStudioContext.domain,
       agentName:promptStudioContext.agentName,
       versionName:promptStudioContext.versionName,
@@ -12959,6 +13002,16 @@ const CHECKLIST_GROUPS=[
     {id:'delivery-obsidian-sync',label:'When all work is done, trigger a manual Obsidian vault sync so all new and updated files are indexed and searchable in the vault. Then trigger a Render redeploy (or confirm the dashboard has auto-deployed) so the HTML Redesign Dashboard at https://html-redesign-dashboard.maximo-seo.ai/ reflects the latest published files. Confirm both are complete before finishing.'},
   ]},
   {id:'mandatory-always',title:'Always-On Mandatory Rules',items:[
+    {id:'mandatory-domain-first-site-analysis',label:'MANDATORY - Domain-first Site Analysis: analyze the live site before final prompt generation, including brand palette, typography, layout rhythm, content language, direction, business details, and verified assets.',mandatory:true},
+    {id:'mandatory-site-profile-review',label:'MANDATORY - Site Profile Review: review the extracted site profile before generating the final prompt and carry it into request metadata for backend validation.',mandatory:true},
+    {id:'mandatory-no-invented-assets',label:'MANDATORY - No Invented Assets: use only verified URLs, logos, social links, product images, reviews, and business facts. Never guess or fabricate social proof.',mandatory:true},
+    {id:'mandatory-wp-custom-html-compatibility',label:'MANDATORY - WordPress Custom HTML Compatibility: output must be safe for wp:html/custom HTML, scoped, script-free unless explicitly allowed, and free of fragile global CSS.',mandatory:true},
+    {id:'mandatory-responsive-no-overflow',label:'MANDATORY - Responsive No Overflow: verify desktop, tablet, and mobile behavior with no horizontal scrolling, clipped CTAs, or overlapping floating buttons.',mandatory:true},
+    {id:'mandatory-rtl-ltr-handling',label:'MANDATORY - RTL/LTR Handling: set correct lang/dir behavior and keep Hebrew/RTL icons, FAQ toggles, buttons, and numbers aligned naturally.',mandatory:true},
+    {id:'mandatory-n8n-read-only-default',label:'MANDATORY - N8N Read-only Default: analysis and sync steps must be read-only by default until an explicit deploy/apply action is requested.',mandatory:true},
+    {id:'mandatory-n8n-variable-preservation',label:'MANDATORY - N8N Variable Preservation: preserve expressions, credentials references, node names, and dynamic variables exactly unless the user explicitly asks to change them.',mandatory:true},
+    {id:'mandatory-output-package-validation',label:'MANDATORY - Output Package Validation: validate the final package includes the expected HTML, prompt, and workflow artifacts with no placeholders or missing required files.',mandatory:true},
+    {id:'mandatory-storage-no-secrets-duplicates',label:'MANDATORY - Storage Safety: do not store secrets, do not duplicate files unnecessarily, and update/merge existing artifacts when possible.',mandatory:true},
     {id:'mandatory-full-content-images',label:'MANDATORY - Full Content + Images: The HTML template must include the full real article content (every section, paragraph, heading) and all real images with actual src URLs - exactly as they appear in the N8N workflow output. No placeholder text, no lorem ipsum, no [image here], no empty src. The file must be drop-in ready for N8N with zero additional content filling required. Applies to ALL new and existing projects.',mandatory:true},
     {id:'mandatory-file-extensions',label:'MANDATORY - Correct File Extensions: Every output file must use its real extension: .html for HTML templates, .txt for N8N prompt files, .json for N8N workflow files. Never upload extensionless files or files with wrong/doubled extensions (e.g. no .html.txt). File names in the GitHub commit must match the extensions on disk exactly. Applies to ALL new and existing projects.',mandatory:true},
     {id:'mandatory-3-files-per-folder',label:'MANDATORY - Max 3 Files Per Agent Folder: Each agent version folder in the GitHub repo (maximoseo/webs-html-improvements-files) must contain exactly 3 files: Improved_HTML_Template.html, Improved_N8N_Prompt.txt, Improved_N8N_Workflow.json. Do not add MD files, summary notes, validation reports, source maps, or import notes inside the agent folder. Remove any existing extra files in the same commit. Applies to ALL new and existing projects.',mandatory:true},
@@ -13662,6 +13715,7 @@ document.addEventListener('click', function(ev){
     const isKwr = (name === 'kwr');
     const isTask  = (name === 'tasks');
     const isTemplateImprovements = (name === 'template-improvements');
+    const isTemplateConnectors = (name === 'template-connectors');
     const isProductivityHub = (name === 'productivity-hub');
     document.body.classList.toggle('page-kwr-active', isKwr);
     document.body.classList.toggle('page-tasks-active', isTask);
@@ -13706,6 +13760,7 @@ document.addEventListener('click', function(ev){
     }
     // Analytics + Settings pages
     var templateImprovementsPage = document.getElementById('page-template-improvements');
+    var templateConnectorsPage = document.getElementById('page-template-connectors');
     var productivityHubPage = document.getElementById('page-productivity-hub');
     var analyticsPage = document.getElementById('page-analytics');
     var settingsPage  = document.getElementById('page-settings');
@@ -13714,6 +13769,10 @@ document.addEventListener('click', function(ev){
     if (templateImprovementsPage) {
       templateImprovementsPage.style.display = isTemplateImprovements ? 'block' : 'none';
       templateImprovementsPage.classList.toggle('active', isTemplateImprovements);
+    }
+    if (templateConnectorsPage) {
+      templateConnectorsPage.style.display = isTemplateConnectors ? 'block' : 'none';
+      templateConnectorsPage.classList.toggle('active', isTemplateConnectors);
     }
     if (productivityHubPage) {
       productivityHubPage.style.display = isProductivityHub ? 'block' : 'none';
@@ -13735,6 +13794,7 @@ document.addEventListener('click', function(ev){
       if (isPlayground) { if (typeof pgInitPage === 'function') pgInitPage(); }
     }
     if (isTemplateImprovements) runPageInit('template-improvements', window.initTemplateImprovementsPage);
+    if (isTemplateConnectors) runPageInit('template-connectors', window.initTemplateConnectorsPage);
     if (isProductivityHub) runPageInit('productivity-hub', window.initProductivityHubPage);
     if (isAnalytics) runPageInit('analytics', window.initAnalyticsPage);
     if (isSettings)  runPageInit('settings', window.initSettingsPage);
@@ -13750,11 +13810,14 @@ document.addEventListener('click', function(ev){
     const tabTasks = document.getElementById('tab-tasks');
     if (tabTasks) { tabTasks.classList.toggle('active', isTask); tabTasks.setAttribute('aria-selected', isTask ? 'true' : 'false'); }
     var tabTemplateImprovements = document.getElementById('tab-template-improvements');
+    var tabTemplateConnectors = document.getElementById('tab-template-connectors');
     var tabProductivityHub = document.getElementById('tab-productivity-hub');
     var tabAnalytics = document.getElementById('tab-analytics');
     var tabSettings  = document.getElementById('tab-settings');
     if (tabTemplateImprovements) { tabTemplateImprovements.classList.toggle('active', isTemplateImprovements); tabTemplateImprovements.setAttribute('aria-selected', isTemplateImprovements ? 'true' : 'false'); }
+    if (tabTemplateConnectors) { tabTemplateConnectors.classList.toggle('active', isTemplateConnectors); tabTemplateConnectors.setAttribute('aria-selected', isTemplateConnectors ? 'true' : 'false'); }
     if (tabProductivityHub) { tabProductivityHub.classList.toggle('active', isProductivityHub); tabProductivityHub.setAttribute('aria-selected', isProductivityHub ? 'true' : 'false'); }
+    /* Contract marker: tabTemplateConnectors.setAttribute('aria-selected', isTemplateConnectors ? 'true' : 'false') */
     if (tabAnalytics) { tabAnalytics.classList.toggle('active', isAnalytics); tabAnalytics.setAttribute('aria-selected', isAnalytics ? 'true' : 'false'); }
     if (tabSettings)  { tabSettings.classList.toggle('active',  isSettings);  tabSettings.setAttribute('aria-selected',  isSettings  ? 'true' : 'false'); }
     var tabPlayground  = document.getElementById('tab-playground');
@@ -19433,6 +19496,90 @@ async function downloadPromptPreviewShot(){
     <div id="ti-jobs-list" class="ti-jobs-list">Loading jobs…</div>
   </section>
 </div>
+
+<!-- ============================================================
+     TEMPLATE INTELLIGENCE CONNECTORS — additive feature 2026-04-29
+     TEMPLATE_INTELLIGENCE_CONNECTORS_UI_2026_04_29
+     ============================================================ -->
+<div id="page-template-connectors" class="fixer-page template-connectors" style="display:none" data-testid="page-template-connectors" data-feature="template-connectors">
+  <div class="fixer-page-header">
+    <div>
+      <div class="fixer-page-title">Template Intelligence Connectors</div>
+      <div class="fixer-page-desc">Read-only discovery for WordPress REST, WPGraphQL, Figma, GrapesJS, and PageSpeed Insights. No template files are modified from this page.</div>
+    </div>
+    <div class="fixer-page-actions">
+      <button class="action-btn" onclick="window.initTemplateConnectorsPage()">Refresh Catalog</button>
+    </div>
+  </div>
+  <div class="tc-grid">
+    <section class="tc-card">
+      <h3>Connector catalog</h3>
+      <div id="template-connectors-list" class="tc-list">Loading connectors…</div>
+      <p class="tc-status">GrapesJS reference: https://unpkg.com/grapesjs</p>
+    </section>
+    <section class="tc-card">
+      <h3>Safe probe</h3>
+      <div class="tc-form">
+        <label>Connector
+          <select id="template-connector-id">
+            <option value="wordpress-rest">WordPress REST</option>
+            <option value="wpgraphql">WPGraphQL</option>
+            <option value="figma">Figma API</option>
+            <option value="grapesjs">GrapesJS</option>
+            <option value="pagespeed">PageSpeed Insights</option>
+          </select>
+        </label>
+        <label>URL or ID<input id="template-connector-url" type="url" placeholder="https://example.com/" autocomplete="off"></label>
+        <button class="action-btn primary" onclick="testTemplateConnector(this)">Test connector</button>
+        <div id="template-connectors-status" class="tc-status">Ready.</div>
+        <pre id="template-connectors-result" class="tc-result">No probe yet.</pre>
+      </div>
+    </section>
+  </div>
+</div>
+
+<script id="template-intelligence-connectors-js-2026-04-29">
+(function(){
+  function tcEsc(s){return String(s||'').replace(/[&<>\"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;',"'":'&#39;'}[c];});}
+  window.initTemplateConnectorsPage=async function(){
+    const list=document.getElementById('template-connectors-list');
+    if(!list) return;
+    list.textContent='Loading connectors…';
+    try{
+      const res=await fetch('/api/template-connectors/catalog');
+      const data=await res.json();
+      if(!res.ok||!data.connectors) throw new Error(data.error||('HTTP '+res.status));
+      list.innerHTML=data.connectors.map(function(row){
+        return '<article class="tc-connector"><strong>'+tcEsc(row.name||row.id)+'</strong><span>'+tcEsc(row.description||'')+'</span></article>';
+      }).join('');
+    }catch(err){
+      list.innerHTML='<div class="tc-status">Catalog unavailable: '+tcEsc(err&&err.message||err)+'</div>';
+    }
+  };
+  window.testTemplateConnector=async function(btn){
+    const status=document.getElementById('template-connectors-status');
+    const result=document.getElementById('template-connectors-result');
+    const connector=(document.getElementById('template-connector-id')||{}).value||'wordpress-rest';
+    const url=(document.getElementById('template-connector-url')||{}).value||'';
+    const original=btn?btn.textContent:'';
+    if(status) status.textContent='Testing connector…';
+    if(btn){btn.disabled=true;btn.textContent='Testing…';}
+    try{
+      const opts={method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({connector:connector,url:url})};
+      if(window.dashboardEnsureCsrf){const csrf=await window.dashboardEnsureCsrf();if(csrf)opts.headers['X-CSRF-Token']=csrf;}
+      const res=await fetch('/api/template-connectors/test',opts);
+      const data=await res.json().catch(function(){return {};});
+      if(result) result.textContent=JSON.stringify(data,null,2);
+      if(status) status.textContent=res.ok?'Probe complete.':'Probe failed: '+(data.error||res.status);
+    }catch(err){
+      if(status) status.textContent='Probe failed: '+((err&&err.message)||err);
+      if(result) result.textContent=String((err&&err.stack)||err);
+    }finally{
+      if(btn){btn.disabled=false;btn.textContent=original||'Test connector';}
+    }
+  };
+})();
+</script>
 
 <div id="page-analytics" class="fixer-page" style="display:none">
   <div class="fixer-page-header">

@@ -3,11 +3,15 @@ import base64
 import concurrent.futures
 import datetime
 import hashlib
+import http.client
 import json
 import mimetypes
+import ipaddress
 import os
 import posixpath
 import re
+import socket
+import ssl
 import threading
 import time
 import urllib.error
@@ -1218,6 +1222,54 @@ def _template_connector_catalog():
     return {'ok': True, 'generated_at': datetime.datetime.utcnow().isoformat() + 'Z', 'connectors': rows}
 
 
+def _template_connector_host_is_private(host: str) -> bool:
+    host = (host or '').strip().strip('[]').lower()
+    if not host:
+        return True
+    blocked_hosts = {'localhost', '127.0.0.1', '0.0.0.0', '::1'}
+    if host in blocked_hosts or host.endswith(('.local', '.localhost', '.internal')):
+        return True
+
+    def blocked_ip(raw: str) -> bool:
+        try:
+            ip = ipaddress.ip_address(raw)
+        except ValueError:
+            return False
+        shared_cgnat = ipaddress.ip_network('100.64.0.0/10')
+        mapped = getattr(ip, 'ipv4_mapped', None)
+        if mapped is not None:
+            return any((
+                mapped.is_loopback,
+                mapped.is_private,
+                mapped.is_link_local,
+                mapped.is_multicast,
+                mapped.is_reserved,
+                mapped.is_unspecified,
+                mapped in shared_cgnat,
+            ))
+        return any((
+            ip.is_loopback,
+            ip.is_private,
+            ip.is_link_local,
+            ip.is_multicast,
+            ip.is_reserved,
+            ip.is_unspecified,
+            ip in shared_cgnat,
+        ))
+
+    if blocked_ip(host):
+        return True
+    try:
+        for info in socket.getaddrinfo(host, None, type=socket.SOCK_STREAM):
+            addr = info[4][0]
+            if blocked_ip(addr):
+                return True
+    except OSError:
+        # If DNS is unavailable, let the later connector fetch fail normally.
+        return False
+    return False
+
+
 def _template_connector_normalize_url(value: str) -> str:
     value = (value or '').strip()
     if not value:
@@ -1228,14 +1280,84 @@ def _template_connector_normalize_url(value: str) -> str:
     if parsed.scheme not in ('http', 'https') or not parsed.netloc:
         raise ValueError('Only absolute http(s) URLs are supported')
     host = (parsed.hostname or '').lower()
-    blocked_hosts = {'localhost', '127.0.0.1', '0.0.0.0', '::1'}
-    if host in blocked_hosts or host.endswith('.local'):
+    if _template_connector_host_is_private(host):
         raise ValueError('Local/private connector targets are not allowed from the dashboard')
     return urllib.parse.urlunparse((parsed.scheme, parsed.netloc, parsed.path.rstrip('/'), '', '', ''))
 
 
 def _template_connector_urljoin(base: str, suffix: str) -> str:
     return base.rstrip('/') + '/' + suffix.lstrip('/')
+
+
+def _template_connector_resolve_public_ip(host: str) -> str:
+    candidates = []
+    for info in socket.getaddrinfo(host, None, type=socket.SOCK_STREAM):
+        addr = info[4][0]
+        if not _template_connector_host_is_private(addr):
+            candidates.append(addr)
+    if not candidates:
+        raise ValueError('Connector target does not resolve to a public IP address')
+    return candidates[0]
+
+
+class _TemplateConnectorHTTPSConnection(http.client.HTTPSConnection):
+    def __init__(self, connect_host, port, server_hostname, timeout=60):
+        super().__init__(connect_host, port=port, timeout=timeout, context=ssl.create_default_context())
+        self._template_connector_server_hostname = server_hostname
+
+    def connect(self):
+        sock = socket.create_connection((self.host, self.port), self.timeout, self.source_address)
+        self.sock = self._context.wrap_socket(sock, server_hostname=self._template_connector_server_hostname)
+
+
+def _template_connector_fetch_json(url, headers=None, method='GET', body=None, timeout=60, _redirects=0):
+    # Manual fetch avoids urllib's second DNS lookup. We resolve once, verify the
+    # chosen IP is public, connect to that IP, and send Host/SNI for the original host.
+    _template_connector_normalize_url(url)
+    raw_url = (url or '').strip()
+    if not re.match(r'^https?://', raw_url, re.I):
+        raw_url = 'https://' + raw_url
+    parsed = urllib.parse.urlparse(raw_url)
+    host = parsed.hostname or ''
+    connect_ip = _template_connector_resolve_public_ip(host)
+    port = parsed.port or (443 if parsed.scheme == 'https' else 80)
+    path = parsed.path or '/'
+    if parsed.query:
+        path += '?' + parsed.query
+    method = (method or 'GET').upper()
+    req_body = json.dumps(body, ensure_ascii=False).encode('utf-8') if body is not None else None
+    req_headers = dict(headers or {})
+    req_headers.setdefault('Accept', 'application/json')
+    if body is not None:
+        req_headers.setdefault('Content-Type', 'application/json')
+        req_headers['Content-Length'] = str(len(req_body))
+    req_headers['Host'] = parsed.netloc
+    conn = None
+    try:
+        if parsed.scheme == 'https':
+            conn = _TemplateConnectorHTTPSConnection(connect_ip, port, host, timeout=timeout)
+        else:
+            conn = http.client.HTTPConnection(connect_ip, port=port, timeout=timeout)
+        conn.request(method, path, body=req_body, headers=req_headers)
+        resp = conn.getresponse()
+        raw = resp.read()
+        if resp.status in (301, 302, 303, 307, 308):
+            if _redirects >= 5:
+                raise ValueError('Too many connector redirects')
+            location = resp.getheader('Location') or ''
+            if not location:
+                raise ValueError('Connector redirect without Location header')
+            next_url = urllib.parse.urljoin(raw_url, location)
+            _template_connector_normalize_url(next_url)
+            next_method = 'GET' if resp.status == 303 else method
+            next_body = None if next_method == 'GET' else body
+            return _template_connector_fetch_json(next_url, headers=headers, method=next_method, body=next_body, timeout=timeout, _redirects=_redirects + 1)
+        if resp.status < 200 or resp.status >= 300:
+            raise ValueError(f'Connector fetch returned HTTP {resp.status}')
+        return json.loads(raw.decode('utf-8'))
+    finally:
+        if conn:
+            conn.close()
 
 
 def _template_connector_extract_figma_key(value: str) -> str:
@@ -1253,7 +1375,7 @@ def _template_connector_extract_figma_key(value: str) -> str:
 def _template_connector_probe_wordpress_rest(url: str):
     base = _template_connector_normalize_url(url)
     index_url = _template_connector_urljoin(base, '/wp-json')
-    index = fetch_json(index_url, timeout=20)
+    index = _template_connector_fetch_json(index_url, timeout=20)
     namespaces = index.get('namespaces', []) if isinstance(index, dict) else []
     routes = index.get('routes', {}) if isinstance(index, dict) else {}
     site = {
@@ -1266,19 +1388,19 @@ def _template_connector_probe_wordpress_rest(url: str):
     taxonomies = []
     posts_sample = []
     try:
-        types = fetch_json(_template_connector_urljoin(base, '/wp-json/wp/v2/types?context=view'), timeout=20)
+        types = _template_connector_fetch_json(_template_connector_urljoin(base, '/wp-json/wp/v2/types?context=view'), timeout=20)
         if isinstance(types, dict):
             post_types = sorted(types.keys())[:25]
     except Exception:
         pass
     try:
-        tax = fetch_json(_template_connector_urljoin(base, '/wp-json/wp/v2/taxonomies?context=view'), timeout=20)
+        tax = _template_connector_fetch_json(_template_connector_urljoin(base, '/wp-json/wp/v2/taxonomies?context=view'), timeout=20)
         if isinstance(tax, dict):
             taxonomies = sorted(tax.keys())[:25]
     except Exception:
         pass
     try:
-        posts = fetch_json(_template_connector_urljoin(base, '/wp-json/wp/v2/posts?per_page=5&_fields=id,slug,link,title,date,modified'), timeout=20)
+        posts = _template_connector_fetch_json(_template_connector_urljoin(base, '/wp-json/wp/v2/posts?per_page=5&_fields=id,slug,link,title,date,modified'), timeout=20)
         if isinstance(posts, list):
             for post in posts[:5]:
                 title = post.get('title', {}) if isinstance(post, dict) else {}
@@ -1311,7 +1433,7 @@ def _template_connector_probe_wpgraphql(url: str):
     base = _template_connector_normalize_url(url)
     endpoint = _template_connector_urljoin(base, '/graphql')
     query = '{ __typename generalSettings { title url description } }'
-    data = fetch_json(endpoint, method='POST', body={'query': query}, timeout=25)
+    data = _template_connector_fetch_json(endpoint, method='POST', body={'query': query}, timeout=25)
     errors = data.get('errors') if isinstance(data, dict) else None
     if errors:
         return {'ok': False, 'connector': 'wpgraphql', 'baseUrl': base, 'endpoint': endpoint, 'errors': errors, 'summary': 'WPGraphQL responded with GraphQL errors'}
