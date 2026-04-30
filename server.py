@@ -3500,6 +3500,10 @@ class DashboardHandler(BaseHTTPRequestHandler):
         self._r2_status = 0
         self._r2_req_id = _r3_uuid.uuid4().hex[:12]
 
+    def _send_json(self, status, payload):
+        """Compatibility helper for legacy route blocks that call self._send_json."""
+        return json_response(self, status, payload)
+
     def send_response(self, code, message=None):
         # Capture status for logging
         try: self._r2_status = code
