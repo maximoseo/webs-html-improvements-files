@@ -13286,7 +13286,9 @@ function writePromptPreviewDocument(html){
   if(!previewFrame) return;
   const doc=previewFrame.contentDocument||previewFrame.contentWindow.document;
   doc.open();
-  doc.write(html||'<body style="font-family:Segoe UI,sans-serif;padding:24px;color:#666">Preview unavailable.
+  doc.write(html||'<body style="font-family:Segoe UI,sans-serif;padding:24px;color:#666">Preview unavailable.</body>');
+</script>
+
 <style id="playground-ui-nav-final-override-2026-04-29">
 /* PLAYGROUND_UI_NAV_FINAL_OVERRIDE_2026_04_29
    Final late-cascade guard for Playground preview and dashboard nav.
@@ -14236,7 +14238,7 @@ function togglePromptStudioExpand(){
 async function improvePrompt(btn){
   const isImproveWorkflow=!!(window._psSelectedTemplates && window._psSelectedTemplates.has('improve-workflow'));
   if(isImproveWorkflow){
-    const output=document.getElementById('prompt-output');
+    output=document.getElementById('prompt-output');
     const status=document.getElementById('prompt-status');
     if(window._improveAbort){
       try{ window._improveAbort.abort('user_cancel'); }catch(e){}
@@ -14287,7 +14289,7 @@ async function improvePrompt(btn){
     return;
   }
   const draft=document.getElementById('prompt-draft').value.trim();
-  const output=document.getElementById('prompt-output');
+  output=document.getElementById('prompt-output');
   const status=document.getElementById('prompt-status');
   if(!draft){status.textContent='Please write a draft prompt first.';return;}
   // Prompt Studio Contract: domain-first guard
