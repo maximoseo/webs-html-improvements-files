@@ -7285,6 +7285,166 @@ body.light .action-btn.primary{
 .tour-tooltip{box-sizing:border-box;max-height:calc(100vh - 32px);overflow:auto}
 /* END SAFE_UI_API_FIXES_2026_04_26 */
 
+
+/* ═══════════════════════════════════════════════════
+   Scrollable Tab Nav with Arrows (Plan #26)
+   ═══════════════════════════════════════════════════ */
+.tab-nav-scroll-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  flex: 0 1 auto;
+  min-width: 0;
+  max-width: 100%;
+}
+.tab-scroll-arrow {
+  position: absolute;
+  top: 0;
+  height: 100%;
+  width: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  font-size: 22px;
+  font-weight: 700;
+  line-height: 1;
+  cursor: pointer;
+  transition: opacity 0.2s, color 0.15s;
+  color: rgba(255,255,255,0.55);
+  padding: 0;
+  z-index: 5;
+  background: none;
+}
+.tab-scroll-arrow-l {
+  left: 0;
+  background: linear-gradient(to right, rgba(7,8,16,0.97) 55%, transparent) !important;
+}
+.tab-scroll-arrow-r {
+  right: 0;
+  background: linear-gradient(to left, rgba(7,8,16,0.97) 55%, transparent) !important;
+}
+.tab-scroll-arrow:hover { color: #fff; }
+.tab-scroll-arrow.hidden { opacity: 0; pointer-events: none; }
+/* Make the nav scroll internally when inside the wrapper */
+.tab-nav-scroll-wrap .fixer-tab-nav {
+  overflow-x: auto !important;
+  overflow-y: hidden !important;
+  scrollbar-width: none !important;
+  -ms-overflow-style: none !important;
+  scroll-behavior: smooth;
+  flex-shrink: 0 !important;
+  min-width: 0 !important;
+  max-width: 100% !important;
+  display: inline-flex !important;
+  flex-wrap: nowrap !important;
+  border-radius: 12px !important;
+}
+.tab-nav-scroll-wrap .fixer-tab-nav::-webkit-scrollbar { display: none !important; }
+
+/* ═══════════════════════════════════════════════════
+   Playground Tab CSS (Plan #24)
+   ═══════════════════════════════════════════════════ */
+.pg-toolbar {
+  display: flex; align-items: center; gap: 10px;
+  margin-bottom: 20px; flex-wrap: wrap;
+}
+.pg-search-wrap { position: relative; flex: 1; min-width: 200px; }
+.pg-search-icon { position: absolute; left: 11px; top: 50%; transform: translateY(-50%); color: var(--muted); pointer-events: none; }
+.pg-search {
+  width: 100%; background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.09); border-radius: 10px;
+  padding: 9px 14px 9px 34px; color: var(--text); font-size: 13px;
+  font-family: inherit; outline: none; box-sizing: border-box;
+  transition: border-color 0.15s;
+}
+.pg-search:focus { border-color: rgba(113,112,255,0.4); }
+.pg-filter-btn {
+  padding: 8px 14px; border-radius: 9px;
+  border: 1px solid rgba(255,255,255,0.09);
+  background: rgba(255,255,255,0.03); color: var(--text-secondary);
+  font-size: 12px; font-weight: 600; cursor: pointer; transition: all 0.15s;
+  white-space: nowrap; font-family: inherit;
+}
+.pg-filter-btn:hover { border-color: rgba(255,255,255,0.14); color: #fff; }
+.pg-view-toggle { display: flex; gap: 2px; }
+.pg-view-btn {
+  width: 32px; height: 32px; display: flex; align-items: center; justify-content: center;
+  border: 1px solid rgba(255,255,255,0.09); border-radius: 8px;
+  background: transparent; color: var(--muted); cursor: pointer; transition: all 0.15s; font-size: 15px;
+}
+.pg-view-btn.active { background: rgba(113,112,255,0.18); border-color: rgba(113,112,255,0.3); color: #e0deff; }
+.pg-domain-group { margin-bottom: 28px; }
+.pg-domain-header {
+  display: flex; align-items: center; gap: 10px; padding: 10px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.07); margin-bottom: 14px;
+  cursor: pointer; user-select: none;
+}
+.pg-domain-name { font-size: 14px; font-weight: 700; color: var(--text); letter-spacing: -0.02em; }
+.pg-domain-count {
+  font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 99px;
+  background: rgba(113,112,255,0.12); color: #c4b5fd;
+}
+.pg-domain-toggle { margin-left: auto; font-size: 12px; color: var(--muted); transition: transform 0.2s; }
+.pg-domain-group.collapsed .pg-domain-toggle { transform: rotate(-90deg); }
+.pg-domain-group.collapsed .pg-cards-grid,
+.pg-domain-group.collapsed .pg-cards-list { display: none !important; }
+.pg-cards-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 14px; }
+.pg-card {
+  background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 14px; overflow: hidden; transition: border-color 0.15s, transform 0.15s;
+}
+.pg-card:hover { border-color: rgba(113,112,255,0.3); transform: translateY(-1px); }
+.pg-thumb-wrap { width: 100%; height: 160px; overflow: hidden; background: #f0f0f0; position: relative; cursor: pointer; }
+.pg-thumb-wrap iframe { width: 1200px; height: 640px; transform: scale(0.218); transform-origin: top left; border: none; pointer-events: none; }
+.pg-thumb-overlay {
+  position: absolute; inset: 0; background: transparent; cursor: pointer; z-index: 1;
+  display: flex; align-items: center; justify-content: center;
+  opacity: 0; transition: opacity 0.2s; background: rgba(0,0,0,0.42);
+}
+.pg-thumb-wrap:hover .pg-thumb-overlay { opacity: 1; }
+.pg-thumb-overlay span { background: rgba(113,112,255,0.9); color: #fff; font-size: 12px; font-weight: 700; padding: 6px 14px; border-radius: 8px; }
+.pg-card-body { padding: 12px 14px; }
+.pg-card-agent { font-size: 12px; font-weight: 700; color: #c4b5fd; margin-bottom: 4px; }
+.pg-card-meta { font-size: 11px; color: var(--muted); margin-bottom: 10px; }
+.pg-card-actions { display: flex; gap: 6px; flex-wrap: wrap; }
+.pg-action-btn {
+  flex: 1; min-width: 60px; padding: 6px 10px; border-radius: 8px;
+  border: 1px solid rgba(255,255,255,0.09); background: rgba(255,255,255,0.03);
+  color: var(--text-secondary); font-size: 11px; font-weight: 600; cursor: pointer;
+  transition: all 0.15s; text-align: center; font-family: inherit; white-space: nowrap;
+}
+.pg-action-btn:hover { border-color: rgba(255,255,255,0.18); color: #fff; }
+.pg-action-btn.primary { background: rgba(113,112,255,0.15); border-color: rgba(113,112,255,0.3); color: #e0deff; }
+.pg-action-btn.primary:hover { background: rgba(113,112,255,0.28); }
+.pg-cards-list { display: none; flex-direction: column; gap: 6px; }
+.pg-list-item {
+  display: flex; align-items: center; gap: 12px; padding: 10px 14px;
+  background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 10px; transition: border-color 0.15s;
+}
+.pg-list-item:hover { border-color: rgba(113,112,255,0.25); }
+.pg-list-thumb { width: 60px; height: 40px; overflow: hidden; background: #f0f0f0; border-radius: 6px; flex-shrink: 0; cursor: pointer; }
+.pg-list-thumb iframe { width: 600px; height: 400px; transform: scale(0.1); transform-origin: top left; border: none; pointer-events: none; }
+.pg-list-agent { font-size: 12px; font-weight: 700; color: #c4b5fd; flex: 1; min-width: 0; }
+.pg-list-meta { font-size: 11px; color: var(--muted); flex: 2; min-width: 0; }
+.pg-list-actions { display: flex; gap: 6px; flex-shrink: 0; }
+.pg-empty { text-align: center; padding: 52px 20px; color: var(--muted); font-size: 14px; }
+.pg-empty-icon { font-size: 44px; margin-bottom: 14px; }
+.pg-stats-bar {
+  padding: 10px 16px; background: rgba(255,255,255,0.02);
+  border: 1px solid rgba(255,255,255,0.06); border-radius: 10px;
+  font-size: 12px; color: var(--muted); display: flex; align-items: center;
+  gap: 16px; margin-top: 16px; flex-wrap: wrap;
+}
+.pg-stats-bar strong { color: var(--text-secondary); }
+/* Device widths for preview modal */
+#pg-modal-iframe-wrap[data-dev="desktop"] { width: 100%; }
+#pg-modal-iframe-wrap[data-dev="tablet"]  { width: 768px; max-width: 100%; }
+#pg-modal-iframe-wrap[data-dev="mobile"]  { width: 375px; max-width: 100%; }
+.pg-modal-dev-btn { transition: all 0.15s !important; }
+.pg-modal-dev-btn.active { background: rgba(113,112,255,0.3) !important; color: #e0deff !important; }
 </style>
 </head>
 
@@ -7321,7 +7481,9 @@ body.light .action-btn.primary{
     </a>
   </div>
   <div class="header-actions">
-    <div class="fixer-tab-nav main-menu" id="fixer-tab-nav" role="tablist" aria-label="Dashboard sections" aria-orientation="horizontal" data-menu-label="Main menu">
+    <div class="tab-nav-scroll-wrap" id="tab-nav-scroll-wrap">
+      <button class="tab-scroll-arrow tab-scroll-arrow-l hidden" id="tab-arrow-left" onclick="scrollTabNav(-180)" aria-hidden="true">&#8249;</button>
+      <div class="fixer-tab-nav main-menu" id="fixer-tab-nav" role="tablist" aria-label="Dashboard sections" aria-orientation="horizontal" data-menu-label="Main menu">
       <button class="fixer-tab-btn active" id="tab-projects" onclick="showPage('projects')" aria-label="Projects" role="tab" aria-selected="true">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
         <span class="tab-label">Projects</span>
@@ -7358,6 +7520,12 @@ body.light .action-btn.primary{
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
         <span class="tab-label">Settings</span>
       </button>
+      <button class="fixer-tab-btn" id="tab-playground" onclick="showPage('playground')" aria-label="Playground" role="tab" aria-selected="false">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
+        <span class="tab-label">Playground</span>
+      </button>
+    </div>
+      <button class="tab-scroll-arrow tab-scroll-arrow-r hidden" id="tab-arrow-right" onclick="scrollTabNav(180)" aria-hidden="true">&#8250;</button>
     </div>
     <button class="hdr-search-btn" id="hdr-global-search-btn" onclick="openGlobalSearch()" title="Global search (Ctrl+Shift+F)" aria-label="Global search">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
@@ -13559,6 +13727,13 @@ document.addEventListener('click', function(ev){
       settingsPage.style.display  = isSettings  ? 'block' : 'none';
       settingsPage.classList.toggle('active', isSettings);
     }
+    var pgPage         = document.getElementById('page-playground');
+    var isPlayground   = (name === 'playground');
+    if (pgPage) {
+      pgPage.style.display = isPlayground ? 'block' : 'none';
+      pgPage.classList.toggle('active', isPlayground);
+      if (isPlayground) { if (typeof pgInitPage === 'function') pgInitPage(); }
+    }
     if (isTemplateImprovements) runPageInit('template-improvements', window.initTemplateImprovementsPage);
     if (isProductivityHub) runPageInit('productivity-hub', window.initProductivityHubPage);
     if (isAnalytics) runPageInit('analytics', window.initAnalyticsPage);
@@ -13582,6 +13757,8 @@ document.addEventListener('click', function(ev){
     if (tabProductivityHub) { tabProductivityHub.classList.toggle('active', isProductivityHub); tabProductivityHub.setAttribute('aria-selected', isProductivityHub ? 'true' : 'false'); }
     if (tabAnalytics) { tabAnalytics.classList.toggle('active', isAnalytics); tabAnalytics.setAttribute('aria-selected', isAnalytics ? 'true' : 'false'); }
     if (tabSettings)  { tabSettings.classList.toggle('active',  isSettings);  tabSettings.setAttribute('aria-selected',  isSettings  ? 'true' : 'false'); }
+    var tabPlayground  = document.getElementById('tab-playground');
+    if (tabPlayground) { tabPlayground.classList.toggle('active', isPlayground); tabPlayground.setAttribute('aria-selected', isPlayground ? 'true' : 'false'); }
 
     const deployPanel = document.getElementById('deploy-status-panel');
     if (deployPanel) {
@@ -19581,6 +19758,97 @@ async function downloadPromptPreviewShot(){
   </div>
 </div>
 
+<!-- ═══════════════════════════════════════════════════
+     PLAYGROUND TAB — HTML Template Gallery (Plan #24)
+     ═══════════════════════════════════════════════════ -->
+<div id="page-playground" class="fixer-page" style="display:none">
+  <div class="fixer-page-header">
+    <div>
+      <div class="fixer-page-title">🎨 Playground</div>
+      <div class="fixer-page-desc">Browse and preview HTML templates generated by all agents, organized by domain.</div>
+    </div>
+  </div>
+
+  <!-- Toolbar -->
+  <div class="pg-toolbar">
+    <div class="pg-search-wrap">
+      <svg class="pg-search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="15" height="15"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+      <input class="pg-search" id="pg-search" type="text" placeholder="Search by domain, agent, or style..." oninput="pgFilterCards(this.value)">
+    </div>
+    <select class="pg-filter-btn" id="pg-filter-agent" onchange="pgFilterCards(document.getElementById('pg-search').value)">
+      <option value="">All Agents</option>
+      <option value="GPT">GPT</option>
+      <option value="Opus">Opus / Claude</option>
+      <option value="Gemini">Gemini</option>
+      <option value="Kimi">Kimi</option>
+      <option value="GLM">GLM</option>
+    </select>
+    <select class="pg-filter-btn" id="pg-filter-sort" onchange="pgFilterCards(document.getElementById('pg-search').value)">
+      <option value="newest">Newest First</option>
+      <option value="agent">By Agent</option>
+    </select>
+    <div class="pg-view-toggle">
+      <button class="pg-view-btn active" id="pg-view-grid" onclick="pgSetView('grid',this)" title="Grid view">⊞</button>
+      <button class="pg-view-btn" id="pg-view-list" onclick="pgSetView('list',this)" title="List view">☰</button>
+    </div>
+  </div>
+
+  <!-- Gallery (populated by JS) -->
+  <div id="pg-gallery"></div>
+
+  <!-- Empty state -->
+  <div class="pg-empty" id="pg-empty">
+    <div class="pg-empty-icon">🎨</div>
+    <div style="font-weight:700;color:var(--text-secondary);margin-bottom:8px;font-size:16px">No templates in Playground yet</div>
+    <div style="max-width:440px;margin:0 auto;line-height:1.6">
+      Open any project card → expand agent outputs → click <strong>👁 Preview</strong> on any file.<br>
+      Templates you preview will automatically appear here for easy comparison and export.
+    </div>
+    <div style="margin-top:16px">
+      <button class="header-menu-btn" onclick="showPage('projects')">← Go to Projects</button>
+    </div>
+  </div>
+
+  <!-- Stats bar -->
+  <div class="pg-stats-bar" id="pg-stats-bar" style="display:none">
+    <span>🎨 <strong id="pg-count-templates">0</strong> templates</span>
+    <span>📁 <strong id="pg-count-domains">0</strong> domains</span>
+    <span>🤖 <strong id="pg-count-agents">0</strong> agents</span>
+    <span style="margin-left:auto;font-size:11px;color:var(--muted)">Templates are saved locally in your browser. Open any project → Preview file to add.</span>
+  </div>
+</div><!-- end #page-playground -->
+
+<!-- ═══ Playground Preview Modal ═══ -->
+<div id="pg-preview-modal" style="position:fixed;inset:0;z-index:10001;display:none;align-items:center;justify-content:center">
+  <div style="position:absolute;inset:0;background:rgba(0,0,0,0.78);backdrop-filter:blur(5px)" onclick="pgClosePreview()"></div>
+  <div style="position:relative;width:calc(100vw - 24px);max-width:1280px;height:calc(100vh - 24px);background:#111116;border:1px solid rgba(255,255,255,0.1);border-radius:16px;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 25px 60px rgba(0,0,0,0.65);z-index:1">
+    <!-- Toolbar -->
+    <div style="display:flex;align-items:center;gap:8px;padding:0 14px;height:48px;background:rgba(0,0,0,0.4);border-bottom:1px solid rgba(255,255,255,0.08);flex-shrink:0">
+      <div id="pg-modal-title" style="font-size:13px;font-weight:600;color:#fff;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">Template Preview</div>
+      <div style="display:flex;gap:2px;background:rgba(255,255,255,0.05);border-radius:8px;padding:3px">
+        <button class="pg-modal-dev-btn active" data-dev="desktop" onclick="pgSetDevice(this)" style="padding:4px 10px;border:none;border-radius:6px;font-size:11px;font-weight:600;background:rgba(113,112,255,0.3);color:#e0deff;cursor:pointer;font-family:inherit">🖥 Desktop</button>
+        <button class="pg-modal-dev-btn" data-dev="tablet" onclick="pgSetDevice(this)" style="padding:4px 10px;border:none;border-radius:6px;font-size:11px;font-weight:600;background:transparent;color:var(--muted);cursor:pointer;font-family:inherit">📱 Tablet</button>
+        <button class="pg-modal-dev-btn" data-dev="mobile" onclick="pgSetDevice(this)" style="padding:4px 10px;border:none;border-radius:6px;font-size:11px;font-weight:600;background:transparent;color:var(--muted);cursor:pointer;font-family:inherit">📲 Mobile</button>
+      </div>
+      <button onclick="pgCopyHTML()" id="pg-copy-btn" style="padding:6px 12px;border-radius:8px;border:1px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.04);color:var(--text-secondary);font-size:11px;font-weight:600;cursor:pointer;font-family:inherit">📋 Copy HTML</button>
+      <button onclick="pgDownloadHTML()" style="padding:6px 12px;border-radius:8px;border:1px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.04);color:var(--text-secondary);font-size:11px;font-weight:600;cursor:pointer;font-family:inherit">💾 Download</button>
+      <button onclick="pgClosePreview()" title="Close (Escape)" style="width:36px;height:36px;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:700;background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.25);border-radius:8px;color:#f87171;cursor:pointer;flex-shrink:0;transition:all 0.15s">✕</button>
+    </div>
+    <!-- Preview area -->
+    <div style="flex:1;overflow:auto;display:flex;align-items:flex-start;justify-content:center;padding:16px;background:#18181b">
+      <div id="pg-modal-iframe-wrap" data-dev="desktop" style="background:#fff;border-radius:8px;overflow:hidden;box-shadow:0 4px 20px rgba(0,0,0,0.4);width:100%;min-height:400px;transition:width 0.3s">
+        <iframe id="pg-modal-iframe" sandbox="allow-scripts allow-same-origin" title="Template Preview" style="width:100%;height:700px;border:none"></iframe>
+      </div>
+    </div>
+    <!-- Status bar -->
+    <div style="padding:6px 16px;background:rgba(0,0,0,0.3);border-top:1px solid rgba(255,255,255,0.07);font-size:10px;color:var(--muted);display:flex;justify-content:space-between;flex-shrink:0">
+      <span id="pg-modal-char-count"></span>
+      <span>Press <kbd style="background:rgba(255,255,255,0.08);padding:1px 5px;border-radius:3px;font-family:monospace">Escape</kbd> to close</span>
+    </div>
+  </div>
+</div>
+
+
 <!-- ===== GLOBAL SEARCH MODAL ===== -->
 <div id="global-search-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);backdrop-filter:blur(4px);z-index:10100;align-items:flex-start;justify-content:center;padding:80px 16px 16px" onclick="if(event.target===this)closeGlobalSearch()" role="dialog" aria-modal="true" aria-label="Global Search">
   <div style="width:100%;max-width:600px;background:var(--surface-strong,#131416);border:1px solid var(--border-strong,rgba(255,255,255,0.18));border-radius:14px;box-shadow:0 30px 80px rgba(0,0,0,0.6);overflow:hidden">
@@ -24554,5 +24822,273 @@ pre, code { overflow-x: auto !important; }
 
 
 </style>
+
+<script>
+/* ═══════════════════════════════════════════════════
+   Scrollable Tab Nav Arrows (Plan #26)
+   ═══════════════════════════════════════════════════ */
+(function() {
+  function updateTabArrows() {
+    var nav = document.getElementById('fixer-tab-nav');
+    var arL = document.getElementById('tab-arrow-left');
+    var arR = document.getElementById('tab-arrow-right');
+    if (!nav || !arL || !arR) return;
+    var overflow = nav.scrollWidth > nav.clientWidth + 2;
+    arL.classList.toggle('hidden', !overflow || nav.scrollLeft <= 2);
+    arR.classList.toggle('hidden', !overflow || nav.scrollLeft + nav.clientWidth >= nav.scrollWidth - 2);
+  }
+  window.scrollTabNav = function(px) {
+    var nav = document.getElementById('fixer-tab-nav');
+    if (!nav) return;
+    nav.scrollBy({ left: px, behavior: 'smooth' });
+    setTimeout(updateTabArrows, 350);
+  };
+  document.addEventListener('DOMContentLoaded', function() {
+    var nav = document.getElementById('fixer-tab-nav');
+    if (nav) nav.addEventListener('scroll', updateTabArrows);
+    window.addEventListener('resize', updateTabArrows);
+    setTimeout(updateTabArrows, 300);
+  });
+})();
+
+/* ═══════════════════════════════════════════════════
+   Playground Tab Logic (Plan #24)
+   ═══════════════════════════════════════════════════ */
+(function() {
+  var _pgTemplates = [];
+  var _pgView = 'grid';
+  var _pgCurrentHTML = '';
+  var _pgCurrentTitle = '';
+
+  function escHtml(s) {
+    return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+
+  function pgGroupByDomain(templates) {
+    var groups = {};
+    templates.forEach(function(t) {
+      if (!groups[t.domain]) groups[t.domain] = [];
+      groups[t.domain].push(t);
+    });
+    return groups;
+  }
+
+  function pgRenderGallery(templates) {
+    var gallery = document.getElementById('pg-gallery');
+    var empty = document.getElementById('pg-empty');
+    var statsBar = document.getElementById('pg-stats-bar');
+    if (!gallery) return;
+
+    if (!templates || templates.length === 0) {
+      gallery.innerHTML = '';
+      if (empty) empty.style.display = 'block';
+      if (statsBar) statsBar.style.display = 'none';
+      return;
+    }
+    if (empty) empty.style.display = 'none';
+    if (statsBar) statsBar.style.display = 'flex';
+
+    var domains = pgGroupByDomain(templates);
+    var domainNames = Object.keys(domains);
+    var agentSet = new Set(templates.map(function(t){ return t.agent; }));
+
+    var cT = document.getElementById('pg-count-templates');
+    var cD = document.getElementById('pg-count-domains');
+    var cA = document.getElementById('pg-count-agents');
+    if (cT) cT.textContent = templates.length;
+    if (cD) cD.textContent = domainNames.length;
+    if (cA) cA.textContent = agentSet.size;
+
+    var html = '';
+    domainNames.forEach(function(domain) {
+      var cards = domains[domain];
+      html += '<div class="pg-domain-group" data-domain="' + escHtml(domain) + '">';
+      html += '<div class="pg-domain-header" onclick="pgToggleDomain(this.parentElement)">';
+      html += '<span style="font-size:15px">📁</span>';
+      html += '<span class="pg-domain-name">' + escHtml(domain) + '</span>';
+      html += '<span class="pg-domain-count">' + cards.length + '</span>';
+      html += '<span class="pg-domain-toggle">▾</span>';
+      html += '</div>';
+      html += '<div class="pg-cards-grid">';
+      cards.forEach(function(t) {
+        var encHtml = encodeURIComponent(t.html || '');
+        html += '<div class="pg-card" data-agent="' + escHtml(t.agent) + '" data-domain="' + escHtml(t.domain) + '">';
+        html += '<div class="pg-thumb-wrap" onclick="pgOpenPreview('' + t.id + '')">';
+        html += '<iframe sandbox="allow-same-origin" loading="lazy" srcdoc="' + (t.html||'').replace(/"/g,'&quot;').substring(0,3000) + '"></iframe>';
+        html += '<div class="pg-thumb-overlay"><span>👁 Preview</span></div>';
+        html += '</div>';
+        html += '<div class="pg-card-body">';
+        html += '<div class="pg-card-agent">🤖 ' + escHtml(t.agent) + '</div>';
+        html += '<div class="pg-card-meta">📅 ' + escHtml(t.date||'') + ' · 📏 ' + escHtml(t.size||'') + '</div>';
+        html += '<div class="pg-card-actions">';
+        html += '<button class="pg-action-btn primary" onclick="pgOpenPreview('' + t.id + '')">👁 Preview</button>';
+        html += '<button class="pg-action-btn" onclick="pgCopyById('' + t.id + '')">📋 Copy</button>';
+        html += '<button class="pg-action-btn" onclick="pgDownloadById('' + t.id + '','' + escHtml(t.domain) + '','' + escHtml(t.agent) + '')">💾 DL</button>';
+        html += '</div></div></div>';
+      });
+      html += '</div>';
+      html += '<div class="pg-cards-list" style="display:none"></div>';
+      html += '</div>';
+    });
+    gallery.innerHTML = html;
+  }
+
+  window.pgInitPage = function() {
+    // Load from localStorage
+    try {
+      var saved = JSON.parse(localStorage.getItem('pg_templates') || '[]');
+      if (saved.length) {
+        _pgTemplates = saved;
+      }
+    } catch(e) {}
+    pgRenderGallery(_pgTemplates);
+  };
+
+  window.pgAddTemplate = function(domain, agent, html, date) {
+    var id = 'pg-' + Date.now();
+    var tpl = {
+      id: id,
+      domain: domain || 'Unknown domain',
+      agent: agent || 'Agent',
+      html: html || '',
+      date: date || new Date().toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'}),
+      size: Math.round(((html||'').length)/1024) + ' KB'
+    };
+    // Avoid exact duplicates (same domain+agent)
+    _pgTemplates = _pgTemplates.filter(function(t){ return !(t.domain===tpl.domain && t.agent===tpl.agent); });
+    _pgTemplates.unshift(tpl);
+    // Persist (cap at 30 templates)
+    try {
+      localStorage.setItem('pg_templates', JSON.stringify(_pgTemplates.slice(0,30)));
+    } catch(e) {}
+    return id;
+  };
+
+  window.pgOpenPreview = function(id) {
+    var tpl = _pgTemplates.find(function(t){ return t.id===id; });
+    if (!tpl) return;
+    _pgCurrentHTML = tpl.html;
+    _pgCurrentTitle = tpl.agent + ' — ' + tpl.domain;
+    var modal = document.getElementById('pg-preview-modal');
+    var title = document.getElementById('pg-modal-title');
+    var iframe = document.getElementById('pg-modal-iframe');
+    var charCount = document.getElementById('pg-modal-char-count');
+    if (title) title.textContent = _pgCurrentTitle;
+    if (iframe) iframe.srcdoc = _pgCurrentHTML;
+    if (charCount) charCount.textContent = (_pgCurrentHTML.length).toLocaleString() + ' chars';
+    if (modal) { modal.style.display = 'flex'; }
+    document.body.style.overflow = 'hidden';
+  };
+
+  window.pgClosePreview = function() {
+    var modal = document.getElementById('pg-preview-modal');
+    if (modal) modal.style.display = 'none';
+    document.body.style.overflow = '';
+    setTimeout(function(){
+      var iframe = document.getElementById('pg-modal-iframe');
+      if (iframe) iframe.srcdoc = '';
+    }, 300);
+  };
+
+  window.pgSetDevice = function(btn) {
+    var dev = btn.dataset.dev;
+    document.querySelectorAll('.pg-modal-dev-btn').forEach(function(b){
+      b.classList.remove('active');
+      b.style.background = 'transparent';
+      b.style.color = 'var(--muted)';
+    });
+    btn.classList.add('active');
+    btn.style.background = 'rgba(113,112,255,0.3)';
+    btn.style.color = '#e0deff';
+    var wrap = document.getElementById('pg-modal-iframe-wrap');
+    if (wrap) wrap.setAttribute('data-dev', dev);
+  };
+
+  window.pgCopyHTML = function() {
+    if (!_pgCurrentHTML) return;
+    navigator.clipboard.writeText(_pgCurrentHTML).then(function(){
+      var btn = document.getElementById('pg-copy-btn');
+      if (btn) { btn.textContent = '✅ Copied!'; setTimeout(function(){ btn.textContent = '📋 Copy HTML'; }, 2000); }
+    });
+  };
+  window.pgCopyById = function(id) {
+    var tpl = _pgTemplates.find(function(t){ return t.id===id; });
+    if (tpl && tpl.html) navigator.clipboard.writeText(tpl.html).then(function(){ alert('Copied!'); });
+  };
+  window.pgDownloadHTML = function() {
+    if (!_pgCurrentHTML) return;
+    var blob = new Blob([_pgCurrentHTML], {type:'text/html'});
+    var a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = (_pgCurrentTitle||'template').replace(/[^a-z0-9]/gi,'_').toLowerCase() + '.html';
+    a.click();
+  };
+  window.pgDownloadById = function(id, domain, agent) {
+    var tpl = _pgTemplates.find(function(t){ return t.id===id; });
+    if (!tpl) return;
+    var blob = new Blob([tpl.html], {type:'text/html'});
+    var a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = (domain+'_'+agent).replace(/[^a-z0-9]/gi,'_').toLowerCase() + '.html';
+    a.click();
+  };
+
+  window.pgFilterCards = function(q) {
+    var agentF = (document.getElementById('pg-filter-agent')||{}).value || '';
+    q = (q||'').toLowerCase();
+    var filtered = _pgTemplates.filter(function(t){
+      var mq = !q || t.domain.toLowerCase().includes(q) || t.agent.toLowerCase().includes(q);
+      var ma = !agentF || t.agent.toLowerCase().includes(agentF.toLowerCase());
+      return mq && ma;
+    });
+    pgRenderGallery(filtered);
+  };
+
+  window.pgSetView = function(view, btn) {
+    _pgView = view;
+    document.querySelectorAll('.pg-view-btn').forEach(function(b){ b.classList.remove('active'); });
+    if (btn) btn.classList.add('active');
+    document.querySelectorAll('.pg-cards-grid').forEach(function(el){ el.style.display = view==='list'?'none':''; });
+    document.querySelectorAll('.pg-cards-list').forEach(function(el){ el.style.display = view==='list'?'flex':'none'; });
+  };
+
+  window.pgToggleDomain = function(group) { if (group) group.classList.toggle('collapsed'); };
+
+  // Escape key handler
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+      var modal = document.getElementById('pg-preview-modal');
+      if (modal && modal.style.display !== 'none') {
+        e.preventDefault();
+        e.stopPropagation();
+        pgClosePreview();
+      }
+    }
+  }, true);
+
+  // Hook: when openFocusedCompare is called, capture the HTML and add to playground
+  var _origOpenFocused = window.openFocusedCompare;
+  if (_origOpenFocused) {
+    window.openFocusedCompare = function(url, agent, version) {
+      _origOpenFocused.apply(this, arguments);
+      setTimeout(function() {
+        try {
+          var iframe = document.querySelector('.focus-device-frame iframe');
+          if (iframe && iframe.contentDocument) {
+            var html = iframe.contentDocument.documentElement.outerHTML;
+            if (html && html.length > 500) {
+              var agentDec = decodeURIComponent(agent||'Agent');
+              var verDec   = decodeURIComponent(version||'');
+              var domain   = verDec || agentDec;
+              pgAddTemplate(domain, agentDec, html, null);
+            }
+          }
+        } catch(e) {}
+      }, 1800);
+    };
+  }
+})();
+</script>
+
 </body>
 </html>
