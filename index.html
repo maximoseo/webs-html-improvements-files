@@ -16087,7 +16087,7 @@ function loadTopicsFromStatus(state) {
       const qualityTier = (r.quality_tier || '').toString().toLowerCase();
       const qualityLabel = qualityTier ? qualityTier.charAt(0).toUpperCase() + qualityTier.slice(1) : 'Scored';
       const qualityBadge = qualityScore === null ? '' : `<span class="kwr-quality-badge kwr-quality-${kwrEsc(qualityTier || 'medium')}" title="${kwrEsc((r.quality_reasons || []).join(' • '))}">Q ${qualityScore} - ${qualityLabel}</span>`;
-      const serpBtn = kw ? `<button class="skill-action-btn" style="padding:3px 10px;font-size:11px" onclick="kwrShowSerp('${kwrEsc(kw)}', '${kwrEsc(r.pillar || '')}')" title="Preview SERP">👁</button>` : '-';
+      const serpBtn = kw ? `<button class="skill-action-btn" style="padding:3px 10px;font-size:11px" data-kw="${kwrEsc(kw)}" data-pillar="${kwrEsc(r.pillar || '')}" onclick="kwrShowSerp(this.dataset.kw, this.dataset.pillar)" title="Preview SERP">👁</button>` : '-';
       html += `<tr class="${trClass}" data-idx="${i}">
         <td contenteditable="true" data-col="existing_parent_page" onblur="kwrCellEdit(${i},'existing_parent_page',this)">${kwrEsc(r.existing_parent_page||'')}</td>
         <td contenteditable="true" data-col="pillar" onblur="kwrCellEdit(${i},'pillar',this)">${kwrEsc(r.pillar||'')}</td>
@@ -16103,7 +16103,12 @@ function loadTopicsFromStatus(state) {
   }
 
   function kwrEsc(s) {
-    return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+    return String(s)
+      .replace(/&/g,'&amp;')
+      .replace(/</g,'&lt;')
+      .replace(/>/g,'&gt;')
+      .replace(/"/g,'&quot;')
+      .replace(/'/g,'&#39;');
   }
 
   window.kwrCellEdit = function(idx, col, el) {
@@ -16406,12 +16411,16 @@ function loadTopicsFromStatus(state) {
     _kwrPollDelay = _kwrPollMin;
     var tick = function(){
       if (!_kwrRunId) { window.__kwrPollerActive = false; return; }
-      if (document.hidden) { _kwrPoller = setTimeout(tick, 5000); return; }
+      if (document.hidden) {
+        if (window.__kwrPollerActive && _kwrRunId) _kwrPoller = setTimeout(tick, 5000);
+        else window.__kwrPollerActive = false;
+        return;
+      }
       Promise.resolve().then(function(){ return kwrPoll(); })
         .then(function(){ _kwrPollDelay = _kwrPollMin; })
         .catch(function(){ _kwrPollDelay = Math.min(_kwrPollMax, _kwrPollDelay * 2); })
         .finally(function(){
-          if (_kwrRunId) _kwrPoller = setTimeout(tick, _kwrPollDelay);
+          if (window.__kwrPollerActive && _kwrRunId) _kwrPoller = setTimeout(tick, _kwrPollDelay);
           else window.__kwrPollerActive = false;
         });
     };
@@ -16424,9 +16433,12 @@ function loadTopicsFromStatus(state) {
   }
 
   function kwrPoll() {
-    if (!_kwrRunId) return;
-    fetch('/api/kwr/status?run_id=' + encodeURIComponent(_kwrRunId))
-    .then(r => r.json())
+    if (!_kwrRunId) return Promise.resolve();
+    return fetch('/api/kwr/status?run_id=' + encodeURIComponent(_kwrRunId))
+    .then(r => {
+      if (!r.ok) throw new Error('HTTP ' + r.status);
+      return r.json();
+    })
     .then(data => {
       if (!data.ok) return;
       const stage = data.stage || '';
@@ -16485,7 +16497,10 @@ function loadTopicsFromStatus(state) {
         kwrSetStatus('kwr-dot-running', stage.replace(/_/g,' ') + (msg ? ' - ' + msg : ''), _kwrRunId);
       }
     })
-    .catch(err => kwrLog('Poll error: ' + err.message));
+    .catch(err => {
+      kwrLog('Poll error: ' + err.message);
+      throw err;
+    });
   }
 
   // ---- Cancel ----
