@@ -15388,7 +15388,14 @@ async function loadDashboard(opts){
 
   // 1. Try static data.json (always works, no rate limit)
   const snapshotResult=await fetchJSON('./data.json' + (forceRefresh ? ('?refresh=' + Date.now()) : ''));
-  tree=snapshotResult&&snapshotResult.ok?snapshotResult.data:null;
+  // Support both wrapped {ok,data:{tree}} and raw {tree:[...]} formats
+  if(snapshotResult&&snapshotResult.ok&&snapshotResult.data&&snapshotResult.data.tree){
+    tree=snapshotResult.data;
+  } else if(snapshotResult&&snapshotResult.tree&&Array.isArray(snapshotResult.tree)){
+    tree=snapshotResult;
+  } else {
+    tree=null;
+  }
   let source='static';
   let sourceDetail='Source: bundled snapshot';
 
