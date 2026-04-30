@@ -47,7 +47,6 @@ def _post_to_temp_server(path, payload=None):
         thread.join(timeout=2)
 
 
-@pytest.mark.xfail(reason='Template Connectors UI was removed by a later index.html restore while backend contract remains; keep explicit until tab is restored', strict=False)
 def test_template_connectors_ui_and_navigation_markers_present():
     html = INDEX_HTML.read_text(encoding='utf-8')
     assert 'TEMPLATE_INTELLIGENCE_CONNECTORS_UI_2026_04_29' in html
@@ -66,7 +65,6 @@ def test_template_connectors_ui_and_navigation_markers_present():
     assert 'https://unpkg.com/grapesjs' in html
 
 
-@pytest.mark.xfail(reason='Template Connectors showPage wiring was removed by a later index.html restore; keep explicit until tab is restored', strict=False)
 def test_show_page_knows_template_connectors_tab():
     html = INDEX_HTML.read_text(encoding='utf-8')
     assert "const isTemplateConnectors = (name === 'template-connectors');" in html
@@ -106,10 +104,76 @@ def test_connector_catalog_has_priority_one_pack():
 
 def test_connector_url_normalization_blocks_localhost():
     assert server._template_connector_normalize_url('example.com') == 'https://example.com'
+    blocked = [
+        'http://localhost:8000',
+        'http://127.0.0.1:8000',
+        'http://10.0.0.5',
+        'http://172.16.0.10',
+        'http://192.168.1.10',
+        'http://169.254.169.254/latest/meta-data',
+        'http://100.64.0.1',
+        'http://100.127.255.254',
+        'http://[::ffff:100.64.0.1]',
+        'http://[::ffff:100.127.255.254]',
+        'http://[::1]:8000',
+    ]
+    for url in blocked:
+        with pytest.raises(ValueError):
+            server._template_connector_normalize_url(url)
+
+
+def test_connector_fetch_blocks_private_redirect_targets(monkeypatch):
+    class FakeResponse:
+        status = 302
+        def read(self):
+            return b''
+        def getheader(self, name):
+            if name.lower() == 'location':
+                return 'http://169.254.169.254/latest/meta-data'
+            return None
+
+    class FakeConnection:
+        def __init__(self, *args, **kwargs):
+            pass
+        def request(self, *args, **kwargs):
+            pass
+        def getresponse(self):
+            return FakeResponse()
+        def close(self):
+            pass
+
+    monkeypatch.setattr(server, '_template_connector_resolve_public_ip', lambda host: '93.184.216.34')
+    monkeypatch.setattr(server.http.client, 'HTTPConnection', FakeConnection)
     with pytest.raises(ValueError):
-        server._template_connector_normalize_url('http://localhost:8000')
-    with pytest.raises(ValueError):
-        server._template_connector_normalize_url('http://127.0.0.1:8000')
+        server._template_connector_fetch_json('http://example.com/wp-json')
+
+
+def test_connector_fetch_preserves_query_parameters(monkeypatch):
+    seen = {}
+
+    class FakeResponse:
+        status = 200
+        def read(self):
+            return b'{"ok": true}'
+        def getheader(self, name):
+            return None
+
+    class FakeConnection:
+        def __init__(self, *args, **kwargs):
+            pass
+        def request(self, method, path, body=None, headers=None):
+            seen['method'] = method
+            seen['path'] = path
+        def getresponse(self):
+            return FakeResponse()
+        def close(self):
+            pass
+
+    monkeypatch.setattr(server, '_template_connector_resolve_public_ip', lambda host: '93.184.216.34')
+    monkeypatch.setattr(server.http.client, 'HTTPConnection', FakeConnection)
+    result = server._template_connector_fetch_json('http://example.com/wp-json/wp/v2/posts?per_page=5&_fields=id')
+    assert result == {'ok': True}
+    assert seen['path'] == '/wp-json/wp/v2/posts?per_page=5&_fields=id'
 
 
 def test_wordpress_rest_probe_summarizes_public_schema_without_secrets():
@@ -131,7 +195,7 @@ def test_wordpress_rest_probe_summarizes_public_schema_without_secrets():
             return [{'id': 1, 'slug': 'hello', 'link': 'https://example.com/hello', 'title': {'rendered': 'Hello'}, 'date': '2026-01-01', 'modified': '2026-01-02'}]
         raise AssertionError(url)
 
-    with mock.patch.object(server, 'fetch_json', side_effect=fake_fetch):
+    with mock.patch.object(server, '_template_connector_fetch_json', side_effect=fake_fetch):
         result = server._template_connector_probe({'connector': 'wordpress-rest', 'url': 'example.com'})
     assert result['ok'] is True
     assert result['hasWpV2'] is True
@@ -154,7 +218,8 @@ def test_wpgraphql_and_pagespeed_probes_use_safe_payloads():
             return {'lighthouseResult': {'categories': {'performance': {'score': 0.91}, 'seo': {'score': 1}}, 'audits': {'largest-contentful-paint': {'displayValue': '1.2 s'}}}}
         raise AssertionError(url)
 
-    with mock.patch.object(server, 'fetch_json', side_effect=fake_fetch):
+    with mock.patch.object(server, '_template_connector_fetch_json', side_effect=fake_fetch), \
+         mock.patch.object(server, 'fetch_json', side_effect=fake_fetch):
         graph = server._template_connector_probe({'connector': 'wpgraphql', 'url': 'https://example.com'})
         psi = server._template_connector_probe({'connector': 'pagespeed', 'url': 'https://example.com/page', 'strategy': 'desktop'})
     assert graph['ok'] is True

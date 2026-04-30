@@ -1,11 +1,8 @@
 import pathlib
 
-import pytest
-
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 
 
-@pytest.mark.xfail(reason='frontend Prompt Studio contract markers were removed by a later index.html restore; keep explicit until UI contract is restored', strict=False)
 def test_prompt_studio_contract_frontend_markers_and_payload():
     html = (ROOT / 'index.html').read_text(encoding='utf-8')
     assert '// ── Prompt Studio Contract Rules v2026-04-29 ──' in html
@@ -23,7 +20,6 @@ def test_prompt_studio_contract_frontend_markers_and_payload():
         assert token in html
 
 
-@pytest.mark.xfail(reason='frontend Prompt Studio mandatory checklist was removed by a later index.html restore; keep explicit until UI contract is restored', strict=False)
 def test_prompt_studio_contract_mandatory_checklist_ids_exist():
     html = (ROOT / 'index.html').read_text(encoding='utf-8')
     for checklist_id in [
