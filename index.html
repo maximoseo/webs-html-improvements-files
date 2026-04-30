@@ -24152,6 +24152,7 @@ body:not(.tour-user-started) #tour-backdrop.open{
 })();
 </script>
 
+
 <!-- DASHBOARD RESPONSIVE REDESIGN v1 -->
 <style id="dashboard-redesign-v1">
 /* ================================================================
@@ -24252,11 +24253,18 @@ body:not(.tour-user-started) #tour-backdrop.open{
 }
 .hdr-logout-btn:hover { opacity: 1 !important; }
 
-/* ── 4. Main content: proper top margin for fixed header ── */
-#main-content,
+/* ── 4. Main content: body padding handles the fixed header offset ── */
+/* Body already has padding-top from original CSS — just correct it to match new header height */
+body {
+  padding-top: 56px !important;
+}
+#main-content {
+  margin-top: 0 !important;
+  padding-top: 20px !important;
+}
 .container {
-  margin-top: 56px !important;
-  padding-top: 24px !important;
+  margin-top: 0 !important;
+  padding-top: 0 !important;
 }
 
 /* ── 5. STATS BAR: clean cards, consistent sizing ── */
@@ -24437,7 +24445,7 @@ body.light .fixer-page {
     padding: 0 12px !important;
     gap: 8px !important;
   }
-  #main-content, .container { margin-top: 52px !important; }
+  body { padding-top: 52px !important; }
 
   /* Hide desktop-only elements on mobile */
   .fixer-tab-nav,
@@ -24466,7 +24474,7 @@ body.light .fixer-page {
     min-height: 54px !important;
     max-height: 54px !important;
   }
-  #main-content, .container { margin-top: 54px !important; }
+  body { padding-top: 54px !important; }
   .fixer-tab-btn {
     font-size: 11.5px !important;
     padding: 5px 10px !important;
