@@ -13286,7 +13286,7 @@ function writePromptPreviewDocument(html){
   if(!previewFrame) return;
   const doc=previewFrame.contentDocument||previewFrame.contentWindow.document;
   doc.open();
-  doc.write(html||'<body style="font-family:Segoe UI,sans-serif;padding:24px;color:#666">Preview unavailable.</body>');vailable.</body>');
+  doc.write(html||'<body style="font-family:Segoe UI,sans-serif;padding:24px;color:#666">Preview unavailable.</body>');
 </script>
 
 <style id="playground-ui-nav-final-override-2026-04-29">
@@ -13745,10 +13745,11 @@ function setPromptPreviewDevice(mode,btn){
     const labels={mobile:'Mobile · 375px',tablet:'Tablet · 768px',desktop:'Desktop · 1280px'};
     label.textContent=labels[normalized] || labels.desktop;
   }
-  document.querySelectorAll('#prompt-preview-device-tabs .device-tab').forEach(funct);
+  document.querySelectorAll('#prompt-preview-device-tabs .device-tab').forEach(function(tab){tab.classList.remove('active');});
 }
 function setPromptPreviewHtml(html, mode){
   const safeHtml=(html||'').trim()||'<body style="font-family:Segoe UI,sans-serif;padding:24px;color:#666">Preview unavailable.</body>';
+}
 </script>
 
 <style id="playground-ui-nav-final-override-2026-04-29">
