@@ -47,9 +47,46 @@ try:
 except Exception:
     pass
 
+_KWR_SAFE_ID_RE = re.compile(r'[A-Za-z0-9._-]+')
+
+
+def _decode_identifier(raw: str) -> str:
+    value = str(raw or '').strip()
+    for _ in range(3):
+        decoded = urllib.parse.unquote(value)
+        if decoded == value:
+            break
+        value = decoded
+    return value
+
+
+def _safe_run_id(run_id: str) -> str:
+    value = _decode_identifier(run_id)
+    if (
+        not value
+        or value in ('.', '..')
+        or '/' in value
+        or '\\' in value
+        or not _KWR_SAFE_ID_RE.fullmatch(value)
+    ):
+        raise ValueError('invalid run_id')
+    return value
+
+
+def _safe_child_path(root: str, *parts: str) -> str:
+    root_real = os.path.realpath(root)
+    candidate = os.path.realpath(os.path.join(root_real, *parts))
+    try:
+        inside = os.path.commonpath([root_real, candidate]) == root_real
+    except ValueError:
+        inside = False
+    if not inside:
+        raise ValueError('invalid run_id')
+    return candidate
+
 
 def _run_dir(run_id: str) -> str:
-    return os.path.join(OUTPUTS_DIR, run_id)
+    return _safe_child_path(OUTPUTS_DIR, _safe_run_id(run_id))
 
 
 def _atomic_write_json(path: str, data) -> None:
@@ -552,11 +589,14 @@ def _worksheet_name(job: dict, sheet_prefix: str) -> str:
 
 
 def _cached_excel_path(run_id: str) -> str:
-    return os.path.join(_run_dir(run_id), 'file.xlsx')
+    return _safe_child_path(_run_dir(run_id), 'file.xlsx')
 
 
 def _read_cached_excel(run_id: str, job: dict | None = None) -> tuple:
-    xlsx_path = _cached_excel_path(run_id)
+    try:
+        xlsx_path = _cached_excel_path(run_id)
+    except ValueError as exc:
+        return None, None, str(exc)
     if not os.path.exists(xlsx_path):
         return None, None, None
     try:
@@ -2485,7 +2525,10 @@ def list_reports() -> list:
 def delete_report(run_id: str) -> tuple:
     """Remove outputs/{run_id}/ directory. Returns (ok, error)."""
     import shutil
-    rd = _run_dir(run_id)
+    try:
+        rd = _run_dir(run_id)
+    except ValueError as exc:
+        return False, str(exc)
     if not os.path.isdir(rd):
         return False, 'not found'
     try:
