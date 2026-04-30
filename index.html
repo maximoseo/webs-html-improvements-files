@@ -11164,6 +11164,101 @@ CREATE POLICY "Users see own reports"
       }catch(e){return iso;}
     }
     function escapeHtml(s){return String(s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+
+    /* DASHBOARD_XSS_FIX_KWR_REPORTS_SAFE_RENDER_2026_04_30
+       KWR report cards render API-controlled values with DOM text nodes,
+       not HTML templates. Keep this block narrow and additive. */
+    function kwrSetText(el, value){
+      if(el) el.textContent = value == null ? '' : String(value);
+      return el;
+    }
+    function kwrNumberText(value, fallback){
+      const n = Number(value);
+      return Number.isFinite(n) && n >= 0 ? String(n) : String(fallback || 0);
+    }
+    function kwrReportHost(report){
+      const raw = report && (report.domain || report.website_url) || '';
+      const s = String(raw || '').replace(/^https?:\/\//,'').split('/')[0];
+      return s || 'unknown';
+    }
+    function kwrEncodeRunIdForDownload(runId){
+      const value = String(runId || '');
+      if(value.startsWith('flat:')) return 'flat:' + encodeURIComponent(String(runId).slice(5));
+      return encodeURIComponent(value);
+    }
+    function kwrShowMessage(container, message, className){
+      const box = document.createElement('div');
+      box.className = className || '';
+      box.style.cssText = 'grid-column:1/-1;text-align:center;padding:28px;color:var(--muted);font-size:13px';
+      kwrSetText(box, message);
+      container.replaceChildren(box);
+    }
+    function kwrCreateBadge(label, ok){
+      const badge = document.createElement('span');
+      badge.className = 'kwr-badge' + (ok ? ' ok' : '');
+      kwrSetText(badge, (ok ? '✓ ' : '- ') + label);
+      return badge;
+    }
+    function kwrCreateReportCard(report){
+      const r = report || {};
+      const host = kwrReportHost(r);
+      const runId = String(r.run_id || '');
+      const ss = r.sync_status || {};
+
+      const card = document.createElement('div');
+      card.className = 'kwr-report-card';
+      card.setAttribute('data-rid', runId);
+
+      const head = document.createElement('div');
+      head.className = 'kwr-report-head';
+      const icon = document.createElement('div');
+      icon.className = 'kwr-report-fallback-icon';
+      icon.setAttribute('aria-hidden', 'true');
+      kwrSetText(icon, (host || 'K').slice(0, 1).toUpperCase());
+      const domain = document.createElement('div');
+      domain.className = 'domain';
+      domain.title = host;
+      kwrSetText(domain, host);
+      head.append(icon, domain);
+
+      const meta = document.createElement('div');
+      meta.className = 'kwr-report-meta';
+      const fname = document.createElement('div');
+      fname.className = 'fname';
+      kwrSetText(fname, (r.worksheet_name || 'kwr') + '.xlsx');
+      const created = document.createElement('div');
+      kwrSetText(created, fmtDate(r.created_at));
+      const stats = document.createElement('div');
+      kwrSetText(stats, kwrNumberText(r.row_count, 0) + ' rows · ' + kwrNumberText(r.file_size_kb, 0) + ' KB');
+      meta.append(fname, created, stats);
+
+      const badges = document.createElement('div');
+      badges.className = 'kwr-report-badges';
+      badges.append(
+        kwrCreateBadge('GitHub', !!ss.github),
+        kwrCreateBadge('Obsidian', !!ss.obsidian),
+        kwrCreateBadge('Supabase', !!ss.supabase)
+      );
+
+      const actions = document.createElement('div');
+      actions.className = 'kwr-report-actions';
+      const download = document.createElement('button');
+      kwrSetText(download, '⬇ Download');
+      download.addEventListener('click', function(){
+        window.open('/api/kwr/download/' + kwrEncodeRunIdForDownload(runId), '_blank');
+      });
+      const del = document.createElement('button');
+      del.className = 'btn-del';
+      kwrSetText(del, '🗑 Delete');
+      del.addEventListener('click', function(){
+        kwrDeleteReport(encodeURIComponent(runId), del);
+      });
+      actions.append(download, del);
+
+      card.append(head, meta, badges, actions);
+      return card;
+    }
+
     window.kwrFetchReports = async function(){
       const grid = document.getElementById('kwr-reports-grid');
       if(!grid) return;
@@ -11172,37 +11267,14 @@ CREATE POLICY "Users see own reports"
         const j = await r.json();
         const list = (j && j.reports) || [];
         if(!list.length){
-          grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:28px;color:var(--muted);font-size:13px">No reports yet - run a research above to create one.</div>';
+          kwrShowMessage(grid, 'No reports yet - run a research above to create one.');
           return;
         }
-        grid.innerHTML = list.map(r=>{
-          const host = r.domain || (r.website_url||'').replace(/^https?:\/\//,'').split('/')[0] || 'unknown';
-          const ss = r.sync_status || {};
-          const badge = (label, ok)=>`<span class="kwr-badge${ok?' ok':''}">${ok?'✓ ':'- '}${label}</span>`;
-          return `
-            <div class="kwr-report-card" data-rid="${escapeHtml(r.run_id)}">
-              <div class="kwr-report-head">
-                <div class="kwr-report-fallback-icon" aria-hidden="true">${escapeHtml((host||'K').slice(0,1).toUpperCase())}</div>
-                <div class="domain" title="${escapeHtml(host)}">${escapeHtml(host)}</div>
-              </div>
-              <div class="kwr-report-meta">
-                <div class="fname">${escapeHtml(r.worksheet_name||'kwr')}.xlsx</div>
-                <div>${fmtDate(r.created_at)}</div>
-                <div>${r.row_count||0} rows · ${r.file_size_kb||0} KB</div>
-              </div>
-              <div class="kwr-report-badges">
-                ${badge('GitHub', ss.github)}
-                ${badge('Obsidian', ss.obsidian)}
-                ${badge('Supabase', ss.supabase)}
-              </div>
-              <div class="kwr-report-actions">
-                <button onclick="window.open('/api/kwr/download/${encodeURIComponent(r.run_id)}','_blank')">⬇ Download</button>
-                <button class="btn-del" onclick="kwrDeleteReport('${encodeURIComponent(r.run_id)}', this)">🗑 Delete</button>
-              </div>
-            </div>`;
-        }).join('');
+        grid.replaceChildren(...list.map(r=>kwrCreateReportCard(r)));
       }catch(e){
-        grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:20px;color:#ef4444;font-size:12px">Failed to load reports: ${escapeHtml(e.message)}</div>`;
+        kwrShowMessage(grid, 'Failed to load reports: ' + (e && e.message ? e.message : 'unknown error'));
+        const msg = grid.firstElementChild;
+        if(msg) msg.style.color = '#ef4444';
       }
     };
     window.kwrDeleteReport = async function(rid, btn){
