@@ -5100,6 +5100,418 @@ body {
 }
 
 /* END DASHBOARD REBUILD v1.0 */
+
+/* ═══════════════════════════════════════════════════
+   PLAN #26 — Scrollable Tab Nav with Arrows
+   ═══════════════════════════════════════════════════ */
+.tab-nav-scroll-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  flex: 0 1 auto;
+  min-width: 0;
+}
+.tab-scroll-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 5;
+  width: 22px;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 1;
+  cursor: pointer;
+  transition: opacity 0.2s, color 0.15s;
+  color: rgba(255,255,255,0.5);
+  padding: 0;
+}
+.tab-scroll-arrow-l {
+  left: 0;
+  background: linear-gradient(to right, rgba(7,8,16,1) 60%, transparent);
+}
+.tab-scroll-arrow-r {
+  right: 0;
+  background: linear-gradient(to left, rgba(7,8,16,1) 60%, transparent);
+}
+.tab-scroll-arrow:hover { color: #fff; }
+.tab-scroll-arrow.hidden { opacity: 0; pointer-events: none; }
+/* Override: when inside scroll wrap, fixer-tab-nav scrolls internally */
+.tab-nav-scroll-wrap .fixer-tab-nav {
+  overflow-x: auto !important;
+  overflow-y: hidden !important;
+  scrollbar-width: none !important;
+  -ms-overflow-style: none !important;
+  scroll-behavior: smooth;
+  flex-shrink: 0;
+  min-width: 0;
+  max-width: 100%;
+  display: inline-flex !important;
+  flex-wrap: nowrap !important;
+}
+.tab-nav-scroll-wrap .fixer-tab-nav::-webkit-scrollbar { display: none !important; }
+
+/* ═══════════════════════════════════════════════════
+   PLAN #24 — Playground Tab CSS
+   ═══════════════════════════════════════════════════ */
+#page-playground {
+  padding: 24px 20px;
+  min-height: 60vh;
+}
+.pg-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+.pg-search {
+  flex: 1;
+  min-width: 200px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.09);
+  border-radius: 10px;
+  padding: 9px 14px 9px 36px;
+  color: var(--text);
+  font-size: 13px;
+  font-family: inherit;
+  outline: none;
+  transition: border-color 0.15s;
+}
+.pg-search:focus { border-color: rgba(113,112,255,0.4); }
+.pg-search-wrap { position: relative; flex: 1; min-width: 200px; }
+.pg-search-icon {
+  position: absolute;
+  left: 11px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--muted);
+  pointer-events: none;
+}
+.pg-filter-btn {
+  padding: 8px 14px;
+  border-radius: 9px;
+  border: 1px solid rgba(255,255,255,0.09);
+  background: rgba(255,255,255,0.03);
+  color: var(--text-secondary);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s;
+  white-space: nowrap;
+  font-family: inherit;
+}
+.pg-filter-btn:hover { border-color: rgba(255,255,255,0.14); color: #fff; }
+.pg-filter-btn.active { background: rgba(113,112,255,0.18); border-color: rgba(113,112,255,0.3); color: #e0deff; }
+.pg-view-toggle { display: flex; gap: 2px; }
+.pg-view-btn {
+  width: 32px; height: 32px;
+  display: flex; align-items: center; justify-content: center;
+  border: 1px solid rgba(255,255,255,0.09);
+  border-radius: 8px;
+  background: transparent;
+  color: var(--muted);
+  cursor: pointer;
+  transition: all 0.15s;
+  font-size: 14px;
+}
+.pg-view-btn.active { background: rgba(113,112,255,0.18); border-color: rgba(113,112,255,0.3); color: #e0deff; }
+
+/* Domain group */
+.pg-domain-group { margin-bottom: 28px; }
+.pg-domain-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 0 10px;
+  border-bottom: 1px solid rgba(255,255,255,0.07);
+  margin-bottom: 14px;
+  cursor: pointer;
+  user-select: none;
+}
+.pg-domain-name {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text);
+  letter-spacing: -0.02em;
+}
+.pg-domain-count {
+  font-size: 11px;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 99px;
+  background: rgba(113,112,255,0.12);
+  color: #c4b5fd;
+}
+.pg-domain-toggle {
+  margin-left: auto;
+  font-size: 12px;
+  color: var(--muted);
+  transition: transform 0.2s;
+}
+.pg-domain-group.collapsed .pg-domain-toggle { transform: rotate(-90deg); }
+.pg-domain-group.collapsed .pg-cards-grid,
+.pg-domain-group.collapsed .pg-cards-list { display: none !important; }
+
+/* Cards grid */
+.pg-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 14px;
+}
+.pg-card {
+  background: rgba(255,255,255,0.02);
+  border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 14px;
+  overflow: hidden;
+  transition: border-color 0.15s, transform 0.15s;
+}
+.pg-card:hover { border-color: rgba(113,112,255,0.3); transform: translateY(-1px); }
+.pg-thumb-wrap {
+  width: 100%;
+  height: 160px;
+  overflow: hidden;
+  background: #f0f0f0;
+  position: relative;
+  cursor: pointer;
+}
+.pg-thumb-wrap iframe {
+  width: 1200px;
+  height: 640px;
+  transform: scale(0.218);
+  transform-origin: top left;
+  border: none;
+  pointer-events: none;
+}
+.pg-thumb-overlay {
+  position: absolute;
+  inset: 0;
+  background: transparent;
+  cursor: pointer;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.2s;
+  background: rgba(0,0,0,0.4);
+}
+.pg-thumb-wrap:hover .pg-thumb-overlay { opacity: 1; }
+.pg-thumb-overlay span {
+  background: rgba(113,112,255,0.9);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 6px 14px;
+  border-radius: 8px;
+}
+.pg-card-body { padding: 12px 14px; }
+.pg-card-agent {
+  font-size: 12px;
+  font-weight: 700;
+  color: #c4b5fd;
+  margin-bottom: 4px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.pg-card-meta { font-size: 11px; color: var(--muted); margin-bottom: 10px; }
+.pg-card-actions { display: flex; gap: 6px; flex-wrap: wrap; }
+.pg-action-btn {
+  flex: 1;
+  min-width: 70px;
+  padding: 6px 10px;
+  border-radius: 8px;
+  border: 1px solid rgba(255,255,255,0.09);
+  background: rgba(255,255,255,0.03);
+  color: var(--text-secondary);
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s;
+  text-align: center;
+  font-family: inherit;
+  white-space: nowrap;
+}
+.pg-action-btn:hover { border-color: rgba(255,255,255,0.18); color: #fff; }
+.pg-action-btn.primary { background: rgba(113,112,255,0.15); border-color: rgba(113,112,255,0.3); color: #e0deff; }
+.pg-action-btn.primary:hover { background: rgba(113,112,255,0.25); }
+
+/* List view */
+.pg-cards-list { display: none; flex-direction: column; gap: 6px; }
+.pg-list-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 14px;
+  background: rgba(255,255,255,0.02);
+  border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 10px;
+  transition: border-color 0.15s;
+}
+.pg-list-item:hover { border-color: rgba(113,112,255,0.25); }
+.pg-list-thumb {
+  width: 60px; height: 40px;
+  overflow: hidden;
+  background: #f0f0f0;
+  border-radius: 6px;
+  flex-shrink: 0;
+  position: relative;
+  cursor: pointer;
+}
+.pg-list-thumb iframe {
+  width: 600px; height: 400px;
+  transform: scale(0.1); transform-origin: top left;
+  border: none; pointer-events: none;
+}
+.pg-list-agent { font-size: 12px; font-weight: 700; color: #c4b5fd; flex: 1; min-width: 0; }
+.pg-list-meta { font-size: 11px; color: var(--muted); flex: 2; min-width: 0; }
+.pg-list-actions { display: flex; gap: 6px; flex-shrink: 0; }
+
+/* Empty state */
+.pg-empty {
+  text-align: center;
+  padding: 48px 20px;
+  color: var(--muted);
+  font-size: 14px;
+}
+.pg-empty-icon { font-size: 40px; margin-bottom: 12px; }
+.pg-stats-bar {
+  padding: 10px 16px;
+  background: rgba(255,255,255,0.02);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 10px;
+  font-size: 12px;
+  color: var(--muted);
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-top: 16px;
+  flex-wrap: wrap;
+}
+.pg-stats-bar strong { color: var(--text-secondary); }
+
+/* ── Preview Modal ── */
+#pg-preview-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  display: none;
+  align-items: center;
+  justify-content: center;
+}
+#pg-preview-modal.open { display: flex; }
+.pg-modal-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.75);
+  backdrop-filter: blur(4px);
+}
+.pg-modal-box {
+  position: relative;
+  width: calc(100vw - 32px);
+  max-width: 1200px;
+  height: calc(100vh - 32px);
+  background: #111116;
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 16px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  box-shadow: 0 25px 60px rgba(0,0,0,0.6);
+  z-index: 1;
+}
+.pg-modal-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 14px;
+  height: 48px;
+  background: rgba(0,0,0,0.5);
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+  flex-shrink: 0;
+}
+.pg-modal-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: #fff;
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.pg-modal-device-group {
+  display: flex;
+  gap: 2px;
+  background: rgba(255,255,255,0.05);
+  border-radius: 8px;
+  padding: 3px;
+}
+.pg-modal-dev-btn {
+  padding: 4px 10px;
+  border: none;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 600;
+  background: transparent;
+  color: var(--muted);
+  cursor: pointer;
+  transition: all 0.15s;
+  font-family: inherit;
+}
+.pg-modal-dev-btn.active { background: rgba(113,112,255,0.3); color: #e0deff; }
+.pg-modal-body {
+  flex: 1;
+  overflow: auto;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 16px;
+  background: #18181b;
+}
+.pg-modal-iframe-wrap {
+  background: #fff;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+  transition: width 0.3s ease;
+  min-height: 400px;
+}
+.pg-modal-iframe-wrap[data-dev="desktop"] { width: 100%; }
+.pg-modal-iframe-wrap[data-dev="tablet"]  { width: 768px; max-width: 100%; }
+.pg-modal-iframe-wrap[data-dev="mobile"]  { width: 375px; max-width: 100%; }
+.pg-modal-iframe-wrap iframe { width: 100%; height: 680px; border: none; }
+.pg-modal-close-btn {
+  width: 36px; height: 36px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px; font-weight: 700;
+  background: rgba(239,68,68,0.1);
+  border: 1px solid rgba(239,68,68,0.25);
+  border-radius: 8px;
+  color: #f87171;
+  cursor: pointer;
+  transition: all 0.15s;
+  flex-shrink: 0;
+}
+.pg-modal-close-btn:hover { background: #ef4444; border-color: #ef4444; color: #fff; }
+.pg-modal-action-btn {
+  padding: 6px 12px;
+  border-radius: 8px;
+  border: 1px solid rgba(255,255,255,0.1);
+  background: rgba(255,255,255,0.04);
+  color: var(--text-secondary);
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s;
+  font-family: inherit;
+}
+.pg-modal-action-btn:hover { border-color: rgba(255,255,255,0.2); color: #fff; }
 </style>
 </head>
 <body>
@@ -6452,6 +6864,79 @@ body {
 </div>
 </div>
 <!-- /page-kwr -->
+<!-- ═══════════════════════════════════════════════════
+     PLAN #24 — Playground Tab: HTML Template Gallery
+     ═══════════════════════════════════════════════════ -->
+<div id="page-playground" style="display:none">
+
+  <!-- Toolbar -->
+  <div class="pg-toolbar">
+    <div class="pg-search-wrap">
+      <svg class="pg-search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+      <input class="pg-search" id="pg-search" type="text" placeholder="Search by domain, agent, or style..." oninput="pgFilterCards(this.value)">
+    </div>
+    <select class="pg-filter-btn" id="pg-filter-agent" onchange="pgFilterCards(document.getElementById('pg-search').value)">
+      <option value="">All Agents</option>
+      <option value="GPT">GPT</option>
+      <option value="Opus">Opus</option>
+      <option value="Gemini">Gemini</option>
+      <option value="Kimi">Kimi</option>
+      <option value="GLM">GLM</option>
+    </select>
+    <select class="pg-filter-btn" id="pg-filter-sort" onchange="pgFilterCards(document.getElementById('pg-search').value)">
+      <option value="newest">Newest First</option>
+      <option value="oldest">Oldest First</option>
+      <option value="agent">By Agent</option>
+    </select>
+    <div class="pg-view-toggle">
+      <button class="pg-view-btn active" id="pg-view-grid" onclick="pgSetView('grid',this)" title="Grid view">⊞</button>
+      <button class="pg-view-btn" id="pg-view-list" onclick="pgSetView('list',this)" title="List view">☰</button>
+    </div>
+  </div>
+
+  <!-- Gallery container (populated by pgRenderGallery) -->
+  <div id="pg-gallery"></div>
+
+  <!-- Stats bar -->
+  <div class="pg-stats-bar" id="pg-stats-bar">
+    <span>🎨 <strong id="pg-count-templates">0</strong> templates</span>
+    <span>📁 <strong id="pg-count-domains">0</strong> domains</span>
+    <span>🤖 <strong id="pg-count-agents">0</strong> agents</span>
+    <span style="margin-left:auto;font-size:11px">Templates come from project file sets in GitHub. Open a project → Expand → click a file to preview it here.</span>
+  </div>
+
+  <!-- Empty state (shown when no templates) -->
+  <div class="pg-empty" id="pg-empty" style="display:none">
+    <div class="pg-empty-icon">🎨</div>
+    <div style="font-weight:700;color:var(--text-secondary);margin-bottom:6px">No templates yet</div>
+    <div>HTML templates will appear here once agents have generated files for your projects.</div>
+    <div style="margin-top:12px;font-size:12px">Open any project card → expand → click "Preview" on an agent output to add it to the Playground.</div>
+  </div>
+</div><!-- end #page-playground -->
+
+<!-- ═══ Playground Preview Modal ═══ -->
+<div id="pg-preview-modal">
+  <div class="pg-modal-backdrop" onclick="pgClosePreview()"></div>
+  <div class="pg-modal-box">
+    <div class="pg-modal-toolbar">
+      <div class="pg-modal-title" id="pg-modal-title">Template Preview</div>
+      <div class="pg-modal-device-group">
+        <button class="pg-modal-dev-btn active" data-dev="desktop" onclick="pgSetDevice(this)">🖥 Desktop</button>
+        <button class="pg-modal-dev-btn" data-dev="tablet" onclick="pgSetDevice(this)">📱 Tablet</button>
+        <button class="pg-modal-dev-btn" data-dev="mobile" onclick="pgSetDevice(this)">📲 Mobile</button>
+      </div>
+      <button class="pg-modal-action-btn" onclick="pgCopyHTML()" id="pg-copy-btn">📋 Copy HTML</button>
+      <button class="pg-modal-action-btn" onclick="pgDownloadHTML()" id="pg-dl-btn">💾 Download</button>
+      <button class="pg-modal-close-btn" onclick="pgClosePreview()" title="Close (Escape)">✕</button>
+    </div>
+    <div class="pg-modal-body">
+      <div class="pg-modal-iframe-wrap" id="pg-modal-iframe-wrap" data-dev="desktop">
+        <iframe id="pg-modal-iframe" sandbox="allow-scripts allow-same-origin" title="Template Preview"></iframe>
+      </div>
+    </div>
+  </div>
+</div>
+
 
 <div class="action-toast" id="action-toast">
   <svg id="action-toast-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
@@ -8313,15 +8798,17 @@ document.addEventListener('click', function(ev){
 
   // ---- Page navigation ----
   window.showPage = function(name) {
-    const isProjects = (name === 'projects');
-    const isFixer = (name === 'fixer');
-    const isRadar = (name === 'radar');
-    const isKwr = (name === 'kwr');
-    const container = document.querySelector('.container');
-    const fixerPage = document.getElementById('page-fixer');
-    const radarPage = document.getElementById('page-radar');
-    const kwrPage   = document.getElementById('page-kwr');
-    const statsGrid = document.getElementById('stats-grid');
+    const isProjects   = (name === 'projects');
+    const isFixer      = (name === 'fixer');
+    const isRadar      = (name === 'radar');
+    const isKwr        = (name === 'kwr');
+    const isPlayground = (name === 'playground');
+    const container    = document.querySelector('.container');
+    const fixerPage    = document.getElementById('page-fixer');
+    const radarPage    = document.getElementById('page-radar');
+    const kwrPage      = document.getElementById('page-kwr');
+    const pgPage       = document.getElementById('page-playground');
+    const statsGrid    = document.getElementById('stats-grid');
     const sectionHeads = document.querySelectorAll('.section-head');
     const projectsGrid = document.getElementById('projects-grid');
 
@@ -8341,15 +8828,21 @@ document.addEventListener('click', function(ev){
       kwrPage.style.display = isKwr ? 'block' : 'none';
       kwrPage.classList.toggle('active', isKwr);
     }
+    if (pgPage) {
+      pgPage.style.display = isPlayground ? 'block' : 'none';
+      if (isPlayground) pgInitPage();
+    }
     // Update tab buttons
     const tabProj  = document.getElementById('tab-projects');
     const tabFixer = document.getElementById('tab-fixer');
     const tabRadar = document.getElementById('tab-radar');
     const tabKwr   = document.getElementById('tab-kwr');
-    if (tabProj)  { tabProj.classList.toggle('active', isProjects); tabProj.setAttribute('aria-selected', isProjects ? 'true' : 'false'); }
-    if (tabFixer) { tabFixer.classList.toggle('active', isFixer);   tabFixer.setAttribute('aria-selected', isFixer ? 'true' : 'false'); }
-    if (tabRadar) { tabRadar.classList.toggle('active', isRadar);   tabRadar.setAttribute('aria-selected', isRadar ? 'true' : 'false'); }
-    if (tabKwr)   { tabKwr.classList.toggle('active', isKwr);       tabKwr.setAttribute('aria-selected', isKwr ? 'true' : 'false'); }
+    const tabPg    = document.getElementById('tab-playground');
+    if (tabProj)  { tabProj.classList.toggle('active', isProjects);   tabProj.setAttribute('aria-selected', isProjects ? 'true' : 'false'); }
+    if (tabFixer) { tabFixer.classList.toggle('active', isFixer);     tabFixer.setAttribute('aria-selected', isFixer ? 'true' : 'false'); }
+    if (tabRadar) { tabRadar.classList.toggle('active', isRadar);     tabRadar.setAttribute('aria-selected', isRadar ? 'true' : 'false'); }
+    if (tabKwr)   { tabKwr.classList.toggle('active', isKwr);         tabKwr.setAttribute('aria-selected', isKwr ? 'true' : 'false'); }
+    if (tabPg)    { tabPg.classList.toggle('active', isPlayground);   tabPg.setAttribute('aria-selected', isPlayground ? 'true' : 'false'); }
 
     if (isFixer) initFixerPage();
     if (isRadar) initRadarPage();
@@ -10439,5 +10932,355 @@ document.addEventListener('DOMContentLoaded',function(){
   });
 });
 </script>
+
+<script>
+/* ═══════════════════════════════════════════════════
+   PLAN #26 — Scrollable Tab Nav Arrows
+   ═══════════════════════════════════════════════════ */
+(function() {
+  function updateTabArrows() {
+    var nav = document.getElementById('fixer-tab-nav');
+    var arL = document.getElementById('tab-arrow-left');
+    var arR = document.getElementById('tab-arrow-right');
+    if (!nav || !arL || !arR) return;
+    var overflow = nav.scrollWidth > nav.clientWidth + 2;
+    arL.classList.toggle('hidden', !overflow || nav.scrollLeft <= 2);
+    arR.classList.toggle('hidden', !overflow || nav.scrollLeft + nav.clientWidth >= nav.scrollWidth - 2);
+  }
+  window.scrollTabNav = function(px) {
+    var nav = document.getElementById('fixer-tab-nav');
+    if (!nav) return;
+    nav.scrollBy({ left: px, behavior: 'smooth' });
+    setTimeout(updateTabArrows, 350);
+  };
+  document.addEventListener('DOMContentLoaded', function() {
+    var nav = document.getElementById('fixer-tab-nav');
+    if (nav) {
+      nav.addEventListener('scroll', updateTabArrows);
+    }
+    window.addEventListener('resize', updateTabArrows);
+    updateTabArrows();
+  });
+})();
+
+/* ═══════════════════════════════════════════════════
+   PLAN #24 — Playground Tab Logic
+   ═══════════════════════════════════════════════════ */
+(function() {
+  var _pgTemplates = [];
+  var _pgView = 'grid';
+  var _pgCurrentHTML = '';
+  var _pgCurrentTitle = '';
+
+  /* ── Pull templates from project data already loaded on the page ── */
+  function pgCollectTemplates() {
+    var templates = [];
+    // Pull from existing compare panels (iframes already loaded)
+    var frames = document.querySelectorAll('.compare-device-frame iframe, .focus-device-frame iframe, .device-frame iframe');
+    frames.forEach(function(iframe) {
+      try {
+        var html = iframe.contentDocument && iframe.contentDocument.documentElement
+          ? iframe.contentDocument.documentElement.outerHTML : '';
+        if (html && html.length > 500) {
+          // Try to get domain from nearby elements
+          var panel = iframe.closest('[data-project]') || iframe.closest('.project-card');
+          var domain = (panel && panel.dataset.project) || 'Unknown domain';
+          var agentEl = iframe.closest('.compare-panel');
+          var agentTitle = agentEl ? (agentEl.querySelector('.compare-panel-title') || {}).textContent : '';
+          templates.push({
+            id: 'frame-' + templates.length,
+            domain: domain.trim() || 'Project',
+            agent: agentTitle.trim() || 'Agent',
+            html: html,
+            date: new Date().toLocaleDateString('en-GB', {day:'numeric',month:'short',year:'numeric'}),
+            size: Math.round(html.length / 1024) + ' KB'
+          });
+        }
+      } catch(e) {}
+    });
+    // Also check if window._playgroundTemplates was set externally
+    if (window._playgroundTemplates && Array.isArray(window._playgroundTemplates)) {
+      templates = templates.concat(window._playgroundTemplates);
+    }
+    return templates;
+  }
+
+  /* ── Group templates by domain ── */
+  function pgGroupByDomain(templates) {
+    var groups = {};
+    templates.forEach(function(t) {
+      if (!groups[t.domain]) groups[t.domain] = [];
+      groups[t.domain].push(t);
+    });
+    return groups;
+  }
+
+  /* ── Render gallery ── */
+  function pgRenderGallery(templates) {
+    var gallery = document.getElementById('pg-gallery');
+    var empty = document.getElementById('pg-empty');
+    var statsBar = document.getElementById('pg-stats-bar');
+    if (!gallery) return;
+
+    if (!templates || templates.length === 0) {
+      gallery.innerHTML = '';
+      if (empty) empty.style.display = 'block';
+      if (statsBar) statsBar.style.display = 'none';
+      return;
+    }
+    if (empty) empty.style.display = 'none';
+    if (statsBar) statsBar.style.display = 'flex';
+
+    var domains = pgGroupByDomain(templates);
+    var domainNames = Object.keys(domains);
+    var agentSet = new Set(templates.map(function(t){return t.agent;}));
+
+    // Update stat counts
+    var cT = document.getElementById('pg-count-templates');
+    var cD = document.getElementById('pg-count-domains');
+    var cA = document.getElementById('pg-count-agents');
+    if (cT) cT.textContent = templates.length;
+    if (cD) cD.textContent = domainNames.length;
+    if (cA) cA.textContent = agentSet.size;
+
+    var html = '';
+    domainNames.forEach(function(domain) {
+      var cards = domains[domain];
+      html += '<div class="pg-domain-group" data-domain="' + escHtml(domain) + '">';
+      html += '<div class="pg-domain-header" onclick="pgToggleDomain(this.parentElement)">';
+      html += '<span style="font-size:16px">📁</span>';
+      html += '<span class="pg-domain-name">' + escHtml(domain) + '</span>';
+      html += '<span class="pg-domain-count">' + cards.length + ' template' + (cards.length===1?'':'s') + '</span>';
+      html += '<span class="pg-domain-toggle">▾</span>';
+      html += '</div>';
+
+      // Grid
+      html += '<div class="pg-cards-grid"' + (_pgView==='list'?' style="display:none"':'') + '>';
+      cards.forEach(function(t) {
+        html += pgCardHtml(t);
+      });
+      html += '</div>';
+
+      // List
+      html += '<div class="pg-cards-list"' + (_pgView==='list'?' style="display:flex"':'') + '>';
+      cards.forEach(function(t) {
+        html += pgListItemHtml(t);
+      });
+      html += '</div>';
+      html += '</div>';
+    });
+
+    gallery.innerHTML = html;
+
+    // Lazy-load thumbnails
+    gallery.querySelectorAll('.pg-thumb-iframe[data-html]').forEach(function(iframe) {
+      var encoded = iframe.dataset.html;
+      try { iframe.srcdoc = decodeURIComponent(encoded); } catch(e) {}
+      delete iframe.dataset.html;
+    });
+  }
+
+  function escHtml(s) {
+    return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+
+  function pgCardHtml(t) {
+    var encHtml = encodeURIComponent(t.html);
+    var encTitle = encodeURIComponent(t.agent + ' — ' + t.domain);
+    return '<div class="pg-card" data-agent="' + escHtml(t.agent) + '" data-domain="' + escHtml(t.domain) + '">' +
+      '<div class="pg-thumb-wrap" onclick="pgOpenPreview('' + t.id + '')">' +
+        '<iframe class="pg-thumb-iframe" data-html="' + encHtml + '" sandbox="allow-same-origin" loading="lazy"></iframe>' +
+        '<div class="pg-thumb-overlay"><span>👁 Preview</span></div>' +
+      '</div>' +
+      '<div class="pg-card-body">' +
+        '<div class="pg-card-agent">🤖 ' + escHtml(t.agent) + '</div>' +
+        '<div class="pg-card-meta">📅 ' + escHtml(t.date) + ' · 📏 ' + escHtml(t.size) + '</div>' +
+        '<div class="pg-card-actions">' +
+          '<button class="pg-action-btn primary" onclick="pgOpenPreview('' + t.id + '')">👁 Preview</button>' +
+          '<button class="pg-action-btn" onclick="pgCopyById('' + t.id + '')">📋 Copy</button>' +
+          '<button class="pg-action-btn" onclick="pgDownloadById('' + t.id + '','' + escHtml(t.domain) + '','' + escHtml(t.agent) + '')">💾 Download</button>' +
+        '</div>' +
+      '</div>' +
+    '</div>';
+  }
+
+  function pgListItemHtml(t) {
+    return '<div class="pg-list-item" data-agent="' + escHtml(t.agent) + '" data-domain="' + escHtml(t.domain) + '">' +
+      '<div class="pg-list-thumb" onclick="pgOpenPreview('' + t.id + '')">' +
+        '<iframe sandbox="allow-same-origin" loading="lazy"></iframe>' +
+      '</div>' +
+      '<div class="pg-list-agent">🤖 ' + escHtml(t.agent) + '</div>' +
+      '<div class="pg-list-meta">📅 ' + escHtml(t.date) + ' · 📏 ' + escHtml(t.size) + '</div>' +
+      '<div class="pg-list-actions">' +
+        '<button class="pg-action-btn primary" onclick="pgOpenPreview('' + t.id + '')">👁</button>' +
+        '<button class="pg-action-btn" onclick="pgCopyById('' + t.id + '')">📋</button>' +
+        '<button class="pg-action-btn" onclick="pgDownloadById('' + t.id + '','' + escHtml(t.domain) + '','' + escHtml(t.agent) + '')">💾</button>' +
+      '</div>' +
+    '</div>';
+  }
+
+  /* ── Public: init playground tab ── */
+  window.pgInitPage = function() {
+    _pgTemplates = pgCollectTemplates();
+    // Also check localStorage for previously pinned templates
+    try {
+      var saved = JSON.parse(localStorage.getItem('pg_templates') || '[]');
+      // Merge saved (avoid duplicates by id)
+      var existingIds = new Set(_pgTemplates.map(function(t){return t.id;}));
+      saved.forEach(function(t){ if(!existingIds.has(t.id)) _pgTemplates.push(t); });
+    } catch(e) {}
+    pgRenderGallery(_pgTemplates);
+  };
+
+  /* ── Public: open preview from project cards ── */
+  window.pgAddTemplate = function(domain, agent, html, date) {
+    var id = 'pg-' + Date.now();
+    var tpl = {
+      id: id, domain: domain || 'Unknown',
+      agent: agent || 'Agent',
+      html: html, date: date || new Date().toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'}),
+      size: Math.round((html||'').length/1024) + ' KB'
+    };
+    _pgTemplates.push(tpl);
+    // Persist to localStorage
+    try {
+      var saved = JSON.parse(localStorage.getItem('pg_templates') || '[]');
+      saved.push({id:tpl.id,domain:tpl.domain,agent:tpl.agent,date:tpl.date,size:tpl.size,html:tpl.html.substring(0,500000)});
+      localStorage.setItem('pg_templates', JSON.stringify(saved.slice(-50)));
+    } catch(e) {}
+    return id;
+  };
+
+  /* ── Open preview modal ── */
+  window.pgOpenPreview = function(id) {
+    var tpl = _pgTemplates.find(function(t){return t.id===id;});
+    if (!tpl) return;
+    _pgCurrentHTML = tpl.html;
+    _pgCurrentTitle = tpl.agent + ' — ' + tpl.domain;
+    var modal = document.getElementById('pg-preview-modal');
+    var title = document.getElementById('pg-modal-title');
+    var iframe = document.getElementById('pg-modal-iframe');
+    if (title) title.textContent = _pgCurrentTitle;
+    if (iframe) iframe.srcdoc = _pgCurrentHTML;
+    if (modal) modal.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  };
+
+  window.pgClosePreview = function() {
+    var modal = document.getElementById('pg-preview-modal');
+    if (modal) modal.classList.remove('open');
+    document.body.style.overflow = '';
+    setTimeout(function(){
+      var iframe = document.getElementById('pg-modal-iframe');
+      if (iframe) iframe.srcdoc = '';
+    }, 300);
+  };
+
+  /* ── Device toggle in modal ── */
+  window.pgSetDevice = function(btn) {
+    var dev = btn.dataset.dev;
+    document.querySelectorAll('.pg-modal-dev-btn').forEach(function(b){b.classList.remove('active');});
+    btn.classList.add('active');
+    var wrap = document.getElementById('pg-modal-iframe-wrap');
+    if (wrap) wrap.setAttribute('data-dev', dev);
+  };
+
+  /* ── Copy HTML ── */
+  window.pgCopyHTML = function() {
+    if (!_pgCurrentHTML) return;
+    navigator.clipboard.writeText(_pgCurrentHTML).then(function(){
+      var btn = document.getElementById('pg-copy-btn');
+      if (btn) { btn.textContent = '✅ Copied!'; setTimeout(function(){btn.textContent='📋 Copy HTML';},2000); }
+    });
+  };
+  window.pgCopyById = function(id) {
+    var tpl = _pgTemplates.find(function(t){return t.id===id;});
+    if (!tpl) return;
+    navigator.clipboard.writeText(tpl.html).then(function(){
+      alert('HTML copied to clipboard!');
+    });
+  };
+
+  /* ── Download HTML ── */
+  window.pgDownloadHTML = function() {
+    if (!_pgCurrentHTML) return;
+    var blob = new Blob([_pgCurrentHTML], {type:'text/html'});
+    var a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = (_pgCurrentTitle||'template').replace(/[^a-z0-9]/gi,'_') + '.html';
+    a.click();
+  };
+  window.pgDownloadById = function(id, domain, agent) {
+    var tpl = _pgTemplates.find(function(t){return t.id===id;});
+    if (!tpl) return;
+    var blob = new Blob([tpl.html], {type:'text/html'});
+    var a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = (domain+'_'+agent).replace(/[^a-z0-9]/gi,'_') + '.html';
+    a.click();
+  };
+
+  /* ── Filter / search ── */
+  window.pgFilterCards = function(q) {
+    var agentFilter = (document.getElementById('pg-filter-agent')||{}).value || '';
+    var sortVal = (document.getElementById('pg-filter-sort')||{}).value || 'newest';
+    q = (q||'').toLowerCase();
+    var filtered = _pgTemplates.filter(function(t){
+      var matchQ = !q || t.domain.toLowerCase().includes(q) || t.agent.toLowerCase().includes(q);
+      var matchA = !agentFilter || t.agent.toLowerCase().includes(agentFilter.toLowerCase());
+      return matchQ && matchA;
+    });
+    if (sortVal === 'agent') filtered.sort(function(a,b){return a.agent.localeCompare(b.agent);});
+    else if (sortVal === 'oldest') filtered.sort(function(a,b){return (a.date||'').localeCompare(b.date||'');});
+    pgRenderGallery(filtered);
+  };
+
+  /* ── View toggle ── */
+  window.pgSetView = function(view, btn) {
+    _pgView = view;
+    document.querySelectorAll('.pg-view-btn').forEach(function(b){b.classList.remove('active');});
+    if (btn) btn.classList.add('active');
+    document.querySelectorAll('.pg-cards-grid').forEach(function(el){el.style.display = view==='grid'?'':'none';});
+    document.querySelectorAll('.pg-cards-list').forEach(function(el){el.style.display = view==='list'?'flex':'none';});
+  };
+
+  /* ── Domain collapse ── */
+  window.pgToggleDomain = function(group) {
+    if (group) group.classList.toggle('collapsed');
+  };
+
+  /* ── Escape key to close preview ── */
+  document.addEventListener('keydown', function(e){
+    if (e.key === 'Escape') {
+      var modal = document.getElementById('pg-preview-modal');
+      if (modal && modal.classList.contains('open')) {
+        e.preventDefault();
+        e.stopPropagation();
+        pgClosePreview();
+      }
+    }
+  }, true);
+
+  /* ── Hook into existing "openPromptStudio" preview clicks to also add to playground ── */
+  var _origOpenFocused = window.openFocusedCompare;
+  window.openFocusedCompare = function(url, agent, version) {
+    if (_origOpenFocused) _origOpenFocused.apply(this, arguments);
+    // After the modal opens, grab the HTML and register it
+    setTimeout(function(){
+      try {
+        var iframe = document.querySelector('#focus-device-frame iframe, .focus-device-frame iframe');
+        if (iframe && iframe.contentDocument) {
+          var html = iframe.contentDocument.documentElement.outerHTML;
+          if (html && html.length > 200) {
+            pgAddTemplate(decodeURIComponent(agent||''), decodeURIComponent(version||''), html, null);
+          }
+        }
+      } catch(e) {}
+    }, 1500);
+  };
+
+})();
+</script>
+
 </body>
 </html>
