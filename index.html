@@ -7520,7 +7520,7 @@ body.light .action-btn.primary{
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
         <span class="tab-label">Settings</span>
       </button>
-      <button class="fixer-tab-btn" id="tab-playground" onclick="showPage('playground')" aria-label="Playground" role="tab" aria-selected="false">
+      <button class="fixer-tab-btn" id="tab-playground" onclick="pgGotoPlayground()" aria-label="Playground" role="tab" aria-selected="false">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
         <span class="tab-label">Playground</span>
       </button>
@@ -24921,6 +24921,39 @@ pre, code { overflow-x: auto !important; }
     });
     gallery.innerHTML = html;
   }
+
+  window.pgGotoPlayground = function() {
+    // Hide all other pages
+    var pages = ['page-fixer','page-radar','page-kwr','page-tasks',
+                 'page-analytics','page-template-improvements',
+                 'page-productivity-hub','page-settings','page-playground'];
+    pages.forEach(function(id){
+      var el = document.getElementById(id);
+      if (el) el.style.display = 'none';
+    });
+    // Hide projects view
+    var c = document.querySelector('.container');
+    var sg = document.getElementById('stats-grid');
+    var pg = document.getElementById('projects-grid');
+    if (c) c.style.display = 'none';
+    if (sg) sg.style.display = 'none';
+    if (pg) pg.style.display = 'none';
+    document.querySelectorAll('.section-head').forEach(function(el){ el.style.display = 'none'; });
+    // Show playground
+    var playgroundPage = document.getElementById('page-playground');
+    if (playgroundPage) playgroundPage.style.display = 'block';
+    // Update tabs
+    document.querySelectorAll('.fixer-tab-btn').forEach(function(b){
+      b.classList.remove('active');
+      b.setAttribute('aria-selected', 'false');
+    });
+    var tabPg = document.getElementById('tab-playground');
+    if (tabPg) { tabPg.classList.add('active'); tabPg.setAttribute('aria-selected', 'true'); }
+    // Also call showPage for any side effects (fixer state, transitions, etc.)
+    try { if (typeof setFixerBodyState === 'function') setFixerBodyState('playground'); } catch(e) {}
+    // Init gallery
+    pgInitPage();
+  };
 
   window.pgInitPage = function() {
     try {
