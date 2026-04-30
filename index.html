@@ -11742,6 +11742,30 @@ function detectAgent(versionName){
   if(v.includes('latest') || v.includes('improved files')) return 'Latest Files';
   return versionName||'Unknown';
 }
+function projectPreviewPreference(versionName){
+  const agent=detectAgent(versionName);
+  const v=(versionName||'').toLowerCase();
+  let score=0;
+  // PROJECT_PREVIEW_GPT55_PREFERENCE_2026_04_30
+  // When multiple HTML outputs share the same date, prefer the user's canonical
+  // GPT 5.5 output over older multi-agent comparison folders.
+  if(agent==='GPT 5.5') score+=100;
+  if(v.includes('five agents')) score-=25;
+  return score;
+}
+function selectProjectPreviewVersion(versions){
+  const htmlVersions=(versions||[]).filter(v=>v.files&&v.files.some(f=>(f.name||'').toLowerCase().endsWith('.html')));
+  if(!htmlVersions.length) return null;
+  return htmlVersions.slice().sort((a,b)=>{
+    const bDate=versionDateSortKey(b.date||extractVersionDate(b.name)||'');
+    const aDate=versionDateSortKey(a.date||extractVersionDate(a.name)||'');
+    const dateCmp=bDate.localeCompare(aDate);
+    if(dateCmp) return dateCmp;
+    const prefCmp=projectPreviewPreference(b.name)-projectPreviewPreference(a.name);
+    if(prefCmp) return prefCmp;
+    return (b.name||'').localeCompare(a.name||'');
+  })[0];
+}
 function compareCandidatesForProject(projectName){
   const project=allProjects.find(p=>p.name===projectName);
   if(!project) return [];
@@ -13433,11 +13457,16 @@ async function loadDashboard(opts){
     const latestDate=latest?latest.date:'-';
     const lang=['dtapet.com','hipsterstyle.co.il','noyasushi.co.il','oritmartin.com'].includes(p.name)?'HE RTL':'EN LTR';
 
-    // Find latest HTML file download URL for the preview button
+    // PROJECT_PREVIEW_LATEST_HTML_VERSION_FIX_2026_04_30
+    // Some domains may have the newest folder as a notes/comparison-only folder
+    // with no HTML (for example FIVE-VARIANT-COMPARISON.md). The Projects card
+    // preview must still point to the newest file set that actually contains an
+    // HTML template, instead of disappearing from the card header.
+    const latestHtmlVersion=selectProjectPreviewVersion(p.versions)||latest;
     let latestHtmlUrl='';
     let latestHtmlName='';
-    if(latest){
-      const htmlFile=latest.files.find(f=>(f.name||'').toLowerCase().endsWith('.html'));
+    if(latestHtmlVersion){
+      const htmlFile=latestHtmlVersion.files.find(f=>(f.name||'').toLowerCase().endsWith('.html'));
       if(htmlFile){latestHtmlUrl=htmlFile.download;latestHtmlName=p.name+' - '+htmlFile.name}
     }
 
@@ -13479,9 +13508,9 @@ async function loadDashboard(opts){
     const _hiddenCount=Object.keys(versionsByAgent).filter(a=>isAgentHidden(p.name,a)).length;
     if(_hiddenCount>0){versionsHTML+=`<div class="agents-bulk-bar" data-domain-bar="${p.name}"><span>${_hiddenCount} agent${_hiddenCount===1?'':'s'} hidden</span><button onclick="event.stopPropagation();showAllAgents('${encodeURIComponent(p.name)}')">Show all agents</button></div>`;}
 
-    const _psAgent=latest?detectAgent(latest.name):'Agent';
-    const _psVersion=latest?latest.name:'';
-    const _psFiles=latest?latest.files.map(f=>({name:f.name,path:f.path,download:f.download,url:f.url,size:f.size})):[];
+    const _psAgent=latestHtmlVersion?detectAgent(latestHtmlVersion.name):(latest?detectAgent(latest.name):'Agent');
+    const _psVersion=latestHtmlVersion?latestHtmlVersion.name:(latest?latest.name:'');
+    const _psFiles=latestHtmlVersion?latestHtmlVersion.files.map(f=>({name:f.name,path:f.path,download:f.download,url:f.url,size:f.size})):(latest?latest.files.map(f=>({name:f.name,path:f.path,download:f.download,url:f.url,size:f.size})):[]);
     const _psFilesEnc=encodeURIComponent(JSON.stringify(_psFiles));
     const _previewCtxEnc=encodeURIComponent(JSON.stringify({domain:p.name,agentName:_psAgent,versionName:_psVersion,fileManifest:_psFiles}));
     const previewCTA=latestHtmlUrl?`<button class="preview-cta primary-accent" onclick="event.stopPropagation();openPreview('${latestHtmlUrl}','${latestHtmlName}','${_previewCtxEnc}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="5 3 19 12 5 21 5 3"/></svg>Preview</button>`:'';
