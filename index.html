@@ -18711,7 +18711,7 @@ async function downloadPromptPreviewShot(){
     cards.forEach(function(c){
       if (c.__cv) return; c.__cv = true;
       c.style.containIntrinsicSize = c.style.containIntrinsicSize || '180px';
-      c.style.contentVisibility = c.style.contentVisibility || 'auto';
+      c.style.contentVisibility = c.style.contentVisibility || 'visible';
     });
   }
 
