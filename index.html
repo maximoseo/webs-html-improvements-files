@@ -24154,6 +24154,7 @@ body:not(.tour-user-started) #tour-backdrop.open{
 
 
 
+
 <!-- DASHBOARD RESPONSIVE REDESIGN v1 -->
 <style id="dashboard-redesign-v1">
 /* ================================================================
@@ -24162,15 +24163,29 @@ body:not(.tour-user-started) #tour-backdrop.open{
    ================================================================ */
 
 /* ── 1. HEADER: Fix the wrapping / 174px height problem ── */
+/* Override main-menu-safe-top-spacing-2026-04-26 which sets min-height:74px */
+header.header .header-inner,
+.header .header-inner,
 .header-inner {
   flex-wrap: nowrap !important;
   align-items: center !important;
   padding: 0 16px !important;
-  height: 56px !important;
-  min-height: 56px !important;
-  max-height: 56px !important;
+  height: 52px !important;
+  min-height: 52px !important;
+  max-height: 52px !important;
   gap: 12px !important;
   overflow: hidden !important;
+}
+/* Also remove the floating effect (top:12px, left:16px) for desktop */
+@media (min-width: 821px) {
+  header.header, .header {
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    width: 100% !important;
+    border-radius: 0 !important;
+    box-shadow: 0 1px 0 var(--border, rgba(255,255,255,0.08)) !important;
+  }
 }
 
 .header-actions {
