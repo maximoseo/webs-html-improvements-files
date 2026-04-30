@@ -8006,11 +8006,21 @@ body.light .action-btn.primary{
                 var ctx = document.getElementById('radarChartCanvas');
                 if(!ctx) return;
                 
-                // Set defaults for dark theme
-                Chart.defaults.color = 'rgba(255,255,255,0.6)';
+                // Theme-aware colors
+                var isLight = document.body.classList.contains('light');
+                var gridColor   = isLight ? 'rgba(0,0,0,0.1)'   : 'rgba(255,255,255,0.1)';
+                var tickColor   = isLight ? 'rgba(0,0,0,0.4)'   : 'rgba(255,255,255,0.4)';
+                var labelColor  = isLight ? 'rgba(0,0,0,0.75)'  : 'rgba(255,255,255,0.8)';
+                var prevColor   = isLight ? 'rgba(100,100,180,0.5)' : 'rgba(255,255,255,0.4)';
+                var targetColor = isLight ? 'rgba(80,80,160,0.8)'   : 'rgba(255,255,255,0.8)';
+                var tooltipBg   = isLight ? 'rgba(255,255,255,0.97)' : 'rgba(20,22,30,0.9)';
+                var tooltipText = isLight ? '#1a1a2e' : '#fff';
+                var tooltipBody = isLight ? 'rgba(0,0,0,0.6)' : 'rgba(255,255,255,0.7)';
+
+                Chart.defaults.color = labelColor;
                 Chart.defaults.font.family = 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
                 
-                new Chart(ctx, {
+                var radarChart = new Chart(ctx, {
                     type: 'radar',
                     data: {
                         labels: ['Code Quality', 'Speed', 'Accuracy', 'Creativity', 'Consistency', 'Compatibility', 'Accessibility', 'Optimization'],
@@ -8028,9 +8038,9 @@ body.light .action-btn.primary{
                                 label: 'Previous',
                                 data: [88, 85, 88, 75, 77, 85, 94, 75],
                                 backgroundColor: 'transparent',
-                                borderColor: 'rgba(255,255,255, 0.4)',
+                                borderColor: prevColor,
                                 borderDash: [5, 5],
-                                pointBackgroundColor: 'rgba(255,255,255, 0.4)',
+                                pointBackgroundColor: prevColor,
                                 borderWidth: 2,
                                 fill: false
                             },
@@ -8038,7 +8048,7 @@ body.light .action-btn.primary{
                                 label: 'Target',
                                 data: [95, 90, 92, 85, 85, 90, 95, 85],
                                 backgroundColor: 'transparent',
-                                borderColor: 'rgba(255,255,255, 0.8)',
+                                borderColor: targetColor,
                                 borderDash: [2, 2],
                                 pointBackgroundColor: 'transparent',
                                 pointBorderColor: 'transparent',
@@ -8051,14 +8061,12 @@ body.light .action-btn.primary{
                         responsive: true,
                         maintainAspectRatio: true,
                         plugins: {
-                            legend: {
-                                display: false // Using custom HTML legend below
-                            },
+                            legend: { display: false },
                             tooltip: {
-                                backgroundColor: 'rgba(20,22,30,0.9)',
-                                titleColor: '#fff',
-                                bodyColor: 'rgba(255,255,255,0.7)',
-                                borderColor: 'rgba(255,255,255,0.1)',
+                                backgroundColor: tooltipBg,
+                                titleColor: tooltipText,
+                                bodyColor: tooltipBody,
+                                borderColor: gridColor,
                                 borderWidth: 1,
                                 padding: 12,
                                 cornerRadius: 8,
@@ -8071,28 +8079,22 @@ body.light .action-btn.primary{
                                 max: 100,
                                 ticks: {
                                     stepSize: 20,
-                                    color: 'rgba(255,255,255,0.4)',
+                                    color: tickColor,
                                     backdropColor: 'transparent',
                                     z: 10
                                 },
-                                grid: {
-                                    color: 'rgba(255,255,255,0.1)',
-                                    circular: true
-                                },
-                                angleLines: {
-                                    color: 'rgba(255,255,255,0.1)'
-                                },
+                                grid: { color: gridColor, circular: true },
+                                angleLines: { color: gridColor },
                                 pointLabels: {
-                                    font: {
-                                        size: 11,
-                                        weight: '600'
-                                    },
-                                    color: 'rgba(255,255,255,0.8)'
+                                    font: { size: 11, weight: '600' },
+                                    color: labelColor
                                 }
                             }
                         }
                     }
                 });
+                // Store globally so toggleTheme can update it
+                window._radarChart = radarChart;
             }, 500); // slight delay to ensure Chart.js is loaded and canvas is ready
         });
       </script>
@@ -16678,6 +16680,23 @@ function toggleTheme(){
   document.documentElement.setAttribute('data-theme', isLight ? 'light' : 'dark');
   localStorage.setItem('dash-theme', isLight ? 'light' : 'dark');
   applyThemeIcons(isLight);
+  // Update radar chart colors for new theme
+  if (window._radarChart) {
+    var gc   = isLight ? 'rgba(0,0,0,0.1)'    : 'rgba(255,255,255,0.1)';
+    var tc   = isLight ? 'rgba(0,0,0,0.4)'    : 'rgba(255,255,255,0.4)';
+    var lc   = isLight ? 'rgba(0,0,0,0.75)'   : 'rgba(255,255,255,0.8)';
+    var prev = isLight ? 'rgba(100,100,180,0.5)' : 'rgba(255,255,255,0.4)';
+    var tgt  = isLight ? 'rgba(80,80,160,0.8)'   : 'rgba(255,255,255,0.8)';
+    var ch = window._radarChart;
+    ch.data.datasets[1].borderColor = prev;
+    ch.data.datasets[1].pointBackgroundColor = prev;
+    ch.data.datasets[2].borderColor = tgt;
+    ch.options.scales.r.grid.color = gc;
+    ch.options.scales.r.angleLines.color = gc;
+    ch.options.scales.r.ticks.color = tc;
+    ch.options.scales.r.pointLabels.color = lc;
+    ch.update();
+  }
 }
 (function(){
   var isLight = localStorage.getItem('dash-theme') === 'light';
