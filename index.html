@@ -11299,8 +11299,7 @@ function openPreview(downloadUrl,filename,ctx){
     doc.open();doc.write(html);doc.close();
   }).catch(err=>{
     const doc=iframe.contentDocument||iframe.contentWindow.document;
-    doc.open();doc.write('<body style="font-family:Segoe UI,sans-serif;padding:24px;color:#ef4444">Failed to load preview. The file may be missing or the network request failed.<br><br><a href="'+downloadUrl+'" target="_blank" style="color:#7170ff">Open raw file directly</a>
-</body>');doc.close();
+    doc.open();doc.write('<body style="font-family:Segoe UI,sans-serif;padding:24px;color:#ef4444">Failed to load preview. The file may be missing or the network request failed.<br><br><a href="'+downloadUrl+'" target="_blank" style="color:#7170ff">Open raw file directly</a></body>');doc.close();
     console.error('openPreview fetch failed:', err);
   });
   setDevice('desktop',document.querySelector('.device-tab:last-child'));
