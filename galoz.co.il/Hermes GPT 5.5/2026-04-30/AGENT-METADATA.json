@@ -1,0 +1,13 @@
+{
+  "agent_name": "Hermes GPT 5.5",
+  "single_variant_rule": true,
+  "style": "GPT Bold Creative, constrained by attached Master Plan",
+  "source_url": "https://mapril.websmail.net/industrial-control-and-automation-equipment/",
+  "client_site": "https://www.galoz.co.il/",
+  "created_at": "2026-04-30",
+  "notes": [
+    "Only one model/agent used per user hard rule",
+    "Plan-compliant Hebrew RTL WordPress-safe HTML",
+    "No multi-model comparison generated"
+  ]
+}

@@ -1,0 +1,4 @@
+Hebrew RTL WordPress HTML article template prompt for galoz.co.il.
+Generate exactly one GPT 5.5 style output only. Do not create Opus/Gemini/Kimi/GLM variants or multi-model comparisons.
+Use the attached Master Plan rules: wp:html wrapper, scoped .galoz-art CSS, no scripts, no external assets, no emojis, unnumbered closed TOC, closed FAQ, FAQ toggle at end, 2 floating buttons only, verified Galoz contact/logo/product links, Hebrew RTL number convention 30+, CTA resting #5F74A7 hover #003E7E, WhatsApp hover #25D366, FAQ before author block, author block 5-row order.
+Brand data: Galoz Electronics Ltd., phone 079-5805040, WhatsApp 052-251-6009, contact https://www.galoz.co.il/contact, logo CDN URL verified as image/png.
