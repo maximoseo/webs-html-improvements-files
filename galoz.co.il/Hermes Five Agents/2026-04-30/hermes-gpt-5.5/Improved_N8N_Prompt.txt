@@ -1,0 +1,15 @@
+שפר תבנית HTML למאמר WordPress בעברית עבור גלעוז אלקטרוניקה.
+
+אתר יעד: https://www.galoz.co.il/
+מאמר מקור: https://mapril.websmail.net/industrial-control-and-automation-equipment/
+סגנון וריאנט: GPT — Bold Creative
+שפה וכיוון: Hebrew RTL, lang="he", dir="rtl".
+
+כללי חובה:
+- אין H1 בתוך גוף המאמר.
+- התוכן חייב להיות מלא: פתיח, נקודות מפתח, תוכן עניינים סגור כברירת מחדל, H2/H3, טבלאות, כרטיסי מוצר אמיתיים, FAQ לפני הביוגרפיה, ואודות גלעוז כחלק האחרון.
+- יש להשתמש בקישורי קשר אמיתיים: https://www.galoz.co.il/contact, 079-5805040, WhatsApp 052-251-6009.
+- יש להשתמש במוצרי גלעוז אמיתיים בלבד עם תמונות וקישורים מדפי מוצר קיימים.
+- אין סקריפטים, אין אירועי onclick, אין placeholders, אין ביקורות/מחירים/נתונים מומצאים.
+- התבנית חייבת להיות WordPress-safe עם עטיפת wp:html, root scoped class, all: initial, CSS ממוסגר, hover/focus, ויחידות px.
+- לשמור על צבעי גלעוז: כחול תעשייתי, כתום CTA, לבן ואפור בהיר.

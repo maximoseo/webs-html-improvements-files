@@ -1,0 +1,100 @@
+{
+  "name": "Galoz Industrial Control HTML Improvement - Kimi 2026-04-30",
+  "active": false,
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "manual-trigger",
+      "name": "Manual Trigger",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "article_url",
+              "name": "article_url",
+              "value": "https://mapril.websmail.net/industrial-control-and-automation-equipment/",
+              "type": "string"
+            },
+            {
+              "id": "target_site",
+              "name": "target_site",
+              "value": "https://www.galoz.co.il/",
+              "type": "string"
+            },
+            {
+              "id": "variant",
+              "name": "variant",
+              "value": "Kimi - Data-Driven Visual",
+              "type": "string"
+            },
+            {
+              "id": "html_file",
+              "name": "html_file",
+              "value": "Improved_HTML_Template.html",
+              "type": "string"
+            },
+            {
+              "id": "contact_url",
+              "name": "contact_url",
+              "value": "https://www.galoz.co.il/contact",
+              "type": "string"
+            },
+            {
+              "id": "phone",
+              "name": "phone",
+              "value": "079-5805040",
+              "type": "string"
+            },
+            {
+              "id": "whatsapp",
+              "name": "whatsapp",
+              "value": "052-251-6009",
+              "type": "string"
+            }
+          ]
+        }
+      },
+      "id": "set-context",
+      "name": "Set Improvement Context",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        280,
+        0
+      ]
+    }
+  ],
+  "connections": {
+    "Manual Trigger": {
+      "main": [
+        [
+          {
+            "node": "Set Improvement Context",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": {
+    "templateOnly": true,
+    "credentialFree": true,
+    "publishingDisabledByDefault": true,
+    "generatedBy": "Hermes",
+    "date": "2026-04-30",
+    "sourceUrl": "https://mapril.websmail.net/industrial-control-and-automation-equipment/"
+  }
+}

@@ -847,6 +847,174 @@
       "sha": "local-pending",
       "size": 3225,
       "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/contents/powerplug.ai/gemini/2026-04-28/Improved_N8N_Workflow.json"
+    },
+    {
+      "path": "galoz.co.il/Hermes Five Agents/2026-04-30/FIVE-VARIANT-COMPARISON.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "live",
+      "size": 1353,
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/contents/galoz.co.il/Hermes Five Agents/2026-04-30/FIVE-VARIANT-COMPARISON.md"
+    },
+    {
+      "path": "galoz.co.il/Hermes Five Agents/2026-04-30/hermes-gemini-3.1/AGENT-METADATA.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "live",
+      "size": 833,
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/contents/galoz.co.il/Hermes Five Agents/2026-04-30/hermes-gemini-3.1/AGENT-METADATA.json"
+    },
+    {
+      "path": "galoz.co.il/Hermes Five Agents/2026-04-30/hermes-gemini-3.1/Improved_HTML_Template.html",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "live",
+      "size": 51356,
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/contents/galoz.co.il/Hermes Five Agents/2026-04-30/hermes-gemini-3.1/Improved_HTML_Template.html"
+    },
+    {
+      "path": "galoz.co.il/Hermes Five Agents/2026-04-30/hermes-gemini-3.1/Improved_N8N_Prompt.txt",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "live",
+      "size": 1338,
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/contents/galoz.co.il/Hermes Five Agents/2026-04-30/hermes-gemini-3.1/Improved_N8N_Prompt.txt"
+    },
+    {
+      "path": "galoz.co.il/Hermes Five Agents/2026-04-30/hermes-gemini-3.1/Improved_N8N_Workflow.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "live",
+      "size": 2463,
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/contents/galoz.co.il/Hermes Five Agents/2026-04-30/hermes-gemini-3.1/Improved_N8N_Workflow.json"
+    },
+    {
+      "path": "galoz.co.il/Hermes Five Agents/2026-04-30/hermes-glm-5.1/AGENT-METADATA.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "live",
+      "size": 830,
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/contents/galoz.co.il/Hermes Five Agents/2026-04-30/hermes-glm-5.1/AGENT-METADATA.json"
+    },
+    {
+      "path": "galoz.co.il/Hermes Five Agents/2026-04-30/hermes-glm-5.1/Improved_HTML_Template.html",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "live",
+      "size": 50821,
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/contents/galoz.co.il/Hermes Five Agents/2026-04-30/hermes-glm-5.1/Improved_HTML_Template.html"
+    },
+    {
+      "path": "galoz.co.il/Hermes Five Agents/2026-04-30/hermes-glm-5.1/Improved_N8N_Prompt.txt",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "live",
+      "size": 1336,
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/contents/galoz.co.il/Hermes Five Agents/2026-04-30/hermes-glm-5.1/Improved_N8N_Prompt.txt"
+    },
+    {
+      "path": "galoz.co.il/Hermes Five Agents/2026-04-30/hermes-glm-5.1/Improved_N8N_Workflow.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "live",
+      "size": 2458,
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/contents/galoz.co.il/Hermes Five Agents/2026-04-30/hermes-glm-5.1/Improved_N8N_Workflow.json"
+    },
+    {
+      "path": "galoz.co.il/Hermes Five Agents/2026-04-30/hermes-gpt-5.5/AGENT-METADATA.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "live",
+      "size": 831,
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/contents/galoz.co.il/Hermes Five Agents/2026-04-30/hermes-gpt-5.5/AGENT-METADATA.json"
+    },
+    {
+      "path": "galoz.co.il/Hermes Five Agents/2026-04-30/hermes-gpt-5.5/Improved_HTML_Template.html",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "live",
+      "size": 50973,
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/contents/galoz.co.il/Hermes Five Agents/2026-04-30/hermes-gpt-5.5/Improved_HTML_Template.html"
+    },
+    {
+      "path": "galoz.co.il/Hermes Five Agents/2026-04-30/hermes-gpt-5.5/Improved_N8N_Prompt.txt",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "live",
+      "size": 1332,
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/contents/galoz.co.il/Hermes Five Agents/2026-04-30/hermes-gpt-5.5/Improved_N8N_Prompt.txt"
+    },
+    {
+      "path": "galoz.co.il/Hermes Five Agents/2026-04-30/hermes-gpt-5.5/Improved_N8N_Workflow.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "live",
+      "size": 2454,
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/contents/galoz.co.il/Hermes Five Agents/2026-04-30/hermes-gpt-5.5/Improved_N8N_Workflow.json"
+    },
+    {
+      "path": "galoz.co.il/Hermes Five Agents/2026-04-30/hermes-kimi-k2.6/AGENT-METADATA.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "live",
+      "size": 836,
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/contents/galoz.co.il/Hermes Five Agents/2026-04-30/hermes-kimi-k2.6/AGENT-METADATA.json"
+    },
+    {
+      "path": "galoz.co.il/Hermes Five Agents/2026-04-30/hermes-kimi-k2.6/Improved_HTML_Template.html",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "live",
+      "size": 51399,
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/contents/galoz.co.il/Hermes Five Agents/2026-04-30/hermes-kimi-k2.6/Improved_HTML_Template.html"
+    },
+    {
+      "path": "galoz.co.il/Hermes Five Agents/2026-04-30/hermes-kimi-k2.6/Improved_N8N_Prompt.txt",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "live",
+      "size": 1338,
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/contents/galoz.co.il/Hermes Five Agents/2026-04-30/hermes-kimi-k2.6/Improved_N8N_Prompt.txt"
+    },
+    {
+      "path": "galoz.co.il/Hermes Five Agents/2026-04-30/hermes-kimi-k2.6/Improved_N8N_Workflow.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "live",
+      "size": 2461,
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/contents/galoz.co.il/Hermes Five Agents/2026-04-30/hermes-kimi-k2.6/Improved_N8N_Workflow.json"
+    },
+    {
+      "path": "galoz.co.il/Hermes Five Agents/2026-04-30/hermes-opus-4.7/AGENT-METADATA.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "live",
+      "size": 833,
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/contents/galoz.co.il/Hermes Five Agents/2026-04-30/hermes-opus-4.7/AGENT-METADATA.json"
+    },
+    {
+      "path": "galoz.co.il/Hermes Five Agents/2026-04-30/hermes-opus-4.7/Improved_HTML_Template.html",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "live",
+      "size": 50926,
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/contents/galoz.co.il/Hermes Five Agents/2026-04-30/hermes-opus-4.7/Improved_HTML_Template.html"
+    },
+    {
+      "path": "galoz.co.il/Hermes Five Agents/2026-04-30/hermes-opus-4.7/Improved_N8N_Prompt.txt",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "live",
+      "size": 1338,
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/contents/galoz.co.il/Hermes Five Agents/2026-04-30/hermes-opus-4.7/Improved_N8N_Prompt.txt"
+    },
+    {
+      "path": "galoz.co.il/Hermes Five Agents/2026-04-30/hermes-opus-4.7/Improved_N8N_Workflow.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "live",
+      "size": 2461,
+      "url": "https://api.github.com/repos/maximoseo/webs-html-improvements-files/contents/galoz.co.il/Hermes Five Agents/2026-04-30/hermes-opus-4.7/Improved_N8N_Workflow.json"
     }
   ],
   "truncated": false,
