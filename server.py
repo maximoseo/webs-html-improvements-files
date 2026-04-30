@@ -387,6 +387,23 @@ def json_response(handler, status, payload):
     handler.wfile.write(body)
 
 
+_KWR_SAFE_FLAT_SLUG_RE = re.compile(r'[A-Za-z0-9._-]+')
+
+
+def _safe_kwr_flat_slug(raw):
+    slug = str(raw or '').strip()
+    for _ in range(3):
+        decoded = urllib.parse.unquote(slug)
+        if decoded == slug:
+            break
+        slug = decoded
+    if not slug or slug in ('.', '..') or '/' in slug or '\\' in slug:
+        return None
+    if not _KWR_SAFE_FLAT_SLUG_RE.fullmatch(slug):
+        return None
+    return slug
+
+
 _JSON_FILE_WRITE_LOCK = threading.RLock()
 
 def _safe_json_load_dict(path):
@@ -4653,8 +4670,8 @@ body{{font-family:Arial;padding:24px}}h1{{color:#333}}pre{{background:#f4f4f4;pa
             # artifacts from outputs/kwr_<slug>.xlsx, not live jobs. Surface a
             # stable completed status instead of a misleading 404.
             if run_id.startswith('flat:'):
-                slug = run_id[5:]
-                if not re.fullmatch(r'[A-Za-z0-9._-]+', slug or ''):
+                slug = _safe_kwr_flat_slug(run_id[5:])
+                if slug is None:
                     return json_response(self, 400, {'ok': False, 'error': 'invalid flat report id'})
                 base_dir = os.path.realpath(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'outputs'))
                 fp = os.path.realpath(os.path.join(base_dir, f'kwr_{slug}.xlsx'))
@@ -4703,10 +4720,16 @@ body{{font-family:Arial;padding:24px}}h1{{color:#333}}pre{{background:#f4f4f4;pa
                 return json_response(self, 400, {'ok': False, 'error': 'run_id required'})
             # Flat reports synced from GitHub (outputs/kwr_<slug>.xlsx)
             if run_id.startswith('flat:'):
-                slug = run_id[5:]
-                fp = os.path.join(os.path.dirname(os.path.abspath(__file__)),
-                                  'outputs', f'kwr_{slug}.xlsx')
-                if not os.path.isfile(fp):
+                slug = _safe_kwr_flat_slug(run_id[5:])
+                if slug is None:
+                    return json_response(self, 400, {'ok': False, 'error': 'invalid flat report id'})
+                base_dir = os.path.realpath(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'outputs'))
+                fp = os.path.realpath(os.path.join(base_dir, f'kwr_{slug}.xlsx'))
+                try:
+                    inside_outputs = os.path.commonpath([base_dir, fp]) == base_dir
+                except ValueError:
+                    inside_outputs = False
+                if not inside_outputs or not os.path.isfile(fp):
                     return json_response(self, 404, {'ok': False, 'error': 'flat report not found'})
                 with open(fp, 'rb') as f:
                     excel_bytes = f.read()
@@ -4733,7 +4756,8 @@ body{{font-family:Arial;padding:24px}}h1{{color:#333}}pre{{background:#f4f4f4;pa
                 return
             excel_bytes, ws_name, err = kwr_backend.build_excel(run_id)
             if err:
-                return json_response(self, 500, {'ok': False, 'error': err})
+                status = 400 if err == 'invalid run_id' else 500
+                return json_response(self, status, {'ok': False, 'error': err})
             # Build ASCII-safe filename + RFC 5987 UTF-8 version (Hebrew would blow up latin-1 headers).
             safe_ascii = re.sub(r'[^A-Za-z0-9._-]+', '-', ws_name).strip('-') or 'kwr'
             filename_ascii = f"{safe_ascii}.xlsx"
@@ -6277,10 +6301,16 @@ body{{font-family:Arial;padding:24px}}h1{{color:#333}}pre{{background:#f4f4f4;pa
                 return json_response(self, 400, {'ok': False, 'error': 'run_id required'})
             # Flat reports synced from GitHub (outputs/kwr_<slug>.xlsx)
             if run_id.startswith('flat:'):
-                slug = run_id[5:]
-                fp = os.path.join(os.path.dirname(os.path.abspath(__file__)),
-                                  'outputs', f'kwr_{slug}.xlsx')
-                if not os.path.isfile(fp):
+                slug = _safe_kwr_flat_slug(run_id[5:])
+                if slug is None:
+                    return json_response(self, 400, {'ok': False, 'error': 'invalid flat report id'})
+                base_dir = os.path.realpath(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'outputs'))
+                fp = os.path.realpath(os.path.join(base_dir, f'kwr_{slug}.xlsx'))
+                try:
+                    inside_outputs = os.path.commonpath([base_dir, fp]) == base_dir
+                except ValueError:
+                    inside_outputs = False
+                if not inside_outputs or not os.path.isfile(fp):
                     return json_response(self, 404, {'ok': False, 'error': 'flat report not found'})
                 with open(fp, 'rb') as f:
                     excel_bytes = f.read()
@@ -6307,7 +6337,8 @@ body{{font-family:Arial;padding:24px}}h1{{color:#333}}pre{{background:#f4f4f4;pa
                 return
             excel_bytes, ws_name, err = kwr_backend.build_excel(run_id)
             if err:
-                return json_response(self, 500, {'ok': False, 'error': err})
+                status = 400 if err == 'invalid run_id' else 500
+                return json_response(self, status, {'ok': False, 'error': err})
             safe_ascii = re.sub(r'[^A-Za-z0-9._-]+', '-', ws_name).strip('-') or 'kwr'
             filename_ascii = f"{safe_ascii}.xlsx"
             filename_utf8 = urllib.parse.quote(f"{ws_name}.xlsx", safe='')
@@ -7227,7 +7258,8 @@ body{{font-family:Arial;padding:24px}}h1{{color:#333}}pre{{background:#f4f4f4;pa
                 return json_response(self, 400, {'ok': False, 'error': 'run_id required'})
             ok, err = kwr_backend.delete_report(run_id)
             if not ok:
-                return json_response(self, 404, {'ok': False, 'error': err or 'not found'})
+                status = 400 if err == 'invalid run_id' else 404
+                return json_response(self, status, {'ok': False, 'error': err or 'not found'})
             return json_response(self, 200, {'ok': True})
         if parsed.path.startswith('/api/playground/templates/'):
             parts = parsed.path.strip('/').split('/')
