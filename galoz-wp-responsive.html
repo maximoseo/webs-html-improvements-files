@@ -1,0 +1,1319 @@
+<style>
+/* ============================================================
+   Galoz Electronics — WordPress-Compatible Article Template
+   100% Responsive + 100% WordPress Compatible
+   Colors: EXACT from galoz.co.il (#003366, #8FA3D6, #65789B)
+   ============================================================ */
+
+.galoz-article,
+.galoz-article * {
+  all: initial;
+  box-sizing: border-box;
+  font-family: 'Heebo', 'Rubik', 'Assistant', Arial, sans-serif !important;
+}
+
+.galoz-article {
+  display: block;
+  direction: rtl;
+  text-align: right;
+  color: #333333 !important;
+  background: #ffffff !important;
+  line-height: 1.75 !important;
+  max-width: 1100px !important;
+  margin: 0 auto !important;
+  padding: 0 16px !important;
+  font-size: 16px !important;
+  -webkit-font-smoothing: antialiased !important;
+}
+
+.galoz-article img {
+  max-width: 100% !important;
+  height: auto !important;
+  display: block !important;
+  border: none !important;
+}
+
+.galoz-article a {
+  color: #003366 !important;
+  text-decoration: none !important;
+  transition: color 0.2s !important;
+}
+
+.galoz-article a:hover {
+  color: #2563eb !important;
+}
+
+/* ── Typography ── */
+.galoz-article h1,
+.galoz-article h2,
+.galoz-article h3,
+.galoz-article h4 {
+  font-weight: 700 !important;
+  line-height: 1.3 !important;
+  color: #003366 !important;
+  margin: 0 0 16px 0 !important;
+  padding: 0 !important;
+}
+
+.galoz-article h1 { font-size: 28px !important; }
+.galoz-article h2 { font-size: 24px !important; }
+.galoz-article h3 { font-size: 20px !important; }
+
+.galoz-article p {
+  margin: 0 0 16px 0 !important;
+  color: #555555 !important;
+  line-height: 1.85 !important;
+}
+
+.galoz-article strong {
+  color: #003366 !important;
+  font-weight: 700 !important;
+}
+
+/* ── Hero ── */
+.galoz-hero {
+  background: linear-gradient(135deg, #003366 0%, #004488 60%, #65789B 100%) !important;
+  color: #ffffff !important;
+  padding: 48px 16px 32px 16px !important;
+  margin: 0 -16px 32px -16px !important;
+  position: relative !important;
+  overflow: hidden !important;
+  border-radius: 0 !important;
+}
+
+.galoz-hero__badge {
+  display: inline-block !important;
+  background: rgba(255,255,255,0.12) !important;
+  padding: 4px 16px !important;
+  border-radius: 50px !important;
+  font-size: 14px !important;
+  font-weight: 600 !important;
+  margin-bottom: 16px !important;
+  border: 1px solid rgba(255,255,255,0.15) !important;
+  color: #ffffff !important;
+}
+
+.galoz-hero__title {
+  color: #ffffff !important;
+  font-size: clamp(24px, 5vw, 40px) !important;
+  margin: 0 0 16px 0 !important;
+  line-height: 1.25 !important;
+  border: none !important;
+  padding: 0 !important;
+}
+
+.galoz-hero__subtitle {
+  color: rgba(255,255,255,0.92) !important;
+  max-width: 700px !important;
+  margin: 0 auto 24px auto !important;
+  font-size: 17px !important;
+}
+
+.galoz-hero__stats {
+  display: grid !important;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)) !important;
+  gap: 16px !important;
+  max-width: 750px !important;
+  margin: 0 auto !important;
+}
+
+.galoz-hero__stat {
+  text-align: center !important;
+  padding: 16px !important;
+  background: rgba(255,255,255,0.08) !important;
+  border-radius: 12px !important;
+  border: 1px solid rgba(255,255,255,0.12) !important;
+}
+
+.galoz-hero__stat-number {
+  font-size: 29px !important;
+  font-weight: 800 !important;
+  display: block !important;
+  margin-bottom: 4px !important;
+  color: #ffffff !important;
+}
+
+.galoz-hero__stat-label {
+  font-size: 13px !important;
+  color: rgba(255,255,255,0.8) !important;
+}
+
+/* ── Hero Image ── */
+.galoz-article-hero-img {
+  width: 100% !important;
+  border-radius: 12px !important;
+  margin-bottom: 32px !important;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.12) !important;
+  object-fit: cover !important;
+  max-height: 380px !important;
+}
+
+/* ── Intro ── */
+.galoz-intro {
+  font-size: 17px !important;
+  line-height: 1.9 !important;
+  color: #333333 !important;
+  margin-bottom: 24px !important;
+  padding: 24px !important;
+  background: #f7f8fa !important;
+  border-radius: 12px !important;
+  border-right: 4px solid #003366 !important;
+}
+
+.galoz-intro strong { color: #003366 !important; }
+
+/* ── Info Box ── */
+.galoz-info-box {
+  background: #eff6ff !important;
+  border: 1px solid #93c5fd !important;
+  border-radius: 12px !important;
+  padding: 24px !important;
+  margin: 24px 0 !important;
+}
+
+.galoz-info-box__title {
+  font-weight: 700 !important;
+  color: #1e40af !important;
+  margin-bottom: 8px !important;
+  font-size: 16px !important;
+}
+
+.galoz-info-box__list {
+  list-style: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+.galoz-info-box__list li {
+  padding: 4px 0 !important;
+  color: #1e3a5f !important;
+  font-size: 14px !important;
+  display: flex !important;
+  align-items: flex-start !important;
+  gap: 8px !important;
+}
+
+.galoz-info-box__list li::before {
+  content: '\2713' !important;
+  color: #25D366 !important;
+  font-weight: 700 !important;
+  flex-shrink: 0 !important;
+}
+
+/* ── TOC ── */
+.galoz-toc {
+  background: #ffffff !important;
+  border: 1px solid #e2e8f0 !important;
+  border-radius: 12px !important;
+  padding: 24px !important;
+  margin-bottom: 32px !important;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.08) !important;
+}
+
+.galoz-toc__title {
+  font-size: 18px !important;
+  font-weight: 700 !important;
+  color: #003366 !important;
+  margin-bottom: 16px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  cursor: pointer !important;
+  user-select: none !important;
+}
+
+.galoz-toc__toggle {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 28px !important;
+  height: 28px !important;
+  background: #003366 !important;
+  color: #ffffff !important;
+  border-radius: 50% !important;
+  font-size: 16px !important;
+  font-weight: 700 !important;
+  transition: transform 0.3s ease !important;
+  flex-shrink: 0 !important;
+}
+
+.galoz-toc__toggle.open { transform: rotate(45deg) !important; }
+
+.galoz-toc__list {
+  list-style: none !important;
+  columns: 2 !important;
+  column-gap: 32px !important;
+  max-height: 800px !important;
+  overflow: hidden !important;
+  transition: max-height 0.4s ease, opacity 0.3s ease !important;
+  opacity: 1 !important;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+.galoz-toc__list.collapsed { max-height: 0 !important; opacity: 0 !important; }
+
+.galoz-toc__item {
+  padding: 4px 0 !important;
+  break-inside: avoid !important;
+}
+
+.galoz-toc__item a {
+  color: #555555 !important;
+  font-size: 14px !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  padding: 4px 8px !important;
+  border-radius: 4px !important;
+  transition: all 0.2s !important;
+}
+
+.galoz-toc__item a:hover {
+  color: #003366 !important;
+  background: #f7f8fa !important;
+}
+
+.galoz-toc__number {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 24px !important;
+  height: 24px !important;
+  background: #65789B !important;
+  color: #ffffff !important;
+  border-radius: 50% !important;
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  flex-shrink: 0 !important;
+}
+
+/* ── Section ── */
+.galoz-section { margin-bottom: 32px !important; }
+
+.galoz-section__image {
+  width: 100% !important;
+  border-radius: 12px !important;
+  margin-bottom: 16px !important;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1) !important;
+  object-fit: cover !important;
+  max-height: 320px !important;
+}
+
+/* ── Key Point ── */
+.galoz-key-point {
+  background: #fffbeb !important;
+  border: 1px solid #fbbf24 !important;
+  border-radius: 12px !important;
+  padding: 24px !important;
+  margin: 24px 0 !important;
+  position: relative !important;
+}
+
+.galoz-key-point__title {
+  font-weight: 700 !important;
+  color: #92400e !important;
+  margin-bottom: 8px !important;
+  font-size: 16px !important;
+}
+
+.galoz-key-point__text {
+  color: #78350f !important;
+  margin: 0 !important;
+  font-size: 14px !important;
+}
+
+/* ── Equipment Grid ── */
+.galoz-equip-grid {
+  display: grid !important;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)) !important;
+  gap: 24px !important;
+  margin: 24px 0 !important;
+}
+
+.galoz-equip-card {
+  background: #ffffff !important;
+  border: 1px solid #e2e8f0 !important;
+  border-radius: 12px !important;
+  padding: 24px !important;
+  text-align: center !important;
+  transition: all 0.3s !important;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.08) !important;
+}
+
+.galoz-equip-card:hover {
+  transform: translateY(-3px) !important;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.12) !important;
+  border-color: #003366 !important;
+}
+
+.galoz-equip-card__icon { font-size: 40px !important; margin-bottom: 16px !important; }
+.galoz-equip-card__title { font-size: 16px !important; font-weight: 700 !important; color: #003366 !important; margin-bottom: 8px !important; }
+.galoz-equip-card__desc { font-size: 14px !important; color: #555555 !important; line-height: 1.6 !important; }
+
+/* ── Table ── */
+.galoz-table-wrap {
+  overflow-x: auto !important;
+  margin: 24px 0 !important;
+  border-radius: 12px !important;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.08) !important;
+  border: 1px solid #e2e8f0 !important;
+}
+
+.galoz-table {
+  width: 100% !important;
+  border-collapse: collapse !important;
+  font-size: 14px !important;
+}
+
+.galoz-table thead { background: #003366 !important; color: #ffffff !important; }
+.galoz-table th { padding: 12px 16px !important; text-align: right !important; font-weight: 600 !important; white-space: nowrap !important; }
+.galoz-table td { padding: 12px 16px !important; border-bottom: 1px solid #edf2f7 !important; color: #555555 !important; }
+.galoz-table tbody tr:hover { background: #f7f8fa !important; }
+.galoz-table tbody tr:last-child td { border-bottom: none !important; }
+
+/* ── Products ── */
+.galoz-products {
+  background: #f7f8fa !important;
+  padding: 32px 16px !important;
+  margin: 32px -16px !important;
+  border-radius: 0 !important;
+}
+
+.galoz-products__title {
+  text-align: center !important;
+  font-size: clamp(20px, 3vw, 26px) !important;
+  margin-bottom: 24px !important;
+  border: none !important;
+  padding: 0 !important;
+}
+
+.galoz-products__subtitle {
+  text-align: center !important;
+  color: #888888 !important;
+  margin-bottom: 24px !important;
+  font-size: 14px !important;
+}
+
+.galoz-prod-grid {
+  display: grid !important;
+  grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)) !important;
+  gap: 16px !important;
+}
+
+.galoz-prod-card {
+  background: #ffffff !important;
+  border-radius: 12px !important;
+  overflow: hidden !important;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.08) !important;
+  border: 1px solid #e2e8f0 !important;
+  transition: all 0.3s !important;
+}
+
+.galoz-prod-card:hover {
+  transform: translateY(-3px) !important;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.12) !important;
+  border-color: #003366 !important;
+}
+
+.galoz-prod-card__img-wrap {
+  position: relative !important;
+  padding-top: 75% !important;
+  overflow: hidden !important;
+  background: #f7f8fa !important;
+}
+
+.galoz-prod-card__img {
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: contain !important;
+  padding: 16px !important;
+  transition: transform 0.3s !important;
+}
+
+.galoz-prod-card:hover .galoz-prod-card__img { transform: scale(1.05) !important; }
+
+.galoz-prod-card__brand {
+  position: absolute !important;
+  top: 8px !important;
+  right: 8px !important;
+  background: rgba(0,51,102,0.92) !important;
+  color: #ffffff !important;
+  padding: 2px 8px !important;
+  border-radius: 4px !important;
+  font-size: 10px !important;
+  font-weight: 600 !important;
+}
+
+.galoz-prod-card__body { padding: 16px !important; }
+
+.galoz-prod-card__title {
+  font-size: 14px !important;
+  font-weight: 600 !important;
+  color: #003366 !important;
+  margin-bottom: 4px !important;
+  line-height: 1.4 !important;
+  display: -webkit-box !important;
+  -webkit-line-clamp: 2 !important;
+  -webkit-box-orient: vertical !important;
+  overflow: hidden !important;
+}
+
+.galoz-prod-card__desc {
+  font-size: 12px !important;
+  color: #888888 !important;
+  margin-bottom: 8px !important;
+  line-height: 1.5 !important;
+}
+
+.galoz-prod-card__actions { display: flex !important; gap: 4px !important; }
+
+.galoz-prod-card__btn {
+  flex: 1 !important;
+  padding: 6px 12px !important;
+  border-radius: 4px !important;
+  font-size: 12px !important;
+  font-weight: 600 !important;
+  text-align: center !important;
+  cursor: pointer !important;
+  transition: all 0.2s !important;
+  border: none !important;
+  text-decoration: none !important;
+  display: inline-block !important;
+}
+
+.galoz-prod-card__btn--primary {
+  background: #003366 !important;
+  color: #ffffff !important;
+}
+
+.galoz-prod-card__btn--primary:hover {
+  background: #004488 !important;
+  color: #ffffff !important;
+}
+
+.galoz-prod-card__btn--secondary {
+  background: #f7f8fa !important;
+  color: #555555 !important;
+  border: 1px solid #e2e8f0 !important;
+}
+
+.galoz-prod-card__btn--secondary:hover {
+  border-color: #003366 !important;
+  color: #003366 !important;
+}
+
+/* ── CTA ── */
+.galoz-cta {
+  background: linear-gradient(135deg, #003366 0%, #65789B 100%) !important;
+  color: #ffffff !important;
+  padding: 32px 16px !important;
+  text-align: center !important;
+  border-radius: 12px !important;
+  margin: 32px 0 !important;
+}
+
+.galoz-cta__title {
+  font-size: clamp(20px, 3vw, 26px) !important;
+  color: #ffffff !important;
+  margin-bottom: 8px !important;
+  border: none !important;
+  padding: 0 !important;
+}
+
+.galoz-cta__text {
+  font-size: 15px !important;
+  color: rgba(255,255,255,0.9) !important;
+  max-width: 550px !important;
+  margin: 0 auto 16px auto !important;
+}
+
+.galoz-cta__buttons {
+  display: flex !important;
+  justify-content: center !important;
+  gap: 8px !important;
+  flex-wrap: wrap !important;
+}
+
+.galoz-cta__btn {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  padding: 10px 24px !important;
+  border-radius: 8px !important;
+  font-size: 14px !important;
+  font-weight: 700 !important;
+  text-decoration: none !important;
+  transition: all 0.2s !important;
+  cursor: pointer !important;
+  border: none !important;
+}
+
+.galoz-cta__btn--primary { background: #ffffff !important; color: #003366 !important; }
+.galoz-cta__btn--primary:hover { background: #f7f8fa !important; transform: translateY(-2px) !important; box-shadow: 0 4px 16px rgba(0,0,0,0.12) !important; color: #003366 !important; }
+.galoz-cta__btn--outline { background: transparent !important; color: #ffffff !important; border: 2px solid rgba(255,255,255,0.4) !important; }
+.galoz-cta__btn--outline:hover { border-color: #ffffff !important; background: rgba(255,255,255,0.1) !important; color: #ffffff !important; }
+
+/* ── Author Section ── */
+.galoz-author {
+  background: #ffffff !important;
+  border: 1px solid #e2e8f0 !important;
+  border-radius: 12px !important;
+  padding: 32px !important;
+  margin: 32px 0 !important;
+  display: flex !important;
+  gap: 24px !important;
+  align-items: flex-start !important;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.08) !important;
+}
+
+.galoz-author__logo {
+  width: 100px !important;
+  height: 100px !important;
+  border-radius: 12px !important;
+  object-fit: contain !important;
+  background: #f7f8fa !important;
+  padding: 8px !important;
+  flex-shrink: 0 !important;
+  border: 1px solid #e2e8f0 !important;
+}
+
+.galoz-author__content { flex: 1 !important; }
+.galoz-author__name { font-size: 19px !important; font-weight: 700 !important; color: #003366 !important; margin-bottom: 4px !important; }
+.galoz-author__role { font-size: 14px !important; color: #888888 !important; margin-bottom: 16px !important; }
+.galoz-author__bio { font-size: 14px !important; color: #555555 !important; line-height: 1.7 !important; margin-bottom: 16px !important; }
+
+.galoz-author__social { display: flex !important; gap: 8px !important; margin-top: 16px !important; }
+
+.galoz-author__social a {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 36px !important;
+  height: 36px !important;
+  border-radius: 50% !important;
+  transition: all 0.2s !important;
+  text-decoration: none !important;
+}
+
+.galoz-author__social a:hover { transform: translateY(-2px) !important; }
+.galoz-author__social--wa { background: #25D366 !important; }
+.galoz-author__social--wa:hover { background: #1da851 !important; }
+.galoz-author__social--phone { background: #003366 !important; }
+.galoz-author__social--phone:hover { background: #004488 !important; }
+.galoz-author__social--email { background: #65789B !important; }
+.galoz-author__social--email:hover { background: #4a5f7a !important; }
+
+.galoz-author__contact { display: flex !important; flex-wrap: wrap !important; gap: 16px !important; margin-top: 16px !important; }
+.galoz-author__contact-item { font-size: 13px !important; color: #555555 !important; display: flex !important; align-items: center !important; gap: 4px !important; }
+.galoz-author__contact-item a { color: #003366 !important; font-weight: 600 !important; }
+
+/* ── FAQ ── */
+.galoz-faq { margin: 32px 0 !important; }
+.galoz-faq__item { border: 1px solid #e2e8f0 !important; border-radius: 8px !important; margin-bottom: 8px !important; overflow: hidden !important; }
+
+.galoz-faq__question {
+  width: 100% !important;
+  padding: 16px 24px !important;
+  background: #ffffff !important;
+  border: none !important;
+  text-align: right !important;
+  font-family: 'Heebo', 'Rubik', 'Assistant', Arial, sans-serif !important;
+  font-size: 15px !important;
+  font-weight: 600 !important;
+  color: #003366 !important;
+  cursor: pointer !important;
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+  transition: all 0.2s !important;
+}
+
+.galoz-faq__question:hover { background: #f7f8fa !important; }
+
+.galoz-faq__icon {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 26px !important;
+  height: 26px !important;
+  background: #003366 !important;
+  color: #ffffff !important;
+  border-radius: 50% !important;
+  font-size: 18px !important;
+  font-weight: 700 !important;
+  transition: transform 0.3s ease !important;
+  flex-shrink: 0 !important;
+}
+
+.galoz-faq__icon.open { transform: rotate(45deg) !important; }
+
+.galoz-faq__answer {
+  max-height: 0 !important;
+  overflow: hidden !important;
+  transition: max-height 0.4s ease, padding 0.3s ease !important;
+}
+
+.galoz-faq__answer.open { max-height: 500px !important; padding: 0 24px 16px 24px !important; }
+.galoz-faq__answer p { margin: 0 !important; color: #555555 !important; line-height: 1.7 !important; font-size: 14px !important; }
+
+/* ── Supplier Grid ── */
+.galoz-supplier-grid {
+  display: grid !important;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)) !important;
+  gap: 16px !important;
+  margin: 24px 0 !important;
+}
+
+.galoz-supplier-item {
+  display: flex !important;
+  align-items: flex-start !important;
+  gap: 8px !important;
+  padding: 16px !important;
+  background: #ffffff !important;
+  border: 1px solid #e2e8f0 !important;
+  border-radius: 8px !important;
+  transition: all 0.2s !important;
+}
+
+.galoz-supplier-item:hover { border-color: #003366 !important; box-shadow: 0 1px 3px rgba(0,0,0,0.08) !important; }
+.galoz-supplier-item__icon { width: 36px !important; height: 36px !important; background: #003366 !important; color: #ffffff !important; border-radius: 8px !important; display: flex !important; align-items: center !important; justify-content: center !important; font-size: 18px !important; flex-shrink: 0 !important; }
+.galoz-supplier-item__title { font-weight: 600 !important; color: #003366 !important; margin-bottom: 4px !important; font-size: 14px !important; }
+.galoz-supplier-item__desc { font-size: 13px !important; color: #555555 !important; line-height: 1.5 !important; margin: 0 !important; }
+
+/* ── Brands ── */
+.galoz-brands { padding: 32px 0 !important; text-align: center !important; }
+.galoz-brands__title { font-size: 18px !important; color: #888888 !important; margin-bottom: 24px !important; border: none !important; }
+.galoz-brands__grid { display: flex !important; flex-wrap: wrap !important; justify-content: center !important; gap: 16px !important; align-items: center !important; }
+
+.galoz-brand-logo {
+  padding: 8px 16px !important;
+  background: #f7f8fa !important;
+  border-radius: 8px !important;
+  min-width: 110px !important;
+  height: 50px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  font-weight: 700 !important;
+  color: #888888 !important;
+  font-size: 12px !important;
+  border: 1px solid #edf2f7 !important;
+  transition: all 0.2s !important;
+}
+
+.galoz-brand-logo:hover { border-color: #003366 !important; color: #003366 !important; box-shadow: 0 1px 3px rgba(0,0,0,0.08) !important; }
+
+/* ── Floating Buttons ── */
+.galoz-float-wrap {
+  position: fixed !important;
+  bottom: 16px !important;
+  left: 16px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 8px !important;
+  z-index: 999999 !important;
+}
+
+.galoz-float-btn {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 52px !important;
+  height: 52px !important;
+  border-radius: 50% !important;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.12) !important;
+  cursor: pointer !important;
+  transition: all 0.3s !important;
+  text-decoration: none !important;
+  border: none !important;
+  color: #ffffff !important;
+  font-size: 21px !important;
+}
+
+.galoz-float-btn:hover { transform: scale(1.1) !important; box-shadow: 0 8px 32px rgba(0,0,0,0.16) !important; color: #ffffff !important; }
+.galoz-float-btn--wa { background: #25D366 !important; }
+.galoz-float-btn--phone { background: #003366 !important; }
+.galoz-float-btn--email { background: #65789B !important; }
+.galoz-float-btn--top { background: #8FA3D6 !important; opacity: 0 !important; pointer-events: none !important; transition: opacity 0.3s, transform 0.3s !important; }
+.galoz-float-btn--top.visible { opacity: 1 !important; pointer-events: auto !important; }
+
+/* ── Responsive ── */
+@media (max-width: 768px) {
+  .galoz-toc__list { columns: 1 !important; }
+  .galoz-hero__stats { grid-template-columns: repeat(2, 1fr) !important; }
+  .galoz-equip-grid { grid-template-columns: 1fr !important; }
+  .galoz-prod-grid { grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)) !important; }
+  .galoz-cta__buttons { flex-direction: column !important; align-items: center !important; }
+  .galoz-author { flex-direction: column !important; align-items: center !important; text-align: center !important; }
+  .galoz-author__social { justify-content: center !important; }
+  .galoz-author__contact { justify-content: center !important; }
+  .galoz-float-wrap { bottom: 12px !important; left: 12px !important; }
+  .galoz-float-btn { width: 48px !important; height: 48px !important; font-size: 18px !important; }
+}
+
+@media (max-width: 480px) {
+  .galoz-hero__stats { grid-template-columns: 1fr !important; }
+  .galoz-hero__title { font-size: 24px !important; }
+  .galoz-prod-grid { grid-template-columns: 1fr !important; }
+  .galoz-supplier-grid { grid-template-columns: 1fr !important; }
+  .galoz-cta { padding: 24px 12px !important; }
+}
+</style>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700;800;900&family=Assistant:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+
+<!-- ═══════════════ FLOATING BUTTONS ═══════════════ -->
+<div class="galoz-float-wrap" id="galozFloat">
+  <button class="galoz-float-btn galoz-float-btn--top" id="galozTopBtn" onclick="window.scrollTo({top:0,behavior:'smooth'})" title="חזרה למעלה" style="display:inline-flex">↑</button>
+  <a href="https://wa.me/972522516009" class="galoz-float-btn galoz-float-btn--wa" title="WhatsApp" target="_blank" rel="noopener">💬</a>
+  <a href="tel:0795805040" class="galoz-float-btn galoz-float-btn--phone" title="התקשרו אלינו">📞</a>
+  <a href="mailto:sales@galoz.co.il" class="galoz-float-btn galoz-float-btn--email" title="שלחו מייל">✉</a>
+</div>
+
+<!-- ═══════════════ HERO ═══════════════ -->
+<div class="galoz-hero">
+  <div class="galoz-hero__badge">🏭 גלעוז אלקטרוניקה — 30+ שנות ניסיון בתעשייה</div>
+  <h1 class="galoz-hero__title">ציוד פיקוד ובקרה לתעשייה:<br>המדריך המלא לבחירת פתרונות מתקדמים</h1>
+  <p class="galoz-hero__subtitle">
+    בכל מערכת תעשייתית, החל מקו ייצור מזון ועד מתקן אנרגיה, נדרש מענה מקצועי שמחבר בין מדידה מדויקת, בקרה חכמה ופעולה אמינה בשטח.
+  </p>
+  <div class="galoz-hero__stats">
+    <div class="galoz-hero__stat"><span class="galoz-hero__stat-number">30+</span><span class="galoz-hero__stat-label">שנות ניסיון</span></div>
+    <div class="galoz-hero__stat"><span class="galoz-hero__stat-number">✔</span><span class="galoz-hero__stat-label">ייעוץ טכני מקצועי</span></div>
+    <div class="galoz-hero__stat"><span class="galoz-hero__stat-number">⚙</span><span class="galoz-hero__stat-label">אינטגרציה מלאה</span></div>
+    <div class="galoz-hero__stat"><span class="galoz-hero__stat-number">📦</span><span class="galoz-hero__stat-label">מלאי שוטף וזמינות</span></div>
+  </div>
+</div>
+
+<!-- ═══════════════ ARTICLE CONTENT ═══════════════ -->
+<div class="galoz-article">
+
+  <!-- Hero Image -->
+  <img src="https://mapril.websmail.net/wp-content/uploads/2026/04/CommandandControlEquipmentTheCompleteGuidetoChoosingRightforIndustry.jpg" alt="ציוד פיקוד ובקרה: המדריך המלא לבחירה נכונה לתעשייה" class="galoz-article-hero-img" width="1376" height="768" loading="eager">
+
+  <!-- Intro -->
+  <div class="galoz-intro">
+    <p style="margin:0"><strong>ציוד פיקוד ובקרה</strong> הוא הלב של כל מערכת תעשייתית, והבחירה בו דורשת הבנה של תהליך הייצור, של תנאי הסביבה ושל הדרישות התפעוליות. גלעוז אלקטרוניקה, עם <strong>30+ שנות ניסיון</strong> בתחום הבקרה התעשייתית, מלווה מפעלים ועסקים לאורך כל שלבי הפרויקט — מהאפיון ועד ההפעלה.</p>
+  </div>
+
+  <!-- What's in this guide -->
+  <div class="galoz-info-box">
+    <div class="galoz-info-box__title">📋 במדריך טכני זה תמצאו</div>
+    <ul class="galoz-info-box__list">
+      <li>מה זה ציוד פיקוד ובקרה ומדוע הוא קריטי</li>
+      <li>ההבדל בין ציוד מדידה, בקרה ופיקוד</li>
+      <li>כיצד לבחור ציוד שמתאים לתנאי הסביבה</li>
+      <li>טעויות נפוצות בבחירה ובאינטגרציה</li>
+      <li>המוצרים המובילים מבית Carlo Gavazzi, Toky ו-Leuze</li>
+      <li>שאלות ותשובות נפוצות מהשטח</li>
+    </ul>
+  </div>
+
+  <!-- ═══════════════ TOC ═══════════════ -->
+  <nav class="galoz-toc" aria-label="תוכן עניינים">
+    <div class="galoz-toc__title" onclick="galozToggleTOC()">
+      <span>📑 תוכן עניינים טכני</span>
+      <span class="galoz-toc__toggle open" id="galozTocToggle">+</span>
+    </div>
+    <ol class="galoz-toc__list" id="galozTocList">
+      <li class="galoz-toc__item"><a href="#galoz-s1"><span class="galoz-toc__number">1</span> מה זה ציוד פיקוד ובקרה?</a></li>
+      <li class="galoz-toc__item"><a href="#galoz-s2"><span class="galoz-toc__number">2</span> למה ציוד פיקוד ובקרה חשוב?</a></li>
+      <li class="galoz-toc__item"><a href="#galoz-s3"><span class="galoz-toc__number">3</span> איך בוחרים ציוד מתאים?</a></li>
+      <li class="galoz-toc__item"><a href="#galoz-s4"><span class="galoz-toc__number">4</span> ההבדל בין פיקוד, בקרה ומדידה</a></li>
+      <li class="galoz-toc__item"><a href="#galoz-s5"><span class="galoz-toc__number">5</span> טבלת השוואה בין סוגי הציוד</a></li>
+      <li class="galoz-toc__item"><a href="#galoz-s6"><span class="galoz-toc__number">6</span> מכשירי בקרה חיוניים</a></li>
+      <li class="galoz-toc__item"><a href="#galoz-s7"><span class="galoz-toc__number">7</span> התאמה לסביבה תעשייתית</a></li>
+      <li class="galoz-toc__item"><a href="#galoz-s8"><span class="galoz-toc__number">8</span> צמצום תקלות והשבתות</a></li>
+      <li class="galoz-toc__item"><a href="#galoz-s9"><span class="galoz-toc__number">9</span> מוצרים מומלצים</a></li>
+      <li class="galoz-toc__item"><a href="#galoz-s10"><span class="galoz-toc__number">10</span> איך לבחור ספק?</a></li>
+      <li class="galoz-toc__item"><a href="#galoz-s11"><span class="galoz-toc__number">11</span> שאלות ותשובות נפוצות</a></li>
+    </ol>
+  </nav>
+
+  <!-- ═══════════════ CTA 1 ═══════════════ -->
+  <div class="galoz-cta">
+    <h2 class="galoz-cta__title">צריכים ייעוץ לבחירת ציוד פיקוד ובקרה?</h2>
+    <p class="galoz-cta__text">המהנדסים שלנו יעזרו לכם לבחור את הפתרון המדויק — בחינם</p>
+    <div class="galoz-cta__buttons">
+      <a href="tel:0795805040" class="galoz-cta__btn galoz-cta__btn--primary">📞 079-580-5040</a>
+      <a href="https://wa.me/972522516009" class="galoz-cta__btn galoz-cta__btn--outline" target="_blank" rel="noopener">💬 WhatsApp</a>
+    </div>
+  </div>
+
+  <!-- Section 1 -->
+  <div class="galoz-section" id="galoz-s1">
+    <h2>מה זה ציוד פיקוד ובקרה?</h2>
+    <p>ציוד פיקוד ובקרה הוא מכלול הרכיבים והמערכות שמטרתם לנטר, למדוד, לעבד ולהפעיל תהליכים תעשייתיים בצורה מדויקת ובטוחה. התחום כולל חיישנים, בקרים לוגיים, ממסרים, לוחות פיקוד, ספקי כוח, רכיבי תקשורת וממשקי מגע.</p>
+    <p>במונחים בינלאומיים מדובר ב-<em>industrial control equipment</em>, ובפועל זהו הבסיס לכל מערכת ייצור או ניטור מודרנית. ניתן לעיין במגוון רחב של רכיבים ופתרונות בתחום <a href="https://www.galoz.co.il/categories/640384">ציוד פיקוד ובקרה</a> באתר גלעוז.</p>
+  </div>
+
+  <!-- Section 2 -->
+  <div class="galoz-section" id="galoz-s2">
+    <h2>למה ציוד פיקוד ובקרה חשוב בכל מערכת תעשייתית?</h2>
+    <img src="https://mapril.websmail.net/wp-content/uploads/2026/04/WhyIsCommandandControlEquipmentImportantinEveryIndustrialSystem.jpg" alt="למה ציוד פיקוד ובקרה חשוב" class="galoz-section__image" width="1376" height="768" loading="lazy">
+    <p>החשיבות של מערכת בקרה איכותית נמדדת ביכולת שלה לשמור על רציפות תהליך, לצמצם טעויות אנוש ולשפר את בטיחות הייצור. סטייה קטנה בלחץ, בטמפרטורה או במהירות יכולה לגרום לפגיעה באיכות, לפסילת אצוות שלמה ואף לסיכון בטיחותי.</p>
+
+    <div class="galoz-key-point">
+      <div class="galoz-key-point__title">נקודת מפתח תפעולית</div>
+      <p class="galoz-key-point__text">מערכת בקרה לא מתאימה אינה רק עלות תחזוקה — היא סיכון בטיחותי ממשי. בחירה נכונה של ציוד פיקוד ובקרה מגנה על עובדים, ציוד ותהליך כאחד.</p>
+    </div>
+  </div>
+
+  <!-- Section 3 -->
+  <div class="galoz-section" id="galoz-s3">
+    <h2>איך בוחרים ציוד פיקוד ובקרה שמתאים ליישום שלכם?</h2>
+    <p>הבחירה מתחילה בהגדרה ברורה של מטרת המערכת: מה מודדים, מה מפעילים, באיזו רמת דיוק ובאילו תנאים. רק לאחר מיפוי הצורך אפשר להתאים בקרים, חיישנים ולוחות פיקוד.</p>
+
+    <div class="galoz-info-box">
+      <div class="galoz-info-box__title">🔍 שאלות מנחות לפני רכישה</div>
+      <ul class="galoz-info-box__list">
+        <li>מהם הטווחים הנמדדים ורמת הדיוק הנדרשת?</li>
+        <li>אילו פרוטוקולי תקשורת קיימים כבר במפעל?</li>
+        <li>האם מדובר בתהליך רציף (Continuous) או דיסקרטי?</li>
+        <li>מה רמת הזמינות הנדרשת (Availability)?</li>
+        <li>אילו אפשרויות הרחבה צפויות בעתיד?</li>
+      </ul>
+    </div>
+
+    <h3>טעויות נפוצות בבחירת ציוד</h3>
+    <p>הטעות הנפוצה ביותר היא בחירה לפי מחיר בלבד, בלי לשקלל תנאי סביבה, איכות רכיבים וזמינות שירות. טעות נוספת היא התעלמות מאפשרויות הרחבה.</p>
+  </div>
+
+  <!-- ═══════════════ CTA 2 ═══════════════ -->
+  <div class="galoz-cta">
+    <h2 class="galoz-cta__title">לא בטוחים מה מתאים לכם?</h2>
+    <p class="galoz-cta__text">שלחו לנו את דרישות המערכת ונחזור עם הצעה מותאמת תוך 24 שעות</p>
+    <div class="galoz-cta__buttons">
+      <a href="https://wa.me/972522516009" class="galoz-cta__btn galoz-cta__btn--primary" target="_blank" rel="noopener">💬 WhatsApp</a>
+      <a href="mailto:sales@galoz.co.il" class="galoz-cta__btn galoz-cta__btn--outline">✉ sales@galoz.co.il</a>
+    </div>
+  </div>
+
+  <!-- ═══════════════ PRODUCTS EARLY ═══════════════ -->
+  <div class="galoz-products" id="galoz-prod-early">
+    <h2 class="galoz-products__title">🔥 מוצרים מובילים — זמינים למשלוח מיידי</h2>
+    <p class="galoz-products__subtitle">מבחר רכיבי פיקוד ובקרה איכותיים מהמותגים המובילים</p>
+    <div class="galoz-prod-grid">
+
+      <article class="galoz-prod-card">
+        <div class="galoz-prod-card__img-wrap">
+          <img src="https://d3m9l0v76dty0.cloudfront.net/system/photos/16429193/show/aa8b674d2e0f7dc210290cda3eb12e6f.jpg" alt="RM1E ממסר אלקטרוני חד פאזי Carlo Gavazzi" class="galoz-prod-card__img" width="300" height="268" loading="lazy">
+          <span class="galoz-prod-card__brand">Carlo Gavazzi</span>
+        </div>
+        <div class="galoz-prod-card__body">
+          <h3 class="galoz-prod-card__title">RM1E — ממסר אלקטרוני חד פאזי</h3>
+          <p class="galoz-prod-card__desc">ממסר מצב מוצק עד 50A, פיקוד 4-20mA. אידיאלי לבקרת הספק.</p>
+          <div class="galoz-prod-card__actions">
+            <a href="https://www.galoz.co.il/products/1196048" class="galoz-prod-card__btn galoz-prod-card__btn--primary">לצפייה</a>
+            <a href="https://www.galoz.co.il/contact-us" class="galoz-prod-card__btn galoz-prod-card__btn--secondary">צור קשר</a>
+          </div>
+        </div>
+      </article>
+
+      <article class="galoz-prod-card">
+        <div class="galoz-prod-card__img-wrap">
+          <img src="https://d3m9l0v76dty0.cloudfront.net/system/photos/16442224/show/0f3c09b7cc2392c7b00f6c508c6f3620.jpg" alt="RGSxP60Dxxx ממסר אלקטרוני Carlo Gavazzi" class="galoz-prod-card__img" width="300" height="300" loading="lazy">
+          <span class="galoz-prod-card__brand">Carlo Gavazzi</span>
+        </div>
+        <div class="galoz-prod-card__body">
+          <h3 class="galoz-prod-card__title">RGSxP60Dxxx — ממסר AC/DC</h3>
+          <p class="galoz-prod-card__desc">ממסר מצב מוצק עם פיקוד AC או DC למגוון יישומי תעשייה.</p>
+          <div class="galoz-prod-card__actions">
+            <a href="https://www.galoz.co.il/products/1196071" class="galoz-prod-card__btn galoz-prod-card__btn--primary">לצפייה</a>
+            <a href="https://www.galoz.co.il/contact-us" class="galoz-prod-card__btn galoz-prod-card__btn--secondary">צור קשר</a>
+          </div>
+        </div>
+      </article>
+
+      <article class="galoz-prod-card">
+        <div class="galoz-prod-card__img-wrap">
+          <img src="https://d3m9l0v76dty0.cloudfront.net/system/photos/16428899/show/f5b2c9818effd5f7314958021ff3eac9.jpg" alt="RMD3 ממסר אלקטרוני תלת פאזי Toky" class="galoz-prod-card__img" width="300" height="219" loading="lazy">
+          <span class="galoz-prod-card__brand">Toky</span>
+        </div>
+        <div class="galoz-prod-card__body">
+          <h3 class="galoz-prod-card__title">RMD3 — ממסר תלת פאזי</h3>
+          <p class="galoz-prod-card__desc">ממסר תלת-פאזי איכותי ליישומי תעשייה עם דרישות אמינות גבוהות.</p>
+          <div class="galoz-prod-card__actions">
+            <a href="https://www.galoz.co.il/products/1196066" class="galoz-prod-card__btn galoz-prod-card__btn--primary">לצפייה</a>
+            <a href="https://www.galoz.co.il/contact-us" class="galoz-prod-card__btn galoz-prod-card__btn--secondary">צור קשר</a>
+          </div>
+        </div>
+      </article>
+
+    </div>
+  </div>
+
+  <!-- Section 4 -->
+  <div class="galoz-section" id="galoz-s4">
+    <h2>מה ההבדל בין ציוד פיקוד, ציוד בקרה וציוד מדידה?</h2>
+    <img src="https://mapril.websmail.net/wp-content/uploads/2026/04/WhatIstheDifferenceBetweenCommandEquipmentControlEquipmentandMeasurementEquipmen.jpg" alt="ההבדל בין ציוד פיקוד, ציוד בקרה וציוד מדידה" class="galoz-section__image" width="1376" height="768" loading="lazy">
+
+    <div class="galoz-equip-grid">
+      <div class="galoz-equip-card">
+        <div class="galoz-equip-card__icon">📡</div>
+        <div class="galoz-equip-card__title">ציוד מדידה</div>
+        <div class="galoz-equip-card__desc">אוסף נתונים מהשטח — טמפרטורה, לחץ, זרימה, רמה.</div>
+      </div>
+      <div class="galoz-equip-card">
+        <div class="galoz-equip-card__icon">🧠</div>
+        <div class="galoz-equip-card__title">ציוד בקרה</div>
+        <div class="galoz-equip-card__desc">מעבד נתונים ומקבל החלטות — PLC, מודולי I/O, בקרי טמפרטורה.</div>
+      </div>
+      <div class="galoz-equip-card">
+        <div class="galoz-equip-card__icon">⚡</div>
+        <div class="galoz-equip-card__title">ציוד פיקוד</div>
+        <div class="galoz-equip-card__desc">מפעיל פעולות פיזיות — ממסרים, קונטקטורים, לוחות פיקוד.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Section 5 -->
+  <div class="galoz-section" id="galoz-s5">
+    <h2>טבלת השוואה בין סוגי הציוד המרכזיים</h2>
+    <div class="galoz-table-wrap">
+      <table class="galoz-table">
+        <thead><tr><th>סוג ציוד</th><th>תפקיד ראשי</th><th>דוגמאות נפוצות</th><th>פרמטר בחירה קריטי</th></tr></thead>
+        <tbody>
+          <tr><td><strong>מדידה</strong></td><td>איסוף נתונים מהשטח</td><td>חיישני טמפרטורה, לחץ, זרימה</td><td>דיוק וטווח מדידה</td></tr>
+          <tr><td><strong>בקרה</strong></td><td>עיבוד נתונים והחלטות</td><td>PLC, מודולי I/O, בקרי טמפרטורה</td><td>מהירות עיבוד ופרוטוקולים</td></tr>
+          <tr><td><strong>פיקוד</strong></td><td>הפעלה פיזית ומיתוג</td><td>ממסרים, קונטקטורים, לוחות פיקוד</td><td>קיבולת חשמלית ועמידות</td></tr>
+          <tr><td><strong>ממשק אדם-מכונה</strong></td><td>תצוגה ושליטה אנושית</td><td>מסכי מגע, כפתורים, נורות חיווי</td><td>נוחות תפעול וקריאות</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Section 6 -->
+  <div class="galoz-section" id="galoz-s6">
+    <h2>אילו מכשירי בקרה נחשבים חיוניים?</h2>
+    <img src="https://mapril.websmail.net/wp-content/uploads/2026/04/WhichIndustrialControlDevicesAreConsideredEssential.jpg" alt="מכשירי בקרה חיוניים" class="galoz-section__image" width="1376" height="768" loading="lazy">
+
+    <div class="galoz-table-wrap">
+      <table class="galoz-table">
+        <thead><tr><th>צורך עסקי</th><th>פתרון מעשי</th><th>ערך מוסף</th></tr></thead>
+        <tbody>
+          <tr><td>בחירה מדויקת של ציוד</td><td>ייעוץ הנדסי והתאמת יישום</td><td>חיסכון בעלויות ומניעת טעויות</td></tr>
+          <tr><td>אינטגרציה עם מערכות קיימות</td><td>בדיקת תאימות פרוטוקולים</td><td>הפעלה מהירה וללא תקלות</td></tr>
+          <tr><td>סביבה תעשייתית קשה</td><td>רכיבים עם דירוג IP מתאים</td><td>אריכות ימים ותחזוקה מופחתת</td></tr>
+          <tr><td>זמינות חלפים ושירות</td><td>מלאי שוטף ותמיכה טכנית</td><td>צמצום זמן השבתה</td></tr>
+          <tr><td>תכנון הרחבה עתידית</td><td>בחירת מערכות מודולריות</td><td>גמישות ומוכנות לצמיחה</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Section 7 -->
+  <div class="galoz-section" id="galoz-s7">
+    <h2>התאמה לסביבת עבודה תעשייתית</h2>
+    <p>סביבות תעשייתיות שונות דורשות רמות הגנה שונות. במפעל מזון נדרש ציוד עם דירוג <strong>IP69K</strong> שעמיד בפני שטיפות בלחץ גבוה.</p>
+
+    <div class="galoz-info-box">
+      <div class="galoz-info-box__title">🏭 גורמים קריטיים להתאמה סביבתית</div>
+      <ul class="galoz-info-box__list">
+        <li>טמפרטורת פעולה ולחות</li>
+        <li>חשיפה לאבק, רעידות וחומרים כימיים</li>
+        <li>הפרעות אלקטרומגנטיות (EMI)</li>
+        <li>דרישות תקן ישראלי ו-EN 415-5</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Section 8 -->
+  <div class="galoz-section" id="galoz-s8">
+    <h2>איך לצמצם תקלות והשבתות?</h2>
+    <p>ניטור רציף + התראות מוקדמות + זיהוי חריגות בזמן אמת מונעים הפיכת בעיות קטנות להשבתות יקרות. <strong>מודדי אנרגיה ובקרים</strong> מספקים נראות מלאה של צריכת החשמל.</p>
+  </div>
+
+  <!-- ═══════════════ PRODUCTS LATE ═══════════════ -->
+  <div class="galoz-products" id="galoz-s9">
+    <h2 class="galoz-products__title">🛒 קטלוג מוצרים — פיקוד ובקרה</h2>
+    <p class="galoz-products__subtitle">כל המוצרים הזמינים למשלוח מיידי</p>
+    <div class="galoz-prod-grid">
+
+      <article class="galoz-prod-card">
+        <div class="galoz-prod-card__img-wrap">
+          <img src="https://d3m9l0v76dty0.cloudfront.net/system/photos/16427685/show/71698d2ff23194a2022d0986bfc0da9c.jpg" alt="RR ממסר מחליף כיוון תלת פאזי" class="galoz-prod-card__img" width="300" height="259" loading="lazy">
+          <span class="galoz-prod-card__brand">Carlo Gavazzi</span>
+        </div>
+        <div class="galoz-prod-card__body">
+          <h3 class="galoz-prod-card__title">RR — ממסר מחליף כיוון תלת פאזי</h3>
+          <p class="galoz-prod-card__desc">ממסר תלת-פאזי להחלפת כיוון, לבקרת מנועים.</p>
+          <div class="galoz-prod-card__actions">
+            <a href="https://www.galoz.co.il/products/1196044" class="galoz-prod-card__btn galoz-prod-card__btn--primary">לצפייה</a>
+            <a href="https://www.galoz.co.il/contact-us" class="galoz-prod-card__btn galoz-prod-card__btn--secondary">צור קשר</a>
+          </div>
+        </div>
+      </article>
+
+      <article class="galoz-prod-card">
+        <div class="galoz-prod-card__img-wrap">
+          <img src="https://d3m9l0v76dty0.cloudfront.net/system/photos/16442742/show/52a8b8b32bad8716d1c3328c7414db0f.jpg" alt="RMA ממסר אלקטרוני חד פאזי עם LED Toky" class="galoz-prod-card__img" width="259" height="300" loading="lazy">
+          <span class="galoz-prod-card__brand">Toky</span>
+        </div>
+        <div class="galoz-prod-card__body">
+          <h3 class="galoz-prod-card__title">RMA — ממסר חד פאזי עם LED</h3>
+          <p class="galoz-prod-card__desc">ממסר עם חיווי LED ומכסה מגן.</p>
+          <div class="galoz-prod-card__actions">
+            <a href="https://www.galoz.co.il/products/1196083" class="galoz-prod-card__btn galoz-prod-card__btn--primary">לצפייה</a>
+            <a href="https://www.galoz.co.il/contact-us" class="galoz-prod-card__btn galoz-prod-card__btn--secondary">צור קשר</a>
+          </div>
+        </div>
+      </article>
+
+      <article class="galoz-prod-card">
+        <div class="galoz-prod-card__img-wrap">
+          <img src="https://d3m9l0v76dty0.cloudfront.net/system/photos/16428954/show/3fedba5e28e90dda3504366ff8e3a347.jpg" alt="CSL מסך סרגל עיניים Leuze" class="galoz-prod-card__img" width="99" height="300" loading="lazy">
+          <span class="galoz-prod-card__brand">Leuze</span>
+        </div>
+        <div class="galoz-prod-card__body">
+          <h3 class="galoz-prod-card__title">CSL — מסך סרגל עיניים</h3>
+          <p class="galoz-prod-card__desc">מסך בטיחות לזיהוי עצמים ואנשים באזורי סכנה.</p>
+          <div class="galoz-prod-card__actions">
+            <a href="https://www.galoz.co.il/products/1196067" class="galoz-prod-card__btn galoz-prod-card__btn--primary">לצפייה</a>
+            <a href="https://www.galoz.co.il/contact-us" class="galoz-prod-card__btn galoz-prod-card__btn--secondary">צור קשר</a>
+          </div>
+        </div>
+      </article>
+
+      <article class="galoz-prod-card">
+        <div class="galoz-prod-card__img-wrap">
+          <img src="https://www.galoz.co.il/images/thumbnails/640/480/detailed/312/TRH514-1.jpg" alt="TRH514 מתמר טמפרטורה ולחות" class="galoz-prod-card__img" width="300" height="225" loading="lazy">
+          <span class="galoz-prod-card__brand">Ascon</span>
+        </div>
+        <div class="galoz-prod-card__body">
+          <h3 class="galoz-prod-card__title">TRH514 — מתמר טמפרטורה ולחות</h3>
+          <p class="galoz-prod-card__desc">מתמר טמפרטורה ולחות להתקנה על קיר.</p>
+          <div class="galoz-prod-card__actions">
+            <a href="https://www.galoz.co.il/products/1201154" class="galoz-prod-card__btn galoz-prod-card__btn--primary">לצפייה</a>
+            <a href="https://www.galoz.co.il/contact-us" class="galoz-prod-card__btn galoz-prod-card__btn--secondary">צור קשר</a>
+          </div>
+        </div>
+      </article>
+
+      <article class="galoz-prod-card">
+        <div class="galoz-prod-card__img-wrap">
+          <img src="https://www.galoz.co.il/images/thumbnails/640/480/detailed/314/PIRA-T-1.jpg" alt="גלאי תנועה PIRA T" class="galoz-prod-card__img" width="300" height="225" loading="lazy">
+          <span class="galoz-prod-card__brand">Theben</span>
+        </div>
+        <div class="galoz-prod-card__body">
+          <h3 class="galoz-prod-card__title">PIRA T — גלאי תנועה ונוכחות</h3>
+          <p class="galoz-prod-card__desc">גלאי תנועה פנימי/חיצוני מבית Theben.</p>
+          <div class="galoz-prod-card__actions">
+            <a href="https://www.galoz.co.il/products/1201160" class="galoz-prod-card__btn galoz-prod-card__btn--primary">לצפייה</a>
+            <a href="https://www.galoz.co.il/contact-us" class="galoz-prod-card__btn galoz-prod-card__btn--secondary">צור קשר</a>
+          </div>
+        </div>
+      </article>
+
+      <article class="galoz-prod-card">
+        <div class="galoz-prod-card__img-wrap">
+          <img src="https://www.galoz.co.il/images/thumbnails/640/480/detailed/320/RSL-200-1.jpg" alt="RSL-200 סורק לייזר בטיחות Leuze" class="galoz-prod-card__img" width="300" height="225" loading="lazy">
+          <span class="galoz-prod-card__brand">Leuze</span>
+        </div>
+        <div class="galoz-prod-card__body">
+          <h3 class="galoz-prod-card__title">RSL-200 — סורק לייזר בטיחות</h3>
+          <p class="galoz-prod-card__desc">סורק לייזר בטיחות 275° וטווח עד 3 מטר.</p>
+          <div class="galoz-prod-card__actions">
+            <a href="https://www.galoz.co.il/products/1201170" class="galoz-prod-card__btn galoz-prod-card__btn--primary">לצפייה</a>
+            <a href="https://www.galoz.co.il/contact-us" class="galoz-prod-card__btn galoz-prod-card__btn--secondary">צור קשר</a>
+          </div>
+        </div>
+      </article>
+
+    </div>
+  </div>
+
+  <!-- ═══════════════ CTA 3 ═══════════════ -->
+  <div class="galoz-cta">
+    <h2 class="galoz-cta__title">מוצרים נוספים? פנו אלינו!</h2>
+    <p class="galoz-cta__text">אם לא מצאתם את המוצר שחיפשתם — נשמח לעזור</p>
+    <div class="galoz-cta__buttons">
+      <a href="tel:0795805040" class="galoz-cta__btn galoz-cta__btn--primary">📞 התקשרו עכשיו</a>
+      <a href="https://wa.me/972522516009" class="galoz-cta__btn galoz-cta__btn--outline" target="_blank" rel="noopener">💬 WhatsApp</a>
+    </div>
+  </div>
+
+  <!-- Section 10 -->
+  <div class="galoz-section" id="galoz-s10">
+    <h2>איך לבחור ספק לציוד פיקוד ובקרה?</h2>
+    <img src="https://mapril.websmail.net/wp-content/uploads/2026/04/HowtoChooseaSupplierforCommandandControlEquipment-1.jpg" alt="איך לבחור ספק לציוד פיקוד ובקרה" class="galoz-section__image" width="1376" height="768" loading="lazy">
+
+    <div class="galoz-supplier-grid">
+      <div class="galoz-supplier-item">
+        <div class="galoz-supplier-item__icon">🎯</div>
+        <div><div class="galoz-supplier-item__title">הבנת יישום מעמיקה</div><p class="galoz-supplier-item__desc">המלצות מבוססות הנדסה, התאמה ליישום.</p></div>
+      </div>
+      <div class="galoz-supplier-item">
+        <div class="galoz-supplier-item__icon">🔧</div>
+        <div><div class="galoz-supplier-item__title">תמיכה לאורך מחזור החיים</div><p class="galoz-supplier-item__desc">מייעוץ, התקנה, תחזוקה ותמיכה שוטפת.</p></div>
+      </div>
+      <div class="galoz-supplier-item">
+        <div class="galoz-supplier-item__icon">📦</div>
+        <div><div class="galoz-supplier-item__title">זמינות מלאי שוטפת</div><p class="galoz-supplier-item__desc">מלאי מקומי למשלוח מיידי.</p></div>
+      </div>
+      <div class="galoz-supplier-item">
+        <div class="galoz-supplier-item__icon">🏆</div>
+        <div><div class="galoz-supplier-item__title">מותגים בינלאומיים</div><p class="galoz-supplier-item__desc">ייצוג רשמי: Carlo Gavazzi, Leuze, Ascon, Theben.</p></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Section 11: FAQ -->
+  <div class="galoz-section" id="galoz-s11">
+    <h2>שאלות ותשובות נפוצות</h2>
+
+    <div class="galoz-faq">
+      <div class="galoz-faq__item">
+        <button class="galoz-faq__question" onclick="galozToggleFAQ(this)">
+          <span>מה ההבדל בין PLC לבקר טמפרטורה?</span>
+          <span class="galoz-faq__icon">+</span>
+        </button>
+        <div class="galoz-faq__answer">
+          <p>PLC הוא מערכת בקרה גנרית שניתן לתכנת למגוון משימות. בקר טמפרטורה הוא ייעודי למדידה ובקרה של טמפרטורה בלבד, עם אלגוריתמי PID מובנים. לבקרה מורכבת — PLC. לבקרת טמפרטורה נקודתית — בקר ייעודי.</p>
+        </div>
+      </div>
+
+      <div class="galoz-faq__item">
+        <button class="galoz-faq__question" onclick="galozToggleFAQ(this)">
+          <span>איך בוחרים את דירוג ה-IP הנכון?</span>
+          <span class="galoz-faq__icon">+</span>
+        </button>
+        <div class="galoz-faq__answer">
+          <p>דירוג IP קובע את רמת ההגנה בפני אבק ומים. לסביבה יבשה — IP20 מספיק. לאזור עם אבק — IP54 ומעלה. לשטיפות בלחץ גבוה (מפעלי מזון) — IP69K.</p>
+        </div>
+      </div>
+
+      <div class="galoz-faq__item">
+        <button class="galoz-faq__question" onclick="galozToggleFAQ(this)">
+          <span>האם אפשר לשלב ציוד חדש עם מערכת קיימת?</span>
+          <span class="galoz-faq__icon">+</span>
+        </button>
+        <div class="galoz-faq__answer">
+          <p>כן, בתנאי שיש תאימות בפרוטוקולי התקשורת (Modbus, Profinet, Ethernet/IP וכו'). גלעוז מבצעת בדיקת תאימות לפני ההתקנה.</p>
+        </div>
+      </div>
+
+      <div class="galoz-faq__item">
+        <button class="galoz-faq__question" onclick="galozToggleFAQ(this)">
+          <span>כמה זמן אספקה לציוד פיקוד ובקרה?</span>
+          <span class="galoz-faq__icon">+</span>
+        </button>
+        <div class="galoz-faq__answer">
+          <p>פריטים במלאי נשלחים ביום עסקים. פריטים בהזמנה מיוחדת — 2-6 שבועות תלוי ביצרן.</p>
+        </div>
+      </div>
+
+      <div class="galoz-faq__item">
+        <button class="galoz-faq__question" onclick="galozToggleFAQ(this)">
+          <span>האם גלעוז מציעה ייעוץ הנדסי?</span>
+          <span class="galoz-faq__icon">+</span>
+        </button>
+        <div class="galoz-faq__answer">
+          <p>כן. צוות ההנדסה של גלעוז מציע ייעוץ טכני חינם. ניתן לפנות בטלפון 079-580-5040 או במייל sales@galoz.co.il.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════ AUTHOR SECTION ═══════════════ -->
+  <div class="galoz-author">
+    <img src="https://www.galoz.co.il/logo.png" alt="גלעוז אלקטרוניקה" class="galoz-author__logo" width="100" height="100">
+    <div class="galoz-author__content">
+      <div class="galoz-author__name">גלעוז אלקטרוניקה בע"מ</div>
+      <div class="galoz-author__role">מכשירי בקרה ומדידה לתעשייה | 30+ שנות ניסיון</div>
+      <p class="galoz-author__bio">גלעוז אלקטרוניקה היא חברה ישראלית המתמחה בייצוג והפצה של מותגי בקרה ומדידה בינלאומיים מובילים. עם ניסיון של למעלה מ-30 שנה בתעשייה הישראלית, החברה מספקת פתרונות מקצה לקצה.</p>
+
+      <!-- Social Media -->
+      <div class="galoz-author__social">
+        <a href="https://wa.me/972522516009" class="galoz-author__social--wa" title="WhatsApp" target="_blank" rel="noopener" style="color:#fff">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+        </a>
+        <a href="tel:0795805040" class="galoz-author__social--phone" title="התקשרו" style="color:#fff">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg>
+        </a>
+        <a href="mailto:sales@galoz.co.il" class="galoz-author__social--email" title="מייל" style="color:#fff">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+        </a>
+      </div>
+
+      <div class="galoz-author__contact">
+        <div class="galoz-author__contact-item">📞 <a href="tel:0795805040">079-580-5040</a></div>
+        <div class="galoz-author__contact-item">💬 <a href="https://wa.me/972522516009">052-251-6009</a></div>
+        <div class="galoz-author__contact-item">📧 <a href="mailto:sales@galoz.co.il">sales@galoz.co.il</a></div>
+        <div class="galoz-author__contact-item">📍 המרצ 7, ראש העין</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ═══════════════ BRANDS ═══════════════ -->
+<div class="galoz-brands">
+  <h2 class="galoz-brands__title">מותגים מיוצגים</h2>
+  <div class="galoz-brands__grid">
+    <div class="galoz-brand-logo">Carlo Gavazzi</div>
+    <div class="galoz-brand-logo">Leuze</div>
+    <div class="galoz-brand-logo">Ascon Tecnologic</div>
+    <div class="galoz-brand-logo">Theben</div>
+    <div class="galoz-brand-logo">Toky</div>
+    <div class="galoz-brand-logo">Red Lion</div>
+    <div class="galoz-brand-logo">Wiska</div>
+    <div class="galoz-brand-logo">Nethix</div>
+    <div class="galoz-brand-logo">Cimon</div>
+    <div class="galoz-brand-logo">FineTek</div>
+  </div>
+</div>
+
+<!-- ═══════════════ CTA 4 (FINAL) ═══════════════ -->
+<div class="galoz-cta">
+  <h2 class="galoz-cta__title">מוכנים לשדרג את מערכת הבקרה שלכם?</h2>
+  <p class="galoz-cta__text">צרו קשר עוד היום לקבלת ייעוץ חינם והצעת מחיר מותאמת</p>
+  <div class="galoz-cta__buttons">
+    <a href="tel:0795805040" class="galoz-cta__btn galoz-cta__btn--primary">📞 079-580-5040</a>
+    <a href="https://wa.me/972522516009" class="galoz-cta__btn galoz-cta__btn--outline" target="_blank" rel="noopener">💬 WhatsApp</a>
+    <a href="mailto:sales@galoz.co.il" class="galoz-cta__btn galoz-cta__btn--outline">✉ מייל</a>
+  </div>
+</div>
+
+<!-- ═══════════════ JAVASCRIPT ═══════════════ -->
+<script>
+function galozToggleFAQ(btn) {
+  var answer = btn.nextElementSibling;
+  var icon = btn.querySelector('.galoz-faq__icon');
+  var isOpen = answer.classList.contains('open');
+  document.querySelectorAll('.galoz-faq__answer.open').forEach(function(a) { a.classList.remove('open'); });
+  document.querySelectorAll('.galoz-faq__icon.open').forEach(function(i) { i.classList.remove('open'); });
+  if (!isOpen) { answer.classList.add('open'); icon.classList.add('open'); }
+}
+
+function galozToggleTOC() {
+  var list = document.getElementById('galozTocList');
+  var toggle = document.getElementById('galozTocToggle');
+  list.classList.toggle('collapsed');
+  toggle.classList.toggle('open');
+}
+
+var topBtn = document.getElementById('galozTopBtn');
+window.addEventListener('scroll', function() {
+  if (window.scrollY > 600) { topBtn.classList.add('visible'); }
+  else { topBtn.classList.remove('visible'); }
+});
+
+document.querySelectorAll('.galoz-toc__item a').forEach(function(link) {
+  link.addEventListener('click', function(e) {
+    e.preventDefault();
+    var target = document.querySelector(this.getAttribute('href'));
+    if (target) {
+      var offset = 80;
+      var top = target.getBoundingClientRect().top + window.pageYOffset - offset;
+      window.scrollTo({ top: top, behavior: 'smooth' });
+    }
+  });
+});
+</script>
