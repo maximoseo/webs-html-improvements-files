@@ -11500,11 +11500,7 @@ function openPreview(downloadUrl,filename,ctx){
     doc.open();doc.write(html);doc.close();
   }).catch(err=>{
     const doc=iframe.contentDocument||iframe.contentWindow.document;
-    doc.open();doc.write('<body style="font-family:Segoe UI,sans-serif;padding:24px;color:#ef4444">Failed to load preview. The file may be missing or the network request failed.<br><br><a href="'+downloadUrl+'" target="_blank" style="color:#7170ff">Open raw file directly</a></body>');
-  });
-}
-</script>
-
+    doc.open();doc.write('<body style="font-family:Segoe UI,sans-serif;padding:24px;color:#ef4444">Failed to load preview. The file may be missing or the network request failed.<br><br><a href="'+downloadUrl+'" target="_blank" style="color:#7170ff">Open raw file directly</a>
 <style id="playground-ui-nav-final-override-2026-04-29">
 /* PLAYGROUND_UI_NAV_FINAL_OVERRIDE_2026_04_29
    Final late-cascade guard for Playground preview and dashboard nav.
@@ -11517,14 +11513,14 @@ header.header,.header{z-index:1200 !important;top:10px !important;left:16px !imp
 .header .fixer-tab-nav.main-menu{height:42px !important;max-height:42px !important;overflow-x:auto !important;overflow-y:hidden !important;white-space:nowrap !important;}
 .header .fixer-tab-btn{height:32px !important;min-height:32px !important;padding:0 10px !important;font-size:11.5px !important;}
 .search-wrap,.status-stack{display:none !important;}
-html body{padding-top:var(--page-safe-top,96px);}
+body{padding-top:96px !important;}
 #main-content{padding-top:0 !important;}
 #playground-preview-modal.modal-overlay.open,#playground-upload-modal.modal-overlay.open,#playground-export-modal.modal-overlay.open{z-index:30000 !important;}
 #playground-preview-modal .modal-close{pointer-events:auto !important;z-index:10 !important;}
-@media(max-width:1240px){:root{--dashboard-header-offset:88px !important;--header-safe-offset:88px !important;--page-safe-top:88px !important;}header.header,.header{max-height:82px !important}.header-inner{grid-template-columns:auto minmax(0,1fr) !important}.fixer-tab-btn .tab-label{display:none !important}}
-@media(max-width:820px){:root{--dashboard-header-offset:76px !important;--header-safe-offset:76px !important;--page-safe-top:76px !important;}header.header,.header{top:8px !important;left:10px !important;right:10px !important;border-radius:18px !important;max-height:60px !important}.header-inner{display:flex !important;justify-content:space-between !important;min-height:52px !important;max-height:58px !important}.header .fixer-tab-nav.main-menu,.hdr-search-btn,.hdr-expand-all-btn,.hdr-overflow-wrap,.hdr-sync-btn,.hdr-refresh-cache-btn,.hdr-logout-btn{display:none !important}.hamburger-btn,.theme-toggle-btn{display:inline-flex !important}}
-</style' + '>
-<script>
+@media(max-width:1240px){body{padding-top:88px !important;}header.header,.header{max-height:82px !important}.header-inner{grid-template-columns:auto minmax(0,1fr) !important}.fixer-tab-btn .tab-label{display:none !important}}
+@media(max-width:820px){body{padding-top:76px !important;}header.header,.header{top:8px !important;left:10px !important;right:10px !important;border-radius:18px !important;max-height:60px !important}.header-inner{display:flex !important;justify-content:space-between !important;min-height:52px !important;max-height:58px !important}.header .fixer-tab-nav.main-menu,.hdr-search-btn,.hdr-expand-all-btn,.hdr-overflow-wrap,.hdr-sync-btn,.hdr-refresh-cache-btn,.hdr-logout-btn{display:none !important}.hamburger-btn,.theme-toggle-btn{display:inline-flex !important}}
+</style>
+<script id="playground-ui-nav-final-override-2026-04-29">
 (function(){
   function compactHeaderVars(){
     try{
@@ -11554,7 +11550,7 @@ html body{padding-top:var(--page-safe-top,96px);}
   window.addEventListener('load', compactHeaderVars, {once:false});
   setTimeout(compactHeaderVars,0); setTimeout(compactHeaderVars,500);
 })();
-</scr' + 'ipt>
+</script>
 </body>');doc.close();
 <!-- ═══════════════════════════════════════════════════════
      DASHBOARD_FEATURES_MODALS — 15-feature roadmap (additive, 2026-04-28)
@@ -11872,8 +11868,8 @@ async function dfSubmitABTest() {
   } catch(e) { dfShowMsg('df-ab-msg', 'Network error', 'error'); }
 }
 
-function openCreateBatchModal() {
-  if (DF_DOMAINS.length === 0) { dfLoadDomains().then(function(d) { DF_DOMAINS = d; dfFillDomainCheckboxes('df-batch-domains'); }); }
+);
+  }
   dfFillDomainCheckboxes('df-batch-domains');
   dfShowMsg('df-batch-msg', '', 'info');
   dfOpenModal('df-modal-batch');
@@ -11881,12 +11877,7 @@ function openCreateBatchModal() {
 
 function openGenerateReportModal() {
   if (DF_DOMAINS.length === 0) { dfLoadDomains().then(function(d) { DF_DOMAINS = d; dfFillDomainSelect('df-report-domain'); }); }
-  dfFillDomainSelect('df-report-domain');
-  dfShowMsg('df-report-msg', '', 'info');
-  dfOpenModal('df-modal-report');
-}
-
-function openBudgetModal() {
+  dfFillDomainSelect('df-repfunction openBudgetModal() {
   if (DF_DOMAINS.length === 0) { dfLoadDomains().then(function(d) { DF_DOMAINS = d; dfFillDomainSelect('df-budget-domain'); }); }
   dfFillDomainSelect('df-budget-domain');
   dfShowMsg('df-budget-msg', '', 'info');
@@ -11896,23 +11887,12 @@ function openBudgetModal() {
 
 function openScheduleModal() {
   if (DF_DOMAINS.length === 0) { dfLoadDomains().then(function(d) { DF_DOMAINS = d; dfFillDomainCheckboxes('df-schedule-domains'); }); }
-  dfFillDomainCheckboxes('df-schedule-domains');
-  dfShowMsg('df-schedule-msg', '', 'info');
-  dfOpenModal('df-modal-schedule');
-}
-
-function openCreateABTestModal() {
+  dfFillDomainCheckboxes('df-schedfunction openCreateABTestModal() {
   if (DF_DOMAINS.length === 0) { dfLoadDomains().then(function(d) { DF_DOMAINS = d; dfFillDomainSelect('df-ab-domain'); }); }
   dfFillDomainSelect('df-ab-domain');
   dfShowMsg('df-ab-msg', '', 'info');
   document.getElementById('df-ab-page').value = '';
-  document.getElementById('df-ab-version-a').value = '';
-  document.getElementById('df-ab-version-b').value = '';
-  document.getElementById('df-ab-notes').value = '';
-  dfOpenModal('df-modal-ab');
-}
-
-// Close modals on overlay click
+  document.getElementById('df-ab-version-a').val// Close modals on overlay click
 document.addEventListener('click', function(e) {
   if (e.target.classList.contains('df-modal-overlay')) {
     e.target.classList.remove('open');
@@ -11928,7 +11908,7 @@ document.addEventListener('keydown', function(e) {
 
 // Load domains on init
 (function() {
-  dfLoadDomains().then(function(domains) { DF_DOMAINS = domains; });
+  dfLoadDomains().then(func);
 })();
 </script>
     console.error('openPreview fetch failed:', err);
@@ -12173,17 +12153,9 @@ function detectAgent(versionName){
   if(v.includes('hermes glm')||v.includes('glm 5.1')) return 'GLM 5.1';
   if(v.includes('myclaw')||v.includes('my claw')) return 'MyClaw';
   if(v.includes('agent-zero')||v.includes('agent zero')) return 'Agent Zero';
-  if(v.includes('hermes gpt')) return 'Hermes GPT 5.5';
-  if(v.includes('hermes opus')) return 'Hermes Opus 4.7';
-  if(v.includes('hermes gemini')) return 'Hermes Gemini 3.1';
-  if(v.includes('hermes kimi')) return 'Hermes Kimi K2.6';
-  if(v.includes('hermes glm')) return 'Hermes GLM 5.1';
   if(v.includes('hermes')) return 'Hermes Agent';
   if(v.includes('claude')) return 'Claude Code';
   if(v.includes('codex')) return 'Codex';
-  if(v.includes('hermes gemini')) return 'Hermes Gemini 3.1';
-  if(v.includes('hermes gemini')) return 'Hermes Gemini 3.1';
-  if(v.includes('hermes gemini')) return 'Hermes Gemini 3.1';
   if(v.includes('gemini')) return 'Gemini';
   if(v.includes('copilot')) return 'GitHub Copilot';
   if(v.includes('manus')) return 'Manus';
@@ -12387,14 +12359,14 @@ header.header,.header{z-index:1200 !important;top:10px !important;left:16px !imp
 .header .fixer-tab-nav.main-menu{height:42px !important;max-height:42px !important;overflow-x:auto !important;overflow-y:hidden !important;white-space:nowrap !important;}
 .header .fixer-tab-btn{height:32px !important;min-height:32px !important;padding:0 10px !important;font-size:11.5px !important;}
 .search-wrap,.status-stack{display:none !important;}
-html body{padding-top:var(--page-safe-top,96px);}
+body{padding-top:96px !important;}
 #main-content{padding-top:0 !important;}
 #playground-preview-modal.modal-overlay.open,#playground-upload-modal.modal-overlay.open,#playground-export-modal.modal-overlay.open{z-index:30000 !important;}
 #playground-preview-modal .modal-close{pointer-events:auto !important;z-index:10 !important;}
-@media(max-width:1240px){:root{--dashboard-header-offset:88px !important;--header-safe-offset:88px !important;--page-safe-top:88px !important;}header.header,.header{max-height:82px !important}.header-inner{grid-template-columns:auto minmax(0,1fr) !important}.fixer-tab-btn .tab-label{display:none !important}}
-@media(max-width:820px){:root{--dashboard-header-offset:76px !important;--header-safe-offset:76px !important;--page-safe-top:76px !important;}header.header,.header{top:8px !important;left:10px !important;right:10px !important;border-radius:18px !important;max-height:60px !important}.header-inner{display:flex !important;justify-content:space-between !important;min-height:52px !important;max-height:58px !important}.header .fixer-tab-nav.main-menu,.hdr-search-btn,.hdr-expand-all-btn,.hdr-overflow-wrap,.hdr-sync-btn,.hdr-refresh-cache-btn,.hdr-logout-btn{display:none !important}.hamburger-btn,.theme-toggle-btn{display:inline-flex !important}}
-</style' + '>
-<script>
+@media(max-width:1240px){body{padding-top:88px !important;}header.header,.header{max-height:82px !important}.header-inner{grid-template-columns:auto minmax(0,1fr) !important}.fixer-tab-btn .tab-label{display:none !important}}
+@media(max-width:820px){body{padding-top:76px !important;}header.header,.header{top:8px !important;left:10px !important;right:10px !important;border-radius:18px !important;max-height:60px !important}.header-inner{display:flex !important;justify-content:space-between !important;min-height:52px !important;max-height:58px !important}.header .fixer-tab-nav.main-menu,.hdr-search-btn,.hdr-expand-all-btn,.hdr-overflow-wrap,.hdr-sync-btn,.hdr-refresh-cache-btn,.hdr-logout-btn{display:none !important}.hamburger-btn,.theme-toggle-btn{display:inline-flex !important}}
+</style>
+<script id="playground-ui-nav-final-override-2026-04-29">
 (function(){
   function compactHeaderVars(){
     try{
@@ -12746,9 +12718,7 @@ async function dfSubmitABTest() {
 // Close modals on overlay click
 document.addEventListener('click', function(e) {
   if (e.target.classList.contains('df-modal-overlay')) {
-    e.target.classList.remove('open');
-  }
-});
+    e.target.clas});
 
 // Close modals on Escape
 document.addEventListener('keydown', function(e) {
@@ -12761,10 +12731,25 @@ document.addEventListener('keydown', function(e) {
 (function() {
   dfLoadDomains().then(function(domains) { DF_DOMAINS = domains; });
 })();
-
 </script>
-
-<script>
+      promptStudioContext.originalPreviewHtml=fallback;
+      setPromptPreviewHtml(fallback, 'original');
+    });
+  }else{
+    const fallback='<body style="font-faheader.header,.header{z-index:1200 !important;top:10px !important;left:16px !important;right:16px !important;width:auto !important;border-radius:22px !important;max-height:86px !important;overflow:visible !important;}
+.header-inner{min-height:62px !important;max-height:84px !important;padding:10px 16px !important;display:grid !important;grid-template-columns:auto minmax(0,1fr) !important;align-items:center !important;gap:14px !important;}
+.header-actions{display:grid !important;grid-template-columns:minmax(360px,1fr) repeat(7,auto) !important;align-items:center !important;gap:8px !important;width:100% !important;min-width:0 !important;}
+.header .fixer-tab-nav.main-menu{height:42px !important;max-height:42px !important;overflow-x:auto !important;overflow-y:hidden !important;white-space:nowrap !important;}
+.header .fixer-tab-btn{height:32px !important;min-height:32px !important;padding:0 10px !important;font-size:11.5px !important;}
+.search-wrap,.status-stack{display:none !important;}
+body{padding-top:96px !important;}
+#main-content{padding-top:0 !important;}
+#playground-preview-modal.modal-overlay.open,#playground-upload-modal.modal-overlay.open,#playground-export-modal.modal-overlay.open{z-index:30000 !important;}
+#playground-preview-modal .modal-close{pointer-events:auto !important;z-index:10 !important;}
+@media(max-width:1240px){body{padding-top:88px !important;}header.header,.header{max-height:82px !important}.header-inner{grid-template-columns:auto minmax(0,1fr) !important}.fixer-tab-btn .tab-label{display:none !important}}
+@media(max-width:820px){body{padding-top:76px !important;}header.header,.header{top:8px !important;left:10px !important;right:10px !important;border-radius:18px !important;max-height:60px !important}.header-inner{display:flex !important;justify-content:space-between !important;min-height:52px !important;max-height:58px !important}.header .fixer-tab-nav.main-menu,.hdr-search-btn,.hdr-expand-all-btn,.hdr-overflow-wrap,.hdr-sync-btn,.hdr-refresh-cache-btn,.hdr-logout-btn{display:none !important}.hamburger-btn,.theme-toggle-btn{display:inline-flex !important}}
+</style>
+<script id="playground-ui-nav-final-override-2026-04-29">
 (function(){
   function compactHeaderVars(){
     try{
@@ -13119,11 +13104,6 @@ function openCreateBatchModal() {
       dfFillDomainCheckboxes('df-batch-domains');
     });
   }
-  dfFillDomainCheckboxes('df-batch-domains');
-  dfShowMsg('df-batch-msg', '', 'info');
-  dfOpenModal('df-modal-batch');
-}
-
 function openGenerateReportModal() {
   if (DF_DOMAINS.length === 0) { dfLoadDomains().then(function(d) { DF_DOMAINS = d; dfFillDomainSelect('df-report-domain'); }); }
   dfFillDomainSelect('df-report-domain');
@@ -13139,11 +13119,7 @@ function openBudgetModal() {
   if (DF_DOMAINS.length === 0) { dfLoadDomains().then(function(d) { DF_DOMAINS = d; dfFillDomainSelect('df-budget-domain'); }); }
   dfFillDomainSelect('df-budget-domain');
   dfShowMsg('df-budget-msg', '', 'info');
-  document.getElementById('df-budget-msg');
-  dfOpenModal('df-modal-budget');
-}
-
-function openScheduleModal() {
+  document.getElementById('df-budgfunction openScheduleModal() {
   if (DF_DOMAINS.length === 0) { dfLoadDomains().then(function(d) { DF_DOMAINS = d; dfFillDomainCheckboxes('df-schedule-domains'); }); }
   dfFillDomainCheckboxes('df-schedule-domains');
   dfShowMsg('df-schedule-msg', '', 'info');
@@ -13158,12 +13134,7 @@ function openCreateABTestModal() {
   dfFillDomainSelect('df-ab-domain');
   dfShowMsg('df-ab-msg', '', 'info');
   document.getElementById('df-ab-page').value = '';
-  document.getElementById('df-ab-version-a').value = '';
-  document.getElementById('df-ab-version-b').value = '';
-  dfOpenModal('df-modal-ab');
-}
-
-// Close modals on overlay click
+  document.getElementById('df-ab-version-a').value// Close modals on overlay click
 document.addEventListener('click', function(e) {
   if (e.target.classList.contains('df-modal-overlay')) {
     e.target.classList.remove('open');
@@ -13179,8 +13150,12 @@ document.addEventListener('keydown', function(e) {
 
 // Load domains on init
 (function() {
-  dfLoadDomains().then(function(domains) { DF_DOMAINS = domains; });
-})();
+  dfLoadDomains().then(function(domains) { DF_DOMAINS = domains; })();
+</script>
+    promptStudioContext.originalPreviewHtml=fallback;
+    setPromptPreviewHtml(fallback, 'original');
+  }
+
   // Build rich pre-filled draft with full context
   const draft=document.getElementById('prompt-draft');
   if(!draft.value.trim()){
@@ -13198,6 +13173,7 @@ document.addEventListener('keydown', function(e) {
 
     // ── Build all other versions list for this domain ──
     // This tells the agent exactly where to find v1, v2, previous agent outputs etc.
+  /main`;
       const GH_BASE=`https://github.com/${REPO}/blob/main`;
 
       // Current version summary
@@ -13267,9 +13243,11 @@ Approved deliverables should eventually target BOTH destinations below, but only
    Dashboard: https://html-redesign-dashboard.maximo-seo.ai/
    Suggested commit message after approval: "feat(${domain}): [describe what changed] - ${today}"
 `;
+  }
 
   document.getElementById('prompt-modal').classList.add('open');
   draft.focus();
+}
 function closePromptStudio(){
   document.getElementById('prompt-modal').classList.remove('open');
   document.getElementById('prompt-modal').classList.remove('ps-fullscreen');
@@ -13286,11 +13264,7 @@ function writePromptPreviewDocument(html){
   if(!previewFrame) return;
   const doc=previewFrame.contentDocument||previewFrame.contentWindow.document;
   doc.open();
-  doc.write(html||'<body style="font-family:Segoe UI,sans-serif;padding:24px;color:#666">Preview unavailable.</body>');
-  doc.close();
-}
-</script>
-
+  doc.write(html||'<body style="font-family:Segoe UI,sans-serif;padding:24px;color:#666">Preview unavailable.
 <style id="playground-ui-nav-final-override-2026-04-29">
 /* PLAYGROUND_UI_NAV_FINAL_OVERRIDE_2026_04_29
    Final late-cascade guard for Playground preview and dashboard nav.
@@ -13303,14 +13277,14 @@ header.header,.header{z-index:1200 !important;top:10px !important;left:16px !imp
 .header .fixer-tab-nav.main-menu{height:42px !important;max-height:42px !important;overflow-x:auto !important;overflow-y:hidden !important;white-space:nowrap !important;}
 .header .fixer-tab-btn{height:32px !important;min-height:32px !important;padding:0 10px !important;font-size:11.5px !important;}
 .search-wrap,.status-stack{display:none !important;}
-html body{padding-top:var(--page-safe-top,96px);}
+body{padding-top:96px !important;}
 #main-content{padding-top:0 !important;}
 #playground-preview-modal.modal-overlay.open,#playground-upload-modal.modal-overlay.open,#playground-export-modal.modal-overlay.open{z-index:30000 !important;}
 #playground-preview-modal .modal-close{pointer-events:auto !important;z-index:10 !important;}
-@media(max-width:1240px){:root{--dashboard-header-offset:88px !important;--header-safe-offset:88px !important;--page-safe-top:88px !important;}header.header,.header{max-height:82px !important}.header-inner{grid-template-columns:auto minmax(0,1fr) !important}.fixer-tab-btn .tab-label{display:none !important}}
-@media(max-width:820px){:root{--dashboard-header-offset:76px !important;--header-safe-offset:76px !important;--page-safe-top:76px !important;}header.header,.header{top:8px !important;left:10px !important;right:10px !important;border-radius:18px !important;max-height:60px !important}.header-inner{display:flex !important;justify-content:space-between !important;min-height:52px !important;max-height:58px !important}.header .fixer-tab-nav.main-menu,.hdr-search-btn,.hdr-expand-all-btn,.hdr-overflow-wrap,.hdr-sync-btn,.hdr-refresh-cache-btn,.hdr-logout-btn{display:none !important}.hamburger-btn,.theme-toggle-btn{display:inline-flex !important}}
-</style' + '>
-<script>
+@media(max-width:1240px){body{padding-top:88px !important;}header.header,.header{max-height:82px !important}.header-inner{grid-template-columns:auto minmax(0,1fr) !important}.fixer-tab-btn .tab-label{display:none !important}}
+@media(max-width:820px){body{padding-top:76px !important;}header.header,.header{top:8px !important;left:10px !important;right:10px !important;border-radius:18px !important;max-height:60px !important}.header-inner{display:flex !important;justify-content:space-between !important;min-height:52px !important;max-height:58px !important}.header .fixer-tab-nav.main-menu,.hdr-search-btn,.hdr-expand-all-btn,.hdr-overflow-wrap,.hdr-sync-btn,.hdr-refresh-cache-btn,.hdr-logout-btn{display:none !important}.hamburger-btn,.theme-toggle-btn{display:inline-flex !important}}
+</style>
+<script id="playground-ui-nav-final-override-2026-04-29">
 (function(){
   function compactHeaderVars(){
     try{
@@ -13340,7 +13314,7 @@ html body{padding-top:var(--page-safe-top,96px);}
   window.addEventListener('load', compactHeaderVars, {once:false});
   setTimeout(compactHeaderVars,0); setTimeout(compactHeaderVars,500);
 })();
-</scr' + 'ipt>
+</script>
 </body>');
 <!-- ═══════════════════════════════════════════════════════
      DASHBOARD_FEATURES_MODALS — 15-feature roadmap (additive, 2026-04-28)
@@ -13670,8 +13644,7 @@ function openCreateBatchModal() {
   dfOpenModal('df-modal-batch');
 }
 
-function openGenerateReportModal() {
-  if (DF_DOMAINS.length === 0) { dfLoadDomains().then(function(d) { DF_DOMAINS = d; dfFillDomainSelect('df-report-domain'); }); }
+); }
   dfFillDomainSelect('df-report-domain');
   dfShowMsg('df-report-msg', '', 'info');
   var today = new Date().toISOString().split('T')[0];
@@ -13690,7 +13663,7 @@ function openBudgetModal() {
 }
 
 function openScheduleModal() {
-  if (DF_DOMAINS.length === 0) { dfLoadDomains().then(function(d) { DF_DOMAINS = d; dfFillDomainCheckboxes('df-schedule-domains'); }); }
+  if (DF_DOMAINS.length === 0) { dfLoadDomains().then(function(d) { DF_DOMAINS = d; dfFillDomainCheckboxes('df-schedule-domains'); ); }
   dfFillDomainCheckboxes('df-schedule-domains');
   dfShowMsg('df-schedule-msg', '', 'info');
   document.getElementById('df-schedule-name').value = '';
@@ -13713,9 +13686,7 @@ function openCreateABTestModal() {
 // Close modals on overlay click
 document.addEventListener('click', function(e) {
   if (e.target.classList.contains('df-modal-overlay')) {
-    e.target.classList.remove('open');
-  }
-});
+    e.target.classList.r});
 
 // Close modals on Escape
 document.addEventListener('keydown', function(e) {
@@ -13728,7 +13699,30 @@ document.addEventListener('keydown', function(e) {
 (function() {
   dfLoadDomains().then(function(domains) { DF_DOMAINS = domains; });
 })();
-
+</script>
+  doc.close();
+  try{
+    const win=previewFrame.contentWindow;
+    if(win && !previewFrame.dataset.wheelBound){
+      previewFrame.dataset.wheelBound='1';
+      previ, {passive:false});
+      win.addEventListener('wheel', function(ev){
+        const panel=previewFrame.closest('.prompt-panel');
+        if(!panel) return;
+        panel.scrollTop += ev.deltaY;
+        ev.preventDefault();
+      }, {passive:false});
+    }
+    if(doc && doc.documentElement){
+      doc.documentElement.style.overflow='hidden';
+    }
+    if(doc && doc.body){
+      doc.body.style.overflow='hidden';
+      doc.body.style.overscrollBehavior='contain';
+      doc.body.style.margin='0';
+    }
+  }catch(err){}
+}
 function updatePromptPreviewBadge(label,isOriginal){
   const badge=document.getElementById('prompt-preview-badge');
   if(!badge) return;
@@ -13747,14 +13741,10 @@ function setPromptPreviewDevice(mode,btn){
     const labels={mobile:'Mobile · 375px',tablet:'Tablet · 768px',desktop:'Desktop · 1280px'};
     label.textContent=labels[normalized] || labels.desktop;
   }
-  document.querySelectorAll('#prompt-preview-device-tabs .device-tab').forEach(function(tab){tab.classList.remove('active');});
+  document.querySelectorAll('#prompt-preview-device-tabs .device-tab').forEach(funct);
 }
 function setPromptPreviewHtml(html, mode){
-  const safeHtml=(html||'').trim()||'<body style="font-family:Segoe UI,sans-serif;padding:24px;color:#666">Preview unavailable.</body>';
-  writePromptPreviewDocument(safeHtml);
-}
-</script>
-
+  const safeHtml=(html||'').trim()||'<body style="font-family:Segoe UI,sans-serif;padding:24px;color:#666">Preview unavailable.
 <style id="playground-ui-nav-final-override-2026-04-29">
 /* PLAYGROUND_UI_NAV_FINAL_OVERRIDE_2026_04_29
    Final late-cascade guard for Playground preview and dashboard nav.
@@ -13767,14 +13757,14 @@ header.header,.header{z-index:1200 !important;top:10px !important;left:16px !imp
 .header .fixer-tab-nav.main-menu{height:42px !important;max-height:42px !important;overflow-x:auto !important;overflow-y:hidden !important;white-space:nowrap !important;}
 .header .fixer-tab-btn{height:32px !important;min-height:32px !important;padding:0 10px !important;font-size:11.5px !important;}
 .search-wrap,.status-stack{display:none !important;}
-html body{padding-top:var(--page-safe-top,96px);}
+body{padding-top:96px !important;}
 #main-content{padding-top:0 !important;}
 #playground-preview-modal.modal-overlay.open,#playground-upload-modal.modal-overlay.open,#playground-export-modal.modal-overlay.open{z-index:30000 !important;}
 #playground-preview-modal .modal-close{pointer-events:auto !important;z-index:10 !important;}
-@media(max-width:1240px){:root{--dashboard-header-offset:88px !important;--header-safe-offset:88px !important;--page-safe-top:88px !important;}header.header,.header{max-height:82px !important}.header-inner{grid-template-columns:auto minmax(0,1fr) !important}.fixer-tab-btn .tab-label{display:none !important}}
-@media(max-width:820px){:root{--dashboard-header-offset:76px !important;--header-safe-offset:76px !important;--page-safe-top:76px !important;}header.header,.header{top:8px !important;left:10px !important;right:10px !important;border-radius:18px !important;max-height:60px !important}.header-inner{display:flex !important;justify-content:space-between !important;min-height:52px !important;max-height:58px !important}.header .fixer-tab-nav.main-menu,.hdr-search-btn,.hdr-expand-all-btn,.hdr-overflow-wrap,.hdr-sync-btn,.hdr-refresh-cache-btn,.hdr-logout-btn{display:none !important}.hamburger-btn,.theme-toggle-btn{display:inline-flex !important}}
-</style' + '>
-<script>
+@media(max-width:1240px){body{padding-top:88px !important;}header.header,.header{max-height:82px !important}.header-inner{grid-template-columns:auto minmax(0,1fr) !important}.fixer-tab-btn .tab-label{display:none !important}}
+@media(max-width:820px){body{padding-top:76px !important;}header.header,.header{top:8px !important;left:10px !important;right:10px !important;border-radius:18px !important;max-height:60px !important}.header-inner{display:flex !important;justify-content:space-between !important;min-height:52px !important;max-height:58px !important}.header .fixer-tab-nav.main-menu,.hdr-search-btn,.hdr-expand-all-btn,.hdr-overflow-wrap,.hdr-sync-btn,.hdr-refresh-cache-btn,.hdr-logout-btn{display:none !important}.hamburger-btn,.theme-toggle-btn{display:inline-flex !important}}
+</style>
+<script id="playground-ui-nav-final-override-2026-04-29">
 (function(){
   function compactHeaderVars(){
     try{
@@ -14135,8 +14125,7 @@ function openCreateBatchModal() {
 }
 
 function openGenerateReportModal() {
-  if (DF_DOMAINS.length === 0) { dfLoadDomains().then(function(d) { DF_DOMAINS = d; dfFillDomainSelect('df-report-domain'); }); }
-  dfFillDomainSelect('df-report-domain');
+  if (DF_DOMAINS.length === 0) { dfLoadDomains().then(function(d) { DF_DOMAINS = d; dfFillDomainSelect('df-report-domain'); }  dfFillDomainSelect('df-report-domain');
   dfShowMsg('df-report-msg', '', 'info');
   var today = new Date().toISOString().split('T')[0];
   var weekAgo = new Date(Date.now() - 7*86400000).toISOString().split('T')[0];
@@ -14155,14 +14144,6 @@ function openBudgetModal() {
 
 function openScheduleModal() {
   if (DF_DOMAINS.length === 0) { dfLoadDomains().then(function(d) { DF_DOMAINS = d; dfFillDomainCheckboxes('df-schedule-domains'); }); }
-  dfFillDomainCheckboxes('df-schedule-domains');
-  dfShowMsg('df-schedule-msg', '', 'info');
-  document.getElementById('df-schedule-name').value = '';
-  document.getElementById('df-schedule-cron').value = '';
-  document.getElementById('df-schedule-budget').value = '';
-  dfOpenModal('df-modal-schedule');
-}
-
 function openCreateABTestModal() {
   if (DF_DOMAINS.length === 0) { dfLoadDomains().then(function(d) { DF_DOMAINS = d; dfFillDomainSelect('df-ab-domain'); }); }
   dfFillDomainSelect('df-ab-domain');
@@ -14190,12 +14171,23 @@ document.addEventListener('keydown', function(e) {
 
 // Load domains on init
 (function() {
-  dfLoadDomains().then(function(domains) { DF_DOMAINS = domains; });
+  dfLoadDomains().then(function(domains) { DF_);
 })();
-function resetPromptPreviewToOriginal(){
-  setPromptPreviewHtml(promptStudioContext.originalPreviewHtml||'', 'original');
+</script>
+  promptStudioContext.currentPreviewHtml=safeHtml;
+  promptStudioContext.previewMode=mode||'original';
+  writePromptPreviewDocument(safeHtml);
+  const isOriginal=(promptStudioContext.previewMode!=='candidate');
+  updatePromptPreviewBadge(isOriginal?'Original template':'Tweaked candidate', isOriginal);
+  const note=document.getElementById('prompt-preview-note');
+  if(note){
+    note.textContent=isOriginal
+      ? 'You are viewing the current active HTML file.'
+      : 'You are viewing the generated HTML candidate from the prompt - review it before replacing the active file.';
+  }
 }
-function previewTweakedHtml(){
+function resetPromptPreviewToOriginal(){
+  setPromptPreviewHtml(promptStudioContext.originalPreviewHtml||'', 'original')function previewTweakedHtml(){
   const html=(document.getElementById('prompt-tweak-output').value||'').trim();
   if(!html){showToast('Generate an HTML candidate first','warn');return;}
   setPromptPreviewHtml(html,'candidate');
@@ -14217,14 +14209,13 @@ function togglePromptStudioExpand(){
 async function improvePrompt(btn){
   const isImproveWorkflow=!!(window._psSelectedTemplates && window._psSelectedTemplates.has('improve-workflow'));
   if(isImproveWorkflow){
-    output=document.getElementById('prompt-output');
+    const output=document.getElementById('prompt-output');
     const status=document.getElementById('prompt-status');
     if(window._improveAbort){
       try{ window._improveAbort.abort('user_cancel'); }catch(e){}
       window._improveAbort=null;
       status.textContent='Improve Workflow assembly cancelled.';
-      showToast('Improve Workflow cancelled','warn');
-    const modelEl=document.getElementById('prompt-model-select');
+      showToast('Improve Workflow cancelled','warn'); _    const modelEl=document.getElementById('prompt-model-select');
     const selectedModel=modelEl?modelEl.value:'google/gemini-2.5-flash';
     const payload=window.psCollectImproveWorkflowPayload ? window.psCollectImproveWorkflowPayload('focused') : {};
     payload.model=selectedModel;
@@ -14268,8 +14259,8 @@ async function improvePrompt(btn){
     return;
   }
   const draft=document.getElementById('prompt-draft').value.trim();
-  output=document.getElementById('prompt-output');
-  status=document.getElementById('prompt-status');
+  const output=document.getElementById('prompt-output');
+  const status=document.getElementById('prompt-status');
   if(!draft){status.textContent='Please write a draft prompt first.';return;}
   // Prompt Studio Contract: domain-first guard
   if(!String(promptStudioContext.domain||'').trim()){
@@ -15439,7 +15430,7 @@ async function loadDashboard(opts){
   let latestSetCount=0, latestSetFileCount=0, visibleAgentCount=0;
   const projectMap={};
 
-  const projectDomainRe=/^(?![.-])[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?(?:\.[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?)*$/i;
+  const projectDomainRe=/^(?![.-])[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?(?:\.[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?)+$/i;
   for(const item of tree.tree){
     if(item.type!=='blob')continue;
     const parts=item.path.split('/');
@@ -26580,11 +26571,9 @@ body:not(.tour-user-started) #tour-backdrop.open{
   if(document.readyState==='loading') document.addEventListener('DOMContentLoaded', boot, {once:true});
   else boot();
 })();
-</script>
 
 
 /* PLAYGROUND_TAB_PLAN24_2026_04_29 — vanilla JS implementation */
-<script>
 (function(){
   var PG = { templates: [], domains: [], view: 'grid', current: null, device: 'desktop', zoom: 1, landscape: false, lastExport: null };
   var DEVICES = {
@@ -27440,7 +27429,7 @@ async function loadTraces(domain) {
     var dur = t.duration_ms ? (t.duration_ms/1000).toFixed(1)+'s' : '—';
     var score = t.score ? t.score + '/100' : '—';
     var cost = t.cost_usd ? '$'+parseFloat(t.cost_usd).toFixed(4) : '—';
-    html += '<div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px;display:flex;align-items:center;gap:12px;flex-wrap:wrap;cursor:pointer" onclick="dfShowTraceDetail('+JSON.stringify(t).replace(/'/g,"&#39;")+')">'
+    html += '<div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px;display:flex;align-items:center;gap:12px;flex-wrap:wrap;cursor:pointer" onclick='dfShowTraceDetail('+JSON.stringify(t).replace(/'/g,"\\'")+')">'
       + '<span style="color:'+statusColor+';font-size:16px">'+statusIcon+'</span>'
       + '<div style="flex:1;min-width:200px">'
       + '<div style="font-size:13px;font-weight:600;color:var(--text)">'+t.agent_name+' <span style="color:var(--muted);font-weight:400">('+t.model_name+')</span></div>'
@@ -27804,14 +27793,14 @@ header.header,.header{z-index:1200 !important;top:10px !important;left:16px !imp
 .header .fixer-tab-nav.main-menu{height:42px !important;max-height:42px !important;overflow-x:auto !important;overflow-y:hidden !important;white-space:nowrap !important;}
 .header .fixer-tab-btn{height:32px !important;min-height:32px !important;padding:0 10px !important;font-size:11.5px !important;}
 .search-wrap,.status-stack{display:none !important;}
-html body{padding-top:var(--page-safe-top,96px);}
+body{padding-top:96px !important;}
 #main-content{padding-top:0 !important;}
 #playground-preview-modal.modal-overlay.open,#playground-upload-modal.modal-overlay.open,#playground-export-modal.modal-overlay.open{z-index:30000 !important;}
 #playground-preview-modal .modal-close{pointer-events:auto !important;z-index:10 !important;}
-@media(max-width:1240px){:root{--dashboard-header-offset:88px !important;--header-safe-offset:88px !important;--page-safe-top:88px !important;}header.header,.header{max-height:82px !important}.header-inner{grid-template-columns:auto minmax(0,1fr) !important}.fixer-tab-btn .tab-label{display:none !important}}
-@media(max-width:820px){:root{--dashboard-header-offset:76px !important;--header-safe-offset:76px !important;--page-safe-top:76px !important;}header.header,.header{top:8px !important;left:10px !important;right:10px !important;border-radius:18px !important;max-height:60px !important}.header-inner{display:flex !important;justify-content:space-between !important;min-height:52px !important;max-height:58px !important}.header .fixer-tab-nav.main-menu,.hdr-search-btn,.hdr-expand-all-btn,.hdr-overflow-wrap,.hdr-sync-btn,.hdr-refresh-cache-btn,.hdr-logout-btn{display:none !important}.hamburger-btn,.theme-toggle-btn{display:inline-flex !important}}
-</style' + '>
-<script>
+@media(max-width:1240px){body{padding-top:88px !important;}header.header,.header{max-height:82px !important}.header-inner{grid-template-columns:auto minmax(0,1fr) !important}.fixer-tab-btn .tab-label{display:none !important}}
+@media(max-width:820px){body{padding-top:76px !important;}header.header,.header{top:8px !important;left:10px !important;right:10px !important;border-radius:18px !important;max-height:60px !important}.header-inner{display:flex !important;justify-content:space-between !important;min-height:52px !important;max-height:58px !important}.header .fixer-tab-nav.main-menu,.hdr-search-btn,.hdr-expand-all-btn,.hdr-overflow-wrap,.hdr-sync-btn,.hdr-refresh-cache-btn,.hdr-logout-btn{display:none !important}.hamburger-btn,.theme-toggle-btn{display:inline-flex !important}}
+</style>
+<script id="playground-ui-nav-final-override-2026-04-29">
 (function(){
   function compactHeaderVars(){
     try{
@@ -28246,14 +28235,14 @@ function dfCompareAB(testId, versionA, versionB) {
       overlay.className = 'df-modal-overlay';
       overlay.innerHTML = '<div class="df-modal-box" style="max-width:95vw;width:95vw;height:90vh">'
         + '<div class="df-modal-header"><h3>🔀 A/B Comparison</h3>'
-        + '<button class="df-modal-close" onclick="document.getElementById(\'df-ab-compare-overlay\').classList.remove(\'open\')">×</button></div>'
+        + '<button class="df-modal-close" onclick="document.getElementById(\'df-ab-compare-overlay\').classList.remove(\'open\')">\\u00D7</button></div>'
         + '<div class="df-modal-body" style="padding:10px">'
         + '<div id="df-ab-compare-diff" style="margin-bottom:10px;padding:10px;background:var(--card);border:1px solid var(--border);border-radius:8px;font-size:12px"></div>'
         + '<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;height:calc(90vh - 180px)">'
         + '<div style="border:1px solid var(--border);border-radius:8px;overflow:hidden"><div style="padding:8px;background:var(--card);font-size:12px;font-weight:700">Version A (' + (va.model_name||'') + ') <span id="df-ab-score-a" style="float:right"></span></div><iframe id="df-ab-frame-a" style="width:100%;height:calc(100% - 32px);border:none;background:#fff"></iframe></div>'
         + '<div style="border:1px solid var(--border);border-radius:8px;overflow:hidden"><div style="padding:8px;background:var(--card);font-size:12px;font-weight:700">Version B (' + (vb.model_name||'') + ') <span id="df-ab-score-b" style="float:right"></span></div><iframe id="df-ab-frame-b" style="width:100%;height:calc(100% - 32px);border:none;background:#fff"></iframe></div>'
         + '</div></div>'
-        + '<div class="df-modal-footer"><button class="df-btn primary" onclick="dfDecideAB(\'' + testId + '\',\'' + versionA + '\')">✅ Pick A</button><button class="df-btn primary" onclick="dfDecideAB(\'' + testId + '\',\'' + versionB + '\')">✅ Pick B</button><button class="df-btn" onclick="document.getElementById(\'df-ab-compare-overlay\').classList.remove(\'open\')">Close</button></div>'
+        + '<div class="df-modal-footer"><button class="df-btn primary" onclick="dfDecideAB(\\'' + testId + '\\',\\'' + versionA + '\\')">\\u2705 Pick A</button><button class="df-btn primary" onclick="dfDecideAB(\\'' + testId + '\\',\\'' + versionB + '\\')">\\u2705 Pick B</button><button class="df-btn" onclick="document.getElementById(\'df-ab-compare-overlay\').classList.remove(\'open\')">Close</button></div>'
         + '</div>';
       document.body.appendChild(overlay);
     }
@@ -28396,7 +28385,7 @@ function dfCopyTraceField(id) {
     });
   }
 }
-</script>
+\n</script>
 <!-- PWA Service Worker Registration -->
 <script>
 if ('serviceWorker' in navigator) {
