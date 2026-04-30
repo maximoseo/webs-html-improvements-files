@@ -1,0 +1,32 @@
+{
+  "agent_name": "Opus",
+  "design_identity": "Elegant Minimalist",
+  "color_palette": [
+    "#123f63",
+    "#d97816",
+    "#e8f1f7",
+    "#ffffff",
+    "#1f2937"
+  ],
+  "layout_type": "airy editorial",
+  "wordpress_ready": true,
+  "inject_points_present": true,
+  "source_url": "https://mapril.websmail.net/industrial-control-and-automation-equipment/",
+  "target_site": "https://www.galoz.co.il/",
+  "date": "2026-04-30",
+  "root_class": "hermes-tpl-op47g",
+  "validation": {
+    "wp_html_wrapper": true,
+    "all_initial": true,
+    "scoped_style": true,
+    "inject_markers": true,
+    "no_script": true,
+    "no_event_handlers": true,
+    "no_h1": true,
+    "faq_before_bio": true,
+    "contact_verified_links": true,
+    "real_product_links": true,
+    "no_obvious_placeholders": true,
+    "no_forbidden_css_units": true
+  }
+}
