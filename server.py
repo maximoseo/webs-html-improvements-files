@@ -40,7 +40,7 @@ REPO = 'maximoseo/webs-html-improvements-files'
 RAW_BASE = f'https://raw.githubusercontent.com/{REPO}/main'
 DEFAULT_N8N_BASE = 'https://websiseo.app.n8n.cloud'
 _SERVER_START_TIME = time.time()
-_PROJECT_DOMAIN_RE = re.compile(r'^(?![.-])[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?(?:\.[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?)+$', re.I)
+_PROJECT_DOMAIN_RE = re.compile(r'^(?![.-])[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?(?:\.[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?)*$', re.I)
 
 
 def _looks_like_project_domain(name: str) -> bool:
