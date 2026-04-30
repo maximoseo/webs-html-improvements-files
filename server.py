@@ -456,9 +456,17 @@ _STAGE8_PUBLIC_PATHS = {
     '/api/playground/templates', '/api/playground/domains', '/api/preferences',
 }
 _STAGE8_PUBLIC_PREFIXES = ('/static/', '/assets/', '/css/', '/js/', '/img/', '/fonts/', '/api/playground/templates/', '/api/playground/exports/')
+_STAGE8_PUBLIC_UNSAFE_PATHS = {
+    '/api/auth/login', '/api/login', '/api/auth/request-reset', '/api/auth/reset', '/api/reset-password',
+    '/api/n8n/webhook',
+}
+_STAGE8_SAFE_METHODS = {'GET', 'HEAD', 'OPTIONS'}
 
-def _stage8_public_path(path):
-    return path in _STAGE8_PUBLIC_PATHS or any(path.startswith(p) for p in _STAGE8_PUBLIC_PREFIXES)
+def _stage8_public_path(path, method='GET'):
+    method = (method or 'GET').upper()
+    if method in _STAGE8_SAFE_METHODS:
+        return path in _STAGE8_PUBLIC_PATHS or any(path.startswith(p) for p in _STAGE8_PUBLIC_PREFIXES)
+    return path in _STAGE8_PUBLIC_UNSAFE_PATHS
 
 def _stage8_secret():
     secret = (
@@ -607,7 +615,8 @@ def _dashboard_auth_status():
 def _stage8_check_auth(handler, parsed):
     """Return True if request is allowed; otherwise write a 401/redirect and return False."""
     path = parsed.path
-    if _stage8_public_path(path):
+    method = getattr(handler, 'command', 'GET')
+    if _stage8_public_path(path, method=method):
         return True
     token = _stage8_get_token(handler)
     session = _stage8_verify_session(token) if token else None
@@ -3455,8 +3464,6 @@ _R3_CSRF_ENABLED = os.environ.get('DASH_CSRF', '1') not in ('0','false','False',
 _R3_CSRF_EXEMPT = (
     '/api/auth/login', '/api/auth/request-reset', '/api/auth/reset',
     '/api/n8n/webhook', '/login', '/api/csrf', '/metrics', '/api/login', '/api/reset-password',
-    '/api/fixer/analyze', '/api/kwr/ensemble', '/api/delete-agent', '/api/kwr/save-obsidian', '/api/kwr/update-rows', '/api/radar/run',
-    '/api/playground/templates', '/api/playground/templates/', '/api/playground/exports/', '/api/preferences'
 )
 
 def _r3_csrf_token():
