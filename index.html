@@ -13287,6 +13287,8 @@ function writePromptPreviewDocument(html){
   const doc=previewFrame.contentDocument||previewFrame.contentWindow.document;
   doc.open();
   doc.write(html||'<body style="font-family:Segoe UI,sans-serif;padding:24px;color:#666">Preview unavailable.</body>');
+  doc.close();
+}
 </script>
 
 <style id="playground-ui-nav-final-override-2026-04-29">
@@ -13749,6 +13751,7 @@ function setPromptPreviewDevice(mode,btn){
 }
 function setPromptPreviewHtml(html, mode){
   const safeHtml=(html||'').trim()||'<body style="font-family:Segoe UI,sans-serif;padding:24px;color:#666">Preview unavailable.</body>';
+  writePromptPreviewDocument(safeHtml);
 }
 </script>
 
