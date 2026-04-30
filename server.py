@@ -7010,7 +7010,7 @@ body{{font-family:Arial;padding:24px}}h1{{color:#333}}pre{{background:#f4f4f4;pa
         # DASHBOARD_FEATURES_API — 15-feature roadmap POST routes (additive, path-guarded)
         _df_new_paths = (
             '/api/notifications', '/api/notifications/mark-read', '/api/notifications/mark-all-read',
-            '/api/alert-rules', '/api/budget-limits',
+            '/api/alert-rules', '/api/budget-limits', '/api/budget/check',
             '/api/template-versions', '/api/template-versions/',
             '/api/template-gallery', '/api/template-gallery/', '/api/template-gallery/detail',
             '/api/ab-tests', '/api/ab-tests/',

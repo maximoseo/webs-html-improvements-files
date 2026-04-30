@@ -205,7 +205,7 @@ def handle_get(handler, parsed):
             return _json_resp(handler, 200, {'ok': True, 'limits': [], 'error': result['error']})
         return _json_resp(handler, 200, {'ok': True, 'limits': result or []})
 
-    # --- Budget Check (auto-check all budgets) ---
+    # --- Budget Check (read-only; notification creation is POST-only) ---
     if path == '/api/budget/check':
         if not _supa_available():
             return _json_resp(handler, 200, {'ok': True, 'checked': 0, 'violations': []})
@@ -221,8 +221,7 @@ def handle_get(handler, parsed):
                         'domain': limit.get('domain'),
                         'action': limit.get('action', 'alert'),
                     })
-                    sh.create_budget_notification(limit.get('domain'), limit, spent)
-            return _json_resp(handler, 200, {'ok': True, 'checked': 1, 'violations': violations})
+            return _json_resp(handler, 200, {'ok': True, 'checked': 1, 'violations': violations, 'notification_created': False})
         except Exception as e:
             return _json_resp(handler, 500, {'ok': False, 'error': str(e)})
 
@@ -664,6 +663,35 @@ def handle_post(handler, parsed, payload):
                 return _json_resp(handler, 201, {'ok': True, 'rule': result[0]})
             return _json_resp(handler, 500, {'ok': False, 'error': result})
         return _json_resp(handler, 201, {'ok': True, 'rule': rule})
+
+    # --- Budget Check with notifications (POST-only because it can write notifications) ---
+    if path == '/api/budget/check':
+        if not _supa_available():
+            return _json_resp(handler, 200, {'ok': True, 'checked': 0, 'violations': [], 'notification_created': False})
+        try:
+            violations = []
+            notification_count = 0
+            for period in ['daily', 'weekly', 'monthly']:
+                exceeded, limit, spent = sh.check_budget_exceeded(limit_type=period)
+                if exceeded and limit:
+                    violations.append({
+                        'period': period,
+                        'limit': limit.get('limit_usd', 0),
+                        'spent': spent,
+                        'domain': limit.get('domain'),
+                        'action': limit.get('action', 'alert'),
+                    })
+                    sh.create_budget_notification(limit.get('domain'), limit, spent)
+                    notification_count += 1
+            return _json_resp(handler, 200, {
+                'ok': True,
+                'checked': 1,
+                'violations': violations,
+                'notification_created': notification_count > 0,
+                'notification_count': notification_count,
+            })
+        except Exception as e:
+            return _json_resp(handler, 500, {'ok': False, 'error': str(e)})
 
     # --- Create Budget Limit ---
     if path == '/api/budget-limits':
