@@ -24835,6 +24835,7 @@ pre, code { overflow-x: auto !important; }
     arL.classList.toggle('hidden', !overflow || nav.scrollLeft <= 2);
     arR.classList.toggle('hidden', !overflow || nav.scrollLeft + nav.clientWidth >= nav.scrollWidth - 2);
   }
+  window.updateTabArrows = updateTabArrows;
   window.scrollTabNav = function(px) {
     var nav = document.getElementById('fixer-tab-nav');
     if (!nav) return;
@@ -24951,6 +24952,18 @@ pre, code { overflow-x: auto !important; }
     if (tabPg) { tabPg.classList.add('active'); tabPg.setAttribute('aria-selected', 'true'); }
     // Also call showPage for any side effects (fixer state, transitions, etc.)
     try { if (typeof setFixerBodyState === 'function') setFixerBodyState('playground'); } catch(e) {}
+    // Scroll tab nav to reveal Playground tab
+    setTimeout(function() {
+      var nav = document.getElementById('fixer-tab-nav');
+      var tab = document.getElementById('tab-playground');
+      if (nav && tab) {
+        var tabRight = tab.offsetLeft + tab.offsetWidth;
+        if (tabRight > nav.scrollLeft + nav.clientWidth) {
+          nav.scrollTo({ left: tabRight - nav.clientWidth + 20, behavior: 'smooth' });
+        }
+      }
+      if (typeof updateTabArrows === 'function') setTimeout(updateTabArrows, 350);
+    }, 50);
     // Init gallery
     pgInitPage();
   };
