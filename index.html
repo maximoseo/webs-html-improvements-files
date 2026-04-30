@@ -13270,7 +13270,6 @@ Approved deliverables should eventually target BOTH destinations below, but only
 
   document.getElementById('prompt-modal').classList.add('open');
   draft.focus();
-}
 function closePromptStudio(){
   document.getElementById('prompt-modal').classList.remove('open');
   document.getElementById('prompt-modal').classList.remove('ps-fullscreen');
@@ -14243,7 +14242,8 @@ async function improvePrompt(btn){
       try{ window._improveAbort.abort('user_cancel'); }catch(e){}
       window._improveAbort=null;
       status.textContent='Improve Workflow assembly cancelled.';
-      showToast('Improve Workflow cancelled','warn'); _    const modelEl=document.getElementById('prompt-model-select');
+      showToast('Improve Workflow cancelled','warn');
+    const modelEl=document.getElementById('prompt-model-select');
     const selectedModel=modelEl?modelEl.value:'google/gemini-2.5-flash';
     const payload=window.psCollectImproveWorkflowPayload ? window.psCollectImproveWorkflowPayload('focused') : {};
     payload.model=selectedModel;
