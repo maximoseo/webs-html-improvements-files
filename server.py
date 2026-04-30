@@ -4796,7 +4796,7 @@ body{{font-family:Arial;padding:24px}}h1{{color:#333}}pre{{background:#f4f4f4;pa
                     except Exception:
                         bucket['starred'] = False
                     if max_mtime:
-                        bucket['last_updated'] = datetime.datetime.utcfromtimestamp(max_mtime).isoformat() + 'Z'
+                        import datetime as _dt_fix; bucket['last_updated'] = _dt_fix.datetime.utcfromtimestamp(max_mtime).isoformat() + 'Z'
                 projects = list(grouped.values())
                 return json_response(self, 200, {'ok': True, 'projects': projects})
             except Exception as exc:
