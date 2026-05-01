@@ -13530,13 +13530,19 @@ async function loadDashboard(opts){
     if(versions.length>0){versions[0].isLatest=true;latestCount++}
     // DASHBOARD_PROJECTS_METADATA_PASS_THROUGH_2026_05_01
     // Preserve API enrichment fields used by project-card rendering.
+    // DASHBOARD_PROJECTS_PROGRESS_NUMERIC_STRING_FIX_2026_05_01
+    // Accept numeric string progress from metadata APIs without treating blank strings as 0.
+    const metaProgressRaw=meta.progress;
+    const metaProgressNumber=(typeof metaProgressRaw==='number'&&Number.isFinite(metaProgressRaw))
+      ?metaProgressRaw
+      :(typeof metaProgressRaw==='string'&&metaProgressRaw.trim()!==''&&Number.isFinite(Number(metaProgressRaw))?Number(metaProgressRaw):null);
     projects.push({
       name:domain,
       versions,
       status:meta.status||'active',
       last_updated:meta.last_updated||null,
       deployed:!!meta.deployed,
-      progress:typeof meta.progress==='number'?meta.progress:null,
+      progress:metaProgressNumber,
       starred:!!meta.starred
     });
   }

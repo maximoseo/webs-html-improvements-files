@@ -21,10 +21,19 @@ def test_projects_api_enrichment_no_longer_reads_projects_from_fetchjson_wrapper
 def test_projects_api_enrichment_metadata_passes_through_to_cards():
     html = INDEX.read_text(encoding="utf-8")
     assert "DASHBOARD_PROJECTS_METADATA_PASS_THROUGH_2026_05_01" in html
-    assert "progress:typeof meta.progress==='number'?meta.progress:null" in html
+    assert "progress:metaProgressNumber" in html
     assert "starred:!!meta.starred" in html
     assert "const isStarred = !!p.starred" in html
     assert "const progressVal = p.progress || 25" not in html
+
+
+def test_projects_progress_accepts_numeric_strings_without_blank_zero_coercion():
+    html = INDEX.read_text(encoding="utf-8")
+    assert "DASHBOARD_PROJECTS_PROGRESS_NUMERIC_STRING_FIX_2026_05_01" in html
+    assert "const metaProgressRaw=meta.progress;" in html
+    assert "typeof metaProgressRaw==='number'&&Number.isFinite(metaProgressRaw)" in html
+    assert "typeof metaProgressRaw==='string'&&metaProgressRaw.trim()!==''" in html
+    assert "Number.isFinite(Number(metaProgressRaw))?Number(metaProgressRaw):null" in html
 
 
 def test_projects_progress_preserves_zero_and_clamps_width():
