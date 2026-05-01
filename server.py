@@ -6640,6 +6640,10 @@ body{{font-family:Arial;padding:24px}}h1{{color:#333}}pre{{background:#f4f4f4;pa
             except Exception:
                 pass
 
+        # DASHBOARD_ROUTE_INVENTORY_GUARD_2026_05_01
+        # Critical mutating UI/API routes below are covered by tests/test_dashboard_route_inventory_guard.py
+        # so future edits do not leave routes shadowed outside the active do_POST handler.
+
         # Stage 8: login — both endpoints are aliases for the same cookie-setting handler.
         if parsed.path in ('/api/auth/login', '/api/login'):
             try:
