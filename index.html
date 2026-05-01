@@ -12287,6 +12287,23 @@ function togglePromptStudioExpand(){
     btn.title=isExpanded?'Collapse':'Expand to full screen';
   }
 }
+// PROMPT_STUDIO_POST_CSRF_JSON_HELPER_2026_05_01
+// Prompt Studio POST endpoints are state-changing same-origin requests. Add
+// CSRF explicitly here instead of relying only on the global fetch wrapper, and
+// normalize non-JSON failures so provider/API errors stay classifiable.
+async function promptStudioJsonPost(url,payload,signal){
+  const headers={'Content-Type':'application/json'};
+  if(window.dashboardEnsureCsrf&&typeof window.dashboardEnsureCsrf==='function'){
+    const csrf=await window.dashboardEnsureCsrf();
+    if(csrf) headers['X-CSRF-Token']=csrf;
+  }
+  const opts={method:'POST',headers,body:JSON.stringify(payload||{})};
+  if(signal) opts.signal=signal;
+  const res=await fetch(url,opts);
+  let data={};
+  try{data=await res.json();}catch(parseErr){data={ok:false,error:'Endpoint returned a non-JSON response'};}
+  return {res,data};
+}
 async function improvePrompt(btn){
   const isImproveWorkflow=!!(window._psSelectedTemplates && window._psSelectedTemplates.has('improve-workflow'));
   if(isImproveWorkflow){
@@ -12315,8 +12332,7 @@ async function improvePrompt(btn){
     btn.classList.add('is-running');
     window._improveAbort=new AbortController(); _syncPromptModalRunningState();
     try{
-      const res=await fetch('/api/studio/improve',{method:'POST',signal:window._improveAbort.signal,headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
-      const data=await res.json().catch(()=>({}));
+      const {res,data}=await promptStudioJsonPost('/api/studio/improve',payload,window._improveAbort.signal);
       if(!res.ok||!data.ok) throw new Error(data.error||'Improve Workflow assembly failed');
       output.value=data.assembledPrompt||'';
       promptStudioContext.lastImprovedPrompt=output.value;
@@ -12378,7 +12394,7 @@ async function improvePrompt(btn){
     return;
   }
   try{
-    const res=await fetch('/api/prompt/improve',{method:'POST',signal:window._improveAbort.signal,headers:{'Content-Type':'application/json'},body:JSON.stringify({
+    const {res,data}=await promptStudioJsonPost('/api/prompt/improve',{
       // Prompt Studio Contract: request metadata
       contractVersion:promptStudioContext.contractVersion,
       siteProfile:promptStudioContext.siteProfile,
@@ -12397,8 +12413,7 @@ async function improvePrompt(btn){
       draftPrompt:draft,
       checklist:ruleLabels,
       model:selectedModel,
-    })});
-    const data=await res.json();
+    },window._improveAbort.signal);
     if(!res.ok||!data.ok) throw new Error(data.error||'Prompt improvement failed');
     output.value=data.content||'';
     promptStudioContext.lastImprovedPrompt=output.value;
@@ -12464,7 +12479,7 @@ async function brainstormPrompt(btn){
   const ruleLabels=selected.map(s=>s.label);
   status.textContent=`Brainstorming with ${BSTORM_MODELS.length} selected model${BSTORM_MODELS.length===1?'':'s'}${selected.length?' + '+selected.length+' rule'+(selected.length===1?'':'s'):''}...`;
   try{
-    const res=await fetch('/api/prompt/brainstorm',{method:'POST',signal:window._brainstormAbort.signal,headers:{'Content-Type':'application/json'},body:JSON.stringify({
+    const {res,data}=await promptStudioJsonPost('/api/prompt/brainstorm',{
       domain:promptStudioContext.domain,
       agentName:promptStudioContext.agentName,
       versionName:promptStudioContext.versionName,
@@ -12476,8 +12491,7 @@ async function brainstormPrompt(btn){
       draftPrompt:draft,
       checklist:ruleLabels,
       brainstormModels:BSTORM_MODELS.map(m=>m.id),
-    })});
-    const data=await res.json();
+    },window._brainstormAbort.signal);
     if(!res.ok||!data.ok){
       const msg=(data&&data.error&&typeof data.error==='object')?JSON.stringify(data.error).slice(0,400):(data.error||'Brainstorm failed');
       throw new Error(msg);
@@ -12575,8 +12589,7 @@ async function commitPromptToGitHub(btn){
   btn.title='Click to cancel the GitHub sync';
   statusEl.textContent='Committing to GitHub...';
   try{
-    const res=await fetch('/api/prompt/commit',{method:'POST',signal:window._ghSyncAbort.signal,headers:{'Content-Type':'application/json'},body:JSON.stringify({path,content,message,branch:'main'})});
-    const data=await res.json();
+    const {res,data}=await promptStudioJsonPost('/api/prompt/commit',{path,content,message,branch:'main'},window._ghSyncAbort.signal);
     if(!res.ok||!data.ok){
       const msg=(data&&data.error&&typeof data.error==='object')?JSON.stringify(data.error).slice(0,400):(data.error||('HTTP '+res.status));
       throw new Error(msg);
@@ -12667,9 +12680,7 @@ async function tweakTemplate(btn){
   tweakStatus.textContent='Launching HTML pipeline...';
   window._tweakAbort=new AbortController(); _syncPromptModalRunningState();
   try{
-    const res=await fetch('/api/prompt/tweak',{method:'POST',signal:window._tweakAbort.signal,headers:{'Content-Type':'application/json'},body:JSON.stringify({domain:promptStudioContext.domain,agentName:promptStudioContext.agentName,versionName:promptStudioContext.versionName,htmlDownloadUrl:htmlFile.download,htmlFileName:htmlFile.name,htmlFilePath:htmlFile.path,fileManifest:promptStudioContext.fileManifest,improvedPrompt:improved,model:selectedModel||'google/gemini-2.5-flash',latestOnly:true})});
-    let data={};
-    try{data=await res.json();}catch(parseErr){data={ok:false,error:'Pipeline returned a non-JSON response'};}
+    const {res,data}=await promptStudioJsonPost('/api/prompt/tweak',{domain:promptStudioContext.domain,agentName:promptStudioContext.agentName,versionName:promptStudioContext.versionName,htmlDownloadUrl:htmlFile.download,htmlFileName:htmlFile.name,htmlFilePath:htmlFile.path,fileManifest:promptStudioContext.fileManifest,improvedPrompt:improved,model:selectedModel||'google/gemini-2.5-flash',latestOnly:true},window._tweakAbort.signal);
     if(!res.ok||!data.ok){
       const errorDetail=data&&data.details?(' - '+data.details):'';
       const errorText=(data&&data.error&&typeof data.error==='object')?JSON.stringify(data.error).slice(0,400):(data.error||('HTTP '+res.status));
@@ -12734,8 +12745,7 @@ async function applyTweakedHtmlToGitHub(btn){
   btn.title='Click to cancel the HTML apply';
   statusEl.textContent='Replacing the active HTML file in GitHub...';
   try{
-    const res=await fetch('/api/prompt/commit',{method:'POST',signal:window._htmlApplyAbort.signal,headers:{'Content-Type':'application/json'},body:JSON.stringify({path,content,message,branch:'main'})});
-    const data=await res.json();
+    const {res,data}=await promptStudioJsonPost('/api/prompt/commit',{path,content,message,branch:'main'},window._htmlApplyAbort.signal);
     if(!res.ok||!data.ok){const msg=(data&&data.error&&typeof data.error==='object')?JSON.stringify(data.error).slice(0,400):(data.error||('HTTP '+res.status));throw new Error(msg);}
     statusEl.innerHTML=`Applied to latest HTML file - <a href="${esc(data.commitUrl||'#')}" target="_blank" style="color:#d7dbff">${esc((data.commitSha||'').slice(0,7))}</a>. Refresh after Render redeploys.`;
     showToast('Latest HTML file replaced','success');
@@ -12774,8 +12784,7 @@ async function extractPaletteFromUrl(btn){
   status.textContent='Fetching '+url+' and parsing CSS colors...';
   swatchesEl.style.display='none';snippetEl.style.display='none';actionsEl.style.display='none';
   try{
-    const res=await fetch('/api/prompt/palette',{method:'POST',signal:window._paletteAbort.signal,headers:{'Content-Type':'application/json'},body:JSON.stringify({url,maxColors:10})});
-    const data=await res.json();
+    const {res,data}=await promptStudioJsonPost('/api/prompt/palette',{url,maxColors:10},window._paletteAbort.signal);
     if(!res.ok||!data.ok) throw new Error(data.error||'Palette extraction failed');
     _lastPalette=data;
     renderPalette(data);
