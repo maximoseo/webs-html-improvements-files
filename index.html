@@ -13528,7 +13528,17 @@ async function loadDashboard(opts){
     // Mark only the first (newest) version as latest
     versions.forEach(v=>v.isLatest=false);
     if(versions.length>0){versions[0].isLatest=true;latestCount++}
-    projects.push({name:domain,versions,status:meta.status||'active',last_updated:meta.last_updated||null,deployed:!!meta.deployed});
+    // DASHBOARD_PROJECTS_METADATA_PASS_THROUGH_2026_05_01
+    // Preserve API enrichment fields used by project-card rendering.
+    projects.push({
+      name:domain,
+      versions,
+      status:meta.status||'active',
+      last_updated:meta.last_updated||null,
+      deployed:!!meta.deployed,
+      progress:typeof meta.progress==='number'?meta.progress:null,
+      starred:!!meta.starred
+    });
   }
 
   allProjects=projects;

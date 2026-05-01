@@ -16,3 +16,12 @@ def test_projects_api_enrichment_no_longer_reads_projects_from_fetchjson_wrapper
     html = INDEX.read_text(encoding="utf-8")
     broken = "if (apiRes && apiRes.ok && apiRes.projects)"
     assert broken not in html
+
+
+def test_projects_api_enrichment_metadata_passes_through_to_cards():
+    html = INDEX.read_text(encoding="utf-8")
+    assert "DASHBOARD_PROJECTS_METADATA_PASS_THROUGH_2026_05_01" in html
+    assert "progress:typeof meta.progress==='number'?meta.progress:null" in html
+    assert "starred:!!meta.starred" in html
+    assert "const isStarred = !!p.starred" in html
+    assert "const progressVal = p.progress || 25" in html
