@@ -6933,8 +6933,16 @@ body{{font-family:Arial;padding:24px}}h1{{color:#333}}pre{{background:#f4f4f4;pa
             add_target('index.html', INDEX)
             return json_response(self, 200, {
                 'ok': True,
+                'marker': 'DASHBOARD_REFRESH_CACHE_CONTRACT_FIX_2026_05_01',
                 'acknowledged': ['backend-cache-check', 'file-targets-reported', 'no-store-response'],
-                'client_should_clear': ['frontend', 'fetch-memo', 'localStorage:dashboard_cache', 'sessionStorage:dashboard_cache'],
+                'client_should_clear': [
+                    'frontend',
+                    'fetch-memo',
+                    'localStorage:dashboard_cache',
+                    'sessionStorage:dashboard_cache',
+                    'localStorage:dashboard_projects_cache',
+                    'sessionStorage:dashboard_projects_cache',
+                ],
                 'server_cache_control': 'no-store',
                 'message': 'Refresh requested. Server caches are header-only/no-store; no project files were modified.',
                 'targets': targets,
