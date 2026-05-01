@@ -13536,14 +13536,17 @@ async function loadDashboard(opts){
     const metaProgressNumber=(typeof metaProgressRaw==='number'&&Number.isFinite(metaProgressRaw))
       ?metaProgressRaw
       :(typeof metaProgressRaw==='string'&&metaProgressRaw.trim()!==''&&Number.isFinite(Number(metaProgressRaw))?Number(metaProgressRaw):null);
+    // DASHBOARD_PROJECTS_BOOLEAN_METADATA_NORMALIZATION_FIX_2026_05_01
+    // Boolean-like strings such as "false" must not render as truthy deployed/starred flags.
+    const normalizeMetaFlag=value=>value===true||value===1||(typeof value==='string'&&['true','1','yes','y'].includes(value.trim().toLowerCase()));
     projects.push({
       name:domain,
       versions,
       status:meta.status||'active',
       last_updated:meta.last_updated||null,
-      deployed:!!meta.deployed,
+      deployed:normalizeMetaFlag(meta.deployed),
       progress:metaProgressNumber,
-      starred:!!meta.starred
+      starred:normalizeMetaFlag(meta.starred)
     });
   }
 

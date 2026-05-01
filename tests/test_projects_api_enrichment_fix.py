@@ -22,9 +22,22 @@ def test_projects_api_enrichment_metadata_passes_through_to_cards():
     html = INDEX.read_text(encoding="utf-8")
     assert "DASHBOARD_PROJECTS_METADATA_PASS_THROUGH_2026_05_01" in html
     assert "progress:metaProgressNumber" in html
-    assert "starred:!!meta.starred" in html
+    assert "starred:normalizeMetaFlag(meta.starred)" in html
+    assert "deployed:normalizeMetaFlag(meta.deployed)" in html
     assert "const isStarred = !!p.starred" in html
     assert "const progressVal = p.progress || 25" not in html
+    assert "deployed:!!meta.deployed" not in html
+    assert "starred:!!meta.starred" not in html
+
+
+def test_projects_boolean_metadata_normalizes_string_flags():
+    html = INDEX.read_text(encoding="utf-8")
+    assert "DASHBOARD_PROJECTS_BOOLEAN_METADATA_NORMALIZATION_FIX_2026_05_01" in html
+    assert "const normalizeMetaFlag=value=>" in html
+    assert "value===true||value===1" in html
+    assert "['true','1','yes','y'].includes(value.trim().toLowerCase())" in html
+    assert "normalizeMetaFlag(meta.deployed)" in html
+    assert "normalizeMetaFlag(meta.starred)" in html
 
 
 def test_projects_progress_accepts_numeric_strings_without_blank_zero_coercion():
