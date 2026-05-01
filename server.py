@@ -6960,6 +6960,12 @@ body{{font-family:Arial;padding:24px}}h1{{color:#333}}pre{{background:#f4f4f4;pa
                     domain = (route_payload.get('domain') or '').strip()
                     if not domain:
                         return json_response(self, 400, {'ok': False, 'error': 'domain required'})
+                    # PROJECT_DELETE_TYPED_CONFIRMATION_2026_05_01
+                    # Deletes must include a server-side typed-confirmation echo so accidental/mobile taps
+                    # or stale clients cannot delete with a bare domain payload.
+                    confirm_domain = (route_payload.get('confirm_domain') or '').strip()
+                    if confirm_domain != domain:
+                        return json_response(self, 400, {'ok': False, 'error': 'confirm_domain must match domain'})
                     data['tree'] = [item for item in tree if not (isinstance(item, dict) and item.get('path', '').startswith(domain + '/'))]
                     _atomic_write_json_file(data_path, data)
                     return json_response(self, 200, {'ok': True, 'deleted': domain})

@@ -13766,7 +13766,7 @@ async function loadDashboard(opts){
         <button class="action-btn" onclick="event.stopPropagation();toggleActionMenu('${_projectNameArg}',this,event)" title="Actions" aria-label="Project actions for ${_projectNameAttr}" aria-haspopup="menu" aria-expanded="false" aria-controls="menu-${_projectNameAttr}">⋯</button>
         <div class="action-menu" id="menu-${_projectNameAttr}" role="menu" aria-hidden="true">
           <div class="action-menu-item" role="menuitem" tabindex="-1" onclick="event.stopPropagation();duplicateProject('${_projectNameArg}')">Duplicate</div>
-          <div class="action-menu-item danger" role="menuitem" tabindex="-1" onclick="event.stopPropagation();deleteProject('${_projectNameArg}')">Delete</div>
+          <div class="action-menu-item danger" role="menuitem" tabindex="-1" onclick="event.stopPropagation();deleteProject('${_projectNameArg}')">Delete…</div>
         </div>
       </div>
       <div class="card-header" role="button" tabindex="0" aria-expanded="false" aria-controls="${cardId}" aria-label="Open project ${_projectNameAttr}" onclick="event.stopPropagation();toggleProjectCard(this.parentElement,{scroll:true})" onkeydown="handleProjectHeaderKeydown(event,this.parentElement)">
@@ -21945,9 +21945,16 @@ async function duplicateProject(domain){
   var d=result.data; if(d.ok){showToast('Duplicated: '+d.new_domain); reloadProjects();}else{showToast(d.error||'Failed','error');}}
   catch(e){showToast('Network error','error');}
 }
+function confirmProjectDelete(domain){
+  // PROJECT_DELETE_TYPED_CONFIRMATION_2026_05_01
+  domain=String(domain||'').trim();
+  if(!domain) return false;
+  var typed=window.prompt('Delete project "'+domain+'"?\n\nThis cannot be undone. Type the exact project/domain name to confirm:', '');
+  return typed===domain;
+}
 async function deleteProject(domain){
-  if(!confirm('Delete '+domain+'? This cannot be undone.')) return;
-  try{var result=await projectQuickActionPostJson('/api/projects/delete',{domain:domain});
+  if(!confirmProjectDelete(domain)){showToast('Delete cancelled');return;}
+  try{var result=await projectQuickActionPostJson('/api/projects/delete',{domain:domain,confirm_domain:domain});
   var d=result.data; if(d.ok){showToast('Deleted: '+domain); reloadProjects();}else{showToast(d.error||'Failed','error');}}
   catch(e){showToast('Network error','error');}
 }
