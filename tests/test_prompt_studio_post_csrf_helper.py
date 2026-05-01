@@ -2,10 +2,15 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 INDEX = ROOT / "index.html"
+SERVER = ROOT / "server.py"
 
 
 def _html() -> str:
     return INDEX.read_text(encoding="utf-8")
+
+
+def _server() -> str:
+    return SERVER.read_text(encoding="utf-8")
 
 
 def test_prompt_studio_posts_use_explicit_csrf_json_helper():
@@ -42,3 +47,26 @@ def test_prompt_studio_direct_prompt_fetches_are_removed_but_payload_shapes_rema
     assert "improvedPrompt:improved" in html
     assert "model:selectedModel||'google/gemini-2.5-flash'" in html
     assert "latestOnly:true" in html
+
+
+def test_prompt_studio_routes_are_wired_in_active_stage8_do_post():
+    server = _server()
+    active = server[server.rfind("    def do_POST(self):"):]
+
+    assert "PROMPT_STUDIO_ACTIVE_POST_ROUTES_2026_05_01" in active
+    assert "an older do_POST block above is shadowed by this later method" in active
+    for path in (
+        "/api/studio/improve",
+        "/api/prompt/improve",
+        "/api/prompt/palette",
+        "/api/prompt/brainstorm",
+        "/api/prompt/tweak",
+        "/api/prompt/commit",
+    ):
+        assert path in active
+
+    assert "result = assemble_improve_workflow_prompt(payload)" in active
+    assert "result = improve_prompt_with_model(payload)" in active
+    assert "result = brainstorm_prompt_multi_model(payload)" in active
+    assert "result = tweak_html_with_prompt(payload)" in active
+    assert "result = commit_prompt_to_github(payload)" in active

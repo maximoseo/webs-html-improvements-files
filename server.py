@@ -6729,6 +6729,100 @@ body{{font-family:Arial;padding:24px}}h1{{color:#333}}pre{{background:#f4f4f4;pa
                 return json_response(self, 400, {'ok': False, 'error': 'token_and_new_password_required'})
             return json_response(self, 400, {'ok': False, 'error': 'invalid_or_expired_token'})
 
+        # PROMPT_STUDIO_ACTIVE_POST_ROUTES_2026_05_01
+        # Keep Prompt Studio POST actions wired in the active Stage 8 do_POST;
+        # an older do_POST block above is shadowed by this later method.
+        if parsed.path in ('/api/studio/improve', '/api/prompt/improve', '/api/prompt/palette', '/api/prompt/brainstorm', '/api/prompt/tweak', '/api/prompt/commit'):
+            try:
+                payload = read_request_json(self) or {}
+            except Exception:
+                payload = {}
+
+            if parsed.path == '/api/studio/improve':
+                try:
+                    result = assemble_improve_workflow_prompt(payload)
+                    return json_response(self, 200, result)
+                except ValueError as exc:
+                    return json_response(self, 400, {'ok': False, 'error': str(exc)})
+                except Exception as exc:
+                    return json_response(self, 500, {'ok': False, 'error': str(exc)[:500]})
+
+            if parsed.path == '/api/prompt/improve':
+                try:
+                    result = improve_prompt_with_model(payload)
+                    return json_response(self, 200, {'ok': True, **result})
+                except RuntimeError as exc:
+                    return json_response(self, 503, {'ok': False, 'error': str(exc)})
+                except ValueError as exc:
+                    return json_response(self, 400, {'ok': False, 'error': str(exc)})
+                except urllib.error.HTTPError as exc:
+                    body = exc.read().decode('utf-8', 'replace')[:1000]
+                    return json_response(self, 502, {'ok': False, 'error': f'Model API error {exc.code}', 'details': body})
+                except Exception as exc:
+                    return json_response(self, 500, {'ok': False, 'error': str(exc)})
+
+            if parsed.path == '/api/prompt/palette':
+                try:
+                    url = (payload.get('url') or '').strip()
+                    if not url:
+                        return json_response(self, 400, {'ok': False, 'error': 'url is required'})
+                    max_colors = int(payload.get('maxColors') or 10)
+                    max_colors = max(3, min(max_colors, 20))
+                    result = extract_palette_from_url(url, max_colors=max_colors)
+                    return json_response(self, 200, result)
+                except ValueError as exc:
+                    return json_response(self, 400, {'ok': False, 'error': str(exc)})
+                except urllib.error.HTTPError as exc:
+                    return json_response(self, 502, {'ok': False, 'error': f'Fetch failed {exc.code}', 'details': str(exc)[:300]})
+                except urllib.error.URLError as exc:
+                    return json_response(self, 502, {'ok': False, 'error': f'Fetch failed: {exc.reason}'})
+                except Exception as exc:
+                    return json_response(self, 500, {'ok': False, 'error': str(exc)[:400]})
+
+            if parsed.path == '/api/prompt/brainstorm':
+                try:
+                    result = brainstorm_prompt_multi_model(payload)
+                    return json_response(self, 200, result)
+                except ValueError as exc:
+                    return json_response(self, 400, {'ok': False, 'error': str(exc)})
+                except RuntimeError as exc:
+                    msg = str(exc)
+                    try:
+                        parsed_err = json.loads(msg)
+                        return json_response(self, 502, {'ok': False, 'error': parsed_err})
+                    except Exception:
+                        return json_response(self, 503, {'ok': False, 'error': msg})
+                except Exception as exc:
+                    return json_response(self, 500, {'ok': False, 'error': str(exc)})
+
+            if parsed.path == '/api/prompt/tweak':
+                try:
+                    result = tweak_html_with_prompt(payload)
+                    return json_response(self, 200, result)
+                except RuntimeError as exc:
+                    return json_response(self, 503, {'ok': False, 'error': str(exc)})
+                except ValueError as exc:
+                    return json_response(self, 400, {'ok': False, 'error': str(exc)})
+                except urllib.error.HTTPError as exc:
+                    body = exc.read().decode('utf-8', 'replace')[:1000]
+                    return json_response(self, 502, {'ok': False, 'error': f'Model API error {exc.code}', 'details': body})
+                except Exception as exc:
+                    return json_response(self, 500, {'ok': False, 'error': str(exc)})
+
+            if parsed.path == '/api/prompt/commit':
+                try:
+                    result = commit_prompt_to_github(payload)
+                    return json_response(self, 200, result)
+                except ValueError as exc:
+                    return json_response(self, 400, {'ok': False, 'error': str(exc)})
+                except RuntimeError as exc:
+                    return json_response(self, 503, {'ok': False, 'error': str(exc)})
+                except urllib.error.HTTPError as exc:
+                    body = exc.read().decode('utf-8', 'replace')[:1000]
+                    return json_response(self, 502, {'ok': False, 'error': f'GitHub API error {exc.code}', 'details': body})
+                except Exception as exc:
+                    return json_response(self, 500, {'ok': False, 'error': str(exc)})
+
         # N8N_FIXER_VALIDATE_POST_2026_04_29 - read-only workflow validation; no n8n writes.
         if parsed.path == '/api/n8n-fixer/validate':
             try:
