@@ -30,7 +30,7 @@ Runs at startup without credential helpers. Set auth tokens in environment:
 | Bitbucket | `BITBUCKET_TOKEN` | App password or repo token |
 
 ```bash
-export GITHUB_TOKEN=ghp_xxxxxxxxxxxxxxxxxxxx
+export GITHUB_TOKEN=<GITHUB_TOKEN>
 ```
 
 CI/CD: configure as secret env variable. GitHub Actions auto-provides `GITHUB_TOKEN`.
