@@ -24,4 +24,13 @@ def test_projects_api_enrichment_metadata_passes_through_to_cards():
     assert "progress:typeof meta.progress==='number'?meta.progress:null" in html
     assert "starred:!!meta.starred" in html
     assert "const isStarred = !!p.starred" in html
-    assert "const progressVal = p.progress || 25" in html
+    assert "const progressVal = p.progress || 25" not in html
+
+
+def test_projects_progress_preserves_zero_and_clamps_width():
+    html = INDEX.read_text(encoding="utf-8")
+    assert "DASHBOARD_PROJECTS_PROGRESS_ZERO_CLAMP_FIX_2026_05_01" in html
+    assert "const rawProgress = (typeof p.progress === 'number' && Number.isFinite(p.progress)) ? p.progress : 25;" in html
+    assert "const progressVal = Math.max(0, Math.min(100, rawProgress));" in html
+    assert "Progress: ${progressVal}%" in html
+    assert "width:${progressVal}%" in html

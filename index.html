@@ -13658,7 +13658,10 @@ async function loadDashboard(opts){
     card.className='project-card';
     card.dataset.name=(p.name||'').toLowerCase();
     const isStarred = !!p.starred;
-    const progressVal = p.progress || 25;
+    // DASHBOARD_PROJECTS_PROGRESS_ZERO_CLAMP_FIX_2026_05_01
+    // Preserve an intentional 0% API progress value and clamp unsafe widths.
+    const rawProgress = (typeof p.progress === 'number' && Number.isFinite(p.progress)) ? p.progress : 25;
+    const progressVal = Math.max(0, Math.min(100, rawProgress));
     const progressClass = progressVal >= 100 ? 'green' : (progressVal >= 50 ? 'yellow' : 'blue');
     card.innerHTML=`
       <button class="star-btn ${isStarred?'starred':''}" onclick="event.stopPropagation();toggleStar('${p.name}',this)" title="${isStarred?'Unstar':'Star'} this project">${isStarred?'★':'☆'}</button>
