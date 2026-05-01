@@ -11565,6 +11565,17 @@ function previewOnclickArg(value){
     .replace(/</g,'&lt;')
     .replace(/>/g,'&gt;');
 }
+// PROJECT_FILE_ACTION_INLINE_ATTR_ESCAPE_2026_05_01
+// Prompt Studio, View Code, Download, and Compare controls interpolate project
+// file URLs into legacy inline HTML. Escape HTML attribute delimiters for href
+// values and use previewOnclickArg for JS string arguments inside onclick.
+function projectActionAttr(value){
+  return String(value||'')
+    .replace(/&/g,'&amp;')
+    .replace(/"/g,'&quot;')
+    .replace(/</g,'&lt;')
+    .replace(/>/g,'&gt;');
+}
 function openPreview(downloadUrl,filename,ctx){
   document.getElementById('preview-filename').textContent=filename;
   document.getElementById('preview-modal').classList.add('open');
@@ -11928,10 +11939,15 @@ function openCompare(projectName){
     panel.id=panelId;
     const filesEnc=encodeURIComponent(JSON.stringify(allFiles));
     const _wfEnc=encodeURIComponent(JSON.stringify(workflowFiles));
+    const _comparePromptDownloadArg=previewOnclickArg(item.file.download);
+    const _focusedDownloadArg=previewOnclickArg(item.file.download);
+    const _focusedAgentArg=previewOnclickArg(item.agent);
+    const _focusedVersionArg=previewOnclickArg(item.version);
+    const _compareFileUrlAttr=projectActionAttr(item.file.url);
     const deployBtnHtml=hasWorkflow
       ? `<button class="action-btn" style="border-color:rgba(249,115,22,0.30);color:#fb923c;background:rgba(249,115,22,0.08)" onclick="deployVersionToN8n('${encodeURIComponent(projectName)}','${encodeURIComponent(item.agent)}','${encodeURIComponent(item.version)}','${_wfEnc}',this,'${panelId}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" style="width:12px;height:12px"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>Deploy to n8n</button>`
       : '';
-    panel.innerHTML=`<div class="compare-panel-header"><div class="compare-panel-title">${item.agent}<small>${item.version}</small></div><div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;justify-content:flex-end">${deployBtnHtml}<button class="action-btn" onclick="openPromptStudio('${encodeURIComponent(projectName)}','${encodeURIComponent(item.agent)}','${encodeURIComponent(item.version)}','${item.file.download.replace(/'/g,'%27')}','${filesEnc}')">Prompt Studio</button><button class="action-btn project-comments-btn" onclick="openCommentsFromProject('${encodeURIComponent(projectName)}','${encodeURIComponent(item.agent)}','${encodeURIComponent(item.version)}','${encodeURIComponent(item.file.path||'')}')"><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2.1' style='width:12px;height:12px'><path d='M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z'/></svg>Comments</button><button class="action-btn" onclick="openFocusedCompare('${item.file.download.replace(/'/g,'%27')}','${item.agent.replace(/'/g,'%27')}','${item.version.replace(/'/g,'%27')}')">Expand</button><a href="${item.file.url}" target="_blank" class="action-btn">View Code</a></div></div><div class="compare-frame-wrap"><div class="compare-device-frame desktop"><iframe sandbox="allow-same-origin"></iframe></div></div><div class="compare-deploy-bar" id="${panelId}-bar" style="display:none"><span class="compare-deploy-badge idle" id="${panelId}-badge"><span class="compare-deploy-dot"></span><span id="${panelId}-badge-text">Ready</span></span><span class="compare-deploy-status" id="${panelId}-status"></span></div>`;
+    panel.innerHTML=`<div class="compare-panel-header"><div class="compare-panel-title">${item.agent}<small>${item.version}</small></div><div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;justify-content:flex-end">${deployBtnHtml}<button class="action-btn" onclick="openPromptStudio('${encodeURIComponent(projectName)}','${encodeURIComponent(item.agent)}','${encodeURIComponent(item.version)}','${_comparePromptDownloadArg}','${filesEnc}')">Prompt Studio</button><button class="action-btn project-comments-btn" onclick="openCommentsFromProject('${encodeURIComponent(projectName)}','${encodeURIComponent(item.agent)}','${encodeURIComponent(item.version)}','${encodeURIComponent(item.file.path||'')}')"><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2.1' style='width:12px;height:12px'><path d='M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z'/></svg>Comments</button><button class="action-btn" onclick="openFocusedCompare('${_focusedDownloadArg}','${_focusedAgentArg}','${_focusedVersionArg}')">Expand</button><a href="${_compareFileUrlAttr}" target="_blank" class="action-btn">View Code</a></div></div><div class="compare-frame-wrap"><div class="compare-device-frame desktop"><iframe sandbox="allow-same-origin"></iframe></div></div><div class="compare-deploy-bar" id="${panelId}-bar" style="display:none"><span class="compare-deploy-badge idle" id="${panelId}-badge"><span class="compare-deploy-dot"></span><span id="${panelId}-badge-text">Ready</span></span><span class="compare-deploy-status" id="${panelId}-status"></span></div>`;
     grid.appendChild(panel);
     fetch(item.file.download).then(r=>r.text()).then(html=>{
       const iframe=panel.querySelector('iframe');
@@ -13636,14 +13652,17 @@ async function loadDashboard(opts){
         const _fCtxEnc=encodeURIComponent(JSON.stringify({domain:p.name,agentName:detectAgent(v.name),versionName:v.name,fileManifest:v.files}));
         const _previewDownloadArg=previewOnclickArg(f.download);
         const _previewNameArg=previewOnclickArg(p.name+' - '+f.name);
+        const _promptDownloadArg=previewOnclickArg(f.download);
+        const _fileUrlAttr=projectActionAttr(f.url);
+        const _fileDownloadAttr=projectActionAttr(f.download);
         const previewBtn=cls==='html'?`<button class="action-btn" onclick="event.preventDefault();event.stopPropagation();openPreview('${_previewDownloadArg}','${_previewNameArg}','${_fCtxEnc}')" style="border-color:var(--purple);color:var(--purple)">&#9654; Preview</button>`:'';
         const deployBtn=cls==='json'&&/workflow/i.test(f.name)?`<button class="action-btn success" onclick="event.preventDefault();event.stopPropagation();deployToN8n('${encodeURIComponent(p.name)}','${encodeURIComponent(v.name)}','${encodeURIComponent(f.path)}','${encodeURIComponent(f.name)}',this)">Deploy to n8n</button>`:'';
         const _isHtml=cls==='html';
-        const promptStudioBtn=_isHtml?`<button class="file-action-btn prompt action-btn" onclick="event.preventDefault();event.stopPropagation();openPromptStudioForFile('${encodeURIComponent(p.name)}','${encodeURIComponent(agentName)}','${encodeURIComponent(f.name)}','${f.download}')" title="Open Prompt Studio for this file" style="font-size:10px">Prompt</button>`:'';
+        const promptStudioBtn=_isHtml?`<button class="file-action-btn prompt action-btn" onclick="event.preventDefault();event.stopPropagation();openPromptStudioForFile('${encodeURIComponent(p.name)}','${encodeURIComponent(agentName)}','${encodeURIComponent(f.name)}','${_promptDownloadArg}')" title="Open Prompt Studio for this file" style="font-size:10px">Prompt</button>`:'';
         filesHTML+=`<div class="file-row">
           <div class="file-badge ${cls}">${label}</div>
           <div class="file-details"><div class="file-name">${f.name}</div><div class="file-size">${formatSize(f.size)}</div></div>
-          <div class="file-actions">${previewBtn}${deployBtn}${promptStudioBtn}<a href="${f.url}" target="_blank" class="action-btn">View Code</a><a href="${f.download}" class="action-btn primary">Download</a></div>
+          <div class="file-actions">${previewBtn}${deployBtn}${promptStudioBtn}<a href="${_fileUrlAttr}" target="_blank" class="action-btn">View Code</a><a href="${_fileDownloadAttr}" class="action-btn primary">Download</a></div>
         </div>`;
       });
       const _agEnc=encodeURIComponent(agentName);
@@ -13662,10 +13681,12 @@ async function loadDashboard(opts){
     const _previewCtxEnc=encodeURIComponent(JSON.stringify({domain:p.name,agentName:_psAgent,versionName:_psVersion,fileManifest:_psFiles}));
     const _latestHtmlUrlArg=previewOnclickArg(latestHtmlUrl);
     const _latestHtmlNameArg=previewOnclickArg(latestHtmlName);
+    const _compareProjectArg=previewOnclickArg(p.name);
+    const _latestHtmlUrlPromptArg=previewOnclickArg(latestHtmlUrl);
     const previewCTA=latestHtmlUrl?`<button class="preview-cta primary-accent" onclick="event.stopPropagation();openPreview('${_latestHtmlUrlArg}','${_latestHtmlNameArg}','${_previewCtxEnc}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="5 3 19 12 5 21 5 3"/></svg>Preview</button>`:'';
     const compareCandidates=compareCandidatesForProject(p.name);
-    const compareCTA=compareCandidates.length>1?`<button class="action-btn" onclick="event.stopPropagation();openCompare('${p.name}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M10 3H3v7h7V3zM21 14h-7v7h7v-7zM21 3h-7v7h7V3zM10 14H3v7h7v-7z"/></svg>Compare agents</button>`:'';
-    const promptStudioCTA=latestHtmlUrl?`<button class="action-btn" onclick="event.stopPropagation();openPromptStudio('${encodeURIComponent(p.name)}','${encodeURIComponent(_psAgent)}','${encodeURIComponent(_psVersion)}','${latestHtmlUrl.replace(/'/g,"%27")}','${_psFilesEnc}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" style="width:13px;height:13px"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 1 1 3 3L7 19l-4 1 1-4Z"/></svg>Prompt Studio</button>`:'';
+    const compareCTA=compareCandidates.length>1?`<button class="action-btn" onclick="event.stopPropagation();openCompare('${_compareProjectArg}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M10 3H3v7h7V3zM21 14h-7v7h7v-7zM21 3h-7v7h7V3zM10 14H3v7h7v-7z"/></svg>Compare agents</button>`:'';
+    const promptStudioCTA=latestHtmlUrl?`<button class="action-btn" onclick="event.stopPropagation();openPromptStudio('${encodeURIComponent(p.name)}','${encodeURIComponent(_psAgent)}','${encodeURIComponent(_psVersion)}','${_latestHtmlUrlPromptArg}','${_psFilesEnc}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" style="width:13px;height:13px"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 1 1 3 3L7 19l-4 1 1-4Z"/></svg>Prompt Studio</button>`:'';
     const commentsCTA=`<button class="action-btn project-comments-btn" onclick="event.stopPropagation();openCommentsFromProject('${encodeURIComponent(p.name)}','${encodeURIComponent(_psAgent)}','${encodeURIComponent(_psVersion)}','')">Review Notes</button>`;
     const latestLabel=latestDate||'Pending sync';
     const expandedTools=(compareCTA||promptStudioCTA||commentsCTA)?`<div class="card-tools-row">${compareCTA}${promptStudioCTA}${commentsCTA}</div>`:'';
