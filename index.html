@@ -11576,6 +11576,7 @@ function projectActionAttr(value){
     .replace(/</g,'&lt;')
     .replace(/>/g,'&gt;');
 }
+function projectCardText(value){return projectActionAttr(value).replace(/'/g,'&#39;');}
 function openPreview(downloadUrl,filename,ctx){
   document.getElementById('preview-filename').textContent=filename;
   document.getElementById('preview-modal').classList.add('open');
@@ -13722,26 +13723,36 @@ async function loadDashboard(opts){
     const rawProgress = (typeof p.progress === 'number' && Number.isFinite(p.progress)) ? p.progress : 25;
     const progressVal = Math.max(0, Math.min(100, rawProgress));
     const progressClass = progressVal >= 100 ? 'green' : (progressVal >= 50 ? 'yellow' : 'blue');
+    // PROJECT_CARD_SAFE_RENDER_ESCAPE_2026_05_01
+    // Project names can come from repository/API data; escape text, attributes,
+    // and legacy inline JS arguments before interpolating into the card template.
+    const _projectNameText=projectCardText(p.name);
+    const _projectNameAttr=projectActionAttr(p.name);
+    const _projectNameArg=previewOnclickArg(p.name);
+    const _lastUpdatedAttr=projectActionAttr(p.last_updated || '');
+    const _projectDomainAttr=projectActionAttr(encodeURIComponent(p.domain||p.name));
+    const _projectInitialsText=projectCardText(initials);
+    const _projectIconId=(p.name||'project').replace(/[^a-z0-9]/gi,'-');
     card.innerHTML=`
       <!-- PROJECT_QUICK_ACTIONS_EXPLICIT_CSRF_POST_2026_05_01: project quick actions pass events explicitly and set CSRF headers explicitly. -->
-      <button class="star-btn ${isStarred?'starred':''}" onclick="event.stopPropagation();toggleStar('${p.name}',this,event)" title="${isStarred?'Unstar':'Star'} this project" aria-label="${isStarred?'Unstar':'Star'} project ${p.name}" aria-pressed="${isStarred?'true':'false'}">${isStarred?'★':'☆'}</button>
+      <button class="star-btn ${isStarred?'starred':''}" onclick="event.stopPropagation();toggleStar('${_projectNameArg}',this,event)" title="${isStarred?'Unstar':'Star'} this project" aria-label="${isStarred?'Unstar':'Star'} project ${_projectNameAttr}" aria-pressed="${isStarred?'true':'false'}">${isStarred?'★':'☆'}</button>
       <div class="card-actions">
         <!-- PROJECT_CARD_ACTION_MENU_A11Y_FIX_2026_05_01: pass event explicitly and keep menu aria state truthful. -->
-        <button class="action-btn" onclick="event.stopPropagation();toggleActionMenu('${p.name}',this,event)" title="Actions" aria-label="Project actions for ${p.name}" aria-haspopup="menu" aria-expanded="false" aria-controls="menu-${p.name}">⋯</button>
-        <div class="action-menu" id="menu-${p.name}" role="menu" aria-hidden="true">
-          <div class="action-menu-item" role="menuitem" tabindex="-1" onclick="event.stopPropagation();duplicateProject('${p.name}')">Duplicate</div>
-          <div class="action-menu-item danger" role="menuitem" tabindex="-1" onclick="event.stopPropagation();deleteProject('${p.name}')">Delete</div>
+        <button class="action-btn" onclick="event.stopPropagation();toggleActionMenu('${_projectNameArg}',this,event)" title="Actions" aria-label="Project actions for ${_projectNameAttr}" aria-haspopup="menu" aria-expanded="false" aria-controls="menu-${_projectNameAttr}">⋯</button>
+        <div class="action-menu" id="menu-${_projectNameAttr}" role="menu" aria-hidden="true">
+          <div class="action-menu-item" role="menuitem" tabindex="-1" onclick="event.stopPropagation();duplicateProject('${_projectNameArg}')">Duplicate</div>
+          <div class="action-menu-item danger" role="menuitem" tabindex="-1" onclick="event.stopPropagation();deleteProject('${_projectNameArg}')">Delete</div>
         </div>
       </div>
-      <div class="card-header" role="button" tabindex="0" aria-expanded="false" aria-controls="${cardId}" aria-label="Open project ${p.name}" onclick="event.stopPropagation();toggleProjectCard(this.parentElement,{scroll:true})" onkeydown="handleProjectHeaderKeydown(event,this.parentElement)">
-        <div class="card-icon" id="icon-${p.name.replace(/[^a-z0-9]/gi,'-')}" style="background:linear-gradient(135deg,${color},${color}88)"><img class="favicon" src="https://www.google.com/s2/favicons?domain=${encodeURIComponent(p.domain||p.name)}&sz=64" alt="" onload="this.classList.add('loaded');this.parentElement.classList.add('has-logo')"><span class="icon-initials">${initials}</span></div>
+      <div class="card-header" role="button" tabindex="0" aria-expanded="false" aria-controls="${cardId}" aria-label="Open project ${_projectNameAttr}" onclick="event.stopPropagation();toggleProjectCard(this.parentElement,{scroll:true})" onkeydown="handleProjectHeaderKeydown(event,this.parentElement)">
+        <div class="card-icon" id="icon-${_projectIconId}" style="background:linear-gradient(135deg,${color},${color}88)"><img class="favicon" src="https://www.google.com/s2/favicons?domain=${_projectDomainAttr}&sz=64" alt="" onload="this.classList.add('loaded');this.parentElement.classList.add('has-logo')"><span class="icon-initials">${_projectInitialsText}</span></div>
         <div class="card-info">
-          <h3>${p.name}</h3>
+          <h3>${_projectNameText}</h3>
           <div class="card-meta">
             <span class="meta-tag" style="background:${sMeta.bg};color:${sMeta.color};font-weight:700">${sMeta.label}</span>
             <span class="meta-tag">${lang}</span>
             <span class="meta-tag">${currentSetCount} current sets</span>
-            <span class="meta-tag" title="${p.last_updated || ''}">Updated: ${relTime}</span>
+            <span class="meta-tag" title="${_lastUpdatedAttr}">Updated: ${relTime}</span>
           </div>
           <div class="progress-wrap" title="Progress: ${progressVal}%"><div class="progress-bar ${progressClass}" style="width:${progressVal}%"></div></div>
         </div>

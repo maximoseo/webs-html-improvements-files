@@ -54,6 +54,6 @@ def test_project_quick_action_frontend_uses_explicit_csrf_helper():
     for route in ("/api/projects/duplicate", "/api/projects/delete", "/api/projects/star"):
         assert f"projectQuickActionPostJson('{route}'" in INDEX
         assert f"fetch('{route}'" not in INDEX
-    assert "toggleStar('${p.name}',this,event)" in INDEX
+    assert "toggleStar('${_projectNameArg}',this,event)" in INDEX
     assert "function toggleStar(domain, btn, ev)" in INDEX
     assert "aria-pressed" in INDEX

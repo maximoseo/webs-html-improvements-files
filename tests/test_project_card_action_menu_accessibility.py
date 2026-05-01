@@ -6,11 +6,11 @@ HTML = (ROOT / 'index.html').read_text(encoding='utf-8')
 
 def test_project_action_menu_buttons_pass_event_and_expose_aria_state():
     assert 'PROJECT_CARD_ACTION_MENU_A11Y_FIX_2026_05_01' in HTML
-    assert "toggleActionMenu('${p.name}',this,event)" in HTML
+    assert "toggleActionMenu('${_projectNameArg}',this,event)" in HTML
     assert 'aria-haspopup="menu"' in HTML
     assert 'aria-expanded="false"' in HTML
-    assert 'aria-controls="menu-${p.name}"' in HTML
-    assert '<div class="action-menu" id="menu-${p.name}" role="menu" aria-hidden="true">' in HTML
+    assert 'aria-controls="menu-${_projectNameAttr}"' in HTML
+    assert '<div class="action-menu" id="menu-${_projectNameAttr}" role="menu" aria-hidden="true">' in HTML
     assert 'role="menuitem"' in HTML
 
 
