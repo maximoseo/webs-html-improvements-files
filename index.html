@@ -13500,8 +13500,12 @@ async function loadDashboard(opts){
   let apiProjects = {};
   try {
     const apiRes = await fetchJSON('/api/projects/list' + (forceRefresh ? ('?refresh=' + Date.now()) : ''));
-    if (apiRes && apiRes.ok && apiRes.projects) {
-      apiRes.projects.forEach(proj => { apiProjects[proj.name] = proj; });
+    // DASHBOARD_PROJECTS_API_ENRICHMENT_FIX_2026_05_01
+    // fetchJSON wraps JSON responses as {ok:true,data:<payload>}; support both
+    // the wrapped shape and the historical direct {ok:true,projects:[...]} shape.
+    const apiPayload = apiRes && apiRes.data ? apiRes.data : apiRes;
+    if (apiPayload && apiPayload.ok && Array.isArray(apiPayload.projects)) {
+      apiPayload.projects.forEach(proj => { apiProjects[proj.name] = proj; });
     }
   } catch(e) {}
 
