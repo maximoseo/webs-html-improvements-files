@@ -21925,6 +21925,18 @@ async function toggleStar(domain, btn, ev){
 function reloadProjects(){ if(typeof loadProjects==='function') loadProjects(); }
 
 // Theme
+// SETTINGS_THEME_EXPLICIT_CSRF_POST_2026_05_01: persist settings theme with an explicit CSRF JSON POST helper.
+async function settingsThemePostJson(color){
+  const headers={'Content-Type':'application/json'};
+  if(window.dashboardEnsureCsrf&&typeof window.dashboardEnsureCsrf==='function'){
+    const csrf=await window.dashboardEnsureCsrf();
+    if(csrf) headers['X-CSRF-Token']=csrf;
+  }
+  const res=await fetch('/api/settings/theme',{method:'POST',credentials:'same-origin',headers:headers,body:JSON.stringify({theme_color:color})});
+  let data={ok:false};
+  try{data=await res.json();}catch(_){data={ok:false,error:'bad_json'};}
+  return {res:res,data:data};
+}
 function setThemeColor(color, persist){
   if (persist === undefined) persist = true;
   var colors = {purple:'#7c3aed', blue:'#2563eb', green:'#16a34a', red:'#dc2626', orange:'#ea580c', pink:'#db2777'};
@@ -21933,7 +21945,7 @@ function setThemeColor(color, persist){
   document.querySelectorAll('.theme-swatch').forEach(function(s){ s.classList.toggle('active', s.dataset.color===color); });
   try{localStorage.setItem('theme_color', color);}catch(_){}
   if (persist) {
-    fetch('/api/settings/theme',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({theme_color:color})}).catch(function(){});
+    settingsThemePostJson(color).catch(function(){});
   }
 }
 (function initTheme(){
