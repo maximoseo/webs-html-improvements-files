@@ -13725,10 +13725,11 @@ async function loadDashboard(opts){
     card.innerHTML=`
       <button class="star-btn ${isStarred?'starred':''}" onclick="event.stopPropagation();toggleStar('${p.name}',this)" title="${isStarred?'Unstar':'Star'} this project">${isStarred?'★':'☆'}</button>
       <div class="card-actions">
-        <button class="action-btn" onclick="event.stopPropagation();toggleActionMenu('${p.name}',this)" title="Actions">⋯</button>
-        <div class="action-menu" id="menu-${p.name}">
-          <div class="action-menu-item" onclick="event.stopPropagation();duplicateProject('${p.name}')">Duplicate</div>
-          <div class="action-menu-item danger" onclick="event.stopPropagation();deleteProject('${p.name}')">Delete</div>
+        <!-- PROJECT_CARD_ACTION_MENU_A11Y_FIX_2026_05_01: pass event explicitly and keep menu aria state truthful. -->
+        <button class="action-btn" onclick="event.stopPropagation();toggleActionMenu('${p.name}',this,event)" title="Actions" aria-label="Project actions for ${p.name}" aria-haspopup="menu" aria-expanded="false" aria-controls="menu-${p.name}">⋯</button>
+        <div class="action-menu" id="menu-${p.name}" role="menu" aria-hidden="true">
+          <div class="action-menu-item" role="menuitem" tabindex="-1" onclick="event.stopPropagation();duplicateProject('${p.name}')">Duplicate</div>
+          <div class="action-menu-item danger" role="menuitem" tabindex="-1" onclick="event.stopPropagation();deleteProject('${p.name}')">Delete</div>
         </div>
       </div>
       <div class="card-header" role="button" tabindex="0" aria-expanded="false" aria-controls="${cardId}" aria-label="Open project ${p.name}" onclick="event.stopPropagation();toggleProjectCard(this.parentElement,{scroll:true})" onkeydown="handleProjectHeaderKeydown(event,this.parentElement)">
@@ -21871,15 +21872,26 @@ function _renderActivityChart() {
 
 
 // === Phase 3: Quick Actions, Star, Progress, Theme ===
-function toggleActionMenu(domain, btn){
+function closeProjectActionMenus(){
+  document.querySelectorAll('.action-menu.show').forEach(function(m){
+    m.classList.remove('show');
+    m.setAttribute('aria-hidden','true');
+  });
+  document.querySelectorAll('.card-actions .action-btn[aria-expanded="true"]').forEach(function(b){
+    b.setAttribute('aria-expanded','false');
+  });
+}
+function toggleActionMenu(domain, btn, ev){
+  if(ev&&ev.stopPropagation) ev.stopPropagation();
   var menu = document.getElementById('menu-'+domain);
   if(!menu) return;
   var show = !menu.classList.contains('show');
-  document.querySelectorAll('.action-menu').forEach(function(m){m.classList.remove('show');});
+  closeProjectActionMenus();
   if(show) menu.classList.add('show');
-  event.stopPropagation();
+  menu.setAttribute('aria-hidden', show ? 'false' : 'true');
+  if(btn) btn.setAttribute('aria-expanded', show ? 'true' : 'false');
 }
-document.addEventListener('click', function(){ document.querySelectorAll('.action-menu').forEach(function(m){m.classList.remove('show');}); });
+document.addEventListener('click', closeProjectActionMenus);
 async function duplicateProject(domain){
   try{var r=await fetch('/api/projects/duplicate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({domain:domain})});
   var d=await r.json(); if(d.ok){showToast('Duplicated: '+d.new_domain); reloadProjects();}else{showToast(d.error||'Failed','error');}}
