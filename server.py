@@ -5402,146 +5402,14 @@ body{{font-family:Arial;padding:24px}}h1{{color:#333}}pre{{background:#f4f4f4;pa
             except Exception as exc:
                 return json_response(self, 500, {'ok': False, 'error': str(exc)})
 
+        # Legacy GET-path handlers for task, Prompt Studio, comments, and n8n deployment
+        # mutations were removed/moved to active do_POST handlers. Keep this area free of
+        # exact mutating route literals so the route inventory guard can catch drift.
+
         try:
             payload = read_request_json(self)
         except Exception:
             return json_response(self, 400, {'ok': False, 'error': 'Invalid JSON body'})
-
-        if parsed.path == '/api/tasks':
-            tasks = payload.get('tasks')
-            if not isinstance(tasks, list):
-                return json_response(self, 400, {'ok': False, 'error': 'tasks must be an array'})
-            _tasks_save(tasks)
-            return json_response(self, 200, {'ok': True, 'count': len(tasks)})
-
-        if parsed.path == '/api/tasks/sync-github':
-            tasks = payload.get('tasks')
-            if not isinstance(tasks, list):
-                return json_response(self, 400, {'ok': False, 'error': 'tasks must be an array'})
-            try:
-                content = json.dumps(tasks, ensure_ascii=False, indent=2)
-                result = commit_prompt_to_github({
-                    'path': 'tasks/tasks.json',
-                    'content': content,
-                    'message': 'chore: update dashboard tasks',
-                    'branch': payload.get('branch') or 'main',
-                })
-                return json_response(self, 200, {'ok': True, **result})
-            except RuntimeError as exc:
-                return json_response(self, 503, {'ok': False, 'error': str(exc)})
-            except ValueError as exc:
-                return json_response(self, 400, {'ok': False, 'error': str(exc)})
-            except urllib.error.HTTPError as exc:
-                body = exc.read().decode('utf-8', 'replace')[:1000]
-                return json_response(self, 502, {'ok': False, 'error': f'GitHub API error {exc.code}', 'details': body})
-            except Exception as exc:
-                return json_response(self, 500, {'ok': False, 'error': str(exc)})
-
-        if parsed.path == '/api/prompt/improve':
-            try:
-                result = improve_prompt_with_model(payload)
-                return json_response(self, 200, {'ok': True, **result})
-            except RuntimeError as exc:
-                return json_response(self, 503, {'ok': False, 'error': str(exc)})
-            except ValueError as exc:
-                return json_response(self, 400, {'ok': False, 'error': str(exc)})
-            except urllib.error.HTTPError as exc:
-                body = exc.read().decode('utf-8', 'replace')[:1000]
-                return json_response(self, 502, {'ok': False, 'error': f'Model API error {exc.code}', 'details': body})
-            except Exception as exc:
-                return json_response(self, 500, {'ok': False, 'error': str(exc)})
-
-        if parsed.path == '/api/studio/improve':
-            try:
-                result = assemble_improve_workflow_prompt(payload)
-                return json_response(self, 200, result)
-            except ValueError as exc:
-                return json_response(self, 400, {'ok': False, 'error': str(exc)})
-            except Exception as exc:
-                return json_response(self, 500, {'ok': False, 'error': str(exc)[:500]})
-
-        if parsed.path == '/api/prompt/palette':
-            try:
-                url = (payload.get('url') or '').strip()
-                if not url:
-                    return json_response(self, 400, {'ok': False, 'error': 'url is required'})
-                max_colors = int(payload.get('maxColors') or 10)
-                max_colors = max(3, min(max_colors, 20))
-                result = extract_palette_from_url(url, max_colors=max_colors)
-                return json_response(self, 200, result)
-            except ValueError as exc:
-                return json_response(self, 400, {'ok': False, 'error': str(exc)})
-            except urllib.error.HTTPError as exc:
-                return json_response(self, 502, {'ok': False, 'error': f'Fetch failed {exc.code}', 'details': str(exc)[:300]})
-            except urllib.error.URLError as exc:
-                return json_response(self, 502, {'ok': False, 'error': f'Fetch failed: {exc.reason}'})
-            except Exception as exc:
-                return json_response(self, 500, {'ok': False, 'error': str(exc)[:400]})
-
-        if parsed.path == '/api/prompt/brainstorm':
-            try:
-                result = brainstorm_prompt_multi_model(payload)
-                return json_response(self, 200, result)
-            except ValueError as exc:
-                return json_response(self, 400, {'ok': False, 'error': str(exc)})
-            except RuntimeError as exc:
-                msg = str(exc)
-                try:
-                    parsed_err = json.loads(msg)
-                    return json_response(self, 502, {'ok': False, 'error': parsed_err})
-                except Exception:
-                    return json_response(self, 503, {'ok': False, 'error': msg})
-            except Exception as exc:
-                return json_response(self, 500, {'ok': False, 'error': str(exc)})
-
-        if parsed.path == '/api/prompt/tweak':
-            try:
-                result = tweak_html_with_prompt(payload)
-                return json_response(self, 200, result)
-            except RuntimeError as exc:
-                return json_response(self, 503, {'ok': False, 'error': str(exc)})
-            except ValueError as exc:
-                return json_response(self, 400, {'ok': False, 'error': str(exc)})
-            except urllib.error.HTTPError as exc:
-                body = exc.read().decode('utf-8', 'replace')[:1000]
-                return json_response(self, 502, {'ok': False, 'error': f'Model API error {exc.code}', 'details': body})
-            except Exception as exc:
-                return json_response(self, 500, {'ok': False, 'error': str(exc)})
-
-        if parsed.path == '/api/prompt/commit':
-            try:
-                result = commit_prompt_to_github(payload)
-                return json_response(self, 200, result)
-            except ValueError as exc:
-                return json_response(self, 400, {'ok': False, 'error': str(exc)})
-            except RuntimeError as exc:
-                return json_response(self, 503, {'ok': False, 'error': str(exc)})
-            except urllib.error.HTTPError as exc:
-                body = exc.read().decode('utf-8', 'replace')[:1000]
-                return json_response(self, 502, {'ok': False, 'error': f'GitHub API error {exc.code}', 'details': body})
-            except Exception as exc:
-                return json_response(self, 500, {'ok': False, 'error': str(exc)})
-
-        if parsed.path == '/api/comments':
-            try:
-                result = save_supabase_comment(payload)
-                return json_response(self, 200, result)
-            except ValueError as exc:
-                return json_response(self, 400, {'ok': False, 'error': str(exc)})
-            except RuntimeError as exc:
-                return json_response(self, 503, {'ok': False, 'error': str(exc)})
-            except urllib.error.HTTPError as exc:
-                body = exc.read().decode('utf-8', 'replace')[:1200]
-                return json_response(self, 502, {'ok': False, 'error': f'Supabase API error {exc.code}', 'details': body})
-            except Exception as exc:
-                return json_response(self, 500, {'ok': False, 'error': str(exc)})
-
-        if parsed.path == '/api/n8n/deploy':
-            return json_response(self, 403, {
-                'ok': False,
-                'error': 'n8n deployment is disabled by read-only safety policy',
-                'safety': 'MANUAL IMPORT ONLY — this dashboard must not modify existing n8n workflows',
-            })
 
         # ===== RADAR POST ENDPOINTS =====
 
@@ -6831,6 +6699,10 @@ body{{font-family:Arial;padding:24px}}h1{{color:#333}}pre{{background:#f4f4f4;pa
                 'safety': 'MANUAL IMPORT ONLY — this dashboard must not modify existing n8n workflows',
             })
 
+        # DASHBOARD_ROUTE_INVENTORY_EXPANSION_2026_05_01
+        # Curated expansion keeps Comments, KWR start/swarm, connector probes, and task saves
+        # wired in the active Stage 8 do_POST instead of legacy GET/shadowed sections.
+
         # COMMENTS_ACTIVE_POST_ROUTE_2026_05_01
         # Keep Review Notes/Comments saves in the active Stage 8 do_POST; an older
         # POST dispatch block above is not the live Python method.
@@ -7100,6 +6972,36 @@ body{{font-family:Arial;padding:24px}}h1{{color:#333}}pre{{background:#f4f4f4;pa
                 return json_response(self, exc.code if 400 <= exc.code < 600 else 502, {'ok': False, 'error': str(exc), 'details': details})
             except Exception as exc:
                 return json_response(self, 502, {'ok': False, 'error': str(exc)})
+
+        if parsed.path in ('/api/tasks', '/api/tasks/sync-github'):
+            try:
+                payload = read_request_json(self) or {}
+            except Exception:
+                return json_response(self, 400, {'ok': False, 'error': 'Invalid JSON body'})
+            tasks = payload.get('tasks')
+            if not isinstance(tasks, list):
+                return json_response(self, 400, {'ok': False, 'error': 'tasks must be an array'})
+            if parsed.path == '/api/tasks':
+                _tasks_save(tasks)
+                return json_response(self, 200, {'ok': True, 'count': len(tasks)})
+            try:
+                content = json.dumps(tasks, ensure_ascii=False, indent=2)
+                result = commit_prompt_to_github({
+                    'path': 'tasks/tasks.json',
+                    'content': content,
+                    'message': 'chore: update dashboard tasks',
+                    'branch': payload.get('branch') or 'main',
+                })
+                return json_response(self, 200, {'ok': True, **result})
+            except RuntimeError as exc:
+                return json_response(self, 503, {'ok': False, 'error': str(exc)})
+            except ValueError as exc:
+                return json_response(self, 400, {'ok': False, 'error': str(exc)})
+            except urllib.error.HTTPError as exc:
+                body = exc.read().decode('utf-8', 'replace')[:1000]
+                return json_response(self, 502, {'ok': False, 'error': f'GitHub API error {exc.code}', 'details': body})
+            except Exception as exc:
+                return json_response(self, 500, {'ok': False, 'error': str(exc)})
 
         # PLAYGROUND_API_POST_2026_04_29 - local persisted Playground actions.
         if parsed.path == '/api/playground/templates':

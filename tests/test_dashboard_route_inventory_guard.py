@@ -21,6 +21,19 @@ CRITICAL_ACTIVE_POST_ROUTES = {
     "/api/settings/theme",
 }
 
+EXPANDED_ROUTE_FAMILY_POST_ROUTES = {
+    # DASHBOARD_ROUTE_INVENTORY_EXPANSION_2026_05_01
+    # Curated expansion: state-changing route families already used by the UI.
+    "/api/comments",
+    "/api/kwr/start",
+    "/api/kwr/swarm",
+    "/api/template-connectors/test",
+    "/api/tasks",
+    "/api/tasks/sync-github",
+}
+
+ALL_GUARDED_POST_ROUTES = CRITICAL_ACTIVE_POST_ROUTES | EXPANDED_ROUTE_FAMILY_POST_ROUTES
+
 
 def _method_block(name: str) -> str:
     start = SERVER.find(f"    def {name}(self):")
@@ -39,8 +52,9 @@ def test_dashboard_has_single_active_handler_per_core_http_method():
 def test_critical_mutating_routes_are_guarded_in_active_post_inventory():
     active_post = _method_block("do_POST")
     assert "DASHBOARD_ROUTE_INVENTORY_GUARD_2026_05_01" in active_post
-    missing = sorted(route for route in CRITICAL_ACTIVE_POST_ROUTES if route not in active_post)
-    assert not missing, "critical mutating routes missing from active do_POST: " + ", ".join(missing)
+    assert "DASHBOARD_ROUTE_INVENTORY_EXPANSION_2026_05_01" in active_post
+    missing = sorted(route for route in ALL_GUARDED_POST_ROUTES if route not in active_post)
+    assert not missing, "guarded mutating routes missing from active do_POST: " + ", ".join(missing)
 
 
 def test_critical_project_and_prompt_frontend_routes_use_explicit_post_helpers():
@@ -64,7 +78,7 @@ def test_critical_project_and_prompt_frontend_routes_use_explicit_post_helpers()
 
 def test_do_get_does_not_write_for_critical_mutating_routes():
     do_get = _method_block("do_GET")
-    for route in CRITICAL_ACTIVE_POST_ROUTES:
+    for route in ALL_GUARDED_POST_ROUTES:
         pos = do_get.find(route)
         if pos == -1:
             continue
