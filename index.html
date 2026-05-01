@@ -13723,7 +13723,8 @@ async function loadDashboard(opts){
     const progressVal = Math.max(0, Math.min(100, rawProgress));
     const progressClass = progressVal >= 100 ? 'green' : (progressVal >= 50 ? 'yellow' : 'blue');
     card.innerHTML=`
-      <button class="star-btn ${isStarred?'starred':''}" onclick="event.stopPropagation();toggleStar('${p.name}',this)" title="${isStarred?'Unstar':'Star'} this project">${isStarred?'★':'☆'}</button>
+      <!-- PROJECT_QUICK_ACTIONS_EXPLICIT_CSRF_POST_2026_05_01: project quick actions pass events explicitly and set CSRF headers explicitly. -->
+      <button class="star-btn ${isStarred?'starred':''}" onclick="event.stopPropagation();toggleStar('${p.name}',this,event)" title="${isStarred?'Unstar':'Star'} this project" aria-label="${isStarred?'Unstar':'Star'} project ${p.name}" aria-pressed="${isStarred?'true':'false'}">${isStarred?'★':'☆'}</button>
       <div class="card-actions">
         <!-- PROJECT_CARD_ACTION_MENU_A11Y_FIX_2026_05_01: pass event explicitly and keep menu aria state truthful. -->
         <button class="action-btn" onclick="event.stopPropagation();toggleActionMenu('${p.name}',this,event)" title="Actions" aria-label="Project actions for ${p.name}" aria-haspopup="menu" aria-expanded="false" aria-controls="menu-${p.name}">⋯</button>
@@ -21892,21 +21893,33 @@ function toggleActionMenu(domain, btn, ev){
   if(btn) btn.setAttribute('aria-expanded', show ? 'true' : 'false');
 }
 document.addEventListener('click', closeProjectActionMenus);
+async function projectQuickActionPostJson(url, payload){
+  // PROJECT_QUICK_ACTIONS_EXPLICIT_CSRF_POST_2026_05_01
+  var headers={'Content-Type':'application/json'};
+  if(window.dashboardEnsureCsrf&&typeof window.dashboardEnsureCsrf==='function'){
+    var csrf=await window.dashboardEnsureCsrf();
+    if(csrf) headers['X-CSRF-Token']=csrf;
+  }
+  var r=await fetch(url,{method:'POST',headers:headers,credentials:'same-origin',body:JSON.stringify(payload||{})});
+  var d=await r.json().catch(function(){return {ok:false,error:'bad_json'};});
+  return {res:r,data:d};
+}
 async function duplicateProject(domain){
-  try{var r=await fetch('/api/projects/duplicate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({domain:domain})});
-  var d=await r.json(); if(d.ok){showToast('Duplicated: '+d.new_domain); reloadProjects();}else{showToast(d.error||'Failed','error');}}
+  try{var result=await projectQuickActionPostJson('/api/projects/duplicate',{domain:domain});
+  var d=result.data; if(d.ok){showToast('Duplicated: '+d.new_domain); reloadProjects();}else{showToast(d.error||'Failed','error');}}
   catch(e){showToast('Network error','error');}
 }
 async function deleteProject(domain){
   if(!confirm('Delete '+domain+'? This cannot be undone.')) return;
-  try{var r=await fetch('/api/projects/delete',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({domain:domain})});
-  var d=await r.json(); if(d.ok){showToast('Deleted: '+domain); reloadProjects();}else{showToast(d.error||'Failed','error');}}
+  try{var result=await projectQuickActionPostJson('/api/projects/delete',{domain:domain});
+  var d=result.data; if(d.ok){showToast('Deleted: '+domain); reloadProjects();}else{showToast(d.error||'Failed','error');}}
   catch(e){showToast('Network error','error');}
 }
-async function toggleStar(domain, btn){
+async function toggleStar(domain, btn, ev){
+  if(ev&&ev.stopPropagation) ev.stopPropagation();
   var starred = !btn.classList.contains('starred');
-  try{var r=await fetch('/api/projects/star',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({domain:domain,starred:starred})});
-  var d=await r.json(); if(d.ok){btn.classList.toggle('starred', starred); btn.textContent = starred ? '★' : '☆'; showToast(starred?'Starred':'Unstarred');}else{showToast(d.error||'Failed','error');}}
+  try{var result=await projectQuickActionPostJson('/api/projects/star',{domain:domain,starred:starred});
+  var d=result.data; if(d.ok){btn.classList.toggle('starred', starred); btn.textContent = starred ? '★' : '☆'; btn.setAttribute('aria-pressed', starred ? 'true' : 'false'); btn.setAttribute('title', (starred ? 'Unstar' : 'Star') + ' this project'); showToast(starred?'Starred':'Unstarred');}else{showToast(d.error||'Failed','error');}}
   catch(e){showToast('Network error','error');}
 }
 function reloadProjects(){ if(typeof loadProjects==='function') loadProjects(); }

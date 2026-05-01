@@ -6493,72 +6493,11 @@ body{{font-family:Arial;padding:24px}}h1{{color:#333}}pre{{background:#f4f4f4;pa
                 return json_response(self, 500, {'ok': False, 'error': str(exc)})
 
 
-        # ── PROJECT QUICK ACTIONS ──────────────────────────────────────
-        if parsed.path == '/api/projects/duplicate':
-            route_payload = payload if isinstance(payload, dict) else {}
-            domain = (route_payload.get('domain') or '').strip()
-            if not domain:
-                return json_response(self, 400, {'ok': False, 'error': 'domain required'})
-            data_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'data.json')
-            try:
-                with open(data_path, 'r', encoding='utf-8') as f:
-                    data = json.load(f)
-                tree = data.get('tree', []) if isinstance(data, dict) else []
-                new_domain = domain + '_copy'
-                # Add copies of all files with new domain prefix
-                new_items = []
-                for item in tree:
-                    path = item.get('path', '')
-                    if path.startswith(domain + '/'):
-                        new_path = new_domain + path[len(domain):]
-                        new_items.append({'path': new_path, 'type': item.get('type', 'blob'), 'size': item.get('size', 0)})
-                tree.extend(new_items)
-                data['tree'] = tree
-                with open(data_path, 'w', encoding='utf-8') as f:
-                    json.dump(data, f, indent=2)
-                return json_response(self, 200, {'ok': True, 'new_domain': new_domain})
-            except Exception as exc:
-                return json_response(self, 500, {'ok': False, 'error': str(exc)})
+        # PROJECT_QUICK_ACTIONS_NO_MUTATING_GET_2026_05_01
+        # Project quick actions are mutating operations and must be handled only by active do_POST.
+        if parsed.path in ('/api/projects/duplicate', '/api/projects/rename', '/api/projects/delete', '/api/projects/star'):
+            return json_response(self, 405, {'ok': False, 'error': 'method not allowed; use POST'})
 
-        if parsed.path == '/api/projects/rename':
-            route_payload = payload if isinstance(payload, dict) else {}
-            old_domain = (route_payload.get('old_domain') or '').strip()
-            new_domain = (route_payload.get('new_domain') or '').strip()
-            if not old_domain or not new_domain:
-                return json_response(self, 400, {'ok': False, 'error': 'old_domain and new_domain required'})
-            data_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'data.json')
-            try:
-                with open(data_path, 'r', encoding='utf-8') as f:
-                    data = json.load(f)
-                tree = data.get('tree', []) if isinstance(data, dict) else []
-                for item in tree:
-                    path = item.get('path', '')
-                    if path.startswith(old_domain + '/'):
-                        item['path'] = new_domain + path[len(old_domain):]
-                data['tree'] = tree
-                with open(data_path, 'w', encoding='utf-8') as f:
-                    json.dump(data, f, indent=2)
-                return json_response(self, 200, {'ok': True, 'domain': new_domain})
-            except Exception as exc:
-                return json_response(self, 500, {'ok': False, 'error': str(exc)})
-
-        if parsed.path == '/api/projects/delete':
-            route_payload = payload if isinstance(payload, dict) else {}
-            domain = (route_payload.get('domain') or '').strip()
-            if not domain:
-                return json_response(self, 400, {'ok': False, 'error': 'domain required'})
-            data_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'data.json')
-            try:
-                with open(data_path, 'r', encoding='utf-8') as f:
-                    data = json.load(f)
-                tree = data.get('tree', []) if isinstance(data, dict) else []
-                tree = [item for item in tree if not item.get('path', '').startswith(domain + '/')]
-                data['tree'] = tree
-                with open(data_path, 'w', encoding='utf-8') as f:
-                    json.dump(data, f, indent=2)
-                return json_response(self, 200, {'ok': True, 'deleted': domain})
-            except Exception as exc:
-                return json_response(self, 500, {'ok': False, 'error': str(exc)})
         if parsed.path.startswith('/api/connectors/wp-rest/'):
             try:
                 from wp_rest_client import create_wp_rest_client
@@ -6948,6 +6887,59 @@ body{{font-family:Arial;padding:24px}}h1{{color:#333}}pre{{background:#f4f4f4;pa
                 'targets': targets,
                 'ts': datetime.datetime.utcnow().isoformat() + 'Z',
             })
+
+        # PROJECT_QUICK_ACTIONS_ACTIVE_POST_ROUTES_2026_05_01
+        # Keep Duplicate/Rename/Delete wired in the active Stage 8 do_POST; older do_GET code must not mutate data.json.
+        if parsed.path in ('/api/projects/duplicate', '/api/projects/rename', '/api/projects/delete'):
+            try:
+                route_payload = read_request_json(self) or {}
+            except Exception:
+                route_payload = {}
+            data_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'data.json')
+            try:
+                with _JSON_FILE_WRITE_LOCK:
+                    data = _safe_json_load_dict(data_path)
+                    tree = data.get('tree', []) if isinstance(data.get('tree'), list) else []
+
+                    if parsed.path == '/api/projects/duplicate':
+                        domain = (route_payload.get('domain') or '').strip()
+                        if not domain:
+                            return json_response(self, 400, {'ok': False, 'error': 'domain required'})
+                        new_domain = domain + '_copy'
+                        new_items = []
+                        for item in tree:
+                            path = item.get('path', '') if isinstance(item, dict) else ''
+                            if path.startswith(domain + '/'):
+                                new_path = new_domain + path[len(domain):]
+                                new_items.append({'path': new_path, 'type': item.get('type', 'blob'), 'size': item.get('size', 0)})
+                        tree.extend(new_items)
+                        data['tree'] = tree
+                        _atomic_write_json_file(data_path, data)
+                        return json_response(self, 200, {'ok': True, 'new_domain': new_domain})
+
+                    if parsed.path == '/api/projects/rename':
+                        old_domain = (route_payload.get('old_domain') or '').strip()
+                        new_domain = (route_payload.get('new_domain') or '').strip()
+                        if not old_domain or not new_domain:
+                            return json_response(self, 400, {'ok': False, 'error': 'old_domain and new_domain required'})
+                        for item in tree:
+                            if not isinstance(item, dict):
+                                continue
+                            path = item.get('path', '')
+                            if path.startswith(old_domain + '/'):
+                                item['path'] = new_domain + path[len(old_domain):]
+                        data['tree'] = tree
+                        _atomic_write_json_file(data_path, data)
+                        return json_response(self, 200, {'ok': True, 'domain': new_domain})
+
+                    domain = (route_payload.get('domain') or '').strip()
+                    if not domain:
+                        return json_response(self, 400, {'ok': False, 'error': 'domain required'})
+                    data['tree'] = [item for item in tree if not (isinstance(item, dict) and item.get('path', '').startswith(domain + '/'))]
+                    _atomic_write_json_file(data_path, data)
+                    return json_response(self, 200, {'ok': True, 'deleted': domain})
+            except Exception as exc:
+                return json_response(self, 500, {'ok': False, 'error': str(exc)})
 
         # PROJECT_SETTINGS_POST_2026_04_29 - active do_POST wiring for project quick actions and theme settings.
         if parsed.path == '/api/projects/star':
