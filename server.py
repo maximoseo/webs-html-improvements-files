@@ -6831,6 +6831,27 @@ body{{font-family:Arial;padding:24px}}h1{{color:#333}}pre{{background:#f4f4f4;pa
                 'safety': 'MANUAL IMPORT ONLY — this dashboard must not modify existing n8n workflows',
             })
 
+        # COMMENTS_ACTIVE_POST_ROUTE_2026_05_01
+        # Keep Review Notes/Comments saves in the active Stage 8 do_POST; an older
+        # POST dispatch block above is not the live Python method.
+        if parsed.path == '/api/comments':
+            try:
+                payload = read_request_json(self) or {}
+            except Exception:
+                payload = {}
+            try:
+                result = save_supabase_comment(payload)
+                return json_response(self, 200, result)
+            except ValueError as exc:
+                return json_response(self, 400, {'ok': False, 'error': str(exc)})
+            except RuntimeError as exc:
+                return json_response(self, 503, {'ok': False, 'error': str(exc)})
+            except urllib.error.HTTPError as exc:
+                body = exc.read().decode('utf-8', 'replace')[:1200]
+                return json_response(self, 502, {'ok': False, 'error': f'Supabase API error {exc.code}', 'details': body})
+            except Exception as exc:
+                return json_response(self, 500, {'ok': False, 'error': str(exc)})
+
         # KWR_CACHE_POST_ACTIVE_2026_04_29 - active do_POST wiring for KWR runs and safe cache refresh.
         if parsed.path == '/api/kwr/start':
             try:

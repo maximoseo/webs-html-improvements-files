@@ -11707,6 +11707,21 @@ async function loadComments(){
     if(status) status.textContent=(err&&err.message)||'Could not load comments';
   }
 }
+// COMMENTS_EXPLICIT_CSRF_POST_2026_05_01
+// Review Notes saves are state-changing; set CSRF explicitly instead of relying
+// only on global fetch wrappers that future edits may reorder or bypass.
+async function commentsPostJson(payload){
+  const csrf=(window.dashboardEnsureCsrf?await window.dashboardEnsureCsrf():window.DASHBOARD_CSRF_TOKEN)||'';
+  const res=await fetch('/api/comments',{
+    method:'POST',
+    credentials:'same-origin',
+    headers:{'Content-Type':'application/json','X-CSRF-Token':csrf},
+    body:JSON.stringify(payload||{})
+  });
+  let data={};
+  try{data=await res.json();}catch(e){data={ok:false,error:'Invalid JSON response'};}
+  return {res,data};
+}
 async function saveComment(btn){
   const input=document.getElementById('comments-input');
   const authorInput=document.getElementById('comments-author');
@@ -11720,7 +11735,7 @@ async function saveComment(btn){
   btn.innerHTML='Saving...';
   if(status) status.textContent='Saving to Supabase...';
   try{
-    const res=await fetch('/api/comments',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({
+    const {res,data}=await commentsPostJson({
       domain:commentsContext.domain,
       agentName:commentsContext.agentName,
       versionName:commentsContext.versionName,
@@ -11731,8 +11746,7 @@ async function saveComment(btn){
       metadata:commentsContext.metadata||{},
       authorName:author,
       commentText:text,
-    })});
-    const data=await res.json();
+    });
     if(!res.ok||!data.ok) throw new Error(data.error||'Could not save comment');
     if(input) input.value='';
     if(status) status.textContent='Saved comment to Supabase.';
