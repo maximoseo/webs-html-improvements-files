@@ -31,3 +31,20 @@ def test_project_card_preview_context_uses_html_version_not_notes_only_latest():
     assert "const _psAgent=latestHtmlVersion?detectAgent(latestHtmlVersion.name):(latest?detectAgent(latest.name):'Agent');" in body
     assert "const _psVersion=latestHtmlVersion?latestHtmlVersion.name:(latest?latest.name:'');" in body
     assert "const _psFiles=latestHtmlVersion?latestHtmlVersion.files.map(f=>({name:f.name,path:f.path,download:f.download,url:f.url,size:f.size})):(latest?latest.files.map(f=>({name:f.name,path:f.path,download:f.download,url:f.url,size:f.size})):[]);" in body
+
+
+def test_project_preview_inline_onclick_arguments_are_escaped():
+    body = html()
+    assert "PROJECT_PREVIEW_INLINE_ONCLICK_ARG_ESCAPE_2026_05_01" in body
+    assert "function previewOnclickArg(value){" in body
+    assert ".replace(/\\\\/g,'\\\\\\\\')" in body
+    assert ".replace(/'/g,\"\\\\'\")" in body
+    assert ".replace(/\"/g,'&quot;')" in body
+    assert "const _previewDownloadArg=previewOnclickArg(f.download);" in body
+    assert "const _previewNameArg=previewOnclickArg(p.name+' - '+f.name);" in body
+    assert "openPreview('${_previewDownloadArg}','${_previewNameArg}','${_fCtxEnc}')" in body
+    assert "const _latestHtmlUrlArg=previewOnclickArg(latestHtmlUrl);" in body
+    assert "const _latestHtmlNameArg=previewOnclickArg(latestHtmlName);" in body
+    assert "openPreview('${_latestHtmlUrlArg}','${_latestHtmlNameArg}','${_previewCtxEnc}')" in body
+    assert "openPreview('${f.download}','${p.name} - ${f.name}','${_fCtxEnc}')" not in body
+    assert "openPreview('${latestHtmlUrl}','${latestHtmlName}','${_previewCtxEnc}')" not in body
