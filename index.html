@@ -13654,11 +13654,21 @@ async function loadDashboard(opts){
     });
     const currentSetCount=Object.keys(versionsByAgent).length;
     versionsHTML=Object.entries(versionsByAgent).map(([agentName,v])=>{
+      // PROJECT_EXPANDED_FILE_ROWS_SAFE_RENDER_ESCAPE_2026_05_01
+      // Expanded agent/file rows interpolate repository/API names into parsed HTML;
+      // precompute text and attribute values by context before legacy template use.
+      const _projectNameDataAttr=projectActionAttr(p.name);
+      const _agentText=projectCardText(agentName);
+      const _agentAttr=projectActionAttr(agentName);
+      const _versionTitleText=projectCardText(v.date||v.name);
       let filesHTML='';
       v.files.forEach(f=>{
         const ext=f.name.split('.').pop().toLowerCase();
         const cls=ext==='html'?'html':ext==='txt'?'txt':'json';
         const label=ext.toUpperCase();
+        const _fileBadgeText=projectCardText(label);
+        const _fileNameText=projectCardText(f.name);
+        const _fileSizeText=projectCardText(formatSize(f.size));
         const _fCtxEnc=encodeURIComponent(JSON.stringify({domain:p.name,agentName:detectAgent(v.name),versionName:v.name,fileManifest:v.files}));
         const _previewDownloadArg=previewOnclickArg(f.download);
         const _previewNameArg=previewOnclickArg(p.name+' - '+f.name);
@@ -13670,19 +13680,20 @@ async function loadDashboard(opts){
         const _isHtml=cls==='html';
         const promptStudioBtn=_isHtml?`<button class="file-action-btn prompt action-btn" onclick="event.preventDefault();event.stopPropagation();openPromptStudioForFile('${encodeURIComponent(p.name)}','${encodeURIComponent(agentName)}','${encodeURIComponent(f.name)}','${_promptDownloadArg}')" title="Open Prompt Studio for this file" style="font-size:10px">Prompt</button>`:'';
         filesHTML+=`<div class="file-row">
-          <div class="file-badge ${cls}">${label}</div>
-          <div class="file-details"><div class="file-name">${f.name}</div><div class="file-size">${formatSize(f.size)}</div></div>
+          <div class="file-badge ${cls}">${_fileBadgeText}</div>
+          <div class="file-details"><div class="file-name">${_fileNameText}</div><div class="file-size">${_fileSizeText}</div></div>
           <div class="file-actions">${previewBtn}${deployBtn}${promptStudioBtn}<a href="${_fileUrlAttr}" target="_blank" class="action-btn">View Code</a><a href="${_fileDownloadAttr}" class="action-btn primary">Download</a></div>
         </div>`;
       });
       const _agEnc=encodeURIComponent(agentName);
       const _dmEnc=encodeURIComponent(p.name);
       const _hidden=isAgentHidden(p.name,agentName);
-      return `<div class="agent-group${_hidden?' collapsed':''}" data-domain="${p.name}" data-agent="${agentName.replace(/"/g,'&quot;')}"><div class="agent-group-header"><strong>${agentName}</strong><div class="agent-group-controls"><span class="agent-group-badge">Current file set</span>${_hidden?'<span class="agent-group-hidden-note">hidden</span>':''}<button class="agent-hide-btn" onclick="event.stopPropagation();toggleAgentHidden('${_dmEnc}','${_agEnc}',this)" title="${_hidden?'Show this agent':'Hide this agent'}" aria-label="${_hidden?'Show':'Hide'} agent ${agentName}">${_hidden?'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>Show':'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17.94 17.94A10.94 10.94 0 0 1 12 20c-7 0-11-8-11-8a19.6 19.6 0 0 1 5.06-5.94M9.9 4.24A10.94 10.94 0 0 1 12 4c7 0 11 8 11 8a19.6 19.6 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>Hide'}<button class="agent-delete-btn" onclick="deleteAgent(event,'${_dmEnc}','${_agEnc}')" title="Delete agent" style="background:none;border:none;color:#f87171;cursor:pointer;font-size:11px;padding:2px 6px;border-radius:4px;opacity:0.6;transition:opacity .15s" onmouseenter="this.style.opacity=1" onmouseleave="this.style.opacity=0.6">&#x2715; Remove</button></div></div><div class="agent-group-body"><div class="version-section"><div class="version-header"><span class="version-dot latest"></span><span class="version-title">${v.date||v.name} <span class="v-badge">&#x2605; Latest</span></span></div>${filesHTML}</div></div></div>`;
+      return `<div class="agent-group${_hidden?' collapsed':''}" data-domain="${_projectNameDataAttr}" data-agent="${_agentAttr}"><div class="agent-group-header"><strong>${_agentText}</strong><div class="agent-group-controls"><span class="agent-group-badge">Current file set</span>${_hidden?'<span class="agent-group-hidden-note">hidden</span>':''}<button class="agent-hide-btn" onclick="event.stopPropagation();toggleAgentHidden('${_dmEnc}','${_agEnc}',this)" title="${_hidden?'Show this agent':'Hide this agent'}" aria-label="${_hidden?'Show':'Hide'} agent ${_agentAttr}">${_hidden?'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>Show':'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17.94 17.94A10.94 10.94 0 0 1 12 20c-7 0-11-8-11-8a19.6 19.6 0 0 1 5.06-5.94M9.9 4.24A10.94 10.94 0 0 1 12 4c7 0 11 8 11 8a19.6 19.6 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>Hide'}<button class="agent-delete-btn" onclick="deleteAgent(event,'${_dmEnc}','${_agEnc}')" title="Delete agent" style="background:none;border:none;color:#f87171;cursor:pointer;font-size:11px;padding:2px 6px;border-radius:4px;opacity:0.6;transition:opacity .15s" onmouseenter="this.style.opacity=1" onmouseleave="this.style.opacity=0.6">&#x2715; Remove</button></div></div><div class="agent-group-body"><div class="version-section"><div class="version-header"><span class="version-dot latest"></span><span class="version-title">${_versionTitleText} <span class="v-badge">&#x2605; Latest</span></span></div>${filesHTML}</div></div></div>`;
     }).join('');
     // Bulk bar if any agents hidden for this domain
     const _hiddenCount=Object.keys(versionsByAgent).filter(a=>isAgentHidden(p.name,a)).length;
-    if(_hiddenCount>0){versionsHTML+=`<div class="agents-bulk-bar" data-domain-bar="${p.name}"><span>${_hiddenCount} agent${_hiddenCount===1?'':'s'} hidden</span><button onclick="event.stopPropagation();showAllAgents('${encodeURIComponent(p.name)}')">Show all agents</button></div>`;}
+    const _projectNameDataAttr=projectActionAttr(p.name);
+    if(_hiddenCount>0){versionsHTML+=`<div class="agents-bulk-bar" data-domain-bar="${_projectNameDataAttr}"><span>${_hiddenCount} agent${_hiddenCount===1?'':'s'} hidden</span><button onclick="event.stopPropagation();showAllAgents('${encodeURIComponent(p.name)}')">Show all agents</button></div>`;}
 
     const _psAgent=latestHtmlVersion?detectAgent(latestHtmlVersion.name):(latest?detectAgent(latest.name):'Agent');
     const _psVersion=latestHtmlVersion?latestHtmlVersion.name:(latest?latest.name:'');
