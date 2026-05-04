@@ -1,0 +1,698 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project Detail | Maximo SEO</title>
+    
+    <link rel="stylesheet" href="./styles/design-tokens.css">
+    <link rel="stylesheet" href="./styles/components.css">
+    
+    <style>
+        .app-container {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        .header {
+            background-color: var(--color-surface);
+            border-bottom: 1px solid var(--color-border);
+            padding: 1rem 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .main-content {
+            padding: 2rem;
+            flex: 1;
+            max-width: 1600px;
+            margin: 0 auto;
+            width: 100%;
+            display: grid;
+            grid-template-columns: 300px 1fr 300px;
+            gap: 2rem;
+        }
+
+        /* Sidebar - Versions & Upload */
+        .sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        /* Drag and drop zone */
+        .dropzone {
+            border: 2px dashed var(--color-border);
+            border-radius: var(--radius-lg);
+            padding: 2rem 1.5rem;
+            text-align: center;
+            background-color: var(--color-surface);
+            transition: all var(--transition-fast);
+            cursor: pointer;
+        }
+
+        .dropzone:hover, .dropzone.dragover {
+            border-color: var(--color-primary);
+            background-color: rgba(37, 99, 235, 0.05);
+        }
+
+        .dropzone svg {
+            color: var(--color-primary);
+            margin-bottom: 1rem;
+        }
+
+        .drop-text {
+            font-weight: 500;
+            color: var(--color-text);
+            margin: 0 0 0.5rem;
+        }
+
+        .drop-subtext {
+            font-size: 0.75rem;
+            color: var(--color-text-muted);
+            margin: 0;
+        }
+        
+        .progress-bar-container {
+            width: 100%;
+            height: 6px;
+            background-color: var(--color-border);
+            border-radius: var(--radius-full);
+            margin-top: 1rem;
+            overflow: hidden;
+            display: none;
+        }
+        
+        .progress-bar-fill {
+            height: 100%;
+            background-color: var(--color-primary);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        /* Version History (Timeline) */
+        .version-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            position: relative;
+        }
+
+        .version-list::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 15px;
+            width: 2px;
+            background-color: var(--color-border);
+        }
+
+        .version-item {
+            position: relative;
+            padding-left: 2.5rem;
+        }
+
+        .version-bullet {
+            position: absolute;
+            left: 11px;
+            top: 0.25rem;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background-color: var(--color-border);
+            border: 2px solid var(--color-surface);
+            z-index: 10;
+        }
+
+        .version-item.active .version-bullet {
+            background-color: var(--color-primary);
+            box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.2);
+        }
+
+        .version-card {
+            background-color: var(--color-surface);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-md);
+            padding: 1rem;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+        }
+
+        .version-item.active .version-card {
+            border-color: var(--color-primary);
+        }
+
+        .version-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+            font-size: 0.875rem;
+            font-weight: 600;
+        }
+
+        /* Workspace (Comparison view) */
+        .workspace {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .workspace-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: var(--color-surface);
+            padding: 1rem;
+            border-radius: var(--radius-md);
+            border: 1px solid var(--color-border);
+        }
+        
+        .device-toggle {
+            display: flex;
+            background-color: var(--color-bg);
+            border-radius: var(--radius-md);
+            padding: 0.25rem;
+            border: 1px solid var(--color-border);
+        }
+
+        .device-btn {
+            background: transparent;
+            border: none;
+            padding: 0.5rem;
+            border-radius: var(--radius-sm);
+            color: var(--color-text-muted);
+            cursor: pointer;
+        }
+
+        .device-btn.active {
+            background-color: var(--color-surface);
+            color: var(--color-text);
+            box-shadow: var(--shadow-sm);
+        }
+
+        /* Split Comparison */
+        .comparison-container {
+            position: relative;
+            flex: 1;
+            min-height: 600px;
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            display: flex;
+            background-color: #f1f5f9; /* Fixed background for preview visibility */
+        }
+        
+        [data-theme="dark"] .comparison-container {
+            background-color: #0f172a;
+        }
+
+        .comparison-panel {
+            width: 50%;
+            height: 100%;
+            position: relative;
+        }
+        
+        .panel-label {
+            position: absolute;
+            top: 1rem;
+            left: 1rem;
+            background-color: rgba(0,0,0,0.7);
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: var(--radius-full);
+            font-size: 0.75rem;
+            font-weight: 600;
+            z-index: 10;
+        }
+
+        iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            background-color: white; /* Ensure rendering background is normal */
+            transition: width 0.3s ease;
+        }
+
+        .slider-handle {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 50%;
+            width: 4px;
+            background-color: var(--color-primary);
+            cursor: col-resize;
+            transform: translateX(-50%);
+            z-index: 50;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .slider-button {
+            width: 32px;
+            height: 32px;
+            background-color: white;
+            border: 2px solid var(--color-primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--color-primary);
+            box-shadow: var(--shadow-md);
+        }
+
+        /* Batch Uploads panel */
+        .batch-panel {
+            margin-top: 2rem;
+            padding: 1.5rem;
+            background-color: var(--color-surface);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-md);
+        }
+        
+        /* Mobile Adapters */
+        @media (max-width: 1024px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+            .sidebar {
+                flex-direction: row;
+                flex-wrap: wrap;
+                align-items: flex-start;
+            }
+            .version-list {
+                width: 100%;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .comparison-container {
+                flex-direction: column;
+            }
+            .comparison-panel {
+                width: 100%;
+                height: 50%;
+            }
+            .slider-handle {
+                top: 50%;
+                left: 0;
+                right: 0;
+                height: 4px;
+                width: 100%;
+                cursor: row-resize;
+                transform: translateY(-50%);
+            }
+        }
+        
+        /* Preview width overrides via classes */
+        .iframe-desktop { max-width: 100%; margin: 0 auto; }
+        .iframe-tablet { max-width: 768px; margin: 0 auto; border-left: 1px solid var(--color-border); border-right: 1px solid var(--color-border); }
+        .iframe-mobile { max-width: 375px; margin: 0 auto; border-left: 1px solid var(--color-border); border-right: 1px solid var(--color-border); }
+    </style>
+</head>
+<body>
+
+    <div class="app-container">
+        <header class="header">
+            <div style="display:flex; align-items:center; gap:1rem;">
+                <button class="btn btn-outline touch-target" onclick="window.location.href='index.html'">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+                    Back
+                </button>
+                <h1 style="font-size: 1.25rem; margin: 0;">Galoz Industrial Control Redesign</h1>
+            </div>
+            
+            <div style="display: flex; gap: 1rem;">
+                <button class="btn btn-outline touch-target" id="shareBtn">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-share-2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" x2="15.42" y1="13.51" y2="17.49"/><line x1="15.41" x2="8.59" y1="6.51" y2="10.49"/></svg>
+                    Share
+                </button>
+                <button class="btn btn-primary touch-target">
+                    Download Improved
+                </button>
+            </div>
+        </header>
+
+        <main class="main-content">
+            <!-- Sidebar -->
+            <aside class="sidebar">
+                
+                <!-- Drag and Drop Zone -->
+                <div class="dropzone" id="dropzone">
+                    <input type="file" id="fileInput" multiple accept=".html,.htm,.zip" style="display: none;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" x2="12" y1="3" y2="15"/></svg>
+                    <p class="drop-text">Drag & drop HTML files here</p>
+                    <p class="drop-subtext">or click to browse (.html, .htm, .zip max 10MB)</p>
+                    
+                    <div class="progress-bar-container" id="uploadProgressContainer">
+                        <div class="progress-bar-fill" id="uploadProgressBar"></div>
+                    </div>
+                </div>
+
+                <!-- Version History -->
+                <div>
+                    <h3 style="font-size: 1rem; margin-bottom: 1rem;">Version History</h3>
+                    <div class="version-list">
+                        
+                        <div class="version-item active">
+                            <div class="version-bullet"></div>
+                            <div class="version-card">
+                                <div class="version-header">
+                                    <span>v3.0 - Current</span>
+                                    <span style="color:var(--color-text-muted); font-weight: 400;">Just now</span>
+                                </div>
+                                <p style="font-size: 0.75rem; color: var(--color-text-muted); margin: 0;">AI optimized Hero CTA and adjusted typography spacing.</p>
+                            </div>
+                        </div>
+
+                        <div class="version-item">
+                            <div class="version-bullet"></div>
+                            <div class="version-card">
+                                <div class="version-header">
+                                    <span>v2.0</span>
+                                    <span style="color:var(--color-text-muted); font-weight: 400;">2 hrs ago</span>
+                                </div>
+                                <p style="font-size: 0.75rem; color: var(--color-text-muted); margin: 0;">Applied strict DOM locking, CSS only fixes.</p>
+                            </div>
+                        </div>
+
+                        <div class="version-item">
+                            <div class="version-bullet"></div>
+                            <div class="version-card">
+                                <div class="version-header">
+                                    <span>v1.0 - Original</span>
+                                    <span style="color:var(--color-text-muted); font-weight: 400;">10:00 AM</span>
+                                </div>
+                                <p style="font-size: 0.75rem; color: var(--color-text-muted); margin: 0;">Initial upload.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Batch Panel Placeholder -->
+                <div class="batch-panel">
+                    <h3 style="font-size: 1rem; margin-top:0;">Batch Processing</h3>
+                    <p style="font-size: 0.8rem; color: var(--color-text-muted);">Process multiple URLs via n8n workflows</p>
+                    <textarea class="form-input" style="width:100%; min-height: 80px; resize:vertical;" placeholder="Enter URLs, one per line (max 50)"></textarea>
+                    <button class="btn btn-outline touch-target" style="width:100%; margin-top: 0.5rem;" id="startBatchBtn">Start Batch</button>
+                    
+                    <div id="batchStatus" style="margin-top: 1rem; display: none;">
+                        <div style="display:flex; justify-content:space-between; font-size:0.75rem; margin-bottom:0.25rem;">
+                            <span>Processing...</span>
+                            <span id="batchCount">0/0 files</span>
+                        </div>
+                        <div class="progress-bar-container" style="display:block;">
+                            <div class="progress-bar-fill" id="batchProgressBar" style="width: 0%;"></div>
+                        </div>
+                    </div>
+                </div>
+            </aside>
+
+            <!-- Comparison Workspace -->
+            <section class="workspace">
+                <div class="workspace-controls">
+                    <div style="display:flex; align-items:center; gap:1rem;">
+                        <span style="font-weight: 500; font-size: 0.875rem;">Preview Mode</span>
+                        <div class="device-toggle">
+                            <button class="device-btn active" data-device="desktop">Desktop</button>
+                            <button class="device-btn" data-device="tablet">Tablet</button>
+                            <button class="device-btn" data-device="mobile">Mobile</button>
+                        </div>
+                    </div>
+                    
+                    <button class="btn btn-outline touch-target" id="runLighthouseBtn">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--color-warning)"><path d="M12 2v20"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+                        Run Lighthouse
+                    </button>
+                </div>
+
+                <div class="comparison-container" id="compareContainer">
+                    <div class="comparison-panel" id="panelBefore" style="width: 50%;">
+                        <div class="panel-label">Original</div>
+                        <!-- Stubbed for UI setup -->
+                        <iframe id="frameBefore" srcdoc="<html><body style='padding:20px;font-family:sans-serif'><h1>Original Title</h1><p>Checking initial layout issues...</p></body></html>" class="iframe-desktop"></iframe>
+                    </div>
+                    
+                    <div class="slider-handle" id="sliderHandle">
+                        <div class="slider-button">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+                        </div>
+                    </div>
+                    
+                    <div class="comparison-panel" id="panelAfter" style="width: 50%;">
+                        <div class="panel-label" style="background-color: var(--color-primary)">Improved</div>
+                        <iframe id="frameAfter" srcdoc="<html><body style='padding:20px;font-family:sans-serif'><h1>Improved SEO Title</h1><p style='color:#333; line-height:1.6'>Now completely responsive with CSS variable integrations.</p></body></html>" class="iframe-desktop"></iframe>
+                    </div>
+                </div>
+            </section>
+        
+            <!-- AI Suggestions & Analysis Sidebar (Task 5.3 & 5.2) -->
+            <aside class="sidebar ai-sidebar">
+                
+                <!-- Lighthouse Score Display (Task 5.2) -->
+                <div class="card" id="lighthousePanel" style="display:none; padding:1rem; margin-bottom: 2rem;">
+                    <h3 style="font-size: 1rem; margin-top:0; margin-bottom: 1rem; display:flex; align-items:center; gap:0.5rem;">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--color-warning)"><path d="M12 2v20"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+                        Lighthouse Analysis
+                    </h3>
+                    
+                    <div style="display:flex; flex-direction:column; gap:0.75rem; font-size:0.875rem;">
+                        <div style="display:flex; justify-content:space-between;">
+                            <span>Performance</span>
+                            <span>[62] → [89] <span style="color:var(--color-success);">+27 🟢</span></span>
+                        </div>
+                        <div style="display:flex; justify-content:space-between;">
+                            <span>Accessibility</span>
+                            <span>[71] → [95] <span style="color:var(--color-success);">+24 🟢</span></span>
+                        </div>
+                        <div style="display:flex; justify-content:space-between;">
+                            <span>Best Practices</span>
+                            <span>[80] → [92] <span style="color:var(--color-success);">+12 🟢</span></span>
+                        </div>
+                        <div style="display:flex; justify-content:space-between;">
+                            <span>SEO</span>
+                            <span>[85] → [98] <span style="color:var(--color-success);">+13 🟢</span></span>
+                        </div>
+                        <hr style="border:none; border-top:1px solid var(--color-border); margin:0.25rem 0;">
+                        <div style="text-align:center; font-weight:600;">Overall: +19 average improvement</div>
+                    </div>
+                </div>
+
+                <!-- AI Changes List (Task 5.3) -->
+                <h3 style="font-size: 1rem; margin-bottom: 1rem;">AI Changes (9 improvements)</h3>
+                
+                <div class="version-list" style="gap:1.5rem;">
+                    <!-- Category: Colors -->
+                    <div class="ai-category">
+                        <strong style="font-size:0.875rem; color:var(--color-text); text-transform:uppercase;">🎨 COLORS (2)</strong>
+                        <ul style="margin: 0.5rem 0 0; padding-left: 1.25rem; font-size: 0.875rem; color:var(--color-text-muted); line-height: 1.6;">
+                            <li>Hero bg → brand blue #2563eb</li>
+                            <li>CTA button → contrast orange</li>
+                        </ul>
+                    </div>
+                    
+                    <!-- Category: Layout -->
+                    <div class="ai-category">
+                        <strong style="font-size:0.875rem; color:var(--color-text); text-transform:uppercase;">📐 LAYOUT (4)</strong>
+                        <ul style="margin: 0.5rem 0 0; padding-left: 1.25rem; font-size: 0.875rem; color:var(--color-text-muted); line-height: 1.6;">
+                            <li>Hero → full-width with pad</li>
+                            <li>CTA section → centered</li>
+                            <li>Cards → 3-col grid</li>
+                            <li>Footer → 4-col links</li>
+                        </ul>
+                    </div>
+                    
+                    <!-- Category: Typography -->
+                    <div class="ai-category">
+                        <strong style="font-size:0.875rem; color:var(--color-text); text-transform:uppercase;">📝 TYPOGRAPHY (2)</strong>
+                        <ul style="margin: 0.5rem 0 0; padding-left: 1.25rem; font-size: 0.875rem; color:var(--color-text-muted); line-height: 1.6;">
+                            <li>Headings → Inter Bold 700</li>
+                            <li>Body → 16px line-height 1.6</li>
+                        </ul>
+                    </div>
+                    
+                    <!-- Category: Images -->
+                    <div class="ai-category">
+                        <strong style="font-size:0.875rem; color:var(--color-text); text-transform:uppercase;">🖼️ IMAGES (1)</strong>
+                        <ul style="margin: 0.5rem 0 0; padding-left: 1.25rem; font-size: 0.875rem; color:var(--color-text-muted); line-height: 1.6;">
+                            <li>Icons → SVG replacements</li>
+                        </ul>
+                    </div>
+                </div>
+            </aside>
+
+        </main>
+    </div>
+
+    <script type="module">
+        import { toast } from './components/toast.js';
+
+        // --- Drag and Drop Logic --- //
+        const dropzone = document.getElementById('dropzone');
+        const fileInput = document.getElementById('fileInput');
+        const progressContainer = document.getElementById('uploadProgressContainer');
+        const progressBar = document.getElementById('uploadProgressBar');
+
+        dropzone.addEventListener('click', () => fileInput.click());
+
+        dropzone.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            dropzone.classList.add('dragover');
+        });
+
+        dropzone.addEventListener('dragleave', () => {
+            dropzone.classList.remove('dragover');
+        });
+
+        dropzone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            dropzone.classList.remove('dragover');
+            if(e.dataTransfer.files.length) {
+                handleFiles(e.dataTransfer.files);
+            }
+        });
+
+        fileInput.addEventListener('change', (e) => {
+            if(e.target.files.length) {
+                handleFiles(e.target.files);
+            }
+        });
+
+        function handleFiles(files) {
+            const validTypes = ['text/html', 'application/zip'];
+            const f = files[0];
+            
+            // Validate type
+            if (!validTypes.includes(f.type) && !f.name.endsWith('.html') && !f.name.endsWith('.htm')) {
+                toast.show('Invalid file type. Only .html or .zip allowed.', 'error');
+                return;
+            }
+            
+            // Validate size (10MB)
+            if (f.size > 10 * 1024 * 1024) {
+                toast.show('File too large. Maximum size is 10MB.', 'error');
+                return;
+            }
+
+            // Simulate Upload
+            progressContainer.style.display = 'block';
+            progressBar.style.width = '0%';
+            
+            let progress = 0;
+            const interval = setInterval(() => {
+                progress += Math.random() * 20;
+                if(progress >= 100) {
+                    progress = 100;
+                    clearInterval(interval);
+                    setTimeout(() => {
+                        toast.show(`File "${f.name}" uploaded successfully!`, 'success');
+                        progressContainer.style.display = 'none';
+                    }, 500);
+                }
+                progressBar.style.width = `${progress}%`;
+            }, 200);
+        }
+
+        // --- Slider Logic --- //
+        const compareContainer = document.getElementById('compareContainer');
+        const sliderHandle = document.getElementById('sliderHandle');
+        const panelBefore = document.getElementById('panelBefore');
+        const panelAfter = document.getElementById('panelAfter');
+        let isDragging = false;
+
+        sliderHandle.addEventListener('mousedown', () => isDragging = true);
+        window.addEventListener('mouseup', () => isDragging = false);
+        window.addEventListener('mousemove', (e) => {
+            if(!isDragging) return;
+            
+            const rect = compareContainer.getBoundingClientRect();
+            // Desktop horizontal slider logic 
+            // In a real app we'd adapt for mobile vertical orientation
+            let newWidth = ((e.clientX - rect.left) / rect.width) * 100;
+            
+            // Constrain
+            if(newWidth < 5) newWidth = 5;
+            if(newWidth > 95) newWidth = 95;
+            
+            panelBefore.style.width = `${newWidth}%`;
+            panelAfter.style.width = `${100 - newWidth}%`;
+            sliderHandle.style.left = `${newWidth}%`;
+        });
+
+        // --- Device Toggle Logic --- //
+        const deviceBtns = document.querySelectorAll('.device-btn');
+        const frames = [document.getElementById('frameBefore'), document.getElementById('frameAfter')];
+        
+        deviceBtns.forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                // Update active state
+                deviceBtns.forEach(b => b.classList.remove('active'));
+                const targetBtn = e.target.closest('.device-btn');
+                targetBtn.classList.add('active');
+                
+                // Change iframe widths
+                const device = targetBtn.dataset.device;
+                frames.forEach(frame => {
+                    frame.className = `iframe-${device}`;
+                });
+            });
+        });
+        
+        // --- Share Action (Task 5.1) --- //
+        document.getElementById('shareBtn').addEventListener('click', async () => {
+            try {
+                // Stubbing the token generation
+                const fakeToken = "prv-" + Math.random().toString(36).substr(2, 9);
+                const baseUrl = window.location.origin;
+                const link = `${baseUrl}/preview.html?token=${fakeToken}`;
+                
+                await navigator.clipboard.writeText(link);
+                toast.show('Share link copied to clipboard (valid for 7 days).', 'success');
+            } catch (err) {
+                toast.show('Failed to copy link.', 'error');
+            }
+        });
+        
+        // --- Batch Processing (Task 4.4) --- //
+        const startBatchBtn = document.getElementById('startBatchBtn');
+        const batchStatus = document.getElementById('batchStatus');
+        const batchProgressBar = document.getElementById('batchProgressBar');
+        const batchCount = document.getElementById('batchCount');
+        
+        startBatchBtn.addEventListener('click', () => {
+            startBatchBtn.disabled = true;
+            batchStatus.style.display = 'block';
+            let completed = 0;
+            const total = 5; // simulating 5 urls
+            
+            batchCount.innerText = `0/${total} items`;
+            
+            const interval = setInterval(() => {
+                completed++;
+                batchProgressBar.style.width = `${(completed/total)*100}%`;
+                batchCount.innerText = `${completed}/${total} items`;
+                
+                if (completed >= total) {
+                    clearInterval(interval);
+                    startBatchBtn.disabled = false;
+                    toast.show('Batch processing complete!', 'success');
+                    setTimeout(() => batchStatus.style.display = 'none', 3000);
+                }
+            }, 1000);
+        });
+
+                // --- Lighthouse Call Stub (Task 5.2) --- //
+        document.getElementById('runLighthouseBtn').addEventListener('click', () => {
+            toast.show('Starting Lighthouse analysis... This may take up to 30 seconds.', 'warning');
+            
+            setTimeout(() => {
+                toast.show('Lighthouse results available! Score improved by 19 points.', 'success');
+                document.getElementById('lighthousePanel').style.display = 'block';
+            }, 3000);
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shared Preview | Maximo SEO Dashboard</title>
+    <link rel="stylesheet" href="./styles/design-tokens.css">
+    <link rel="stylesheet" href="./styles/components.css">
+    <style>
+        body { margin: 0; display: flex; flex-direction: column; min-height: 100vh; }
+        .preview-header {
+            background-color: var(--color-surface);
+            padding: 1rem 2rem;
+            border-bottom: 1px solid var(--color-border);
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .preview-info h1 { margin: 0; font-size: 1.25rem; }
+        .preview-info p { margin: 0.25rem 0 0; font-size: 0.875rem; color: var(--color-text-muted); }
+        .comparison-container {
+            display: flex; flex: 1; position: relative; overflow: hidden; background: #f1f5f9;
+        }
+        .comparison-panel { height: 100%; position: relative; }
+        iframe { width: 100%; height: 100%; border: none; background: white; }
+        .slider-handle {
+            position: absolute; top: 0; bottom: 0; left: 50%; width: 4px;
+            background-color: var(--color-primary); cursor: col-resize;
+            transform: translateX(-50%); z-index: 50;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .slider-button {
+            width: 32px; height: 32px; background-color: white; border: 2px solid var(--color-primary);
+            border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            color: var(--color-primary); box-shadow: var(--shadow-md);
+        }
+        .panel-label {
+            position: absolute; top: 1rem; left: 1rem; background-color: rgba(0,0,0,0.7);
+            color: white; padding: 0.25rem 0.75rem; border-radius: var(--radius-full);
+            font-size: 0.75rem; font-weight: 600; z-index: 10;
+        }
+    </style>
+</head>
+<body>
+    <header class="preview-header">
+        <div class="preview-info">
+            <h1 id="previewTitle">Preview — Loading...</h1>
+            <p id="previewMeta">Shared by: --- | Expires: ---</p>
+        </div>
+        <div>
+            <button class="btn btn-primary" onclick="window.location.href='https://maximo-seo.ai'">Powered by Maximo SEO</button>
+        </div>
+    </header>
+
+    <div class="comparison-container" id="compareContainer">
+        <div class="comparison-panel" id="panelBefore" style="width: 50%;">
+            <div class="panel-label">Original</div>
+            <iframe id="frameBefore" srcdoc="<html><body style='padding:20px;font-family:sans-serif'><h1>Loading Original...</h1></body></html>"></iframe>
+        </div>
+        
+        <div class="slider-handle" id="sliderHandle">
+            <div class="slider-button">
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+            </div>
+        </div>
+        
+        <div class="comparison-panel" id="panelAfter" style="width: 50%;">
+            <div class="panel-label" style="background-color: var(--color-primary)">Improved</div>
+            <iframe id="frameAfter" srcdoc="<html><body style='padding:20px;font-family:sans-serif'><h1>Loading Improved...</h1></body></html>"></iframe>
+        </div>
+    </div>
+
+    <script>
+        // Setup URL param parsing for token
+        const urlParams = new URLSearchParams(window.location.search);
+        const token = urlParams.get('token');
+        
+        if(!token) {
+            document.getElementById('previewTitle').innerText = "Invalid Link";
+            document.getElementById('previewMeta').innerText = "This preview requires a valid token.";
+        } else {
+            // Mock data loading
+            document.getElementById('previewTitle').innerText = "Preview — Galoz Industrial Redesign";
+            document.getElementById('previewMeta').innerText = "Shared by: admin@maximo-seo.ai | Expires: May 10, 2026";
+            
+            // Populate iframes
+            document.getElementById('frameBefore').srcdoc = "<html><body style='padding:20px;font-family:sans-serif'><h1>Galoz Original</h1><p>Checking initial layout...</p></body></html>";
+            document.getElementById('frameAfter').srcdoc = "<html><body style='padding:20px;font-family:sans-serif'><h1>Galoz Improved</h1><p style='color:#333; line-height:1.6'>Now with optimized CSS and structure.</p></body></html>";
+        }
+
+        // Slider logic
+        const compareContainer = document.getElementById('compareContainer');
+        const sliderHandle = document.getElementById('sliderHandle');
+        const panelBefore = document.getElementById('panelBefore');
+        const panelAfter = document.getElementById('panelAfter');
+        let isDragging = false;
+
+        sliderHandle.addEventListener('mousedown', () => isDragging = true);
+        window.addEventListener('mouseup', () => isDragging = false);
+        window.addEventListener('mousemove', (e) => {
+            if(!isDragging) return;
+            const rect = compareContainer.getBoundingClientRect();
+            let newWidth = ((e.clientX - rect.left) / rect.width) * 100;
+            if(newWidth < 5) newWidth = 5;
+            if(newWidth > 95) newWidth = 95;
+            panelBefore.style.width = `${newWidth}%`;
+            panelAfter.style.width = `${100 - newWidth}%`;
+            sliderHandle.style.left = `${newWidth}%`;
+        });
+    </script>
+</body>
+</html>
