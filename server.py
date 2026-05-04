@@ -5391,8 +5391,6 @@ body{{font-family:Arial;padding:24px}}h1{{color:#333}}pre{{background:#f4f4f4;pa
                 try:
                     # In a real environment, we'd use urllib to push to the local/remote n8n instance. 
                     # If this fails due to no N8N running on the port in this specific instance, we swallow gracefully.
-                    import urllib.request
-                    import json
                     req = urllib.request.Request(n8n_webhook_url, method='POST')
                     req.add_header('Content-Type', 'application/json')
                     n8n_data = json.dumps({
@@ -5417,8 +5415,6 @@ body{{font-family:Arial;padding:24px}}h1{{color:#333}}pre{{background:#f4f4f4;pa
                     return json_response(self, 400, {'ok': False, 'error': 'missing_token'})
 
                 # Verify token with Supabase API
-                import urllib.request
-                import json
                 sb_url = os.environ.get('SUPABASE_URL', 'https://cbysbvanpohcdgbrembr.supabase.co')
                 sb_key = os.environ.get('SUPABASE_KEY', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNieXNidmFucG9oY2RnYnJlbWJyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc4ODcxNDcsImV4cCI6MjA5MzQ2MzE0N30.V4TvBwAaj9TZZqvkms47aA_ETY_kv_-8O153IpT3qmg')
                 
@@ -6609,8 +6605,6 @@ body{{font-family:Arial;padding:24px}}h1{{color:#333}}pre{{background:#f4f4f4;pa
                 try:
                     # In a real environment, we'd use urllib to push to the local/remote n8n instance. 
                     # If this fails due to no N8N running on the port in this specific instance, we swallow gracefully.
-                    import urllib.request
-                    import json
                     req = urllib.request.Request(n8n_webhook_url, method='POST')
                     req.add_header('Content-Type', 'application/json')
                     n8n_data = json.dumps({
@@ -6635,8 +6629,6 @@ body{{font-family:Arial;padding:24px}}h1{{color:#333}}pre{{background:#f4f4f4;pa
                     return json_response(self, 400, {'ok': False, 'error': 'missing_token'})
 
                 # Verify token with Supabase API
-                import urllib.request
-                import json
                 sb_url = os.environ.get('SUPABASE_URL', 'https://cbysbvanpohcdgbrembr.supabase.co')
                 sb_key = os.environ.get('SUPABASE_KEY', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNieXNidmFucG9oY2RnYnJlbWJyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc4ODcxNDcsImV4cCI6MjA5MzQ2MzE0N30.V4TvBwAaj9TZZqvkms47aA_ETY_kv_-8O153IpT3qmg')
                 
