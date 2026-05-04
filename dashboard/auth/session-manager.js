@@ -24,6 +24,8 @@ class SessionManager {
         if (this.refreshInterval) {
             clearInterval(this.refreshInterval);
         }
+        // Force expiry of the legacy Python server cookie on logout
+        document.cookie = "dash_auth=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
     }
 
     startRefreshTimer(expiresInSeconds) {

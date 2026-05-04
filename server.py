@@ -466,7 +466,7 @@ import time as _time8
 
 _STAGE8_PUBLIC_PATHS = {
     '/api/health', '/api/auth/login', '/api/auth/logout', '/api/auth/me', '/api/auth/status',
-    '/api/auth/request-reset', '/api/auth/reset',
+    '/api/auth/request-reset', '/api/auth/reset', '/api/auth/supabase-sync',
     '/login', '/login.html', '/static/login.css', '/api/login', '/api/reset-password',
     '/api/fixer/analyze', '/api/kwr/ensemble', '/api/delete-agent', '/api/kwr/save-obsidian', '/api/kwr/update-rows',
     '/api/csrf', '/api/version', '/healthz', '/api/studio/improve/rules', '/api/studio/improve',
@@ -474,7 +474,7 @@ _STAGE8_PUBLIC_PATHS = {
 }
 _STAGE8_PUBLIC_PREFIXES = ('/static/', '/assets/', '/css/', '/js/', '/img/', '/fonts/', '/api/playground/templates/', '/api/playground/exports/', '/styles/', '/components/', '/auth/')
 _STAGE8_PUBLIC_UNSAFE_PATHS = {
-    '/api/auth/login', '/api/login', '/api/auth/request-reset', '/api/auth/reset', '/api/reset-password',
+    '/api/auth/login', '/api/login', '/api/auth/request-reset', '/api/auth/reset', '/api/auth/supabase-sync', '/api/reset-password',
     '/api/n8n/webhook',
 }
 _STAGE8_SAFE_METHODS = {'GET', 'HEAD', 'OPTIONS'}
@@ -3479,7 +3479,7 @@ _R3_SSE_LOCK = threading.Lock()
 _R3_CSRF_SECRET = os.environ.get('DASH_CSRF_SECRET') or _r3_secrets.token_hex(32)
 _R3_CSRF_ENABLED = os.environ.get('DASH_CSRF', '1') not in ('0','false','False','')
 _R3_CSRF_EXEMPT = (
-    '/api/auth/login', '/api/auth/request-reset', '/api/auth/reset',
+    '/api/auth/login', '/api/auth/request-reset', '/api/auth/reset', '/api/auth/supabase-sync',
     '/api/n8n/webhook', '/login', '/api/csrf', '/metrics', '/api/login', '/api/reset-password',
 )
 
@@ -5375,6 +5375,45 @@ body{{font-family:Arial;padding:24px}}h1{{color:#333}}pre{{background:#f4f4f4;pa
                 return json_response(self, 200, {'ok': True})
             except Exception as e:
                 return json_response(self, 500, {'ok': False, 'error': str(e)})
+        # --- Stage 8.5: Supabase Auth Bridge ---
+        if parsed.path == '/api/auth/supabase-sync':
+            try:
+                payload = read_request_json(self) or {}
+                access_token = payload.get('access_token')
+                if not access_token:
+                    return json_response(self, 400, {'ok': False, 'error': 'missing_token'})
+
+                # Verify token with Supabase API
+                import urllib.request
+                import json
+                sb_url = os.environ.get('SUPABASE_URL', 'https://wtpczvyupmavzrxisvcm.supabase.co')
+                sb_key = os.environ.get('SUPABASE_KEY', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Ind0cGN6dnl1cG1hdnpyeGlzdmNtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njg3MjEyOTgsImV4cCI6MjA4NDI5NzI5OH0.-_AP23-lVz_v3HPrqp4HfN4_QJZ_0zklfyRb9tSeTk4')
+                
+                req = urllib.request.Request(f"{sb_url}/auth/v1/user")
+                req.add_header('Authorization', f'Bearer {access_token}')
+                req.add_header('apikey', sb_key)
+                
+                try:
+                    with urllib.request.urlopen(req) as resp:
+                        if resp.status != 200:
+                            return json_response(self, 401, {'ok': False, 'error': 'invalid_supabase_token'})
+                        user_data = json.loads(resp.read().decode('utf-8'))
+                        email = user_data.get('email', 'admin')
+                except Exception as e:
+                    return json_response(self, 401, {'ok': False, 'error': f'supabase_verification_failed: {str(e)}'})
+
+                # Issue Python Server Cookie to align the legacy server auth
+                role = 'admin'
+                token = _jwt_make(email, role)
+                self.send_response(200)
+                self.send_header('Content-Type', 'application/json; charset=utf-8')
+                self.send_header('Set-Cookie', f'dash_auth={token}; Path=/; HttpOnly; SameSite=Lax; Max-Age={14*86400}')
+                self.end_headers()
+                self.wfile.write(json.dumps({'ok': True, 'msg': 'Cookie sync successful'}).encode('utf-8'))
+                return
+            except Exception as e:
+                return json_response(self, 500, {'ok': False, 'error': str(e)})
+
         # Stage 8: login — both endpoints are aliases for the same cookie-setting handler.
         if parsed.path in ('/api/auth/login', '/api/login'):
             try:
@@ -6521,6 +6560,44 @@ body{{font-family:Arial;padding:24px}}h1{{color:#333}}pre{{background:#f4f4f4;pa
         # DASHBOARD_ROUTE_INVENTORY_GUARD_2026_05_01
         # Critical mutating UI/API routes below are covered by tests/test_dashboard_route_inventory_guard.py
         # so future edits do not leave routes shadowed outside the active do_POST handler.
+        # --- Stage 8.5: Supabase Auth Bridge ---
+        if parsed.path == '/api/auth/supabase-sync':
+            try:
+                payload = read_request_json(self) or {}
+                access_token = payload.get('access_token')
+                if not access_token:
+                    return json_response(self, 400, {'ok': False, 'error': 'missing_token'})
+
+                # Verify token with Supabase API
+                import urllib.request
+                import json
+                sb_url = os.environ.get('SUPABASE_URL', 'https://wtpczvyupmavzrxisvcm.supabase.co')
+                sb_key = os.environ.get('SUPABASE_KEY', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Ind0cGN6dnl1cG1hdnpyeGlzdmNtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njg3MjEyOTgsImV4cCI6MjA4NDI5NzI5OH0.-_AP23-lVz_v3HPrqp4HfN4_QJZ_0zklfyRb9tSeTk4')
+                
+                req = urllib.request.Request(f"{sb_url}/auth/v1/user")
+                req.add_header('Authorization', f'Bearer {access_token}')
+                req.add_header('apikey', sb_key)
+                
+                try:
+                    with urllib.request.urlopen(req) as resp:
+                        if resp.status != 200:
+                            return json_response(self, 401, {'ok': False, 'error': 'invalid_supabase_token'})
+                        user_data = json.loads(resp.read().decode('utf-8'))
+                        email = user_data.get('email', 'admin')
+                except Exception as e:
+                    return json_response(self, 401, {'ok': False, 'error': f'supabase_verification_failed: {str(e)}'})
+
+                # Issue Python Server Cookie to align the legacy server auth
+                role = 'admin'
+                token = _jwt_make(email, role)
+                self.send_response(200)
+                self.send_header('Content-Type', 'application/json; charset=utf-8')
+                self.send_header('Set-Cookie', f'dash_auth={token}; Path=/; HttpOnly; SameSite=Lax; Max-Age={14*86400}')
+                self.end_headers()
+                self.wfile.write(json.dumps({'ok': True, 'msg': 'Cookie sync successful'}).encode('utf-8'))
+                return
+            except Exception as e:
+                return json_response(self, 500, {'ok': False, 'error': str(e)})
 
         # Stage 8: login — both endpoints are aliases for the same cookie-setting handler.
         if parsed.path in ('/api/auth/login', '/api/login'):

@@ -220,6 +220,18 @@
                         expires_in: res.expires_in,
                         user: res.user 
                     });
+                    
+                    // SYNC WITH PYTHON SERVER
+                    try {
+                        await fetch('/api/auth/supabase-sync', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ access_token: res.access_token })
+                        });
+                    } catch (syncErr) {
+                        console.warn("Could not sync auth with Python server", syncErr);
+                    }
+
                     toast.show('Login successful! Redirecting...', 'success');
                     setTimeout(() => window.location.href = '/index.html', 1000);
                 } else {
