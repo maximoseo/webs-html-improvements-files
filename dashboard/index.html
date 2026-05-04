@@ -238,41 +238,7 @@
             </div>
 
             <div class="projects-grid" id="projectsContainer">
-                <!-- Example Card 1 -->
-                <div class="card project-card" onclick="window.location.href='project-detail.html?id=1'">
-                    <div class="project-info">
-                        <div class="project-header">
-                            <div>
-                                <h3 class="project-name">Galoz Industrial Control</h3>
-                                <a href="https://galoz.co.il" class="project-url" target="_blank" rel="noopener noreferrer">galoz.co.il</a>
-                            </div>
-                            <span class="badge badge-success">Completed</span>
-                        </div>
-                        <p style="font-size: 0.875rem; color: var(--color-text-muted); margin: 0;">Updated WordPress structure with strict DOM locking.</p>
-                    </div>
-                    <div class="project-footer">
-                        <span>ID: PRJ-1049</span>
-                        <span>Updated 2h ago</span>
-                    </div>
-                </div>
-
-                <!-- Example Card 2 -->
-                <div class="card project-card" onclick="window.location.href='project-detail.html?id=2'">
-                    <div class="project-info">
-                        <div class="project-header">
-                            <div>
-                                <h3 class="project-name">Powerplug V2</h3>
-                                <a href="https://powerplug.ai" class="project-url" target="_blank" rel="noopener noreferrer">powerplug.ai</a>
-                            </div>
-                            <span class="badge badge-warning">In Progress</span>
-                        </div>
-                        <p style="font-size: 0.875rem; color: var(--color-text-muted); margin: 0;">Fixing CSS variables and Hero section alignments.</p>
-                    </div>
-                    <div class="project-footer">
-                        <span>ID: PRJ-1050</span>
-                        <span>Updated 5m ago</span>
-                    </div>
-                </div>
+                <!-- Data will be loaded dynamically here -->
             </div>
             
             <!-- Empty state hidden by default -->
@@ -288,13 +254,16 @@
 
     <script type="module">
         import { requireAuth, sessionManager } from './auth/middleware.js';
-        
-        // Ensure user is verified (client-side)
-        // For development layout view uncommenting bypasses auth check:
-        /* if(!requireAuth()) {
-             console.log("Not authenticated.");
-           }
-        */
+        import { supabaseClient } from './auth/supabase-client.js';
+        import { toast } from './components/toast.js';
+
+        // 1. Require Authentication
+        if (!requireAuth()) {
+            console.warn("Redirecting to login...");
+        } else {
+            // Proceed to load data if authenticated
+            loadDashboardData();
+        }
 
         // Theme
         const themeToggle = document.getElementById('themeToggle');
@@ -308,9 +277,88 @@
             sessionManager.clearSession();
             window.location.href = '/login.html';
         });
+
+        // New Redesign routing
+        document.getElementById('newRedesignBtn').addEventListener('click', () => {
+            window.location.href = '/project-detail.html'; // Create new empty project view
+        });
+
+        // Dynamic Data Loading
+        async function loadDashboardData() {
+            const session = sessionManager.getSession();
+            if (!session || !session.access_token) return;
+
+            const container = document.getElementById('projectsContainer');
+            const emptyState = document.getElementById('emptyState');
+            container.innerHTML = '<div class="spinner" style="margin:2rem auto; border-top-color: var(--color-primary)"></div>';
+
+            const response = await supabaseClient.getProjects(session.access_token);
+            
+            if (response.error) {
+                container.innerHTML = '';
+                toast.show('Failed to load projects: ' + (response.error.message || 'Unknown error'), 'error');
+                return;
+            }
+
+            const projects = response.data;
+            
+            // Update Stats (Basic calculation)
+            document.getElementById('stat-total').innerText = projects.length;
+            // Fake stats for UI completeness pending real columns
+            document.getElementById('stat-completed').innerText = projects.filter(p => (p.status || '').toLowerCase() === 'completed').length || 0;
+            document.getElementById('stat-progress').innerText = projects.filter(p => (p.status || '').toLowerCase() === 'in_progress').length || 0;
+            document.getElementById('stat-failed').innerText = projects.filter(p => (p.status || '').toLowerCase() === 'failed').length || 0;
+
+            if (projects.length === 0) {
+                container.innerHTML = '';
+                emptyState.style.display = 'block';
+            } else {
+                emptyState.style.display = 'none';
+                renderProjects(projects, container);
+            }
+        }
+
+        function renderProjects(projects, container) {
+            container.innerHTML = '';
+            
+            projects.forEach(project => {
+                const date = new Date(project.created_at).toLocaleDateString();
+                const status = project.status || 'Pending';
+                
+                let badgeClass = 'badge-warning';
+                if (status.toLowerCase() === 'completed') badgeClass = 'badge-success';
+                if (status.toLowerCase() === 'failed') badgeClass = 'badge-error';
+
+                const cardHtml = `
+                <div class="card project-card" onclick="window.location.href='project-detail.html?id=${project.id}'">
+                    <div class="project-info">
+                        <div class="project-header">
+                            <div>
+                                <h3 class="project-name">${escapeHtml(project.name || 'Untitled Project')}</h3>
+                                <a href="${escapeHtml(project.url || '#')}" class="project-url" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">${escapeHtml(project.url || 'No URL')}</a>
+                            </div>
+                            <span class="badge ${badgeClass}">${escapeHtml(status)}</span>
+                        </div>
+                        <p style="font-size: 0.875rem; color: var(--color-text-muted); margin: 0;">Created ${date}</p>
+                    </div>
+                    <div class="project-footer">
+                        <span title="${project.id}">ID: ${project.id.substring(0,8)}...</span>
+                        <span>View Details</span>
+                    </div>
+                </div>`;
+                
+                container.insertAdjacentHTML('beforeend', cardHtml);
+            });
+        }
         
-        // In real app, we fetch from supabase here and dynamically render the `projectsContainer`.
-        // If projects = 0, we show emptyState.
+        function escapeHtml(unsafe) {
+            return (unsafe||'').toString()
+                 .replace(/&/g, "&amp;")
+                 .replace(/</g, "&lt;")
+                 .replace(/>/g, "&gt;")
+                 .replace(/"/g, "&quot;")
+                 .replace(/'/g, "&#039;");
+        }
     </script>
 </body>
 </html>

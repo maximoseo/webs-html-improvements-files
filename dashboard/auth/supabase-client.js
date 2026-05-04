@@ -53,6 +53,24 @@ class SupabaseAuthClient {
         });
         return await res.json();
     }
+    // --- Data Fetching Methods --- //
+
+    async getProjects(token) {
+        try {
+            const res = await fetch(`${this.url}/rest/v1/projects?select=*&order=created_at.desc`, {
+                method: 'GET',
+                headers: {
+                    ...this.headers,
+                    'Authorization': `Bearer ${token}` // Override anon key with user JWT
+                }
+            });
+            const data = await res.json();
+            if (!res.ok) return { error: data };
+            return { data };
+        } catch(e) {
+            return { error: { message: "Failed to fetch projects." }};
+        }
+    }
 }
 
 export const supabaseClient = new SupabaseAuthClient(SUPABASE_URL, SUPABASE_ANON_KEY);
