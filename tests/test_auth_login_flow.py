@@ -25,7 +25,7 @@ def req(path, method='GET', headers=None, data=None):
 class AuthLoginFlowTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        os.environ['DASHBOARD_USERS'] = 'admin:Maximo2025!'
+        os.environ['DASHBOARD_USERS'] = 'admin:HermesTestPassword123!'
         cls.httpd = HTTPServer(('127.0.0.1', PORT), server.DashboardHandler)
         cls.thread = threading.Thread(target=cls.httpd.serve_forever, daemon=True)
         cls.thread.start()
@@ -37,18 +37,17 @@ class AuthLoginFlowTests(unittest.TestCase):
         cls.thread.join(timeout=2)
         os.environ.pop('DASHBOARD_USERS', None)
 
-    def test_login_page_uses_canonical_auth_endpoints(self):
+    def test_login_page_uses_supabase_client_without_legacy_auth_endpoints(self):
         status, _, body = req('/login')
         self.assertEqual(status, 200)
-        self.assertIn('/api/auth/login', body)
-        self.assertIn('/api/auth/request-reset', body)
-        self.assertIn('/api/auth/reset', body)
+        self.assertIn("./auth/supabase-client.js", body)
+        self.assertIn('/api/auth/supabase-sync', body)
         self.assertNotIn('/api/login', body)
         self.assertNotIn('/api/reset-password', body)
         self.assertNotIn('dashboard_token', body)
 
     def test_auth_login_sets_dash_auth_cookie_and_auth_me_accepts_it(self):
-        payload = json.dumps({'username': 'admin', 'user': 'admin', 'password': 'Maximo2025!'}).encode()
+        payload = json.dumps({'username': 'admin', 'user': 'admin', 'password': 'HermesTestPassword123!'}).encode()
         status, headers, body = req('/api/auth/login', method='POST', headers={'Content-Type': 'application/json'}, data=payload)
         data = json.loads(body)
         self.assertEqual(status, 200)
@@ -86,11 +85,11 @@ class AuthLoginFlowTests(unittest.TestCase):
         old = {name: os.environ.get(name) for name in keys}
         try:
             os.environ['DASHBOARD_USER'] = 'admin'
-            os.environ['DASHBOARD_PASSWORD'] = 'Maximo2025!'
+            os.environ['DASHBOARD_PASSWORD'] = 'HermesTestPassword123!'
             os.environ['DASHBOARD_EMAIL'] = 'service@maximo-seo.com'
             for key in ('SUPABASE_URL', 'SUPABASE_ANON_KEY', 'SUPABASE_SERVICE_ROLE_KEY'):
                 os.environ.pop(key, None)
-            matched = server._dashboard_validate_credentials('service@maximo-seo.com', 'Maximo2025!')
+            matched = server._dashboard_validate_credentials('service@maximo-seo.com', 'HermesTestPassword123!')
             self.assertIsNotNone(matched)
             self.assertEqual(matched['username'], 'admin')
             self.assertEqual(matched['role'], 'admin')

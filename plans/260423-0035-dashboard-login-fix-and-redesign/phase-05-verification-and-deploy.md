@@ -35,7 +35,7 @@
 # V1 — login API
 curl -sS -X POST https://html-redesign-dashboard.maximo-seo.ai/api/auth/login \
   -H 'Content-Type: application/json' \
-  -d '{"email":"service@maximo-seo.com","password":"Maximo2025!"}' \
+  -d '{"email":"service@maximo-seo.com","password":"[REDACTED_PASSWORD]"}' \
   -D - | grep -E "Set-Cookie|HTTP"
 
 # V2 — gate enforced

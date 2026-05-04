@@ -23,14 +23,14 @@ import logging
 
 # ===== AUTH CONFIG =====
 _AUTH_USER = os.getenv('DASHBOARD_USER', 'admin')
-_AUTH_PASS = os.getenv('DASHBOARD_PASSWORD', 'Maximo2025!')
-_JWT_SECRET = os.getenv('DASHBOARD_JWT_SECRET', 'maximo-dashboard-secret-2025')
+_AUTH_PASS = os.getenv('AUTH_PASSWORD', '')
+_JWT_SECRET = os.getenv('JWT_SECRET', '')
 _TOKEN_EXPIRY = 7 * 24 * 3600  # 7 days
-RESEND_API_KEY_AUTH = os.getenv('RESEND_API_KEY', 're_i1aPFBSa_J88E2g6XqjaMZufEpJmmcLAj')
+RESEND_API_KEY_AUTH = os.getenv('RESEND_API_KEY', '')
 SUPABASE_URL_AUTH = os.getenv('SUPABASE_URL', 'https://wtpczvyupmavzrxisvcm.supabase.co')
-SUPABASE_ANON_KEY_AUTH = os.getenv('SUPABASE_ANON_KEY', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Ind0cGN6dnl1cG1hdnpyeGlzdmNtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njg3MjEyOTgsImV4cCI6MjA4NDI5NzI5OH0.-_AP23-lVz_v3HPrqp4HfN4_QJZ_0zklfyRb9tSeTk4')
+SUPABASE_ANON_KEY_AUTH = os.getenv('SUPABASE_ANON_KEY', '')
 OBSIDIAN_URL_AUTH = os.getenv('OBSIDIAN_URL', 'https://ciara-televisional-compressively.ngrok-free.dev')
-OBSIDIAN_KEY_AUTH = os.getenv('OBSIDIAN_KEY', '8d167cbd4bb55fba21cdcc1c88a1998b4f8703dbb456d4fd8fc6451f8d034f2c')
+OBSIDIAN_KEY_AUTH = os.getenv('OBSIDIAN_API_KEY', '')
 
 
 def _b64url_enc(data: bytes) -> str:

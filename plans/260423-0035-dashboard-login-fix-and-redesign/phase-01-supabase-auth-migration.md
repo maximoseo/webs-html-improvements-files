@@ -46,7 +46,7 @@ create policy "service_full" on public.dashboard_users for all to service_role u
 
 -- Seed admin (run once manually):
 -- 1. In Supabase dashboard → Authentication → Add user:
---    email=service@maximo-seo.com, password=Maximo2025!, email_confirmed=true
+--    email=service@maximo-seo.com, password=[REDACTED_PASSWORD], email_confirmed=true
 -- 2. Run:
 -- insert into public.dashboard_users (id, username, role, display_name, email)
 -- select id, 'admin', 'admin', 'Admin', email from auth.users where email='service@maximo-seo.com';
@@ -106,7 +106,7 @@ create policy "service_full" on public.dashboard_users for all to service_role u
 - [ ] Add password-reset route using Supabase `/auth/v1/recover`.
 
 ## Success criteria
-- Admin can log in with email `service@maximo-seo.com` + `Maximo2025!` via Supabase.
+- Admin can log in with email `service@maximo-seo.com` + `[REDACTED_PASSWORD]` via Supabase.
 - `last_login` updates in `dashboard_users`.
 - `users.json` can be deleted and login still works.
 

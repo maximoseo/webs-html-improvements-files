@@ -466,7 +466,7 @@ import time as _time8
 
 _STAGE8_PUBLIC_PATHS = {
     '/api/health', '/api/auth/login', '/api/auth/logout', '/api/auth/me', '/api/auth/status',
-    '/api/auth/request-reset', '/api/auth/reset', '/api/auth/supabase-sync',
+    '/api/auth/request-reset', '/api/auth/reset', '/api/auth/supabase-sync', '/api/auth/supabase-config',
     '/login', '/login.html', '/static/login.css', '/api/login', '/api/reset-password',
     '/api/fixer/analyze', '/api/kwr/ensemble', '/api/delete-agent', '/api/kwr/save-obsidian', '/api/kwr/update-rows',
     '/api/csrf', '/api/version', '/healthz', '/api/studio/improve/rules', '/api/studio/improve',
@@ -786,7 +786,7 @@ if not _JWT_SECRET_KEY and _dashboard_is_production():
     import secrets as _secrets
     _JWT_SECRET_KEY = _secrets.token_hex(32)
     print('[auth] auto-generated DASHBOARD_JWT_SECRET', flush=True)
-_JWT_SECRET_KEY = _JWT_SECRET_KEY or 'maximo-dashboard-secret-2025-DEV-ONLY'
+_JWT_SECRET_KEY = _JWT_SECRET_KEY or 'dev-only-jwt-secret-change-me'
 _USERS_JSON_LOCK = _threading_mu.Lock()
 
 def _mu_users_load():
@@ -833,7 +833,7 @@ def _mu_init_users():
         admin_pass = os.getenv('DASHBOARD_PASSWORD') or ''
         if _dashboard_is_production() and not admin_pass:
             return
-        admin_pass = admin_pass or 'Maximo2025!'
+        admin_pass = admin_pass or 'dev-only-password-change-me'
         users = [{
             'id': str(_uuid_mu.uuid4()),
             'username': admin_user,
@@ -867,7 +867,7 @@ def _dashboard_auth_enabled():
         or os.getenv('DASHBOARD_PASSWORD', '')
         or os.path.exists(_USERS_JSON_PATH)
         or _supabase_auth_configured()
-        or _fallback_auth_enabled()  # allow break-glass fallback on cold-start misconfig
+        or (_fallback_auth_enabled() and os.getenv('DASHBOARD_FALLBACK_PASSWORD', '').strip())
     )
 
 
@@ -964,7 +964,8 @@ def _dashboard_validate_credentials(username, password):
             }
 
     if not matched:
-        if _fallback_auth_enabled() and _hmac.compare_digest(username, 'admin') and _hmac.compare_digest(password, 'Maximo2025!'):
+        fallback_pass = os.getenv('DASHBOARD_FALLBACK_PASSWORD', '')
+        if fallback_pass and _fallback_auth_enabled() and _hmac.compare_digest(username, 'admin') and _hmac.compare_digest(password, fallback_pass):
             matched = {'username': 'admin', 'role': 'admin', 'email': 'service@maximo-seo.com'}
 
     if not matched:
@@ -4230,6 +4231,17 @@ body{{font-family:Arial;padding:24px}}h1{{color:#333}}pre{{background:#f4f4f4;pa
             })
         if parsed.path == '/api/auth/status':
             return json_response(self, 200, _dashboard_auth_status())
+        if parsed.path == '/api/auth/supabase-config':
+            supabase_url = (os.getenv('SUPABASE_URL') or '').strip().rstrip('/')
+            supabase_anon = (
+                (os.getenv('SUPABASE_ANON_KEY') or '').strip()
+                or (os.getenv('NEXT_PUBLIC_SUPABASE_ANON_KEY') or '').strip()
+            )
+            return json_response(self, 200, {
+                'ok': bool(supabase_url and supabase_anon),
+                'supabaseUrl': supabase_url,
+                'supabaseAnonKey': supabase_anon if supabase_url and supabase_anon else '',
+            })
         if parsed.path == '/api/auth/logout':
             self.send_response(200)
             self.send_header('Content-Type', 'application/json; charset=utf-8')
@@ -5415,9 +5427,12 @@ body{{font-family:Arial;padding:24px}}h1{{color:#333}}pre{{background:#f4f4f4;pa
                     return json_response(self, 400, {'ok': False, 'error': 'missing_token'})
 
                 # Verify token with Supabase API
-                sb_url = os.environ.get('SUPABASE_URL', 'https://cbysbvanpohcdgbrembr.supabase.co')
-                sb_key = os.environ.get('SUPABASE_KEY', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNieXNidmFucG9oY2RnYnJlbWJyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc4ODcxNDcsImV4cCI6MjA5MzQ2MzE0N30.V4TvBwAaj9TZZqvkms47aA_ETY_kv_-8O153IpT3qmg')
+                sb_url = os.environ.get('SUPABASE_URL', '')
+                sb_key = (os.environ.get('SUPABASE_KEY') or os.environ.get('SUPABASE_ANON_KEY') or os.environ.get('NEXT_PUBLIC_SUPABASE_ANON_KEY') or '')
                 
+                if not sb_url or not sb_key:
+                    return json_response(self, 503, {'ok': False, 'error': 'supabase_not_configured'})
+
                 req = urllib.request.Request(f"{sb_url}/auth/v1/user")
                 req.add_header('Authorization', f'Bearer {access_token}')
                 req.add_header('apikey', sb_key)
@@ -6629,9 +6644,12 @@ body{{font-family:Arial;padding:24px}}h1{{color:#333}}pre{{background:#f4f4f4;pa
                     return json_response(self, 400, {'ok': False, 'error': 'missing_token'})
 
                 # Verify token with Supabase API
-                sb_url = os.environ.get('SUPABASE_URL', 'https://cbysbvanpohcdgbrembr.supabase.co')
-                sb_key = os.environ.get('SUPABASE_KEY', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNieXNidmFucG9oY2RnYnJlbWJyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc4ODcxNDcsImV4cCI6MjA5MzQ2MzE0N30.V4TvBwAaj9TZZqvkms47aA_ETY_kv_-8O153IpT3qmg')
+                sb_url = os.environ.get('SUPABASE_URL', '')
+                sb_key = (os.environ.get('SUPABASE_KEY') or os.environ.get('SUPABASE_ANON_KEY') or os.environ.get('NEXT_PUBLIC_SUPABASE_ANON_KEY') or '')
                 
+                if not sb_url or not sb_key:
+                    return json_response(self, 503, {'ok': False, 'error': 'supabase_not_configured'})
+
                 req = urllib.request.Request(f"{sb_url}/auth/v1/user")
                 req.add_header('Authorization', f'Bearer {access_token}')
                 req.add_header('apikey', sb_key)

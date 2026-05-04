@@ -1,8 +1,8 @@
 // dashboard/auth/supabase-client.js
 // Shared Supabase Instance Configuration
 
-const SUPABASE_URL = 'https://cbysbvanpohcdgbrembr.supabase.co'; // To be replaced in actual environment
-const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNieXNidmFucG9oY2RnYnJlbWJyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc4ODcxNDcsImV4cCI6MjA5MzQ2MzE0N30.V4TvBwAaj9TZZqvkms47aA_ETY_kv_-8O153IpT3qmg'; // To be replaced
+const SUPABASE_URL = window.SUPABASE_URL || ''; // Configure via runtime environment
+const SUPABASE_ANON_KEY = window.SUPABASE_ANON_KEY || ''; // Configure via runtime environment
 
 // Create a single instance using the standard JS library or simple REST if vanilla
 // In Vanilla JS without bundler, we assume the Supabase CDN script is loaded or we use REST methods
@@ -11,6 +11,12 @@ class SupabaseAuthClient {
     constructor(url, key) {
         this.url = url;
         this.key = key;
+        this.headers = {};
+        this.configLoaded = false;
+        this.updateHeaders();
+    }
+
+    updateHeaders() {
         this.headers = {
             'apikey': this.key,
             'Authorization': `Bearer ${this.key}`,
@@ -18,8 +24,31 @@ class SupabaseAuthClient {
         };
     }
 
+    async ensureConfig() {
+        if (this.url && this.key) return true;
+        if (this.configLoaded) return Boolean(this.url && this.key);
+        this.configLoaded = true;
+        try {
+            const res = await fetch('/api/auth/supabase-config', { cache: 'no-store' });
+            const data = await res.json();
+            if (res.ok && data.ok && data.supabaseUrl && data.supabaseAnonKey) {
+                this.url = data.supabaseUrl;
+                this.key = data.supabaseAnonKey;
+                this.updateHeaders();
+                return true;
+            }
+        } catch (e) {
+            // Fall through and report a generic unavailable error to callers.
+        }
+        return false;
+    }
+
     async signIn(email, password) {
         try {
+            const configured = await this.ensureConfig();
+            if (!configured) {
+                return { error: { message: "Supabase login is not configured." }};
+            }
             const res = await fetch(`${this.url}/auth/v1/token?grant_type=password`, {
                 method: 'POST',
                 headers: this.headers,
@@ -35,6 +64,10 @@ class SupabaseAuthClient {
 
     async refreshSession(refreshToken) {
         try {
+            const configured = await this.ensureConfig();
+            if (!configured) {
+                return { error: { message: "Supabase login is not configured." }};
+            }
             const res = await fetch(`${this.url}/auth/v1/token?grant_type=refresh_token`, {
                 method: 'POST',
                 headers: this.headers,
@@ -46,17 +79,13 @@ class SupabaseAuthClient {
         } catch(e) {
             return { error: { message: "Failed to refresh session." }};
         }
-    }/auth/v1/token?grant_type=refresh_token`, {
-            method: 'POST',
-            headers: this.headers,
-            body: JSON.stringify({ refresh_token: refreshToken })
-        });
-        return await res.json();
     }
     // --- Data Fetching Methods --- //
 
     async getProjects(token) {
         try {
+            const configured = await this.ensureConfig();
+            if (!configured) return { error: { message: "Supabase is not configured." }};
             const res = await fetch(`${this.url}/rest/v1/projects?select=*&order=created_at.desc`, {
                 method: 'GET',
                 headers: {
@@ -75,6 +104,8 @@ class SupabaseAuthClient {
 
     async uploadFile(token, file, projectId) {
         try {
+            const configured = await this.ensureConfig();
+            if (!configured) return { error: { message: "Supabase is not configured." }};
             const formData = new FormData();
             formData.append('file', file);
             
@@ -102,6 +133,8 @@ class SupabaseAuthClient {
 
     async saveVersion(token, projectId, htmlUrl, notes) {
         try {
+            const configured = await this.ensureConfig();
+            if (!configured) return { error: { message: "Supabase is not configured." }};
             const res = await fetch(`${this.url}/rest/v1/versions`, {
                 method: 'POST',
                 headers: {
@@ -125,6 +158,8 @@ class SupabaseAuthClient {
     }
     async getProjectDetails(token, projectId) {
         try {
+            const configured = await this.ensureConfig();
+            if (!configured) return { error: { message: "Supabase is not configured." }};
             const res = await fetch(`${this.url}/rest/v1/projects?id=eq.${projectId}`, {
                 method: 'GET',
                 headers: { ...this.headers, 'Authorization': `Bearer ${token}` }
@@ -137,6 +172,8 @@ class SupabaseAuthClient {
 
     async getProjectVersions(token, projectId) {
         try {
+            const configured = await this.ensureConfig();
+            if (!configured) return { error: { message: "Supabase is not configured." }};
             // Fetch versions ordered by creation date (newest first)
             const res = await fetch(`${this.url}/rest/v1/versions?project_id=eq.${projectId}&order=created_at.desc`, {
                 method: 'GET',

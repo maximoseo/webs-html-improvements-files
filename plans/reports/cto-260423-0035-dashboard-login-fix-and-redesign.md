@@ -7,7 +7,7 @@
 
 | Item | Finding |
 |---|---|
-| Login API | **Works**. `admin/Maximo2025!` → 200 + JWT on both `/api/login` and `/api/auth/login`. |
+| Login API | **Works**. `admin/[REDACTED_PASSWORD]` → 200 + JWT on both `/api/login` and `/api/auth/login`. |
 | Auth enforcement | **Silently bypassed in production.** Unauthenticated GET `/` returns full 820KB dashboard. |
 | User store | Local file `data/users.json` on Render (ephemeral, weak sha256) **→ will migrate to Supabase.** |
 | Dual login endpoints | Race between `/api/login` (localStorage) + `/api/auth/login` (cookie). |
@@ -18,16 +18,16 @@
 ## 1. Login Root Cause
 
 ### What the user experiences
-User submits `admin / Maximo2025!` at `/login` → appears to fail.
+User submits `admin / [REDACTED_PASSWORD]` at `/login` → appears to fail.
 
 ### What actually happens on the wire
 ```
-POST /api/login   { username:"admin", password:"Maximo2025!" }
+POST /api/login   { username:"admin", password:"[REDACTED_PASSWORD]" }
 → 200 { ok:true, token:"eyJ…JWT…", user:"admin", role:"admin" }
    (NO Set-Cookie)
 
 // login-page.html then fires-and-forgets:
-POST /api/auth/login { user:"admin", password:"Maximo2025!" }
+POST /api/auth/login { user:"admin", password:"[REDACTED_PASSWORD]" }
 → 200 Set-Cookie: dash_auth=...; HttpOnly; SameSite=Lax; Max-Age=604800
     (but result is discarded in try/catch{})
 
@@ -48,7 +48,7 @@ x-render-origin-server: DashboardHTTP/1.0 Python/3.11.15
 $ curl https://html-redesign-dashboard.maximo-seo.ai/ | wc -c
 820962    # Full dashboard served to anonymous user
 
-$ curl -X POST .../api/login -d '{"username":"admin","password":"Maximo2025!"}'
+$ curl -X POST .../api/login -d '{"username":"admin","password":"[REDACTED_PASSWORD]"}'
 {"ok":true,"user":"admin","role":"admin","token":"eyJ..."}   # Login API works
 ```
 
@@ -59,7 +59,7 @@ $ curl -X POST .../api/login -d '{"username":"admin","password":"Maximo2025!"}'
 Move credentials & users from `data/users.json` into Supabase. Two viable paths:
 
 #### Path A1 (Recommended) — Supabase Auth as source of truth
-- Seed admin user in Supabase Auth (email=`service@maximo-seo.com`, password=`Maximo2025!`).
+- Seed admin user in Supabase Auth (email=`service@maximo-seo.com`, password=`[REDACTED_PASSWORD]`).
 - Python backend calls `POST https://<proj>.supabase.co/auth/v1/token?grant_type=password` with email+password to verify credentials.
 - On success, Supabase returns an access_token (Supabase JWT). Python verifies signature with Supabase JWKS (or trusts it and immediately re-issues its own session JWT tied to the Supabase user id).
 - Dashboard uses existing `dash_auth` cookie for session (unchanged UX), but the cookie's underlying identity claim is a Supabase user id.

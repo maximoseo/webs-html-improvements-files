@@ -33,9 +33,9 @@ class AuthToolingTests(unittest.TestCase):
             'SUPABASE_URL',
             'SUPABASE_ANON_KEY',
         )}
-        os.environ['DASHBOARD_USERS'] = 'admin:Maximo2025!'
+        os.environ['DASHBOARD_USERS'] = 'admin:HermesTestPassword123!'
         os.environ['DASHBOARD_USER'] = 'admin'
-        os.environ['DASHBOARD_PASSWORD'] = 'Maximo2025!'
+        os.environ['DASHBOARD_PASSWORD'] = 'HermesTestPassword123!'
         os.environ['DASHBOARD_EMAIL'] = 'service@maximo-seo.com'
         os.environ.pop('SUPABASE_URL', None)
         os.environ.pop('SUPABASE_ANON_KEY', None)
@@ -75,8 +75,31 @@ class AuthToolingTests(unittest.TestCase):
         self.assertTrue(data['configuredSources']['breakGlassEmailAlias'])
         self.assertTrue(data['configuredSources']['stage8UsersEnv'])
         self.assertEqual(data['counts']['stage8Users'], 1)
-        self.assertNotIn('Maximo2025!', body)
+        self.assertNotIn('HermesTestPassword123!', body)
         self.assertNotIn('service@maximo-seo.com', body)
+
+    def test_supabase_config_endpoint_is_public_client_only(self):
+        old_url = os.environ.get('SUPABASE_URL')
+        old_anon = os.environ.get('SUPABASE_ANON_KEY')
+        try:
+            os.environ['SUPABASE_URL'] = 'https://example.supabase.co'
+            os.environ['SUPABASE_ANON_KEY'] = 'test-public-anon-key'
+            status, _, body = req('/api/auth/supabase-config')
+            data = json.loads(body)
+            self.assertEqual(status, 200)
+            self.assertTrue(data['ok'])
+            self.assertEqual(data['supabaseUrl'], 'https://example.supabase.co')
+            self.assertEqual(data['supabaseAnonKey'], 'test-public-anon-key')
+            self.assertNotIn('SUPABASE_SERVICE_ROLE_KEY', body)
+        finally:
+            if old_url is None:
+                os.environ.pop('SUPABASE_URL', None)
+            else:
+                os.environ['SUPABASE_URL'] = old_url
+            if old_anon is None:
+                os.environ.pop('SUPABASE_ANON_KEY', None)
+            else:
+                os.environ['SUPABASE_ANON_KEY'] = old_anon
 
     def test_auth_status_warns_when_break_glass_password_drifts_from_users_json(self):
         users_path = server._USERS_JSON_PATH
@@ -101,7 +124,7 @@ class AuthToolingTests(unittest.TestCase):
             warnings = data.get('driftWarnings') or []
             self.assertTrue(any('users.json password hash does not match the configured break-glass password' in item for item in warnings), warnings)
             self.assertNotIn('DifferentPass123!', body)
-            self.assertNotIn('Maximo2025!', body)
+            self.assertNotIn('HermesTestPassword123!', body)
         finally:
             if original_users is None:
                 try:

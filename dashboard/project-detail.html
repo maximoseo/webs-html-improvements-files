@@ -555,7 +555,9 @@
                 // Fetch AI Changes (Task 5.3)
                 const aiContainer = document.getElementById('aiChangesList');
                 try {
-                    const aiRes = await fetch(`${supabaseClient.url}/rest/v1/ai_changes?project_id=eq.${projectId}&order=created_at.desc`, {
+                    const configured = await supabaseClient.ensureConfig();
+                    if (!configured) throw new Error('Supabase is not configured');
+                    const aiRes = await fetch(`${supabaseClient.url}/rest/v1/ai_changes?project_id=eq.${encodeURIComponent(projectId)}&order=created_at.desc`, {
                         headers: { ...supabaseClient.headers, 'Authorization': `Bearer ${session.access_token}` }
                     });
                     const aiData = await aiRes.json();
@@ -745,6 +747,8 @@
                 return;
             }
             try {
+                const configured = await supabaseClient.ensureConfig();
+                if (!configured) throw new Error('Supabase is not configured');
                 // Expire in 7 days
                 const expires = new Date();
                 expires.setDate(expires.getDate() + 7);
@@ -760,7 +764,7 @@
                 
                 const token = data[0].token;
                 const baseUrl = window.location.origin;
-                const link = `${baseUrl}/preview.html?token=${token}`;
+                const link = `${baseUrl}/preview.html?token=${encodeURIComponent(token)}`;
                 
                 await navigator.clipboard.writeText(link);
                 toast.show('Share link copied to clipboard (valid for 7 days).', 'success');

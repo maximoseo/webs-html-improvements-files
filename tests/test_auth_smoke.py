@@ -42,7 +42,7 @@ def _request(base: str, path: str, method: str = "GET", body: dict | None = None
 
 def main(base: str) -> int:
     admin_email = os.getenv("TEST_ADMIN_EMAIL", "service@maximo-seo.com")
-    admin_password = os.getenv("TEST_ADMIN_PASSWORD", "Maximo2025!")
+    admin_password = os.getenv("TEST_ADMIN_PASSWORD", "HermesTestPassword123!")
 
     print(f"Target: {base}")
     failures: list[str] = []

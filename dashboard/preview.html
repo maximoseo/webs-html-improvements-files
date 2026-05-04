@@ -72,8 +72,24 @@
         // Real Token Parsing & Data Fetching (Task 5.1)
         const urlParams = new URLSearchParams(window.location.search);
         const token = urlParams.get('token');
-        const SUPABASE_URL = "https://cbysbvanpohcdgbrembr.supabase.co";
-        const ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNieXNidmFucG9oY2RnYnJlbWJyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc4ODcxNDcsImV4cCI6MjA5MzQ2MzE0N30.V4TvBwAaj9TZZqvkms47aA_ETY_kv_-8O153IpT3qmg";
+        let SUPABASE_URL = window.SUPABASE_URL || "";
+        let ANON_KEY = window.SUPABASE_ANON_KEY || "";
+
+        async function ensureSupabaseConfig() {
+            if (SUPABASE_URL && ANON_KEY) return true;
+            try {
+                const res = await fetch('/api/auth/supabase-config', { cache: 'no-store' });
+                const data = await res.json();
+                if (res.ok && data.ok && data.supabaseUrl && data.supabaseAnonKey) {
+                    SUPABASE_URL = data.supabaseUrl;
+                    ANON_KEY = data.supabaseAnonKey;
+                    return true;
+                }
+            } catch (e) {
+                // Fall through and show a safe configuration error.
+            }
+            return false;
+        }
 
         async function loadSharedPreview() {
             if(!token) {
@@ -83,6 +99,10 @@
             } 
             
             try {
+                const configured = await ensureSupabaseConfig();
+                if (!configured) {
+                    throw new Error("Preview service is not configured.");
+                }
                 // 1. Fetch Token Record
                 const tokenRes = await fetch(`${SUPABASE_URL}/rest/v1/public_previews?token=eq.${token}`, {
                     headers: { 'apikey': ANON_KEY, 'Authorization': `Bearer ${ANON_KEY}` }

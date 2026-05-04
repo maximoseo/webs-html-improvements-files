@@ -35,7 +35,7 @@ Alias `/api/login` → same handler as `/api/auth/login`. Both must:
 _JWT_SECRET_KEY = os.getenv('DASHBOARD_JWT_SECRET')
 if not _JWT_SECRET_KEY and os.getenv('RENDER') == 'true':   # production guard
     raise RuntimeError('DASHBOARD_JWT_SECRET must be set in production')
-_JWT_SECRET_KEY = _JWT_SECRET_KEY or 'maximo-dashboard-secret-2025-DEV-ONLY'
+_JWT_SECRET_KEY = _JWT_SECRET_KEY or '[REDACTED_JWT_SECRET]-DEV-ONLY'
 ```
 
 ### 2.4 Rate limiting
