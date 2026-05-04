@@ -355,40 +355,8 @@
                 <!-- Version History -->
                 <div>
                     <h3 style="font-size: 1rem; margin-bottom: 1rem;">Version History</h3>
-                    <div class="version-list">
-                        
-                        <div class="version-item active">
-                            <div class="version-bullet"></div>
-                            <div class="version-card">
-                                <div class="version-header">
-                                    <span>v3.0 - Current</span>
-                                    <span style="color:var(--color-text-muted); font-weight: 400;">Just now</span>
-                                </div>
-                                <p style="font-size: 0.75rem; color: var(--color-text-muted); margin: 0;">AI optimized Hero CTA and adjusted typography spacing.</p>
-                            </div>
-                        </div>
-
-                        <div class="version-item">
-                            <div class="version-bullet"></div>
-                            <div class="version-card">
-                                <div class="version-header">
-                                    <span>v2.0</span>
-                                    <span style="color:var(--color-text-muted); font-weight: 400;">2 hrs ago</span>
-                                </div>
-                                <p style="font-size: 0.75rem; color: var(--color-text-muted); margin: 0;">Applied strict DOM locking, CSS only fixes.</p>
-                            </div>
-                        </div>
-
-                        <div class="version-item">
-                            <div class="version-bullet"></div>
-                            <div class="version-card">
-                                <div class="version-header">
-                                    <span>v1.0 - Original</span>
-                                    <span style="color:var(--color-text-muted); font-weight: 400;">10:00 AM</span>
-                                </div>
-                                <p style="font-size: 0.75rem; color: var(--color-text-muted); margin: 0;">Initial upload.</p>
-                            </div>
-                        </div>
+                    <div class="version-list" id="versionsContainer">
+                        <div class="spinner" style="margin:2rem auto; border-top-color: var(--color-primary)"></div>
                     </div>
                 </div>
                 
@@ -540,6 +508,90 @@
         const urlParams = new URLSearchParams(window.location.search);
         let projectId = urlParams.get('id');
         const session = sessionManager.getSession();
+
+        // Load Dynamic Data
+        async function loadProjectData() {
+            if (!projectId || !session || !session.access_token) {
+                document.getElementById('projectTitleHeader').innerText = "New Project Workspace";
+                document.getElementById('versionsContainer').innerHTML = "<p style='font-size:0.875rem; color:var(--color-text-muted);'>Upload a file to create the first version.</p>";
+                return;
+            }
+
+            try {
+                // Fetch Project Info
+                const projRes = await supabaseClient.getProjectDetails(session.access_token, projectId);
+                if (projRes.data) {
+                    document.getElementById('projectTitleHeader').innerText = projRes.data.name || "Project Details";
+                } else {
+                    document.getElementById('projectTitleHeader').innerText = "Project Not Found";
+                }
+
+                // Fetch Versions
+                const verRes = await supabaseClient.getProjectVersions(session.access_token, projectId);
+                const container = document.getElementById('versionsContainer');
+                
+                if (verRes.error) throw new Error(verRes.error.message);
+                
+                const versions = verRes.data || [];
+                container.innerHTML = ''; // clear spinner
+
+                if (versions.length === 0) {
+                    container.innerHTML = "<p style='font-size:0.875rem; color:var(--color-text-muted);'>No versions tracked yet. Upload an HTML file.</p>";
+                    return;
+                }
+
+                // Populate Versions Timeline
+                versions.forEach((v, index) => {
+                    const isActive = index === 0 ? 'active' : '';
+                    const vDate = new Date(v.created_at);
+                    const timeStr = vDate.toLocaleDateString() + ' ' + vDate.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+                    
+                    const el = document.createElement('div');
+                    el.className = `version-item ${isActive}`;
+                    el.innerHTML = `
+                        <div class="version-bullet"></div>
+                        <div class="version-card">
+                            <div class="version-header">
+                                <span>Version ${v.version_number ? v.version_number : versions.length - index}</span>
+                                <span style="color:var(--color-text-muted); font-weight: 400; font-size: 0.75rem;">${timeStr}</span>
+                            </div>
+                            <p style="font-size: 0.75rem; color: var(--color-text-muted); margin: 0;">${v.notes || 'Automated save'}</p>
+                        </div>
+                    `;
+                    
+                    // Click to preview this specific version
+                    el.addEventListener('click', () => {
+                        // Remove active class from all, add to this
+                        document.querySelectorAll('.version-item').forEach(vi => vi.classList.remove('active'));
+                        el.classList.add('active');
+                        // Load the historical file into the exact window
+                        document.getElementById('frameAfter').src = v.html_url;
+                        toast.show(`Loaded version from ${timeStr}`, 'info');
+                    });
+                    
+                    container.appendChild(el);
+                });
+
+                // Setup Iframes: Newest to "Improved" panel, oldest to "Original"
+                if (versions.length > 0) {
+                    // Replace srcdoc with actual src
+                    const frameAfter = document.getElementById('frameAfter');
+                    const frameBefore = document.getElementById('frameBefore');
+                    
+                    frameAfter.removeAttribute('srcdoc');
+                    frameBefore.removeAttribute('srcdoc');
+                    
+                    frameAfter.src = versions[0].html_url; // latest
+                    frameBefore.src = versions[versions.length - 1].html_url; // oldest/first
+                }
+
+            } catch(e) {
+                console.error(e);
+                toast.show("Error loading project: " + e.message, 'error');
+            }
+        }
+        
+        loadProjectData(); // Trigger on load
 
         // --- Drag and Drop Logic --- //
         const dropzone = document.getElementById('dropzone');

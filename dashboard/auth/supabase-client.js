@@ -123,6 +123,30 @@ class SupabaseAuthClient {
             return { error: { message: "Failed to save version." }};
         }
     }
+    async getProjectDetails(token, projectId) {
+        try {
+            const res = await fetch(`${this.url}/rest/v1/projects?id=eq.${projectId}`, {
+                method: 'GET',
+                headers: { ...this.headers, 'Authorization': `Bearer ${token}` }
+            });
+            const data = await res.json();
+            if (!res.ok) return { error: data };
+            return { data: data[0] }; // Return the single project object
+        } catch(e) { return { error: { message: "Failed to fetch project details." }}; }
+    }
+
+    async getProjectVersions(token, projectId) {
+        try {
+            // Fetch versions ordered by creation date (newest first)
+            const res = await fetch(`${this.url}/rest/v1/versions?project_id=eq.${projectId}&order=created_at.desc`, {
+                method: 'GET',
+                headers: { ...this.headers, 'Authorization': `Bearer ${token}` }
+            });
+            const data = await res.json();
+            if (!res.ok) return { error: data };
+            return { data };
+        } catch(e) { return { error: { message: "Failed to fetch versions." }}; }
+    }
 }
 
 export const supabaseClient = new SupabaseAuthClient(SUPABASE_URL, SUPABASE_ANON_KEY);
