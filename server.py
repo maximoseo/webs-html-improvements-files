@@ -5386,8 +5386,8 @@ body{{font-family:Arial;padding:24px}}h1{{color:#333}}pre{{background:#f4f4f4;pa
                 # Verify token with Supabase API
                 import urllib.request
                 import json
-                sb_url = os.environ.get('SUPABASE_URL', 'https://wtpczvyupmavzrxisvcm.supabase.co')
-                sb_key = os.environ.get('SUPABASE_KEY', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Ind0cGN6dnl1cG1hdnpyeGlzdmNtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njg3MjEyOTgsImV4cCI6MjA4NDI5NzI5OH0.-_AP23-lVz_v3HPrqp4HfN4_QJZ_0zklfyRb9tSeTk4')
+                sb_url = os.environ.get('SUPABASE_URL', 'https://cbysbvanpohcdgbrembr.supabase.co')
+                sb_key = os.environ.get('SUPABASE_KEY', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNieXNidmFucG9oY2RnYnJlbWJyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc4ODcxNDcsImV4cCI6MjA5MzQ2MzE0N30.V4TvBwAaj9TZZqvkms47aA_ETY_kv_-8O153IpT3qmg')
                 
                 req = urllib.request.Request(f"{sb_url}/auth/v1/user")
                 req.add_header('Authorization', f'Bearer {access_token}')
@@ -6571,8 +6571,8 @@ body{{font-family:Arial;padding:24px}}h1{{color:#333}}pre{{background:#f4f4f4;pa
                 # Verify token with Supabase API
                 import urllib.request
                 import json
-                sb_url = os.environ.get('SUPABASE_URL', 'https://wtpczvyupmavzrxisvcm.supabase.co')
-                sb_key = os.environ.get('SUPABASE_KEY', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Ind0cGN6dnl1cG1hdnpyeGlzdmNtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njg3MjEyOTgsImV4cCI6MjA4NDI5NzI5OH0.-_AP23-lVz_v3HPrqp4HfN4_QJZ_0zklfyRb9tSeTk4')
+                sb_url = os.environ.get('SUPABASE_URL', 'https://cbysbvanpohcdgbrembr.supabase.co')
+                sb_key = os.environ.get('SUPABASE_KEY', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNieXNidmFucG9oY2RnYnJlbWJyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc4ODcxNDcsImV4cCI6MjA5MzQ2MzE0N30.V4TvBwAaj9TZZqvkms47aA_ETY_kv_-8O153IpT3qmg')
                 
                 req = urllib.request.Request(f"{sb_url}/auth/v1/user")
                 req.add_header('Authorization', f'Bearer {access_token}')
