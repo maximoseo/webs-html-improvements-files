@@ -71,6 +71,58 @@ class SupabaseAuthClient {
             return { error: { message: "Failed to fetch projects." }};
         }
     }
+    // --- Storage & Versioning Methods --- //
+
+    async uploadFile(token, file, projectId) {
+        try {
+            const formData = new FormData();
+            formData.append('file', file);
+            
+            // Format: project_id/timestamp_filename
+            const filePath = `${projectId || 'temp'}/${Date.now()}_${file.name}`;
+            
+            const res = await fetch(`${this.url}/storage/v1/object/html-uploads/${filePath}`, {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                    // Do not set Content-Type explicitly when using FormData, browser handles boundaries
+                },
+                body: formData
+            });
+            const data = await res.json();
+            if (!res.ok) return { error: data };
+            
+            // Return public URL path
+            const publicUrl = `${this.url}/storage/v1/object/public/html-uploads/${data.Key || filePath}`;
+            return { data: { path: data.Key, url: publicUrl } };
+        } catch(e) {
+            return { error: { message: "Failed to upload file." }};
+        }
+    }
+
+    async saveVersion(token, projectId, htmlUrl, notes) {
+        try {
+            const res = await fetch(`${this.url}/rest/v1/versions`, {
+                method: 'POST',
+                headers: {
+                    ...this.headers,
+                    'Authorization': `Bearer ${token}`,
+                    'Prefer': 'return=representation'
+                },
+                body: JSON.stringify({
+                    project_id: projectId,
+                    version_number: Date.now(), // Simplified versioning logic
+                    html_url: htmlUrl,
+                    notes: notes
+                })
+            });
+            const data = await res.json();
+            if (!res.ok) return { error: data };
+            return { data };
+        } catch(e) {
+            return { error: { message: "Failed to save version." }};
+        }
+    }
 }
 
 export const supabaseClient = new SupabaseAuthClient(SUPABASE_URL, SUPABASE_ANON_KEY);

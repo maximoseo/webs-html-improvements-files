@@ -528,7 +528,18 @@
     </div>
 
     <script type="module">
+        import { requireAuth, sessionManager } from './auth/middleware.js';
+        import { supabaseClient } from './auth/supabase-client.js';
         import { toast } from './components/toast.js';
+        
+        if (!requireAuth()) {
+            console.warn("Redirecting to login...");
+        }
+        
+        // Extract Project ID
+        const urlParams = new URLSearchParams(window.location.search);
+        let projectId = urlParams.get('id');
+        const session = sessionManager.getSession();
 
         // --- Drag and Drop Logic --- //
         const dropzone = document.getElementById('dropzone');
@@ -561,39 +572,61 @@
             }
         });
 
-        function handleFiles(files) {
+        async function handleFiles(files) {
             const validTypes = ['text/html', 'application/zip'];
             const f = files[0];
             
-            // Validate type
             if (!validTypes.includes(f.type) && !f.name.endsWith('.html') && !f.name.endsWith('.htm')) {
                 toast.show('Invalid file type. Only .html or .zip allowed.', 'error');
                 return;
             }
             
-            // Validate size (10MB)
             if (f.size > 10 * 1024 * 1024) {
                 toast.show('File too large. Maximum size is 10MB.', 'error');
                 return;
             }
 
-            // Simulate Upload
+            if (!session || !session.access_token) {
+                toast.show('Authentication required to upload.', 'error');
+                return;
+            }
+
+            // Show UX progress
             progressContainer.style.display = 'block';
-            progressBar.style.width = '0%';
-            
-            let progress = 0;
-            const interval = setInterval(() => {
-                progress += Math.random() * 20;
-                if(progress >= 100) {
-                    progress = 100;
-                    clearInterval(interval);
-                    setTimeout(() => {
-                        toast.show(`File "${f.name}" uploaded successfully!`, 'success');
-                        progressContainer.style.display = 'none';
-                    }, 500);
+            progressBar.style.width = '30%';
+
+            try {
+                // 1. Upload to Supabase Storage
+                const uploadRes = await supabaseClient.uploadFile(session.access_token, f, projectId || 'new');
+                
+                progressBar.style.width = '70%';
+
+                if (uploadRes.error) {
+                    throw new Error(uploadRes.error.message || 'Upload failed');
                 }
-                progressBar.style.width = `${progress}%`;
-            }, 200);
+
+                // 2. Save record to Versions table
+                const publicUrl = uploadRes.data.url;
+                // If there's no project ID, we'd theoretically create one, but for this step we assume a temp or existing
+                if (projectId) {
+                    const versionRes = await supabaseClient.saveVersion(session.access_token, projectId, publicUrl, 'Original File Uploaded manually');
+                    if (versionRes.error) console.error("Could not register version", versionRes.error);
+                }
+
+                progressBar.style.width = '100%';
+                
+                setTimeout(() => {
+                    toast.show(`File "${f.name}" uploaded successfully!`, 'success');
+                    progressContainer.style.display = 'none';
+                    // We would then update the iframes and AI lists here.
+                    document.getElementById('frameBefore').src = publicUrl;
+                }, 500);
+
+            } catch (err) {
+                toast.show(err.message, 'error');
+                progressContainer.style.display = 'none';
+                progressBar.style.width = '0%';
+            }
         }
 
         // --- Slider Logic --- //
