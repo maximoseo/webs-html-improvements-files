@@ -204,17 +204,27 @@
                 // Simulate network for error handling visibility
                 // const res = await supabaseClient.signIn(email, password);
                 
-                // For layout/HTML test demonstration, we simulate success/error based on admin
-                await new Promise(r => setTimeout(r, 800));
+                // Real Authentication via Supabase
+                const res = await supabaseClient.signIn(email, password);
                 
-                if(email === 'admin@maximo-seo.ai' && password === 'Maximo2025!') {
+                if (res.error) {
+                    trackLoginAttempt(false); // Registers failure
+                    throw new Error(res.error_description || res.error.message || 'Invalid email or password');
+                }
+                
+                if (res.access_token) {
                     trackLoginAttempt(true); // Clear failures
-                    sessionManager.saveSession({ access_token: 'fake-jwt', refresh_token: 'fake-refresh', expires_in: 3600 });
+                    sessionManager.saveSession({ 
+                        access_token: res.access_token, 
+                        refresh_token: res.refresh_token, 
+                        expires_in: res.expires_in,
+                        user: res.user 
+                    });
                     toast.show('Login successful! Redirecting...', 'success');
                     setTimeout(() => window.location.href = '/index.html', 1000);
                 } else {
-                    trackLoginAttempt(false); // Registers failure
-                    throw new Error('Invalid email or password');
+                    trackLoginAttempt(false);
+                    throw new Error('Authentication failed to return a valid token.');
                 }
 
             } catch(errorMessage) {

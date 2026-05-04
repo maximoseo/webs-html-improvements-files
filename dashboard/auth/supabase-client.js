@@ -19,16 +19,34 @@ class SupabaseAuthClient {
     }
 
     async signIn(email, password) {
-        const res = await fetch(`${this.url}/auth/v1/token?grant_type=password`, {
-            method: 'POST',
-            headers: this.headers,
-            body: JSON.stringify({ email, password })
-        });
-        return await res.json();
+        try {
+            const res = await fetch(`${this.url}/auth/v1/token?grant_type=password`, {
+                method: 'POST',
+                headers: this.headers,
+                body: JSON.stringify({ email, password })
+            });
+            const data = await res.json();
+            if (!res.ok) { return { error: data }; }
+            return data;
+        } catch(e) {
+            return { error: { message: "Network error or Supabase unavailable." }};
+        }
     }
 
     async refreshSession(refreshToken) {
-        const res = await fetch(`${this.url}/auth/v1/token?grant_type=refresh_token`, {
+        try {
+            const res = await fetch(`${this.url}/auth/v1/token?grant_type=refresh_token`, {
+                method: 'POST',
+                headers: this.headers,
+                body: JSON.stringify({ refresh_token: refreshToken })
+            });
+            const data = await res.json();
+            if (!res.ok) { return { error: data }; }
+            return data;
+        } catch(e) {
+            return { error: { message: "Failed to refresh session." }};
+        }
+    }/auth/v1/token?grant_type=refresh_token`, {
             method: 'POST',
             headers: this.headers,
             body: JSON.stringify({ refresh_token: refreshToken })
