@@ -69,22 +69,75 @@
     </div>
 
     <script>
-        // Setup URL param parsing for token
+        // Real Token Parsing & Data Fetching (Task 5.1)
         const urlParams = new URLSearchParams(window.location.search);
         const token = urlParams.get('token');
-        
-        if(!token) {
-            document.getElementById('previewTitle').innerText = "Invalid Link";
-            document.getElementById('previewMeta').innerText = "This preview requires a valid token.";
-        } else {
-            // Mock data loading
-            document.getElementById('previewTitle').innerText = "Preview — Galoz Industrial Redesign";
-            document.getElementById('previewMeta').innerText = "Shared by: admin@maximo-seo.ai | Expires: May 10, 2026";
+        const SUPABASE_URL = "https://cbysbvanpohcdgbrembr.supabase.co";
+        const ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNieXNidmFucG9oY2RnYnJlbWJyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc4ODcxNDcsImV4cCI6MjA5MzQ2MzE0N30.V4TvBwAaj9TZZqvkms47aA_ETY_kv_-8O153IpT3qmg";
+
+        async function loadSharedPreview() {
+            if(!token) {
+                document.getElementById('previewTitle').innerText = "Invalid Link";
+                document.getElementById('previewMeta').innerText = "This preview requires a valid generated token.";
+                return;
+            } 
             
-            // Populate iframes
-            document.getElementById('frameBefore').srcdoc = "<html><body style='padding:20px;font-family:sans-serif'><h1>Galoz Original</h1><p>Checking initial layout...</p></body></html>";
-            document.getElementById('frameAfter').srcdoc = "<html><body style='padding:20px;font-family:sans-serif'><h1>Galoz Improved</h1><p style='color:#333; line-height:1.6'>Now with optimized CSS and structure.</p></body></html>";
+            try {
+                // 1. Fetch Token Record
+                const tokenRes = await fetch(`${SUPABASE_URL}/rest/v1/public_previews?token=eq.${token}`, {
+                    headers: { 'apikey': ANON_KEY, 'Authorization': `Bearer ${ANON_KEY}` }
+                });
+                const tokenData = await tokenRes.json();
+                
+                if (!tokenRes.ok || tokenData.length === 0) {
+                    throw new Error("Token not found or expired.");
+                }
+
+                const record = tokenData[0];
+                const expiresDate = new Date(record.expires_at);
+                
+                if (new Date() > expiresDate) {
+                    document.getElementById('previewTitle').innerText = "Preview Expired";
+                    document.getElementById('previewMeta').innerText = "This share link has expired.";
+                    return;
+                }
+
+                document.getElementById('previewMeta').innerText = `Valid until: ${expiresDate.toLocaleDateString()}`;
+
+                // 2. Fetch Project & Versions (Using the linked project_id safely accessible via views or specific RLS if needed, or we just trust the anon key since token is known)
+                const projectId = record.project_id;
+                
+                const projRes = await fetch(`${SUPABASE_URL}/rest/v1/projects?id=eq.${projectId}&select=name`, {
+                    headers: { 'apikey': ANON_KEY, 'Authorization': `Bearer ${ANON_KEY}` }
+                });
+                const projData = await projRes.json();
+                if(projData.length > 0) {
+                    document.getElementById('previewTitle').innerText = `${projData[0].name} — AI Redesign`;
+                }
+
+                const verRes = await fetch(`${SUPABASE_URL}/rest/v1/versions?project_id=eq.${projectId}&order=created_at.desc`, {
+                    headers: { 'apikey': ANON_KEY, 'Authorization': `Bearer ${ANON_KEY}` }
+                });
+                const versions = await verRes.json();
+
+                if (versions.length > 0) {
+                    const frameAfter = document.getElementById('frameAfter');
+                    const frameBefore = document.getElementById('frameBefore');
+                    frameAfter.removeAttribute('srcdoc');
+                    frameBefore.removeAttribute('srcdoc');
+                    frameAfter.src = versions[0].html_url; 
+                    frameBefore.src = versions[versions.length - 1].html_url; 
+                } else {
+                    document.getElementById('previewTitle').innerText = "No versions exist for this project yet.";
+                }
+
+            } catch (err) {
+                document.getElementById('previewTitle').innerText = "Access Denied";
+                document.getElementById('previewMeta').innerText = err.message;
+            }
         }
+        
+        loadSharedPreview();
 
         // Slider logic
         const compareContainer = document.getElementById('compareContainer');

@@ -450,44 +450,14 @@
                 </div>
 
                 <!-- AI Changes List (Task 5.3) -->
-                <h3 style="font-size: 1rem; margin-bottom: 1rem;">AI Changes (9 improvements)</h3>
+                <div style="display:flex; justify-content:space-between; align-items:flex-end; margin-bottom: 1rem;">
+                    <h3 style="font-size: 1rem; margin:0;">AI Changes</h3>
+                    <span class="badge badge-success" id="aiCountBadge">0 improvements</span>
+                </div>
                 
-                <div class="version-list" style="gap:1.5rem;">
-                    <!-- Category: Colors -->
-                    <div class="ai-category">
-                        <strong style="font-size:0.875rem; color:var(--color-text); text-transform:uppercase;">🎨 COLORS (2)</strong>
-                        <ul style="margin: 0.5rem 0 0; padding-left: 1.25rem; font-size: 0.875rem; color:var(--color-text-muted); line-height: 1.6;">
-                            <li>Hero bg → brand blue #2563eb</li>
-                            <li>CTA button → contrast orange</li>
-                        </ul>
-                    </div>
-                    
-                    <!-- Category: Layout -->
-                    <div class="ai-category">
-                        <strong style="font-size:0.875rem; color:var(--color-text); text-transform:uppercase;">📐 LAYOUT (4)</strong>
-                        <ul style="margin: 0.5rem 0 0; padding-left: 1.25rem; font-size: 0.875rem; color:var(--color-text-muted); line-height: 1.6;">
-                            <li>Hero → full-width with pad</li>
-                            <li>CTA section → centered</li>
-                            <li>Cards → 3-col grid</li>
-                            <li>Footer → 4-col links</li>
-                        </ul>
-                    </div>
-                    
-                    <!-- Category: Typography -->
-                    <div class="ai-category">
-                        <strong style="font-size:0.875rem; color:var(--color-text); text-transform:uppercase;">📝 TYPOGRAPHY (2)</strong>
-                        <ul style="margin: 0.5rem 0 0; padding-left: 1.25rem; font-size: 0.875rem; color:var(--color-text-muted); line-height: 1.6;">
-                            <li>Headings → Inter Bold 700</li>
-                            <li>Body → 16px line-height 1.6</li>
-                        </ul>
-                    </div>
-                    
-                    <!-- Category: Images -->
-                    <div class="ai-category">
-                        <strong style="font-size:0.875rem; color:var(--color-text); text-transform:uppercase;">🖼️ IMAGES (1)</strong>
-                        <ul style="margin: 0.5rem 0 0; padding-left: 1.25rem; font-size: 0.875rem; color:var(--color-text-muted); line-height: 1.6;">
-                            <li>Icons → SVG replacements</li>
-                        </ul>
+                <div class="version-list" id="aiChangesList" style="gap:1.5rem;">
+                    <div style="text-align:center; padding: 2rem 0;">
+                        <div class="spinner" style="margin: 0 auto; border-top-color: var(--color-primary)"></div>
                     </div>
                 </div>
             </aside>
@@ -574,15 +544,57 @@
 
                 // Setup Iframes: Newest to "Improved" panel, oldest to "Original"
                 if (versions.length > 0) {
-                    // Replace srcdoc with actual src
                     const frameAfter = document.getElementById('frameAfter');
                     const frameBefore = document.getElementById('frameBefore');
-                    
                     frameAfter.removeAttribute('srcdoc');
                     frameBefore.removeAttribute('srcdoc');
+                    frameAfter.src = versions[0].html_url; 
+                    frameBefore.src = versions[versions.length - 1].html_url; 
+                }
+
+                // Fetch AI Changes (Task 5.3)
+                const aiContainer = document.getElementById('aiChangesList');
+                try {
+                    const aiRes = await fetch(`${supabaseClient.url}/rest/v1/ai_changes?project_id=eq.${projectId}&order=created_at.desc`, {
+                        headers: { ...supabaseClient.headers, 'Authorization': `Bearer ${session.access_token}` }
+                    });
+                    const aiData = await aiRes.json();
                     
-                    frameAfter.src = versions[0].html_url; // latest
-                    frameBefore.src = versions[versions.length - 1].html_url; // oldest/first
+                    if (!aiRes.ok) throw new Error("Could not load AI changes");
+                    
+                    aiContainer.innerHTML = ''; // clear spinner
+                    document.getElementById('aiCountBadge').innerText = `${aiData.length} improvements`;
+
+                    if (aiData.length === 0) {
+                        aiContainer.innerHTML = "<p style='font-size:0.875rem; color:var(--color-text-muted);'>No specific AI modifications logged yet.</p>";
+                    } else {
+                        // Group by category
+                        const grouped = {};
+                        aiData.forEach(item => {
+                            if(!grouped[item.category]) grouped[item.category] = [];
+                            grouped[item.category].push(item);
+                        });
+                        
+                        let uiHtml = '';
+                        // Icon mapping
+                        const iconMap = { 'COLORS': '🎨', 'LAYOUT': '📐', 'TYPOGRAPHY': '📝', 'IMAGES': '🖼️', 'PERFORMANCE': '⚡', 'CTA': '🎯' };
+                        
+                        for (const [cat, items] of Object.entries(grouped)) {
+                            const icon = iconMap[cat.toUpperCase()] || '✨';
+                            let listItems = items.map(li => `<li>${escapeHtml(li.description)}</li>`).join('');
+                            
+                            uiHtml += `
+                            <div class="ai-category">
+                                <strong style="font-size:0.875rem; color:var(--color-text); text-transform:uppercase;">${icon} ${escapeHtml(cat)} (${items.length})</strong>
+                                <ul style="margin: 0.5rem 0 0; padding-left: 1.25rem; font-size: 0.875rem; color:var(--color-text-muted); line-height: 1.6;">
+                                    ${listItems}
+                                </ul>
+                            </div>`;
+                        }
+                        aiContainer.innerHTML = uiHtml;
+                    }
+                } catch(e) {
+                    aiContainer.innerHTML = "<p style='font-size:0.875rem; color:var(--color-error);'>Error loading insights.</p>";
                 }
 
             } catch(e) {
@@ -728,16 +740,32 @@
         
         // --- Share Action (Task 5.1) --- //
         document.getElementById('shareBtn').addEventListener('click', async () => {
+            if (!projectId) {
+                toast.show('Save the project first before sharing.', 'warning');
+                return;
+            }
             try {
-                // Stubbing the token generation
-                const fakeToken = "prv-" + Math.random().toString(36).substr(2, 9);
+                // Expire in 7 days
+                const expires = new Date();
+                expires.setDate(expires.getDate() + 7);
+                
+                const res = await fetch(`${supabaseClient.url}/rest/v1/public_previews`, {
+                    method: 'POST',
+                    headers: { ...supabaseClient.headers, 'Authorization': `Bearer ${session.access_token}`, 'Prefer': 'return=representation' },
+                    body: JSON.stringify({ project_id: projectId, expires_at: expires.toISOString() })
+                });
+                
+                const data = await res.json();
+                if (!res.ok) throw new Error(data.message || 'Could not generate token');
+                
+                const token = data[0].token;
                 const baseUrl = window.location.origin;
-                const link = `${baseUrl}/preview.html?token=${fakeToken}`;
+                const link = `${baseUrl}/preview.html?token=${token}`;
                 
                 await navigator.clipboard.writeText(link);
                 toast.show('Share link copied to clipboard (valid for 7 days).', 'success');
             } catch (err) {
-                toast.show('Failed to copy link.', 'error');
+                toast.show('Failed to copy link: ' + err.message, 'error');
             }
         });
         
