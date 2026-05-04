@@ -472,7 +472,7 @@ _STAGE8_PUBLIC_PATHS = {
     '/api/csrf', '/api/version', '/healthz', '/api/studio/improve/rules', '/api/studio/improve',
     '/api/playground/templates', '/api/playground/domains', '/api/preferences',
 }
-_STAGE8_PUBLIC_PREFIXES = ('/static/', '/assets/', '/css/', '/js/', '/img/', '/fonts/', '/api/playground/templates/', '/api/playground/exports/')
+_STAGE8_PUBLIC_PREFIXES = ('/static/', '/assets/', '/css/', '/js/', '/img/', '/fonts/', '/api/playground/templates/', '/api/playground/exports/', '/styles/', '/components/', '/auth/')
 _STAGE8_PUBLIC_UNSAFE_PATHS = {
     '/api/auth/login', '/api/login', '/api/auth/request-reset', '/api/auth/reset', '/api/reset-password',
     '/api/n8n/webhook',
@@ -3856,7 +3856,17 @@ body{{font-family:Arial;padding:24px}}h1{{color:#333}}pre{{background:#f4f4f4;pa
             target = ROOT / 'login-page.html'
         else:
             clean = posixpath.normpath(urllib.parse.unquote(parsed.path))
-            target = INDEX if clean in ('', '.', '/') else (ROOT / clean.lstrip('/')).resolve()
+            
+            # Allow API to pass, target files into dashboard directory
+            possible_dashboard_target = (ROOT / 'dashboard' / clean.lstrip('/')).resolve()
+            possible_root_target = (ROOT / clean.lstrip('/')).resolve()
+            
+            if clean in ('', '.', '/'):
+                target = (ROOT / 'dashboard' / 'index.html').resolve()
+            elif possible_dashboard_target.exists() and possible_dashboard_target.is_file():
+                target = possible_dashboard_target
+            else:
+                target = possible_root_target
             if ROOT not in target.parents and target != ROOT:
                 self.send_response(403); self.end_headers(); return
         if not target.exists() or not target.is_file():
@@ -4199,7 +4209,7 @@ body{{font-family:Arial;padding:24px}}h1{{color:#333}}pre{{background:#f4f4f4;pa
         # Stage 8 endpoints
         if parsed.path == '/login' or parsed.path == '/login.html':
             try:
-                lp = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'login-page.html')
+                lp = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'dashboard', 'login.html')
                 with open(lp, 'rb') as _lf:
                     _ldata = _lf.read()
                 return text_response(self, 200, _ldata, 'text/html; charset=utf-8')
