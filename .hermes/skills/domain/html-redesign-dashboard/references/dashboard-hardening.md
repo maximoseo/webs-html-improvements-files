@@ -25,11 +25,12 @@ triggers:
 ## MANDATORY after EVERY change (3-item checklist)
 1. **git push via PowerShell** (WSL git times out on HTTPS push):
    ```bash
-   powershell.exe -Command "\$pat=(Get-Content 'C:\\Users\\seoadmin\\.hermes\\secure\\github_pat_full.txt' -Raw).Trim(); cd 'C:\\Users\\seoadmin\\webs-html-improvements-files-clean'; git remote set-url origin \"https://\$pat@github.com/maximoseo/webs-html-improvements-files.git\"; git pull --rebase origin main; git push origin main; git remote set-url origin 'https://github.com/maximoseo/webs-html-improvements-files.git'; git log --oneline -3"
+   powershell.exe -Command "\$pat=(Get-Content '\\\\wsl.localhost\\Ubuntu\\home\\seoadmin\\.hermes\\secure\\github_pat_full.txt' -Raw).Trim(); cd 'C:\\Users\\seoadmin\\webs-html-improvements-files-clean'; git remote set-url origin \"https://\$pat@github.com/maximoseo/webs-html-improvements-files.git\"; git pull --rebase origin main; git push origin main; git remote set-url origin 'https://github.com/maximoseo/webs-html-improvements-files.git'; git log --oneline -3"
    ```
-   PAT file: `C:\Users\seoadmin\.hermes\secure\github_pat_full.txt` — must contain the **full 40-char PAT** on a single line, no trailing whitespace.
-   > ⚠️ `github_pats.txt` stores a **truncated** value — do **not** use it. Write the full PAT once to `github_pat_full.txt` with:
-   > `echo -n 'ghp_XXXX...' > /mnt/c/Users/seoadmin/.hermes/secure/github_pat_full.txt`
+   PAT file (WSL): `/home/seoadmin/.hermes/secure/github_pat_full.txt` — 40-char PAT, no trailing whitespace.
+   > ⚠️ `.hermes` lives only in WSL, not on `C:\`. PowerShell reads it via `\\wsl.localhost\Ubuntu\...`.
+   > ⚠️ `github_pats.txt` stores a **truncated** value — do **not** use it.
+   > To (re)write the PAT: `printf '%s' 'ghp_XXXX...' > /home/seoadmin/.hermes/secure/github_pat_full.txt`
    Always restore clean URL after push (already included in the command above).
 2. **Obsidian sync** — copy `index.html`, `server.py`, `n8n-workflow-map.json` to vault path above (direct filesystem write from WSL via `/mnt/c/`).
 3. **Live verify** — HTTP 200 + spot-check changed DOM nodes on the live URL after Render redeploy (~40s).

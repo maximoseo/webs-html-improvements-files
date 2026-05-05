@@ -14,3 +14,5 @@ __pycache__/
 .cache/
 .local/
 .bash_history
+.hermes/config.yaml
+.hermes/config.yaml.bak*
