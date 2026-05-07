@@ -7167,7 +7167,14 @@ function showErrorToast(msg) {
 .ps-iw-field textarea{min-height:74px;resize:vertical}
 .ps-iw-field.full{grid-column:1/-1}
 .ps-iw-note{font-size:11px;color:var(--muted);line-height:1.45}
-@media(max-width:780px){.ps-iw-grid{grid-template-columns:1fr}.ps-template-btn[data-template="improve-workflow"]{grid-column:auto}}
+/* PLAN23_ACTIVE_PROMPT_STATUS_UI_2026_05_07 */
+.ps-active-prompt-card{display:grid;gap:8px;border:1px solid rgba(104,101,255,.26);border-radius:12px;background:rgba(104,101,255,.055);padding:10px;margin:8px 0 2px}
+.ps-active-prompt-head{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap}
+.ps-active-prompt-title{font-size:11px;font-weight:800;color:#d7dbff;letter-spacing:.04em;text-transform:uppercase}
+.ps-active-prompt-status{font-size:12px;color:var(--text-secondary);line-height:1.45;min-height:17px}
+.ps-active-prompt-status.active{color:#86efac}.ps-active-prompt-status.missing{color:#fde68a}.ps-active-prompt-status.invalid,.ps-active-prompt-status.error{color:#fca5a5}.ps-active-prompt-status.loading{color:#bfdbfe}
+.ps-active-prompt-detail{font-size:11px;color:var(--muted);line-height:1.45;word-break:break-word}
+@media(max-width:780px){.ps-iw-grid{grid-template-columns:1fr}.ps-template-btn[data-template="improve-workflow"]{grid-column:auto}.ps-active-prompt-head{align-items:flex-start}.ps-active-prompt-head .ps-mini-btn{width:100%;justify-content:center}}
 /* END PLAN21_IMPROVE_WORKFLOW_PROMPT_STUDIO_2026_04_28 */
 
 /* TEMPLATE_INTELLIGENCE_CONNECTORS_UI_2026_04_29 */
@@ -9971,6 +9978,14 @@ GET    /api/tasks/stats/burndown?project_id=x     — Burndown chart data
         </div>
         <div id="ps-improve-workflow-form" class="ps-improve-workflow-form" aria-label="Improve Workflow inputs">
           <div class="ps-iw-note">Improve Workflow builds the full production prompt from backend rules. Required: main site URL, original article URL, original prompt, HTML template, and workflow JSON.</div>
+          <div class="ps-active-prompt-card" aria-label="Plan #23 active prompt status">
+            <div class="ps-active-prompt-head">
+              <div class="ps-active-prompt-title">Method B read-only API · readOnlyN8n=true · mutatesWorkflow=false</div>
+              <button type="button" id="ps-active-prompt-check-btn" class="ps-mini-btn" onclick="checkPlan23ActivePromptStatus()">Check active prompt</button>
+            </div>
+            <div id="ps-active-prompt-status" class="ps-active-prompt-status">No active prompt checked yet.</div>
+            <div id="ps-active-prompt-detail" class="ps-active-prompt-detail">Plan #23 lookup reads only GET /api/prompts/active for the selected domain.</div>
+          </div>
           <div class="ps-iw-grid">
             <div class="ps-iw-field"><label for="ps-iw-main-url">Main Website URL *</label><input id="ps-iw-main-url" type="url" placeholder="https://example.com/"></div>
             <div class="ps-iw-field"><label for="ps-iw-article-url">Original Article URL *</label><input id="ps-iw-article-url" type="url" placeholder="https://example.com/blog/article"></div>
@@ -11549,7 +11564,7 @@ let allProjects=[];
 // ── Prompt Studio Contract Rules v2026-04-29 ──
 // Prompt Studio Contract: initialize context
 const PROMPT_STUDIO_READ_ONLY_N8N=true;
-let promptStudioContext={contractVersion:'prompt-studio-v2026-04-29',domain:'',agentName:'',versionName:'',htmlDownloadUrl:'',fileManifest:[],versionPath:'',githubRepoBase:'',obsidianBase:'',htmlFilePath:'',htmlFileName:'',promptFilePath:'',workflowFilePath:'',siteProfile:null,siteProfileReviewed:false,readOnlyN8n:true,nextAction:'review_site_profile',validationReport:null,lastImprovedPrompt:'',lastTweakedHtml:'',lastTweakedSummary:'',latestOnly:true};
+let promptStudioContext={contractVersion:'prompt-studio-v2026-04-29',domain:'',agentName:'',versionName:'',htmlDownloadUrl:'',fileManifest:[],versionPath:'',githubRepoBase:'',obsidianBase:'',htmlFilePath:'',htmlFileName:'',promptFilePath:'',workflowFilePath:'',siteProfile:null,siteProfileReviewed:false,readOnlyN8n:true,nextAction:'review_site_profile',validationReport:null,lastImprovedPrompt:'',lastTweakedHtml:'',lastTweakedSummary:'',latestOnly:true,activePromptStatus:null};
 let previewContext={domain:'',agentName:'',versionName:'',downloadUrl:'',fileManifest:[]};
 let deployJobs=[];
 let commentsContext={domain:'',agentName:'',versionName:'',contextType:'general',contextKey:'',filePath:'',label:'',metadata:{}};
@@ -12202,6 +12217,7 @@ Replace the existing files for this project. Upload to BOTH destinations below -
   }
 
   document.getElementById('prompt-modal').classList.add('open');
+  window.checkPlan23ActivePromptStatus&&window.checkPlan23ActivePromptStatus({silent:true});
   draft.focus();
 }
 function closePromptStudio(){
@@ -12310,6 +12326,58 @@ function togglePromptStudioExpand(){
     btn.title=isExpanded?'Collapse':'Expand to full screen';
   }
 }
+// PLAN23_ACTIVE_PROMPT_STATUS_UI_2026_05_07
+// Read-only Prompt Studio status for Dynamic N8N Prompt Customization Method B.
+function setPlan23ActivePromptStatus(kind,message,detail){
+  const status=document.getElementById('ps-active-prompt-status');
+  const detailEl=document.getElementById('ps-active-prompt-detail');
+  if(status){status.className='ps-active-prompt-status '+(kind||'');status.textContent=message||'';}
+  if(detailEl){detailEl.textContent=detail||'';}
+}
+async function checkPlan23ActivePromptStatus(opts){
+  opts=opts||{};
+  const ctx=window.promptStudioContext||{};
+  const main=document.getElementById('ps-iw-main-url');
+  const rawDomain=String((main&&main.value)||ctx.domain||'').trim();
+  const domain=rawDomain;
+  if(!domain){
+    if(!opts.silent)setPlan23ActivePromptStatus('missing','No active prompt saved yet','Enter a main website URL to query the Method B read-only API.');
+    if(ctx)ctx.activePromptStatus={ok:false,error:'missing_domain'};
+    if(window.promptStudioContext)window.promptStudioContext.activePromptStatus=ctx.activePromptStatus;
+    return null;
+  }
+  setPlan23ActivePromptStatus('loading','Checking active prompt...','Method B read-only API · readOnlyN8n=true · mutatesWorkflow=false');
+  const fetcher=window.authedFetch||fetch;
+  try{
+    const res=await fetcher('/api/prompts/active?domain='+encodeURIComponent(domain),{method:'GET'});
+    let data={};
+    try{data=await res.json();}catch(parseErr){data={ok:false,error:'invalid_json'};}
+    if(ctx)ctx.activePromptStatus=data;
+    if(window.promptStudioContext)window.promptStudioContext.activePromptStatus=data;
+    if(res.ok&&data&&data.ok){
+      const label=data.promptFileName||data.path||data.domain||domain;
+      setPlan23ActivePromptStatus('active','Active prompt available','Existing approved prompt found: '+label+' · readOnlyN8n=true · mutatesWorkflow=false');
+      return data;
+    }
+    if(res.status===404 || (data&&data.error==='no_active_prompt')){
+      setPlan23ActivePromptStatus('missing','No active prompt saved yet','Plan #23 will need an approved prompt before Method B can return content for '+domain+'.');
+      return data;
+    }
+    if(res.status===400 || (data&&data.error==='invalid_domain')){
+      setPlan23ActivePromptStatus('invalid','Invalid domain for active prompt lookup','Use a public website domain or URL. Local, private, and malformed values are rejected.');
+      return data;
+    }
+    setPlan23ActivePromptStatus('error','Plan #23 lookup failed',(data&&data.error)||('HTTP '+res.status));
+    return data;
+  }catch(err){
+    if(ctx)ctx.activePromptStatus={ok:false,error:'network_error'};
+    if(window.promptStudioContext)window.promptStudioContext.activePromptStatus=ctx.activePromptStatus;
+    setPlan23ActivePromptStatus('error','Plan #23 lookup failed',(err&&err.message)||'Network error');
+    return null;
+  }
+}
+window.checkPlan23ActivePromptStatus=checkPlan23ActivePromptStatus;
+
 // PROMPT_STUDIO_POST_CSRF_JSON_HELPER_2026_05_01
 // Prompt Studio POST endpoints are state-changing same-origin requests. Add
 // CSRF explicitly here instead of relying only on the global fetch wrapper, and
@@ -17828,6 +17896,8 @@ window.psAutoloadImproveWorkflowInputs = async function(){
     var ctx=window.promptStudioContext||{};
     var main=document.getElementById('ps-iw-main-url');
     if(main && !main.value && ctx.domain) main.value='https://'+ctx.domain+'/';
+    if(main && !main.dataset.plan23ActivePromptBound){main.dataset.plan23ActivePromptBound='1';main.addEventListener('change',function(){checkPlan23ActivePromptStatus({silent:false});});}
+    window.checkPlan23ActivePromptStatus&&window.checkPlan23ActivePromptStatus({silent:true});
     var html=document.getElementById('ps-iw-html-template');
     if(html && !html.value && ctx.htmlDownloadUrl){
       fetch(ctx.htmlDownloadUrl).then(function(r){return r.ok?r.text():'';}).then(function(t){if(t && !html.value) html.value=t;}).catch(function(){});
