@@ -105,6 +105,22 @@
             background-color: var(--color-surface);
             color: var(--color-text);
         }
+
+        /* DASHBOARD_LOGIN_SERVER_AUTH_2026_05_07 */
+        .login-hint {
+            margin-top: 0.5rem;
+            font-size: 0.75rem;
+            color: var(--color-text-muted);
+            line-height: 1.4;
+        }
+        .login-message {
+            min-height: 1.25rem;
+            margin-top: 0.875rem;
+            font-size: 0.8125rem;
+            line-height: 1.45;
+        }
+        .login-message.error { color: var(--color-danger, #f87171); }
+        .login-message.success { color: var(--color-success, #22c55e); }
     </style>
 </head>
 <body>
@@ -127,8 +143,9 @@
             <div class="login-body">
                 <form id="loginForm">
                     <div class="form-group">
-                        <label class="form-label" for="email">Email</label>
-                        <input class="form-input touch-target" type="email" id="email" name="email" required placeholder="admin@maximo-seo.ai" autocomplete="email">
+                        <label class="form-label" for="email">Username</label>
+                        <input class="form-input touch-target" type="text" id="email" name="username" required placeholder="maximoseo" autocomplete="username">
+                        <div class="login-hint">Use the site operator username configured in the server runtime.</div>
                     </div>
                     
                     <div class="form-group mb-4">
@@ -145,6 +162,7 @@
                     <button type="submit" class="btn btn-primary btn-full touch-target" id="submitBtn">
                         <span id="btnText">Sign In</span>
                     </button>
+                    <div class="login-message" id="loginMessage" role="alert" aria-live="polite"></div>
                 </form>
             </div>
             
@@ -155,11 +173,15 @@
     </div>
 
     <!-- Scripts -->
-    <script type="module">
-        import { supabaseClient } from './auth/supabase-client.js';
-        import { sessionManager } from './auth/session-manager.js';
-        import { trackLoginAttempt } from './auth/middleware.js';
-        import { toast } from './components/toast.js';
+    <script>
+        const LOGIN_ENDPOINT = '/api/auth/login';
+
+        function setLoginMessage(kind, message) {
+            const msg = document.getElementById('loginMessage');
+            if (!msg) return;
+            msg.className = 'login-message' + (kind ? ' ' + kind : '');
+            msg.textContent = message || '';
+        }
 
         // Theme Toggle
         const themeToggle = document.getElementById('themeToggle');
@@ -174,88 +196,64 @@
         togglePassword.addEventListener('click', () => {
             const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
             passwordInput.setAttribute('type', type);
-            // Switch icon logically (omitted full SVG swap for brevity, but functionality works)
             togglePassword.style.color = type === 'text' ? 'var(--color-primary)' : 'var(--color-text-muted)';
         });
 
-        // Login Logic
+        // Server-auth login: the page never contains or stores the password.
         const loginForm = document.getElementById('loginForm');
         const submitBtn = document.getElementById('submitBtn');
         const btnText = document.getElementById('btnText');
 
         loginForm.addEventListener('submit', async (e) => {
             e.preventDefault();
-            
-            // Check Rate limit before trying
-            const rlStatus = trackLoginAttempt(false); // Peek first
-            if (!rlStatus.allowed) {
-                toast.show(`Too many attempts. Try again in ${rlStatus.minutesLeft} minutes.`, 'error');
+            const identifier = document.getElementById('email').value.trim();
+            const password = document.getElementById('password').value;
+            if (!identifier || !password) {
+                setLoginMessage('error', 'Please enter your email or username and password.');
                 return;
             }
 
-            const email = document.getElementById('email').value;
-            const password = document.getElementById('password').value;
-
-            // UI Loading state
             submitBtn.disabled = true;
-            btnText.innerHTML = '<div class="spinner spinner-sm"></div>';
+            btnText.textContent = 'Signing in…';
+            setLoginMessage('', '');
 
             try {
-                // Simulate network for error handling visibility
-                // const res = await supabaseClient.signIn(email, password);
-                
-                // Real Authentication via Supabase
-                const res = await supabaseClient.signIn(email, password);
-                
-                if (res.error) {
-                    trackLoginAttempt(false); // Registers failure
-                    throw new Error(res.error_description || res.error.message || 'Invalid email or password');
-                }
-                
-                if (res.access_token) {
-                    trackLoginAttempt(true); // Clear failures
-                    sessionManager.saveSession({ 
-                        access_token: res.access_token, 
-                        refresh_token: res.refresh_token, 
-                        expires_in: res.expires_in,
-                        user: res.user 
-                    });
-                    
-                    // SYNC WITH PYTHON SERVER
+                const res = await fetch(LOGIN_ENDPOINT, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    credentials: 'same-origin',
+                    body: JSON.stringify({ user: identifier, password: password })
+                });
+                let data = {};
+                try { data = await res.json(); } catch (_) { data = {}; }
+
+                if (res.ok && data.ok) {
                     try {
-                        await fetch('/api/auth/supabase-sync', {
-                            method: 'POST',
-                            headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify({ access_token: res.access_token })
-                        });
-                    } catch (syncErr) {
-                        console.warn("Could not sync auth with Python server", syncErr);
-                    }
-
-                    toast.show('Login successful! Redirecting...', 'success');
-                    setTimeout(() => window.location.href = '/index.html', 1000);
-                } else {
-                    trackLoginAttempt(false);
-                    throw new Error('Authentication failed to return a valid token.');
+                        if (data.jwt) localStorage.setItem('dashboard_token', data.jwt);
+                    } catch (_) {}
+                    setLoginMessage('success', 'Signed in. Redirecting…');
+                    const next = new URLSearchParams(window.location.search).get('next') || '/';
+                    window.location.replace(next);
+                    return;
                 }
 
-            } catch(errorMessage) {
-                toast.show(errorMessage.message || 'Connection lost. Check your internet.', 'error');
+                let message = data.error || 'Login failed';
+                if (res.status === 429) message = 'Too many attempts. Please wait a minute and try again.';
+                else if (res.status === 503) message = 'Authentication service is not configured. Contact the administrator.';
+                else if (res.status >= 500) message = 'Login service is restarting. Please try again in a minute.';
+                else if (message === 'invalid_credentials') message = 'Invalid username or password.';
+                setLoginMessage('error', message);
+            } catch (err) {
+                setLoginMessage('error', 'Network error. Please check your connection and try again.');
             } finally {
                 submitBtn.disabled = false;
                 btnText.textContent = 'Sign In';
             }
         });
-        
-        // Forgot password stub
+
         document.getElementById('forgotPasswordBtn').addEventListener('click', (e) => {
             e.preventDefault();
-            const email = document.getElementById('email').value;
-            if(!email) {
-                toast.show('Please enter your email address first.', 'warning');
-            } else {
-                toast.show(`Password reset link sent to ${email}`, 'success');
-            }
+            setLoginMessage('error', 'Password reset is handled by the site administrator. Contact service@maximo-seo.com.');
         });
     </script>
 </body>
