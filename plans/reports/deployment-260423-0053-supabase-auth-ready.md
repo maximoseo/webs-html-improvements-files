@@ -6,7 +6,7 @@
 
 - ✅ Supabase project confirmed (`wtpczvyupmavzrxisvcm`, ACTIVE_HEALTHY, PG 17.6).
 - ✅ `public.dashboard_users` table created with RLS (self_read + service_full).
-- ✅ Admin user in Supabase Auth: `service@maximo-seo.com` / `Supermario60@!` (id `4c990bfc-4576-4587-8fdc-3a48047b17f2`, role=admin, username=maximoseo).
+- ✅ Admin user in Supabase Auth: `service@maximo-seo.com` / `[REDACTED_PASSWORD_STORED_IN_RENDER_ENV_AND_HERMES_SECURE_STORE]` (id `4c990bfc-4576-4587-8fdc-3a48047b17f2`, role=admin, username=maximoseo).
 - ✅ Wrong-ID row in `dashboard_users` removed; correct row seeded.
 - ✅ `_supabase_verify_password` live-tested against real Supabase Auth — returns full user dict.
 - ✅ `_dashboard_validate_credentials` accepts email OR username; Supabase-first, local fallback.
@@ -26,7 +26,7 @@ Open Render dashboard → `html-improver` service → Environment. Add / update:
 | `DASHBOARD_JWT_SECRET` | (from `.env.local` — generated, 64 hex chars) |
 | `DASHBOARD_AUTH_SECRET` | (from `.env.local` — generated, 64 hex chars) |
 | `DASHBOARD_USER` | `maximoseo` |
-| `DASHBOARD_PASSWORD` | `Supermario60@!` |
+| `DASHBOARD_PASSWORD` | `[REDACTED_PASSWORD_STORED_IN_RENDER_ENV_AND_HERMES_SECURE_STORE]` |
 
 Do NOT set `DASHBOARD_USERS` (legacy var) — new logic uses `_dashboard_auth_enabled()`.
 
@@ -66,7 +66,7 @@ curl -sS -I https://html-redesign-dashboard.maximo-seo.ai/ | grep -E "HTTP|Locat
 # Login via email:
 curl -sS -X POST https://html-redesign-dashboard.maximo-seo.ai/api/auth/login \
   -H 'Content-Type: application/json' \
-  -d '{"email":"service@maximo-seo.com","password":"Supermario60@!"}' \
+  -d '{"email":"service@maximo-seo.com","password":"[REDACTED_PASSWORD_STORED_IN_RENDER_ENV_AND_HERMES_SECURE_STORE]"}' \
   -D - | head -15
 
 # Run the smoke suite:

@@ -922,21 +922,19 @@ def _dashboard_validate_credentials(username, password):
     if not username or not password:
         return None
 
-    # 1. Supabase Auth (preferred when email is used and project is configured).
-    #    An email-looking identifier is routed to Supabase's password grant.
-    supa = _supabase_verify_password(username, password)
-    if supa:
-        return supa
+    # DASHBOARD_USERNAME_ONLY_LOGIN_2026_05_07
+    # The live dashboard is intentionally username + password only.
+    # Email remains a contact/reset identity, but must not authenticate as a login identifier.
+    if '@' in username:
+        return None
 
-    # 2. Local users.json fallback (sha256 — legacy; to be retired after Supabase migration).
+    # Local users.json fallback (sha256 — legacy; to be retired after Supabase migration).
     users = _mu_users_load()
     matched = None
     updated = False
-    lookup = username.lower()
     for u in users:
         record_username = (u.get('username') or '').strip()
-        record_email = (u.get('email') or '').strip()
-        is_same_user = record_username == username or (record_email and record_email.lower() == lookup)
+        is_same_user = record_username == username
         if is_same_user and _mu_verify_password(password, u.get('password_hash', '')):
             matched = u
             if _mu_password_needs_rehash(u.get('password_hash', '')):
@@ -948,9 +946,8 @@ def _dashboard_validate_credentials(username, password):
         env_user = os.getenv('DASHBOARD_USER', '').strip()
         env_email = (os.getenv('DASHBOARD_EMAIL') or 'service@maximo-seo.com').strip()
         env_pass = os.getenv('DASHBOARD_PASSWORD', '')
-        email_matches = bool(env_email and _hmac.compare_digest(lookup, env_email.lower()))
         user_matches = bool(env_user and _hmac.compare_digest(username, env_user))
-        if (user_matches or email_matches) and _hmac.compare_digest(password, env_pass):
+        if user_matches and _hmac.compare_digest(password, env_pass):
             matched = {'username': env_user or username, 'role': 'admin', 'email': env_email}
 
     if not matched:

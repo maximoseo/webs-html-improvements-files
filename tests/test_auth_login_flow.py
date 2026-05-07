@@ -37,14 +37,17 @@ class AuthLoginFlowTests(unittest.TestCase):
         cls.thread.join(timeout=2)
         os.environ.pop('DASHBOARD_USERS', None)
 
-    def test_login_page_uses_supabase_client_without_legacy_auth_endpoints(self):
+    def test_login_page_uses_server_auth_username_only_endpoint(self):
         status, _, body = req('/login')
         self.assertEqual(status, 200)
-        self.assertIn("./auth/supabase-client.js", body)
-        self.assertIn('/api/auth/supabase-sync', body)
+        self.assertIn('DASHBOARD_LOGIN_SERVER_AUTH_2026_05_07', body)
+        self.assertIn("const LOGIN_ENDPOINT = '/api/auth/login';", body)
+        self.assertIn("JSON.stringify({ user: identifier, password: password })", body)
+        self.assertIn('placeholder="maximoseo"', body)
+        self.assertNotIn("./auth/supabase-client.js", body)
+        self.assertNotIn('/api/auth/supabase-sync', body)
         self.assertNotIn('/api/login', body)
         self.assertNotIn('/api/reset-password', body)
-        self.assertNotIn('dashboard_token', body)
 
     def test_auth_login_sets_dash_auth_cookie_and_auth_me_accepts_it(self):
         payload = json.dumps({'username': 'admin', 'user': 'admin', 'password': 'HermesTestPassword123!'}).encode()
@@ -80,7 +83,7 @@ class AuthLoginFlowTests(unittest.TestCase):
                 else:
                     os.environ[key] = value
 
-    def test_break_glass_login_accepts_service_email_alias(self):
+    def test_break_glass_login_requires_username_not_service_email_alias(self):
         keys = ('DASHBOARD_USER', 'DASHBOARD_PASSWORD', 'DASHBOARD_EMAIL', 'SUPABASE_URL', 'SUPABASE_ANON_KEY', 'SUPABASE_SERVICE_ROLE_KEY')
         old = {name: os.environ.get(name) for name in keys}
         try:
@@ -89,10 +92,12 @@ class AuthLoginFlowTests(unittest.TestCase):
             os.environ['DASHBOARD_EMAIL'] = 'service@maximo-seo.com'
             for key in ('SUPABASE_URL', 'SUPABASE_ANON_KEY', 'SUPABASE_SERVICE_ROLE_KEY'):
                 os.environ.pop(key, None)
-            matched = server._dashboard_validate_credentials('service@maximo-seo.com', 'HermesTestPassword123!')
-            self.assertIsNotNone(matched)
-            self.assertEqual(matched['username'], 'admin')
-            self.assertEqual(matched['role'], 'admin')
+            email_match = server._dashboard_validate_credentials('service@maximo-seo.com', 'HermesTestPassword123!')
+            self.assertIsNone(email_match)
+            username_match = server._dashboard_validate_credentials('admin', 'HermesTestPassword123!')
+            self.assertIsNotNone(username_match)
+            self.assertEqual(username_match['username'], 'admin')
+            self.assertEqual(username_match['role'], 'admin')
         finally:
             for key, value in old.items():
                 if value is None:
