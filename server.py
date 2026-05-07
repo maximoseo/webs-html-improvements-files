@@ -3078,6 +3078,118 @@ def _safe_text(value, limit=20000):
     return text[:limit]
 
 
+# PLAN23_ACTIVE_PROMPT_READ_API_2026_05_07
+# Read-only contract endpoint support for Plan #23 Method B:
+# n8n may read an already-approved active prompt, but this server never mutates
+# n8n workflows from this endpoint and never fabricates prompt content.
+def _normalize_active_prompt_domain(value):
+    raw = _safe_text(value, 1000)
+    if not raw:
+        raise ValueError('domain is required')
+    if '://' in raw:
+        parsed = urllib.parse.urlparse(raw)
+    else:
+        parsed = urllib.parse.urlparse('https://' + raw)
+    host = (parsed.hostname or '').strip().lower().rstrip('.')
+    if not host:
+        raise ValueError('domain is required')
+    if host in ('localhost', '127.0.0.1', '0.0.0.0', '::1'):
+        raise ValueError('invalid domain')
+    if not re.fullmatch(r'(?:[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\.)+[a-z]{2,63}', host):
+        raise ValueError('invalid domain')
+    return host
+
+
+def _root_relative_path(path_obj):
+    root = Path(ROOT).resolve()
+    resolved = Path(path_obj).resolve()
+    if os.path.commonpath([str(root), str(resolved)]) != str(root):
+        return None
+    return resolved.relative_to(root).as_posix()
+
+
+def _active_prompt_candidate_files(domain):
+    root = Path(ROOT).resolve()
+    candidate_roots = [root / domain, root / 'prompts' / 'per-site' / domain]
+    candidates = []
+    for base in candidate_roots:
+        if not base.exists() or not base.is_dir():
+            continue
+        for pattern in ('Improved_N8N_Prompt.txt', 'improved_n8n_prompt.txt', '*N8N*Prompt*.txt', '*prompt*.txt'):
+            for path_obj in base.rglob(pattern):
+                if path_obj.is_file() and _root_relative_path(path_obj):
+                    candidates.append(path_obj)
+    # data.json may list generated files even when directory traversal order changes.
+    try:
+        tree_data = json.loads((Path(ROOT) / 'data.json').read_text(encoding='utf-8'))
+        tree = tree_data.get('tree', []) if isinstance(tree_data, dict) else []
+        for item in tree:
+            rel = (item or {}).get('path') if isinstance(item, dict) else ''
+            if not rel or not rel.startswith(domain + '/'):
+                continue
+            name = rel.rsplit('/', 1)[-1].lower()
+            if name == 'improved_n8n_prompt.txt' or ('prompt' in name and name.endswith('.txt')):
+                path_obj = Path(ROOT) / rel
+                if path_obj.is_file() and _root_relative_path(path_obj):
+                    candidates.append(path_obj)
+    except Exception:
+        pass
+    unique = {str(path_obj.resolve()): path_obj for path_obj in candidates}
+    return sorted(unique.values(), key=lambda p: (p.stat().st_mtime, str(p)), reverse=True)
+
+
+def active_prompt_read_response(raw_domain):
+    try:
+        domain = _normalize_active_prompt_domain(raw_domain)
+    except ValueError as exc:
+        return 400, {
+            'ok': False,
+            'error': str(exc),
+            'marker': 'PLAN23_ACTIVE_PROMPT_READ_API_2026_05_07',
+            'readOnlyN8n': True,
+            'n8nIntegration': {'method': 'GET', 'mutatesWorkflow': False},
+        }
+
+    base_payload = {
+        'marker': 'PLAN23_ACTIVE_PROMPT_READ_API_2026_05_07',
+        'domain': domain,
+        'contractVersion': PROMPT_STUDIO_CONTRACT_VERSION,
+        'readOnlyN8n': True,
+        'n8nIntegration': {
+            'method': 'GET',
+            'endpoint': f'/api/prompts/active?domain={urllib.parse.quote(domain)}',
+            'mutatesWorkflow': False,
+            'requiresManualN8nNodeConfig': True,
+        },
+    }
+    candidates = _active_prompt_candidate_files(domain)
+    if not candidates:
+        return 404, {
+            **base_payload,
+            'ok': False,
+            'error': 'no_active_prompt',
+            'nextAction': 'create_or_commit_prompt_via_prompt_studio',
+        }
+    source = candidates[0]
+    prompt = source.read_text(encoding='utf-8', errors='replace')[:250000]
+    if not prompt.strip():
+        return 404, {
+            **base_payload,
+            'ok': False,
+            'error': 'empty_active_prompt',
+            'sourcePath': _root_relative_path(source),
+            'nextAction': 'create_or_commit_prompt_via_prompt_studio',
+        }
+    return 200, {
+        **base_payload,
+        'ok': True,
+        'prompt': prompt,
+        'promptLength': len(prompt),
+        'sourcePath': _root_relative_path(source),
+        'nextAction': 'copy_or_read_from_n8n_http_request_node',
+    }
+
+
 def _detect_language_direction(*texts):
     combined = '\n'.join(_safe_text(t, 3000) for t in texts if t)
     hebrew_chars = len(re.findall(r'[\u0590-\u05FF]', combined))
@@ -4873,6 +4985,12 @@ body{{font-family:Arial;padding:24px}}h1{{color:#333}}pre{{background:#f4f4f4;pa
                 {'id': 'deploy-checklist', 'name': 'Deploy Checklist', 'category': 'devops', 'description': 'Pre-deployment verification checklist'},
             ]
             return json_response(self, 200, {'ok': True, 'palette': palette})
+
+        if parsed.path == '/api/prompts/active':
+            query = urllib.parse.parse_qs(parsed.query or '')
+            domain = (query.get('domain') or [''])[0]
+            status, payload = active_prompt_read_response(domain)
+            return json_response(self, status, payload)
 
         if parsed.path == '/api/studio/improve/rules':
             query = urllib.parse.parse_qs(parsed.query or '')
