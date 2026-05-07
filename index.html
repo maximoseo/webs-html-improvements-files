@@ -11492,8 +11492,12 @@ CREATE POLICY "Users see own reports"
     return _csrfPromise;
   }
   window.dashboardEnsureCsrf = _ensureCsrf;
-  window.fetch = function(url, opts){
-    var self = this;
+  // DASHBOARD_AUTHED_FETCH_HELPER_2026_05_07
+  // Phase 04 migration guard: expose a named authenticated fetch helper so
+  // dashboard callsites can move off raw fetch incrementally without relying
+  // only on the global fetch monkeypatch.
+  function _dashboardFetch(url, opts){
+    var self = this || window;
     opts = opts || {};
     opts.headers = opts.headers || {};
     var tok = '';
@@ -11521,7 +11525,11 @@ CREATE POLICY "Users see own reports"
       if (csrf) _setHeader(opts.headers, 'X-CSRF-Token', csrf);
       return send();
     });
+  }
+  window.authedFetch = function(url, opts){
+    return _dashboardFetch(url, opts);
   };
+  window.fetch = window.authedFetch;
 })();
 
 function doLogout(){
@@ -13396,7 +13404,8 @@ function toggleAllCards() {
 
 async function fetchJSON(url){
   try{
-    const r=await fetch(url);
+    const fetcher=window.authedFetch||fetch;
+    const r=await fetcher(url);
     if(r.status===403||r.status===429){
       console.warn('Rate limited, using cache');
       return {ok:false, rateLimited:true, status:r.status};
